@@ -1,0 +1,1 @@
+{"version":"0.0.1","configurations":[{"name":"guaibao","runtimeExecutable":"pnpm","runtimeArgs":["dev","--port","5180","--strictPort"],"port":5180}]}

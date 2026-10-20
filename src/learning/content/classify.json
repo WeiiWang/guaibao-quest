@@ -1,0 +1,506 @@
+[
+  {
+    "id": "classify-1-01", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "水果是甜甜的，可以吃的食物喔。"
+  },
+  {
+    "id": "classify-1-02", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "動物會動，有的會游，有的會跑。"
+  },
+  {
+    "id": "classify-1-03", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是大自然？",
+    "items": [],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "花、貝殼和星星，都是大自然裡的東西。"
+  },
+  {
+    "id": "classify-1-04", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "水果是甜甜的，可以吃的食物喔。"
+  },
+  {
+    "id": "classify-1-05", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "動物會動，有的會游，有的會跑。"
+  },
+  {
+    "id": "classify-1-06", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是大自然？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "花、貝殼和星星，都是大自然裡的東西。"
+  },
+  {
+    "id": "classify-1-07", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-apple",
+    "hint": "水果是甜甜的，可以吃的食物喔。"
+  },
+  {
+    "id": "classify-1-08", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-fish",
+    "hint": "動物會動，有的會游，有的會跑。"
+  },
+  {
+    "id": "classify-1-09", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是大自然？",
+    "items": [],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "花、貝殼和星星，都是大自然裡的東西。"
+  },
+  {
+    "id": "classify-1-10", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "水果是甜甜的，可以吃的食物喔。"
+  },
+  {
+    "id": "classify-1-11", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "動物會動，有的會游，有的會跑。"
+  },
+  {
+    "id": "classify-1-12", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是大自然？",
+    "items": [],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-shell",
+    "hint": "花、貝殼和星星，都是大自然裡的東西。"
+  },
+  {
+    "id": "classify-1-13", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "水果是甜甜的，可以吃的食物喔。"
+  },
+  {
+    "id": "classify-1-14", "skill": "classify", "difficulty": 1, "type": "kind", "version": 1,
+    "prompt": "哪一個是動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "動物會動，有的會游，有的會跑。"
+  },
+  {
+    "id": "classify-2-01", "skill": "classify", "difficulty": 2, "type": "color", "version": 1,
+    "prompt": "哪一個是黃色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "看看顏色，找出黃色的那一個。"
+  },
+  {
+    "id": "classify-2-02", "skill": "classify", "difficulty": 2, "type": "color", "version": 1,
+    "prompt": "哪一個是粉色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "看看顏色，找出粉色的那一個。"
+  },
+  {
+    "id": "classify-2-03", "skill": "classify", "difficulty": 2, "type": "color", "version": 1,
+    "prompt": "哪一個是紅色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-apple",
+    "hint": "看看顏色，找出紅色的那一個。"
+  },
+  {
+    "id": "classify-2-04", "skill": "classify", "difficulty": 2, "type": "color", "version": 1,
+    "prompt": "哪一個是紫色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-grape",
+    "hint": "看看顏色，找出紫色的那一個。"
+  },
+  {
+    "id": "classify-2-05", "skill": "classify", "difficulty": 2, "type": "color", "version": 1,
+    "prompt": "哪一個是藍色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看看顏色，找出藍色的那一個。"
+  },
+  {
+    "id": "classify-2-06", "skill": "classify", "difficulty": 2, "type": "color", "version": 1,
+    "prompt": "哪一個是白色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "看看顏色，找出白色的那一個。"
+  },
+  {
+    "id": "classify-2-07", "skill": "classify", "difficulty": 2, "type": "color", "version": 1,
+    "prompt": "哪一個是黃色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-star",
+    "hint": "看看顏色，找出黃色的那一個。"
+  },
+  {
+    "id": "classify-2-08", "skill": "classify", "difficulty": 2, "type": "color", "version": 1,
+    "prompt": "哪一個是粉色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-flower",
+    "hint": "看看顏色，找出粉色的那一個。"
+  },
+  {
+    "id": "classify-2-09", "skill": "classify", "difficulty": 2, "type": "kind", "version": 1,
+    "prompt": "哪一個是大自然？",
+    "items": [],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-flower",
+    "hint": "花、貝殼和星星，都是大自然裡的東西。"
+  },
+  {
+    "id": "classify-2-10", "skill": "classify", "difficulty": 2, "type": "kind", "version": 1,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-banana",
+    "hint": "水果是甜甜的，可以吃的食物喔。"
+  },
+  {
+    "id": "classify-2-11", "skill": "classify", "difficulty": 2, "type": "kind", "version": 1,
+    "prompt": "哪一個是動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "動物會動，有的會游，有的會跑。"
+  },
+  {
+    "id": "classify-2-12", "skill": "classify", "difficulty": 2, "type": "kind", "version": 1,
+    "prompt": "哪一個是大自然？",
+    "items": [],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-shell",
+    "hint": "花、貝殼和星星，都是大自然裡的東西。"
+  },
+  {
+    "id": "classify-2-13", "skill": "classify", "difficulty": 2, "type": "kind", "version": 1,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-banana",
+    "hint": "水果是甜甜的，可以吃的食物喔。"
+  },
+  {
+    "id": "classify-2-14", "skill": "classify", "difficulty": 2, "type": "kind", "version": 1,
+    "prompt": "哪一個是動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "動物會動，有的會游，有的會跑。"
+  },
+  {
+    "id": "classify-3-01", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-shell",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-02", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-peach",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-03", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-04", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-grape",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-05", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-06", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-shell",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-07", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-chick",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-08", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-09", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-flower",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-10", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-apple",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-11", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-banana",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-12", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-flower",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-13", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  },
+  {
+    "id": "classify-3-14", "skill": "classify", "difficulty": 3, "type": "odd", "version": 1,
+    "prompt": "哪一個跟別的不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-peach",
+    "hint": "看看它們是水果、動物，還是大自然的東西？有一個和其他三個不是同一類喔。"
+  }
+]

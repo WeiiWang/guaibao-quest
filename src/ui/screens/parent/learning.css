@@ -1,0 +1,60 @@
+/* 家長區新分頁：學習報告 / 遊玩時間 / 音效語音 / 訂閱方案（樣品）。只用 CSS 變數與基本元素，不依賴既有 class 的樣子 */
+.lt { display: grid; gap: 14px; }
+.lt h2 { margin: 0 0 8px; }
+.lt-h3 { margin: 16px 0 6px; font-size: 1.05rem; }
+.lt-text { margin: 6px 0; line-height: 1.55; font-size: 1.05rem; }
+.lt-note { margin: 6px 0; font-size: 0.9rem; opacity: 0.7; line-height: 1.5; }
+.lt-advice { margin: 10px 0 0; padding: 10px 14px; border-radius: 16px; background: color-mix(in srgb, var(--butter) 35%, #fff); font-weight: 700; line-height: 1.5; }
+.lt-big { display: flex; gap: 28px; flex-wrap: wrap; margin: 6px 0; }
+.lt-big div { display: grid; }
+.lt-big b { font-size: 2rem; line-height: 1.15; }
+.lt-big span { font-size: 0.9rem; opacity: 0.7; }
+
+.lt-skills { display: grid; gap: 14px; }
+.lt-skills li { padding: 12px 14px; border-radius: 18px; background: color-mix(in srgb, var(--sky) 14%, #fff); border: 2px solid transparent; }
+.lt-skills li.weak { border-color: var(--peach); background: color-mix(in srgb, var(--peach) 14%, #fff); }
+.lt-skill-head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.lt-skill-head b { font-size: 1.2rem; }
+.lt-level { font-size: 0.9rem; opacity: 0.75; }
+.lt-flag { font-size: 0.8rem; font-weight: 800; padding: 2px 10px; border-radius: 999px; background: var(--peach); color: #fff; }
+.lt-bar { height: 14px; border-radius: 7px; background: rgba(74, 59, 53, 0.12); margin: 8px 0 4px; overflow: hidden; }
+.lt-bar i { display: block; height: 100%; background: var(--mint); border-radius: 7px; }
+.lt-skills li.weak .lt-bar i { background: var(--peach); }
+.lt-skill-nums { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 0.9rem; font-weight: 700; }
+
+.lt-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; align-items: end; height: 150px; }
+.lt-day { display: grid; grid-template-rows: 18px 1fr 20px; height: 100%; text-align: center; font-size: 0.85rem; }
+.lt-day-bar { display: flex; align-items: flex-end; justify-content: center; }
+.lt-day-bar i { display: block; width: 70%; min-height: 3px; background: var(--sky); border-radius: 8px 8px 2px 2px; }
+.lt-day-n { font-weight: 800; }
+.lt-day-l { opacity: 0.7; }
+
+.lt-choices { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.lt-choice { min-height: 56px; min-width: 88px; padding: 0 18px; border-radius: 999px; border: 3px solid rgba(74, 59, 53, 0.15); background: #fff; font-weight: 800; font-size: 1.05rem; }
+.lt-choice.on { background: var(--butter); border-color: color-mix(in srgb, var(--butter) 60%, #000 20%); }
+
+.lt-switch-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid rgba(74, 59, 53, 0.1); }
+.lt-switch-row p { margin: 2px 0 0; }
+.lt-switch { position: relative; flex: none; width: 104px; min-height: 56px; border-radius: 28px; border: 0; background: rgba(74, 59, 53, 0.2); font-weight: 800; text-align: right; padding: 0 16px 0 0; transition: background 0.15s; }
+.lt-switch span { position: relative; color: var(--ink); }
+.lt-switch i { position: absolute; left: 4px; top: 4px; width: 48px; height: 48px; border-radius: 50%; background: #fff; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18); transition: transform 0.15s; }
+.lt-switch.on { background: var(--mint); text-align: left; padding: 0 0 0 16px; }
+.lt-switch.on i { transform: translateX(48px); }
+.lt-switch:active i { width: 54px; }
+.lt-choice { transition: transform 0.12s; }
+.lt-choice:active { transform: translateY(3px) scale(0.96); }
+
+.lt-sample { position: relative; }
+.lt-sample > .lt-flag { position: absolute; right: 14px; top: 14px; background: var(--lavender); }
+.lt-plans { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 10px 0; }
+.lt-plan { padding: 14px 16px; border-radius: 22px; background: #fff; border: 3px solid rgba(74, 59, 53, 0.12); }
+.lt-plan.paid { border-color: var(--butter); background: color-mix(in srgb, var(--butter) 12%, #fff); }
+.lt-plan h3 { margin: 0; font-size: 1.2rem; }
+.lt-price { margin: 4px 0; font-size: 1.7rem; font-weight: 900; }
+.lt-price small { font-size: 0.85rem; font-weight: 700; opacity: 0.7; }
+.lt-price.alt { font-size: 1.3rem; }
+.lt-plan ul, .lt-terms { list-style: disc; padding-left: 1.3em; margin: 8px 0; display: grid; gap: 4px; }
+.lt-terms { font-size: 0.92rem; line-height: 1.5; opacity: 0.85; }
+
+.lt-tip { margin: 0 0 12px; padding: 10px 14px; border-radius: 16px; background: color-mix(in srgb, var(--sky) 25%, #fff); font-weight: 700; line-height: 1.5; }
+.lt-tip.warn { background: color-mix(in srgb, var(--butter) 40%, #fff); }

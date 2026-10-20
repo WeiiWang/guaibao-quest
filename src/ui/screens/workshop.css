@@ -1,0 +1,41 @@
+/* 工坊（用材料做家具）。主色 butter。 */
+.workshop { color: var(--ink); }
+.ws-lead { text-align: center; font-size: 1.15rem; font-weight: 700; margin: 0 0 16px; }
+.ws-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); }
+.ws-card {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 14px 10px 16px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--butter-soft) 70%, white) 0, var(--white) 55%);
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--butter-deep) 28%, transparent), var(--shadow-soft);
+}
+.ws-card.owned { background: linear-gradient(180deg, var(--mint-soft), var(--white) 60%); }
+.ws-art { width: 116px; height: 116px; border-radius: 26px; background: radial-gradient(circle at 50% 60%, #fff, var(--butter-soft)); padding: 6px; box-shadow: inset 0 3px 0 #fff; }
+.ws-name { font-weight: 900; font-size: 1.2rem; }
+.ws-card { grid-template-rows: auto auto 1fr auto; }
+.ws-cost { align-content: center; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; min-height: 30px; }
+.ws-cost-item { display: inline-flex; align-items: center; gap: 2px; font-weight: 900; padding: 2px 10px 2px 4px; border-radius: 999px; background: var(--butter-soft); }
+.ws-cost-item.short { background: var(--peach-soft); }
+.ws-btn {
+  --b: #fff;
+  --bd: rgba(74, 59, 53, 0.18);
+  min-height: 56px;
+  width: 100%;
+  border: 0;
+  border-radius: 26px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--b) 80%, white), var(--b));
+  color: var(--ink);
+  font-weight: 900;
+  font-size: 1.1rem;
+  box-shadow: 0 5px 0 var(--bd), inset 0 2px 0 rgba(255, 255, 255, 0.8);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.ws-btn.primary { --b: var(--butter); --bd: var(--butter-deep); }
+.ws-btn:active:not(:disabled) { transform: translateY(4px) scale(0.96); box-shadow: 0 1px 0 var(--bd); }
+.ws-btn:disabled { opacity: 0.55; box-shadow: 0 3px 0 var(--bd); font-size: 0.95rem; }
+.ws-foot { text-align: center; font-weight: 700; }
+.ws-link { border: 0; background: transparent; font: inherit; font-weight: 900; text-decoration: underline; color: var(--ink); min-height: 56px; padding: 0 12px; border-radius: 20px; transition: transform 0.12s; }
+.ws-link:active { transform: scale(0.94); background: var(--butter-soft); }
+@media (prefers-reduced-motion: reduce) { .ws-btn, .ws-link { transition: none; } }

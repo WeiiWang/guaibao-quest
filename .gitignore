@@ -1,0 +1,10 @@
+node_modules
+dist
+dev-dist
+*.local
+.DS_Store
+design/raw/
+design/tools/assets.txt
+design/tools/batch.log
+design/screens/
+design/ref/

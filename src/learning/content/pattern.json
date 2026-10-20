@@ -1,0 +1,827 @@
+[
+  {
+    "id": "pattern-1-01", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-02", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-star",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-03", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-shell"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-04", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-05", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-flower",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-06", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-chick",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-07", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-08", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-peach",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-09", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-flower",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-10", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-11", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-peach",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-12", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-shell"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-13", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-apple",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-1-14", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-shell",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-01", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-02", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-grape",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-03", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-04", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-shell",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-05", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-06", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-star"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-07", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-flower",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-08", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-09", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-10", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-fish",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-11", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-chick",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-12", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-star",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-13", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-2-14", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-fish",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-3-01", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-3-02", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-3-03", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-shell"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-chick",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-3-04", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-shell",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-3-05", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-fish",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-3-06", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-shell",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-3-07", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-banana",
+    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+  },
+  {
+    "id": "pattern-3-08", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
+    "prompt": "問號的地方是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-star"},
+      {"obj":null},
+      {"obj":"obj-chick"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-shell",
+    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+  },
+  {
+    "id": "pattern-3-09", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
+    "prompt": "問號的地方是哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-apple"},
+      {"obj":null},
+      {"obj":"obj-shell"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-star",
+    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+  },
+  {
+    "id": "pattern-3-10", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
+    "prompt": "問號的地方是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":null},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-flower",
+    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+  },
+  {
+    "id": "pattern-3-11", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
+    "prompt": "問號的地方是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":null},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-flower",
+    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+  },
+  {
+    "id": "pattern-3-12", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
+    "prompt": "問號的地方是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":null},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+  },
+  {
+    "id": "pattern-3-13", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
+    "prompt": "問號的地方是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-shell"},
+      {"obj":null},
+      {"obj":"obj-fish"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+  },
+  {
+    "id": "pattern-3-14", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
+    "prompt": "問號的地方是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-banana"},
+      {"obj":null},
+      {"obj":"obj-shell"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+  }
+]

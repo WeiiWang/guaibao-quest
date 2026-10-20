@@ -1,0 +1,568 @@
+[
+  {
+    "id": "number-1-01", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾顆桃子？",
+    "items": [
+      {"obj":"obj-peach","count":1}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"}
+    ],
+    "answer": "1",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-02", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾條小魚？",
+    "items": [
+      {"obj":"obj-fish","count":2}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"5","label":"5"}
+    ],
+    "answer": "2",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-03", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾朵花？",
+    "items": [
+      {"obj":"obj-flower","count":3}
+    ],
+    "choices": [
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"},
+      {"id":"6","label":"6"}
+    ],
+    "answer": "3",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-04", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾根香蕉？",
+    "items": [
+      {"obj":"obj-banana","count":4}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "4",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-05", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾串葡萄？",
+    "items": [
+      {"obj":"obj-grape","count":5}
+    ],
+    "choices": [
+      {"id":"2","label":"2"},
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"}
+    ],
+    "answer": "5",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-06", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾隻小兔？",
+    "items": [
+      {"obj":"obj-rabbit","count":3}
+    ],
+    "choices": [
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "3",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-07", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾顆星星？",
+    "items": [
+      {"obj":"obj-star","count":2}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"5","label":"5"}
+    ],
+    "answer": "2",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-08", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾顆蘋果？",
+    "items": [
+      {"obj":"obj-apple","count":4}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"4","label":"4"},
+      {"id":"5","label":"5"}
+    ],
+    "answer": "4",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-09", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾隻小雞？",
+    "items": [
+      {"obj":"obj-chick","count":5}
+    ],
+    "choices": [
+      {"id":"3","label":"3"},
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"}
+    ],
+    "answer": "5",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-10", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾個貝殼？",
+    "items": [
+      {"obj":"obj-shell","count":1}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "1",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-11", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾顆桃子？",
+    "items": [
+      {"obj":"obj-peach","count":3}
+    ],
+    "choices": [
+      {"id":"3","label":"3"},
+      {"id":"4","label":"4"},
+      {"id":"6","label":"6"}
+    ],
+    "answer": "3",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-12", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾條小魚？",
+    "items": [
+      {"obj":"obj-fish","count":5}
+    ],
+    "choices": [
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"},
+      {"id":"5","label":"5"}
+    ],
+    "answer": "5",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-13", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾朵花？",
+    "items": [
+      {"obj":"obj-flower","count":2}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "2",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-1-14", "skill": "number", "difficulty": 1, "type": "count", "version": 1,
+    "prompt": "數一數，有幾根香蕉？",
+    "items": [
+      {"obj":"obj-banana","count":4}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"4","label":"4"},
+      {"id":"6","label":"6"}
+    ],
+    "answer": "4",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-01", "skill": "number", "difficulty": 2, "type": "count", "version": 1,
+    "prompt": "數一數，有幾顆蘋果？",
+    "items": [
+      {"obj":"obj-apple","count":6}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"},
+      {"id":"7","label":"7"}
+    ],
+    "answer": "6",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-02", "skill": "number", "difficulty": 2, "type": "count", "version": 1,
+    "prompt": "數一數，有幾隻小雞？",
+    "items": [
+      {"obj":"obj-chick","count":7}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"7","label":"7"},
+      {"id":"10","label":"10"}
+    ],
+    "answer": "7",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-03", "skill": "number", "difficulty": 2, "type": "count", "version": 1,
+    "prompt": "數一數，有幾個貝殼？",
+    "items": [
+      {"obj":"obj-shell","count":8}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"},
+      {"id":"8","label":"8"}
+    ],
+    "answer": "8",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-04", "skill": "number", "difficulty": 2, "type": "count", "version": 1,
+    "prompt": "數一數，有幾顆桃子？",
+    "items": [
+      {"obj":"obj-peach","count":9}
+    ],
+    "choices": [
+      {"id":"6","label":"6"},
+      {"id":"7","label":"7"},
+      {"id":"9","label":"9"}
+    ],
+    "answer": "9",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-05", "skill": "number", "difficulty": 2, "type": "count", "version": 1,
+    "prompt": "數一數，有幾條小魚？",
+    "items": [
+      {"obj":"obj-fish","count":10}
+    ],
+    "choices": [
+      {"id":"7","label":"7"},
+      {"id":"9","label":"9"},
+      {"id":"10","label":"10"}
+    ],
+    "answer": "10",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-06", "skill": "number", "difficulty": 2, "type": "count", "version": 1,
+    "prompt": "數一數，有幾朵花？",
+    "items": [
+      {"obj":"obj-flower","count":6}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"},
+      {"id":"9","label":"9"}
+    ],
+    "answer": "6",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-07", "skill": "number", "difficulty": 2, "type": "count", "version": 1,
+    "prompt": "數一數，有幾根香蕉？",
+    "items": [
+      {"obj":"obj-banana","count":7}
+    ],
+    "choices": [
+      {"id":"7","label":"7"},
+      {"id":"9","label":"9"},
+      {"id":"10","label":"10"}
+    ],
+    "answer": "7",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-08", "skill": "number", "difficulty": 2, "type": "count", "version": 1,
+    "prompt": "數一數，有幾串葡萄？",
+    "items": [
+      {"obj":"obj-grape","count":8}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"8","label":"8"},
+      {"id":"9","label":"9"}
+    ],
+    "answer": "8",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-2-09", "skill": "number", "difficulty": 2, "type": "compare", "version": 1,
+    "prompt": "哪一堆的小雞比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-chick","count":3},
+      {"id":"B","obj":"obj-chick","count":5}
+    ],
+    "answer": "B",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-2-10", "skill": "number", "difficulty": 2, "type": "compare", "version": 1,
+    "prompt": "哪一堆的貝殼比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-shell","count":4},
+      {"id":"B","obj":"obj-shell","count":5}
+    ],
+    "answer": "B",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-2-11", "skill": "number", "difficulty": 2, "type": "compare", "version": 1,
+    "prompt": "哪一堆的桃子比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-peach","count":3},
+      {"id":"B","obj":"obj-peach","count":6}
+    ],
+    "answer": "B",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-2-12", "skill": "number", "difficulty": 2, "type": "compare", "version": 1,
+    "prompt": "哪一堆的小兔比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-rabbit","count":6},
+      {"id":"B","obj":"obj-rabbit","count":5}
+    ],
+    "answer": "A",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-2-13", "skill": "number", "difficulty": 2, "type": "compare", "version": 1,
+    "prompt": "哪一堆的小魚比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-fish","count":10},
+      {"id":"B","obj":"obj-fish","count":7}
+    ],
+    "answer": "A",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-2-14", "skill": "number", "difficulty": 2, "type": "compare", "version": 1,
+    "prompt": "哪一堆的蘋果比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-apple","count":4},
+      {"id":"B","obj":"obj-apple","count":5}
+    ],
+    "answer": "B",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-3-01", "skill": "number", "difficulty": 3, "type": "count", "version": 1,
+    "prompt": "數一數，有幾條小魚？",
+    "items": [
+      {"obj":"obj-fish","count":11}
+    ],
+    "choices": [
+      {"id":"10","label":"10"},
+      {"id":"11","label":"11"},
+      {"id":"13","label":"13"}
+    ],
+    "answer": "11",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-3-02", "skill": "number", "difficulty": 3, "type": "count", "version": 1,
+    "prompt": "數一數，有幾朵花？",
+    "items": [
+      {"obj":"obj-flower","count":14}
+    ],
+    "choices": [
+      {"id":"11","label":"11"},
+      {"id":"13","label":"13"},
+      {"id":"14","label":"14"}
+    ],
+    "answer": "14",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-3-03", "skill": "number", "difficulty": 3, "type": "count", "version": 1,
+    "prompt": "數一數，有幾根香蕉？",
+    "items": [
+      {"obj":"obj-banana","count":17}
+    ],
+    "choices": [
+      {"id":"15","label":"15"},
+      {"id":"17","label":"17"},
+      {"id":"19","label":"19"}
+    ],
+    "answer": "17",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-3-04", "skill": "number", "difficulty": 3, "type": "count", "version": 1,
+    "prompt": "數一數，有幾串葡萄？",
+    "items": [
+      {"obj":"obj-grape","count":20}
+    ],
+    "choices": [
+      {"id":"17","label":"17"},
+      {"id":"19","label":"19"},
+      {"id":"20","label":"20"}
+    ],
+    "answer": "20",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-3-05", "skill": "number", "difficulty": 3, "type": "count", "version": 1,
+    "prompt": "數一數，有幾隻小兔？",
+    "items": [
+      {"obj":"obj-rabbit","count":13}
+    ],
+    "choices": [
+      {"id":"10","label":"10"},
+      {"id":"13","label":"13"},
+      {"id":"14","label":"14"}
+    ],
+    "answer": "13",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-3-06", "skill": "number", "difficulty": 3, "type": "count", "version": 1,
+    "prompt": "數一數，有幾顆星星？",
+    "items": [
+      {"obj":"obj-star","count":16}
+    ],
+    "choices": [
+      {"id":"14","label":"14"},
+      {"id":"16","label":"16"},
+      {"id":"19","label":"19"}
+    ],
+    "answer": "16",
+    "hint": "跟阿悟一起，一個一個慢慢數。數到最後一個，就是答案囉。"
+  },
+  {
+    "id": "number-3-07", "skill": "number", "difficulty": 3, "type": "compare", "version": 1,
+    "prompt": "哪一堆的桃子比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-peach","count":15},
+      {"id":"B","obj":"obj-peach","count":18}
+    ],
+    "answer": "B",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-3-08", "skill": "number", "difficulty": 3, "type": "compare", "version": 1,
+    "prompt": "哪一堆的葡萄比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-grape","count":10},
+      {"id":"B","obj":"obj-grape","count":9}
+    ],
+    "answer": "A",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-3-09", "skill": "number", "difficulty": 3, "type": "compare", "version": 1,
+    "prompt": "哪一堆的小雞比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-chick","count":14},
+      {"id":"B","obj":"obj-chick","count":11}
+    ],
+    "answer": "A",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-3-10", "skill": "number", "difficulty": 3, "type": "compare", "version": 1,
+    "prompt": "哪一堆的星星比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-star","count":16},
+      {"id":"B","obj":"obj-star","count":13}
+    ],
+    "answer": "A",
+    "hint": "先數數看左邊有幾個，再數數右邊有幾個，數字比較大的那一堆就是比較多喔。"
+  },
+  {
+    "id": "number-3-11", "skill": "number", "difficulty": 3, "type": "diff", "version": 1,
+    "prompt": "左邊比右邊多幾串葡萄？",
+    "items": [
+      {"obj":"obj-grape","count":13},
+      {"obj":"obj-grape","count":12}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "1",
+    "hint": "先數左邊，再數右邊。左邊多出來的，就是答案。"
+  },
+  {
+    "id": "number-3-12", "skill": "number", "difficulty": 3, "type": "diff", "version": 1,
+    "prompt": "左邊比右邊多幾個貝殼？",
+    "items": [
+      {"obj":"obj-shell","count":17},
+      {"obj":"obj-shell","count":15}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "2",
+    "hint": "先數左邊，再數右邊。左邊多出來的，就是答案。"
+  },
+  {
+    "id": "number-3-13", "skill": "number", "difficulty": 3, "type": "diff", "version": 1,
+    "prompt": "左邊比右邊多幾顆桃子？",
+    "items": [
+      {"obj":"obj-peach","count":19},
+      {"obj":"obj-peach","count":17}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "2",
+    "hint": "先數左邊，再數右邊。左邊多出來的，就是答案。"
+  },
+  {
+    "id": "number-3-14", "skill": "number", "difficulty": 3, "type": "diff", "version": 1,
+    "prompt": "左邊比右邊多幾隻小兔？",
+    "items": [
+      {"obj":"obj-rabbit","count":16},
+      {"obj":"obj-rabbit","count":14}
+    ],
+    "choices": [
+      {"id":"1","label":"1"},
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "2",
+    "hint": "先數左邊，再數右邊。左邊多出來的，就是答案。"
+  }
+]

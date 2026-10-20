@@ -1,0 +1,24 @@
+/* 每日遊玩時間到了的鎖定畫面 */
+.lock-screen {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  color: var(--ink);
+  background: radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--lavender) 50%, transparent), transparent 45%), linear-gradient(180deg, color-mix(in srgb, var(--lavender) 40%, var(--cream)), var(--cream));
+  animation: lock-in 0.3s ease-out;
+}
+@keyframes lock-in { from { opacity: 0; } }
+.lock-card { width: min(480px, 100%); display: grid; justify-items: center; gap: 6px; text-align: center; padding: 22px 18px; border-radius: 40px; background: rgba(255, 255, 255, 0.9); box-shadow: 0 8px 0 rgba(74, 59, 53, 0.08), 0 18px 30px rgba(74, 59, 53, 0.1); }
+.lock-card h1 { margin: 0; font-size: 2rem; font-weight: 900; }
+.lock-say { margin: 0; font-size: 1.5rem; font-weight: 800; }
+.lock-sub { margin: 0 0 6px; font-size: 1.05rem; opacity: 0.8; }
+.lock-zzz { margin: 0; font-size: 1.6rem; font-weight: 900; color: var(--lavender); animation: lock-float 2.4s ease-in-out infinite; }
+@keyframes lock-float { 50% { transform: translateY(-8px); } }
+.lock-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.lock-btn { min-height: 56px; padding: 0 28px; border: 0; border-radius: 28px; background: radial-gradient(120% 100% at 30% 6%, #c9e8fb, var(--sky) 60%); color: var(--ink); font-size: 1.15rem; font-weight: 800; box-shadow: 0 5px 0 var(--sky-deep), inset 0 2px 0 rgba(255, 255, 255, 0.6); transition: transform 0.12s, box-shadow 0.12s; }
+.lock-btn:active { transform: translateY(4px) scale(0.96); box-shadow: 0 1px 0 var(--sky-deep); }
+.lock-parent { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+.lock-link { min-height: 56px; padding: 0 16px; border-radius: 20px; transition: transform 0.12s, background 0.12s; border: 0; background: transparent; color: var(--ink); opacity: 0.65; font-size: 0.95rem; font-weight: 700; text-decoration: underline; }
+.lock-link:active { transform: scale(0.94); background: rgba(74, 59, 53, 0.08); }
+@media (prefers-reduced-motion: reduce) { .lock-screen, .lock-zzz { animation: none; } }
