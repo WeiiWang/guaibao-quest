@@ -261,12 +261,12 @@ describe('遊玩時間', () => {
 describe('材料與家具', () => {
   it('每件家具都有成本，且 SHOP_CATALOG 只在家具上加 cost', () => {
     const decor = SHOP_ITEMS.filter((i) => i.kind === 'decor')
-    expect(decor.length).toBe(10)
+    expect(decor.length).toBe(24)
     for (const d of decor) {
       expect(DECOR_COSTS[d.id], d.id).toBeDefined()
       expect(SHOP_CATALOG.find((i) => i.id === d.id)?.cost).toEqual(DECOR_COSTS[d.id])
     }
-    expect(SHOP_CATALOG.filter((i) => i.kind !== 'decor').every((i) => !i.cost)).toBe(true)
+    expect(SHOP_CATALOG.filter((i) => i.kind !== 'decor' && i.kind !== 'theme').every((i) => !i.cost)).toBe(true)
   })
   it('canCraft：材料不足回報差多少；已擁有不能再做', () => {
     const plant = SHOP_CATALOG.find((i) => i.id === 'decor-plant')!

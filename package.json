@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "e2e": "node scripts/e2e-room.mjs",
     "e2e:adventure": "node scripts/e2e-adventure.mjs",
-    "gen:questions": "node scripts/gen-questions.mjs"
+    "gen:questions": "node scripts/gen-questions.mjs",
+    "e2e:content": "node scripts/e2e-content.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",

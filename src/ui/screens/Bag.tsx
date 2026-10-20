@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
-import { artName, FOOD_EMOJI } from '../../art/items'
+import { artName, DECOR_EMOJI, FOOD_EMOJI, isArtworkId } from '../../art/items'
+import { GalleryFrame } from '../components/GalleryFrame'
 import { Icon } from '../components/Icon'
 import { ScreenHeader } from '../components/Header'
 import type { Screen } from '../App'
@@ -14,7 +15,7 @@ export function BagScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const owned = inventory
     .filter((v) => v.qty > 0)
     .map((v) => ({ inv: v, item: shopItems.find((i) => i.id === v.itemId) }))
-    .filter((x) => x.item && x.item.kind !== 'coloring')
+    .filter((x) => x.item && x.item.kind !== 'coloring' && x.item.kind !== 'theme')
 
   return (
     <main className="screen theme-bubblegum">
@@ -27,7 +28,11 @@ export function BagScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
           return (
             <li key={it.id} className="card shop-item art-card">
               <div className="shop-art">
-                <Icon name={artName(it)} emoji={FOOD_EMOJI[it.asset]} alt={it.name} className="shop-sprite" />
+                {isArtworkId(it.id) ? (
+                  <div className="shop-sprite"><GalleryFrame artId={it.id} /></div>
+                ) : (
+                  <Icon name={artName(it)} emoji={it.kind === 'food' ? FOOD_EMOJI[it.asset] : DECOR_EMOJI[it.asset]} alt={it.name} className="shop-sprite" />
+                )}
               </div>
               <div className="shop-name">{it.name}</div>
               {it.kind === 'food' ? (

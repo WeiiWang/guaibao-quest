@@ -73,3 +73,39 @@ export function ray(cx: number, cy: number, r1: number, r2: number, deg: number,
   }
   return poly([pt(r1, deg - half), pt(r2, deg), pt(r1, deg + half)])
 }
+
+/** 從 (x1,y1) 到 (x2,y2) 的直條（旋轉長方形），w 為寬度 */
+export function bar(x1: number, y1: number, x2: number, y2: number, w: number): string {
+  const len = Math.hypot(x2 - x1, y2 - y1) || 1
+  const nx = (-(y2 - y1) / len) * (w / 2)
+  const ny = ((x2 - x1) / len) * (w / 2)
+  return poly([
+    [x1 + nx, y1 + ny],
+    [x2 + nx, y2 + ny],
+    [x2 - nx, y2 - ny],
+    [x1 - nx, y1 - ny],
+  ])
+}
+
+/** 直條上的一段（t0–t1 為 0–1 的位置），可以比整條更寬，用來畫金箍棒的環 */
+export function barAt(x1: number, y1: number, x2: number, y2: number, t0: number, t1: number, w: number): string {
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+  return bar(lerp(x1, x2, t0), lerp(y1, y2, t0), lerp(x1, x2, t1), lerp(y1, y2, t1), w)
+}
+
+/** 火焰：底邊中心 (x,y)、半寬 w、高 h */
+export function flame(x: number, y: number, w: number, h: number): string {
+  return (
+    `M${f(x - w)} ${f(y)}Q${f(x - w)} ${f(y - h * 0.4)} ${f(x - w * 0.25)} ${f(y - h * 0.62)}` +
+    `Q${f(x - w * 0.1)} ${f(y - h * 0.82)} ${f(x + w * 0.1)} ${f(y - h)}` +
+    `Q${f(x + w)} ${f(y - h * 0.55)} ${f(x + w)} ${f(y)}Z`
+  )
+}
+
+/** 水滴 / 桃子形：頂點在上，圓肚在下 */
+export function drop(cx: number, cy: number, r: number): string {
+  return (
+    `M${f(cx)} ${f(cy - r * 1.5)}Q${f(cx + r * 0.2)} ${f(cy - r * 0.7)} ${f(cx + r)} ${f(cy)}` +
+    `A${f(r)} ${f(r)} 0 1 1 ${f(cx - r)} ${f(cy)}Q${f(cx - r * 0.2)} ${f(cy - r * 0.7)} ${f(cx)} ${f(cy - r * 1.5)}Z`
+  )
+}

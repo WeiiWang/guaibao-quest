@@ -39,3 +39,22 @@
 .ws-link { border: 0; background: transparent; font: inherit; font-weight: 900; text-decoration: underline; color: var(--ink); min-height: 56px; padding: 0 12px; border-radius: 20px; transition: transform 0.12s; }
 .ws-link:active { transform: scale(0.94); background: var(--butter-soft); }
 @media (prefers-reduced-motion: reduce) { .ws-btn, .ws-link { transition: none; } }
+
+/* v3：壁紙 / 地板色卡、使用中狀態 */
+.ws-art-theme { padding: 0; overflow: hidden; background: #fff; position: relative; }
+.rb-swatch { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; }
+/* 色卡把房間的壁紙 / 地板圖樣縮小，才看得出花紋 */
+.rb-swatch .rb-wall, .rb-swatch .rb-floor { position: absolute; left: 0; top: 0; right: auto; bottom: auto; width: 250%; height: 250%; transform: scale(0.4); transform-origin: 0 0; }
+.ws-card.active { box-shadow: 0 0 0 4px var(--butter-deep), 0 6px 0 color-mix(in srgb, var(--butter-deep) 28%, transparent), var(--shadow-soft); }
+.ws-free { font-weight: 800; color: var(--ink-soft); font-size: 0.95rem; }
+
+/* 手機：一排兩張 */
+@media (max-width: 420px) {
+  .ws-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ws-card { padding: 10px 6px 12px; border-radius: 22px; }
+  .ws-art { width: 96px; height: 96px; }
+  .ws-name { font-size: 1.05rem; }
+  .ws-cost { gap: 4px; }
+  .ws-cost-item { padding-right: 8px; }
+  .ws-btn { font-size: 1rem; min-height: 52px; }
+}

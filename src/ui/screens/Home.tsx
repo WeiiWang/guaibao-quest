@@ -98,7 +98,8 @@ export function Home({ childName, now, go, initialEdit }: Props) {
   const foods = shopItems.filter((i) => i.kind === 'food').map((f) => ({ item: f, qty: qtyOf(f.id) }))
   const order = (id: string) => SHOP_ITEMS.findIndex((i) => i.id === id)
   const ownedDecor = shopItems.filter((i) => i.kind === 'decor' && qtyOf(i.id) > 0).sort((a, b) => order(a.id) - order(b.id))
-  foods.sort((a, b) => order(a.item.id) - order(b.item.id))
+  // 食物變 10 種：背包有的排前面，其餘照價格順序
+  foods.sort((a, b) => Number(b.qty > 0) - Number(a.qty > 0) || order(a.item.id) - order(b.item.id))
 
   const edit = !!initialEdit
 

@@ -1,0 +1,20 @@
+/* 商店（v3）：食物改成緊湊網格，顯示飽足值（愛心）與「今天最喜歡」 */
+.food-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.food-grid .shop-art { height: 96px; }
+.food-grid .shop-sprite { width: 76px; height: 82px; }
+.food-grid .shop-item { position: relative; padding-top: 12px; gap: 6px; }
+@media (min-width: 900px) { .food-grid { grid-template-columns: repeat(5, 1fr); } }
+@media (max-width: 420px) { .food-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+
+.hearts { display: flex; gap: 3px; align-items: center; justify-content: center; height: 18px; }
+.hearts i {
+  display: block; width: 16px; height: 14px; background: rgba(74, 59, 53, 0.16);
+  clip-path: path('M8 14 C-4 6 1 -2 8 3.5 C15 -2 20 6 8 14 Z');
+}
+.hearts i.on { background: var(--bubblegum); }
+.shop-item.favorite { background: linear-gradient(180deg, var(--butter-soft), var(--white) 65%); box-shadow: 0 0 0 3px var(--butter), 0 6px 0 var(--butter-deep); }
+.fav-badge {
+  position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-3deg); white-space: nowrap; z-index: 2;
+  padding: 3px 12px; border-radius: 999px; font-size: 0.85rem; font-weight: 900; color: var(--ink);
+  background: var(--butter); box-shadow: 0 3px 0 var(--butter-deep);
+}

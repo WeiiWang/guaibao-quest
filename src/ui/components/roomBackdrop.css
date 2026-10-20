@@ -1,2 +1,197 @@
-/* 房間背景容器：與 .room 同大小，疊在最底層 */
-.room-backdrop { position: absolute; inset: 0; pointer-events: none; }
+/* 房間背景（v3）：牆面 / 壁紙、窗景、地板、光線。與 .room 同大小，疊在最底層。
+   牆面與地板的分界在 62%（與 domain/room.ts 的 FLOOR_TOP 一致）。 */
+.room-backdrop {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+  /* 每個時段的色票；下面的元件都吃這些變數 */
+  --sky-top: #8fd0f8; --sky-bot: #e6f6ff;
+  --hill-far: #b4e3a8; --hill-near: #8fd08a; --tree: #6fbf6f; --trunk: #a8794f;
+  --beam: rgba(255, 249, 214, 0.6); --tint: transparent; --wall-shade: rgba(255, 255, 255, 0.4);
+  --floor-shade: rgba(130, 70, 20, 0.16);
+  --wall-bg: #ffe4c4; --wainscot: #fff1de; --wainscot-line: #f6dfc2;
+}
+.room-backdrop.tod-dusk {
+  --sky-top: #6a72d6; --sky-bot: #ffc58a;
+  --hill-far: #a98ab5; --hill-near: #7d6aa0; --tree: #5d4f88; --trunk: #4a3d6c;
+  --beam: rgba(255, 168, 92, 0.52); --tint: rgba(255, 140, 60, 0.2); --wall-shade: rgba(255, 190, 120, 0.4);
+  --floor-shade: rgba(150, 60, 20, 0.22);
+}
+.room-backdrop.tod-night {
+  --sky-top: #0d1238; --sky-bot: #2d3d83;
+  --hill-far: #1d2c5d; --hill-near: #14204a; --tree: #0f1a3d; --trunk: #0b1330;
+  --beam: rgba(170, 195, 255, 0.24); --tint: rgba(18, 26, 86, 0.5); --wall-shade: rgba(140, 160, 255, 0.12);
+  --floor-shade: rgba(10, 14, 50, 0.3);
+}
+
+/* ---------- 牆面 + 壁紙 ---------- */
+.rb-wall { position: absolute; left: 0; right: 0; top: 0; bottom: 0; background: var(--wall-bg); }
+.rb-wall-light { position: absolute; left: 0; right: 0; top: 0; height: 66%; background: linear-gradient(180deg, var(--wall-shade), rgba(255, 255, 255, 0) 74%); }
+/* 天花板邊緣陰影 */
+.rb-ceiling { position: absolute; left: 0; right: 0; top: 0; height: 8%; background: linear-gradient(180deg, rgba(110, 60, 20, 0.2), rgba(110, 60, 20, 0)); }
+.rb-ceiling::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 10px; background: linear-gradient(180deg, rgba(255, 248, 236, 0.9), rgba(255, 248, 236, 0.1)); opacity: 0.55; }
+
+.wall-cream .rb-wall {
+  background:
+    radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.6) 2px, transparent 2.5px) 0 0 / 30px 30px,
+    linear-gradient(180deg, #ffe9cf 0%, #ffdcb6 100%);
+}
+.wall-mint { --wall-bg: #e2f7ee; --wainscot: #f2fcf7; --wainscot-line: #cdeee0; }
+.wall-mint .rb-wall { background: repeating-linear-gradient(90deg, #d4f2e4 0 46px, #e8f9f1 46px 92px); }
+.wall-pink { --wall-bg: #ffd9e5; --wainscot: #fff0f5; --wainscot-line: #f8cfdd; }
+.wall-pink .rb-wall {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.92) 7px, transparent 8px) 0 0 / 54px 54px,
+    radial-gradient(circle, rgba(255, 255, 255, 0.92) 7px, transparent 8px) 27px 27px / 54px 54px,
+    #ffc6d8;
+}
+.wall-clouds { --wall-bg: #cfeaff; --wainscot: #f0f8ff; --wainscot-line: #cfe4f6; }
+.wall-clouds .rb-wall {
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='110' viewBox='0 0 150 110'><g fill='%23ffffff' opacity='.92'><ellipse cx='42' cy='34' rx='26' ry='12'/><circle cx='28' cy='28' r='11'/><circle cx='50' cy='24' r='14'/><ellipse cx='114' cy='86' rx='22' ry='10'/><circle cx='104' cy='80' r='10'/><circle cx='122' cy='76' r='12'/></g></svg>") 0 0 / 150px 110px,
+    linear-gradient(180deg, #a9d8fb, #d9efff);
+}
+.wall-banana { --wall-bg: #fff3b8; --wainscot: #fff9d9; --wainscot-line: #f4e49a; }
+.wall-banana .rb-wall {
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'><g stroke='%23d9a21c' stroke-width='1.6' stroke-linejoin='round'><path d='M10 28 Q36 14 46 44 Q24 36 10 28 Z' fill='%23ffd23f'/><path d='M58 84 Q84 70 94 100 Q72 92 58 84 Z' fill='%23ffd23f' transform='translate(-22 -22)'/></g><circle cx='11' cy='28' r='2.2' fill='%238a5a2b'/><circle cx='37' cy='62' r='2.2' fill='%238a5a2b'/></svg>") 0 0 / 96px 96px,
+    linear-gradient(180deg, #fff6c8, #ffec96);
+}
+.wall-stars { --wall-bg: #35479b; --wainscot: #46589f; --wainscot-line: #3a4b95; --wall-shade: rgba(170, 190, 255, 0.28); }
+.wall-stars .rb-wall {
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110' viewBox='0 0 110 110'><polygon points='28,12 31,22 42,22 33,28 36,38 28,32 20,38 23,28 14,22 25,22' fill='%23ffe27a'/><polygon points='86,66 88,72 95,72 89,76 91,83 86,79 81,83 83,76 77,72 84,72' fill='%23fff3b0'/><circle cx='78' cy='20' r='2' fill='%23ffffff'/><circle cx='12' cy='80' r='2' fill='%23ffffff'/><circle cx='58' cy='96' r='1.6' fill='%23cfd8ff'/><circle cx='52' cy='50' r='1.6' fill='%23cfd8ff'/></svg>") 0 0 / 110px 110px,
+    linear-gradient(180deg, #2c3d8c, #4a5fc0);
+}
+
+/* 護牆板（牆面下 15%） */
+.rb-wainscot {
+  position: absolute; left: 0; right: 0; top: calc(62% - 15%); height: 15%;
+  background: repeating-linear-gradient(90deg, var(--wainscot) 0 70px, var(--wainscot-line) 70px 73px), var(--wainscot);
+  border-top: 6px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 -4px 8px rgba(120, 70, 30, 0.1), inset 0 6px 8px rgba(120, 70, 30, 0.08);
+}
+
+/* ---------- 窗戶 + 窗景 ---------- */
+.rb-window-set { position: absolute; top: 12%; height: 30%; aspect-ratio: 1.2 / 1; }
+.rb-window {
+  position: absolute; inset: 0; z-index: 1; border-radius: 22px; overflow: hidden;
+  border: 10px solid #fff8ec; background: var(--sky-bot);
+  box-shadow: 0 7px 0 #ecd2a8, 0 18px 24px rgba(120, 70, 30, 0.22), inset 0 0 0 3px #c2e5f8, inset 0 10px 18px rgba(60, 40, 20, 0.25);
+}
+.rb-bar { position: absolute; inset: 0; z-index: 4; background: linear-gradient(#fff8ec, #fff8ec) center / 8px 100% no-repeat, linear-gradient(#fff8ec, #fff8ec) center / 100% 8px no-repeat; }
+/* 窗台 */
+.rb-sill {
+  position: absolute; left: -6%; right: -6%; bottom: -9%; height: 7%; border-radius: 8px;
+  background: linear-gradient(180deg, #fffaf0, #f0d9b5); box-shadow: 0 5px 8px rgba(120, 70, 30, 0.25), inset 0 2px 0 #fff;
+  z-index: 2;
+}
+.rb-drape { position: absolute; top: -9%; bottom: -6%; width: 30%; z-index: 3; background: linear-gradient(90deg, #ffe9a0, #ffd96a 45%, #ffe9a0 70%, #f7cf5c); box-shadow: 0 8px 12px rgba(120, 70, 30, 0.2), inset 0 0 0 2px rgba(255, 255, 255, 0.35); }
+.rb-drape.l { left: -17%; border-radius: 40% 55% 30% 60% / 12% 8% 22% 18%; }
+.rb-drape.r { right: -17%; border-radius: 55% 40% 60% 30% / 8% 12% 18% 22%; }
+.rb-drape::after { content: ''; position: absolute; left: 0; right: 0; top: 56%; height: 9%; background: #fff3c9; border-radius: 6px; box-shadow: 0 3px 0 rgba(224, 165, 44, 0.45); }
+.tod-night .rb-drape { filter: brightness(0.62) saturate(0.8); }
+.tod-dusk .rb-drape { filter: brightness(0.94) saturate(1.1); }
+
+.rb-scene { position: absolute; inset: 0; overflow: hidden; }
+.rb-sky { position: absolute; inset: 0; background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bot) 100%); }
+.tod-dusk .rb-sky { background: linear-gradient(180deg, #5b5fc7 0%, #b27bc2 38%, #ff9a7a 70%, #ffd08a 100%); }
+.tod-night .rb-sky { background: linear-gradient(180deg, #080c2c 0%, #1a2560 60%, #2d3d83 100%); }
+.rb-hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 56%; }
+.rb-hills .hill-far { fill: var(--hill-far); }
+.rb-hills .hill-near { fill: var(--hill-near); }
+.rb-hills .tree-trunk { fill: var(--trunk); }
+.rb-hills .tree-crown { fill: var(--tree); }
+
+.rb-cloud { position: absolute; display: block; width: 38%; height: 16%; border-radius: 999px; background: rgba(255, 255, 255, 0.95); box-shadow: 0 3px 0 rgba(180, 210, 235, 0.35); animation: rb-drift 56s linear infinite; left: -40%; }
+.rb-cloud::before, .rb-cloud::after { content: ''; position: absolute; border-radius: 50%; background: inherit; }
+.rb-cloud::before { width: 42%; height: 120%; left: 16%; top: -58%; }
+.rb-cloud::after { width: 34%; height: 100%; right: 14%; top: -40%; }
+.rb-cloud.c1 { top: 16%; }
+.rb-cloud.c2 { top: 36%; width: 28%; height: 12%; animation-duration: 74s; animation-delay: -30s; }
+.rb-cloud.c3 { top: 8%; width: 22%; height: 10%; animation-duration: 90s; animation-delay: -62s; opacity: 0.85; }
+.tod-dusk .rb-cloud { background: rgba(255, 214, 190, 0.92); box-shadow: 0 3px 0 rgba(200, 110, 110, 0.3); }
+@keyframes rb-drift { from { transform: translateX(0); } to { transform: translateX(380%); } }
+
+.rb-daysun { position: absolute; right: 12%; top: 12%; width: 20%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #fffbe0 30%, #ffe680 62%, rgba(255, 230, 128, 0) 72%); animation: rb-pulse 6s ease-in-out infinite; }
+.rb-sun { position: absolute; left: 50%; bottom: 20%; width: 34%; aspect-ratio: 1; margin-left: -17%; border-radius: 50%; background: radial-gradient(circle, #fff3c4 20%, #ffb15c 50%, rgba(255, 150, 80, 0.6) 62%, rgba(255, 150, 80, 0) 74%); }
+.rb-moon { position: absolute; right: 16%; top: 14%; width: 20%; aspect-ratio: 1; border-radius: 50%; background: transparent; box-shadow: inset -7px -3px 0 0 #fff6c9, 0 0 14px 2px rgba(255, 246, 201, 0.55); transform: rotate(-12deg); }
+.rb-stars { position: absolute; inset: 0; background-repeat: repeat; }
+.rb-stars-a {
+  background:
+    radial-gradient(circle 1.6px at 50% 50%, #fff 98%, transparent) 14% 18% / 6px 6px no-repeat,
+    radial-gradient(circle 1.2px at 50% 50%, #fff 98%, transparent) 30% 40% / 6px 6px no-repeat,
+    radial-gradient(circle 1.8px at 50% 50%, #ffeaa0 98%, transparent) 52% 12% / 6px 6px no-repeat,
+    radial-gradient(circle 1.2px at 50% 50%, #fff 98%, transparent) 70% 46% / 6px 6px no-repeat,
+    radial-gradient(circle 1.6px at 50% 50%, #fff 98%, transparent) 86% 30% / 6px 6px no-repeat;
+  animation: rb-twinkle 3.2s ease-in-out infinite;
+}
+.rb-stars-b {
+  background:
+    radial-gradient(circle 1.4px at 50% 50%, #fff 98%, transparent) 22% 52% / 6px 6px no-repeat,
+    radial-gradient(circle 1.8px at 50% 50%, #ffeaa0 98%, transparent) 40% 22% / 6px 6px no-repeat,
+    radial-gradient(circle 1.2px at 50% 50%, #fff 98%, transparent) 62% 30% / 6px 6px no-repeat,
+    radial-gradient(circle 1.6px at 50% 50%, #fff 98%, transparent) 78% 12% / 6px 6px no-repeat,
+    radial-gradient(circle 1.2px at 50% 50%, #fff 98%, transparent) 8% 36% / 6px 6px no-repeat;
+  animation: rb-twinkle 4.4s ease-in-out infinite 1.4s;
+}
+@keyframes rb-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes rb-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+
+/* ---------- 地板 ---------- */
+.rb-floor {
+  position: absolute; left: 0; right: 0; top: 62%; bottom: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0) 34%, var(--floor-shade) 100%),
+    repeating-linear-gradient(90deg, #efc08a 0 150px, #e3b07a 150px 152px, #f2c995 152px 300px, #e3b07a 300px 302px);
+}
+.floor-oak .rb-floor {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0, rgba(255, 255, 255, 0) 34%, var(--floor-shade) 100%),
+    repeating-linear-gradient(0deg, transparent 0 78px, rgba(190, 160, 110, 0.28) 78px 80px),
+    repeating-linear-gradient(90deg, #f7ead3 0 130px, #e5d0aa 130px 132px, #fbf1de 132px 262px, #e5d0aa 262px 264px);
+}
+.floor-checker .rb-floor {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0) 34%, var(--floor-shade) 100%),
+    repeating-conic-gradient(#ffd0e0 0 25%, #d4f3e5 0 50%) 0 0 / 120px 120px;
+}
+.floor-grass .rb-floor {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0, rgba(255, 255, 255, 0) 34%, var(--floor-shade) 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='72' height='48' viewBox='0 0 72 48'><g fill='%2376c157'><path d='M6 46 L11 26 L16 46 Z'/><path d='M22 46 L29 20 L36 46 Z'/><path d='M46 46 L51 30 L56 46 Z'/></g><g fill='%23ffffff' opacity='.85'><circle cx='60' cy='12' r='3'/><circle cx='14' cy='10' r='2.4'/></g><circle cx='60' cy='12' r='1.2' fill='%23ffcf40'/></svg>") 0 0 / 72px 48px,
+    #9ddc7e;
+}
+.rb-baseboard { position: absolute; left: 0; right: 0; top: calc(62% - 10px); height: 22px; background: linear-gradient(180deg, #fff8ea, #f7e3c4); border-bottom: 4px solid #deb27c; box-shadow: 0 5px 8px rgba(120, 70, 30, 0.18); }
+.floor-grass .rb-baseboard { background: linear-gradient(180deg, #fffdf2, #f0e6bf); border-bottom-color: #8bc36c; }
+
+/* ---------- 光線 ---------- */
+/* 窗戶投在地板上的光斑：白天直射、傍晚偏橘斜長、夜晚淡淡月光 */
+.rb-beam { position: absolute; top: 62%; bottom: 0; width: 15%; margin-left: -1%; background: linear-gradient(180deg, var(--beam), rgba(255, 255, 255, 0)); clip-path: polygon(24% 0, 100% 0, 76% 100%, 0 100%); }
+.tod-dusk .rb-beam { margin-left: 3%; width: 20%; clip-path: polygon(10% 0, 80% 0, 100% 100%, 30% 100%); }
+.tod-night .rb-beam { margin-left: 0; width: 13%; }
+.rb-tint { position: absolute; inset: 0; background: var(--tint); }
+.rb-glow { position: absolute; width: 22%; aspect-ratio: 1; margin: -11% 0 0 -11%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 214, 120, 0.7) 0, rgba(255, 190, 90, 0.32) 38%, rgba(255, 190, 90, 0) 70%); mix-blend-mode: screen; animation: rb-flicker 5s ease-in-out infinite; }
+@keyframes rb-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.82; } }
+
+/* 漂浮的灰塵光點 */
+.rb-dust { position: absolute; inset: 0; }
+.rb-dust i { position: absolute; display: block; border-radius: 50%; background: rgba(255, 255, 255, 0.75); box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.55); animation: rb-float linear infinite; opacity: 0; }
+.tod-dusk .rb-dust i { background: rgba(255, 220, 160, 0.8); box-shadow: 0 0 6px 1px rgba(255, 190, 110, 0.55); }
+.tod-night .rb-dust i { background: rgba(200, 215, 255, 0.7); box-shadow: 0 0 6px 1px rgba(150, 180, 255, 0.5); }
+@keyframes rb-float {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 0.85; }
+  50% { transform: translate(14px, -22px); opacity: 0.6; }
+  85% { opacity: 0.8; }
+  100% { transform: translate(-6px, -48px); opacity: 0; }
+}
+
+/* 蓋在家具上方的整體色調（RoomAmbient，選用） */
+.room-ambient { position: absolute; inset: 0; pointer-events: none; z-index: 845; }
+.room-ambient.tod-dusk { background: rgba(255, 150, 70, 0.14); mix-blend-mode: multiply; }
+.room-ambient.tod-night { background: rgba(20, 28, 90, 0.34); mix-blend-mode: multiply; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rb-cloud, .rb-daysun, .rb-stars, .rb-glow, .rb-dust i { animation: none; }
+  .rb-dust i { opacity: 0.5; }
+  .rb-cloud.c1 { left: 8%; } .rb-cloud.c2 { left: 52%; } .rb-cloud.c3 { left: 30%; }
+}

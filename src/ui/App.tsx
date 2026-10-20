@@ -17,6 +17,8 @@ import { StageScreen } from './screens/adventure/StageScreen'
 import { Ceremony } from './screens/adventure/Ceremony'
 import { WorkshopScreen } from './screens/Workshop'
 import { LockScreen, PlayTimeWatcher } from './components/PlayTime'
+import { BackdropPreview, parseBackdropHash } from './screens/BackdropPreview'
+import { GalleryScreen } from './screens/Gallery'
 
 export type Screen =
   | { name: 'home'; edit?: boolean }
@@ -31,6 +33,8 @@ export type Screen =
   | { name: 'map' }
   | { name: 'stage'; chapterId: string; station: number; ceremony?: boolean }
   | { name: 'workshop' }
+  | { name: 'gallery' }
+  | { name: 'backdrop'; hash: string }
 
 /** 兒童端畫面中，時間到會被鎖住的（學習與餵食）；任務、著色、家長區不鎖 */
 const LOCKABLE: Screen['name'][] = ['home', 'map', 'stage', 'workshop']
@@ -40,6 +44,8 @@ function screenFromHash(): Screen {
   const h = typeof location === 'undefined' ? '' : location.hash.replace(/^#\/?/, '')
   if (h === 'map') return { name: 'map' }
   if (h === 'workshop') return { name: 'workshop' }
+  if (h === 'gallery') return { name: 'gallery' }
+  if (h.startsWith('backdrop')) return { name: 'backdrop', hash: h }
   return { name: 'home' }
 }
 
@@ -118,10 +124,10 @@ function Main({ childName }: { childName: string }) {
         body = <BagScreen onBack={home} go={go} />
         break
       case 'coloring':
-        body = <ColoringListScreen onBack={home} onOpen={(pageId) => go({ name: 'paint', pageId })} />
+        body = <ColoringListScreen onBack={home} onOpen={(pageId) => go({ name: 'paint', pageId })} onGallery={() => go('gallery')} />
         break
       case 'paint':
-        body = <ColoringPlayScreen pageId={screen.pageId} onBack={() => go('coloring')} />
+        body = <ColoringPlayScreen pageId={screen.pageId} onBack={() => go('coloring')} go={go} />
         break
       case 'parent':
         body = <ParentArea onExit={home} />
@@ -146,6 +152,14 @@ function Main({ childName }: { childName: string }) {
       case 'workshop':
         body = <WorkshopScreen onBack={home} go={go} />
         break
+      case 'gallery':
+        body = <GalleryScreen onBack={() => go('coloring')} go={go} />
+        break
+      case 'backdrop': {
+        const p = parseBackdropHash(screen.hash)
+        body = p ? <BackdropPreview {...p} /> : null
+        break
+      }
     }
   }
 

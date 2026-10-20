@@ -1,0 +1,3 @@
+.bp { position: fixed; inset: 0; overflow: hidden; background: #333; }
+.bp-room { position: relative; height: 100%; width: 250vw; }
+.bp-item { position: absolute; object-fit: contain; }

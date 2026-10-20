@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { SHOP_ITEMS } from './constants'
+import { FOOD_EFFECTS, FOOD_IDS, foodHearts, SHOP_ITEMS } from './constants'
 import { canBuy } from './shop'
 import { hashPin, checkPin, isValidPin } from './pin'
 import { sha256Hex } from './sha256'
@@ -19,10 +19,35 @@ describe('購買', () => {
     expect(canBuy(500, 1, item('coloring-fish'))).toEqual({ ok: false, reason: 'owned' })
   })
   it('商店內容符合規格', () => {
-    expect(SHOP_ITEMS.filter((i) => i.kind === 'decor')).toHaveLength(10)
+    expect(SHOP_ITEMS.filter((i) => i.kind === 'decor')).toHaveLength(24)
+    expect(SHOP_ITEMS.filter((i) => i.kind === 'food')).toHaveLength(10)
+    expect(SHOP_ITEMS.filter((i) => i.kind === 'theme' && i.themeSlot === 'wall')).toHaveLength(5)
+    expect(SHOP_ITEMS.filter((i) => i.kind === 'theme' && i.themeSlot === 'floor')).toHaveLength(3)
     expect(SHOP_ITEMS.filter((i) => i.kind === 'decor').every((i) => i.slot === 'wall' || i.slot === 'floor')).toBe(true)
-    expect(SHOP_ITEMS.filter((i) => i.kind === 'coloring')).toHaveLength(10)
-    expect(SHOP_ITEMS.filter((i) => i.kind === 'decor').every((i) => i.price >= 40 && i.price <= 200)).toBe(true)
+    expect(SHOP_ITEMS.filter((i) => i.kind === 'coloring')).toHaveLength(18)
+    expect(SHOP_ITEMS.filter((i) => i.kind === 'decor').every((i) => i.price >= 40 && i.price <= 300)).toBe(true)
+  })
+  it('食物：10 種、價格與飽足值都遞增（蛋糕最貴、飽足最多並會跳舞）', () => {
+    const foods = SHOP_ITEMS.filter((i) => i.kind === 'food')
+    expect(foods.map((f) => f.id)).toEqual([...FOOD_IDS])
+    for (let i = 1; i < foods.length; i++) {
+      expect(foods[i].price).toBeGreaterThan(foods[i - 1].price)
+      expect(FOOD_EFFECTS[foods[i].id].hunger).toBeGreaterThan(FOOD_EFFECTS[foods[i - 1].id].hunger)
+    }
+    expect(foods.at(-1)?.id).toBe('cake')
+    expect(FOOD_EFFECTS.cake).toMatchObject({ hunger: 100, special: 'dance' })
+    expect(Object.keys(FOOD_EFFECTS).sort()).toEqual([...FOOD_IDS].sort())
+  })
+  it('飽足值換算愛心 1–5 顆', () => {
+    expect(foodHearts('carrot')).toBe(1)
+    expect(foodHearts('banana')).toBe(2)
+    expect(foodHearts('peach')).toBe(3)
+    expect(foodHearts('cake')).toBe(5)
+    expect(foodHearts('???')).toBe(0)
+  })
+  it('商品 id 不重複', () => {
+    const ids = SHOP_ITEMS.map((i) => i.id)
+    expect(new Set(ids).size).toBe(ids.length)
   })
 })
 

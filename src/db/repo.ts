@@ -16,14 +16,19 @@ import { balanceOf, checkPenalty, grantPoints } from '../domain/points'
 import { canBuy } from '../domain/shop'
 import { clampTaskPoints, instancesToCreate, transition } from '../domain/tasks'
 import type {
+  ColoringProgress,
   Pet,
   PointLedger,
+  RoomThemeChoice,
   Settings,
   Stage,
   TaskTemplate,
 } from '../domain/types'
 import { now as clockNow } from '../domain/clock'
-import { spriteSize } from '../art/items'
+import { isArtworkId, spriteSize } from '../art/items'
+import { getColoringPage } from '../art/coloring/pages'
+import { checkApplyTheme, resolveTheme } from '../domain/theme'
+import { docOf, type PaintDoc } from '../domain/coloring'
 import { clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
 import { getChapter } from '../learning/chapter'
@@ -321,6 +326,12 @@ export class Repo {
   // ---------- 房間裝飾 ----------
   /** 驗證擁有該裝飾，回傳規格；否則回 null */
   private async ownedDecor(itemId: string) {
+    // 掛到房間的畫廊作品（art-<galleryId>）：牆面裝飾，擁有 = 背包有紀錄
+    if (isArtworkId(itemId)) {
+      const inv = await this.db.inventory.get(itemId)
+      if (!inv || inv.qty < 1) return null
+      return { item: undefined, slot: 'wall' as const, hf: spriteSize(itemId).rows / ROOM_CELLS_H }
+    }
     const item = SHOP_ITEMS.find((i) => i.id === itemId)
     if (!item || item.kind !== 'decor' || !item.slot) return null
     const inv = await this.db.inventory.get(itemId)
@@ -611,10 +622,10 @@ export class Repo {
     return balanceOfMaterials(await this.db.materialLedger.toArray())
   }
 
-  /** 用材料做家具：扣材料、放進背包（可到首頁佈置）。一種家具只能有一件。 */
+  /** 用材料做家具 / 壁紙 / 地板：扣材料、放進背包（家具到首頁佈置；壁紙地板在工坊套用）。一種只能有一件。 */
   async craftFurniture(itemId: string, now = this.clock()): Promise<Result> {
     const item = SHOP_CATALOG.find((i) => i.id === itemId)
-    if (!item || item.kind !== 'decor' || !item.cost) return { ok: false, error: '這個不能製作' }
+    if (!item || (item.kind !== 'decor' && item.kind !== 'theme') || !item.cost) return { ok: false, error: '這個不能製作' }
     const cost = item.cost
     const d = this.db
     return d.transaction('rw', [d.materialLedger, d.inventory], async () => {
@@ -642,9 +653,106 @@ export class Repo {
     })
   }
 
-  // ---------- 著色 ----------
+  // ---------- 房間主題（壁紙 / 地板） ----------
+  /** 套用中的主題（已確認擁有，否則退回預設） */
+  async getRoomTheme(): Promise<Required<RoomThemeChoice>> {
+    const [settings, inv] = await Promise.all([this.getSettings(), this.db.inventory.toArray()])
+    return resolveTheme(settings?.roomTheme, inv)
+  }
+
+  /** 套用已擁有的壁紙 / 地板；預設主題永遠可套用 */
+  async applyTheme(themeId: string): Promise<Result> {
+    const d = this.db
+    return d.transaction('rw', [d.settings, d.inventory], async () => {
+      const check = checkApplyTheme(themeId, await d.inventory.toArray())
+      if (!check.ok) return { ok: false, error: check.error } as const
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s) return { ok: false, error: '還沒完成初始設定' } as const
+      await d.settings.update(SETTINGS_ID, { roomTheme: { ...(s.roomTheme ?? {}), [check.slot]: themeId } })
+      return { ok: true } as const
+    })
+  }
+
+  // ---------- 著色 / 畫廊 ----------
+  /** 儲存進行中的作品（填色 + 筆刷 + 貼紙） */
+  async saveColoringDoc(pageId: string, doc: PaintDoc, now = this.clock()): Promise<void> {
+    await this.db.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, updatedAt: now })
+  }
+
+  /** 只更新填色（保留筆刷與貼紙） */
   async saveColoring(pageId: string, fills: Record<string, string>, now = this.clock()): Promise<void> {
-    await this.db.coloring.put({ pageId, fills, updatedAt: now })
+    const prev = await this.db.coloring.get(pageId)
+    await this.db.coloring.put({ ...prev, pageId, fills, updatedAt: now })
+  }
+
+  async getColoringDoc(pageId: string): Promise<PaintDoc> {
+    return docOf(await this.db.coloring.get(pageId))
+  }
+
+  /** 完成：把目前的作品存成畫廊作品（png 是完成圖的 data URL）。回傳畫廊 id */
+  async completeColoring(pageId: string, doc: PaintDoc, png: string, now = this.clock()): Promise<Result<{ galleryId: string }>> {
+    if (!getColoringPage(pageId)) return { ok: false, error: '找不到這張著色頁' }
+    if (!png.startsWith('data:image/')) return { ok: false, error: '完成圖不正確' }
+    const galleryId = newId()
+    const d = this.db
+    await d.transaction('rw', d.coloring, async () => {
+      await d.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, updatedAt: now })
+      await d.coloring.put({
+        pageId: `g:${galleryId}`,
+        basePageId: pageId,
+        fills: doc.fills,
+        strokes: doc.strokes,
+        stickers: doc.stickers,
+        png,
+        createdAt: now,
+        updatedAt: now,
+      })
+    })
+    return { ok: true, galleryId }
+  }
+
+  /** 畫廊作品，新的在前 */
+  async listGallery(): Promise<ColoringProgress[]> {
+    const all = await this.db.coloring.toArray()
+    return all.filter((w) => w.pageId.startsWith('g:')).sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))
+  }
+
+  /** 把畫廊作品掛到房間（牆面裝飾 art-<galleryId>）。已掛過就維持原位。 */
+  async hangArtwork(galleryId: string, now = this.clock()): Promise<Result<{ itemId: string; already: boolean }>> {
+    const d = this.db
+    return d.transaction('rw', [d.coloring, d.shopItems, d.inventory, d.placements], async () => {
+      const work = await d.coloring.get(`g:${galleryId}`)
+      if (!work) return { ok: false, error: '找不到這幅畫' } as const
+      const itemId = `art-${galleryId}`
+      const already = !!(await d.placements.get(itemId))
+      if (already) return { ok: true, itemId, already: true } as const
+      const base = work.basePageId ? getColoringPage(work.basePageId)?.name : undefined
+      await d.shopItems.put({ id: itemId, kind: 'decor', name: `我的畫：${base ?? '作品'}`, price: 0, asset: itemId, slot: 'wall' })
+      await d.inventory.put({ id: itemId, itemId, qty: 1 })
+      const hung = (await d.placements.toArray()).filter((p) => isArtworkId(p.itemId)).length
+      const size = spriteSize(itemId)
+      const hf = size.rows / ROOM_CELLS_H
+      const pos = clampPlacement('wall', 0.14 + 0.07 * (hung % 10), 0.26, 0, hf)
+      await d.placements.put({ itemId, x: pos.x, y: pos.y, z: 0, flipped: false, placedAt: now })
+      return { ok: true, itemId, already: false } as const
+    })
+  }
+
+  /** 從房間取下（回到背包，可再到佈置模式擺放） */
+  async unhangArtwork(galleryId: string): Promise<void> {
+    await this.db.placements.delete(`art-${galleryId}`)
+  }
+
+  /** 刪除畫廊作品（連同掛在房間裡的畫框） */
+  async deleteGalleryWork(galleryId: string): Promise<void> {
+    const d = this.db
+    const itemId = `art-${galleryId}`
+    await d.transaction('rw', [d.coloring, d.shopItems, d.inventory, d.placements], async () => {
+      await d.coloring.delete(`g:${galleryId}`)
+      await d.placements.delete(itemId)
+      await d.inventory.delete(itemId)
+      await d.shopItems.delete(itemId)
+    })
   }
 }
 

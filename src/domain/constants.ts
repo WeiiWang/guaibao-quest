@@ -1,3 +1,4 @@
+import { THEME_DEFS } from './theme'
 import type { ShopItem, TaskTemplate } from './types'
 
 /** 所有可調數值集中在這裡 */
@@ -37,6 +38,15 @@ export const COLORING_PAGE_IDS = [
   'car',
   'sun-moon',
   'chick',
+  // v3：西遊記主題
+  'staff',
+  'wukong-cloud',
+  'peach-garden',
+  'water-curtain',
+  'dragon-fish',
+  'tang-horse',
+  'flower-fruit-mountain',
+  'flame-mountain',
 ] as const
 
 export const COLORING_NAMES: Record<string, string> = {
@@ -50,19 +60,70 @@ export const COLORING_NAMES: Record<string, string> = {
   car: '小汽車',
   'sun-moon': '太陽月亮',
   chick: '小雞',
+  staff: '金箍棒',
+  'wukong-cloud': '筋斗雲上的阿悟',
+  'peach-garden': '蟠桃園',
+  'water-curtain': '水簾洞',
+  'dragon-fish': '龍宮小魚',
+  'tang-horse': '唐僧的馬',
+  'flower-fruit-mountain': '花果山',
+  'flame-mountain': '火焰山',
 }
 
 export const COLORING_PRICE = 30
+/** 西遊記主題著色頁（較複雜）售價 */
+export const COLORING_PRICE_JOURNEY = 40
+const JOURNEY_PAGES: readonly string[] = [
+  'staff',
+  'wukong-cloud',
+  'peach-garden',
+  'water-curtain',
+  'dragon-fish',
+  'tang-horse',
+  'flower-fruit-mountain',
+  'flame-mountain',
+]
 
-/** 飼料效果 */
-export const FOOD_EFFECTS: Record<string, { hunger: number; feed: number }> = {
+/**
+ * 飼料效果：hunger = 增加的飽足值（滿 100）、feed = 算幾次餵食（影響成長）。
+ * special：吃到時的特別反應，由寵物行為端（RoomView）解讀；目前只有蛋糕 'dance'（阿悟跳舞）。
+ */
+export interface FoodEffect {
+  hunger: number
+  feed: number
+  special?: 'dance'
+}
+export const FOOD_EFFECTS: Record<string, FoodEffect> = {
+  carrot: { hunger: 15, feed: 1 },
+  cookie: { hunger: 20, feed: 1 },
   banana: { hunger: 25, feed: 1 },
+  apple: { hunger: 30, feed: 1 },
+  grape: { hunger: 35, feed: 1 },
+  milk: { hunger: 40, feed: 1 },
   peach: { hunger: 50, feed: 2 },
+  riceball: { hunger: 60, feed: 2 },
+  watermelon: { hunger: 75, feed: 2 },
+  cake: { hunger: 100, feed: 3, special: 'dance' },
 }
 
+/** 食物 id，依價格由低到高（商店與房間飼料列的順序） */
+export const FOOD_IDS = ['carrot', 'cookie', 'banana', 'apple', 'grape', 'milk', 'peach', 'riceball', 'watermelon', 'cake'] as const
+
+/** 飽足值換成幾顆小愛心（1–5）：每 20 點一顆，進位 */
+export const foodHearts = (foodId: string): number => Math.min(5, Math.ceil((FOOD_EFFECTS[foodId]?.hunger ?? 0) / 20))
+
 export const SHOP_ITEMS: ShopItem[] = [
+  { id: 'carrot', kind: 'food', name: '胡蘿蔔', price: 6, asset: 'carrot' },
+  { id: 'cookie', kind: 'food', name: '餅乾', price: 8, asset: 'cookie' },
   { id: 'banana', kind: 'food', name: '香蕉', price: 10, asset: 'banana' },
+  { id: 'apple', kind: 'food', name: '蘋果', price: 12, asset: 'apple' },
+  { id: 'grape', kind: 'food', name: '葡萄', price: 15, asset: 'grape' },
+  { id: 'milk', kind: 'food', name: '牛奶', price: 18, asset: 'milk' },
   { id: 'peach', kind: 'food', name: '桃子', price: 20, asset: 'peach' },
+  { id: 'riceball', kind: 'food', name: '飯糰', price: 25, asset: 'riceball' },
+  { id: 'watermelon', kind: 'food', name: '西瓜', price: 35, asset: 'watermelon' },
+  { id: 'cake', kind: 'food', name: '蛋糕', price: 60, asset: 'cake' },
+  // 家具：star 價格只是參考，v2 起改由工坊用材料製作（成本見 learning/materials.ts）
   { id: 'decor-clock', kind: 'decor', name: '時鐘', price: 40, asset: 'clock', slot: 'wall' },
   { id: 'decor-ball', kind: 'decor', name: '玩具球', price: 40, asset: 'ball', slot: 'floor' },
   { id: 'decor-plant', kind: 'decor', name: '小盆栽', price: 50, asset: 'plant', slot: 'floor' },
@@ -73,12 +134,30 @@ export const SHOP_ITEMS: ShopItem[] = [
   { id: 'decor-shelf', kind: 'decor', name: '書架', price: 150, asset: 'shelf', slot: 'floor' },
   { id: 'decor-frame', kind: 'decor', name: '星星畫框', price: 150, asset: 'frame', slot: 'wall' },
   { id: 'decor-bed', kind: 'decor', name: '小床', price: 200, asset: 'bed', slot: 'floor' },
+  { id: 'decor-bunting', kind: 'decor', name: '三角彩旗', price: 80, asset: 'bunting', slot: 'wall' },
+  { id: 'decor-wallshelf', kind: 'decor', name: '牆上層板', price: 100, asset: 'wallshelf', slot: 'wall' },
+  { id: 'decor-monstera', kind: 'decor', name: '龜背芋', price: 100, asset: 'monstera', slot: 'floor' },
+  { id: 'decor-lamp', kind: 'decor', name: '落地燈', price: 100, asset: 'lamp', slot: 'floor' },
+  { id: 'decor-beanbag', kind: 'decor', name: '懶骨頭', price: 120, asset: 'beanbag', slot: 'floor' },
+  { id: 'decor-fishbowl', kind: 'decor', name: '魚缸', price: 120, asset: 'fishbowl', slot: 'floor' },
+  { id: 'decor-table', kind: 'decor', name: '桌椅', price: 140, asset: 'table', slot: 'floor' },
+  { id: 'decor-cloudlamp', kind: 'decor', name: '雲朵夜燈', price: 140, asset: 'cloudlamp', slot: 'floor' },
+  { id: 'decor-rainbow', kind: 'decor', name: '彩虹', price: 160, asset: 'rainbow', slot: 'wall' },
+  { id: 'decor-tent', kind: 'decor', name: '帳篷', price: 180, asset: 'tent', slot: 'floor' },
+  { id: 'decor-car', kind: 'decor', name: '小汽車', price: 180, asset: 'car', slot: 'floor' },
+  { id: 'decor-dino', kind: 'decor', name: '恐龍', price: 200, asset: 'dino', slot: 'floor' },
+  { id: 'decor-piano', kind: 'decor', name: '小鋼琴', price: 240, asset: 'piano', slot: 'floor' },
+  { id: 'decor-rocket', kind: 'decor', name: '火箭', price: 280, asset: 'rocket', slot: 'floor' },
+  // 壁紙 / 地板：同樣在工坊用材料製作（成本見 domain/theme.ts），price 只是參考
+  ...THEME_DEFS.filter((t) => !t.isDefault).map(
+    (t): ShopItem => ({ id: t.id, kind: 'theme', name: t.name, price: 0, asset: t.id, themeSlot: t.slot, cost: t.cost }),
+  ),
   ...COLORING_PAGE_IDS.map(
     (p): ShopItem => ({
       id: `coloring-${p}`,
       kind: 'coloring',
       name: `著色頁：${COLORING_NAMES[p]}`,
-      price: COLORING_PRICE,
+      price: JOURNEY_PAGES.includes(p) ? COLORING_PRICE_JOURNEY : COLORING_PRICE,
       asset: p,
     }),
   ),

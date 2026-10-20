@@ -20,13 +20,31 @@ const DECOR_BOX: Record<string, { h: number; aspect: number }> = {
   clock: { h: 0.12, aspect: 506 / 512 },
   curtain: { h: 0.3, aspect: 512 / 454 },
   poster: { h: 0.21, aspect: 365 / 512 },
+  // v3 新增（長寬比先給估計值，素材到齊後依實際圖片調整）
+  lamp: { h: 0.5, aspect: 0.45 },
+  tent: { h: 0.36, aspect: 1.1 },
+  car: { h: 0.22, aspect: 1.5 },
+  rocket: { h: 0.5, aspect: 0.55 },
+  dino: { h: 0.38, aspect: 1.0 },
+  table: { h: 0.3, aspect: 1.2 },
+  beanbag: { h: 0.2, aspect: 1.1 },
+  fishbowl: { h: 0.2, aspect: 1.0 },
+  wallshelf: { h: 0.14, aspect: 1.7 },
+  bunting: { h: 0.12, aspect: 2.4 },
+  cloudlamp: { h: 0.16, aspect: 1.2 },
+  rainbow: { h: 0.22, aspect: 1.5 },
+  monstera: { h: 0.36, aspect: 0.9 },
+  piano: { h: 0.32, aspect: 1.3 },
 }
+/** 掛到房間的畫廊作品（itemId / asset 為 art-<galleryId>）：方形畫框，牆面裝飾 */
+const ARTWORK_BOX = { h: 0.2, aspect: 1 }
+export const isArtworkId = (id: string) => id.startsWith('art-')
 const FALLBACK_BOX = { h: 0.18, aspect: 1 }
 
 /** 物件大小換算成「格」（ROOM_CELLS_H 格 = 房間高度）。domain 的 clamp 與 repo 驗證沿用格數。 */
 const CELLS = 88
 export function spriteSize(asset: string): { cols: number; rows: number } {
-  const b = DECOR_BOX[asset] ?? FALLBACK_BOX
+  const b = isArtworkId(asset) ? ARTWORK_BOX : (DECOR_BOX[asset] ?? FALLBACK_BOX)
   const rows = b.h * CELLS
   return { cols: rows * b.aspect, rows }
 }
@@ -39,7 +57,46 @@ export function artName(item: Pick<ShopItem, 'id' | 'kind' | 'asset'>): string {
 }
 
 /** 食物 / 裝飾缺圖時，小圖示用的備援 emoji */
-export const FOOD_EMOJI: Record<string, string> = { banana: '🍌', peach: '🍑' }
+export const FOOD_EMOJI: Record<string, string> = {
+  banana: '🍌',
+  peach: '🍑',
+  apple: '🍎',
+  grape: '🍇',
+  riceball: '🍙',
+  milk: '🥛',
+  watermelon: '🍉',
+  carrot: '🥕',
+  cookie: '🍪',
+  cake: '🍰',
+}
+
+/** 家具缺圖時的備援 emoji（key 是 ShopItem.asset） */
+export const DECOR_EMOJI: Record<string, string> = {
+  clock: '🕰️',
+  ball: '⚽',
+  plant: '🪴',
+  crate: '📦',
+  poster: '🖼️',
+  curtain: '🪟',
+  rug: '🟠',
+  shelf: '📚',
+  frame: '⭐',
+  bed: '🛏️',
+  lamp: '💡',
+  tent: '⛺',
+  car: '🚗',
+  rocket: '🚀',
+  dino: '🦖',
+  table: '🪑',
+  beanbag: '🛋️',
+  fishbowl: '🐟',
+  wallshelf: '📚',
+  bunting: '🚩',
+  cloudlamp: '☁️',
+  rainbow: '🌈',
+  monstera: '🌿',
+  piano: '🎹',
+}
 
 /** 寵物在房間中的高度（佔房間高度比例，上限約 45%）；寬約為高的 0.85。窄螢幕另外限制寬度不超過可視寬的 42%。 */
 export const PET_HEIGHT_FRAC = { egg: 0.3, baby: 0.35, adult: 0.42 } as const
