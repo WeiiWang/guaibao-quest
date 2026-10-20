@@ -12,8 +12,10 @@ import { PlayTimeTab } from './PlayTimeTab'
 import { AudioTab } from './AudioTab'
 import { SubscriptionTab } from './SubscriptionTab'
 import { TaskLimitNote } from './TaskLimitNote'
+import { PmTab } from './PmTab'
+import { PM_TOOLS_ENABLED } from '../../../db/pm'
 
-type Tab = 'review' | 'points' | 'tasks' | 'ledger' | 'learning' | 'playtime' | 'audio' | 'plan' | 'settings'
+type Tab = 'review' | 'points' | 'tasks' | 'ledger' | 'learning' | 'playtime' | 'audio' | 'plan' | 'settings' | 'pm'
 const TABS: { id: Tab; label: string }[] = [
   { id: 'review', label: '審核' },
   { id: 'points', label: '加/扣點' },
@@ -24,6 +26,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'audio', label: '音效/語音' },
   { id: 'plan', label: '訂閱方案' },
   { id: 'settings', label: '設定' },
+  ...(PM_TOOLS_ENABLED ? [{ id: 'pm' as const, label: 'PM 預覽' }] : []),
 ]
 
 // 輸入錯誤次數放在模組層，離開再進入也不會歸零
@@ -115,6 +118,7 @@ export function ParentArea({ onExit }: { onExit: () => void }) {
       {tab === 'audio' && <AudioTab />}
       {tab === 'plan' && <SubscriptionTab />}
       {tab === 'settings' && <SettingsTab onReset={onExit} />}
+      {tab === 'pm' && <PmTab onExit={onExit} />}
     </main>
   )
 }
