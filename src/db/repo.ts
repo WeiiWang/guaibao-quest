@@ -11,6 +11,7 @@ import {
 } from '../domain/constants'
 import { dayRange, localDateStr } from '../domain/date'
 import { feed } from '../domain/pet'
+import { planFeedPoop, POOP_CAP, resolveDuePoops, type PoopSpread } from '../pet/poop'
 import { checkPin, hashPin, isValidPin } from '../domain/pin'
 import { balanceOf, checkPenalty, grantPoints } from '../domain/points'
 import { canBuy } from '../domain/shop'
@@ -18,6 +19,7 @@ import { clampTaskPoints, instancesToCreate, transition } from '../domain/tasks'
 import type {
   ColoringProgress,
   Pet,
+  Poop,
   PointLedger,
   RoomThemeChoice,
   Settings,
@@ -68,6 +70,8 @@ export class Repo {
   constructor(
     readonly db: GuaibaoDB = defaultDb,
     private readonly clock: () => number = clockNow,
+    /** 亂數來源（大便機率用；測試可注入固定值） */
+    private readonly rng: () => number = Math.random,
   ) {}
 
   // ---------- 啟動 / 設定 ----------
@@ -311,16 +315,77 @@ export class Repo {
     const d = this.db
     const effect = FOOD_EFFECTS[foodId]
     if (!effect) return { ok: false, error: '這不是飼料' }
-    return d.transaction('rw', [d.pets, d.inventory], async () => {
+    return d.transaction('rw', [d.pets, d.inventory, d.settings], async () => {
       const inv = await d.inventory.get(foodId)
       if (!inv || inv.qty < 1) return { ok: false, error: '背包裡沒有這個了' } as const
       const pet = await d.pets.get(PET_ID)
       if (!pet) return { ok: false, error: '找不到寵物' } as const
       const r = feed(pet, effect, now)
+      // v3：吃完東西可能在一段時間後大便（蛋不會；家長可關閉）
+      const settings = await d.settings.get(SETTINGS_ID)
+      const pp = planFeedPoop({
+        stage: pet.stage,
+        streak: pet.feedStreak,
+        now,
+        poopOn: settings?.petPoopOn ?? true,
+        poopCount: pet.poops?.length ?? 0,
+        dueCount: pet.poopDue?.length ?? 0,
+        rng: this.rng,
+      })
+      r.pet.feedStreak = pp.streak
+      if (pp.due !== null) r.pet.poopDue = [...(pet.poopDue ?? []), pp.due]
       await d.pets.put(r.pet)
       await d.inventory.put({ ...inv, qty: inv.qty - 1 })
       return { ok: true, pet: r.pet, evolvedTo: r.evolvedTo } as const
     })
+  }
+
+  // ---------- 便便（SPEC-v3 A3） ----------
+  async getPoops(): Promise<Poop[]> {
+    return (await this.db.pets.get(PET_ID))?.poops ?? []
+  }
+
+  /** 立刻長一坨便便（PM 預覽、到期補發用）；已達上限回 null */
+  async addPoop(x: number, now = this.clock()): Promise<Poop | null> {
+    return this.db.transaction('rw', this.db.pets, async () => {
+      const pet = await this.db.pets.get(PET_ID)
+      if (!pet) return null
+      const poops = pet.poops ?? []
+      if (poops.length >= POOP_CAP) return null
+      const p: Poop = { id: newId(), x: Math.min(0.94, Math.max(0.06, x)), at: now }
+      await this.db.pets.update(PET_ID, { poops: [...poops, p] })
+      return p
+    })
+  }
+
+  /** 把已到期的排定便便變成真的（離線期間到期的也會補上）。回傳這次新長的。 */
+  async takeDuePoops(centerX: number, now = this.clock(), spread?: PoopSpread): Promise<Poop[]> {
+    return this.db.transaction('rw', this.db.pets, async () => {
+      const pet = await this.db.pets.get(PET_ID)
+      if (!pet || !pet.poopDue?.length) return []
+      const r = resolveDuePoops(pet.poops ?? [], pet.poopDue, now, centerX, this.rng, newId, POOP_CAP, spread)
+      await this.db.pets.update(PET_ID, { poops: r.poops, poopDue: r.due })
+      return r.added
+    })
+  }
+
+  async clearPoop(id: string): Promise<boolean> {
+    return this.db.transaction('rw', this.db.pets, async () => {
+      const pet = await this.db.pets.get(PET_ID)
+      const poops = pet?.poops ?? []
+      if (!poops.some((p) => p.id === id)) return false
+      await this.db.pets.update(PET_ID, { poops: poops.filter((p) => p.id !== id) })
+      return true
+    })
+  }
+
+  /** 清空所有便便與排定的大便（PM 預覽用） */
+  async clearAllPoops(): Promise<void> {
+    await this.db.pets.update(PET_ID, { poops: [], poopDue: [] })
+  }
+
+  async setPetPoopOn(on: boolean): Promise<void> {
+    await this.db.settings.update(SETTINGS_ID, { petPoopOn: on })
   }
 
   // ---------- 房間裝飾 ----------

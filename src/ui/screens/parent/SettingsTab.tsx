@@ -6,6 +6,8 @@ import { isValidPin } from '../../../domain/pin'
 import { Modal } from '../../components/Modal'
 import { PinPad } from '../../components/PinPad'
 import { useToast } from '../../hooks'
+import { usePoopSetting } from '../../pet/hooks'
+import { Switch } from './AudioTab'
 
 export function SettingsTab({ onReset }: { onReset: () => void }) {
   const toast = useToast()
@@ -18,6 +20,7 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
   const [newPin2, setNewPin2] = useState('')
   const [pinMsg, setPinMsg] = useState('')
   const [confirmReset, setConfirmReset] = useState(false)
+  const poopOn = usePoopSetting()
 
   const changePin = async () => {
     if (!isValidPin(newPin)) return setPinMsg('新 PIN 需為 4 位數字')
@@ -33,6 +36,17 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
 
   return (
     <section className="settings">
+      <div className="card">
+        <h2>寵物</h2>
+        <Switch
+          label="寵物會大便"
+          desc="吃東西後，阿悟偶爾會大便（可愛的卡通風），小孩點一下就能清掉。不會影響飽足、也不會生病。關閉後不會再出現新的便便。"
+          on={poopOn}
+          testId="poop-switch"
+          onChange={(v) => void repo.setPetPoopOn(v)}
+        />
+      </div>
+
       <div className="card form">
         <h2>名字</h2>
         <label className="field">
