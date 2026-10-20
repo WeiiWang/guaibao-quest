@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { RoomBackdrop } from './RoomBackdrop'
 import { repo } from '../../db/repo'
 import { artName, FOOD_EMOJI, isFlatDecor, PET_ASPECT, PET_HEIGHT_FRAC, spriteSize } from '../../art/items'
 import { EATING_ANIM_MS, HUNGER_MAX } from '../../domain/constants'
@@ -450,19 +451,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
             onPointerCancel={onScrollerUp}
           >
             <div className={`room ${edit ? 'edit' : ''}`} ref={roomRef} aria-label="寵物房間" data-testid="room" style={{ width: roomW || undefined }}>
-              <div className="wall-light" aria-hidden />
-              <div className="wainscot" aria-hidden />
-              {['22%', '70%'].map((left) => (
-                <div key={left} className="window-set" style={{ left }} aria-hidden>
-                  <div className="room-window" />
-                  <i className="drape l" />
-                  <i className="drape r" />
-                </div>
-              ))}
-              <div className="floor" aria-hidden />
-              <div className="sunbeam" style={{ left: '19%' }} aria-hidden />
-              <div className="sunbeam" style={{ left: '67%' }} aria-hidden />
-              <div className="baseboard" aria-hidden />
+              <RoomBackdrop timeOfDay="day" />
               {edit && <div className="floor-line" style={{ top: `${FLOOR_TOP * 100}%` }} aria-hidden><span>牆面</span><span>地板</span></div>}
 
               {roomH > 0 &&

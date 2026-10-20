@@ -58,3 +58,7 @@
 
 .lt-tip { margin: 0 0 12px; padding: 10px 14px; border-radius: 16px; background: color-mix(in srgb, var(--sky) 25%, #fff); font-weight: 700; line-height: 1.5; }
 .lt-tip.warn { background: color-mix(in srgb, var(--butter) 40%, #fff); }
+
+/* PM 預覽 */
+.pm-stages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 12px; }
+.pm-stage { display: grid; justify-items: center; gap: 4px; padding: 12px 8px; min-height: 120px; }

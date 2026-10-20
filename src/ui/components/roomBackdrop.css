@@ -1,0 +1,2 @@
+/* 房間背景容器：與 .room 同大小，疊在最底層 */
+.room-backdrop { position: absolute; inset: 0; pointer-events: none; }
