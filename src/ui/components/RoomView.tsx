@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { RoomBackdrop } from './RoomBackdrop'
 import { repo } from '../../db/repo'
 import { artName, FOOD_EMOJI, isFlatDecor, PET_ASPECT, PET_HEIGHT_FRAC, spriteSize } from '../../art/items'
-import { EATING_ANIM_MS, HUNGER_MAX } from '../../domain/constants'
+import { HUNGER_MAX } from '../../domain/constants'
 import { currentHunger, feedsToNextStage, moodAt } from '../../domain/pet'
 import {
   autoScrollSpeed,
@@ -22,6 +22,14 @@ import { Art } from './Art'
 import { Icon } from './Icon'
 import { PetSprite } from './PetSprite'
 import { useCelebrate, useToast } from '../hooks'
+import { useLearningSettings } from '../learningHooks'
+import { playPetSound } from '../../pet/sounds'
+import { PetFx } from '../pet/PetFx'
+import { PoopBurst, PoopSpot } from '../pet/PoopSpot'
+import { foodMeta } from '../pet/foodFx'
+import { useReducedMotion, useTodMode } from '../pet/hooks'
+import { usePetLife, type Geometry } from '../pet/usePetLife'
+import '../pet/pet.css'
 
 interface Props {
   pet: Pet
@@ -34,6 +42,8 @@ interface Props {
   feedHintShown: boolean
   initialEdit: boolean
   goShop: () => void
+  /** 小孩的名字（阿悟揮手時會叫） */
+  childName?: string
 }
 
 type DragKind = 'food' | 'new' | 'move'
@@ -67,10 +77,15 @@ const unplacedKey = (decor: ShopItem[], placements: Placement[]) => {
   return decor.filter((d) => !placed.has(d.id)).map((d) => d.id).join()
 }
 const toRect = (r: DOMRect): Rect => ({ left: r.left, top: r.top, right: r.right, bottom: r.bottom })
+/** 由 id 算一個固定的小數，讓每坨便便的位置、蒼蠅有點不同 */
+const hashOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
 
-export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop }: Props) {
+export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, childName = '' }: Props) {
   const toast = useToast()
   const celebrate = useCelebrate()
+  const { soundOn } = useLearningSettings()
+  const todMode = useTodMode()
+  const reducedMotion = useReducedMotion()
 
   const scrollerRef = useRef<HTMLDivElement>(null)
   const roomRef = useRef<HTMLDivElement>(null)
@@ -85,11 +100,16 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const [, setTick] = useState(0)
   const [dockFade, setDockFade] = useState({ left: false, right: false })
   const [fly, setFly] = useState<{ itemId: string; kind: DragKind; fx: number; fy: number; tx: number; ty: number; go: boolean } | null>(null)
-  const [eating, setEating] = useState(false)
   const [poke, setPoke] = useState(0)
+  const [popping, setPopping] = useState<string[]>([])
+  const [bursts, setBursts] = useState<{ id: string; x: number }[]>([])
   const [hearts, setHearts] = useState<number[]>([])
   const [hintGone, setHintGone] = useState(false)
-  const eatTimer = useRef<number | undefined>(undefined)
+  const slotRef = useRef<HTMLDivElement>(null)
+  const pressTimer = useRef<number | undefined>(undefined)
+  const pressCleanup = useRef<(() => void) | null>(null)
+  const longFired = useRef(false)
+  const ballPending = useRef(false)
   const press = useRef<Press | null>(null)
   const pointer = useRef({ x: 0, y: 0 })
   const bgDrag = useRef<{ id: number; sx: number; sl: number; moved: boolean } | null>(null)
@@ -97,7 +117,14 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const roomW = view.w * ROOM_WIDTH_FACTOR
   const roomH = view.h
 
-  useEffect(() => () => window.clearTimeout(eatTimer.current), [])
+  // 卸載時清掉長按計時器與全域監聽
+  useEffect(
+    () => () => {
+      window.clearTimeout(pressTimer.current)
+      pressCleanup.current?.()
+    },
+    [],
+  )
 
   // 量測可視區大小
   useLayoutEffect(() => {
@@ -152,23 +179,71 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     }
   }, [feedHintShown, hintGone])
 
-  const feed = async (foodId: string) => {
+  const feed = async (foodId: string, from?: { x: number; y: number }) => {
     dismissHint()
+    const stage = pet.stage
     const r = await repo.feedPet(foodId)
     if (!r.ok) return toast(r.error, 'warn')
-    setEating(true)
-    window.clearTimeout(eatTimer.current)
-    eatTimer.current = window.setTimeout(() => setEating(false), EATING_ANIM_MS)
+    // 食物從放開的地方（或飼料欄）飛到嘴邊，接著咀嚼、吞下去（動畫腳本在 src/pet/plan.ts）
+    const item = foods.find((f) => f.item.id === foodId)?.item
+    if (item) {
+      let origin = from ?? null
+      if (!origin) {
+        const el = document.querySelector(`[data-dock-item="${foodId}"]`)?.getBoundingClientRect()
+        if (el) origin = { x: el.left + el.width / 2, y: el.top + el.height / 2 }
+      }
+      life.startEat(foodMeta(item), origin, stage)
+    }
     if (r.evolvedTo === 'baby' || r.evolvedTo === 'adult') {
       celebrate({ petName: r.pet.name, from: r.evolvedTo === 'baby' ? 'egg' : 'baby', to: r.evolvedTo, feedCount: r.pet.feedCount })
     } else toast('好好吃！', 'ok')
   }
 
-  const touchPet = () => {
-    setPoke((p) => p + 1)
+  const addHeart = () => {
     const id = Date.now()
     setHearts((h) => [...h.slice(-3), id])
-    window.setTimeout(() => setHearts((h) => h.filter((x) => x !== id)), 900)
+    life.later(() => setHearts((h) => h.filter((x) => x !== id)), 900)
+  }
+  const touchPet = () => {
+    life.tap()
+    if (life.asleep) return // 睡著的阿悟被點醒：只演「好睏喔…」，不彈跳
+    setPoke((p) => p + 1)
+    addHeart()
+  }
+  // 長按 1 秒：摸摸頭
+  const onPetDown = (e: React.PointerEvent<HTMLElement>) => {
+    if (edit) return
+    longFired.current = false
+    const sx = e.clientX
+    const sy = e.clientY
+    window.clearTimeout(pressTimer.current)
+    pressTimer.current = window.setTimeout(() => {
+      longFired.current = true
+      life.pat()
+      addHeart()
+    }, 1000)
+    const move = (ev: PointerEvent) => {
+      if (Math.hypot(ev.clientX - sx, ev.clientY - sy) > 12) cancel()
+    }
+    const cancel = () => {
+      window.clearTimeout(pressTimer.current)
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', cancel)
+      window.removeEventListener('pointercancel', cancel)
+      pressCleanup.current = null
+    }
+    pressCleanup.current?.()
+    pressCleanup.current = cancel
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', cancel)
+    window.addEventListener('pointercancel', cancel)
+  }
+  const onPetClick = () => {
+    if (longFired.current) {
+      longFired.current = false
+      return
+    }
+    touchPet()
   }
 
   // ---------- 幾何 ----------
@@ -179,6 +254,70 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   // 高度依房間高度，並限制寬度不超過可視寬的 42%（手機直向時不會塞滿房間）
   const petH = Math.min(PET_HEIGHT_FRAC[pet.stage] * roomH, (view.w * 0.42) / PET_ASPECT[pet.stage])
   const petW = petH * PET_ASPECT[pet.stage]
+
+  // ---------- 阿悟的生命感：行為、睡覺、便便、日夜 ----------
+  const bedPl = placements.find((p) => p.itemId === 'decor-bed')
+  const bedItem = bedPl ? itemById.get('decor-bed') : undefined
+  const bed = bedPl && bedItem && roomH > 0 ? { x: bedPl.x, y: bedPl.y, h: sizeOf(bedItem).h / roomH } : null
+  const geo = (): Geometry => {
+    const obstacles: Geometry['obstacles'] = []
+    let ball: Geometry['ball'] = null
+    if (roomW > 0 && roomH > 0) {
+      for (const pl of placements) {
+        const it = itemById.get(pl.itemId)
+        if (!it || it.slot !== 'floor' || isFlatDecor(pl.itemId)) continue
+        const sz = sizeOf(it)
+        const w = sz.w / roomW
+        // 離地板前緣太遠（靠牆）的家具不擋阿悟的路
+        if (pl.y + sz.h / roomH / 2 < PET_BOTTOM - 0.1) continue
+        obstacles.push({ id: pl.itemId, left: pl.x - w / 2, right: pl.x + w / 2 })
+        const sl = scrollerRef.current?.scrollLeft ?? 0
+        if (pl.itemId === 'decor-ball' && pl.x * roomW > sl && pl.x * roomW < sl + view.w) ball = { x: pl.x, halfW: w / 2 }
+      }
+    }
+    return { roomW, roomH, viewW: view.w, scrollLeft: scrollerRef.current?.scrollLeft ?? 0, petW, obstacles, ball }
+  }
+  const life = usePetLife({
+    pet,
+    stage: pet.stage,
+    hunger,
+    childName,
+    now,
+    todMode,
+    edit,
+    dragging: !!drag,
+    soundOn,
+    wishIcons: foods.map((f) => artName(f.item)),
+    slotRef,
+    geo,
+    bed,
+    ready: roomW > 0 && roomH > 0,
+  })
+  const { view: pv } = life
+  const dragging = !!drag
+  useEffect(() => {
+    if (dragging || edit) life.cancelIdle()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dragging, edit])
+  const petBottom = life.onBed && bed ? Math.min(0.97, bed.y + bed.h * 0.2) : PET_BOTTOM
+  const poops = useMemo(() => pet.poops ?? [], [pet.poops])
+  // 被清掉的便便不用再記著「正在消失」
+  useEffect(() => {
+    setPopping((a) => (a.length ? a.filter((id) => poops.some((p) => p.id === id)) : a))
+  }, [poops])
+  const cleanPoop = (id: string, x: number) => {
+    if (popping.includes(id)) return
+    setPopping((a) => [...a, id])
+    life.later(() => {
+      playPetSound('pop', soundOn)
+      setBursts((b) => [...b, { id, x }])
+    }, 650)
+    life.later(() => {
+      void repo.clearPoop(id)
+      life.thanks()
+    }, 700)
+    life.later(() => setBursts((b) => b.filter((i) => i.id !== id)), 1400)
+  }
 
   /** 以目前的 DOM 位置算出拖曳目標 */
   const evaluate = (d: DragView, fx: number, fy: number) => {
@@ -249,7 +388,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const revealPet = () => {
     const sc = scrollerRef.current
     if (!sc || !roomW) return
-    const petCenter = PET_X * roomW
+    const petCenter = life.petXRef.current * roomW
     const margin = petW / 2 + 24
     if (petCenter - margin >= sc.scrollLeft && petCenter + margin <= sc.scrollLeft + view.w) return
     sc.scrollTo({ left: Math.max(0, petCenter - view.w / 2), behavior: 'smooth' })
@@ -271,6 +410,11 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     const cxPx = (scroller?.scrollLeft ?? 0) + view.w / 2
     const y = it.slot === 'wall' ? 0.3 : 0.86
     return clampPlacement(it.slot ?? 'floor', cxPx / roomW, y, size.w / roomW, size.h / roomH)
+  }
+
+  /** 把玩具球放到阿悟附近：離開佈置模式後，阿悟會跑去追球 */
+  const noteBall = (itemId: string, x: number) => {
+    if (itemId === 'decor-ball' && Math.abs(x - life.petXRef.current) < 0.2) ballPending.current = true
   }
 
   const finishPress = async (p: Press, fx: number, fy: number, cancelled: boolean) => {
@@ -297,13 +441,15 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     const d: DragView = { kind: p.kind, itemId: p.itemId, x: fx, y: fy, lift: p.lift, grabDX: p.grabDX, grabDY: p.grabDY }
     const ev = evaluate(d, fx, fy)
     if (p.kind === 'food') {
-      if (ev.overPet) void feed(p.itemId)
+      if (ev.overPet) void feed(p.itemId, { x: fx, y: fy })
       else flyBack(p.itemId, 'food', fx, fy)
     } else if (p.kind === 'new') {
       if (ev.preview) {
         const r = await repo.placeDecor(p.itemId, ev.preview.x, ev.preview.y)
-        if (r.ok) setSelected(p.itemId)
-        else toast(r.error, 'warn')
+        if (r.ok) {
+          setSelected(p.itemId)
+          noteBall(p.itemId, ev.preview.x)
+        } else toast(r.error, 'warn')
       } else flyBack(p.itemId, 'new', fx, fy)
     } else {
       if (ev.overDock) {
@@ -311,6 +457,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
         setSelected(null)
       } else if (ev.preview) {
         await repo.moveDecor(p.itemId, ev.preview.x, ev.preview.y)
+        noteBall(p.itemId, ev.preview.x)
       }
     }
   }
@@ -403,7 +550,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
         const size = sizeOf(it)
         return { id: p.itemId, bottom: isFlatDecor(p.itemId) ? -1 : p.y + size.h / roomH / 2, z: p.z, p, it, size }
       }),
-    { id: '__pet', bottom: PET_BOTTOM, z: 0 },
+    { id: '__pet', bottom: life.onBed && bed ? bed.y + bed.h / 2 + 0.002 : PET_BOTTOM, z: 0 },
   ])
   const zOf = (id: string) => entries.findIndex((e) => e.id === id) + 1
 
@@ -421,6 +568,10 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const flyItem = fly ? (foods.find((f) => f.item.id === fly.itemId)?.item ?? itemById.get(fly.itemId)) : undefined
 
   const toggleEdit = () => {
+    if (edit && ballPending.current) {
+      ballPending.current = false
+      life.later(() => life.playBall(), 700)
+    }
     setEdit((v) => !v)
     setSelected(null)
   }
@@ -430,7 +581,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
       <section className="room-section">
         <div className={`room-frame ${edit ? 'editing' : ''}`}>
           <div className="pet-hud">
-            <div className="pet-name">{pet.name}<span className="mood-text"> {eating || hovering ? '好好吃～' : MOOD_TEXT[mood]}</span></div>
+            <div className="pet-name">{pet.name}<span className="mood-text"> {pv.food || hovering ? '好好吃～' : MOOD_TEXT[mood]}</span></div>
             <div className="hunger" role="meter" aria-valuemin={0} aria-valuemax={HUNGER_MAX} aria-valuenow={Math.round(hunger)} aria-label="飽足度">
               <span>飽足</span>
               <div className="bar"><i style={{ width: `${hunger}%` }} className={`m-${mood}`} /></div>
@@ -451,30 +602,60 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
             onPointerCancel={onScrollerUp}
           >
             <div className={`room ${edit ? 'edit' : ''}`} ref={roomRef} aria-label="寵物房間" data-testid="room" style={{ width: roomW || undefined }}>
-              <RoomBackdrop timeOfDay="day" />
+              {/* 背景自成一層（z-index: 0）：窗簾等內部圖層不會蓋到阿悟的對話泡泡與家具 */}
+              <div className="pf-backdrop-layer" aria-hidden>
+                <RoomBackdrop timeOfDay={life.tod} />
+              </div>
               {edit && <div className="floor-line" style={{ top: `${FLOOR_TOP * 100}%` }} aria-hidden><span>牆面</span><span>地板</span></div>}
 
               {roomH > 0 &&
                 entries.map((e) => {
                   if (e.id === '__pet') {
                     return (
-                      <div key="pet" className="pet-slot" style={{ left: PET_X * roomW - petW / 2, top: PET_BOTTOM * roomH - petH, width: petW, height: petH, zIndex: zOf('__pet') }}>
+                      <div
+                        key="pet"
+                        ref={slotRef}
+                        className="pet-slot"
+                        data-testid="pet-slot"
+                        style={{
+                          left: life.petX * roomW - petW / 2,
+                          top: petBottom * roomH - petH,
+                          width: petW,
+                          height: petH,
+                          zIndex: zOf('__pet'),
+                          transition: reducedMotion ? 'none' : `left ${life.walkMs}ms linear, top 0.8s ease-in-out`,
+                        }}
+                      >
                         <div className="pet-shadow" aria-hidden />
                         <button
                           key={poke}
                           ref={petRef}
                           data-nodrag
                           data-testid="pet"
-                          className={`pet-btn ${poke > 0 ? 'poked' : ''} ${eating ? 'is-eating' : ''} ${hovering ? 'pet-hover' : ''} ${edit ? 'pet-ghosted' : ''}`}
-                          onClick={touchPet}
+                          data-pose={pv.pose ?? (life.asleep ? 'sleep' : 'idle')}
+                          data-anim={pv.anim ?? undefined}
+                          data-asleep={life.asleep || undefined}
+                          className={`pet-btn ${poke > 0 ? 'poked' : ''} ${hovering ? 'pet-hover' : ''} ${edit ? 'pet-ghosted' : ''} ${pv.anim ? `pf-a-${pv.anim}` : ''} ${life.asleep && !pv.anim ? 'pf-asleep' : ''} ${pv.fx.includes('glow') ? 'pf-glow' : ''}`}
+                          onClick={onPetClick}
+                          onPointerDown={onPetDown}
+                          onContextMenu={(e) => e.preventDefault()}
                           disabled={edit}
                           aria-label={`摸摸${pet.name}`}
                         >
-                          <PetSprite pet={pet} mood={mood} eating={eating || hovering} className={`idle ${mood === 'low' ? 'idle-slow' : ''}`} />
+                          <div className={`pf-flip ${pv.flip ? 'on' : ''}`}>
+                            <PetSprite
+                              pet={pet}
+                              mood={mood}
+                              eating={hovering}
+                              pose={pv.pose ?? (life.asleep ? 'sleep' : undefined)}
+                              className={pv.anim || life.asleep ? '' : `idle ${mood === 'low' ? 'idle-slow' : ''}`}
+                            />
+                          </div>
                         </button>
                         {hearts.map((id) => (
                           <span key={id} className="heart-pop" aria-hidden>💗</span>
                         ))}
+                        <PetFx view={pv} asleep={life.asleep} lying={pet.stage !== 'egg'} />
                       </div>
                     )
                   }
@@ -486,7 +667,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                       data-nodrag
                       data-placed={ent.id}
                       data-slot={ent.it.slot}
-                      className={`placed ${edit ? 'editable' : ''} ${selected === ent.id ? 'selected' : ''}`}
+                      className={`placed ${edit ? 'editable' : ''} ${selected === ent.id ? 'selected' : ''} ${ent.id === 'decor-ball' && pv.ballBounce ? 'pf-ball-play' : ''}`}
                       style={{
                         left: ent.p.x * roomW - ent.size.w / 2,
                         top: ent.p.y * roomH - ent.size.h / 2,
@@ -504,6 +685,30 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                     </div>
                   )
                 })}
+
+              {roomH > 0 &&
+                poops.map((po) => {
+                  const size = Math.max(44, Math.min(96, petH * 0.38))
+                  const dy = ((hashOf(po.id) % 5) - 2) * 0.008 * roomH
+                  return (
+                    <PoopSpot
+                      key={po.id}
+                      poop={po}
+                      left={po.x * roomW - size / 2}
+                      top={PET_BOTTOM * roomH - size + dy}
+                      size={size}
+                      z={entries.length + 2}
+                      fresh={life.freshIds.includes(po.id)}
+                      from={(life.petX - po.x) * roomW}
+                      popping={popping.includes(po.id)}
+                      disabled={edit}
+                      fly={hashOf(po.id) % 2 === 0}
+                      onClean={() => cleanPoop(po.id, po.x)}
+                    />
+                  )
+                })}
+              {roomH > 0 &&
+                bursts.map((b) => <PoopBurst key={b.id} left={b.x * roomW} top={PET_BOTTOM * roomH - 40} z={entries.length + 3} />)}
 
               {dv?.preview && (
                 <div className={`drop-preview ${dv.preview.invalid ? 'invalid' : ''}`} data-invalid={dv.preview.invalid || undefined} style={{ left: dv.preview.x * roomW - dv.preview.w / 2, top: dv.preview.y * roomH - dv.preview.h / 2, width: dv.preview.w, height: dv.preview.h, zIndex: 999 }} aria-hidden>

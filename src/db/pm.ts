@@ -52,3 +52,8 @@ export async function pmOwnAllDecor(): Promise<number> {
   })
   return decor.length
 }
+
+/** 清空房間裡所有便便與排定的大便 */
+export async function pmClearPoops(): Promise<void> {
+  await db.pets.update(PET_ID, { poops: [], poopDue: [] })
+}

@@ -136,6 +136,7 @@ export function Home({ childName, now, go, initialEdit }: Props) {
         placements={placements}
         feedHintShown={!!settings.feedHintShown}
         initialEdit={edit}
+        childName={childName}
         goShop={() => go('shop')}
       />
 

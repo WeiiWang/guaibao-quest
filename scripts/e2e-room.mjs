@@ -30,6 +30,14 @@ const DECOR = ['decor-clock', 'decor-ball', 'decor-plant', 'decor-crate', 'decor
 
 async function freshApp(browser, viewport, opts = {}) {
   const ctx = await browser.newContext({ viewport, ...opts })
+  // v3：阿悟晚上會睡覺。固定成白天，測試才不會受真實時間影響（日夜行為在 e2e-pet.mjs 測）
+  await ctx.addInitScript(() => {
+    try {
+      localStorage.setItem('gq-pet-tod', 'day')
+    } catch {
+      /* ignore */
+    }
+  })
   const page = await ctx.newPage()
   await page.goto(BASE)
   await page.waitForSelector('button.key')

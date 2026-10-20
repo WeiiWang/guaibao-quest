@@ -4,7 +4,8 @@ type Kind = 'correct' | 'wrong' | 'reward' | 'tap'
 
 let ctx: AudioContext | null = null
 
-function audio(): AudioContext | null {
+/** 共用的 AudioContext（寵物音效也用這個）；不支援時回 null */
+export function audio(): AudioContext | null {
   try {
     if (ctx) return ctx
     const C = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext

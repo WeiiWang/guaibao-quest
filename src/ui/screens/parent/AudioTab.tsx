@@ -4,7 +4,7 @@ import { isSpeechSupported, speak } from '../../../learning/speech'
 import { useLearningSettings } from '../../learningHooks'
 import './learning.css'
 
-function Switch({ label, desc, on, onChange, testId }: { label: string; desc: string; on: boolean; onChange: (v: boolean) => void; testId: string }) {
+export function Switch({ label, desc, on, onChange, testId }: { label: string; desc: string; on: boolean; onChange: (v: boolean) => void; testId: string }) {
   return (
     <div className="lt-switch-row">
       <div>

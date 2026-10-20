@@ -35,6 +35,18 @@ export interface PointLedger {
   kind: LedgerKind
   refId?: string
 }
+/** 房間裡的一坨便便（SPEC-v3 A3）；x 是中心點，占房間寬度的比例 */
+export interface Poop {
+  id: string
+  x: number
+  /** 出現時間（ms） */
+  at: number
+}
+/** 連續餵食計數（決定大便機率）；間隔太久會重算 */
+export interface FeedStreak {
+  n: number
+  at: number
+}
 export interface Pet {
   id: string
   name: string
@@ -43,6 +55,12 @@ export interface Pet {
   hunger: number
   hungerUpdatedAt: number
   mood: Expression
+  /** v3：房間裡的便便。舊資料沒有這欄，讀取時當成空陣列（不升 Dexie 版本） */
+  poops?: Poop[]
+  /** v3：已排定、還沒發生的大便時間（ms）；離線期間到期的下次開啟時補上 */
+  poopDue?: number[]
+  /** v3：連續餵食計數 */
+  feedStreak?: FeedStreak
 }
 export type DecorSlot = 'wall' | 'floor'
 export interface ShopItem {
@@ -89,4 +107,6 @@ export interface Settings {
   soundOn?: boolean
   /** 語音唸題開關；未設定視為開 */
   voiceOn?: boolean
+  /** v3：寵物會大便；未設定視為開 */
+  petPoopOn?: boolean
 }
