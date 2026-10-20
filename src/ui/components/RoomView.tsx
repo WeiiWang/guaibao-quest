@@ -44,6 +44,8 @@ interface Props {
   goShop: () => void
   /** 小孩的名字（阿悟揮手時會叫） */
   childName?: string
+  /** 今天阿悟最喜歡的食物 id（SPEC B2）；吃到時愛心加倍、說「最喜歡了！」。沒有就不演 */
+  favoriteFoodId?: string | null
 }
 
 type DragKind = 'food' | 'new' | 'move'
@@ -80,7 +82,7 @@ const toRect = (r: DOMRect): Rect => ({ left: r.left, top: r.top, right: r.right
 /** 由 id 算一個固定的小數，讓每坨便便的位置、蒼蠅有點不同 */
 const hashOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
 
-export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, childName = '' }: Props) {
+export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, childName = '', favoriteFoodId = null }: Props) {
   const toast = useToast()
   const celebrate = useCelebrate()
   const { soundOn } = useLearningSettings()
@@ -192,7 +194,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
         const el = document.querySelector(`[data-dock-item="${foodId}"]`)?.getBoundingClientRect()
         if (el) origin = { x: el.left + el.width / 2, y: el.top + el.height / 2 }
       }
-      life.startEat(foodMeta(item), origin, stage)
+      life.startEat(foodMeta(item, item.id === favoriteFoodId), origin, stage)
     }
     if (r.evolvedTo === 'baby' || r.evolvedTo === 'adult') {
       celebrate({ petName: r.pet.name, from: r.evolvedTo === 'baby' ? 'egg' : 'baby', to: r.evolvedTo, feedCount: r.pet.feedCount })

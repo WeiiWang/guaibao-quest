@@ -12,6 +12,8 @@
     "lint": "eslint .",
     "e2e": "node scripts/e2e-room.mjs",
     "e2e:adventure": "node scripts/e2e-adventure.mjs",
+    "e2e:pet": "node scripts/e2e-pet.mjs",
+    "shots:pet": "node scripts/shots-pet.mjs",
     "gen:questions": "node scripts/gen-questions.mjs"
   },
   "dependencies": {

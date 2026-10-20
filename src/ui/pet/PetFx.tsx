@@ -66,9 +66,9 @@ export function PetFx({ view, asleep, lying }: Props) {
           ))}
         </div>
       )}
-      {fx.includes('hearts') && (
-        <div className="pf-hearts" aria-hidden data-testid="fx-hearts">
-          {[0, 1, 2].map((i) => (
+      {(fx.includes('hearts') || fx.includes('bigHearts')) && (
+        <div className={`pf-hearts ${fx.includes('bigHearts') ? 'big' : ''}`} aria-hidden data-testid="fx-hearts">
+          {(fx.includes('bigHearts') ? [0, 1, 2, 3, 4, 5] : [0, 1, 2]).map((i) => (
             <i key={i} style={css({ '--i': i })}>💗</i>
           ))}
         </div>

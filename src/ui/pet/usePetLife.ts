@@ -63,6 +63,8 @@ export interface FoodMeta {
   color: string
   /** 蛋糕：吃完會跳舞 */
   celebrate?: boolean
+  /** 今天最喜歡的食物 */
+  favorite?: boolean
 }
 
 export interface Geometry {
@@ -445,7 +447,7 @@ export function usePetLife(p: PetLifeParams) {
         dy = from.y - (r.top + r.height * 0.52)
       }
       foodRef.current = { ...food, dx, dy }
-      startScene(planEat({ stage, burp: stage !== 'egg' && Math.random() < 0.25, celebrate: food.celebrate }))
+      startScene(planEat({ stage, burp: stage !== 'egg' && Math.random() < 0.25, celebrate: food.celebrate, favorite: food.favorite }))
     },
     [cancelScene, startScene],
   )

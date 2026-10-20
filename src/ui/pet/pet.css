@@ -119,6 +119,7 @@
   position: absolute; left: calc((var(--i) - 1) * 34px); top: 0; font-style: normal; font-size: clamp(1.5rem, 4.4vmin, 2.3rem); opacity: 0;
   animation: pf-heart 1.1s ease-out infinite; animation-delay: calc(var(--i) * 0.28s);
 }
+.pf-hearts.big i { left: calc((var(--i) - 2.5) * 30px); animation-delay: calc(var(--i) * 0.12s); }
 @keyframes pf-heart { 0% { opacity: 0; transform: translateY(8px) scale(0.5); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-74px) scale(1.3); } }
 .pf-orbit { top: 8%; transform: scaleY(0.42); }
 .pf-orbit i { position: absolute; left: 0; top: 0; font-style: normal; color: #ffd23f; font-size: 1.6rem; text-shadow: 0 0 6px #fff6bf; animation: pf-orbit 1.1s linear infinite; animation-delay: calc(var(--i) * -0.367s); }

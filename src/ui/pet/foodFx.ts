@@ -17,12 +17,13 @@ const CRUMB_COLOR: Record<string, string> = {
 }
 const DEFAULT_CRUMB = '#f3c98b'
 
-export function foodMeta(item: Pick<ShopItem, 'id' | 'kind' | 'asset'>): FoodMeta {
+export function foodMeta(item: Pick<ShopItem, 'id' | 'kind' | 'asset'>, favorite = false): FoodMeta {
   return {
     art: artName(item),
     emoji: FOOD_EMOJI[item.asset],
     color: CRUMB_COLOR[item.asset] ?? DEFAULT_CRUMB,
     celebrate: item.asset === 'cake',
+    favorite,
   }
 }
 

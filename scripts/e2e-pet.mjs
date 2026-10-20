@@ -432,6 +432,50 @@ try {
     await ctx.close()
   }
 
+  // ---------- 13b) 散步遇到家具會停在前面 ----------
+  {
+    // 亂數固定 0.99：散步目標會挑在可視範圍的最右邊，中間擋著木箱
+    const { ctx, page } = await freshApp(browser, VP, { rand: 0.99, decor: ['decor-crate'] })
+    await page.getByRole('button', { name: /佈置/ }).click()
+    const pet = await center(page, '[data-testid=pet]')
+    const crate = await center(page, '[data-dock-item=decor-crate]')
+    const sc = await page.getByTestId('room-scroller').boundingBox()
+    await drag(page, crate, { x: pet.x + 250, y: sc.y + sc.height - 60 }, { settle: 400 })
+    await page.getByRole('button', { name: /完成/ }).click()
+    await pmTrigger(page, 'walk')
+    await page.waitForTimeout(4500)
+    const g = await page.evaluate(() => {
+      const c = document.querySelector('[data-placed=decor-crate]').getBoundingClientRect()
+      const p = document.querySelector('[data-testid=pet-slot]').getBoundingClientRect()
+      return { crateLeft: c.left, petRight: p.right, petLeft: p.left }
+    })
+    check('散步遇到家具：停在家具前面，不會穿過去', g.petRight <= g.crateLeft + 2 && g.petLeft > pet.x - 100, JSON.stringify(g))
+    await shot(page, 'walk-blocked')
+    await ctx.close()
+  }
+
+  // ---------- 13c) 缺圖時退回 happy/idle 圖與 emoji，不壞版 ----------
+  {
+    const { ctx, page, errors } = await freshApp(browser, VP, { rand: 0.9 })
+    await ctx.route(/\/art\/(pet-(adult|baby)-(sing|dance|laugh|dizzy|sleep|shy)|poop)\.png/, (r) => r.abort())
+    await page.reload()
+    await page.waitForSelector('[data-testid=pet]')
+    await pmTrigger(page, 'sing')
+    await page.waitForTimeout(900)
+    const src = () => page.locator('[data-testid=pet] img.pet-img').getAttribute('src')
+    check('缺 sing 圖：退回 happy 圖，動作與音符照演', (await src())?.includes('pet-adult-happy') === true && (await page.getByTestId('fx-notes').count()) === 1, String(await src()))
+    await page.waitForTimeout(3000)
+    await pmTrigger(page, 'sleep')
+    await page.waitForTimeout(700)
+    check('缺 sleep 圖：退回 sleepy 圖，Zzz 照冒', (await src())?.includes('pet-adult-sleepy') === true && (await page.getByTestId('pet-zzz').count()) === 1, String(await src()))
+    await pmTrigger(page, 'wake')
+    await pmTrigger(page, 'poop')
+    await page.waitForTimeout(2300)
+    check('缺 poop 圖：顯示 emoji 備援', (await page.locator('[data-testid=poop] .art-emoji').count()) === 1 && (await page.locator('[data-testid=poop] .art-emoji-glyph').innerText()) === '💩')
+    check('缺圖時頁面沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
   // ---------- 14) 離開首頁（元件卸載）時，計時器與監聽清乾淨、不丟錯 ----------
   {
     const { ctx, page, errors } = await freshApp(browser, VP, { rand: 0.9, fast: true })

@@ -191,6 +191,13 @@ describe('吃東西（SPEC A1）', () => {
     expect(sounds(s)).not.toContain('burp')
     expect(s.ms).toBeLessThanOrEqual(2500)
   })
+  it('今天最喜歡的食物：愛心加倍、說「最喜歡了！」、仍在 2.5 秒內，不打嗝', () => {
+    const s = planEat({ stage: 'adult', burp: true, favorite: true })
+    expect(say(s)[0].text).toBe('最喜歡了！')
+    expect(s.steps.some((x) => x.act.do === 'fx' && x.act.fx === 'bigHearts')).toBe(true)
+    expect(sounds(s)).not.toContain('burp')
+    expect(s.ms).toBeLessThanOrEqual(2500)
+  })
   it('蛋糕（celebrate）：吃完會跳舞', () => {
     const s = planEat({ stage: 'adult', burp: false, celebrate: true })
     expect(poses(s)).toContain('dance')

@@ -24,7 +24,7 @@ export type AnimId =
   | 'gaze'
   | 'wave'
   | 'wobble'
-export type FxId = 'notes' | 'sparkles' | 'cloud' | 'hearts' | 'orbit' | 'glow'
+export type FxId = 'notes' | 'sparkles' | 'cloud' | 'hearts' | 'bigHearts' | 'orbit' | 'glow'
 export type SceneKind = 'eat' | 'poop' | 'behavior' | 'reaction'
 
 export type Action =
@@ -351,6 +351,8 @@ export interface EatOpts {
   burp: boolean
   /** 蛋糕：吃完會跳舞（SPEC B2） */
   celebrate?: boolean
+  /** 今天最喜歡的食物（SPEC B2）：愛心加倍、說「最喜歡了！」 */
+  favorite?: boolean
 }
 
 /** 咀嚼的間隔 */
@@ -389,9 +391,13 @@ export function planEat(o: EatOpts): Scene {
     steps.push(step(t, { do: 'pose', pose: 'happy' }), step(t, { do: 'anim', anim: 'chew' }), step(t, { do: 'food', phase: 'bite', n }), step(t, { do: 'sound', sound: 'chew' }))
   }
   const tg = b0 + 3 * BITE_MS + 40
-  steps.push(step(tg, { do: 'food', phase: 'gulp' }), step(tg, { do: 'anim', anim: 'gulp' }), step(tg, { do: 'sound', sound: 'gulp' }), step(tg + 120, { do: 'fx', fx: 'hearts', ms: 700 }))
+  steps.push(step(tg, { do: 'food', phase: 'gulp' }), step(tg, { do: 'anim', anim: 'gulp' }), step(tg, { do: 'sound', sound: 'gulp' }), step(tg + 120, { do: 'fx', fx: o.favorite ? 'bigHearts' : 'hearts', ms: o.favorite ? 900 : 700 }))
   let end = tg + 420
-  if (o.burp) {
+  if (o.favorite) {
+    // 最喜歡的食物：開心大笑、愛心加倍，不打嗝（維持在 2.5 秒內）
+    steps.push(step(tg + 100, { do: 'pose', pose: 'laugh' }), step(tg + 100, { do: 'anim', anim: 'bounce' }), step(tg + 100, { do: 'say', text: '最喜歡了！', ms: 900 }), step(tg + 100, { do: 'sound', sound: 'giggle' }))
+    end = tg + 1000
+  } else if (o.burp) {
     const tb = tg + 300
     steps.push(
       step(tb, { do: 'pose', pose: 'shy' }),
