@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
-import { mustObject } from '../../../learning/objects'
 import { pickLine } from '../../../learning/lines'
 import { say } from '../../../learning/speech'
 import type { Question } from '../../../learning/types'
 import { OBJ_EMOJI } from '../../../art/items'
+import { artAltOf, artEmojiOf } from '../../../learning/lifeNature'
 import { Icon } from '../../components/Icon'
+import { itemName } from './itemInfo'
 import { useDragKit } from './DragKit'
 import type { HintStage } from './QuestionView'
 import './adventure-v4.css'
+import './adventure-v6-life.css'
 
 interface Props {
   q: Question
@@ -23,7 +25,7 @@ interface Props {
   onDemoEnd?: () => void
 }
 
-const ObjIcon = ({ id }: { id: string }) => <Icon name={id} emoji={OBJ_EMOJI[id]} alt={mustObject(id).name} />
+const ObjIcon = ({ id }: { id: string }) => <Icon name={id} emoji={OBJ_EMOJI[id]} alt={itemName(id)} />
 
 /**
  * 拖曳歸類：把東西拖進對的籃子（兩到三個籃子）。
@@ -110,7 +112,7 @@ export function SortView({ q, hintStage, solved, voiceOn, onWrong, onSolved, dem
               className={`sort-item ${selected === i ? 'selected' : ''} ${bounce === i ? 'bounce' : ''} ${glow === i ? 'demo' : ''} ${draggingId === String(i) ? 'dragging' : ''}`}
               data-testid="sort-item"
               data-item={i}
-              aria-label={`${mustObject(it.obj as string).name}（拖到籃子，或點一下再點籃子）`}
+              aria-label={`${itemName(it.obj as string)}（拖到籃子，或點一下再點籃子）`}
               aria-pressed={selected === i}
               disabled={solved || demo}
               {...bind(String(i))}
@@ -133,11 +135,17 @@ export function SortView({ q, hintStage, solved, voiceOn, onWrong, onSolved, dem
             disabled={solved || demo}
             onClick={() => selected !== null && place(selected, b.id)}
           >
-            <span className="sort-bin-head">
-              {b.obj && (
-                <span className="sort-bin-icon">
-                  <ObjIcon id={b.obj} />
+            <span className={`sort-bin-head ${b.art ? 'scene' : ''}`}>
+              {b.art ? (
+                <span className="sort-bin-icon sort-bin-scene">
+                  <Icon name={b.art} emoji={artEmojiOf(b.art)} alt={artAltOf(b.art)} />
                 </span>
+              ) : (
+                b.obj && (
+                  <span className="sort-bin-icon">
+                    <ObjIcon id={b.obj} />
+                  </span>
+                )
               )}
               <b>{b.label}</b>
             </span>

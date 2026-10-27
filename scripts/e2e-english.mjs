@@ -110,7 +110,7 @@ try {
 
   // ---------- 科目分頁 ----------
   await openMap(page)
-  check('地圖上方有科目分頁：數學、英文（大圖示加文字）', (await page.getByTestId('subject-math').innerText()).includes('數學') && (await page.getByTestId('subject-english').innerText()).includes('英文') && (await page.locator('.adv-subject-glyph').count()) === 2)
+  check('地圖上方有科目分頁：數學、英文（大圖示加文字；v6 之後還有生活、自然）', (await page.getByTestId('subject-math').innerText()).includes('數學') && (await page.getByTestId('subject-english').innerText()).includes('英文') && (await page.locator('.adv-subject-glyph').count()) === 4)
   check('預設是數學（花果山）', (await page.getByTestId('subject-math').getAttribute('aria-selected')) === 'true' && (await page.getByTestId('map').getAttribute('data-subject')) === 'math' && (await page.locator('.adv-map-hero').innerText()).includes('花果山'))
   check('數學地圖有今日冒險卡片（還沒玩）', (await page.getByTestId('daily-card').getAttribute('data-done')) === '0' && (await page.getByTestId('daily-go').innerText()).includes('出發'))
   await page.getByTestId('subject-english').click()

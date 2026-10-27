@@ -61,6 +61,10 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'bins.hint': '把東西放進對的籃子裡。',
   'bins.wrong': '這個不是這一籃喔，再試試看。',
   'bins.done': '都放好了！',
+  // 步驟排序（生活、自然）
+  'order.hint': '照順序，一個一個放進格子裡。',
+  'order.wrong': '這個還不是喔，再想想看。',
+  'order.done': '順序都排對了！',
   'audio.test': '數一數，有幾根香蕉？',
   'lock.sleepy': '我想睡覺了，明天再一起冒險吧',
   'ceremony.done': '今天的冒險完成了！',
@@ -107,6 +111,7 @@ export const STATIC_LINES: Record<string, string | string[]> = {
     '阿悟學會了新本領：節奏舞！',
     '阿悟學會了新本領：說 Hello！',
     '阿悟學會了新本領：翻筋斗！',
+    '阿悟學會了新本領：有禮貌地鞠躬！',
   ],
   // v5 圖鑑：點一下唸名字（物件名稱；英文名稱等英文科目上線後再加）
   'ui.friend.name': ['香蕉', '桃子', '蘋果', '葡萄', '小魚', '小雞', '小兔子', '花', '貝殼', '星星', '汽車', '火箭', '皮球', '恐龍', '鋼琴'],

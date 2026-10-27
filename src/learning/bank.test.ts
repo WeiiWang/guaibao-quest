@@ -3,8 +3,8 @@ import { QUESTIONS as ALL_QUESTIONS, getQuestion, isGentleOk, questionsFor } fro
 import { CATEGORY_NAMES, COLOR_WORDS, getObject, mustObject, OBJECTS, type LearnObject } from './objects'
 import { DIFFICULTIES, MATH_SKILLS as SKILLS, type Question } from './types'
 
-/** 這個檔案驗證數學題庫（物件、種類、顏色）；英文題庫見 english.test.ts */
-const QUESTIONS = ALL_QUESTIONS.filter((q) => q.skill !== 'english')
+/** 這個檔案驗證數學題庫（物件、種類、顏色）；英文題庫見 english.test.ts，生活與自然見 world.test.ts */
+const QUESTIONS = ALL_QUESTIONS.filter((q) => !['english', 'life', 'nature'].includes(q.skill))
 
 type ObjOf = (id: string | undefined) => LearnObject
 

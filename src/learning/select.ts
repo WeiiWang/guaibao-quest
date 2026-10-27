@@ -87,6 +87,16 @@ export interface PlanOptions {
 export const SKILL_OF_INTERACTION: Partial<Record<Interaction, SkillId>> = { tapN: 'number', dragSort: 'classify' }
 
 /**
+ * 這種互動的題屬於哪個技能：數學的拿給我 N 個是數感、拖曳歸類是分類；
+ * 只有一個技能的科目（英文、生活、自然）裡，點選以外的互動（拖曳歸類、排序）都屬於它唯一的技能。
+ */
+export function skillForInteraction(it: Interaction, skills: readonly SkillId[]): SkillId | undefined {
+  const fixed = SKILL_OF_INTERACTION[it]
+  if (fixed && skills.includes(fixed)) return fixed
+  return it !== 'pick' && skills.length === 1 ? skills[0] : undefined
+}
+
+/**
  * 規劃一站的題目：
  * - 混合三種技能（輪替起點隨站別移動，每站 2/2/1 題）
  * - 每個技能用自己目前的難度
@@ -111,7 +121,7 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
     const spare = [...rotation]
     const fixed = new Set<number>()
     opts.slots.slice(0, size).forEach((it, i) => {
-      const skill = SKILL_OF_INTERACTION[it]
+      const skill = skillForInteraction(it, skills)
       if (!skill) return
       const diff = opts.states[skill].difficulty
       const has = pickQuestion({ skill, difficulty: diff, seen, rng: () => 0, bank: opts.bank, gentle: opts.gentle, interaction: it })

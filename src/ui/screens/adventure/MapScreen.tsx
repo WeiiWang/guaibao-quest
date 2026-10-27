@@ -124,7 +124,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const pos = (k: number) => ({ ['--x' as string]: `${POINTS[k][0]}%`, ['--y' as string]: `${POINTS[k][1]}%` })
 
   return (
-    <main className={`screen adv adv-map ${subject.id === 'english' ? 'theme-sky' : 'theme-mint'} subject-${subject.id}`} data-testid="map" data-subject={subject.id}>
+    <main className={`screen adv adv-map theme-${subject.theme} subject-${subject.id}`} data-testid="map" data-subject={subject.id}>
       <ScreenHeader title="冒險地圖" onBack={onBack} right={<MaterialsChip />} />
 
       <nav className="adv-subjects" role="tablist" aria-label="科目">

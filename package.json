@@ -21,7 +21,8 @@
     "e2e:interact": "node scripts/e2e-interact.mjs",
     "e2e:meta": "node scripts/e2e-meta.mjs",
     "e2e:profiles": "node scripts/e2e-profiles.mjs",
-    "e2e:english": "node scripts/e2e-english.mjs"
+    "e2e:english": "node scripts/e2e-english.mjs",
+    "e2e:life": "node scripts/e2e-life.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",

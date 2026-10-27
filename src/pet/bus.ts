@@ -22,9 +22,10 @@ export type PetCommand =
   | 'trick:rhythm'
   | 'trick:hello'
   | 'trick:flip'
+  | 'trick:bow'
   | 'trick:all'
 
-export const PET_COMMANDS: readonly PetCommand[] = ['sing', 'dance', 'walk', 'sneeze', 'yawn', 'gaze', 'wave', 'rubTummy', 'pinchNose', 'poop', 'sleep', 'wake', 'trick:count', 'trick:tidy', 'trick:rhythm', 'trick:hello', 'trick:flip', 'trick:all']
+export const PET_COMMANDS: readonly PetCommand[] = ['sing', 'dance', 'walk', 'sneeze', 'yawn', 'gaze', 'wave', 'rubTummy', 'pinchNose', 'poop', 'sleep', 'wake', 'trick:count', 'trick:tidy', 'trick:rhythm', 'trick:hello', 'trick:flip', 'trick:bow', 'trick:all']
 
 const CMD_KEY = 'gq-pet-cmds'
 const TOD_KEY = 'gq-pet-tod'
