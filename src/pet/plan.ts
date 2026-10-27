@@ -24,6 +24,8 @@ export type AnimId =
   | 'gaze'
   | 'wave'
   | 'wobble'
+  /** 搖頭說「不要」（吃飽了） */
+  | 'headshake'
 export type FxId = 'notes' | 'sparkles' | 'cloud' | 'hearts' | 'bigHearts' | 'orbit' | 'glow'
 export type SceneKind = 'eat' | 'poop' | 'behavior' | 'reaction'
 
@@ -250,7 +252,7 @@ export function planBehavior(id: BehaviorId, env: PlanEnv): Scene {
 
 // ---------- 互動反應（SPEC-v3 A4） ----------
 
-export type ReactionId = 'tickle' | 'dizzy' | 'pat' | 'thanks' | 'wake'
+export type ReactionId = 'tickle' | 'dizzy' | 'pat' | 'thanks' | 'wake' | 'full'
 
 export function planReaction(id: ReactionId): Scene {
   switch (id) {
@@ -307,6 +309,18 @@ export function planReaction(id: ReactionId): Scene {
           step(0, { do: 'say', text: '謝謝你！', ms: 1800 }),
           step(0, { do: 'fx', fx: 'hearts', ms: 1400 }),
           step(0, { do: 'sound', sound: 'giggle' }),
+        ],
+      }
+    case 'full': // 吃飽了還被餵：搖頭「我吃飽了～」（SPEC-v4 U2；食物沒有被扣）
+      return {
+        id,
+        kind: 'reaction',
+        ms: 2200,
+        steps: [
+          step(0, { do: 'pose', pose: 'shy' }),
+          step(0, { do: 'anim', anim: 'headshake' }),
+          step(0, { do: 'say', text: '我吃飽了～', ms: 1900 }),
+          step(0, { do: 'sound', sound: 'gulp' }),
         ],
       }
     case 'wake': // 點睡著的阿悟

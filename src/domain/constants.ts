@@ -17,6 +17,14 @@ export const PIN_MAX_FAILS = 5
 export const PIN_LOCK_MS = 30 * 1000
 export const DEFAULT_PET_NAME = '阿悟'
 export const EATING_ANIM_MS = 1600
+/** 飽足 ≥ 這個值就吃不下了：餵食不扣食物，阿悟搖頭說「我吃飽了～」 */
+export const FULL_HUNGER = 95
+/** 輕點餵食的最短間隔（ms）：小孩狂點只算一次 */
+export const TAP_FEED_GAP_MS = 800
+/** 剛買的東西可以在這段時間內退回（畫面上的「退回」按鈕存在多久） */
+export const PURCHASE_UNDO_MS = 5000
+/** 送給新使用者的免費著色頁（著色本一開始就有東西可畫，不是死路） */
+export const FREE_COLORING_PAGES = ['monkey', 'banana-tree'] as const
 export const HOUR_MS = 60 * 60 * 1000
 
 export const DEFAULT_TEMPLATES: TaskTemplate[] = [

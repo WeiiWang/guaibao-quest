@@ -24,6 +24,9 @@ import { Art } from './Art'
 import { Icon } from './Icon'
 import { PetSprite } from './PetSprite'
 import { useCelebrate, useToast } from '../hooks'
+import { useCelebrateSmall } from '../feedback'
+import { speak } from '../../learning/speech'
+import { TAP_FEED_GAP_MS } from '../../domain/constants'
 import { useLearningSettings } from '../learningHooks'
 import { playPetSound } from '../../pet/sounds'
 import { PetFx } from '../pet/PetFx'
@@ -87,7 +90,8 @@ const hashOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0
 export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, childName = '', favoriteFoodId = null }: Props) {
   const toast = useToast()
   const celebrate = useCelebrate()
-  const { soundOn } = useLearningSettings()
+  const { soundOn, voiceOn } = useLearningSettings()
+  const small = useCelebrateSmall()
   const todMode = useTodMode()
   const reducedMotion = useReducedMotion()
 
@@ -109,6 +113,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const [bursts, setBursts] = useState<{ id: string; x: number }[]>([])
   const [hearts, setHearts] = useState<number[]>([])
   const [hintGone, setHintGone] = useState(false)
+  /** 吃飽了被餵：那個食物圖示抖一下（食物沒有被扣） */
+  const [nopeId, setNopeId] = useState<string | null>(null)
+  const lastTapFeed = useRef(0)
   const slotRef = useRef<HTMLDivElement>(null)
   const pressTimer = useRef<number | undefined>(undefined)
   const pressCleanup = useRef<(() => void) | null>(null)
@@ -185,11 +192,28 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     }
   }, [feedHintShown, hintGone])
 
-  const feed = async (foodId: string, from?: { x: number; y: number }) => {
+  const feed = async (foodId: string, from?: { x: number; y: number }, via: 'tap' | 'drag' = 'drag') => {
+    // 輕點餵食：800ms 內只算一次（4–7 歲的孩子習慣狂點）；拖曳是刻意的動作，不受限制
+    if (via === 'tap') {
+      const t = Date.now()
+      if (t - lastTapFeed.current < TAP_FEED_GAP_MS) return
+      lastTapFeed.current = t
+    }
     dismissHint()
     const stage = pet.stage
     const r = await repo.feedPet(foodId)
-    if (!r.ok) return toast(r.error, 'warn')
+    if (!r.ok) {
+      if (r.reason === 'full') {
+        // 吃飽了：食物沒有被扣；阿悟搖頭說「我吃飽了～」，食物彈回（拖的飛回去、點的抖一下）
+        life.refuse()
+        speak('我吃飽了', { enabled: voiceOn })
+        setNopeId(foodId)
+        life.later(() => setNopeId((v) => (v === foodId ? null : v)), 700)
+        if (from) flyBack(foodId, 'food', from.x, from.y)
+        return
+      }
+      return toast(r.error, 'warn')
+    }
     // 食物從放開的地方（或飼料欄）飛到嘴邊，接著咀嚼、吞下去（動畫腳本在 src/pet/plan.ts）
     const item = foods.find((f) => f.item.id === foodId)?.item
     if (item) {
@@ -321,6 +345,8 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     life.later(() => {
       void repo.clearPoop(id)
       life.thanks()
+      const rr = roomRef.current?.getBoundingClientRect()
+      if (rr) small('poop', { at: { x: rr.left + x * roomW, y: rr.top + PET_BOTTOM * roomH - 50 } })
     }, 700)
     life.later(() => setBursts((b) => b.filter((i) => i.id !== id)), 1400)
   }
@@ -435,12 +461,14 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     const it = ownedDecor.find((d) => d.id === p.itemId)
     if (!p.started) {
       // 點一下
-      if (p.kind === 'food') void feed(p.itemId)
+      if (p.kind === 'food') void feed(p.itemId, undefined, 'tap')
       else if (p.kind === 'new' && it) {
         const c = defaultSpot(it)
         const r = await repo.placeDecor(it.id, c.x, c.y)
-        if (r.ok) setSelected(it.id)
-        else toast(r.error, 'warn')
+        if (r.ok) {
+          setSelected(it.id)
+          small('place', { at: p.target })
+        } else toast(r.error, 'warn')
       } else if (p.kind === 'move') setSelected((s) => (s === p.itemId ? null : p.itemId))
       return
     }
@@ -455,6 +483,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
         if (r.ok) {
           setSelected(p.itemId)
           noteBall(p.itemId, ev.preview.x)
+          small('place', { at: { x: fx, y: fy } })
         } else toast(r.error, 'warn')
       } else flyBack(p.itemId, 'new', fx, fy)
     } else {
@@ -544,6 +573,8 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     if (bgDrag.current?.id === e.pointerId) bgDrag.current = null
   }
   const scrollBy = (dir: -1 | 1) => scrollerRef.current?.scrollBy({ left: dir * view.w * 0.6, behavior: 'smooth' })
+  /** 食物欄只能從空白處或這兩顆箭頭捲動（從食物上開始的手勢一律是拖曳） */
+  const scrollDock = (dir: -1 | 1) => dockRef.current?.scrollBy({ left: dir * Math.max(160, dockRef.current.clientWidth * 0.7), behavior: 'smooth' })
   const canLeft = scrollLeft > 4
   const canRight = roomW > 0 && scrollLeft < roomW - view.w - 4
 
@@ -753,8 +784,8 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
             </div>
           </div>
 
-          {canLeft && <button className="room-arrow left" onClick={() => scrollBy(-1)} aria-label="往左看">‹</button>}
-          {canRight && <button className="room-arrow right" onClick={() => scrollBy(1)} aria-label="往右看">›</button>}
+          {canLeft && <button className="room-arrow left" onClick={() => scrollBy(-1)} aria-label="往左看房間" data-testid="room-left"><span aria-hidden>👈</span></button>}
+          {canRight && <button className="room-arrow right" onClick={() => scrollBy(1)} aria-label="往右看房間" data-testid="room-right"><span aria-hidden>👉</span></button>}
         </div>
       </section>
 
@@ -767,6 +798,8 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
         <div className="dock-wrap">
           {dockFade.left && <span className="dock-fade left" aria-hidden data-testid="dock-fade-left" />}
           {dockFade.right && <span className="dock-fade right" aria-hidden data-testid="dock-fade-right" />}
+          {dockFade.left && <button className="dock-arrow left" onClick={() => scrollDock(-1)} aria-label="往左看" data-testid="dock-arrow-left">◀</button>}
+          {dockFade.right && <button className="dock-arrow right" onClick={() => scrollDock(1)} aria-label="往右看" data-testid="dock-arrow-right">▶</button>}
         <div className="dock" ref={dockRef} onScroll={measureDock} data-testid="dock" aria-label={edit ? '尚未擺放的裝飾' : '飼料'}>
           {!edit &&
             foods.map(({ item, qty }) => {
@@ -784,13 +817,13 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                   key={item.id}
                   role="button"
                   tabIndex={0}
-                  className={`dock-item food ${drag?.itemId === item.id && drag.kind === 'food' ? 'lifted' : ''}`}
+                  className={`dock-item food ${drag?.itemId === item.id && drag.kind === 'food' ? 'lifted' : ''} ${nopeId === item.id ? 'nope' : ''}`}
                   data-dock-item={item.id}
                   aria-label={`餵${item.name}，剩 ${qty} 個，可拖到${pet.name}身上`}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault()
-                      void feed(item.id)
+                      void feed(item.id, undefined, 'tap')
                     }
                   }}
                   {...bind('food', item.id)}

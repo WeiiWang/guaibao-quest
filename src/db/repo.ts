@@ -4,13 +4,16 @@ import {
   DEFAULT_PET_NAME,
   DEFAULT_TEMPLATES,
   FOOD_EFFECTS,
+  FREE_COLORING_PAGES,
+  FULL_HUNGER,
+  PURCHASE_UNDO_MS,
   SHOP_ITEMS,
   START_HUNGER,
   TASK_POINTS_MAX,
   TASK_POINTS_MIN,
 } from '../domain/constants'
 import { dayRange, localDateStr } from '../domain/date'
-import { feed } from '../domain/pet'
+import { currentHunger, feed } from '../domain/pet'
 import { planFeedPoop, POOP_CAP, resolveDuePoops, type PoopSpread } from '../pet/poop'
 import { checkPin, hashPin, isValidPin } from '../domain/pin'
 import { balanceOf, checkPenalty, grantPoints } from '../domain/points'
@@ -31,7 +34,7 @@ import { isArtworkId, spriteSize } from '../art/items'
 import { getColoringPage } from '../art/coloring/pages'
 import { checkApplyTheme, resolveTheme } from '../domain/theme'
 import { docOf, type PaintDoc } from '../domain/coloring'
-import { clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
+import { artworkSpot, clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
 import { getChapter } from '../learning/chapter'
 import { addMaterial, emptyCost, stationRewardQty, STATION_SIZE } from '../learning/scoring'
@@ -63,7 +66,7 @@ const SETTINGS_ID = 'main'
 const CHILD_ID = 'child'
 const PET_ID = 'pet'
 
-export type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string }
+export type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string; reason?: 'full' | 'expired' | 'used' }
 
 /** 所有寫入都走 Repo；db 與時間來源可注入（測試用） */
 export class Repo {
@@ -77,6 +80,30 @@ export class Repo {
   // ---------- 啟動 / 設定 ----------
   async seedShop(): Promise<void> {
     await this.db.shopItems.bulkPut(SHOP_CATALOG)
+  }
+
+  /**
+   * 送新使用者免費著色頁（小猴子、香蕉樹）：著色本一打開就有東西可畫。
+   * 只送一次（settings.freeColoringGranted）；已經有的不重複加，之後怎麼退回、重設都不再補。
+   */
+  async grantFreeColoring(): Promise<boolean> {
+    const d = this.db
+    return d.transaction('rw', [d.settings, d.inventory], async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s || s.freeColoringGranted) return false
+      for (const p of FREE_COLORING_PAGES) {
+        const id = `coloring-${p}`
+        const inv = await d.inventory.get(id)
+        if (!inv || inv.qty < 1) await d.inventory.put({ id, itemId: id, qty: 1 })
+      }
+      await d.settings.update(SETTINGS_ID, { freeColoringGranted: true })
+      return true
+    })
+  }
+
+  /** 首次進首頁的引導只出現一次 */
+  async markHomeGuideShown(): Promise<void> {
+    await this.db.settings.update(SETTINGS_ID, { homeGuideShown: true })
   }
 
   async getSettings(): Promise<Settings | undefined> {
@@ -164,6 +191,18 @@ export class Repo {
       if (!inst) return { ok: false, error: '找不到任務' } as const
       const next = transition(inst.status, 'submit')
       if (!next) return { ok: false, error: '這個任務現在不能申請' } as const
+      await this.db.instances.update(instanceId, { status: next, updatedAt: now })
+      return { ok: true } as const
+    })
+  }
+
+  /** 收回還在等審核的「我做完了」（小孩按錯了）：回到待辦，家長不會看到 */
+  async withdrawTask(instanceId: string, now = this.clock()): Promise<Result> {
+    return this.db.transaction('rw', this.db.instances, async () => {
+      const inst = await this.db.instances.get(instanceId)
+      if (!inst) return { ok: false, error: '找不到任務' } as const
+      const next = transition(inst.status, 'withdraw')
+      if (!next) return { ok: false, error: '這個任務現在不能收回' } as const
       await this.db.instances.update(instanceId, { status: next, updatedAt: now })
       return { ok: true } as const
     })
@@ -292,7 +331,7 @@ export class Repo {
   }
 
   // ---------- 商店 / 背包 / 寵物 ----------
-  async buyItem(itemId: string, now = this.clock()): Promise<Result> {
+  async buyItem(itemId: string, now = this.clock()): Promise<Result<{ ledgerId: string }>> {
     const d = this.db
     return d.transaction('rw', [d.ledger, d.inventory, d.shopItems], async () => {
       const item = await d.shopItems.get(itemId)
@@ -305,9 +344,29 @@ export class Repo {
           error: check.reason === 'owned' ? '已經擁有了' : `還差 ${check.shortBy} 點`,
         } as const
       }
-      await d.ledger.add({ id: newId(), at: now, delta: -item.price, reason: `購買：${item.name}`, kind: 'purchase', refId: itemId })
+      const ledgerId = newId()
+      await d.ledger.add({ id: ledgerId, at: now, delta: -item.price, reason: `購買：${item.name}`, kind: 'purchase', refId: itemId })
       await d.inventory.put({ id: itemId, itemId, qty: (inv?.qty ?? 0) + 1 })
-      return { ok: true } as const
+      return { ok: true, ledgerId } as const
+    })
+  }
+
+  /**
+   * 退回剛買的東西（PURCHASE_UNDO_MS 內，含一點網路/卡頓的寬限）：
+   * 把那筆購買紀錄整筆拿掉（星星還回去）並從庫存扣 1，彷彿沒買過；整個動作在同一個交易裡，星星與庫存不會不一致。
+   * 食物如果已經餵掉了（庫存不夠扣）就不能退。
+   */
+  async undoPurchase(ledgerId: string, now = this.clock()): Promise<Result<{ itemId: string; refunded: number }>> {
+    const d = this.db
+    return d.transaction('rw', [d.ledger, d.inventory], async () => {
+      const entry = await d.ledger.get(ledgerId)
+      if (!entry || entry.kind !== 'purchase' || !entry.refId) return { ok: false, error: '找不到這筆購買' } as const
+      if (now - entry.at > PURCHASE_UNDO_MS + 1500) return { ok: false, error: '太久了，不能退回了', reason: 'expired' } as const
+      const inv = await d.inventory.get(entry.refId)
+      if (!inv || inv.qty < 1) return { ok: false, error: '已經用掉了，不能退回', reason: 'used' } as const
+      await d.ledger.delete(ledgerId)
+      await d.inventory.put({ ...inv, qty: inv.qty - 1 })
+      return { ok: true, itemId: entry.refId, refunded: -entry.delta } as const
     })
   }
 
@@ -320,6 +379,8 @@ export class Repo {
       if (!inv || inv.qty < 1) return { ok: false, error: '背包裡沒有這個了' } as const
       const pet = await d.pets.get(PET_ID)
       if (!pet) return { ok: false, error: '找不到寵物' } as const
+      // 吃飽了：不扣食物、不增加餵食次數（小孩狂點也不會白白燒掉星星換來的食物）
+      if (currentHunger(pet, now) >= FULL_HUNGER) return { ok: false, error: '我吃飽了～', reason: 'full' } as const
       const r = feed(pet, effect, now)
       // v3：吃完東西可能在一段時間後大便（蛋不會；家長可關閉）
       const settings = await d.settings.get(SETTINGS_ID)
@@ -797,7 +858,9 @@ export class Repo {
       const hung = (await d.placements.toArray()).filter((p) => isArtworkId(p.itemId)).length
       const size = spriteSize(itemId)
       const hf = size.rows / ROOM_CELLS_H
-      const pos = clampPlacement('wall', 0.14 + 0.07 * (hung % 10), 0.26, 0, hf)
+      // 預設放在剛進房間時畫面的右側牆面，避開左上角的狀態卡與右上角的工坊/背包按鈕
+      const spot = artworkSpot(hung)
+      const pos = clampPlacement('wall', spot.x, spot.y, 0, hf)
       await d.placements.put({ itemId, x: pos.x, y: pos.y, z: 0, flipped: false, placedAt: now })
       return { ok: true, itemId, already: false } as const
     })

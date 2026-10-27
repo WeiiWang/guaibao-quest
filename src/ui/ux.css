@@ -1,0 +1,36 @@
+/* ============ v4 線 U：操作與回饋（UX）============
+   styles.css 的既有規則不動；這裡放新元件與覆寫。 */
+
+/* ---------- 統一成功回饋（feedback.ts）---------- */
+.fb-burst { position: fixed; inset: 0; z-index: 96; pointer-events: none; overflow: hidden; }
+.fb-particle { position: absolute; will-change: transform, opacity; filter: drop-shadow(0 3px 3px rgba(74, 59, 53, 0.25)); }
+
+/* ---------- 食物欄（第 4 項）：從食物上開始的拖曳一律是拖曳，捲動只靠空白處與兩顆箭頭 ---------- */
+.dock-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 4; width: 44px; height: 56px; padding: 0; border: 0;
+  font-size: 1.2rem; font-weight: 900; color: var(--butter-deep); background: rgba(255, 253, 249, 0.96);
+  box-shadow: 0 3px 0 rgba(74, 59, 53, 0.14); touch-action: manipulation;
+}
+.dock-arrow:active { background: var(--butter-soft); }
+.dock-arrow.left { left: 3px; border-radius: 0 22px 22px 0; }
+.dock-arrow.right { right: 3px; border-radius: 22px 0 0 22px; }
+.dock-row.editing .dock-arrow { background: var(--sky-soft); color: var(--sky-deep); }
+/* 吃飽了：被拒絕的食物圖示抖一下 */
+.dock-item.nope { animation: ux-nope 0.5s ease-in-out; }
+@keyframes ux-nope { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px) rotate(-3deg); } 45% { transform: translateX(8px) rotate(3deg); } 70% { transform: translateX(-5px); } }
+
+/* ---------- 房間左右「看旁邊」鈕（第 10 項）：改成圓形 + 指向的手，不再像返回鍵「‹」 ---------- */
+.room-frame .room-arrow { width: 64px; height: 64px; border-radius: 50%; font-size: 1.9rem; display: grid; place-items: center; background: rgba(255, 253, 249, 0.9); box-shadow: 0 4px 0 rgba(74, 59, 53, 0.14), 0 0 0 4px rgba(142, 201, 245, 0.7); }
+.room-frame .room-arrow.left { left: 8px; border-radius: 50%; }
+.room-frame .room-arrow.right { right: 8px; border-radius: 50%; }
+.room-frame .room-arrow span { display: block; animation: ux-nudge 1.4s ease-in-out infinite; }
+.room-frame .room-arrow.left span { animation-name: ux-nudge-l; }
+@keyframes ux-nudge { 50% { transform: translateX(5px); } }
+@keyframes ux-nudge-l { 50% { transform: translateX(-5px); } }
+
+/* ---------- 狀態卡半透明（第 6 項）：萬一蓋到牆上的東西還看得到 ---------- */
+.room-frame .pet-hud { background: rgba(255, 253, 249, 0.62); backdrop-filter: blur(4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .room-frame .room-arrow span, .dock-item.nope { animation: none; }
+}

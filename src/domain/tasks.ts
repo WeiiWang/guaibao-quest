@@ -1,9 +1,11 @@
 import type { TaskInstance, TaskStatus, TaskTemplate } from './types'
 
-export type TaskAction = 'submit' | 'approve' | 'reject'
+export type TaskAction = 'submit' | 'withdraw' | 'approve' | 'reject'
 
 const TRANSITIONS: Record<TaskAction, Partial<Record<TaskStatus, TaskStatus>>> = {
   submit: { todo: 'pending', rejected: 'pending' },
+  /** 小孩在家長審核前可以收回自己按的「我做完了」 */
+  withdraw: { pending: 'todo' },
   approve: { pending: 'approved' },
   reject: { pending: 'rejected' },
 }

@@ -153,4 +153,8 @@ export interface Settings {
   roomTheme?: RoomThemeChoice
   /** v3：寵物會大便；未設定視為開 */
   petPoopOn?: boolean
+  /** v4：已送過免費著色頁（只送一次，之後使用者的庫存怎麼變都不再補） */
+  freeColoringGranted?: boolean
+  /** v4：首次進首頁的引導（冒險地圖按鈕跳動 + 語音）是否已經顯示過 */
+  homeGuideShown?: boolean
 }

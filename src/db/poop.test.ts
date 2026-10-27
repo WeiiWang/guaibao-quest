@@ -21,11 +21,16 @@ async function setup() {
 beforeEach(setup)
 
 const pet = async () => (await repo.db.pets.get('pet'))!
+/** 餵之前先讓阿悟餓著（飽足 ≥95 時不會吃，見 repo.test.ts 的「吃飽了」） */
+const feedHungry = async (id: string, t: number) => {
+  await repo.db.pets.update('pet', { hunger: 0, hungerUpdatedAt: t })
+  return repo.feedPet(id, t)
+}
 
 describe('餵食後排定大便', () => {
   it('機率命中：排一個 20–90 秒後的大便，並記下連續餵食', async () => {
     rngValue = 0 // 0 < 0.3 → 命中；延遲取最小值
-    await repo.feedPet('banana', T0)
+    await feedHungry('banana', T0)
     const p = await pet()
     expect(p.poopDue).toHaveLength(1)
     expect(p.poopDue![0] - T0).toBeGreaterThanOrEqual(POOP_DELAY_MIN_MS)
@@ -35,36 +40,36 @@ describe('餵食後排定大便', () => {
   })
   it('機率沒命中：不排', async () => {
     rngValue = 0.9
-    await repo.feedPet('banana', T0)
+    await feedHungry('banana', T0)
     expect((await pet()).poopDue ?? []).toHaveLength(0)
   })
   it('連續吃第 3 次，機率提高到 60%（0.5 命中、第 1 次不命中）', async () => {
     rngValue = 0.5
-    await repo.feedPet('banana', T0)
+    await feedHungry('banana', T0)
     expect((await pet()).poopDue ?? []).toHaveLength(0)
-    await repo.feedPet('banana', T0 + 1000) // 第 2 次 45% → 0.5 仍不中
+    await feedHungry('banana', T0 + 1000) // 第 2 次 45% → 0.5 仍不中
     expect((await pet()).poopDue ?? []).toHaveLength(0)
-    await repo.feedPet('banana', T0 + 2000) // 第 3 次 60% → 中
+    await feedHungry('banana', T0 + 2000) // 第 3 次 60% → 中
     expect((await pet()).poopDue).toHaveLength(1)
   })
   it('蛋不會大便', async () => {
     await repo.db.pets.update('pet', { stage: 'egg', feedCount: 0 })
-    await repo.feedPet('banana', T0)
+    await feedHungry('banana', T0)
     expect((await pet()).poopDue ?? []).toHaveLength(0)
   })
   it('家長關掉「寵物會大便」就不排', async () => {
     await repo.setPetPoopOn(false)
-    await repo.feedPet('banana', T0)
+    await feedHungry('banana', T0)
     expect((await pet()).poopDue ?? []).toHaveLength(0)
   })
   it('房間（含已排定）達上限就不再排', async () => {
-    for (let i = 0; i < 10; i++) await repo.feedPet('banana', T0 + i)
+    for (let i = 0; i < 10; i++) await feedHungry('banana', T0 + i)
     const p = await pet()
     expect((p.poops?.length ?? 0) + (p.poopDue?.length ?? 0)).toBeLessThanOrEqual(POOP_CAP)
     expect(p.poopDue).toHaveLength(POOP_CAP)
   })
   it('餵食本身的結果不受影響（feedCount、hunger 照常）', async () => {
-    const r = await repo.feedPet('banana', T0)
+    const r = await feedHungry('banana', T0)
     expect(r.ok && r.pet.feedCount).toBe(21)
   })
 })
@@ -72,7 +77,7 @@ describe('餵食後排定大便', () => {
 describe('便便存取', () => {
   it('到期的才會長出來，而且存在資料庫（重新整理後還在）', async () => {
     rngValue = 0
-    await repo.feedPet('banana', T0)
+    await feedHungry('banana', T0)
     const due = (await pet()).poopDue![0]
     expect(await repo.takeDuePoops(0.3, due - 1)).toEqual([])
     const added = await repo.takeDuePoops(0.3, due + 5)

@@ -5,7 +5,7 @@
 import { mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { freshApp, idb, launch, makeChecker } from './e2e-lib.mjs'
+import { center, drag, freshApp, getPet, idb, launch, makeChecker, patchPet } from './e2e-lib.mjs'
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '../design/screens')
 mkdirSync(OUT, { recursive: true })
@@ -101,7 +101,134 @@ async function lockScreen(browser) {
   await ctx.close()
 }
 
-const SECTIONS = { lockScreen }
+
+// ---------- 第 2 項：餵食防呆 ----------
+async function feedingGuard(browser) {
+  // 吃飽了（≥95）：點、拖都不扣食物，阿悟搖頭說「我吃飽了～」
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { bananas: 5 })
+    await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now() })
+    await page.reload()
+    await page.waitForSelector('[data-testid=pet]')
+    await page.evaluate(() => {
+      window.__spoken = []
+      const orig = window.speechSynthesis.speak.bind(window.speechSynthesis)
+      window.speechSynthesis.speak = (u) => (window.__spoken.push(u.text), orig(u))
+    })
+    const before = await getPet(page)
+    await page.locator('[data-dock-item=banana]').click()
+    await page.waitForTimeout(250)
+    check('飽足 100：輕點食物，食物不扣（x5）', (await qtyOf(page, 'banana')) === 5)
+    check('飽足 100：feedCount 不增加', (await getPet(page)).feedCount === before.feedCount)
+    const bubble = await page.getByTestId('pet-bubble').innerText().catch(() => '')
+    check('阿悟說「我吃飽了～」', bubble.includes('我吃飽了'), bubble)
+    check('阿悟搖頭（headshake 動畫）', (await page.getByTestId('pet').getAttribute('data-anim')) === 'headshake')
+    check('語音唸「我吃飽了」', (await page.evaluate(() => window.__spoken)).some((t) => t.includes('我吃飽了')))
+    check('被拒絕的食物圖示抖一下（nope）', (await page.locator('[data-dock-item=banana].nope').count()) === 1)
+    await shot(page, 'feed-full', 'land')
+    // 拖給阿悟也一樣
+    await page.waitForTimeout(2300)
+    const from = await center(page, '[data-dock-item=banana]')
+    const to = await center(page, '[data-testid=pet]')
+    await drag(page, from, to, { settle: 600 })
+    check('飽足 100：拖給阿悟吃，食物也不扣', (await qtyOf(page, 'banana')) === 5 && (await getPet(page)).feedCount === before.feedCount)
+    check('無 console 錯誤', errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+  // 家長關語音：不唸
+  {
+    const { ctx, page } = await freshApp(browser, SIZES.land, { bananas: 5 })
+    await patchSettings(page, { voiceOn: false })
+    await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now() })
+    await page.reload()
+    await page.waitForSelector('[data-testid=pet]')
+    await page.evaluate(() => {
+      window.__spoken = []
+      const orig = window.speechSynthesis.speak.bind(window.speechSynthesis)
+      window.speechSynthesis.speak = (u) => (window.__spoken.push(u.text), orig(u))
+    })
+    await page.locator('[data-dock-item=banana]').click()
+    await page.waitForTimeout(300)
+    check('家長關語音：吃飽了不唸（字幕泡泡還在）', (await page.evaluate(() => window.__spoken.length)) === 0 && (await page.getByTestId('pet-bubble').count()) === 1)
+    await ctx.close()
+  }
+  // 輕點防連點：800ms 內只算一次；拖曳不受限
+  {
+    const { ctx, page } = await freshApp(browser, SIZES.land, { bananas: 8 })
+    await patchPet(page, { hunger: 5, hungerUpdatedAt: Date.now() })
+    await page.reload()
+    await page.waitForSelector('[data-testid=pet]')
+    for (let i = 0; i < 6; i++) {
+      await page.locator('[data-dock-item=banana]').click()
+      await page.waitForTimeout(90)
+    }
+    await page.waitForTimeout(300)
+    check('狂點 6 下（0.5 秒內）：只吃 1 個（8→7）', (await qtyOf(page, 'banana')) === 7, String(await qtyOf(page, 'banana')))
+    await page.waitForTimeout(3600) // 等吃完、過了 800ms
+    await page.locator('[data-dock-item=banana]').click()
+    await page.waitForTimeout(300)
+    check('800ms 之後再點一次又可以吃（7→6）', (await qtyOf(page, 'banana')) === 6)
+    await patchPet(page, { hunger: 5, hungerUpdatedAt: Date.now() })
+    await page.reload()
+    await page.waitForSelector('[data-testid=pet]')
+    const from = await center(page, '[data-dock-item=banana]')
+    const to = await center(page, '[data-testid=pet]')
+    await drag(page, from, to, { settle: 300 })
+    await patchPet(page, { hunger: 5, hungerUpdatedAt: Date.now() }) // 兩次拖曳之間不被「吃飽」擋住，單純驗證「拖曳不受 800ms 限制」
+    await drag(page, await center(page, '[data-dock-item=banana]'), await center(page, '[data-testid=pet]'), { settle: 300 })
+    check('連續兩次拖曳（間隔 <800ms）都有餵到（6→4）', (await qtyOf(page, 'banana')) === 4, String(await qtyOf(page, 'banana')))
+    await ctx.close()
+  }
+}
+
+// ---------- 第 4 項：食物欄拖曳（觸控、偏水平） ----------
+/** 用 CDP 送真實觸控：從 a 拖到 b（steps 步），放開 */
+async function touchDrag(page, a, b, steps = 14) {
+  const cdp = await page.context().newCDPSession(page)
+  const pt = (p) => [{ x: Math.round(p.x), y: Math.round(p.y), id: 1 }]
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(a) })
+  for (let i = 1; i <= steps; i++) {
+    const p = { x: a.x + ((b.x - a.x) * i) / steps, y: a.y + ((b.y - a.y) * i) / steps }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(p) })
+    await page.waitForTimeout(16)
+  }
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  await cdp.detach()
+}
+
+async function dockTouch(browser) {
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page } = await freshApp(browser, vp, { bananas: 5, ctxOpts: { hasTouch: true } })
+    // 讓 10 種食物都有庫存，食物欄一定比畫面寬（可以捲動）
+    await putRows(page, 'inventory', ['carrot', 'cookie', 'apple', 'grape', 'milk', 'peach', 'riceball', 'watermelon', 'cake'].map((id) => ({ id, itemId: id, qty: 2 })))
+    await patchPet(page, { hunger: 20, hungerUpdatedAt: Date.now(), stage: 'adult' })
+    await page.reload()
+    await page.waitForSelector('[data-testid=pet]')
+    const first = page.locator('.dock-item.food').first()
+    const id = await first.getAttribute('data-dock-item')
+    const a = await center(page, '.dock-item.food')
+    const pet = await center(page, '[data-testid=pet]')
+    const dxy = { x: pet.x - a.x, y: pet.y - a.y }
+    const before = (await getPet(page)).feedCount
+    // 偏水平的拖曳（ux-review #5 的失敗案例：位移 +384, −216，水平分量比垂直大）
+    await touchDrag(page, a, pet)
+    await page.waitForTimeout(500)
+    const after = await getPet(page)
+    check(`[${size}] 觸控：從最左邊的食物偏水平拖給阿悟 → 餵到了（feedCount +1）`, after.feedCount === before + 1, `位移 ${Math.round(dxy.x)},${Math.round(dxy.y)}；${id}`)
+    check(`[${size}] 觸控拖曳後，食物欄沒有被捲走（scrollLeft = 0）`, (await page.getByTestId('dock').evaluate((e) => e.scrollLeft)) === 0)
+    // 食物欄能捲：箭頭
+    const right = page.getByTestId('dock-arrow-right')
+    check(`[${size}] 食物欄溢出時顯示右箭頭`, (await right.count()) === 1)
+    await right.click()
+    await page.waitForTimeout(500)
+    check(`[${size}] 按右箭頭：食物欄往右捲`, (await page.getByTestId('dock').evaluate((e) => e.scrollLeft)) > 40)
+    check(`[${size}] 捲過之後出現左箭頭`, (await page.getByTestId('dock-arrow-left').count()) === 1)
+    await shot(page, 'dock', size)
+    await ctx.close()
+  }
+}
+
+const SECTIONS = { lockScreen, feedingGuard, dockTouch }
 void SECTIONS
 void balance
 void qtyOf

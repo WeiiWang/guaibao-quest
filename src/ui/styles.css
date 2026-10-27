@@ -155,7 +155,7 @@ img.art { object-fit: contain; }
 .form-msg { margin: 10px 0 0; }
 
 .toast {
-  position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+  position: fixed; left: 50%; top: max(16px, env(safe-area-inset-top)); transform: translateX(-50%);
   z-index: 90; max-width: calc(100vw - 32px); pointer-events: none;
   padding: 14px 26px; border-radius: 999px; font-weight: 800; font-size: 1.1rem;
   background: var(--ink); color: #fff;
@@ -164,7 +164,7 @@ img.art { object-fit: contain; }
 }
 .toast.ok { background: var(--mint-deep); }
 .toast.warn { background: var(--peach-deep); }
-@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 16px) scale(0.9); } }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, -16px) scale(0.9); } }
 
 .modal-back { position: fixed; inset: 0; z-index: 70; background: rgba(74, 59, 53, 0.45); display: grid; place-items: center; padding: 16px; overflow-y: auto; animation: fade-in 0.2s; }
 .modal {
@@ -584,7 +584,7 @@ img.art { object-fit: contain; }
   flex: 0 0 auto; display: grid; grid-template-columns: 56px auto; grid-template-rows: auto auto; column-gap: 10px; align-items: center;
   min-height: 72px; min-width: 132px; padding: 6px 18px 6px 10px; border-radius: 28px; border: 0;
   background: linear-gradient(180deg, #fff, var(--butter-soft)); box-shadow: 0 5px 0 var(--butter-deep), inset 0 2px 0 #fff;
-  font-weight: 900; text-align: left; touch-action: pan-x; cursor: grab; user-select: none; -webkit-user-select: none;
+  font-weight: 900; text-align: left; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
   transition: transform 0.12s;
 }
 .dock-item:active { transform: scale(0.96); }

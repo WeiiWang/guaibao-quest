@@ -29,6 +29,7 @@
 .room .pet-btn.pf-a-gaze .pet-sprite { animation: pf-gaze 2.8s ease-in-out 1; }
 .room .pet-btn.pf-a-wave .pet-sprite { animation: pf-wave 0.55s ease-in-out infinite; }
 .room .pet-btn.pf-a-wobble .pet-sprite { animation: pf-wobble 0.5s ease-in-out infinite; }
+.room .pet-btn.pf-a-headshake .pet-sprite { animation: pf-headshake 0.9s ease-in-out 1; }
 .room .pet-btn.pf-asleep .pet-sprite { animation: pf-breath 4s ease-in-out infinite; }
 .room .pet-btn.pf-asleep .pet-img { filter: drop-shadow(0 8px 8px rgba(40, 30, 80, 0.25)) brightness(0.94); }
 .room .pet-btn.pf-glow { filter: drop-shadow(0 0 20px #fff3a0) drop-shadow(0 0 8px #ffd54a); transition: filter 0.3s; }
@@ -71,6 +72,7 @@
 @keyframes pf-wiggle { 0%, 100% { transform: rotate(0); } 15% { transform: rotate(-8deg); } 30% { transform: rotate(7deg); } 45% { transform: rotate(-6deg); } 60% { transform: rotate(5deg); } 75% { transform: rotate(-3deg); } }
 @keyframes pf-gaze { 0%, 100% { transform: none; } 22%, 85% { transform: translateX(7%) rotate(7deg); } }
 @keyframes pf-wave { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-3%); } }
+@keyframes pf-headshake { 0%, 100% { transform: rotate(0); } 12% { transform: translateX(-4%) rotate(-7deg); } 34% { transform: translateX(4%) rotate(7deg); } 56% { transform: translateX(-3%) rotate(-5deg); } 78% { transform: translateX(3%) rotate(5deg); } }
 @keyframes pf-wobble { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
 @keyframes pf-breath { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.01, 1.03); } }
 

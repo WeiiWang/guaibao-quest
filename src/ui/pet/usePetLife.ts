@@ -478,6 +478,12 @@ export function usePetLife(p: PetLifeParams) {
     startScene(planReaction('pat'))
   }, [startScene])
 
+  /** 吃飽了還被餵：搖頭「我吃飽了～」（睡著時不演；吃東西中也不打斷，優先權比吃東西低） */
+  const refuse = useCallback((): void => {
+    if (asleepRef.current) return
+    startScene(planReaction('full'))
+  }, [startScene])
+
   const thanks = useCallback((): void => {
     if (asleepRef.current) return
     startScene(planReaction('thanks'))
@@ -543,6 +549,7 @@ export function usePetLife(p: PetLifeParams) {
     startEat,
     tap,
     pat,
+    refuse,
     thanks,
     playBall,
     cancelIdle,

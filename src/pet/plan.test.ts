@@ -21,7 +21,7 @@ const poses = (s: Scene) => s.steps.flatMap((x) => (x.act.do === 'pose' ? [x.act
 describe('場景資料的共同規則', () => {
   const all: Scene[] = [
     ...BEHAVIOR_IDS.map((id) => planBehavior(id, env)),
-    ...(['tickle', 'dizzy', 'pat', 'thanks', 'wake'] as ReactionId[]).map((id) => planReaction(id)),
+    ...(['tickle', 'dizzy', 'pat', 'thanks', 'wake', 'full'] as ReactionId[]).map((id) => planReaction(id)),
     planPoop(),
     planEat({ stage: 'adult', burp: false }),
     planEat({ stage: 'adult', burp: true }),
@@ -136,6 +136,16 @@ describe('互動反應', () => {
     expect(say(planReaction('thanks'))[0].text).toBe('謝謝你！')
     expect(poses(planReaction('thanks'))).toContain('laugh')
     expect(say(planReaction('wake'))[0].text).toBe('好睏喔…')
+  })
+})
+
+describe('吃飽了（SPEC-v4 U2）', () => {
+  it('搖頭、說「我吃飽了～」，是優先權低於吃東西的反應', () => {
+    const s = planReaction('full')
+    expect(s.kind).toBe('reaction')
+    expect(s.steps.some((x) => x.act.do === 'anim' && x.act.anim === 'headshake')).toBe(true)
+    expect(say(s)[0].text).toBe('我吃飽了～')
+    expect(s.ms).toBeGreaterThanOrEqual(2000)
   })
 })
 

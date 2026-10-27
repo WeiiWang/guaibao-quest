@@ -19,6 +19,7 @@ import { WorkshopScreen } from './screens/Workshop'
 import { LockScreen, PlayTimeWatcher } from './components/PlayTime'
 import { BackdropPreview, parseBackdropHash } from './screens/BackdropPreview'
 import { GalleryScreen } from './screens/Gallery'
+import './ux.css'
 
 export type Screen =
   | { name: 'home'; edit?: boolean }
