@@ -1,4 +1,7 @@
 import { useEffect } from 'react'
+import { repo } from '../../db/repo'
+import { learningSettingsOf } from '../../learning/playtime'
+import { speak } from '../../learning/speech'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { localDateStr } from '../../domain/date'
@@ -92,6 +95,22 @@ export function Home({ childName, now, go, initialEdit }: Props) {
     return () => window.clearTimeout(id)
   }, [bal])
 
+  // 首次進首頁的引導：冒險地圖按鈕亮起、手指指著它，語音「我們去冒險吧」（只出現一次）
+  const showGuide = !!settings && !settings.homeGuideShown && !initialEdit
+  const guideVoiceOn = learningSettingsOf(settings).voiceOn
+  useEffect(() => {
+    if (!showGuide) return
+    speak('我們去冒險吧', { enabled: guideVoiceOn })
+    const t = window.setTimeout(() => void repo.markHomeGuideShown(), 15_000)
+    return () => window.clearTimeout(t)
+    // 只在引導開始時說一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showGuide])
+  const nav = (s: Screen['name'] | Screen) => {
+    if (showGuide) void repo.markHomeGuideShown()
+    go(s)
+  }
+
   // 等資料到齊再一起渲染，避免版面晚出現把下方按鈕往下推
   if (!pet || !inventory || !shopItems || !placements || !settings || todo === undefined || pending === undefined || bal === undefined) return <div className="splash">載入中…</div>
 
@@ -144,20 +163,21 @@ export function Home({ childName, now, go, initialEdit }: Props) {
       />
 
       <nav className="main-nav" aria-label="主選單">
-        <button className="candy mint" onClick={() => go('map')}>
+        <button className={`candy mint ${showGuide ? 'guide' : ''}`} onClick={() => nav('map')} data-testid="candy-map">
           <Icon name="ui-map" emoji="🗺️" className="candy-icon" />
           <span className="candy-label">冒險地圖</span>
+          {showGuide && <span className="guide-hand" data-testid="home-guide" aria-hidden>👇</span>}
         </button>
-        <button className="candy butter" onClick={() => go('tasks')}>
+        <button className="candy butter" onClick={() => nav('tasks')}>
           <Icon name="ui-tasks" emoji="📝" className="candy-icon" />
           <span className="candy-label">今日任務</span>
           {todo > 0 && <b className="badge">{todo}</b>}
         </button>
-        <button className="candy peach" onClick={() => go('shop')}>
+        <button className="candy peach" onClick={() => nav('shop')}>
           <Icon name="ui-shop" emoji="🛒" className="candy-icon" />
           <span className="candy-label">商店</span>
         </button>
-        <button className="candy lavender" onClick={() => go('coloring')}>
+        <button className="candy lavender" onClick={() => nav('coloring')}>
           <Icon name="ui-coloring" emoji="🎨" className="candy-icon" />
           <span className="candy-label">著色本</span>
         </button>

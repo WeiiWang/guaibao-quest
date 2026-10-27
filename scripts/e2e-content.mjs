@@ -117,6 +117,7 @@ try {
     const need = await page.locator('[data-testid=craft-wall-stars] .ws-btn').innerText()
     check('做不起的標出還差多少（星空藍：木材/石頭/花朵夠才可製作）', need === '製作' || need.startsWith('還差'), need)
     await page.locator('[data-testid=craft-wall-mint] [data-testid=craft-btn]').click()
+    await page.getByTestId('craft-done-close').click() // v4：做好了的慶祝畫面先關掉
     await page.waitForSelector('[data-testid=craft-wall-mint] [data-testid=apply-btn]')
     let inv = await dump(page, 'inventory')
     check('兌換薄荷條紋：背包出現 wall-mint', inv.some((v) => v.itemId === 'wall-mint' && v.qty === 1))
@@ -132,6 +133,7 @@ try {
     await page.getByTestId('ws-tab-floor').click()
     check('地板 4 種', (await page.locator('.ws-card').count()) === 4)
     await page.locator('[data-testid=craft-floor-oak] [data-testid=craft-btn]').click()
+    await page.getByTestId('craft-done-close').click() // v4：做好了的慶祝畫面先關掉
     await page.waitForSelector('[data-testid=craft-floor-oak] [data-testid=apply-btn]')
     await page.locator('[data-testid=craft-floor-oak] [data-testid=apply-btn]').click()
     await page.waitForTimeout(250)
@@ -168,6 +170,7 @@ try {
     check('做不起的按鈕是 disabled', await page.locator('[data-testid=craft-decor-rocket] .ws-btn').isDisabled())
     // 木5 石5 花3：小汽車 (木5 石4) 可以做
     await page.locator('[data-testid=craft-decor-car] [data-testid=craft-btn]').click()
+    await page.getByTestId('craft-done-close').click() // v4：做好了的慶祝畫面先關掉
     await page.waitForSelector('[data-testid=craft-decor-car].owned')
     const inv = await dump(page, 'inventory')
     check('做好小汽車：背包 decor-car = 1', inv.some((v) => v.itemId === 'decor-car' && v.qty === 1))

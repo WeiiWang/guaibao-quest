@@ -16,10 +16,11 @@ export const DRAG_START_PX = 6
 /**
  * 掛畫的預設位置（第 index 幅）：落在「剛進房間時畫面」的右側牆面。
  * 房間一打開就把寵物捲到畫面正中間，所以位置用「畫面寬度的比例」換算回房間座標；
- * 左上角是狀態卡、右上角是工坊/背包按鈕，這兩塊都避開。
+ * 左上角是狀態卡、右上角是工坊/背包按鈕，這兩塊都避開（手機 375 寬時，兩者之間只剩約 150px，
+ * 所以第 2、3 幅往下放到狀態卡的下面）。
  */
-const ART_VIEW_FRAC = [0.7, 0.52, 0.62, 0.42]
-const ART_Y = [0.27, 0.27, 0.46, 0.46]
+const ART_VIEW_FRAC = [0.6, 0.45, 0.3, 0.7]
+const ART_Y = [0.27, 0.46, 0.46, 0.46]
 export function artworkSpot(index: number): { x: number; y: number } {
   const k = ((index % ART_VIEW_FRAC.length) + ART_VIEW_FRAC.length) % ART_VIEW_FRAC.length
   return { x: PET_X + (ART_VIEW_FRAC[k] - 0.5) / ROOM_WIDTH_FACTOR, y: ART_Y[k] }

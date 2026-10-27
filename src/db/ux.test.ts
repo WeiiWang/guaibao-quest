@@ -177,12 +177,13 @@ describe('掛畫預設位置', () => {
     for (let i = 0; i < 8; i++) {
       const { x, y } = artworkSpot(i)
       const viewFrac = (x - PET_X) * ROOM_WIDTH_FACTOR + 0.5 // 換算回「畫面寬度的比例」
-      expect(viewFrac).toBeGreaterThan(0.38)
+      expect(viewFrac).toBeGreaterThan(0.25)
       expect(viewFrac).toBeLessThan(0.78) // 右上角是工坊/背包按鈕
       expect(y).toBeLessThan(0.5)
     }
     const first = artworkSpot(0)
-    expect((first.x - PET_X) * ROOM_WIDTH_FACTOR + 0.5).toBeGreaterThanOrEqual(0.65)
+    expect((first.x - PET_X) * ROOM_WIDTH_FACTOR + 0.5).toBeGreaterThanOrEqual(0.55)
+    expect(first.y).toBeLessThan(0.3) // 第一幅放在牆面上方，最顯眼
   })
   it('hangArtwork 第一幅畫放在右側，不在牆面左上', async () => {
     await repo.seedShop()

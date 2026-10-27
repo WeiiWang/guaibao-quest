@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
@@ -9,6 +9,8 @@ import { ScreenHeader } from '../../components/Header'
 import { MaterialsChip } from '../../components/MaterialsChip'
 import { useArtStatus } from '../../artProbe'
 import { useToast } from '../../hooks'
+import { useLearningSettings } from '../../learningHooks'
+import { speak } from '../../../learning/speech'
 import type { Screen } from '../../App'
 import { Companion } from './Companion'
 import './adventure.css'
@@ -57,6 +59,17 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const sceneRef = useRef<HTMLElement>(null)
   const hasScene = useArtStatus('scene-map-huaguoshan') === 'ok'
   const [canScroll, setCanScroll] = useState(false)
+  const { voiceOn } = useLearningSettings()
+  // 點到鎖住 / 已通關的站：那顆圓鈕晃一下 + 一句語音（SPEC-v4 U10；只加回饋，不動關卡流程）
+  const [wobble, setWobble] = useState<string | null>(null)
+  const wobbleTimer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(wobbleTimer.current), [])
+  const nudge = (key: string, say: string) => {
+    window.clearTimeout(wobbleTimer.current)
+    setWobble(key)
+    wobbleTimer.current = window.setTimeout(() => setWobble(null), 560)
+    speak(say, { enabled: voiceOn })
+  }
 
   const run = prog?.run
   const doneN = prog?.stations.filter((s) => s.done).length
@@ -122,9 +135,13 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
                 <li key={s.index} className={`adv-node st-${state} `} style={pos(k)} data-station-state={state}>
                   <button
                     type="button"
-                    className="adv-node-btn"
-                    disabled={state !== 'current'}
-                    onClick={() => go({ name: 'stage', chapterId: ch.id, station: s.index })}
+                    className={`adv-node-btn ${wobble === `s${s.index}` ? 'ux-wobble' : ''}`}
+                    aria-disabled={state !== 'current'}
+                    onClick={() => {
+                      if (state === 'current') go({ name: 'stage', chapterId: ch.id, station: s.index })
+                      else if (state === 'done') nudge(`s${s.index}`, '這一站過關囉，好棒！')
+                      else nudge(`s${s.index}`, '還沒到喔，先去前面的站')
+                    }}
                     data-testid={`station-${s.index}`}
                     aria-label={`第 ${s.index} 站 ${s.name}，${state === 'done' ? '已通關' : state === 'current' ? '出發' : '還沒解鎖'}`}
                   >
@@ -151,9 +168,12 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
             >
               <button
                 type="button"
-                className="adv-node-btn"
-                disabled={!allDone}
-                onClick={() => go({ name: 'stage', chapterId: ch.id, station: ch.stations.length, ceremony: true })}
+                className={`adv-node-btn ${wobble === 'chest' ? 'ux-wobble' : ''}`}
+                aria-disabled={!allDone}
+                onClick={() => {
+                  if (allDone) go({ name: 'stage', chapterId: ch.id, station: ch.stations.length, ceremony: true })
+                  else nudge('chest', '寶箱還鎖著，通關五站就能打開喔')
+                }}
                 data-testid="chest-node"
                 aria-label={prog.chestClaimed ? '寶箱已經打開了' : allDone ? '打開寶箱' : '寶箱，通關 5 站就能打開'}
               >

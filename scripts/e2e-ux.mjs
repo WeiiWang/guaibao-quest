@@ -423,7 +423,274 @@ async function coloringLayout(browser) {
   }
 }
 
-const SECTIONS = { lockScreen, feedingGuard, dockTouch, shopBuy, coloringList, coloringLayout }
+// ---------- 第 6 項：掛到房間的畫不被狀態卡蓋住；第 7 項：佈置擺放的成功回饋 ----------
+const overlaps = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
+
+async function artworkSpot(browser) {
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp)
+    await spyAll(ctx)
+    await page.reload()
+    await page.waitForSelector('[data-testid=room]')
+    for (let n = 0; n < 2; n++) {
+      await page.locator('.candy.lavender').click()
+      await page.getByTestId('page-monkey').locator('.thumb-btn').click()
+      await page.waitForSelector('[data-testid=paint-screen]')
+      await page.waitForTimeout(300)
+      const sb = await boxOf(page, '.pt-svg')
+      await page.mouse.click(sb.x + sb.w * 0.5, sb.y + sb.h * 0.5)
+      await page.waitForTimeout(200)
+      await page.getByTestId('finish-btn').click()
+      await page.getByTestId('hang-btn').click()
+      await page.waitForSelector('[data-testid=hung-ok]')
+      await page.getByRole('button', { name: '回著色本' }).click()
+      await page.waitForSelector('[data-testid=open-gallery]')
+      await page.locator('.screen-header .back').click()
+      await page.waitForSelector('[data-testid=room]')
+      await page.waitForTimeout(700)
+      const arts = await page.locator('[data-placed^=art-]').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height } }))
+      const hud = await boxOf(page, '.pet-hud')
+      const tools = await boxOf(page, '.side-tools')
+      const last = arts[arts.length - 1]
+      check(`[${size}] 第 ${n + 1} 幅畫掛上去：在畫面內可見`, !!last && last.x >= 0 && last.x + last.w <= vp.width && last.y >= 0 && last.y + last.h <= vp.height, JSON.stringify(last))
+      check(`[${size}] 第 ${n + 1} 幅畫：沒有被左上角狀態卡蓋住`, arts.every((a) => !overlaps(a, hud)), `hud ${JSON.stringify(hud)} art ${JSON.stringify(arts)}`)
+      check(`[${size}] 第 ${n + 1} 幅畫：沒有被右上角工坊/背包按鈕蓋住`, arts.every((a) => !overlaps(a, tools)))
+      if (n === 0) await shot(page, 'art-hung', size)
+    }
+    check(`[${size}] 狀態卡是半透明的`, await page.evaluate(() => { const c = getComputedStyle(document.querySelector('.pet-hud')).backgroundColor; const a = Number(c.match(/[\d.]+(?=\)$)/)?.[0] ?? 1); return a < 0.8 }))
+    check(`[${size}] 掛畫無 console 錯誤`, errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+}
+
+// ---------- 第 7 項：佈置擺放、清便便的成功回饋 ----------
+async function placeAndPoop(browser) {
+  const { ctx, page, errors } = await freshApp(browser, SIZES.land, { decor: ['decor-clock', 'decor-ball'] })
+  await spyAll(ctx)
+  await page.reload()
+  await page.waitForSelector('[data-testid=room]')
+  await page.getByRole('button', { name: /佈置/ }).click()
+  await page.waitForSelector('.dock-item.decor-item')
+  const from = await center(page, '[data-dock-item=decor-clock]')
+  const to = await center(page, '[data-testid=room]')
+  await drag(page, from, { x: to.x, y: to.y - 120 }, { settle: 300 })
+  const fb = await page.evaluate(() => window.__fb)
+  check('擺放家具：觸發共用成功回饋（kind=place，有音效與粒子）', fb.some((f) => f.kind === 'place' && f.sound && f.particles > 0), JSON.stringify(fb))
+  check('擺放家具：語音「放好了！」', (await page.evaluate(() => window.__spoken)).includes('放好了！'))
+  // 清便便
+  await page.getByRole('button', { name: /完成/ }).click()
+  await patchPet(page, { poops: [{ id: 'p1', x: 0.4, at: Date.now() - 60000 }], poopDue: [] })
+  await page.reload()
+  await page.waitForSelector('[data-testid=poop]')
+  await page.evaluate(() => (window.__fb.length = 0))
+  await page.locator('[data-testid=poop]').first().click({ force: true })
+  await page.waitForTimeout(1200)
+  const fb2 = await page.evaluate(() => window.__fb)
+  check('清便便：觸發共用成功回饋（kind=poop，愛心粒子）', fb2.some((f) => f.kind === 'poop' && f.particles > 0), JSON.stringify(fb2))
+  check('清便便：語音「乾淨了！」', (await page.evaluate(() => window.__spoken)).includes('乾淨了！'))
+  check('擺放與清便便無 console 錯誤', errors.length === 0, errors.join('|'))
+  await ctx.close()
+}
+
+// ---------- 第 8 項：工坊做得起 / 做不起的視覺、做好的慶祝 ----------
+const giveMaterials = (page, wood, stone, flower, tag = 'g') =>
+  putRows(page, 'materialLedger', [
+    { id: `${tag}-w`, at: Date.now(), material: 'wood', delta: wood, kind: 'station', reason: 'test' },
+    { id: `${tag}-s`, at: Date.now(), material: 'stone', delta: stone, kind: 'station', reason: 'test' },
+    { id: `${tag}-f`, at: Date.now(), material: 'flower', delta: flower, kind: 'station', reason: 'test' },
+  ])
+
+async function workshop(browser) {
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp)
+    await spyAll(ctx)
+    await giveMaterials(page, 4, 1, 0) // 木 4 石 1 花 0：做得起時鐘、木箱、牆上層板
+    await page.goto(new URL('/#workshop', page.url()).href)
+    await page.reload()
+    await page.waitForSelector('[data-testid=workshop]')
+    await page.waitForTimeout(600)
+    const can = await page.locator('.ws-card.can').evaluateAll((els) => els.map((e) => e.dataset.testid))
+    check(`[${size}] 做得起的卡片有標記（時鐘、木箱、牆上層板）`, ['craft-decor-clock', 'craft-decor-crate', 'craft-decor-wallshelf'].every((id) => can.includes(id)) && can.length === 3, can.join())
+    const lit = await page.evaluate(() => {
+      const art = getComputedStyle(document.querySelector('[data-testid=craft-decor-clock] .ws-art'))
+      const card = getComputedStyle(document.querySelector('[data-testid=craft-decor-clock]'))
+      return { anim: art.animationName, shadow: card.boxShadow }
+    })
+    check(`[${size}] 做得起：家具跳動（有動畫）、卡片發光（光暈陰影）`, lit.anim !== 'none' && /rgba\(255, 214, 107, 0\.75\)/.test(lit.shadow), JSON.stringify(lit))
+    const dim = await page.evaluate(() => {
+      const art = getComputedStyle(document.querySelector('[data-testid=craft-decor-rocket] .ws-art'))
+      return { filter: art.filter, anim: art.animationName }
+    })
+    check(`[${size}] 做不起：卡片退成灰階、不跳動`, /grayscale/.test(dim.filter) && dim.anim === 'none', JSON.stringify(dim))
+    // 做不起的按鈕：材料圖示 + 數字缺口，不是「還差石頭2」的文字
+    const gap = await page.locator('[data-testid=craft-decor-rocket] .ws-gap-item').evaluateAll((els) => els.map((e) => ({ n: e.querySelector('b').textContent, hasIcon: !!e.querySelector('img, .art-emoji') })))
+    check(`[${size}] 火箭做不起：按鈕是 3 個材料圖示 + 缺口數字（−1 −6 −2）`, gap.length === 3 && gap.map((g) => g.n).join() === '−1,−6,−2' && gap.every((g) => g.hasIcon), JSON.stringify(gap))
+    const visibleText = await page.locator('[data-testid=craft-decor-rocket] .ws-btn').evaluate((b) => [...b.querySelectorAll(':scope > *')].filter((e) => !e.classList.contains('sr-only')).map((e) => e.innerText).join(''))
+    check(`[${size}] 做不起的按鈕畫面上沒有「還差…」文字`, !/還差/.test(visibleText), visibleText)
+    const gb = await boxOf(page, '[data-testid=craft-decor-rocket] .ws-btn')
+    check(`[${size}] 缺口按鈕夠大（高 ≥56）`, gb.h >= 56, JSON.stringify(gb))
+    if (size !== 'phone') await shot(page, 'workshop', size)
+    else {
+      await page.locator('[data-testid=craft-decor-clock]').scrollIntoViewIfNeeded()
+      await shot(page, 'workshop', size)
+    }
+    // 點做不起的：語音說明、卡片晃一下
+    await page.locator('[data-testid=craft-decor-rocket] .ws-btn').click({ force: true }) // aria-disabled：Playwright 預設不點，孩子的手指點得到
+    await page.waitForTimeout(100)
+    check(`[${size}] 點做不起的：語音「還差 1 個木材，6 個石頭，2 個花朵」`, (await page.evaluate(() => window.__spoken)).includes('還差1個木材，6個石頭，2個花朵'), String(await page.evaluate(() => window.__spoken)))
+    check(`[${size}] 點做不起的：卡片晃一下`, (await page.locator('[data-testid=craft-decor-rocket].ux-shake').count()) === 1)
+    check(`[${size}] 點做不起的：什麼都沒被做出來、材料沒扣`, (await qtyOf(page, 'decor-rocket')) === 0 && (await dump(page, 'materialLedger')).every((e) => e.delta >= 0))
+    // 做得起的：做 → 大圖慶祝 → 去擺放
+    await page.locator('[data-testid=craft-decor-clock] [data-testid=craft-btn]').click()
+    await page.waitForSelector('[data-testid=craft-done]')
+    await page.waitForTimeout(700)
+    const art = await boxOf(page, '[data-testid=craft-done-art]')
+    check(`[${size}] 做好：跳出家具大圖（≥200px）`, art.w >= 200 && art.h >= 200, JSON.stringify(art))
+    check(`[${size}] 做好：觸發共用成功回饋（kind=craft）與語音「時鐘做好了！」`, (await page.evaluate(() => window.__fb)).some((f) => f.kind === 'craft' && f.sound && f.particles > 0) && (await page.evaluate(() => window.__spoken)).includes('時鐘做好了！'))
+    const goBox = await boxOf(page, '[data-testid=craft-done-go]')
+    check(`[${size}] 做好：有大大的「去擺放」按鈕（高 ≥72）`, goBox.h >= 72 && /去擺放/.test(await page.getByTestId('craft-done-go').innerText()), JSON.stringify(goBox))
+    check(`[${size}] 做好：材料扣了、背包有時鐘`, (await qtyOf(page, 'decor-clock')) === 1)
+    await shot(page, 'craft-done', size)
+    await page.getByTestId('craft-done-go').click()
+    await page.waitForSelector('[data-dock-item=decor-clock]')
+    check(`[${size}] 按「去擺放」：直接進佈置模式，時鐘就在佈置列`, (await page.locator('.room.edit').count()) === 1 && (await page.locator('[data-dock-item=decor-clock]').count()) === 1)
+    check(`[${size}] 工坊無 console 錯誤`, errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+  // 壁紙：做好 → 「套用」直接換上
+  {
+    const { ctx, page } = await freshApp(browser, SIZES.land)
+    await giveMaterials(page, 6, 4, 6)
+    await page.goto(new URL('/#workshop', page.url()).href)
+    await page.reload()
+    await page.waitForSelector('[data-testid=workshop]')
+    await page.getByTestId('ws-tab-wall').click()
+    await page.locator('[data-testid=craft-wall-mint] [data-testid=craft-btn]').click()
+    await page.waitForSelector('[data-testid=craft-done]')
+    check('壁紙做好：慶祝畫面的主按鈕是「套用」', /套用/.test(await page.getByTestId('craft-done-go').innerText()))
+    await page.getByTestId('craft-done-go').click()
+    await page.waitForTimeout(400)
+    const st = (await dump(page, 'settings'))[0]
+    check('按「套用」：房間壁紙換成 wall-mint、慶祝畫面關掉', st.roomTheme?.wall === 'wall-mint' && (await page.getByTestId('craft-done').count()) === 0)
+    await ctx.close()
+  }
+}
+
+// ---------- 第 10 項：首頁引導、地圖回饋、任務收回、家長分頁列、房間箭頭、toast ----------
+async function misc(browser) {
+  // 首頁首次引導
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp)
+    await spyAll(ctx)
+    await page.reload()
+    await page.waitForSelector('[data-testid=room]')
+    await page.waitForTimeout(500)
+    check(`[${size}] 首次進首頁：冒險地圖按鈕發光、有手指指著`, (await page.locator('.candy.mint.guide').count()) === 1 && (await page.getByTestId('home-guide').count()) === 1)
+    check(`[${size}] 首次進首頁：語音「我們去冒險吧」`, (await page.evaluate(() => window.__spoken)).includes('我們去冒險吧'))
+    await shot(page, 'home-guide', size)
+    await page.getByTestId('candy-map').click()
+    await page.waitForSelector('[data-testid=map]')
+    await page.locator('.screen-header .back').click()
+    await page.waitForSelector('[data-testid=room]')
+    check(`[${size}] 去過一次之後，引導不再出現`, (await page.getByTestId('home-guide').count()) === 0 && (await page.locator('.candy.guide').count()) === 0)
+    check(`[${size}] 引導無 console 錯誤`, errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+  // 房間左右「看旁邊」鈕
+  {
+    const { ctx, page } = await freshApp(browser, SIZES.land)
+    await page.evaluate(() => (document.querySelector('[data-testid=room-scroller]').scrollLeft = 0))
+    await page.waitForTimeout(200)
+    const r = page.getByTestId('room-right')
+    const b = await r.boundingBox()
+    const radius = await r.evaluate((e) => getComputedStyle(e).borderRadius)
+    const text = await r.innerText()
+    check('房間右側「看旁邊」鈕：圓形、≥56px，內容不是返回鍵的「›」', b.width >= 56 && b.height >= 56 && Math.abs(b.width - b.height) < 1 && radius.startsWith('50%') && !/[‹›]/.test(text), `${b.width}x${b.height} ${radius} ${JSON.stringify(text)}`)
+    await ctx.close()
+  }
+  // 地圖：點鎖住 / 已通關的站有回饋
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land)
+    await spyAll(ctx)
+    await putRows(page, 'progress', [
+      { chapterId: 'huaguoshan', run: 1, stations: [{ done: true, independent: 4, total: 5 }, ...Array.from({ length: 4 }, () => ({ done: false, independent: 0, total: 0 }))], chestClaimed: false, completedRuns: 0, updatedAt: Date.now() },
+    ])
+    await page.reload()
+    await page.getByTestId('candy-map').click()
+    await page.waitForSelector('[data-testid=station-3]')
+    await page.getByTestId('station-3').click({ force: true })
+    await page.waitForTimeout(100)
+    check('地圖：點鎖住的站 → 晃一下 + 語音「還沒到喔」，不會進關卡', (await page.locator('[data-testid=station-3].ux-wobble').count()) === 1 && (await page.evaluate(() => window.__spoken)).some((t) => t.startsWith('還沒到喔')) && (await page.getByTestId('map').count()) === 1)
+    await page.waitForTimeout(700)
+    await page.getByTestId('station-1').click({ force: true })
+    await page.waitForTimeout(100)
+    check('地圖：點已通關的站 → 晃一下 + 語音「這一站過關囉」，不會進關卡', (await page.locator('[data-testid=station-1].ux-wobble').count()) === 1 && (await page.evaluate(() => window.__spoken)).some((t) => t.startsWith('這一站過關囉')) && (await page.getByTestId('map').count()) === 1)
+    await page.getByTestId('chest-node').click({ force: true })
+    check('地圖：點鎖著的寶箱 → 語音說明', (await page.evaluate(() => window.__spoken)).some((t) => t.includes('寶箱還鎖著')))
+    check('地圖：目前這一站照常可以進入（第 2 站）', (await page.getByTestId('station-2').getAttribute('aria-disabled')) === 'false')
+    check('地圖無 console 錯誤', errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+  // 任務：送出 → 收回
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp)
+    await spyAll(ctx)
+    await page.reload()
+    await page.waitForSelector('[data-testid=room]')
+    await page.locator('.candy.butter').click()
+    await page.waitForSelector('[data-testid=task-submit]')
+    await page.locator('[data-testid=task-submit]').first().click()
+    await page.waitForSelector('[data-testid=task-withdraw]')
+    const fb = await page.evaluate(() => window.__fb)
+    check(`[${size}] 任務送出：觸發共用成功回饋（kind=task、有粒子）`, fb.some((f) => f.kind === 'task' && f.sound && f.particles > 0) && (await page.evaluate(() => window.__spoken)).includes('好棒喔！'))
+    const toast = await boxOf(page, '.toast')
+    check(`[${size}] toast 在畫面上方，不蓋底部按鈕（pointer-events: none）`, toast.y < 120 && (await page.locator('.toast').evaluate((e) => getComputedStyle(e).pointerEvents)) === 'none', JSON.stringify(toast))
+    const st1 = (await dump(page, 'instances')).filter((i) => i.status === 'pending').length
+    check(`[${size}] 送出後狀態是等審核（1 筆 pending）`, st1 === 1)
+    const wb = await boxOf(page, '[data-testid=task-withdraw]')
+    check(`[${size}] 「收回」鈕夠大（高 ≥56）`, wb.h >= 56, JSON.stringify(wb))
+    await shot(page, 'task-pending', size)
+    await page.getByTestId('task-withdraw').click()
+    await page.waitForTimeout(300)
+    const after = await dump(page, 'instances')
+    check(`[${size}] 按「收回」：回到待辦（沒有 pending），可以再送出`, after.filter((i) => i.status === 'pending').length === 0 && (await page.locator('[data-testid=task-submit]').count()) === 5)
+    await page.locator('[data-testid=task-submit]').first().click()
+    await page.waitForTimeout(300)
+    check(`[${size}] 收回後再送出：又是 pending`, (await dump(page, 'instances')).filter((i) => i.status === 'pending').length === 1)
+    check(`[${size}] 任務無 console 錯誤`, errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+  // 家長分頁列：10 個分頁都找得到
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page } = await freshApp(browser, vp)
+    await page.getByRole('button', { name: /家長入口/ }).click()
+    await page.waitForSelector('button.key')
+    await page.evaluate(async () => {
+      for (const d of '1234') [...document.querySelectorAll('button.key')].find((b) => b.textContent === d).click()
+      await new Promise((r) => setTimeout(r, 300))
+    })
+    await page.waitForSelector('[data-testid=parent-tabs]')
+    const tabs = await page.locator('[data-testid=parent-tabs] .tab').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { name: e.textContent, x: r.x, y: Math.round(r.y), w: r.width, h: r.height } }))
+    check(`[${size}] 家長分頁 10 個全部存在`, tabs.length === 10, String(tabs.length))
+    const rows = new Set(tabs.map((t) => t.y)).size
+    check(`[${size}] 家長分頁排成兩列`, rows === 2, String(rows))
+    if (size === 'land' || size === 'port') check(`[${size}] 家長分頁不需要捲動就全部看得到（含「設定」「PM 預覽」）`, tabs.every((t) => t.x >= 0 && t.x + t.w <= vp.width), JSON.stringify(tabs.filter((t) => t.x + t.w > vp.width).map((t) => t.name)))
+    else {
+      const scrollable = await page.getByTestId('parent-tabs').evaluate((e) => e.scrollWidth > e.clientWidth + 4)
+      await page.getByRole('tab', { name: 'PM 預覽', exact: true }).scrollIntoViewIfNeeded()
+      await page.waitForTimeout(300)
+      const pm = await boxOf(page, '[role=tab]:has-text("PM 預覽")')
+      check(`[${size}] 手機：分頁列可以左右捲，捲到最後能點到「PM 預覽」`, scrollable && pm.x + pm.w <= vp.width + 1, JSON.stringify(pm))
+      await page.getByRole('tab', { name: 'PM 預覽', exact: true }).click()
+    }
+    await shot(page, 'parent-tabs', size)
+    await page.getByRole('tab', { name: '設定', exact: true }).click({ force: true })
+    check(`[${size}] 點「設定」分頁有反應`, (await page.getByRole('tab', { name: '設定', exact: true }).getAttribute('aria-selected')) === 'true')
+    await ctx.close()
+  }
+}
+
+const SECTIONS = { lockScreen, feedingGuard, dockTouch, shopBuy, coloringList, coloringLayout, artworkSpot, placeAndPoop, workshop, misc }
 void SECTIONS
 void balance
 void qtyOf

@@ -97,7 +97,7 @@ export function ParentArea({ onExit }: { onExit: () => void }) {
         <h1>家長專區</h1>
         <div className="header-right" />
       </header>
-      <div className="tabs" role="tablist">
+      <div className="tabs parent-tabs" role="tablist" data-testid="parent-tabs">
         {TABS.map((t) => (
           <button key={t.id} role="tab" aria-selected={tab === t.id} className={`tab ${tab === t.id ? 'on' : ''}`} onClick={() => setTab(t.id)}>
             {t.label}

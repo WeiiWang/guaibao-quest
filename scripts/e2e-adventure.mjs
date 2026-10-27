@@ -200,10 +200,11 @@ try {
   await page.getByTestId('to-workshop').click()
   await page.waitForSelector('[data-testid=workshop]')
   const plantBtn = page.locator('[data-testid=craft-decor-plant] [data-testid=craft-btn]')
-  await page.waitForFunction(() => document.querySelector('[data-testid=craft-decor-plant] [data-testid=craft-btn]')?.disabled === false)
+  await page.waitForFunction(() => document.querySelector('[data-testid=craft-decor-plant] [data-testid=craft-btn]')?.getAttribute('aria-disabled') === 'false') // v4：做不起的鈕改用 aria-disabled（還是可以點，點了會唸缺什麼）
   check('工坊：材料夠的家具可以做（小盆栽）', await plantBtn.isEnabled())
   const bedBtn = page.locator('[data-testid=craft-decor-bed] [data-testid=craft-btn]')
   await plantBtn.click()
+  await page.getByTestId('craft-done-close').click() // v4：做好了會跳出家具大圖慶祝，先關掉才按得到下面的東西
   await page.waitForTimeout(300)
   const inv = await dump(page, 'inventory')
   check('做家具：背包有小盆栽、扣了材料（木 8 / 花 3）', inv.some((i) => i.itemId === 'decor-plant' && i.qty === 1))

@@ -5,6 +5,7 @@ import { repo } from '../../db/repo'
 import { canCraft, craftableOf } from '../../learning/materials'
 import { THEME_DEFS, themesOf, ownsTheme, sortThemesByCost } from '../../domain/theme'
 import { MATERIAL_IDS, MATERIAL_NAMES } from '../../learning/types'
+import { speak } from '../../learning/speech'
 import type { MaterialCost } from '../../learning/types'
 import { DECOR_EMOJI, MAT_EMOJI } from '../../art/items'
 import type { ShopItem, ThemeSlot } from '../../domain/types'
@@ -12,7 +13,8 @@ import { Icon } from '../components/Icon'
 import { ScreenHeader } from '../components/Header'
 import { MaterialsChip } from '../components/MaterialsChip'
 import { useToast } from '../hooks'
-import { useMaterials } from '../learningHooks'
+import { useLearningSettings, useMaterials } from '../learningHooks'
+import { useCelebrateSmall } from '../feedback'
 import { useRoomTheme } from '../roomTheme'
 import type { Screen } from '../App'
 import './workshop.css'
@@ -26,6 +28,32 @@ const TABS: { id: Tab; label: string }[] = [
 
 const shortText = (short: Partial<MaterialCost>) =>
   MATERIAL_IDS.filter((m) => short[m]).map((m) => `${MATERIAL_NAMES[m]}${short[m]}`).join(' ')
+/** 唸給孩子聽：「還差 2 個石頭、3 個花朵」 */
+const shortSpeech = (short: Partial<MaterialCost>) => `還差${MATERIAL_IDS.filter((m) => short[m]).map((m) => `${short[m]}個${MATERIAL_NAMES[m]}`).join('，')}`
+
+/** 做不起時的按鈕內容：缺的材料圖示 + 數字缺口（不識字也看得懂還差多少）；文字只留給讀屏與測試 */
+function GapButtonBody({ short }: { short: Partial<MaterialCost> }) {
+  return (
+    <>
+      <span className="sr-only">還差 {shortText(short)}</span>
+      <span className="ws-gap" aria-hidden>
+        {MATERIAL_IDS.filter((m) => short[m]).map((m) => (
+          <span key={m} className="ws-gap-item">
+            <Icon name={`mat-${m}`} emoji={MAT_EMOJI[m]} size={30} />
+            <b>−{short[m]}</b>
+          </span>
+        ))}
+      </span>
+    </>
+  )
+}
+
+/** 做好了：跳出家具大圖慶祝，按「去擺放」（壁紙/地板是「套用」）直接帶去用 */
+interface Done {
+  id: string
+  name: string
+  theme: ThemeSlot | null
+}
 
 function CostRow({ cost, bal, owned }: { cost: MaterialCost; bal: Record<string, number>; owned: boolean }) {
   return (
@@ -52,21 +80,32 @@ function Swatch({ id, slot }: { id: string; slot: ThemeSlot }) {
 /** 工坊：用冒險拿到的材料做家具、壁紙、地板。家具到首頁佈置；壁紙地板在這裡直接套用。 */
 export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Screen["name"] | Screen) => void }) {
   const toast = useToast()
+  const small = useCelebrateSmall()
+  const { voiceOn } = useLearningSettings()
   const bal = useMaterials()
   const [tab, setTab] = useState<Tab>('decor')
+  const [done, setDone] = useState<Done | null>(null)
+  const [shaking, setShaking] = useState<string | null>(null)
   const inventory = useLiveQuery(() => db.inventory.toArray(), [], [])
   const placements = useLiveQuery(() => db.placements.toArray(), [], [])
   const theme = useRoomTheme()
 
-  const craft = async (id: string, name: string, isTheme: boolean) => {
+  const craft = async (id: string, name: string, themeSlot: ThemeSlot | null, card: Element | null) => {
     const r = await repo.craftFurniture(id)
-    if (r.ok) toast(isTheme ? `做好了「${name}」！按「套用」就能換上` : `做好了「${name}」！到首頁佈置吧`, 'ok')
-    else toast(r.error, 'warn')
+    if (!r.ok) return toast(r.error, 'warn')
+    small('craft', { at: card?.querySelector('.ws-art') ?? card, phrase: `${name}做好了！` })
+    setDone({ id, name, theme: themeSlot })
   }
   const apply = async (id: string, name: string) => {
     const r = await repo.applyTheme(id)
     if (r.ok) toast(`房間換成「${name}」了！`, 'ok')
     else toast(r.error, 'warn')
+  }
+  /** 做不起：卡片晃一下，唸出還差什麼（按鈕上只有材料圖示與數字） */
+  const explainShort = (id: string, short: Partial<MaterialCost>) => {
+    setShaking(id)
+    window.setTimeout(() => setShaking((v) => (v === id ? null : v)), 520)
+    speak(shortSpeech(short), { enabled: voiceOn })
   }
 
   const qtyOf = (id: string) => inventory.find((v) => v.itemId === id)?.qty ?? 0
@@ -77,7 +116,7 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
     const check = canCraft(bal, qty, item)
     const placed = placements.some((p) => p.itemId === item.id)
     return (
-      <li key={item.id} className={`ws-card ${qty > 0 ? 'owned' : ''}`} data-testid={`craft-${item.id}`}>
+      <li key={item.id} className={`ws-card ${qty > 0 ? 'owned' : check.ok ? 'can' : 'cant'} ${shaking === item.id ? 'ux-shake' : ''}`} data-testid={`craft-${item.id}`}>
         <div className="ws-art">
           <Icon name={item.id} emoji={DECOR_EMOJI[item.asset]} alt={item.name} size="100%" />
         </div>
@@ -88,8 +127,24 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
             {placed ? '已擺放，去調整' : '去佈置'}
           </button>
         ) : (
-          <button className="ws-btn primary" disabled={!check.ok} onClick={() => craft(item.id, item.name, false)} data-testid="craft-btn">
-            {check.ok ? '製作' : check.reason === 'insufficient' ? `還差 ${shortText(check.short)}` : '不能製作'}
+          <button
+            className={`ws-btn ${check.ok ? 'primary go' : 'gap'}`}
+            aria-disabled={!check.ok}
+            onClick={(e) => {
+              if (check.ok) void craft(item.id, item.name, null, e.currentTarget.closest('.ws-card'))
+              else if (check.reason === 'insufficient') explainShort(item.id, check.short)
+            }}
+            data-testid="craft-btn"
+          >
+            {check.ok ? (
+              <>
+                <Icon name="ui-workshop" emoji="🔨" size={32} /> 製作
+              </>
+            ) : check.reason === 'insufficient' ? (
+              <GapButtonBody short={check.short} />
+            ) : (
+              '不能製作'
+            )}
           </button>
         )}
       </li>
@@ -103,7 +158,7 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
     const active = theme[slot] === id
     const check = item ? canCraft(bal, qtyOf(id), item) : null
     return (
-      <li key={id} className={`ws-card ${owned ? 'owned' : ''} ${active ? 'active' : ''}`} data-testid={`craft-${id}`}>
+      <li key={id} className={`ws-card ${owned ? 'owned' : check?.ok ? 'can' : 'cant'} ${active ? 'active' : ''} ${shaking === id ? 'ux-shake' : ''}`} data-testid={`craft-${id}`}>
         <div className="ws-art ws-art-theme">
           <Swatch id={id} slot={slot} />
         </div>
@@ -114,8 +169,24 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
             {active ? '使用中' : '套用'}
           </button>
         ) : (
-          <button className="ws-btn primary" disabled={!check?.ok} onClick={() => craft(id, def.name, true)} data-testid="craft-btn">
-            {check?.ok ? '製作' : check && check.reason === 'insufficient' ? `還差 ${shortText(check.short)}` : '不能製作'}
+          <button
+            className={`ws-btn ${check?.ok ? 'primary go' : 'gap'}`}
+            aria-disabled={!check?.ok}
+            onClick={(e) => {
+              if (check?.ok) void craft(id, def.name, slot, e.currentTarget.closest('.ws-card'))
+              else if (check && check.reason === 'insufficient') explainShort(id, check.short)
+            }}
+            data-testid="craft-btn"
+          >
+            {check?.ok ? (
+              <>
+                <Icon name="ui-workshop" emoji="🔨" size={32} /> 製作
+              </>
+            ) : check && check.reason === 'insufficient' ? (
+              <GapButtonBody short={check.short} />
+            ) : (
+              '不能製作'
+            )}
           </button>
         )}
       </li>
@@ -138,6 +209,37 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
           ? craftableOf('decor').map(decorCard)
           : sortThemesByCost(themesOf(tab)).map((t) => themeCard(tab, t.id))}
       </ul>
+      {done && (
+        <div className="modal-back craft-done" role="presentation" data-testid="craft-done">
+          <div className="modal craft-done-card" role="dialog" aria-modal="true" aria-label={`${done.name}做好了`}>
+            <div className="cd-rays" aria-hidden />
+            <h2 className="cd-title">做好了！</h2>
+            <div className="cd-art" data-testid="craft-done-art">
+              {done.theme ? <Swatch id={done.id} slot={done.theme} /> : <Icon name={done.id} emoji={DECOR_EMOJI[done.id.replace('decor-', '')]} alt={done.name} size="100%" />}
+            </div>
+            <div className="cd-name">{done.name}</div>
+            {done.theme ? (
+              <button
+                className="btn primary cd-go"
+                onClick={async () => {
+                  await apply(done.id, done.name)
+                  setDone(null)
+                }}
+                data-testid="craft-done-go"
+              >
+                ✓ 套用
+              </button>
+            ) : (
+              <button className="btn primary cd-go" onClick={() => go({ name: 'home', edit: true })} data-testid="craft-done-go">
+                <Icon name="ui-bag" emoji="🪑" size={44} /> 去擺放
+              </button>
+            )}
+            <button className="btn" onClick={() => setDone(null)} data-testid="craft-done-close">
+              繼續做
+            </button>
+          </div>
+        </div>
+      )}
       <p className="ws-foot">
         還沒有材料？<button className="ws-link" onClick={() => go('map')}>去冒險地圖</button>
       </p>
