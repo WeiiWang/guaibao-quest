@@ -11429,6 +11429,71 @@
   "text": "好，我們直接開始。",
   "voice": "mama|"
  },
+ "ui.album.card.1": {
+  "file": "954f22021d69934e.m4a",
+  "text": "阿悟孵出來了！",
+  "voice": "mama|"
+ },
+ "ui.album.card.10": {
+  "file": "15095f26eb263592.m4a",
+  "text": "阿悟有第一頂帽子了：花花帽！",
+  "voice": "mama|"
+ },
+ "ui.album.card.11": {
+  "file": "051b140af48fabcf.m4a",
+  "text": "阿悟有第一頂帽子了：草帽！",
+  "voice": "mama|"
+ },
+ "ui.album.card.12": {
+  "file": "d247c031f3805c34.m4a",
+  "text": "阿悟有第一頂帽子了：廚師帽！",
+  "voice": "mama|"
+ },
+ "ui.album.card.13": {
+  "file": "35f5f2c02154de78.m4a",
+  "text": "阿悟有第一頂帽子了：皇冠！",
+  "voice": "mama|"
+ },
+ "ui.album.card.2": {
+  "file": "b01392ea70098ba9.m4a",
+  "text": "阿悟長大了！",
+  "voice": "mama|"
+ },
+ "ui.album.card.3": {
+  "file": "fa4b5fc36766b3eb.m4a",
+  "text": "我們一起通關了花果山！",
+  "voice": "mama|"
+ },
+ "ui.album.card.4": {
+  "file": "6667f9cc06f638aa.m4a",
+  "text": "我們一起通關了英文小島！",
+  "voice": "mama|"
+ },
+ "ui.album.card.5": {
+  "file": "6760e571359bdcd0.m4a",
+  "text": "我們一起通關了水簾洞！",
+  "voice": "mama|"
+ },
+ "ui.album.card.6": {
+  "file": "833f098acba654cb.m4a",
+  "text": "我們一起通關了生活小鎮！",
+  "voice": "mama|"
+ },
+ "ui.album.card.7": {
+  "file": "893c1a5dde6eeec6.m4a",
+  "text": "我們一起通關了自然森林！",
+  "voice": "mama|"
+ },
+ "ui.album.card.8": {
+  "file": "12d524b18f4e2dd9.m4a",
+  "text": "阿悟有第一頂帽子了：派對帽！",
+  "voice": "mama|"
+ },
+ "ui.album.card.9": {
+  "file": "8dc2a9297118ca5d.m4a",
+  "text": "阿悟有第一頂帽子了：棒球帽！",
+  "voice": "mama|"
+ },
  "ui.coloring.price.1": {
   "file": "298d6cf73b6b8a62.m4a",
   "text": "這張要用30顆星星，在商店換喔",
@@ -11597,6 +11662,81 @@
  "ui.gift.food.9": {
   "file": "a26d605769cc00fb.m4a",
   "text": "我在路上撿到一塊西瓜，送給你！",
+  "voice": "mama|"
+ },
+ "ui.hat.buy.1": {
+  "file": "556411bac1d4466c.m4a",
+  "text": "買到派對帽囉！",
+  "voice": "mama|"
+ },
+ "ui.hat.buy.2": {
+  "file": "b70d5f354b802ba1.m4a",
+  "text": "買到棒球帽囉！",
+  "voice": "mama|"
+ },
+ "ui.hat.buy.3": {
+  "file": "127e751cc577af22.m4a",
+  "text": "買到花花帽囉！",
+  "voice": "mama|"
+ },
+ "ui.hat.buy.4": {
+  "file": "98b2d0c05a6edc02.m4a",
+  "text": "買到草帽囉！",
+  "voice": "mama|"
+ },
+ "ui.hat.buy.5": {
+  "file": "963a4df81f1cf58b.m4a",
+  "text": "買到廚師帽囉！",
+  "voice": "mama|"
+ },
+ "ui.hat.buy.6": {
+  "file": "da9471021bfd0179.m4a",
+  "text": "買到皇冠囉！",
+  "voice": "mama|"
+ },
+ "ui.hat.egg": {
+  "file": "d73de232622b1acf.m4a",
+  "text": "阿悟還在蛋裡，孵出來才能戴帽子",
+  "voice": "mama|"
+ },
+ "ui.hat.empty": {
+  "file": "25bd1c98682c28d0.m4a",
+  "text": "還沒有帽子，去商店的衣櫃買一頂吧",
+  "voice": "mama|"
+ },
+ "ui.hat.off": {
+  "file": "42905cdf79832213.m4a",
+  "text": "好，帽子拿下來囉",
+  "voice": "mama|"
+ },
+ "ui.hat.wear.1": {
+  "file": "a07cd059c2248157.m4a",
+  "text": "阿悟戴上了派對帽！",
+  "voice": "mama|"
+ },
+ "ui.hat.wear.2": {
+  "file": "c1dfd429c88f06bd.m4a",
+  "text": "阿悟戴上了棒球帽！",
+  "voice": "mama|"
+ },
+ "ui.hat.wear.3": {
+  "file": "0fd40f076db0aef9.m4a",
+  "text": "阿悟戴上了花花帽！",
+  "voice": "mama|"
+ },
+ "ui.hat.wear.4": {
+  "file": "6e8ae921abd3fd1f.m4a",
+  "text": "阿悟戴上了草帽！",
+  "voice": "mama|"
+ },
+ "ui.hat.wear.5": {
+  "file": "aa1eb89285cc0d49.m4a",
+  "text": "阿悟戴上了廚師帽！",
+  "voice": "mama|"
+ },
+ "ui.hat.wear.6": {
+  "file": "ec34a93e4db113a1.m4a",
+  "text": "阿悟戴上了皇冠！",
   "voice": "mama|"
  },
  "ui.home.guide": {
