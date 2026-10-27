@@ -693,10 +693,6 @@ async function misc(browser) {
 }
 
 const SECTIONS = { lockScreen, feedingGuard, dockTouch, shopBuy, coloringList, coloringLayout, artworkSpot, placeAndPoop, workshop, misc }
-void SECTIONS
-void balance
-void qtyOf
-void giveStars
 
 const only = process.argv[2]
 const browser = await launch()
