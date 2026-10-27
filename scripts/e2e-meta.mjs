@@ -315,7 +315,7 @@ try {
   await page.locator('[data-pm=unlock-tricks]').click()
   await page.waitForTimeout(300)
   const petT = await petOf(page)
-  check('PM 解鎖全部新招：pet.tricks 有 5 招', petT.tricks?.length === 5, JSON.stringify(petT.tricks))
+  check('PM 解鎖全部新招：pet.tricks 有 8 招（v6 多了量身高、捉迷藏、記憶魔術）', petT.tricks?.length === 8, JSON.stringify(petT.tricks))
   await page.getByRole('button', { name: '回首頁看看' }).click()
   await page.waitForSelector('[data-testid=pet]')
   check('學會新招後，首頁出現「表演」按鈕', (await page.getByTestId('perform-btn').count()) === 1)
@@ -327,11 +327,11 @@ try {
   await page.waitForTimeout(100)
   await page.getByTestId('perform-btn').click()
   const rowsOne = await s
-  const trickAnims = new Set(['flip', 'hop', 'wave', 'bounce', 'walk'])
-  check('點「表演」：阿悟演出一個新招動作', rowsOne.some((r) => trickAnims.has(r.anim) || /^[123]$|Hello|整理好/.test(r.bubble ?? '')), JSON.stringify([...new Set(rowsOne.map((r) => r.anim))]))
+  const trickAnims = new Set(['flip', 'hop', 'wave', 'bounce', 'walk', 'squat', 'wobble', 'spin'])
+  check('點「表演」：阿悟演出一個新招動作', rowsOne.some((r) => trickAnims.has(r.anim) || /^[123]$|Hello|整理好|矮矮|高高|躲起來|找到我|？/.test(r.bubble ?? '')), JSON.stringify([...new Set(rowsOne.map((r) => r.anim))]))
 
-  // PM 的「表演每一招」：依序演 5 招，每一招的特徵都要看到
-  const allRows = sampleTrick(page, 34000) // 先開始取樣，才不會漏掉回首頁後第一個動作
+  // PM 的「表演每一招」：依序演 8 招，每一招的特徵都要看到
+  const allRows = sampleTrick(page, 60000) // 先開始取樣，才不會漏掉回首頁後第一個動作
   await openParentTab(page, 'PM 預覽')
   await page.locator('[data-cmd="trick:all"]').click()
   await page.waitForSelector('[data-testid=pet]')
@@ -348,8 +348,9 @@ try {
   check('翻筋斗：flip 動畫（360 度）', has((r) => r.anim === 'flip' && r.pose === 'cheer'))
   const order = (p) => rows.findIndex(p)
   check('五招依序出現（數香蕉 → 整理房間 → 節奏舞 → Hello → 翻筋斗）', order((r) => r.bubble === '1') >= 0 && order((r) => r.bubble === '1') < order((r) => r.tidy) && order((r) => r.tidy) < order((r) => r.anim === 'hop') && order((r) => r.anim === 'hop') < order((r) => r.bubble === 'Hello!') && order((r) => r.bubble === 'Hello!') < order((r) => r.anim === 'flip'))
-  const flipRow = rows.findIndex((r) => r.anim === 'flip')
-  void flipRow
+  check('量身高：先蹲下（泡泡「矮矮的」）再跳起來（泡泡「高高！」）', has((r) => r.bubble === '矮矮的') && has((r) => r.bubble === '高高！') && order((r) => r.bubble === '矮矮的') < order((r) => r.bubble === '高高！'))
+  check('捉迷藏：害羞躲起來，再跳出來說「找到我了！」', has((r) => r.pose === 'shy' && r.bubble === '我躲起來囉') && has((r) => r.bubble === '找到我了！'))
+  check('記憶魔術：香蕉變成問號，再轉一圈變回來', has((r) => r.bubble === '？') && has((r) => r.anim === 'spin'))
 
   // =====================================================================
   // 3b) 新招全螢幕慶祝 + 示範
@@ -358,7 +359,7 @@ try {
   await page.locator('[data-pm=celebrate-tricks]').click()
   await page.waitForSelector('[data-testid=trick-celebrate]')
   const titles = []
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 8; i++) {
     await page.waitForSelector('[data-testid=trick-celebrate]')
     titles.push(await page.getByTestId('trick-celebrate-text').innerText())
     if (i === 0) {
@@ -373,7 +374,7 @@ try {
     await page.getByTestId('trick-close').click()
     await page.waitForTimeout(250)
   }
-  check('依序慶祝 5 招，每招一句「阿悟學會了新本領：○○！」', titles.join('|') === ['數香蕉', '整理房間', '節奏舞', '說 Hello', '翻筋斗'].map((n) => `阿悟學會了新本領：${n}！`).join('|'), titles.join('|'))
+  check('依序慶祝 8 招，每招一句「阿悟學會了新本領：○○！」', titles.join('|') === ['數香蕉', '整理房間', '節奏舞', '說 Hello', '翻筋斗', '量身高', '捉迷藏', '記憶魔術'].map((n) => `阿悟學會了新本領：${n}！`).join('|'), titles.join('|'))
   check('慶祝句有唸出來', (await saidLog(page)).some((t) => t === '阿悟學會了新本領：翻筋斗！' || t.startsWith('audio:')))
   check('慶祝結束後佇列清空、不會再跳', ((await settingsOf(page)).pendingTricks ?? []).length === 0 && (await page.getByTestId('trick-celebrate').count()) === 0)
 

@@ -1,6 +1,6 @@
 // 題庫產生器（固定 seed，輸出可重現）。
 // 用法：node scripts/gen-questions.mjs
-// 輸出：src/learning/content/{number,classify,pattern,english}.json
+// 輸出：src/learning/content/{number,classify,pattern,measure,space,observe,english}.json
 // 產出的 JSON 會進版控，供人工審閱；執行期不跑這支程式。
 // 物件屬性（種類、顏色）直接讀 src/learning/objects.ts（Node 24 可直接載入 .ts），不另外抄一份。
 // 題目是否合理由 src/learning/bank.test.ts 用獨立的解題邏輯驗證（含多屬性檢查）。
@@ -9,6 +9,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { OBJECTS, CATEGORY_NAMES, CATEGORIES, colorWord } from '../src/learning/objects.ts'
 import { EN_WORDS, EN_GENTLE_WORDS } from '../src/learning/english.ts'
+import { INSIDE_PROPS, PROPS, REL_WORD } from '../src/learning/space.ts'
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '../src/learning/content')
 
@@ -53,8 +54,20 @@ const reject = () => {
 }
 
 /** 題幹 + 答案 去重。找不同（odd）的題幹就是那四個物件，所以選項也算進去 */
+const SIG_TYPES = new Set(['bigger', 'order', 'where', 'whereIs', 'place', 'recall', 'gone', 'spot', 'flip', 'row'])
 function dedupKey(q) {
-  return JSON.stringify([q.type, q.prompt, q.items, q.answer, q.type === 'odd' ? q.choices.map((c) => c.id).sort() : null, q.params?.n ?? null, q.params?.word ?? null, q.params?.pattern ?? null])
+  return JSON.stringify([
+    q.type,
+    q.prompt,
+    q.items,
+    q.answer,
+    q.type === 'odd' ? q.choices.map((c) => c.id).sort() : null,
+    q.params?.n ?? null,
+    q.params?.word ?? null,
+    q.params?.pattern ?? null,
+    // v6 新題型：選項與參數（不同的縮放比例、位置、牌面算不同題）
+    SIG_TYPES.has(q.type) ? [q.choices, q.params] : null,
+  ])
 }
 
 /**
@@ -901,6 +914,500 @@ const english1g = cell(
   { gentle: true },
 )
 
+// ---------- v6 第 2 章（水簾洞）：比較與排序 ----------
+// 同一個物件用 CSS 縮放成不同大小（scale），不需要新素材。
+const BIG_WORDS = { size: ['大', '小'], height: ['高', '矮'], length: ['長', '短'] }
+const LENGTH_OBJS = ['obj-banana', 'obj-fish', 'decor-car', 'decor-rocket', 'decor-piano']
+const HEIGHT_OBJS = ['obj-chick', 'obj-rabbit', 'obj-flower', 'obj-apple', 'obj-peach', 'obj-grape', 'decor-rocket', 'decor-dino', 'decor-piano', 'obj-banana']
+const objsFor = (dim) => (dim === 'length' ? LENGTH_OBJS : dim === 'height' ? HEIGHT_OBJS : IDS)
+const SCALE_GRID = [0.32, 0.36, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]
+/** k 個不同的倍率（由小到大），相鄰兩個的比例至少 minRatio，最大的一定 >= 0.85（畫面上看得出來） */
+function scaleSet(k, minRatio) {
+  for (let t = 0; t < 4000; t++) {
+    const picks = sample(SCALE_GRID, k).sort((a, b) => a - b)
+    if (picks[k - 1] < 0.85) continue
+    if (picks.every((v, i) => i === 0 || v / picks[i - 1] >= minRatio - 1e-9)) return picks
+  }
+  reject()
+}
+const dimPhrase = (dim, ask) => BIG_WORDS[dim][ask === 'max' ? 0 : 1]
+
+function biggerQ(i, ctx, k, minRatio, dim, ask, obj, phrase) {
+  const w = dimPhrase(dim, ask)
+  const comp = k === 2 ? '比較' : '最'
+  const forms = [
+    `哪一${un(obj)}${nm(obj)}${comp}${w}？`,
+    `找找看，哪一個${comp}${w}？`,
+    `請指出${comp}${w}的那一${un(obj)}${nm(obj)}。`,
+  ]
+  const sorted = scaleSet(k, minRatio) // 由小到大
+  const answerScale = ask === 'max' ? sorted[k - 1] : sorted[0]
+  const others = shuffle(sorted.filter((v) => v !== answerScale))
+  const pos = ctx.pos(k)
+  const arr = [...others]
+  arr.splice(pos, 0, answerScale)
+  ctx.mark(k, pos)
+  return {
+    type: 'bigger',
+    prompt: variant(forms, phrase),
+    items: [],
+    choices: arr.map((sc, n) => ({ id: `c${n + 1}`, obj, scale: sc, dim })),
+    answer: `c${pos + 1}`,
+    hint: `它們都是${nm(obj)}，只是有${BIG_WORDS[dim][0]}有${BIG_WORDS[dim][1]}。一個一個比一比，看看哪一${un(obj)}${comp}${w}。`,
+    params: { dim, ask },
+  }
+}
+
+const ORDER_FORMS = {
+  size: { asc: ['由小排到大。', '把它們從小排到大，排排隊。', '最小的放最前面，一個一個排好。'], desc: ['由大排到小。', '把它們從大排到小，排排隊。', '最大的放最前面，一個一個排好。'] },
+  height: { asc: ['由矮排到高。', '把它們從矮排到高，排排隊。', '最矮的放最前面，一個一個排好。'], desc: ['由高排到矮。', '把它們從高排到矮，排排隊。', '最高的放最前面，一個一個排好。'] },
+  length: { asc: ['由短排到長。', '把它們從短排到長，排排隊。', '最短的放最前面，一個一個排好。'], desc: ['由長排到短。', '把它們從長排到短，排排隊。', '最長的放最前面，一個一個排好。'] },
+}
+function orderQ(i, ctx, n, minRatio, dim, dir, obj, phrase) {
+  const sorted = scaleSet(n, minRatio) // 由小到大
+  // items 是洗過牌的；order[k] = 第 k 格該放 items 的第幾個
+  let perm
+  for (let t = 0; t < 50; t++) {
+    perm = shuffle([...Array(n).keys()])
+    if (perm.some((v, k) => v !== k)) break
+  }
+  const items = perm.map((rank) => ({ obj, scale: sorted[rank] }))
+  const asc = [...Array(n).keys()].map((rank) => perm.indexOf(rank)) // 由小到大的順序
+  const order = dir === 'asc' ? asc : [...asc].reverse()
+  const [lo, hi] = [BIG_WORDS[dim][1], BIG_WORDS[dim][0]]
+  const first = dir === 'asc' ? lo : hi
+  return {
+    type: 'order',
+    interaction: 'dragOrder',
+    prompt: variant(ORDER_FORMS[dim][dir], phrase),
+    items,
+    choices: [],
+    answer: 'sorted',
+    hint: `先找最${first}的，放在第一格，再找次${first}的放第二格，一個一個排下去。`,
+    params: { dim, dir, order },
+  }
+}
+
+const MEASURE_CANDS = (dims, asks, phrases, objsOverride) =>
+  shuffle(
+    dims.flatMap((dim) =>
+      (objsOverride ?? objsFor(dim)).flatMap((o) => asks.flatMap((ask) => Array.from({ length: phrases }, (_, p) => [dim, ask, o, p]))),
+    ),
+  )
+const ORDER_CANDS = (dims, dirs, phrases) =>
+  shuffle(dims.flatMap((dim) => objsFor(dim).flatMap((o) => dirs.flatMap((dir) => Array.from({ length: phrases }, (_, p) => [dim, dir, o, p])))))
+
+const measure1g = cell(
+  'measure',
+  1,
+  [
+    { count: 16, cands: MEASURE_CANDS(['size'], ['max', 'min'], 3), build: (i, ctx, [dim, ask, o, p]) => biggerQ(i, ctx, 2, 2.0, dim, ask, o, p) },
+    { count: 10, cands: MEASURE_CANDS(['height'], ['max', 'min'], 3), build: (i, ctx, [dim, ask, o, p]) => biggerQ(i, ctx, 2, 2.0, dim, ask, o, p) },
+    { count: 10, cands: MEASURE_CANDS(['length'], ['max', 'min'], 3), build: (i, ctx, [dim, ask, o, p]) => biggerQ(i, ctx, 2, 2.0, dim, ask, o, p) },
+  ],
+  { gentle: true, seed: 11 },
+)
+const measure1 = cell(
+  'measure',
+  1,
+  [
+    { count: 12, cands: MEASURE_CANDS(['size', 'height', 'length'], ['max', 'min'], 3), build: (i, ctx, [dim, ask, o, p]) => biggerQ(i, ctx, 2, 1.7, dim, ask, o, p) },
+    { count: 14, cands: MEASURE_CANDS(['size', 'height', 'length'], ['max', 'min'], 3), build: (i, ctx, [dim, ask, o, p]) => biggerQ(i, ctx, 3, 1.4, dim, ask, o, p) },
+    { count: 10, cands: ORDER_CANDS(['size'], ['asc', 'desc'], 3), build: (i, ctx, [dim, dir, o, p]) => orderQ(i, ctx, 3, 1.5, dim, dir, o, p) },
+  ],
+  { seed: 11 },
+)
+const measure2 = cell(
+  'measure',
+  2,
+  [
+    { count: 18, cands: MEASURE_CANDS(['size', 'height', 'length'], ['max', 'min'], 3), build: (i, ctx, [dim, ask, o, p]) => biggerQ(i, ctx, 3, 1.3, dim, ask, o, p) },
+    { count: 20, cands: ORDER_CANDS(['size', 'height', 'length'], ['asc', 'desc'], 3), build: (i, ctx, [dim, dir, o, p]) => orderQ(i, ctx, 3, 1.35, dim, dir, o, p) },
+  ],
+  { seed: 11 },
+)
+const measure3 = cell(
+  'measure',
+  3,
+  [
+    { count: 12, cands: MEASURE_CANDS(['size', 'height', 'length'], ['max', 'min'], 3), build: (i, ctx, [dim, ask, o, p]) => biggerQ(i, ctx, 4, 1.18, dim, ask, o, p) },
+    { count: 24, cands: ORDER_CANDS(['size', 'height', 'length'], ['asc', 'desc'], 3), build: (i, ctx, [dim, dir, o, p]) => orderQ(i, ctx, 4, 1.2, dim, dir, o, p) },
+  ],
+  { seed: 11 },
+)
+const measure4 = cell(
+  'measure',
+  4,
+  [
+    { count: 12, cands: MEASURE_CANDS(['size', 'height', 'length'], ['max', 'min'], 3), build: (i, ctx, [dim, ask, o, p]) => biggerQ(i, ctx, 5, 1.12, dim, ask, o, p) },
+    { count: 26, cands: ORDER_CANDS(['size', 'height', 'length'], ['asc', 'desc'], 3), build: (i, ctx, [dim, dir, o, p]) => orderQ(i, ctx, 5, 1.14, dim, dir, o, p) },
+  ],
+  { seed: 11 },
+)
+
+// ---------- v6 第 2 章：空間方位 ----------
+// 場景座標與位置判斷見 src/learning/space.ts（畫面、產生器、單元測試共用）。
+const SPACE_SUBJECTS = ['obj-chick', 'obj-fish', 'obj-rabbit', 'obj-apple', 'obj-banana', 'obj-peach', 'obj-star', 'obj-flower', 'obj-grape', 'obj-shell']
+const PROP_NAME = Object.fromEntries(PROPS.map((p) => [p.id, p.name]))
+const REL_HINT = {
+  above: (p) => `上面，就是在${p}的頭頂上。`,
+  below: (p) => `下面，就是在${p}的腳底下。`,
+  inside: (p) => `裡面，就是躲在${p}裡頭。`,
+  outside: (p) => `外面，就是不在${p}裡頭，站在旁邊。`,
+  left: () => '舉起你的左手，左手那一邊就是左邊。',
+  right: () => '舉起你的右手，右手那一邊就是右邊。',
+  between: () => '中間，就是在兩個東西的正中央。',
+}
+const WHERE_FORMS = [
+  (s, p, w) => `哪一張圖，${nm(s)}在${p}的${w}？`,
+  (s, p, w) => `找找看，${nm(s)}在${p}的${w}是哪一張？`,
+  (s, p, w) => `${nm(s)}在${p}的${w}，是哪一張圖？`,
+]
+const sceneChoice = (id, anchor, subject, rel) => ({ id, scene: { anchor, subject, rel } })
+/** 小場景選項：k 張圖，每張的位置都不一樣（rels 的前 k 個，目標放第 pos 張） */
+function whereQ(i, ctx, k, relPool, anchorPool, phrase, subject) {
+  const rels = sample(relPool, k)
+  const target = rels[Math.floor(rnd() * rels.length)]
+  const anchor = pick(anchorPool.filter((a) => rels.every((r) => r !== 'inside' || INSIDE_PROPS.includes(a))))
+  if (!anchor) reject()
+  // outside 和 left / right 不放在同一題（兩個都在旁邊，分不出來）
+  if (rels.includes('outside') && (rels.includes('left') || rels.includes('right'))) reject()
+  const pos = ctx.pos(k)
+  const others = shuffle(rels.filter((r) => r !== target))
+  const arr = [...others]
+  arr.splice(pos, 0, target)
+  ctx.mark(k, pos)
+  const pn = PROP_NAME[anchor]
+  return {
+    type: 'where',
+    prompt: variant(WHERE_FORMS, phrase)(subject, pn, REL_WORD[target]),
+    items: [],
+    choices: arr.map((r, n) => sceneChoice(`c${n + 1}`, anchor, subject, r)),
+    answer: `c${pos + 1}`,
+    hint: `${REL_HINT[target](pn)}找找看，哪一張圖裡的${nm(subject)}在${pn}的${REL_WORD[target]}？`,
+    params: { rel: target },
+  }
+}
+const WHEREIS_FORMS = [
+  (s, p, a, b) => `${nm(s)}在${p}的${REL_WORD[a]}還是${REL_WORD[b]}？`,
+  (s, p, a, b) => `看一看，${nm(s)}是在${p}的${REL_WORD[a]}，還是${REL_WORD[b]}？`,
+]
+const REL_PAIRS = { d2: [['above', 'below'], ['inside', 'outside']], d3: [['left', 'right']] }
+function whereIsQ(i, ctx, pairs, anchorPool, phrase, subject) {
+  const pair = pick(pairs)
+  const anchor = pick(anchorPool.filter((a) => !pair.includes('inside') || INSIDE_PROPS.includes(a)))
+  if (!anchor) reject()
+  const target = pair[Math.floor(rnd() * 2)]
+  const pos = ctx.pos(2)
+  const other = pair.find((r) => r !== target)
+  const arr = [...[other]]
+  arr.splice(pos, 0, target)
+  ctx.mark(2, pos)
+  const [a, b] = rnd() < 0.5 ? pair : [pair[1], pair[0]]
+  const pn = PROP_NAME[anchor]
+  return {
+    type: 'whereIs',
+    prompt: variant(WHEREIS_FORMS, phrase)(subject, pn, a, b),
+    items: [],
+    choices: arr.map((r) => ({ id: r, text: REL_WORD[r] })),
+    answer: target,
+    hint: `先找到${pn}，再看${nm(subject)}站在哪裡。${REL_HINT[target](pn)}`,
+    params: { scene: { anchor, subject, rel: target } },
+  }
+}
+/** 兩個東西排成一排：誰在誰的左邊還是右邊（難度 4） */
+function whereIs2Q(i, ctx, phrase) {
+  const [a, b] = sample(IDS, 2)
+  const target = rnd() < 0.5 ? 'left' : 'right'
+  const pos = ctx.pos(2)
+  const arr = [target === 'left' ? 'right' : 'left']
+  arr.splice(pos, 0, target)
+  ctx.mark(2, pos)
+  // 題幹的排列：a 在 b 的 target 邊（left = a 排在 b 前面）
+  const items = target === 'left' ? [{ obj: a }, { obj: b }] : [{ obj: b }, { obj: a }]
+  const forms = [`${nm(a)}在${nm(b)}的左邊還是右邊？`, `看一看，${nm(a)}是排在${nm(b)}的左邊，還是右邊？`]
+  return {
+    type: 'whereIs',
+    prompt: variant(forms, phrase),
+    items,
+    choices: arr.map((r) => ({ id: r, text: REL_WORD[r] })),
+    answer: target,
+    hint: `先找到${nm(b)}，再看${nm(a)}排在哪一邊。${REL_HINT[target]()}`,
+  }
+}
+const ORD = ['', '一', '二', '三', '四']
+function rowQ(i, ctx, n, kind, nth, phrase) {
+  const objs = sample(IDS, n)
+  const idx = kind === 'middle' ? 1 : kind === 'first' ? 0 : kind === 'last' ? n - 1 : nth - 1
+  const answer = objs[idx]
+  const forms =
+    kind === 'middle'
+      ? ['在最中間的是哪一個？', '排在最中間的是哪一個？']
+      : kind === 'first'
+        ? ['排在最左邊的是哪一個？', '最左邊的是哪一個？']
+        : kind === 'last'
+          ? ['排在最右邊的是哪一個？', '最右邊的是哪一個？']
+          : [`從左邊數過來，第${ORD[nth]}個是哪一個？`, `從左邊開始數，第${ORD[nth]}個是誰？`]
+  const pos = ctx.pos(n)
+  return {
+    type: 'row',
+    prompt: variant(forms, phrase),
+    items: objs.map((obj) => ({ obj })),
+    choices: objChoices(answer, objs.filter((o) => o !== answer), pos, ctx),
+    answer,
+    hint:
+      kind === 'middle'
+        ? '先數一數有幾個，再找最中間的那一個。'
+        : kind === 'nth'
+          ? `從最左邊開始，一個一個數：${Array.from({ length: nth }, (_, k) => ORD[k + 1]).join('、')}。數到第${ORD[nth]}個停下來。`
+          : `舉起你的${kind === 'first' ? '左' : '右'}手，${kind === 'first' ? '左' : '右'}手那一邊，最旁邊的那一個。`,
+    params: { pos: kind, ...(kind === 'nth' ? { nth } : {}) },
+  }
+}
+
+const PLACE_FORMS = [
+  (s, p, w) => `把${nm(s)}放到${p}的${w}。`,
+  (s, p, w) => `幫忙把${nm(s)}放在${p}的${w}。`,
+  (s, p, w) => `請把${nm(s)}送到${p}的${w}。`,
+]
+const BETWEEN_FORMS = [(s, a, b) => `把${nm(s)}放到${a}和${b}的中間。`, (s, a, b) => `請把${nm(s)}放在${a}和${b}的中間。`]
+const zoneList = (specs) => shuffle(specs).map((z, k) => ({ id: `z${k + 1}`, ...z }))
+/** 放到某個位置：單一家具，位置是 rels 的每一個；target 是被問到的那個 */
+function placeSingleQ(i, ctx, rels, anchorPool, phrase, subject) {
+  const target = pick(rels)
+  const anchor = pick(anchorPool.filter((a) => rels.every((r) => r !== 'inside' || INSIDE_PROPS.includes(a))))
+  if (!anchor) reject()
+  const zones = zoneList(rels.map((rel) => ({ rel, of: 0 })))
+  const pn = PROP_NAME[anchor]
+  return {
+    type: 'place',
+    interaction: 'place',
+    prompt: variant(PLACE_FORMS, phrase)(subject, pn, REL_WORD[target]),
+    items: [],
+    choices: [],
+    answer: 'sorted',
+    hint: `${nm(subject)}要放在${pn}的${REL_WORD[target]}。${REL_HINT[target](pn)}`,
+    params: { anchors: [anchor], subject, zones, target: zones.find((z) => z.rel === target).id, rel: target, of: 0 },
+  }
+}
+/** 放到某個位置：兩個家具（上面、下面，難度 4 多一個「中間」） */
+function placeDoubleQ(i, ctx, withBetween, phrase, subject) {
+  const [pa, pb] = sample(PROPS.map((p) => p.id), 2)
+  const specs = [
+    { rel: 'above', of: 0 },
+    { rel: 'above', of: 1 },
+    { rel: 'below', of: 0 },
+    { rel: 'below', of: 1 },
+    ...(withBetween ? [{ rel: 'between' }] : []),
+  ]
+  const zones = zoneList(specs)
+  const target = pick(withBetween ? [...specs, { rel: 'between' }, { rel: 'between' }] : specs)
+  const tz = zones.find((z) => z.rel === target.rel && z.of === target.of)
+  const names = [PROP_NAME[pa], PROP_NAME[pb]]
+  const prompt =
+    target.rel === 'between'
+      ? variant(BETWEEN_FORMS, phrase)(subject, names[0], names[1])
+      : variant(PLACE_FORMS, phrase)(subject, names[target.of], REL_WORD[target.rel])
+  return {
+    type: 'place',
+    interaction: 'place',
+    prompt,
+    items: [],
+    choices: [],
+    answer: 'sorted',
+    hint:
+      target.rel === 'between'
+        ? `${nm(subject)}要放在${names[0]}和${names[1]}的中間。${REL_HINT.between()}`
+        : `${nm(subject)}要放在${names[target.of]}的${REL_WORD[target.rel]}。${REL_HINT[target.rel](names[target.of])}`,
+    params: { anchors: [pa, pb], subject, zones, target: tz.id, rel: target.rel, ...(target.of !== undefined ? { of: target.of } : {}) },
+  }
+}
+const SPACE_CANDS = (n) => shuffle(SPACE_SUBJECTS.flatMap((s) => Array.from({ length: n }, (_, p) => [s, p])))
+const ALL_PROPS = PROPS.map((p) => p.id)
+
+const space1g = cell(
+  'space',
+  1,
+  [
+    { count: 18, cands: SPACE_CANDS(3), build: (i, ctx, [s, p]) => whereQ(i, ctx, 2, ['above', 'below'], ALL_PROPS, p, s) },
+    { count: 18, cands: SPACE_CANDS(3), build: (i, ctx, [s, p]) => placeSingleQ(i, ctx, ['above', 'below'], ALL_PROPS, p, s) },
+  ],
+  { gentle: true, seed: 12 },
+)
+const space1 = cell(
+  'space',
+  1,
+  [
+    { count: 18, cands: SPACE_CANDS(3), build: (i, ctx, [s, p]) => whereQ(i, ctx, 3, ['above', 'below', 'inside'], INSIDE_PROPS, p, s) },
+    { count: 18, cands: SPACE_CANDS(3), build: (i, ctx, [s, p]) => placeSingleQ(i, ctx, ['above', 'below', 'inside'], INSIDE_PROPS, p, s) },
+  ],
+  { seed: 12 },
+)
+const space2 = cell(
+  'space',
+  2,
+  [
+    { count: 14, cands: SPACE_CANDS(2), build: (i, ctx, [s, p]) => whereIsQ(i, ctx, REL_PAIRS.d2, INSIDE_PROPS, p, s) },
+    { count: 12, cands: SPACE_CANDS(2), build: (i, ctx, [s, p]) => whereQ(i, ctx, 3, ['above', 'below', 'inside', 'outside'], INSIDE_PROPS, p, s) },
+    { count: 14, cands: SPACE_CANDS(2), build: (i, ctx, [s, p]) => placeDoubleQ(i, ctx, false, p, s) },
+  ],
+  { seed: 12 },
+)
+const space3 = cell(
+  'space',
+  3,
+  [
+    { count: 10, cands: SPACE_CANDS(2), build: (i, ctx, [s, p]) => whereIsQ(i, ctx, REL_PAIRS.d3, ALL_PROPS, p, s) },
+    { count: 10, cands: SPACE_CANDS(2), build: (i, ctx, [s, p]) => whereQ(i, ctx, 3, ['above', 'below', 'left', 'right'], ALL_PROPS, p, s) },
+    { count: 16, cands: SPACE_CANDS(3), build: (i, ctx, [s, p]) => placeSingleQ(i, ctx, ['above', 'below', 'left', 'right'], ALL_PROPS, p, s) },
+  ],
+  { seed: 12 },
+)
+const space4 = cell(
+  'space',
+  4,
+  [
+    { count: 6, build: (i, ctx) => rowQ(i, ctx, 3, 'middle', 0, i) },
+    { count: 4, build: (i, ctx) => rowQ(i, ctx, 3, 'first', 0, i) },
+    { count: 4, build: (i, ctx) => rowQ(i, ctx, 3, 'last', 0, i) },
+    { count: 6, build: (i, ctx) => rowQ(i, ctx, 4, 'nth', 2 + (i % 3), i) },
+    { count: 8, build: (i, ctx) => whereIs2Q(i, ctx, i) },
+    { count: 14, cands: SPACE_CANDS(2), build: (i, ctx, [s, p]) => placeDoubleQ(i, ctx, true, p, s) },
+  ],
+  { seed: 12 },
+)
+
+// ---------- v6 第 2 章：觀察與記憶 ----------
+const MEMORY_OBJS = IDS.filter((id) => !MULTI.has(id))
+const FLIP_FORMS = ['翻開牌，找出一樣的兩張。', '玩玩記憶翻牌，把一樣的找出來。', '記住牌的樣子，把一樣的兩張找出來。']
+function flipQ(i, ctx, cols, rows, phrase) {
+  const pairs = (cols * rows) / 2
+  const objs = sample(MEMORY_OBJS, pairs)
+  const faces = shuffle([...objs, ...objs])
+  return {
+    type: 'flip',
+    interaction: 'flip',
+    prompt: variant(FLIP_FORMS, phrase),
+    items: faces.map((obj) => ({ obj })),
+    choices: [],
+    answer: 'matched',
+    hint: '先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。',
+    params: { cols, rows },
+  }
+}
+const RECALL_FORMS = [
+  ['剛剛出現的是哪一個？', '剛剛有哪一個出現過？', '請你想一想，剛剛看到的是哪一個？'],
+  ['剛剛有出現過的，是哪一個？', '想一想，剛剛看到了哪一個？', '剛剛出現過的東西，是哪一個？'],
+]
+function recallQ(i, ctx, shown, k, flash, phrase) {
+  const objs = sample(MEMORY_OBJS, shown + k - 1)
+  const items = objs.slice(0, shown)
+  const answer = items[Math.floor(rnd() * shown)]
+  const wrong = objs.slice(shown) // 沒出現過的干擾項
+  const pos = ctx.pos(k)
+  return {
+    type: 'recall',
+    prompt: variant(RECALL_FORMS[shown > 1 ? 1 : 0], phrase),
+    items: items.map((obj) => ({ obj })),
+    choices: objChoices(answer, wrong, pos, ctx),
+    answer,
+    hint: `再看一次，剛剛出現的有${items.map(nm).join('、')}。找找看，哪一個是剛剛出現過的？`,
+    params: { flash },
+  }
+}
+const GONE_FORMS = ['剛剛什麼不見了？', '哪一個不見了？', '少了哪一個？']
+function goneQ(i, ctx, n, k, flash, phrase) {
+  const objs = sample(MEMORY_OBJS, n + k - 1)
+  const items = objs.slice(0, n)
+  const goneAt = Math.floor(rnd() * n)
+  const answer = items[goneAt]
+  const pos = ctx.pos(k)
+  return {
+    type: 'gone',
+    prompt: variant(GONE_FORMS, phrase),
+    items: items.map((obj) => ({ obj })),
+    choices: objChoices(answer, objs.slice(n), pos, ctx),
+    answer,
+    hint: `剛剛有${items.map(nm).join('、')}。現在少了哪一個呢？`,
+    params: { flash, goneAt },
+  }
+}
+const SPOT_FORMS = {
+  color: ['哪一個顏色不一樣？', '找找看，哪一個的顏色不一樣？'],
+  gray: ['哪一個變成灰色的？', '找找看，哪一個是灰色的？'],
+  flip180: ['哪一個是倒過來的？', '找找看，哪一個頭朝下？'],
+  turn90: ['哪一個轉了方向、躺下來了？', '找找看，哪一個轉了方向？'],
+  tilt: ['哪一個歪歪的？', '找找看，哪一個歪了一點點？'],
+}
+function spotQ(i, ctx, k, kind, value, phrase, obj) {
+  const variantOf = kind === 'color' ? { hue: value } : kind === 'gray' ? { gray: true } : { rot: value }
+  const pos = ctx.pos(k)
+  ctx.mark(k, pos)
+  const choices = Array.from({ length: k }, (_, n) => ({ id: `c${n + 1}`, obj, ...(n === pos ? { variant: variantOf } : {}) }))
+  return {
+    type: 'spot',
+    prompt: variant(SPOT_FORMS[kind === 'color' ? 'color' : kind === 'gray' ? 'gray' : value === 180 ? 'flip180' : Math.abs(value) === 90 ? 'turn90' : 'tilt'], phrase),
+    items: [],
+    choices,
+    answer: `c${pos + 1}`,
+    hint: kind === 'color' || kind === 'gray' ? `大家都是${nm(obj)}，一個一個比一比，找出顏色不一樣的那一個。` : `大家都是${nm(obj)}，一個一個比一比，找出方向不一樣的那一個。`,
+    params: {},
+  }
+}
+const SPOT_OBJS = MEMORY_OBJS.filter((id) => !['obj-star', 'obj-shell', 'obj-flower'].includes(id)) // 看得出方向的物件
+const spotCands = (kinds, objs = SPOT_OBJS) => shuffle(kinds.flatMap(([kind, value]) => objs.flatMap((o) => [0, 1].map((p) => [kind, value, p, o]))))
+
+const observe1g = cell(
+  'observe',
+  1,
+  [
+    { count: 14, build: (i, ctx) => flipQ(i, ctx, 2, 2, i) },
+    { count: 12, build: (i, ctx) => recallQ(i, ctx, 1, 2, 3000, i) },
+    { count: 10, cands: spotCands([['color', 150], ['color', 200], ['gray', 0]]), build: (i, ctx, [kind, v, p, o]) => spotQ(i, ctx, 3, kind, v, p, o) },
+  ],
+  { gentle: true, seed: 13 },
+)
+const observe1 = cell(
+  'observe',
+  1,
+  [
+    { count: 12, build: (i, ctx) => flipQ(i, ctx, 2, 2, i) },
+    { count: 12, build: (i, ctx) => recallQ(i, ctx, 1, 3, 2400, i) },
+    { count: 14, cands: spotCands([['color', 150], ['color', 200], ['gray', 0]]), build: (i, ctx, [kind, v, p, o]) => spotQ(i, ctx, 3, kind, v, p, o) },
+  ],
+  { seed: 13 },
+)
+const observe2 = cell(
+  'observe',
+  2,
+  [
+    { count: 10, build: (i, ctx) => flipQ(i, ctx, 3, 2, i) },
+    { count: 12, build: (i, ctx) => recallQ(i, ctx, 2, 3, 3000, i) },
+    { count: 14, cands: spotCands([['rot', 180]]), build: (i, ctx, [kind, v, p, o]) => spotQ(i, ctx, 4, kind, v, p, o) },
+  ],
+  { seed: 13 },
+)
+const observe3 = cell(
+  'observe',
+  3,
+  [
+    { count: 10, build: (i, ctx) => flipQ(i, ctx, 4, 2, i) },
+    { count: 14, build: (i, ctx) => goneQ(i, ctx, 3, 3, 3500, i) },
+    { count: 12, cands: spotCands([['color', 60], ['rot', 90], ['rot', -90]]), build: (i, ctx, [kind, v, p, o]) => spotQ(i, ctx, 4 + (i % 2), kind, v, p, o) },
+  ],
+  { seed: 13 },
+)
+const observe4 = cell(
+  'observe',
+  4,
+  [
+    { count: 12, build: (i, ctx) => flipQ(i, ctx, 4, 3, i) },
+    { count: 12, build: (i, ctx) => goneQ(i, ctx, 4, 4, 4000, i) },
+    { count: 14, cands: spotCands([['color', 35], ['color', -35], ['rot', 35], ['rot', -35]]), build: (i, ctx, [kind, v, p, o]) => spotQ(i, ctx, 5 + (i % 2), kind, v, p, o) },
+  ],
+  { seed: 13 },
+)
+
 // ---------- 輸出 ----------
 /** 每題一個區塊、items/choices 每個元素一行，方便人工審閱與 diff */
 function toReadableJson(questions) {
@@ -932,4 +1439,7 @@ const dump = (name, cells) => {
 dump('number', [number1, number2, number3, number4, number1g])
 dump('classify', [classify1, classify2, classify3, classify4, classify1g])
 dump('pattern', [pattern1, pattern2, pattern3, pattern4, pattern1g])
+dump('measure', [measure1, measure2, measure3, measure4, measure1g])
+dump('space', [space1, space2, space3, space4, space1g])
+dump('observe', [observe1, observe2, observe3, observe4, observe1g])
 dump('english', [english1, english2, english3, english4, english1g])

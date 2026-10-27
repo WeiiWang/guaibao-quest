@@ -1,0 +1,2458 @@
+[
+  {
+    "id": "measure-1-01", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "請指出比較長的那一條小魚。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.36,"dim":"length"},
+      {"id":"c2","obj":"obj-fish","scale":0.9,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小魚，只是有長有短。一個一個比一比，看看哪一條比較長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-1-02", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "哪一枚火箭比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.32,"dim":"size"},
+      {"id":"c2","obj":"decor-rocket","scale":1,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是火箭，只是有大有小。一個一個比一比，看看哪一枚比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-03", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "哪一輛汽車比較長？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car","scale":0.9,"dim":"length"},
+      {"id":"c2","obj":"decor-car","scale":0.45,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛比較長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-1-04", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個比較矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":1,"dim":"height"},
+      {"id":"c2","obj":"decor-piano","scale":0.32,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是鋼琴，只是有高有矮。一個一個比一比，看看哪一台比較矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-05", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":0.32,"dim":"size"},
+      {"id":"c2","obj":"obj-grape","scale":1,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是葡萄，只是有大有小。一個一個比一比，看看哪一串比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-06", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個比較高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino","scale":0.4,"dim":"height"},
+      {"id":"c2","obj":"decor-dino","scale":1,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是恐龍，只是有高有矮。一個一個比一比，看看哪一隻比較高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-07", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "請指出比較小的那一台鋼琴。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.85,"dim":"size"},
+      {"id":"c2","obj":"decor-piano","scale":0.36,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是鋼琴，只是有大有小。一個一個比一比，看看哪一台比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-08", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個比較高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-flower","scale":0.95,"dim":"height"},
+      {"id":"c2","obj":"obj-flower","scale":0.36,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是花，只是有高有矮。一個一個比一比，看看哪一朵比較高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-09", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個比較長？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":1,"dim":"length"},
+      {"id":"c2","obj":"decor-rocket","scale":0.32,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是火箭，只是有長有短。一個一個比一比，看看哪一枚比較長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-1-10", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "哪一朵花比較高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-flower","scale":0.45,"dim":"height"},
+      {"id":"c2","obj":"obj-flower","scale":0.85,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是花，只是有高有矮。一個一個比一比，看看哪一朵比較高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-11", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "哪一顆桃子比較高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","scale":0.95,"dim":"height"},
+      {"id":"c2","obj":"obj-peach","scale":0.36,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是桃子，只是有高有矮。一個一個比一比，看看哪一顆比較高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-12", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "請指出比較小的那一個貝殼。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-shell","scale":1,"dim":"size"},
+      {"id":"c2","obj":"obj-shell","scale":0.5,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-13", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.55,"dim":"length"},
+      {"id":"c2","obj":"decor-piano","scale":0.32,"dim":"length"},
+      {"id":"c3","obj":"decor-piano","scale":0.95,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是鋼琴，只是有長有短。一個一個比一比，看看哪一台最短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-1-14", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","scale":0.95,"dim":"height"},
+      {"id":"c2","obj":"obj-chick","scale":0.5,"dim":"height"},
+      {"id":"c3","obj":"obj-chick","scale":0.32,"dim":"height"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是小雞，只是有高有矮。一個一個比一比，看看哪一隻最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-15", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","scale":0.4,"dim":"height"},
+      {"id":"c2","obj":"obj-peach","scale":0.95,"dim":"height"},
+      {"id":"c3","obj":"obj-peach","scale":0.65,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是桃子，只是有高有矮。一個一個比一比，看看哪一顆最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-16", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "哪一隻小雞最高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","scale":0.4,"dim":"height"},
+      {"id":"c2","obj":"obj-chick","scale":0.6,"dim":"height"},
+      {"id":"c3","obj":"obj-chick","scale":0.9,"dim":"height"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是小雞，只是有高有矮。一個一個比一比，看看哪一隻最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-17", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","scale":0.32,"dim":"size"},
+      {"id":"c2","obj":"obj-peach","scale":0.6,"dim":"size"},
+      {"id":"c3","obj":"obj-peach","scale":0.85,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是桃子，只是有大有小。一個一個比一比，看看哪一顆最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-18", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "請指出最矮的那一朵花。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-flower","scale":0.6,"dim":"height"},
+      {"id":"c2","obj":"obj-flower","scale":0.4,"dim":"height"},
+      {"id":"c3","obj":"obj-flower","scale":0.95,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是花，只是有高有矮。一個一個比一比，看看哪一朵最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-19", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-shell","scale":0.55,"dim":"size"},
+      {"id":"c2","obj":"obj-shell","scale":0.32,"dim":"size"},
+      {"id":"c3","obj":"obj-shell","scale":1,"dim":"size"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-20", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "哪一顆蘋果最小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple","scale":0.65,"dim":"size"},
+      {"id":"c2","obj":"obj-apple","scale":0.4,"dim":"size"},
+      {"id":"c3","obj":"obj-apple","scale":0.95,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是蘋果，只是有大有小。一個一個比一比，看看哪一顆最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-21", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.36,"dim":"height"},
+      {"id":"c2","obj":"decor-rocket","scale":0.95,"dim":"height"},
+      {"id":"c3","obj":"decor-rocket","scale":0.6,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是火箭，只是有高有矮。一個一個比一比，看看哪一枚最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-22", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "哪一輛汽車最短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car","scale":0.32,"dim":"length"},
+      {"id":"c2","obj":"decor-car","scale":1,"dim":"length"},
+      {"id":"c3","obj":"decor-car","scale":0.5,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-1-23", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.55,"dim":"height"},
+      {"id":"c2","obj":"decor-piano","scale":1,"dim":"height"},
+      {"id":"c3","obj":"decor-piano","scale":0.32,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是鋼琴，只是有高有矮。一個一個比一比，看看哪一台最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-24", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-star","scale":0.95,"dim":"size"},
+      {"id":"c2","obj":"obj-star","scale":0.5,"dim":"size"},
+      {"id":"c3","obj":"obj-star","scale":0.32,"dim":"size"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是星星，只是有大有小。一個一個比一比，看看哪一顆最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-25", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "哪一顆皮球最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-ball","scale":0.4,"dim":"size"},
+      {"id":"c2","obj":"decor-ball","scale":0.6,"dim":"size"},
+      {"id":"c3","obj":"decor-ball","scale":0.95,"dim":"size"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是皮球，只是有大有小。一個一個比一比，看看哪一顆最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-26", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2,
+    "prompt": "請指出最大的那一隻小兔子。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit","scale":0.85,"dim":"size"},
+      {"id":"c2","obj":"obj-rabbit","scale":0.36,"dim":"size"},
+      {"id":"c3","obj":"obj-rabbit","scale":0.6,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是小兔子，只是有大有小。一個一個比一比，看看哪一隻最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-27", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從大排到小，排排隊。",
+    "items": [
+      {"obj":"obj-grape","scale":1},
+      {"obj":"obj-grape","scale":0.65},
+      {"obj":"obj-grape","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[0,1,2]}
+  },
+  {
+    "id": "measure-1-28", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"obj-apple","scale":0.36},
+      {"obj":"obj-apple","scale":0.85},
+      {"obj":"obj-apple","scale":0.55}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[0,2,1]}
+  },
+  {
+    "id": "measure-1-29", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"obj-peach","scale":0.55},
+      {"obj":"obj-peach","scale":0.32},
+      {"obj":"obj-peach","scale":0.95}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[1,0,2]}
+  },
+  {
+    "id": "measure-1-30", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從大排到小，排排隊。",
+    "items": [
+      {"obj":"obj-banana","scale":1},
+      {"obj":"obj-banana","scale":0.65},
+      {"obj":"obj-banana","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[0,1,2]}
+  },
+  {
+    "id": "measure-1-31", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"decor-ball","scale":0.32},
+      {"obj":"decor-ball","scale":1},
+      {"obj":"decor-ball","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[0,2,1]}
+  },
+  {
+    "id": "measure-1-32", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從小排到大，排排隊。",
+    "items": [
+      {"obj":"obj-rabbit","scale":0.65},
+      {"obj":"obj-rabbit","scale":1},
+      {"obj":"obj-rabbit","scale":0.4}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[2,0,1]}
+  },
+  {
+    "id": "measure-1-33", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-ball","scale":0.6},
+      {"obj":"decor-ball","scale":0.9},
+      {"obj":"decor-ball","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[1,0,2]}
+  },
+  {
+    "id": "measure-1-34", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最小的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-flower","scale":0.36},
+      {"obj":"obj-flower","scale":1},
+      {"obj":"obj-flower","scale":0.55}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[0,2,1]}
+  },
+  {
+    "id": "measure-1-35", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由大排到小。",
+    "items": [
+      {"obj":"obj-rabbit","scale":0.4},
+      {"obj":"obj-rabbit","scale":1},
+      {"obj":"obj-rabbit","scale":0.6}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[1,2,0]}
+  },
+  {
+    "id": "measure-1-36", "skill": "measure", "difficulty": 1, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-shell","scale":1},
+      {"obj":"obj-shell","scale":0.4},
+      {"obj":"obj-shell","scale":0.6}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[0,2,1]}
+  },
+  {
+    "id": "measure-2-01", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "請指出最長的那一輛汽車。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car","scale":0.32,"dim":"length"},
+      {"id":"c2","obj":"decor-car","scale":0.85,"dim":"length"},
+      {"id":"c3","obj":"decor-car","scale":0.65,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-2-02", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "請指出最大的那一根香蕉。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana","scale":0.95,"dim":"size"},
+      {"id":"c2","obj":"obj-banana","scale":0.5,"dim":"size"},
+      {"id":"c3","obj":"obj-banana","scale":0.65,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是香蕉，只是有大有小。一個一個比一比，看看哪一根最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-2-03", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "請指出最矮的那一隻小雞。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","scale":0.7,"dim":"height"},
+      {"id":"c2","obj":"obj-chick","scale":1,"dim":"height"},
+      {"id":"c3","obj":"obj-chick","scale":0.5,"dim":"height"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是小雞，只是有高有矮。一個一個比一比，看看哪一隻最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-2-04", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.32,"dim":"size"},
+      {"id":"c2","obj":"obj-fish","scale":0.9,"dim":"size"},
+      {"id":"c3","obj":"obj-fish","scale":0.5,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小魚，只是有大有小。一個一個比一比，看看哪一條最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-2-05", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "哪一隻小雞最高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","scale":1,"dim":"height"},
+      {"id":"c2","obj":"obj-chick","scale":0.4,"dim":"height"},
+      {"id":"c3","obj":"obj-chick","scale":0.55,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是小雞，只是有高有矮。一個一個比一比，看看哪一隻最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-2-06", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":0.9,"dim":"height"},
+      {"id":"c2","obj":"obj-grape","scale":0.5,"dim":"height"},
+      {"id":"c3","obj":"obj-grape","scale":0.36,"dim":"height"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是葡萄，只是有高有矮。一個一個比一比，看看哪一串最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-2-07", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "請指出最矮的那一顆蘋果。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple","scale":0.75,"dim":"height"},
+      {"id":"c2","obj":"obj-apple","scale":1,"dim":"height"},
+      {"id":"c3","obj":"obj-apple","scale":0.36,"dim":"height"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是蘋果，只是有高有矮。一個一個比一比，看看哪一顆最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-2-08", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "請指出最長的那一根香蕉。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana","scale":0.75,"dim":"length"},
+      {"id":"c2","obj":"obj-banana","scale":1,"dim":"length"},
+      {"id":"c3","obj":"obj-banana","scale":0.55,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是香蕉，只是有長有短。一個一個比一比，看看哪一根最長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-2-09", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "請指出最短的那一輛汽車。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car","scale":0.5,"dim":"length"},
+      {"id":"c2","obj":"decor-car","scale":0.65,"dim":"length"},
+      {"id":"c3","obj":"decor-car","scale":0.85,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-2-10", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.6,"dim":"height"},
+      {"id":"c2","obj":"decor-piano","scale":0.9,"dim":"height"},
+      {"id":"c3","obj":"decor-piano","scale":0.32,"dim":"height"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是鋼琴，只是有高有矮。一個一個比一比，看看哪一台最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-2-11", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.95,"dim":"size"},
+      {"id":"c2","obj":"decor-rocket","scale":0.45,"dim":"size"},
+      {"id":"c3","obj":"decor-rocket","scale":0.7,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是火箭，只是有大有小。一個一個比一比，看看哪一枚最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-2-12", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "哪一個貝殼最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-shell","scale":0.5,"dim":"size"},
+      {"id":"c2","obj":"obj-shell","scale":0.85,"dim":"size"},
+      {"id":"c3","obj":"obj-shell","scale":0.65,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-2-13", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "哪一朵花最高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-flower","scale":1,"dim":"height"},
+      {"id":"c2","obj":"obj-flower","scale":0.36,"dim":"height"},
+      {"id":"c3","obj":"obj-flower","scale":0.6,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是花，只是有高有矮。一個一個比一比，看看哪一朵最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-2-14", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "哪一隻小兔子最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit","scale":0.65,"dim":"size"},
+      {"id":"c2","obj":"obj-rabbit","scale":0.36,"dim":"size"},
+      {"id":"c3","obj":"obj-rabbit","scale":1,"dim":"size"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是小兔子，只是有大有小。一個一個比一比，看看哪一隻最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-2-15", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "哪一枚火箭最長？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.32,"dim":"length"},
+      {"id":"c2","obj":"decor-rocket","scale":0.95,"dim":"length"},
+      {"id":"c3","obj":"decor-rocket","scale":0.5,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是火箭，只是有長有短。一個一個比一比，看看哪一枚最長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-2-16", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "請指出最小的那一串葡萄。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":1,"dim":"size"},
+      {"id":"c2","obj":"obj-grape","scale":0.5,"dim":"size"},
+      {"id":"c3","obj":"obj-grape","scale":0.75,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是葡萄，只是有大有小。一個一個比一比，看看哪一串最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-2-17", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-star","scale":0.4,"dim":"size"},
+      {"id":"c2","obj":"obj-star","scale":0.55,"dim":"size"},
+      {"id":"c3","obj":"obj-star","scale":0.9,"dim":"size"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是星星，只是有大有小。一個一個比一比，看看哪一顆最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-2-18", "skill": "measure", "difficulty": 2, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino","scale":0.32,"dim":"size"},
+      {"id":"c2","obj":"decor-dino","scale":0.5,"dim":"size"},
+      {"id":"c3","obj":"decor-dino","scale":0.85,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是恐龍，只是有大有小。一個一個比一比，看看哪一隻最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-2-19", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"obj-rabbit","scale":0.95},
+      {"obj":"obj-rabbit","scale":0.7},
+      {"obj":"obj-rabbit","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[2,1,0]}
+  },
+  {
+    "id": "measure-2-20", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從小排到大，排排隊。",
+    "items": [
+      {"obj":"decor-car","scale":0.95},
+      {"obj":"decor-car","scale":0.55},
+      {"obj":"decor-car","scale":0.36}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[2,1,0]}
+  },
+  {
+    "id": "measure-2-21", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從大排到小，排排隊。",
+    "items": [
+      {"obj":"obj-peach","scale":0.36},
+      {"obj":"obj-peach","scale":1},
+      {"obj":"obj-peach","scale":0.55}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[1,2,0]}
+  },
+  {
+    "id": "measure-2-22", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從矮排到高，排排隊。",
+    "items": [
+      {"obj":"obj-peach","scale":0.55},
+      {"obj":"obj-peach","scale":0.85},
+      {"obj":"obj-peach","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[2,0,1]}
+  },
+  {
+    "id": "measure-2-23", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從大排到小，排排隊。",
+    "items": [
+      {"obj":"obj-star","scale":0.9},
+      {"obj":"obj-star","scale":0.5},
+      {"obj":"obj-star","scale":0.36}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[0,1,2]}
+  },
+  {
+    "id": "measure-2-24", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由矮排到高。",
+    "items": [
+      {"obj":"obj-apple","scale":0.7},
+      {"obj":"obj-apple","scale":0.36},
+      {"obj":"obj-apple","scale":0.95}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,0,2]}
+  },
+  {
+    "id": "measure-2-25", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"decor-dino","scale":0.7},
+      {"obj":"decor-dino","scale":0.5},
+      {"obj":"decor-dino","scale":1}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[1,0,2]}
+  },
+  {
+    "id": "measure-2-26", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由短排到長。",
+    "items": [
+      {"obj":"decor-piano","scale":0.85},
+      {"obj":"decor-piano","scale":0.4},
+      {"obj":"decor-piano","scale":0.6}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最短的，放在第一格，再找次短的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"asc","order":[1,2,0]}
+  },
+  {
+    "id": "measure-2-27", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最高的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-grape","scale":0.95},
+      {"obj":"obj-grape","scale":0.36},
+      {"obj":"obj-grape","scale":0.65}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[0,2,1]}
+  },
+  {
+    "id": "measure-2-28", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"obj-peach","scale":0.65},
+      {"obj":"obj-peach","scale":1},
+      {"obj":"obj-peach","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[2,0,1]}
+  },
+  {
+    "id": "measure-2-29", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由長排到短。",
+    "items": [
+      {"obj":"decor-piano","scale":0.95},
+      {"obj":"decor-piano","scale":0.6},
+      {"obj":"decor-piano","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[0,1,2]}
+  },
+  {
+    "id": "measure-2-30", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從長排到短，排排隊。",
+    "items": [
+      {"obj":"decor-rocket","scale":0.95},
+      {"obj":"decor-rocket","scale":0.5},
+      {"obj":"decor-rocket","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[0,1,2]}
+  },
+  {
+    "id": "measure-2-31", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最高的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-rocket","scale":0.6},
+      {"obj":"decor-rocket","scale":0.36},
+      {"obj":"decor-rocket","scale":0.95}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[2,0,1]}
+  },
+  {
+    "id": "measure-2-32", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由高排到矮。",
+    "items": [
+      {"obj":"decor-rocket","scale":0.9},
+      {"obj":"decor-rocket","scale":0.36},
+      {"obj":"decor-rocket","scale":0.55}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[0,2,1]}
+  },
+  {
+    "id": "measure-2-33", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從高排到矮，排排隊。",
+    "items": [
+      {"obj":"decor-piano","scale":0.6},
+      {"obj":"decor-piano","scale":0.32},
+      {"obj":"decor-piano","scale":0.9}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[2,0,1]}
+  },
+  {
+    "id": "measure-2-34", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"obj-chick","scale":0.4},
+      {"obj":"obj-chick","scale":0.95},
+      {"obj":"obj-chick","scale":0.65}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[0,2,1]}
+  },
+  {
+    "id": "measure-2-35", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由長排到短。",
+    "items": [
+      {"obj":"obj-banana","scale":0.55},
+      {"obj":"obj-banana","scale":1},
+      {"obj":"obj-banana","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[1,0,2]}
+  },
+  {
+    "id": "measure-2-36", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從矮排到高，排排隊。",
+    "items": [
+      {"obj":"obj-chick","scale":0.5},
+      {"obj":"obj-chick","scale":0.9},
+      {"obj":"obj-chick","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[2,0,1]}
+  },
+  {
+    "id": "measure-2-37", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從小排到大，排排隊。",
+    "items": [
+      {"obj":"obj-shell","scale":0.55},
+      {"obj":"obj-shell","scale":0.36},
+      {"obj":"obj-shell","scale":0.9}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[1,0,2]}
+  },
+  {
+    "id": "measure-2-38", "skill": "measure", "difficulty": 2, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最矮的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-rocket","scale":0.32},
+      {"obj":"decor-rocket","scale":1},
+      {"obj":"decor-rocket","scale":0.65}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[0,2,1]}
+  },
+  {
+    "id": "measure-3-01", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "請指出最小的那一顆桃子。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","scale":0.75,"dim":"size"},
+      {"id":"c2","obj":"obj-peach","scale":0.6,"dim":"size"},
+      {"id":"c3","obj":"obj-peach","scale":0.4,"dim":"size"},
+      {"id":"c4","obj":"obj-peach","scale":0.95,"dim":"size"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是桃子，只是有大有小。一個一個比一比，看看哪一顆最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-3-02", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "哪一條小魚最長？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.9,"dim":"length"},
+      {"id":"c2","obj":"obj-fish","scale":0.5,"dim":"length"},
+      {"id":"c3","obj":"obj-fish","scale":0.32,"dim":"length"},
+      {"id":"c4","obj":"obj-fish","scale":0.7,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是小魚，只是有長有短。一個一個比一比，看看哪一條最長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-3-03", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "哪一條小魚最小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":1,"dim":"size"},
+      {"id":"c2","obj":"obj-fish","scale":0.65,"dim":"size"},
+      {"id":"c3","obj":"obj-fish","scale":0.8,"dim":"size"},
+      {"id":"c4","obj":"obj-fish","scale":0.32,"dim":"size"}
+    ],
+    "answer": "c4",
+    "hint": "它們都是小魚，只是有大有小。一個一個比一比，看看哪一條最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-3-04", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "請指出最小的那一串葡萄。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":0.55,"dim":"size"},
+      {"id":"c2","obj":"obj-grape","scale":0.45,"dim":"size"},
+      {"id":"c3","obj":"obj-grape","scale":0.75,"dim":"size"},
+      {"id":"c4","obj":"obj-grape","scale":1,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是葡萄，只是有大有小。一個一個比一比，看看哪一串最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-3-05", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":0.36,"dim":"height"},
+      {"id":"c2","obj":"obj-grape","scale":0.55,"dim":"height"},
+      {"id":"c3","obj":"obj-grape","scale":0.45,"dim":"height"},
+      {"id":"c4","obj":"obj-grape","scale":0.9,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是葡萄，只是有高有矮。一個一個比一比，看看哪一串最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-3-06", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "哪一輛汽車最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car","scale":0.36,"dim":"size"},
+      {"id":"c2","obj":"decor-car","scale":0.65,"dim":"size"},
+      {"id":"c3","obj":"decor-car","scale":0.55,"dim":"size"},
+      {"id":"c4","obj":"decor-car","scale":1,"dim":"size"}
+    ],
+    "answer": "c4",
+    "hint": "它們都是汽車，只是有大有小。一個一個比一比，看看哪一輛最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-3-07", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.45,"dim":"size"},
+      {"id":"c2","obj":"decor-piano","scale":0.7,"dim":"size"},
+      {"id":"c3","obj":"decor-piano","scale":0.85,"dim":"size"},
+      {"id":"c4","obj":"decor-piano","scale":0.32,"dim":"size"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是鋼琴，只是有大有小。一個一個比一比，看看哪一台最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-3-08", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","scale":0.7,"dim":"height"},
+      {"id":"c2","obj":"obj-chick","scale":0.36,"dim":"height"},
+      {"id":"c3","obj":"obj-chick","scale":0.9,"dim":"height"},
+      {"id":"c4","obj":"obj-chick","scale":0.45,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小雞，只是有高有矮。一個一個比一比，看看哪一隻最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-3-09", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car","scale":0.5,"dim":"length"},
+      {"id":"c2","obj":"decor-car","scale":0.6,"dim":"length"},
+      {"id":"c3","obj":"decor-car","scale":0.32,"dim":"length"},
+      {"id":"c4","obj":"decor-car","scale":1,"dim":"length"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-3-10", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "哪一台鋼琴最矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.75,"dim":"height"},
+      {"id":"c2","obj":"decor-piano","scale":1,"dim":"height"},
+      {"id":"c3","obj":"decor-piano","scale":0.6,"dim":"height"},
+      {"id":"c4","obj":"decor-piano","scale":0.45,"dim":"height"}
+    ],
+    "answer": "c4",
+    "hint": "它們都是鋼琴，只是有高有矮。一個一個比一比，看看哪一台最矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-3-11", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":1,"dim":"size"},
+      {"id":"c2","obj":"obj-grape","scale":0.4,"dim":"size"},
+      {"id":"c3","obj":"obj-grape","scale":0.32,"dim":"size"},
+      {"id":"c4","obj":"obj-grape","scale":0.7,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是葡萄，只是有大有小。一個一個比一比，看看哪一串最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-3-12", "skill": "measure", "difficulty": 3, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-shell","scale":0.4,"dim":"size"},
+      {"id":"c2","obj":"obj-shell","scale":1,"dim":"size"},
+      {"id":"c3","obj":"obj-shell","scale":0.7,"dim":"size"},
+      {"id":"c4","obj":"obj-shell","scale":0.55,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-3-13", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最小的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-dino","scale":0.75},
+      {"obj":"decor-dino","scale":0.9},
+      {"obj":"decor-dino","scale":0.32},
+      {"obj":"decor-dino","scale":0.4}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[2,3,0,1]}
+  },
+  {
+    "id": "measure-3-14", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-ball","scale":0.6},
+      {"obj":"decor-ball","scale":0.9},
+      {"obj":"decor-ball","scale":0.36},
+      {"obj":"decor-ball","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[1,0,3,2]}
+  },
+  {
+    "id": "measure-3-15", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從長排到短，排排隊。",
+    "items": [
+      {"obj":"decor-rocket","scale":0.45},
+      {"obj":"decor-rocket","scale":0.9},
+      {"obj":"decor-rocket","scale":0.75},
+      {"obj":"decor-rocket","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[1,2,0,3]}
+  },
+  {
+    "id": "measure-3-16", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由矮排到高。",
+    "items": [
+      {"obj":"obj-apple","scale":0.9},
+      {"obj":"obj-apple","scale":0.32},
+      {"obj":"obj-apple","scale":0.6},
+      {"obj":"obj-apple","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,3,2,0]}
+  },
+  {
+    "id": "measure-3-17", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從高排到矮，排排隊。",
+    "items": [
+      {"obj":"obj-chick","scale":0.55},
+      {"obj":"obj-chick","scale":1},
+      {"obj":"obj-chick","scale":0.32},
+      {"obj":"obj-chick","scale":0.45}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[1,0,3,2]}
+  },
+  {
+    "id": "measure-3-18", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由矮排到高。",
+    "items": [
+      {"obj":"obj-chick","scale":0.6},
+      {"obj":"obj-chick","scale":0.4},
+      {"obj":"obj-chick","scale":0.95},
+      {"obj":"obj-chick","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,3,0,2]}
+  },
+  {
+    "id": "measure-3-19", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-rocket","scale":0.55},
+      {"obj":"decor-rocket","scale":0.8},
+      {"obj":"decor-rocket","scale":0.32},
+      {"obj":"decor-rocket","scale":1}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[3,1,0,2]}
+  },
+  {
+    "id": "measure-3-20", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由矮排到高。",
+    "items": [
+      {"obj":"decor-piano","scale":0.5},
+      {"obj":"decor-piano","scale":0.36},
+      {"obj":"decor-piano","scale":0.95},
+      {"obj":"decor-piano","scale":0.75}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,0,3,2]}
+  },
+  {
+    "id": "measure-3-21", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從大排到小，排排隊。",
+    "items": [
+      {"obj":"obj-peach","scale":0.75},
+      {"obj":"obj-peach","scale":0.5},
+      {"obj":"obj-peach","scale":1},
+      {"obj":"obj-peach","scale":0.36}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[2,0,1,3]}
+  },
+  {
+    "id": "measure-3-22", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從小排到大，排排隊。",
+    "items": [
+      {"obj":"obj-peach","scale":0.85},
+      {"obj":"obj-peach","scale":0.65},
+      {"obj":"obj-peach","scale":0.5},
+      {"obj":"obj-peach","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[3,2,1,0]}
+  },
+  {
+    "id": "measure-3-23", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最短的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-car","scale":0.45},
+      {"obj":"decor-car","scale":0.7},
+      {"obj":"decor-car","scale":0.55},
+      {"obj":"decor-car","scale":1}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最短的，放在第一格，再找次短的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"asc","order":[0,2,1,3]}
+  },
+  {
+    "id": "measure-3-24", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從高排到矮，排排隊。",
+    "items": [
+      {"obj":"obj-banana","scale":0.45},
+      {"obj":"obj-banana","scale":0.36},
+      {"obj":"obj-banana","scale":0.6},
+      {"obj":"obj-banana","scale":0.85}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[3,2,0,1]}
+  },
+  {
+    "id": "measure-3-25", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從短排到長，排排隊。",
+    "items": [
+      {"obj":"decor-car","scale":0.32},
+      {"obj":"decor-car","scale":0.8},
+      {"obj":"decor-car","scale":0.45},
+      {"obj":"decor-car","scale":1}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最短的，放在第一格，再找次短的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"asc","order":[0,2,1,3]}
+  },
+  {
+    "id": "measure-3-26", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從長排到短，排排隊。",
+    "items": [
+      {"obj":"decor-car","scale":0.75},
+      {"obj":"decor-car","scale":0.9},
+      {"obj":"decor-car","scale":0.4},
+      {"obj":"decor-car","scale":0.55}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[1,0,3,2]}
+  },
+  {
+    "id": "measure-3-27", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-car","scale":0.5},
+      {"obj":"decor-car","scale":0.32},
+      {"obj":"decor-car","scale":0.95},
+      {"obj":"decor-car","scale":0.4}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[2,0,3,1]}
+  },
+  {
+    "id": "measure-3-28", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-star","scale":0.95},
+      {"obj":"obj-star","scale":0.32},
+      {"obj":"obj-star","scale":0.5},
+      {"obj":"obj-star","scale":0.4}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[0,2,3,1]}
+  },
+  {
+    "id": "measure-3-29", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最小的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-piano","scale":0.5},
+      {"obj":"decor-piano","scale":0.65},
+      {"obj":"decor-piano","scale":0.95},
+      {"obj":"decor-piano","scale":0.4}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[3,0,1,2]}
+  },
+  {
+    "id": "measure-3-30", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由短排到長。",
+    "items": [
+      {"obj":"obj-banana","scale":0.7},
+      {"obj":"obj-banana","scale":0.4},
+      {"obj":"obj-banana","scale":0.85},
+      {"obj":"obj-banana","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最短的，放在第一格，再找次短的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"asc","order":[1,3,0,2]}
+  },
+  {
+    "id": "measure-3-31", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由大排到小。",
+    "items": [
+      {"obj":"obj-flower","scale":0.75},
+      {"obj":"obj-flower","scale":0.36},
+      {"obj":"obj-flower","scale":0.45},
+      {"obj":"obj-flower","scale":1}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[3,0,2,1]}
+  },
+  {
+    "id": "measure-3-32", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最矮的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-rocket","scale":0.95},
+      {"obj":"decor-rocket","scale":0.32},
+      {"obj":"decor-rocket","scale":0.6},
+      {"obj":"decor-rocket","scale":0.4}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,3,2,0]}
+  },
+  {
+    "id": "measure-3-33", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最高的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-chick","scale":1},
+      {"obj":"obj-chick","scale":0.8},
+      {"obj":"obj-chick","scale":0.65},
+      {"obj":"obj-chick","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[0,1,2,3]}
+  },
+  {
+    "id": "measure-3-34", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從大排到小，排排隊。",
+    "items": [
+      {"obj":"obj-apple","scale":0.8},
+      {"obj":"obj-apple","scale":0.45},
+      {"obj":"obj-apple","scale":0.55},
+      {"obj":"obj-apple","scale":1}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[3,0,2,1]}
+  },
+  {
+    "id": "measure-3-35", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從矮排到高，排排隊。",
+    "items": [
+      {"obj":"obj-rabbit","scale":0.4},
+      {"obj":"obj-rabbit","scale":0.95},
+      {"obj":"obj-rabbit","scale":0.5},
+      {"obj":"obj-rabbit","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[3,0,2,1]}
+  },
+  {
+    "id": "measure-3-36", "skill": "measure", "difficulty": 3, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從小排到大，排排隊。",
+    "items": [
+      {"obj":"decor-car","scale":0.55},
+      {"obj":"decor-car","scale":0.36},
+      {"obj":"decor-car","scale":0.95},
+      {"obj":"decor-car","scale":0.75}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[1,0,3,2]}
+  },
+  {
+    "id": "measure-4-01", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-flower","scale":0.65,"dim":"size"},
+      {"id":"c2","obj":"obj-flower","scale":0.32,"dim":"size"},
+      {"id":"c3","obj":"obj-flower","scale":0.85,"dim":"size"},
+      {"id":"c4","obj":"obj-flower","scale":0.4,"dim":"size"},
+      {"id":"c5","obj":"obj-flower","scale":0.55,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是花，只是有大有小。一個一個比一比，看看哪一朵最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-4-02", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "哪一顆桃子最高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","scale":0.36,"dim":"height"},
+      {"id":"c2","obj":"obj-peach","scale":0.32,"dim":"height"},
+      {"id":"c3","obj":"obj-peach","scale":0.8,"dim":"height"},
+      {"id":"c4","obj":"obj-peach","scale":0.6,"dim":"height"},
+      {"id":"c5","obj":"obj-peach","scale":0.95,"dim":"height"}
+    ],
+    "answer": "c5",
+    "hint": "它們都是桃子，只是有高有矮。一個一個比一比，看看哪一顆最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-4-03", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "哪一輛汽車最短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car","scale":0.4,"dim":"length"},
+      {"id":"c2","obj":"decor-car","scale":0.65,"dim":"length"},
+      {"id":"c3","obj":"decor-car","scale":0.32,"dim":"length"},
+      {"id":"c4","obj":"decor-car","scale":0.75,"dim":"length"},
+      {"id":"c5","obj":"decor-car","scale":0.95,"dim":"length"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-4-04", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "哪一個貝殼最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-shell","scale":0.32,"dim":"size"},
+      {"id":"c2","obj":"obj-shell","scale":0.55,"dim":"size"},
+      {"id":"c3","obj":"obj-shell","scale":0.8,"dim":"size"},
+      {"id":"c4","obj":"obj-shell","scale":0.9,"dim":"size"},
+      {"id":"c5","obj":"obj-shell","scale":0.7,"dim":"size"}
+    ],
+    "answer": "c4",
+    "hint": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-4-05", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":1,"dim":"size"},
+      {"id":"c2","obj":"obj-grape","scale":0.36,"dim":"size"},
+      {"id":"c3","obj":"obj-grape","scale":0.45,"dim":"size"},
+      {"id":"c4","obj":"obj-grape","scale":0.7,"dim":"size"},
+      {"id":"c5","obj":"obj-grape","scale":0.55,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是葡萄，只是有大有小。一個一個比一比，看看哪一串最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-4-06", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "請指出最高的那一顆蘋果。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple","scale":0.9,"dim":"height"},
+      {"id":"c2","obj":"obj-apple","scale":0.75,"dim":"height"},
+      {"id":"c3","obj":"obj-apple","scale":0.5,"dim":"height"},
+      {"id":"c4","obj":"obj-apple","scale":0.4,"dim":"height"},
+      {"id":"c5","obj":"obj-apple","scale":0.6,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是蘋果，只是有高有矮。一個一個比一比，看看哪一顆最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-4-07", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana","scale":0.32,"dim":"height"},
+      {"id":"c2","obj":"obj-banana","scale":0.7,"dim":"height"},
+      {"id":"c3","obj":"obj-banana","scale":0.85,"dim":"height"},
+      {"id":"c4","obj":"obj-banana","scale":0.4,"dim":"height"},
+      {"id":"c5","obj":"obj-banana","scale":0.55,"dim":"height"}
+    ],
+    "answer": "c3",
+    "hint": "它們都是香蕉，只是有高有矮。一個一個比一比，看看哪一根最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-4-08", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino","scale":0.55,"dim":"height"},
+      {"id":"c2","obj":"decor-dino","scale":0.85,"dim":"height"},
+      {"id":"c3","obj":"decor-dino","scale":0.32,"dim":"height"},
+      {"id":"c4","obj":"decor-dino","scale":0.7,"dim":"height"},
+      {"id":"c5","obj":"decor-dino","scale":1,"dim":"height"}
+    ],
+    "answer": "c5",
+    "hint": "它們都是恐龍，只是有高有矮。一個一個比一比，看看哪一隻最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-4-09", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "哪一串葡萄最高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":0.36,"dim":"height"},
+      {"id":"c2","obj":"obj-grape","scale":0.85,"dim":"height"},
+      {"id":"c3","obj":"obj-grape","scale":0.32,"dim":"height"},
+      {"id":"c4","obj":"obj-grape","scale":0.5,"dim":"height"},
+      {"id":"c5","obj":"obj-grape","scale":0.7,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是葡萄，只是有高有矮。一個一個比一比，看看哪一串最高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-4-10", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit","scale":0.75,"dim":"size"},
+      {"id":"c2","obj":"obj-rabbit","scale":0.85,"dim":"size"},
+      {"id":"c3","obj":"obj-rabbit","scale":0.45,"dim":"size"},
+      {"id":"c4","obj":"obj-rabbit","scale":0.32,"dim":"size"},
+      {"id":"c5","obj":"obj-rabbit","scale":1,"dim":"size"}
+    ],
+    "answer": "c4",
+    "hint": "它們都是小兔子，只是有大有小。一個一個比一比，看看哪一隻最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-4-11", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.6,"dim":"size"},
+      {"id":"c2","obj":"obj-fish","scale":0.85,"dim":"size"},
+      {"id":"c3","obj":"obj-fish","scale":0.5,"dim":"size"},
+      {"id":"c4","obj":"obj-fish","scale":0.7,"dim":"size"},
+      {"id":"c5","obj":"obj-fish","scale":0.32,"dim":"size"}
+    ],
+    "answer": "c5",
+    "hint": "它們都是小魚，只是有大有小。一個一個比一比，看看哪一條最小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-4-12", "skill": "measure", "difficulty": 4, "type": "bigger", "version": 2,
+    "prompt": "找找看，哪一個最大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-ball","scale":0.5,"dim":"size"},
+      {"id":"c2","obj":"decor-ball","scale":1,"dim":"size"},
+      {"id":"c3","obj":"decor-ball","scale":0.75,"dim":"size"},
+      {"id":"c4","obj":"decor-ball","scale":0.65,"dim":"size"},
+      {"id":"c5","obj":"decor-ball","scale":0.4,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是皮球，只是有大有小。一個一個比一比，看看哪一顆最大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-4-13", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由矮排到高。",
+    "items": [
+      {"obj":"obj-peach","scale":1},
+      {"obj":"obj-peach","scale":0.4},
+      {"obj":"obj-peach","scale":0.5},
+      {"obj":"obj-peach","scale":0.8},
+      {"obj":"obj-peach","scale":0.6}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,2,4,3,0]}
+  },
+  {
+    "id": "measure-4-14", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最長的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-rocket","scale":0.7},
+      {"obj":"decor-rocket","scale":0.95},
+      {"obj":"decor-rocket","scale":0.32},
+      {"obj":"decor-rocket","scale":0.8},
+      {"obj":"decor-rocket","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[1,3,0,4,2]}
+  },
+  {
+    "id": "measure-4-15", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最高的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-flower","scale":0.55},
+      {"obj":"obj-flower","scale":1},
+      {"obj":"obj-flower","scale":0.4},
+      {"obj":"obj-flower","scale":0.32},
+      {"obj":"obj-flower","scale":0.8}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[1,4,0,2,3]}
+  },
+  {
+    "id": "measure-4-16", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最短的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-banana","scale":0.7},
+      {"obj":"obj-banana","scale":0.55},
+      {"obj":"obj-banana","scale":0.36},
+      {"obj":"obj-banana","scale":0.9},
+      {"obj":"obj-banana","scale":0.45}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最短的，放在第一格，再找次短的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"asc","order":[2,4,1,0,3]}
+  },
+  {
+    "id": "measure-4-17", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-rabbit","scale":0.7},
+      {"obj":"obj-rabbit","scale":0.95},
+      {"obj":"obj-rabbit","scale":0.5},
+      {"obj":"obj-rabbit","scale":0.6},
+      {"obj":"obj-rabbit","scale":0.36}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[1,0,3,2,4]}
+  },
+  {
+    "id": "measure-4-18", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最小的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-star","scale":0.9},
+      {"obj":"obj-star","scale":0.45},
+      {"obj":"obj-star","scale":0.7},
+      {"obj":"obj-star","scale":0.36},
+      {"obj":"obj-star","scale":0.6}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[3,1,4,2,0]}
+  },
+  {
+    "id": "measure-4-19", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從大排到小，排排隊。",
+    "items": [
+      {"obj":"decor-piano","scale":0.4},
+      {"obj":"decor-piano","scale":1},
+      {"obj":"decor-piano","scale":0.8},
+      {"obj":"decor-piano","scale":0.7},
+      {"obj":"decor-piano","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[1,2,3,0,4]}
+  },
+  {
+    "id": "measure-4-20", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由長排到短。",
+    "items": [
+      {"obj":"obj-banana","scale":0.4},
+      {"obj":"obj-banana","scale":1},
+      {"obj":"obj-banana","scale":0.32},
+      {"obj":"obj-banana","scale":0.75},
+      {"obj":"obj-banana","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[1,3,4,0,2]}
+  },
+  {
+    "id": "measure-4-21", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-piano","scale":0.5},
+      {"obj":"decor-piano","scale":0.65},
+      {"obj":"decor-piano","scale":0.85},
+      {"obj":"decor-piano","scale":1},
+      {"obj":"decor-piano","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[3,2,1,0,4]}
+  },
+  {
+    "id": "measure-4-22", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從矮排到高，排排隊。",
+    "items": [
+      {"obj":"obj-peach","scale":0.4},
+      {"obj":"obj-peach","scale":0.32},
+      {"obj":"obj-peach","scale":0.8},
+      {"obj":"obj-peach","scale":0.5},
+      {"obj":"obj-peach","scale":1}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,0,3,2,4]}
+  },
+  {
+    "id": "measure-4-23", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從矮排到高，排排隊。",
+    "items": [
+      {"obj":"obj-apple","scale":0.85},
+      {"obj":"obj-apple","scale":0.32},
+      {"obj":"obj-apple","scale":1},
+      {"obj":"obj-apple","scale":0.4},
+      {"obj":"obj-apple","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,3,4,0,2]}
+  },
+  {
+    "id": "measure-4-24", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從高排到矮，排排隊。",
+    "items": [
+      {"obj":"obj-rabbit","scale":0.85},
+      {"obj":"obj-rabbit","scale":0.55},
+      {"obj":"obj-rabbit","scale":1},
+      {"obj":"obj-rabbit","scale":0.45},
+      {"obj":"obj-rabbit","scale":0.36}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[2,0,1,3,4]}
+  },
+  {
+    "id": "measure-4-25", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由短排到長。",
+    "items": [
+      {"obj":"obj-banana","scale":0.65},
+      {"obj":"obj-banana","scale":0.5},
+      {"obj":"obj-banana","scale":0.95},
+      {"obj":"obj-banana","scale":0.75},
+      {"obj":"obj-banana","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最短的，放在第一格，再找次短的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"asc","order":[4,1,0,3,2]}
+  },
+  {
+    "id": "measure-4-26", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-shell","scale":0.55},
+      {"obj":"obj-shell","scale":1},
+      {"obj":"obj-shell","scale":0.45},
+      {"obj":"obj-shell","scale":0.85},
+      {"obj":"obj-shell","scale":0.65}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[1,3,4,0,2]}
+  },
+  {
+    "id": "measure-4-27", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由高排到矮。",
+    "items": [
+      {"obj":"obj-peach","scale":0.85},
+      {"obj":"obj-peach","scale":1},
+      {"obj":"obj-peach","scale":0.65},
+      {"obj":"obj-peach","scale":0.4},
+      {"obj":"obj-peach","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[1,0,2,4,3]}
+  },
+  {
+    "id": "measure-4-28", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由大排到小。",
+    "items": [
+      {"obj":"obj-shell","scale":0.5},
+      {"obj":"obj-shell","scale":1},
+      {"obj":"obj-shell","scale":0.85},
+      {"obj":"obj-shell","scale":0.32},
+      {"obj":"obj-shell","scale":0.4}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[1,2,0,4,3]}
+  },
+  {
+    "id": "measure-4-29", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從小排到大，排排隊。",
+    "items": [
+      {"obj":"obj-apple","scale":0.32},
+      {"obj":"obj-apple","scale":0.55},
+      {"obj":"obj-apple","scale":0.45},
+      {"obj":"obj-apple","scale":0.65},
+      {"obj":"obj-apple","scale":0.9}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[0,2,1,3,4]}
+  },
+  {
+    "id": "measure-4-30", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最長的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-piano","scale":0.5},
+      {"obj":"decor-piano","scale":0.7},
+      {"obj":"decor-piano","scale":0.8},
+      {"obj":"decor-piano","scale":0.95},
+      {"obj":"decor-piano","scale":0.6}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[3,2,1,4,0]}
+  },
+  {
+    "id": "measure-4-31", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最高的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-rabbit","scale":0.4},
+      {"obj":"obj-rabbit","scale":0.32},
+      {"obj":"obj-rabbit","scale":0.95},
+      {"obj":"obj-rabbit","scale":0.75},
+      {"obj":"obj-rabbit","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最高的，放在第一格，再找次高的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"desc","order":[2,3,4,0,1]}
+  },
+  {
+    "id": "measure-4-32", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最矮的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"decor-piano","scale":0.75},
+      {"obj":"decor-piano","scale":0.36},
+      {"obj":"decor-piano","scale":0.5},
+      {"obj":"decor-piano","scale":0.9},
+      {"obj":"decor-piano","scale":0.6}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[1,2,4,0,3]}
+  },
+  {
+    "id": "measure-4-33", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "把它們從小排到大，排排隊。",
+    "items": [
+      {"obj":"obj-star","scale":0.85},
+      {"obj":"obj-star","scale":0.5},
+      {"obj":"obj-star","scale":0.4},
+      {"obj":"obj-star","scale":0.6},
+      {"obj":"obj-star","scale":0.7}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[2,1,3,4,0]}
+  },
+  {
+    "id": "measure-4-34", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "最大的放最前面，一個一個排好。",
+    "items": [
+      {"obj":"obj-peach","scale":0.75},
+      {"obj":"obj-peach","scale":0.65},
+      {"obj":"obj-peach","scale":0.45},
+      {"obj":"obj-peach","scale":0.95},
+      {"obj":"obj-peach","scale":0.55}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最大的，放在第一格，再找次大的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"desc","order":[3,0,1,4,2]}
+  },
+  {
+    "id": "measure-4-35", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由長排到短。",
+    "items": [
+      {"obj":"decor-piano","scale":0.95},
+      {"obj":"decor-piano","scale":0.45},
+      {"obj":"decor-piano","scale":0.7},
+      {"obj":"decor-piano","scale":0.8},
+      {"obj":"decor-piano","scale":0.32}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最長的，放在第一格，再找次長的放第二格，一個一個排下去。",
+    "params": {"dim":"length","dir":"desc","order":[0,3,2,1,4]}
+  },
+  {
+    "id": "measure-4-36", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"obj-chick","scale":0.4},
+      {"obj":"obj-chick","scale":0.65},
+      {"obj":"obj-chick","scale":1},
+      {"obj":"obj-chick","scale":0.85},
+      {"obj":"obj-chick","scale":0.5}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[0,4,1,3,2]}
+  },
+  {
+    "id": "measure-4-37", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由小排到大。",
+    "items": [
+      {"obj":"obj-flower","scale":0.32},
+      {"obj":"obj-flower","scale":0.95},
+      {"obj":"obj-flower","scale":0.6},
+      {"obj":"obj-flower","scale":0.8},
+      {"obj":"obj-flower","scale":0.4}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最小的，放在第一格，再找次小的放第二格，一個一個排下去。",
+    "params": {"dim":"size","dir":"asc","order":[0,4,2,3,1]}
+  },
+  {
+    "id": "measure-4-38", "skill": "measure", "difficulty": 4, "type": "order", "version": 2, "interaction": "dragOrder",
+    "prompt": "由矮排到高。",
+    "items": [
+      {"obj":"obj-chick","scale":0.75},
+      {"obj":"obj-chick","scale":0.45},
+      {"obj":"obj-chick","scale":0.36},
+      {"obj":"obj-chick","scale":0.65},
+      {"obj":"obj-chick","scale":0.9}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "先找最矮的，放在第一格，再找次矮的放第二格，一個一個排下去。",
+    "params": {"dim":"height","dir":"asc","order":[2,1,3,0,4]}
+  },
+  {
+    "id": "measure-1-g01", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一枚火箭比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.45,"dim":"size"},
+      {"id":"c2","obj":"decor-rocket","scale":0.95,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是火箭，只是有大有小。一個一個比一比，看看哪一枚比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g02", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "請指出比較大的那一隻恐龍。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino","scale":0.32,"dim":"size"},
+      {"id":"c2","obj":"decor-dino","scale":0.85,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是恐龍，只是有大有小。一個一個比一比，看看哪一隻比較大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-g03", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一顆桃子比較大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","scale":0.85,"dim":"size"},
+      {"id":"c2","obj":"obj-peach","scale":0.36,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是桃子，只是有大有小。一個一個比一比，看看哪一顆比較大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-g04", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "請指出比較大的那一隻小雞。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","scale":0.45,"dim":"size"},
+      {"id":"c2","obj":"obj-chick","scale":1,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小雞，只是有大有小。一個一個比一比，看看哪一隻比較大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-g05", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":0.45,"dim":"size"},
+      {"id":"c2","obj":"obj-grape","scale":1,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是葡萄，只是有大有小。一個一個比一比，看看哪一串比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g06", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一串葡萄比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":0.9,"dim":"size"},
+      {"id":"c2","obj":"obj-grape","scale":0.4,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是葡萄，只是有大有小。一個一個比一比，看看哪一串比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g07", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.5,"dim":"size"},
+      {"id":"c2","obj":"obj-fish","scale":1,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是小魚，只是有大有小。一個一個比一比，看看哪一條比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g08", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一根香蕉比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana","scale":0.9,"dim":"size"},
+      {"id":"c2","obj":"obj-banana","scale":0.32,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是香蕉，只是有大有小。一個一個比一比，看看哪一根比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g09", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一隻恐龍比較大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino","scale":0.45,"dim":"size"},
+      {"id":"c2","obj":"decor-dino","scale":1,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是恐龍，只是有大有小。一個一個比一比，看看哪一隻比較大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-g10", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一台鋼琴比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.4,"dim":"size"},
+      {"id":"c2","obj":"decor-piano","scale":0.9,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是鋼琴，只是有大有小。一個一個比一比，看看哪一台比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g11", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一隻小兔子比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit","scale":0.95,"dim":"size"},
+      {"id":"c2","obj":"obj-rabbit","scale":0.4,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小兔子，只是有大有小。一個一個比一比，看看哪一隻比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g12", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一枚火箭比較大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.9,"dim":"size"},
+      {"id":"c2","obj":"decor-rocket","scale":0.36,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是火箭，只是有大有小。一個一個比一比，看看哪一枚比較大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-g13", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一隻恐龍比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino","scale":0.4,"dim":"size"},
+      {"id":"c2","obj":"decor-dino","scale":0.95,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是恐龍，只是有大有小。一個一個比一比，看看哪一隻比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g14", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一條小魚比較大？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.36,"dim":"size"},
+      {"id":"c2","obj":"obj-fish","scale":1,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小魚，只是有大有小。一個一個比一比，看看哪一條比較大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-g15", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "請指出比較大的那一條小魚。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.36,"dim":"size"},
+      {"id":"c2","obj":"obj-fish","scale":1,"dim":"size"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小魚，只是有大有小。一個一個比一比，看看哪一條比較大。",
+    "params": {"dim":"size","ask":"max"}
+  },
+  {
+    "id": "measure-1-g16", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較小？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple","scale":0.45,"dim":"size"},
+      {"id":"c2","obj":"obj-apple","scale":1,"dim":"size"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是蘋果，只是有大有小。一個一個比一比，看看哪一顆比較小。",
+    "params": {"dim":"size","ask":"min"}
+  },
+  {
+    "id": "measure-1-g17", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一顆蘋果比較矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple","scale":1,"dim":"height"},
+      {"id":"c2","obj":"obj-apple","scale":0.5,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是蘋果，只是有高有矮。一個一個比一比，看看哪一顆比較矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-g18", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana","scale":0.36,"dim":"height"},
+      {"id":"c2","obj":"obj-banana","scale":0.9,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是香蕉，只是有高有矮。一個一個比一比，看看哪一根比較矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-g19", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "請指出比較高的那一隻小雞。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","scale":0.5,"dim":"height"},
+      {"id":"c2","obj":"obj-chick","scale":1,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小雞，只是有高有矮。一個一個比一比，看看哪一隻比較高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-g20", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一顆桃子比較矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","scale":0.36,"dim":"height"},
+      {"id":"c2","obj":"obj-peach","scale":0.85,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是桃子，只是有高有矮。一個一個比一比，看看哪一顆比較矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-g21", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple","scale":0.4,"dim":"height"},
+      {"id":"c2","obj":"obj-apple","scale":0.9,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是蘋果，只是有高有矮。一個一個比一比，看看哪一顆比較矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-g22", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一朵花比較高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-flower","scale":0.36,"dim":"height"},
+      {"id":"c2","obj":"obj-flower","scale":0.95,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是花，只是有高有矮。一個一個比一比，看看哪一朵比較高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-g23", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一枚火箭比較高？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.32,"dim":"height"},
+      {"id":"c2","obj":"decor-rocket","scale":1,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是火箭，只是有高有矮。一個一個比一比，看看哪一枚比較高。",
+    "params": {"dim":"height","ask":"max"}
+  },
+  {
+    "id": "measure-1-g24", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.36,"dim":"height"},
+      {"id":"c2","obj":"decor-piano","scale":0.9,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是鋼琴，只是有高有矮。一個一個比一比，看看哪一台比較矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-g25", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一隻小雞比較矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","scale":0.32,"dim":"height"},
+      {"id":"c2","obj":"obj-chick","scale":0.85,"dim":"height"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是小雞，只是有高有矮。一個一個比一比，看看哪一隻比較矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-g26", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一串葡萄比較矮？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","scale":0.85,"dim":"height"},
+      {"id":"c2","obj":"obj-grape","scale":0.36,"dim":"height"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是葡萄，只是有高有矮。一個一個比一比，看看哪一串比較矮。",
+    "params": {"dim":"height","ask":"min"}
+  },
+  {
+    "id": "measure-1-g27", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一條小魚比較長？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":1,"dim":"length"},
+      {"id":"c2","obj":"obj-fish","scale":0.4,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是小魚，只是有長有短。一個一個比一比，看看哪一條比較長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-1-g28", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一枚火箭比較短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.85,"dim":"length"},
+      {"id":"c2","obj":"decor-rocket","scale":0.4,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是火箭，只是有長有短。一個一個比一比，看看哪一枚比較短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-1-g29", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一根香蕉比較長？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana","scale":0.32,"dim":"length"},
+      {"id":"c2","obj":"obj-banana","scale":0.95,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是香蕉，只是有長有短。一個一個比一比，看看哪一根比較長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-1-g30", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.4,"dim":"length"},
+      {"id":"c2","obj":"decor-piano","scale":0.85,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是鋼琴，只是有長有短。一個一個比一比，看看哪一台比較短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-1-g31", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.45,"dim":"length"},
+      {"id":"c2","obj":"obj-fish","scale":1,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是小魚，只是有長有短。一個一個比一比，看看哪一條比較短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-1-g32", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "請指出比較長的那一根香蕉。",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana","scale":0.36,"dim":"length"},
+      {"id":"c2","obj":"obj-banana","scale":0.95,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是香蕉，只是有長有短。一個一個比一比，看看哪一根比較長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-1-g33", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較長？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-piano","scale":0.4,"dim":"length"},
+      {"id":"c2","obj":"decor-piano","scale":0.9,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是鋼琴，只是有長有短。一個一個比一比，看看哪一台比較長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-1-g34", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket","scale":0.45,"dim":"length"},
+      {"id":"c2","obj":"decor-rocket","scale":1,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是火箭，只是有長有短。一個一個比一比，看看哪一枚比較短。",
+    "params": {"dim":"length","ask":"min"}
+  },
+  {
+    "id": "measure-1-g35", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個比較長？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.36,"dim":"length"},
+      {"id":"c2","obj":"obj-fish","scale":0.9,"dim":"length"}
+    ],
+    "answer": "c2",
+    "hint": "它們都是小魚，只是有長有短。一個一個比一比，看看哪一條比較長。",
+    "params": {"dim":"length","ask":"max"}
+  },
+  {
+    "id": "measure-1-g36", "skill": "measure", "difficulty": 1, "type": "bigger", "version": 2, "gentle": true,
+    "prompt": "哪一條小魚比較短？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","scale":0.4,"dim":"length"},
+      {"id":"c2","obj":"obj-fish","scale":0.95,"dim":"length"}
+    ],
+    "answer": "c1",
+    "hint": "它們都是小魚，只是有長有短。一個一個比一比，看看哪一條比較短。",
+    "params": {"dim":"length","ask":"min"}
+  }
+]

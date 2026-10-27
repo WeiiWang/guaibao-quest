@@ -40,14 +40,14 @@ import { docOf, type PaintDoc } from '../domain/coloring'
 import { artworkSpot, clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
 import * as meta from './meta'
-import { getChapter } from '../learning/chapter'
+import { CHAPTERS, chapterUnlocked, getChapter } from '../learning/chapter'
 import { addMaterial, emptyCost, stationRewardQty, STATION_SIZE } from '../learning/scoring'
 import { SHOP_CATALOG, balanceOfMaterials, canCraft, type MaterialBalance } from '../learning/materials'
 import { DAILY_LIMIT_OPTIONS, EXTEND_MINUTES, learningSettingsOf, type LearningSettings } from '../learning/playtime'
 import { makeRng, type Rng } from '../learning/rng'
 import { adaptPlan, planStation, type PlannedQuestion } from '../learning/select'
 import { avoidIdsFor, dailyInfo, emptyDaily, finishPlay, planDaily, startPlay, type DailyInfo } from '../learning/daily'
-import { dailyChapterId, dailyMaterial, mustSubject, parseDailyId, subjectOfChapter } from '../learning/subject'
+import { dailyChapterId, dailyMaterial, mustSubject, parseDailyId, skillsOfChapter } from '../learning/subject'
 import { AGE_BANDS, learnerProfileOf, type LearnerProfile } from '../learning/profile'
 import { applyAttempt, applyStationResult, initialSkillState } from '../learning/skills'
 import { MATERIAL_IDS, MATERIAL_NAMES, SKILLS } from '../learning/types'
@@ -616,6 +616,14 @@ export class Repo {
     return (await this.db.progress.get(chapterId)) ?? this.freshProgress(chapterId, 1, 0, now)
   }
 
+  /** 各章節目前有沒有開放：沒有前置章節的一開始就開；有的要先通關前一章，或家長（PM 預覽）直接解鎖 */
+  async getChapterUnlocks(): Promise<Record<string, boolean>> {
+    const [rows, settings] = await Promise.all([this.db.progress.toArray(), this.getSettings()])
+    const progs = Object.fromEntries(rows.map((r) => [r.chapterId, r]))
+    const pm = settings?.unlockedChapters ?? []
+    return Object.fromEntries(CHAPTERS.map((c) => [c.id, chapterUnlocked(c, progs, pm)]))
+  }
+
   private freshProgress(chapterId: string, run: number, completedRuns: number, now: number): Progress {
     const n = getChapter(chapterId)?.stations.length ?? 0
     const stations: StationState[] = Array.from({ length: n }, () => ({ done: false, independent: 0, total: 0 }))
@@ -631,9 +639,9 @@ export class Repo {
   ): Promise<PlannedQuestion[]> {
     const [states, attempts, profile] = await Promise.all([this.getSkillStates(), this.db.attempts.toArray(), this.getLearnerProfile()])
     const slots = chapterId ? getChapter(chapterId)?.stations[stationIndex]?.slots : undefined
-    // 英文章節只出英文技能；沒給章節（或數學）就是數學的三個技能
-    const skills = chapterId ? subjectOfChapter(chapterId)?.skills : undefined
-    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle, slots, skills })
+    // 英文章節只出英文技能；第 2 章（水簾洞）出三個新技能、最後一題複習第 1 章；沒給章節就是數學的三個技能
+    const mix = chapterId ? skillsOfChapter(chapterId) : undefined
+    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle, slots, skills: mix?.skills, tail: mix?.tail })
   }
 
   /**
@@ -788,6 +796,10 @@ export class Repo {
     if (!chapter || !def) return { ok: false, error: '找不到這一站' }
     const d = this.db
     return d.transaction('rw', [d.attempts, d.skillState, d.progress, d.materialLedger, d.settings, d.inventory], async () => {
+      if (chapter.unlockAfter) {
+        const progs = Object.fromEntries((await d.progress.toArray()).map((r) => [r.chapterId, r]))
+        if (!chapterUnlocked(chapter, progs, (await d.settings.get(SETTINGS_ID))?.unlockedChapters ?? [])) return { ok: false, error: '這一章還沒開放，先通關前一章' } as const
+      }
       const attempts = await d.attempts.where('sessionId').equals(input.sessionId).toArray()
       if (attempts.length < STATION_SIZE) return { ok: false, error: '這一站的題目還沒答完' } as const
       if (await d.materialLedger.get(`station:${input.sessionId}`)) return { ok: false, error: '這一站的獎勵已經領過了' } as const

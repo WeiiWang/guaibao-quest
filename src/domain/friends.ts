@@ -18,13 +18,17 @@ export const FRIEND_ENGLISH: Record<string, string> = Object.fromEntries(
 export const FRIENDS: Friend[] = OBJECTS.map((o: LearnObject) => ({ id: o.id, name: o.name, ...(FRIEND_ENGLISH[o.id] ? { en: FRIEND_ENGLISH[o.id] } : {}) }))
 const FRIEND_IDS = new Set(FRIENDS.map((f) => f.id))
 
-/** 一題裡孩子看到的所有物件 id（題幹、選項、拖曳歸類的物件與籃子） */
+/** 一題裡孩子看到的所有物件 id（題幹、選項、拖曳歸類的物件與籃子、空間方位場景裡的東西） */
 export function objectsInQuestion(q: Pick<Question, 'items' | 'choices' | 'params'>): string[] {
   const out = new Set<string>()
   for (const it of q.items) if (it.obj) out.add(it.obj)
   for (const c of q.choices) if (c.obj) out.add(c.obj)
   if (q.params?.obj) out.add(q.params.obj)
   for (const b of q.params?.bins ?? []) if (b.obj) out.add(b.obj)
+  // v6：空間方位的場景（放到位置的東西、看場景選位置、哪一張圖的東西）
+  if (q.params?.subject) out.add(q.params.subject)
+  if (q.params?.scene?.subject) out.add(q.params.scene.subject)
+  for (const c of q.choices) if (c.scene?.subject) out.add(c.scene.subject)
   return [...out].filter((id) => FRIEND_IDS.has(id))
 }
 

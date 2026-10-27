@@ -21,14 +21,29 @@ import { flyOne } from '../../fly'
 import { useLearningSettings } from '../../learningHooks'
 import { Companion, type Pose } from './Companion'
 import { EnglishView } from './EnglishView'
+import { FlipView } from './FlipView'
 import { GiveView } from './GiveView'
+import { OrderView } from './OrderView'
+import { PlaceView } from './PlaceView'
 import { QuestionView, type HintStage } from './QuestionView'
+import { ScenePick } from './ScenePick'
 import { SortView } from './SortView'
 import './adventure.css'
 import './adventure-v4.css'
 import './adventure-v5.css'
 
 const AUTO_NEXT_MS = 1600
+
+/** 各互動教學時阿悟說的話（lines.ts 的 companion.tutorial.*） */
+const TUTORIAL_LINE: Partial<Record<Interaction, string>> = {
+  tapN: 'companion.tutorial.give',
+  dragSort: 'companion.tutorial.bins',
+  dragOrder: 'companion.tutorial.order',
+  place: 'companion.tutorial.place',
+  flip: 'companion.tutorial.flip',
+}
+/** 第 2 章（水簾洞）的點選題：用場景、縮放、記憶翻牌的畫法，不是一般的物件卡片 */
+const SCENE_SKILLS: SkillId[] = ['measure', 'space', 'observe']
 
 interface StationResult {
   independent: number
@@ -164,7 +179,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     solvedRef.current = false
     wrongs.current = 0
     if (intro) {
-      const l = pickLine(intro === 'tapN' ? 'companion.tutorial.give' : 'companion.tutorial.bins', 0)
+      const l = pickLine(TUTORIAL_LINE[intro] ?? 'companion.tutorial.bins', 0)
       const id = window.setTimeout(() => say(l.key, l.text, { enabled: voiceOn }), 350)
       return () => window.clearTimeout(id)
     }
@@ -328,7 +343,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   const subtitle = useMemo(() => {
     if (!q) return ''
     if (intro) {
-      if (introPhase === 'demo') return pickLine(intro === 'tapN' ? 'companion.tutorial.give' : 'companion.tutorial.bins', 0).text
+      if (introPhase === 'demo') return pickLine(TUTORIAL_LINE[intro] ?? 'companion.tutorial.bins', 0).text
       if (introPhase === 'play') return pickLine('tutorial.again').text
       return pickLine('tutorial.done').text
     }
@@ -486,17 +501,23 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
                     onFeel={setFeel}
                   />
                 ) : (
-                  <SortView
-                    key="tutorial-sort"
-                    q={tutorialQ}
-                    hintStage={0}
-                    solved={introPhase === 'done'}
-                    voiceOn={voiceOn}
-                    demo={introPhase === 'demo'}
-                    onDemoEnd={() => setIntroPhase('play')}
-                    onWrong={() => setFeel('shy')}
-                    onSolved={() => finishTutorial()}
-                  />
+                  (() => {
+                    // 拖曳歸類、排序、放到位置、翻牌：共用同一組教學參數
+                    const View = intro === 'dragOrder' ? OrderView : intro === 'place' ? PlaceView : intro === 'flip' ? FlipView : SortView
+                    return (
+                      <View
+                        key={`tutorial-${intro}`}
+                        q={tutorialQ}
+                        hintStage={0}
+                        solved={introPhase === 'done'}
+                        voiceOn={voiceOn}
+                        demo={introPhase === 'demo'}
+                        onDemoEnd={() => setIntroPhase('play')}
+                        onWrong={() => setFeel('shy')}
+                        onSolved={() => finishTutorial()}
+                      />
+                    )
+                  })()
                 )}
                 {introPhase !== 'done' && (
                   <button type="button" className="adv-btn small tutorial-skip" onClick={() => finishTutorial(true)} data-testid="tutorial-skip">
@@ -508,6 +529,14 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
               <GiveView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} onFeel={setFeel} />
             ) : q.interaction === 'dragSort' ? (
               <SortView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
+            ) : q.interaction === 'dragOrder' ? (
+              <OrderView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
+            ) : q.interaction === 'place' ? (
+              <PlaceView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
+            ) : q.interaction === 'flip' ? (
+              <FlipView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
+            ) : SCENE_SKILLS.includes(q.skill) ? (
+              <ScenePick key={q.id} q={q} hintStage={hintStage} tapped={tapped} solved={solved} onPick={pick} voiceOn={voiceOn} startDelay={profile.gentle ? 2400 : 350} />
             ) : q.skill === 'english' ? (
               <EnglishView key={q.id} q={q} hintStage={hintStage} tapped={tapped} solved={solved} onPick={pick} />
             ) : (

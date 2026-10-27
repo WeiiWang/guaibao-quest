@@ -3,7 +3,7 @@ import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
 import { localDateStr } from '../../../domain/date'
 import { buildReport } from '../../../learning/report'
-import { SUBJECTS } from '../../../learning/subject'
+import { SUBJECTS, subjectSkills } from '../../../learning/subject'
 import { MATERIAL_IDS, MATERIAL_NAMES } from '../../../learning/types'
 import { useNow } from '../../hooks'
 import './learning.css'
@@ -53,7 +53,7 @@ export function LearningTab() {
       <div className="card">
         <h2>各項技能</h2>
         {SUBJECTS.map((subject) => {
-          const rows = report.skills.filter((s) => subject.skills.includes(s.skill))
+          const rows = report.skills.filter((s) => subjectSkills(subject).includes(s.skill))
           return (
             <div key={subject.id} className="lt-subject" data-testid={`report-subject-${subject.id}`}>
               <h3 className="lt-h3">{subject.name}</h3>

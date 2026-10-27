@@ -1,0 +1,2210 @@
+[
+  {
+    "id": "space-1-01", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "花在箱子的上面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"below"}}
+    ],
+    "answer": "c1",
+    "hint": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的花在箱子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-02", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "找找看，貝殼在帳篷的裡面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "裡面，就是躲在帳篷裡頭。找找看，哪一張圖裡的貝殼在帳篷的裡面？",
+    "params": {"rel":"inside"}
+  },
+  {
+    "id": "space-1-03", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "哪一張圖，貝殼在箱子的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"below"}}
+    ],
+    "answer": "c3",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的貝殼在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-04", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "哪一張圖，小魚在帳篷的上面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"inside"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"above"}}
+    ],
+    "answer": "c3",
+    "hint": "上面，就是在帳篷的頭頂上。找找看，哪一張圖裡的小魚在帳篷的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-05", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "找找看，小魚在帳篷的裡面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"inside"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "裡面，就是躲在帳篷裡頭。找找看，哪一張圖裡的小魚在帳篷的裡面？",
+    "params": {"rel":"inside"}
+  },
+  {
+    "id": "space-1-06", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "香蕉在箱子的下面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-banana","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-banana","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-banana","rel":"inside"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的香蕉在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-07", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "哪一張圖，桃子在帳篷的上面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"above"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"inside"}}
+    ],
+    "answer": "c2",
+    "hint": "上面，就是在帳篷的頭頂上。找找看，哪一張圖裡的桃子在帳篷的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-08", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "找找看，蘋果在箱子的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-apple","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-apple","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-apple","rel":"below"}}
+    ],
+    "answer": "c1",
+    "hint": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的蘋果在箱子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-09", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "葡萄在箱子的下面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"below"}}
+    ],
+    "answer": "c3",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的葡萄在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-10", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "哪一張圖，葡萄在箱子的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"below"}}
+    ],
+    "answer": "c3",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的葡萄在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-11", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "貝殼在帳篷的下面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"inside"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在帳篷的腳底下。找找看，哪一張圖裡的貝殼在帳篷的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-12", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "小魚在箱子的上面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-fish","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-fish","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-fish","rel":"below"}}
+    ],
+    "answer": "c1",
+    "hint": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的小魚在箱子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-13", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "蘋果在箱子的裡面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-apple","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-apple","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-apple","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的蘋果在箱子的裡面？",
+    "params": {"rel":"inside"}
+  },
+  {
+    "id": "space-1-14", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "哪一張圖，花在箱子的裡面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"inside"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"above"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"below"}}
+    ],
+    "answer": "c1",
+    "hint": "裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的花在箱子的裡面？",
+    "params": {"rel":"inside"}
+  },
+  {
+    "id": "space-1-15", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "找找看，小雞在箱子的裡面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-chick","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-chick","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-chick","rel":"inside"}}
+    ],
+    "answer": "c3",
+    "hint": "裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的小雞在箱子的裡面？",
+    "params": {"rel":"inside"}
+  },
+  {
+    "id": "space-1-16", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "找找看，花在箱子的下面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"inside"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的花在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-17", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "哪一張圖，小雞在帳篷的上面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-chick","rel":"inside"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-chick","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-chick","rel":"above"}}
+    ],
+    "answer": "c3",
+    "hint": "上面，就是在帳篷的頭頂上。找找看，哪一張圖裡的小雞在帳篷的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-18", "skill": "space", "difficulty": 1, "type": "where", "version": 2,
+    "prompt": "星星在帳篷的下面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-star","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-star","rel":"above"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-star","rel":"inside"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在帳篷的腳底下。找找看，哪一張圖裡的星星在帳篷的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-19", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把花送到箱子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在箱子的上面。上面，就是在箱子的頭頂上。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-flower","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"below","of":0}],"target":"z1","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-20", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把小兔子送到帳篷的裡面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在帳篷的裡面。裡面，就是躲在帳篷裡頭。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"above","of":0}],"target":"z2","rel":"inside","of":0}
+  },
+  {
+    "id": "space-1-21", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把香蕉送到箱子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "香蕉要放在箱子的上面。上面，就是在箱子的頭頂上。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-banana","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"inside","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-22", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把桃子送到帳篷的裡面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "桃子要放在帳篷的裡面。裡面，就是躲在帳篷裡頭。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-peach","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"inside","of":0}],"target":"z3","rel":"inside","of":0}
+  },
+  {
+    "id": "space-1-23", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把葡萄送到箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "葡萄要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-grape","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"below","of":0}],"target":"z3","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-24", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小魚放到箱子的裡面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在箱子的裡面。裡面，就是躲在箱子裡頭。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-fish","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"above","of":0}],"target":"z2","rel":"inside","of":0}
+  },
+  {
+    "id": "space-1-25", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把蘋果送到帳篷的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在帳篷的上面。上面，就是在帳篷的頭頂上。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-apple","zones":[{"id":"z1","rel":"inside","of":0},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"above","of":0}],"target":"z3","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-26", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把小雞放在帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小雞要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-chick","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"below","of":0}],"target":"z3","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-27", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小雞放到箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小雞要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-chick","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"below","of":0}],"target":"z3","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-28", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把蘋果放到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-apple","zones":[{"id":"z1","rel":"inside","of":0},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"above","of":0}],"target":"z2","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-29", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把花放在箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-flower","zones":[{"id":"z1","rel":"inside","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"below","of":0}],"target":"z3","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-30", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把花放到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-flower","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"above","of":0}],"target":"z1","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-31", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把桃子放到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "桃子要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-peach","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"inside","of":0}],"target":"z1","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-32", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把葡萄放到帳篷的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "葡萄要放在帳篷的上面。上面，就是在帳篷的頭頂上。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-grape","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"above","of":0}],"target":"z3","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-33", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把葡萄放在箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "葡萄要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-grape","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"inside","of":0}],"target":"z2","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-34", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把小魚放在箱子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在箱子的上面。上面，就是在箱子的頭頂上。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-fish","zones":[{"id":"z1","rel":"inside","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"below","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-35", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小兔子放到箱子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在箱子的上面。上面，就是在箱子的頭頂上。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"inside","of":0},{"id":"z3","rel":"above","of":0}],"target":"z3","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-36", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把星星放在箱子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "星星要放在箱子的上面。上面，就是在箱子的頭頂上。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-star","zones":[{"id":"z1","rel":"inside","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"below","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-2-01", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "桃子在帳篷的上面還是下面？",
+    "items": [],
+    "choices": [
+      {"id":"above","text":"上面"},
+      {"id":"below","text":"下面"}
+    ],
+    "answer": "above",
+    "hint": "先找到帳篷，再看桃子站在哪裡。上面，就是在帳篷的頭頂上。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"above"}}
+  },
+  {
+    "id": "space-2-02", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "看一看，小雞是在帳篷的上面，還是下面？",
+    "items": [],
+    "choices": [
+      {"id":"above","text":"上面"},
+      {"id":"below","text":"下面"}
+    ],
+    "answer": "below",
+    "hint": "先找到帳篷，再看小雞站在哪裡。下面，就是在帳篷的腳底下。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-chick","rel":"below"}}
+  },
+  {
+    "id": "space-2-03", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "小雞在箱子的下面還是上面？",
+    "items": [],
+    "choices": [
+      {"id":"above","text":"上面"},
+      {"id":"below","text":"下面"}
+    ],
+    "answer": "above",
+    "hint": "先找到箱子，再看小雞站在哪裡。上面，就是在箱子的頭頂上。",
+    "params": {"scene":{"anchor":"decor-crate","subject":"obj-chick","rel":"above"}}
+  },
+  {
+    "id": "space-2-04", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "小兔子在箱子的裡面還是外面？",
+    "items": [],
+    "choices": [
+      {"id":"inside","text":"裡面"},
+      {"id":"outside","text":"外面"}
+    ],
+    "answer": "outside",
+    "hint": "先找到箱子，再看小兔子站在哪裡。外面，就是不在箱子裡頭，站在旁邊。",
+    "params": {"scene":{"anchor":"decor-crate","subject":"obj-rabbit","rel":"outside"}}
+  },
+  {
+    "id": "space-2-05", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "花在帳篷的裡面還是外面？",
+    "items": [],
+    "choices": [
+      {"id":"outside","text":"外面"},
+      {"id":"inside","text":"裡面"}
+    ],
+    "answer": "inside",
+    "hint": "先找到帳篷，再看花站在哪裡。裡面，就是躲在帳篷裡頭。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-flower","rel":"inside"}}
+  },
+  {
+    "id": "space-2-06", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "貝殼在帳篷的外面還是裡面？",
+    "items": [],
+    "choices": [
+      {"id":"outside","text":"外面"},
+      {"id":"inside","text":"裡面"}
+    ],
+    "answer": "outside",
+    "hint": "先找到帳篷，再看貝殼站在哪裡。外面，就是不在帳篷裡頭，站在旁邊。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"outside"}}
+  },
+  {
+    "id": "space-2-07", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "看一看，葡萄是在箱子的裡面，還是外面？",
+    "items": [],
+    "choices": [
+      {"id":"inside","text":"裡面"},
+      {"id":"outside","text":"外面"}
+    ],
+    "answer": "inside",
+    "hint": "先找到箱子，再看葡萄站在哪裡。裡面，就是躲在箱子裡頭。",
+    "params": {"scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"inside"}}
+  },
+  {
+    "id": "space-2-08", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "看一看，蘋果是在箱子的外面，還是裡面？",
+    "items": [],
+    "choices": [
+      {"id":"inside","text":"裡面"},
+      {"id":"outside","text":"外面"}
+    ],
+    "answer": "outside",
+    "hint": "先找到箱子，再看蘋果站在哪裡。外面，就是不在箱子裡頭，站在旁邊。",
+    "params": {"scene":{"anchor":"decor-crate","subject":"obj-apple","rel":"outside"}}
+  },
+  {
+    "id": "space-2-09", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "看一看，香蕉是在箱子的裡面，還是外面？",
+    "items": [],
+    "choices": [
+      {"id":"outside","text":"外面"},
+      {"id":"inside","text":"裡面"}
+    ],
+    "answer": "outside",
+    "hint": "先找到箱子，再看香蕉站在哪裡。外面，就是不在箱子裡頭，站在旁邊。",
+    "params": {"scene":{"anchor":"decor-crate","subject":"obj-banana","rel":"outside"}}
+  },
+  {
+    "id": "space-2-10", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "看一看，花是在帳篷的外面，還是裡面？",
+    "items": [],
+    "choices": [
+      {"id":"inside","text":"裡面"},
+      {"id":"outside","text":"外面"}
+    ],
+    "answer": "outside",
+    "hint": "先找到帳篷，再看花站在哪裡。外面，就是不在帳篷裡頭，站在旁邊。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-flower","rel":"outside"}}
+  },
+  {
+    "id": "space-2-11", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "星星在箱子的外面還是裡面？",
+    "items": [],
+    "choices": [
+      {"id":"inside","text":"裡面"},
+      {"id":"outside","text":"外面"}
+    ],
+    "answer": "inside",
+    "hint": "先找到箱子，再看星星站在哪裡。裡面，就是躲在箱子裡頭。",
+    "params": {"scene":{"anchor":"decor-crate","subject":"obj-star","rel":"inside"}}
+  },
+  {
+    "id": "space-2-12", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "蘋果在帳篷的裡面還是外面？",
+    "items": [],
+    "choices": [
+      {"id":"inside","text":"裡面"},
+      {"id":"outside","text":"外面"}
+    ],
+    "answer": "outside",
+    "hint": "先找到帳篷，再看蘋果站在哪裡。外面，就是不在帳篷裡頭，站在旁邊。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-apple","rel":"outside"}}
+  },
+  {
+    "id": "space-2-13", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "葡萄在箱子的外面還是裡面？",
+    "items": [],
+    "choices": [
+      {"id":"outside","text":"外面"},
+      {"id":"inside","text":"裡面"}
+    ],
+    "answer": "inside",
+    "hint": "先找到箱子，再看葡萄站在哪裡。裡面，就是躲在箱子裡頭。",
+    "params": {"scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"inside"}}
+  },
+  {
+    "id": "space-2-14", "skill": "space", "difficulty": 2, "type": "whereIs", "version": 2,
+    "prompt": "看一看，桃子是在箱子的上面，還是下面？",
+    "items": [],
+    "choices": [
+      {"id":"below","text":"下面"},
+      {"id":"above","text":"上面"}
+    ],
+    "answer": "below",
+    "hint": "先找到箱子，再看桃子站在哪裡。下面，就是在箱子的腳底下。",
+    "params": {"scene":{"anchor":"decor-crate","subject":"obj-peach","rel":"below"}}
+  },
+  {
+    "id": "space-2-15", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "哪一張圖，貝殼在箱子的外面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"outside"}}
+    ],
+    "answer": "c3",
+    "hint": "外面，就是不在箱子裡頭，站在旁邊。找找看，哪一張圖裡的貝殼在箱子的外面？",
+    "params": {"rel":"outside"}
+  },
+  {
+    "id": "space-2-16", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "哪一張圖，香蕉在箱子的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-banana","rel":"outside"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-banana","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-banana","rel":"inside"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的香蕉在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-2-17", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "找找看，小魚在帳篷的外面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"outside"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"above"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"below"}}
+    ],
+    "answer": "c1",
+    "hint": "外面，就是不在帳篷裡頭，站在旁邊。找找看，哪一張圖裡的小魚在帳篷的外面？",
+    "params": {"rel":"outside"}
+  },
+  {
+    "id": "space-2-18", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "找找看，香蕉在帳篷的下面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-banana","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-banana","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-banana","rel":"outside"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在帳篷的腳底下。找找看，哪一張圖裡的香蕉在帳篷的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-2-19", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "找找看，葡萄在箱子的下面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"outside"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"below"}}
+    ],
+    "answer": "c3",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的葡萄在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-2-20", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "找找看，花在箱子的下面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"outside"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的花在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-2-21", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "哪一張圖，星星在箱子的裡面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"inside"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的星星在箱子的裡面？",
+    "params": {"rel":"inside"}
+  },
+  {
+    "id": "space-2-22", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "找找看，貝殼在箱子的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-shell","rel":"above"}}
+    ],
+    "answer": "c3",
+    "hint": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的貝殼在箱子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-2-23", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "哪一張圖，小魚在帳篷的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-fish","rel":"outside"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在帳篷的腳底下。找找看，哪一張圖裡的小魚在帳篷的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-2-24", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "哪一張圖，桃子在帳篷的上面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"above"}}
+    ],
+    "answer": "c3",
+    "hint": "上面，就是在帳篷的頭頂上。找找看，哪一張圖裡的桃子在帳篷的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-2-25", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "哪一張圖，蘋果在帳篷的裡面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-apple","rel":"inside"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-apple","rel":"outside"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-apple","rel":"below"}}
+    ],
+    "answer": "c1",
+    "hint": "裡面，就是躲在帳篷裡頭。找找看，哪一張圖裡的蘋果在帳篷的裡面？",
+    "params": {"rel":"inside"}
+  },
+  {
+    "id": "space-2-26", "skill": "space", "difficulty": 2, "type": "where", "version": 2,
+    "prompt": "哪一張圖，葡萄在箱子的裡面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"inside"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-grape","rel":"outside"}}
+    ],
+    "answer": "c2",
+    "hint": "裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的葡萄在箱子的裡面？",
+    "params": {"rel":"inside"}
+  },
+  {
+    "id": "space-2-27", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把花放到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent","decor-table"],"subject":"obj-flower","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"above","of":1},{"id":"z4","rel":"below","of":0}],"target":"z4","rel":"below","of":0}
+  },
+  {
+    "id": "space-2-28", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把葡萄放到沙發的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "葡萄要放在沙發的下面。下面，就是在沙發的腳底下。",
+    "params": {"anchors":["decor-beanbag","decor-bed"],"subject":"obj-grape","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"above","of":1}],"target":"z3","rel":"below","of":0}
+  },
+  {
+    "id": "space-2-29", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把星星放到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "星星要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-table","decor-tent"],"subject":"obj-star","zones":[{"id":"z1","rel":"above","of":1},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"below","of":1},{"id":"z4","rel":"above","of":0}],"target":"z3","rel":"below","of":1}
+  },
+  {
+    "id": "space-2-30", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把花放在沙發的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在沙發的上面。上面，就是在沙發的頭頂上。",
+    "params": {"anchors":["decor-beanbag","decor-crate"],"subject":"obj-flower","zones":[{"id":"z1","rel":"below","of":1},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"above","of":0},{"id":"z4","rel":"above","of":1}],"target":"z3","rel":"above","of":0}
+  },
+  {
+    "id": "space-2-31", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把貝殼放在沙發的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "貝殼要放在沙發的下面。下面，就是在沙發的腳底下。",
+    "params": {"anchors":["decor-beanbag","decor-crate"],"subject":"obj-shell","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"above","of":1},{"id":"z4","rel":"below","of":1}],"target":"z1","rel":"below","of":0}
+  },
+  {
+    "id": "space-2-32", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小魚放到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent","decor-bed"],"subject":"obj-fish","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"above","of":1}],"target":"z3","rel":"below","of":0}
+  },
+  {
+    "id": "space-2-33", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把星星放在沙發的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "星星要放在沙發的上面。上面，就是在沙發的頭頂上。",
+    "params": {"anchors":["decor-bed","decor-beanbag"],"subject":"obj-star","zones":[{"id":"z1","rel":"below","of":1},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"above","of":1}],"target":"z4","rel":"above","of":1}
+  },
+  {
+    "id": "space-2-34", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把蘋果放在箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-bed","decor-crate"],"subject":"obj-apple","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"above","of":1},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"below","of":1}],"target":"z4","rel":"below","of":1}
+  },
+  {
+    "id": "space-2-35", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小兔子放到桌子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在桌子的上面。上面，就是在桌子的頭頂上。",
+    "params": {"anchors":["decor-table","decor-crate"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"below","of":1},{"id":"z4","rel":"above","of":1}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-2-36", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把香蕉放到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "香蕉要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent","decor-bed"],"subject":"obj-banana","zones":[{"id":"z1","rel":"above","of":1},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"above","of":0}],"target":"z3","rel":"below","of":0}
+  },
+  {
+    "id": "space-2-37", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把蘋果放到桌子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在桌子的上面。上面，就是在桌子的頭頂上。",
+    "params": {"anchors":["decor-table","decor-tent"],"subject":"obj-apple","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"above","of":1},{"id":"z4","rel":"above","of":0}],"target":"z4","rel":"above","of":0}
+  },
+  {
+    "id": "space-2-38", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把小魚放在沙發的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在沙發的下面。下面，就是在沙發的腳底下。",
+    "params": {"anchors":["decor-tent","decor-beanbag"],"subject":"obj-fish","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"above","of":1},{"id":"z3","rel":"below","of":1},{"id":"z4","rel":"below","of":0}],"target":"z3","rel":"below","of":1}
+  },
+  {
+    "id": "space-2-39", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把小兔子放在沙發的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在沙發的上面。上面，就是在沙發的頭頂上。",
+    "params": {"anchors":["decor-beanbag","decor-table"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"above","of":1}],"target":"z1","rel":"above","of":0}
+  },
+  {
+    "id": "space-2-40", "skill": "space", "difficulty": 2, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把香蕉放在箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "香蕉要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-tent","decor-crate"],"subject":"obj-banana","zones":[{"id":"z1","rel":"below","of":1},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"above","of":0},{"id":"z4","rel":"above","of":1}],"target":"z1","rel":"below","of":1}
+  },
+  {
+    "id": "space-3-01", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "看一看，貝殼是在帳篷的左邊，還是右邊？",
+    "items": [],
+    "choices": [
+      {"id":"left","text":"左邊"},
+      {"id":"right","text":"右邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到帳篷，再看貝殼站在哪裡。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"left"}}
+  },
+  {
+    "id": "space-3-02", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "貝殼在帳篷的右邊還是左邊？",
+    "items": [],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到帳篷，再看貝殼站在哪裡。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"left"}}
+  },
+  {
+    "id": "space-3-03", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "看一看，小雞是在帳篷的左邊，還是右邊？",
+    "items": [],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到帳篷，再看小雞站在哪裡。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-chick","rel":"right"}}
+  },
+  {
+    "id": "space-3-04", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "小兔子在小床的右邊還是左邊？",
+    "items": [],
+    "choices": [
+      {"id":"left","text":"左邊"},
+      {"id":"right","text":"右邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到小床，再看小兔子站在哪裡。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"scene":{"anchor":"decor-bed","subject":"obj-rabbit","rel":"right"}}
+  },
+  {
+    "id": "space-3-05", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "看一看，星星是在沙發的左邊，還是右邊？",
+    "items": [],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到沙發，再看星星站在哪裡。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"scene":{"anchor":"decor-beanbag","subject":"obj-star","rel":"right"}}
+  },
+  {
+    "id": "space-3-06", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "星星在小床的右邊還是左邊？",
+    "items": [],
+    "choices": [
+      {"id":"left","text":"左邊"},
+      {"id":"right","text":"右邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到小床，再看星星站在哪裡。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"scene":{"anchor":"decor-bed","subject":"obj-star","rel":"right"}}
+  },
+  {
+    "id": "space-3-07", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "看一看，花是在帳篷的右邊，還是左邊？",
+    "items": [],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到帳篷，再看花站在哪裡。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"scene":{"anchor":"decor-tent","subject":"obj-flower","rel":"left"}}
+  },
+  {
+    "id": "space-3-08", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "看一看，蘋果是在小床的左邊，還是右邊？",
+    "items": [],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到小床，再看蘋果站在哪裡。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"scene":{"anchor":"decor-bed","subject":"obj-apple","rel":"right"}}
+  },
+  {
+    "id": "space-3-09", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "香蕉在小床的左邊還是右邊？",
+    "items": [],
+    "choices": [
+      {"id":"left","text":"左邊"},
+      {"id":"right","text":"右邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到小床，再看香蕉站在哪裡。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"scene":{"anchor":"decor-bed","subject":"obj-banana","rel":"left"}}
+  },
+  {
+    "id": "space-3-10", "skill": "space", "difficulty": 3, "type": "whereIs", "version": 2,
+    "prompt": "看一看，香蕉是在沙發的左邊，還是右邊？",
+    "items": [],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到沙發，再看香蕉站在哪裡。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"scene":{"anchor":"decor-beanbag","subject":"obj-banana","rel":"left"}}
+  },
+  {
+    "id": "space-3-11", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "哪一張圖，花在箱子的上面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"left"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"above"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"right"}}
+    ],
+    "answer": "c2",
+    "hint": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的花在箱子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-3-12", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "找找看，桃子在桌子的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-table","subject":"obj-peach","rel":"right"}},
+      {"id":"c2","scene":{"anchor":"decor-table","subject":"obj-peach","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-table","subject":"obj-peach","rel":"above"}}
+    ],
+    "answer": "c3",
+    "hint": "上面，就是在桌子的頭頂上。找找看，哪一張圖裡的桃子在桌子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-3-13", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "找找看，小雞在箱子的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-chick","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-chick","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-chick","rel":"left"}}
+    ],
+    "answer": "c1",
+    "hint": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的小雞在箱子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-3-14", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "哪一張圖，星星在箱子的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"above"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"left"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的星星在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-3-15", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "找找看，貝殼在帳篷的左邊是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"left"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"right"}}
+    ],
+    "answer": "c2",
+    "hint": "舉起你的左手，左手那一邊就是左邊。找找看，哪一張圖裡的貝殼在帳篷的左邊？",
+    "params": {"rel":"left"}
+  },
+  {
+    "id": "space-3-16", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "哪一張圖，小雞在沙發的右邊？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-beanbag","subject":"obj-chick","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-beanbag","subject":"obj-chick","rel":"above"}},
+      {"id":"c3","scene":{"anchor":"decor-beanbag","subject":"obj-chick","rel":"right"}}
+    ],
+    "answer": "c3",
+    "hint": "舉起你的右手，右手那一邊就是右邊。找找看，哪一張圖裡的小雞在沙發的右邊？",
+    "params": {"rel":"right"}
+  },
+  {
+    "id": "space-3-17", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "找找看，星星在箱子的右邊是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"right"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-crate","subject":"obj-star","rel":"left"}}
+    ],
+    "answer": "c1",
+    "hint": "舉起你的右手，右手那一邊就是右邊。找找看，哪一張圖裡的星星在箱子的右邊？",
+    "params": {"rel":"right"}
+  },
+  {
+    "id": "space-3-18", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "找找看，蘋果在帳篷的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-apple","rel":"left"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-apple","rel":"above"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-apple","rel":"below"}}
+    ],
+    "answer": "c2",
+    "hint": "上面，就是在帳篷的頭頂上。找找看，哪一張圖裡的蘋果在帳篷的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-3-19", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "找找看，葡萄在沙發的左邊是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-beanbag","subject":"obj-grape","rel":"right"}},
+      {"id":"c2","scene":{"anchor":"decor-beanbag","subject":"obj-grape","rel":"below"}},
+      {"id":"c3","scene":{"anchor":"decor-beanbag","subject":"obj-grape","rel":"left"}}
+    ],
+    "answer": "c3",
+    "hint": "舉起你的左手，左手那一邊就是左邊。找找看，哪一張圖裡的葡萄在沙發的左邊？",
+    "params": {"rel":"left"}
+  },
+  {
+    "id": "space-3-20", "skill": "space", "difficulty": 3, "type": "where", "version": 2,
+    "prompt": "哪一張圖，貝殼在帳篷的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"left"}},
+      {"id":"c3","scene":{"anchor":"decor-tent","subject":"obj-shell","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在帳篷的腳底下。找找看，哪一張圖裡的貝殼在帳篷的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-3-21", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把小魚送到帳篷的左邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在帳篷的左邊。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-fish","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"left","of":0},{"id":"z3","rel":"right","of":0},{"id":"z4","rel":"above","of":0}],"target":"z2","rel":"left","of":0}
+  },
+  {
+    "id": "space-3-22", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把小兔子放在帳篷的右邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在帳篷的右邊。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"left","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"right","of":0},{"id":"z4","rel":"below","of":0}],"target":"z3","rel":"right","of":0}
+  },
+  {
+    "id": "space-3-23", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把貝殼放到帳篷的左邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "貝殼要放在帳篷的左邊。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-shell","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"left","of":0},{"id":"z4","rel":"right","of":0}],"target":"z3","rel":"left","of":0}
+  },
+  {
+    "id": "space-3-24", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把星星放在箱子的右邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "星星要放在箱子的右邊。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-star","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"left","of":0},{"id":"z4","rel":"right","of":0}],"target":"z4","rel":"right","of":0}
+  },
+  {
+    "id": "space-3-25", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把貝殼放在桌子的右邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "貝殼要放在桌子的右邊。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"anchors":["decor-table"],"subject":"obj-shell","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"left","of":0},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"right","of":0}],"target":"z4","rel":"right","of":0}
+  },
+  {
+    "id": "space-3-26", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把小魚放在桌子的右邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在桌子的右邊。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"anchors":["decor-table"],"subject":"obj-fish","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"right","of":0},{"id":"z3","rel":"left","of":0},{"id":"z4","rel":"above","of":0}],"target":"z2","rel":"right","of":0}
+  },
+  {
+    "id": "space-3-27", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把小雞送到桌子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小雞要放在桌子的下面。下面，就是在桌子的腳底下。",
+    "params": {"anchors":["decor-table"],"subject":"obj-chick","zones":[{"id":"z1","rel":"left","of":0},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"right","of":0},{"id":"z4","rel":"above","of":0}],"target":"z2","rel":"below","of":0}
+  },
+  {
+    "id": "space-3-28", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把蘋果放到箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-apple","zones":[{"id":"z1","rel":"right","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"left","of":0},{"id":"z4","rel":"below","of":0}],"target":"z4","rel":"below","of":0}
+  },
+  {
+    "id": "space-3-29", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把葡萄放到帳篷的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "葡萄要放在帳篷的上面。上面，就是在帳篷的頭頂上。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-grape","zones":[{"id":"z1","rel":"right","of":0},{"id":"z2","rel":"left","of":0},{"id":"z3","rel":"above","of":0},{"id":"z4","rel":"below","of":0}],"target":"z3","rel":"above","of":0}
+  },
+  {
+    "id": "space-3-30", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把花放在帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-flower","zones":[{"id":"z1","rel":"right","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"left","of":0},{"id":"z4","rel":"below","of":0}],"target":"z4","rel":"below","of":0}
+  },
+  {
+    "id": "space-3-31", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把貝殼送到箱子的左邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "貝殼要放在箱子的左邊。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-shell","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"left","of":0},{"id":"z3","rel":"right","of":0},{"id":"z4","rel":"above","of":0}],"target":"z2","rel":"left","of":0}
+  },
+  {
+    "id": "space-3-32", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把星星送到沙發的右邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "星星要放在沙發的右邊。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"anchors":["decor-beanbag"],"subject":"obj-star","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"left","of":0},{"id":"z4","rel":"right","of":0}],"target":"z4","rel":"right","of":0}
+  },
+  {
+    "id": "space-3-33", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小兔子放到沙發的左邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在沙發的左邊。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"anchors":["decor-beanbag"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"left","of":0},{"id":"z3","rel":"right","of":0},{"id":"z4","rel":"above","of":0}],"target":"z2","rel":"left","of":0}
+  },
+  {
+    "id": "space-3-34", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把香蕉放到沙發的左邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "香蕉要放在沙發的左邊。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"anchors":["decor-beanbag"],"subject":"obj-banana","zones":[{"id":"z1","rel":"left","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"right","of":0},{"id":"z4","rel":"below","of":0}],"target":"z1","rel":"left","of":0}
+  },
+  {
+    "id": "space-3-35", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把蘋果放在帳篷的左邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在帳篷的左邊。舉起你的左手，左手那一邊就是左邊。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-apple","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"left","of":0},{"id":"z4","rel":"right","of":0}],"target":"z3","rel":"left","of":0}
+  },
+  {
+    "id": "space-3-36", "skill": "space", "difficulty": 3, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把桃子放在帳篷的右邊。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "桃子要放在帳篷的右邊。舉起你的右手，右手那一邊就是右邊。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-peach","zones":[{"id":"z1","rel":"right","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"left","of":0}],"target":"z1","rel":"right","of":0}
+  },
+  {
+    "id": "space-4-01", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "在最中間的是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "先數一數有幾個，再找最中間的那一個。",
+    "params": {"pos":"middle"}
+  },
+  {
+    "id": "space-4-02", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "排在最中間的是哪一個？",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-peach",
+    "hint": "先數一數有幾個，再找最中間的那一個。",
+    "params": {"pos":"middle"}
+  },
+  {
+    "id": "space-4-03", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "在最中間的是哪一個？",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-peach",
+    "hint": "先數一數有幾個，再找最中間的那一個。",
+    "params": {"pos":"middle"}
+  },
+  {
+    "id": "space-4-04", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "排在最中間的是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-dino",
+    "hint": "先數一數有幾個，再找最中間的那一個。",
+    "params": {"pos":"middle"}
+  },
+  {
+    "id": "space-4-05", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "在最中間的是哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"decor-ball","obj":"decor-ball"}
+    ],
+    "answer": "decor-piano",
+    "hint": "先數一數有幾個，再找最中間的那一個。",
+    "params": {"pos":"middle"}
+  },
+  {
+    "id": "space-4-06", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "排在最中間的是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "decor-dino",
+    "hint": "先數一數有幾個，再找最中間的那一個。",
+    "params": {"pos":"middle"}
+  },
+  {
+    "id": "space-4-07", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "排在最左邊的是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-piano","obj":"decor-piano"}
+    ],
+    "answer": "decor-car",
+    "hint": "舉起你的左手，左手那一邊，最旁邊的那一個。",
+    "params": {"pos":"first"}
+  },
+  {
+    "id": "space-4-08", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "最左邊的是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "舉起你的左手，左手那一邊，最旁邊的那一個。",
+    "params": {"pos":"first"}
+  },
+  {
+    "id": "space-4-09", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "排在最左邊的是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "舉起你的左手，左手那一邊，最旁邊的那一個。",
+    "params": {"pos":"first"}
+  },
+  {
+    "id": "space-4-10", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "最左邊的是哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-shell",
+    "hint": "舉起你的左手，左手那一邊，最旁邊的那一個。",
+    "params": {"pos":"first"}
+  },
+  {
+    "id": "space-4-11", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "排在最右邊的是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-peach",
+    "hint": "舉起你的右手，右手那一邊，最旁邊的那一個。",
+    "params": {"pos":"last"}
+  },
+  {
+    "id": "space-4-12", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "最右邊的是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-ball","obj":"decor-ball"}
+    ],
+    "answer": "decor-ball",
+    "hint": "舉起你的右手，右手那一邊，最旁邊的那一個。",
+    "params": {"pos":"last"}
+  },
+  {
+    "id": "space-4-13", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "排在最右邊的是哪一個？",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-star"},
+      {"obj":"decor-piano"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-piano","obj":"decor-piano"}
+    ],
+    "answer": "decor-piano",
+    "hint": "舉起你的右手，右手那一邊，最旁邊的那一個。",
+    "params": {"pos":"last"}
+  },
+  {
+    "id": "space-4-14", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "最右邊的是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-piano","obj":"decor-piano"}
+    ],
+    "answer": "decor-dino",
+    "hint": "舉起你的右手，右手那一邊，最旁邊的那一個。",
+    "params": {"pos":"last"}
+  },
+  {
+    "id": "space-4-15", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "從左邊數過來，第四個是哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-star",
+    "hint": "從最左邊開始，一個一個數：一、二、三、四。數到第四個停下來。",
+    "params": {"pos":"nth","nth":4}
+  },
+  {
+    "id": "space-4-16", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "從左邊開始數，第二個是誰？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-banana",
+    "hint": "從最左邊開始，一個一個數：一、二。數到第二個停下來。",
+    "params": {"pos":"nth","nth":2}
+  },
+  {
+    "id": "space-4-17", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "從左邊數過來，第三個是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-shell",
+    "hint": "從最左邊開始，一個一個數：一、二、三。數到第三個停下來。",
+    "params": {"pos":"nth","nth":3}
+  },
+  {
+    "id": "space-4-18", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "從左邊開始數，第四個是誰？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-car"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "從最左邊開始，一個一個數：一、二、三、四。數到第四個停下來。",
+    "params": {"pos":"nth","nth":4}
+  },
+  {
+    "id": "space-4-19", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "從左邊數過來，第二個是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"decor-car"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "decor-car",
+    "hint": "從最左邊開始，一個一個數：一、二。數到第二個停下來。",
+    "params": {"pos":"nth","nth":2}
+  },
+  {
+    "id": "space-4-20", "skill": "space", "difficulty": 4, "type": "row", "version": 2,
+    "prompt": "從左邊開始數，第三個是誰？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "從最左邊開始，一個一個數：一、二、三。數到第三個停下來。",
+    "params": {"pos":"nth","nth":3}
+  },
+  {
+    "id": "space-4-21", "skill": "space", "difficulty": 4, "type": "whereIs", "version": 2,
+    "prompt": "小兔子在星星的左邊還是右邊？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"left","text":"左邊"},
+      {"id":"right","text":"右邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到星星，再看小兔子排在哪一邊。舉起你的右手，右手那一邊就是右邊。"
+  },
+  {
+    "id": "space-4-22", "skill": "space", "difficulty": 4, "type": "whereIs", "version": 2,
+    "prompt": "看一看，花是排在桃子的左邊，還是右邊？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"left","text":"左邊"},
+      {"id":"right","text":"右邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到桃子，再看花排在哪一邊。舉起你的左手，左手那一邊就是左邊。"
+  },
+  {
+    "id": "space-4-23", "skill": "space", "difficulty": 4, "type": "whereIs", "version": 2,
+    "prompt": "恐龍在蘋果的左邊還是右邊？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到蘋果，再看恐龍排在哪一邊。舉起你的右手，右手那一邊就是右邊。"
+  },
+  {
+    "id": "space-4-24", "skill": "space", "difficulty": 4, "type": "whereIs", "version": 2,
+    "prompt": "看一看，貝殼是排在葡萄的左邊，還是右邊？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到葡萄，再看貝殼排在哪一邊。舉起你的左手，左手那一邊就是左邊。"
+  },
+  {
+    "id": "space-4-25", "skill": "space", "difficulty": 4, "type": "whereIs", "version": 2,
+    "prompt": "香蕉在小雞的左邊還是右邊？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到小雞，再看香蕉排在哪一邊。舉起你的右手，右手那一邊就是右邊。"
+  },
+  {
+    "id": "space-4-26", "skill": "space", "difficulty": 4, "type": "whereIs", "version": 2,
+    "prompt": "看一看，恐龍是排在花的左邊，還是右邊？",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到花，再看恐龍排在哪一邊。舉起你的左手，左手那一邊就是左邊。"
+  },
+  {
+    "id": "space-4-27", "skill": "space", "difficulty": 4, "type": "whereIs", "version": 2,
+    "prompt": "皮球在火箭的左邊還是右邊？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "right",
+    "hint": "先找到火箭，再看皮球排在哪一邊。舉起你的右手，右手那一邊就是右邊。"
+  },
+  {
+    "id": "space-4-28", "skill": "space", "difficulty": 4, "type": "whereIs", "version": 2,
+    "prompt": "看一看，星星是排在桃子的左邊，還是右邊？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"right","text":"右邊"},
+      {"id":"left","text":"左邊"}
+    ],
+    "answer": "left",
+    "hint": "先找到桃子，再看星星排在哪一邊。舉起你的左手，左手那一邊就是左邊。"
+  },
+  {
+    "id": "space-4-29", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把花放到沙發的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在沙發的下面。下面，就是在沙發的腳底下。",
+    "params": {"anchors":["decor-table","decor-beanbag"],"subject":"obj-flower","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":1},{"id":"z3","rel":"above","of":0},{"id":"z4","rel":"between"},{"id":"z5","rel":"below","of":1}],"target":"z5","rel":"below","of":1}
+  },
+  {
+    "id": "space-4-30", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小魚放到沙發的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在沙發的上面。上面，就是在沙發的頭頂上。",
+    "params": {"anchors":["decor-crate","decor-beanbag"],"subject":"obj-fish","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"between"},{"id":"z4","rel":"below","of":1},{"id":"z5","rel":"above","of":1}],"target":"z5","rel":"above","of":1}
+  },
+  {
+    "id": "space-4-31", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "請把香蕉放在小床和桌子的中間。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "香蕉要放在小床和桌子的中間。中間，就是在兩個東西的正中央。",
+    "params": {"anchors":["decor-bed","decor-table"],"subject":"obj-banana","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":1},{"id":"z3","rel":"between"},{"id":"z4","rel":"below","of":1},{"id":"z5","rel":"above","of":0}],"target":"z3","rel":"between"}
+  },
+  {
+    "id": "space-4-32", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把桃子放在箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "桃子要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-table","decor-crate"],"subject":"obj-peach","zones":[{"id":"z1","rel":"above","of":1},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"between"},{"id":"z4","rel":"above","of":0},{"id":"z5","rel":"below","of":0}],"target":"z2","rel":"below","of":1}
+  },
+  {
+    "id": "space-4-33", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把蘋果放到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-crate","decor-tent"],"subject":"obj-apple","zones":[{"id":"z1","rel":"above","of":1},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"below","of":1},{"id":"z5","rel":"between"}],"target":"z4","rel":"below","of":1}
+  },
+  {
+    "id": "space-4-34", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小兔子放到小床的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在小床的上面。上面，就是在小床的頭頂上。",
+    "params": {"anchors":["decor-table","decor-bed"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"above","of":1},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"below","of":0},{"id":"z4","rel":"above","of":0},{"id":"z5","rel":"between"}],"target":"z1","rel":"above","of":1}
+  },
+  {
+    "id": "space-4-35", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把葡萄放到小床的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "葡萄要放在小床的上面。上面，就是在小床的頭頂上。",
+    "params": {"anchors":["decor-table","decor-bed"],"subject":"obj-grape","zones":[{"id":"z1","rel":"above","of":1},{"id":"z2","rel":"above","of":0},{"id":"z3","rel":"below","of":1},{"id":"z4","rel":"below","of":0},{"id":"z5","rel":"between"}],"target":"z1","rel":"above","of":1}
+  },
+  {
+    "id": "space-4-36", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把蘋果放在小床的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在小床的下面。下面，就是在小床的腳底下。",
+    "params": {"anchors":["decor-bed","decor-crate"],"subject":"obj-apple","zones":[{"id":"z1","rel":"between"},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"above","of":1},{"id":"z4","rel":"below","of":0},{"id":"z5","rel":"above","of":0}],"target":"z4","rel":"below","of":0}
+  },
+  {
+    "id": "space-4-37", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把貝殼放在沙發的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "貝殼要放在沙發的下面。下面，就是在沙發的腳底下。",
+    "params": {"anchors":["decor-tent","decor-beanbag"],"subject":"obj-shell","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":1},{"id":"z3","rel":"between"},{"id":"z4","rel":"below","of":1},{"id":"z5","rel":"above","of":0}],"target":"z4","rel":"below","of":1}
+  },
+  {
+    "id": "space-4-38", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把小雞放到沙發和小床的中間。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小雞要放在沙發和小床的中間。中間，就是在兩個東西的正中央。",
+    "params": {"anchors":["decor-beanbag","decor-bed"],"subject":"obj-chick","zones":[{"id":"z1","rel":"below","of":1},{"id":"z2","rel":"between"},{"id":"z3","rel":"above","of":0},{"id":"z4","rel":"below","of":0},{"id":"z5","rel":"above","of":1}],"target":"z2","rel":"between"}
+  },
+  {
+    "id": "space-4-39", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把小兔子放在沙發的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在沙發的下面。下面，就是在沙發的腳底下。",
+    "params": {"anchors":["decor-beanbag","decor-table"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"between"},{"id":"z3","rel":"above","of":0},{"id":"z4","rel":"above","of":1},{"id":"z5","rel":"below","of":1}],"target":"z1","rel":"below","of":0}
+  },
+  {
+    "id": "space-4-40", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把香蕉放到沙發和桌子的中間。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "香蕉要放在沙發和桌子的中間。中間，就是在兩個東西的正中央。",
+    "params": {"anchors":["decor-beanbag","decor-table"],"subject":"obj-banana","zones":[{"id":"z1","rel":"above","of":1},{"id":"z2","rel":"below","of":1},{"id":"z3","rel":"above","of":0},{"id":"z4","rel":"between"},{"id":"z5","rel":"below","of":0}],"target":"z4","rel":"between"}
+  },
+  {
+    "id": "space-4-41", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "把星星放到帳篷和桌子的中間。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "星星要放在帳篷和桌子的中間。中間，就是在兩個東西的正中央。",
+    "params": {"anchors":["decor-tent","decor-table"],"subject":"obj-star","zones":[{"id":"z1","rel":"above","of":1},{"id":"z2","rel":"between"},{"id":"z3","rel":"above","of":0},{"id":"z4","rel":"below","of":0},{"id":"z5","rel":"below","of":1}],"target":"z2","rel":"between"}
+  },
+  {
+    "id": "space-4-42", "skill": "space", "difficulty": 4, "type": "place", "version": 2, "interaction": "place",
+    "prompt": "幫忙把花放在小床的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在小床的下面。下面，就是在小床的腳底下。",
+    "params": {"anchors":["decor-bed","decor-tent"],"subject":"obj-flower","zones":[{"id":"z1","rel":"below","of":1},{"id":"z2","rel":"below","of":0},{"id":"z3","rel":"between"},{"id":"z4","rel":"above","of":0},{"id":"z5","rel":"above","of":1}],"target":"z2","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-g01", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "哪一張圖，葡萄在帳篷的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-grape","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-grape","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在帳篷的腳底下。找找看，哪一張圖裡的葡萄在帳篷的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g02", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "找找看，小兔子在沙發的下面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-beanbag","subject":"obj-rabbit","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-beanbag","subject":"obj-rabbit","rel":"below"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在沙發的腳底下。找找看，哪一張圖裡的小兔子在沙發的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g03", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "哪一張圖，花在小床的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-bed","subject":"obj-flower","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-bed","subject":"obj-flower","rel":"below"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在小床的腳底下。找找看，哪一張圖裡的花在小床的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g04", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "小雞在帳篷的下面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-chick","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-chick","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在帳篷的腳底下。找找看，哪一張圖裡的小雞在帳篷的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g05", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "找找看，小魚在桌子的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-table","subject":"obj-fish","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-table","subject":"obj-fish","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "上面，就是在桌子的頭頂上。找找看，哪一張圖裡的小魚在桌子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-g06", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "哪一張圖，香蕉在沙發的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-beanbag","subject":"obj-banana","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-beanbag","subject":"obj-banana","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在沙發的腳底下。找找看，哪一張圖裡的香蕉在沙發的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g07", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "哪一張圖，小魚在小床的上面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-bed","subject":"obj-fish","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-bed","subject":"obj-fish","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "上面，就是在小床的頭頂上。找找看，哪一張圖裡的小魚在小床的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-g08", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "哪一張圖，小兔子在沙發的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-beanbag","subject":"obj-rabbit","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-beanbag","subject":"obj-rabbit","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在沙發的腳底下。找找看，哪一張圖裡的小兔子在沙發的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g09", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "哪一張圖，桃子在帳篷的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-peach","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在帳篷的腳底下。找找看，哪一張圖裡的桃子在帳篷的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g10", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "找找看，小雞在沙發的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-beanbag","subject":"obj-chick","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-beanbag","subject":"obj-chick","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "上面，就是在沙發的頭頂上。找找看，哪一張圖裡的小雞在沙發的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-g11", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "找找看，花在箱子的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的花在箱子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-g12", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "找找看，香蕉在小床的下面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-bed","subject":"obj-banana","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-bed","subject":"obj-banana","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在小床的腳底下。找找看，哪一張圖裡的香蕉在小床的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g13", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "花在箱子的上面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-flower","rel":"below"}}
+    ],
+    "answer": "c1",
+    "hint": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的花在箱子的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-g14", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "哪一張圖，小雞在桌子的下面？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-table","subject":"obj-chick","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-table","subject":"obj-chick","rel":"below"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在桌子的腳底下。找找看，哪一張圖裡的小雞在桌子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g15", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "香蕉在帳篷的上面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-tent","subject":"obj-banana","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-tent","subject":"obj-banana","rel":"above"}}
+    ],
+    "answer": "c2",
+    "hint": "上面，就是在帳篷的頭頂上。找找看，哪一張圖裡的香蕉在帳篷的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-g16", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "小兔子在箱子的下面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-crate","subject":"obj-rabbit","rel":"below"}},
+      {"id":"c2","scene":{"anchor":"decor-crate","subject":"obj-rabbit","rel":"above"}}
+    ],
+    "answer": "c1",
+    "hint": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的小兔子在箱子的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g17", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "小魚在小床的下面，是哪一張圖？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-bed","subject":"obj-fish","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-bed","subject":"obj-fish","rel":"below"}}
+    ],
+    "answer": "c2",
+    "hint": "下面，就是在小床的腳底下。找找看，哪一張圖裡的小魚在小床的下面？",
+    "params": {"rel":"below"}
+  },
+  {
+    "id": "space-1-g18", "skill": "space", "difficulty": 1, "type": "where", "version": 2, "gentle": true,
+    "prompt": "找找看，葡萄在沙發的上面是哪一張？",
+    "items": [],
+    "choices": [
+      {"id":"c1","scene":{"anchor":"decor-beanbag","subject":"obj-grape","rel":"above"}},
+      {"id":"c2","scene":{"anchor":"decor-beanbag","subject":"obj-grape","rel":"below"}}
+    ],
+    "answer": "c1",
+    "hint": "上面，就是在沙發的頭頂上。找找看，哪一張圖裡的葡萄在沙發的上面？",
+    "params": {"rel":"above"}
+  },
+  {
+    "id": "space-1-g19", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把小雞放在小床的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小雞要放在小床的上面。上面，就是在小床的頭頂上。",
+    "params": {"anchors":["decor-bed"],"subject":"obj-chick","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g20", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "把小兔子放到帳篷的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在帳篷的上面。上面，就是在帳篷的頭頂上。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g21", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "請把小魚送到沙發的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在沙發的下面。下面，就是在沙發的腳底下。",
+    "params": {"anchors":["decor-beanbag"],"subject":"obj-fish","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z1","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-g22", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "把貝殼放到沙發的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "貝殼要放在沙發的上面。上面，就是在沙發的頭頂上。",
+    "params": {"anchors":["decor-beanbag"],"subject":"obj-shell","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g23", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把花放在沙發的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在沙發的上面。上面，就是在沙發的頭頂上。",
+    "params": {"anchors":["decor-beanbag"],"subject":"obj-flower","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g24", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把香蕉放在小床的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "香蕉要放在小床的下面。下面，就是在小床的腳底下。",
+    "params": {"anchors":["decor-bed"],"subject":"obj-banana","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z1","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-g25", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "請把星星送到沙發的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "星星要放在沙發的上面。上面，就是在沙發的頭頂上。",
+    "params": {"anchors":["decor-beanbag"],"subject":"obj-star","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g26", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "把花放到小床的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "花要放在小床的上面。上面，就是在小床的頭頂上。",
+    "params": {"anchors":["decor-bed"],"subject":"obj-flower","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g27", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "請把蘋果送到沙發的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在沙發的下面。下面，就是在沙發的腳底下。",
+    "params": {"anchors":["decor-beanbag"],"subject":"obj-apple","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z1","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-g28", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把葡萄放在桌子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "葡萄要放在桌子的下面。下面，就是在桌子的腳底下。",
+    "params": {"anchors":["decor-table"],"subject":"obj-grape","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":0}],"target":"z2","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-g29", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把小魚放在箱子的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小魚要放在箱子的下面。下面，就是在箱子的腳底下。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-fish","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":0}],"target":"z2","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-g30", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "請把小雞送到帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小雞要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-chick","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z1","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-g31", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把星星放在桌子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "星星要放在桌子的上面。上面，就是在桌子的頭頂上。",
+    "params": {"anchors":["decor-table"],"subject":"obj-star","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g32", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把桃子放在帳篷的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "桃子要放在帳篷的上面。上面，就是在帳篷的頭頂上。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-peach","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g33", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把蘋果放在箱子的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在箱子的上面。上面，就是在箱子的頭頂上。",
+    "params": {"anchors":["decor-crate"],"subject":"obj-apple","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":0}],"target":"z1","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g34", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "把蘋果放到小床的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "蘋果要放在小床的上面。上面，就是在小床的頭頂上。",
+    "params": {"anchors":["decor-bed"],"subject":"obj-apple","zones":[{"id":"z1","rel":"below","of":0},{"id":"z2","rel":"above","of":0}],"target":"z2","rel":"above","of":0}
+  },
+  {
+    "id": "space-1-g35", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "幫忙把小兔子放在帳篷的下面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "小兔子要放在帳篷的下面。下面，就是在帳篷的腳底下。",
+    "params": {"anchors":["decor-tent"],"subject":"obj-rabbit","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":0}],"target":"z2","rel":"below","of":0}
+  },
+  {
+    "id": "space-1-g36", "skill": "space", "difficulty": 1, "type": "place", "version": 2, "interaction": "place", "gentle": true,
+    "prompt": "把香蕉放到小床的上面。",
+    "items": [],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "香蕉要放在小床的上面。上面，就是在小床的頭頂上。",
+    "params": {"anchors":["decor-bed"],"subject":"obj-banana","zones":[{"id":"z1","rel":"above","of":0},{"id":"z2","rel":"below","of":0}],"target":"z1","rel":"above","of":0}
+  }
+]

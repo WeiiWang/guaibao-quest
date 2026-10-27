@@ -1,11 +1,15 @@
 /** 學習系統的型別（題目、作答、進度） */
 
-export type SkillId = 'number' | 'classify' | 'pattern' | 'english'
+export type SkillId = 'number' | 'classify' | 'pattern' | 'measure' | 'space' | 'observe' | 'english'
 export type Difficulty = 1 | 2 | 3 | 4
 /** 全部技能（家長報告、作答統計、技能狀態都看這份） */
-export const SKILLS: SkillId[] = ['number', 'classify', 'pattern', 'english']
-/** 數學科目的三個技能：一站混合這三種（英文科目只有 english 一種，見 subject.ts） */
+export const SKILLS: SkillId[] = ['number', 'classify', 'pattern', 'measure', 'space', 'observe', 'english']
+/** 數學第 1 章（花果山）的三個技能：一站混合這三種（英文科目只有 english 一種，見 subject.ts） */
 export const MATH_SKILLS: SkillId[] = ['number', 'classify', 'pattern']
+/** 數學第 2 章（水簾洞）的三個新技能：比較與排序、空間方位、觀察與記憶 */
+export const MATH2_SKILLS: SkillId[] = ['measure', 'space', 'observe']
+/** 數學科目全部的技能（每日冒險與家長報告用） */
+export const MATH_ALL_SKILLS: SkillId[] = [...MATH_SKILLS, ...MATH2_SKILLS]
 export const DIFFICULTIES: Difficulty[] = [1, 2, 3, 4]
 export const MAX_DIFFICULTY: Difficulty = 4
 
@@ -13,6 +17,9 @@ export const SKILL_NAMES: Record<SkillId, string> = {
   number: '數感',
   classify: '分類',
   pattern: '規律',
+  measure: '比較與排序',
+  space: '空間方位',
+  observe: '觀察與記憶',
   english: '英文單字',
 }
 
@@ -38,6 +45,16 @@ export const SKILL_NAMES: Record<SkillId, string> = {
  * - pic2en：看圖（物件、色塊或數字），選出英文單字
  * - zh2en：聽中文，選出英文單字
  * - spell：看圖補上缺的那個字母
+ * - bigger：比大小、長短、高矮（同一個物件用 CSS 縮放成不同大小）
+ * - order：由小排到大（長短、高矮也一樣），拖曳排序
+ * - where：哪一張圖裡，東西在某個位置（選項是小場景卡片）
+ * - whereIs：看場景，東西在上面還是下面（選項是文字加箭頭）
+ * - row：一排東西，哪一個在最中間／最左邊／第幾個
+ * - place：把東西放到某個位置（拖曳到發光的位置）
+ * - recall：快閃記憶，剛剛出現的是哪一個
+ * - gone：什麼不見了
+ * - spot：找不一樣的那一個（顏色或方向不同）
+ * - flip：記憶翻牌，找出一樣的兩張
  */
 export type QuestionType =
   | 'count'
@@ -60,6 +77,16 @@ export type QuestionType =
   | 'pic2en'
   | 'zh2en'
   | 'spell'
+  | 'bigger'
+  | 'order'
+  | 'where'
+  | 'whereIs'
+  | 'row'
+  | 'place'
+  | 'recall'
+  | 'gone'
+  | 'spot'
+  | 'flip'
 
 /**
  * 互動方式。每種互動自己判斷對錯，再對應成 firstTryCorrect / hintsUsed，
@@ -67,8 +94,11 @@ export type QuestionType =
  * - pick：點選選項卡（預設，舊題庫沒有這個欄位）
  * - tapN：拿給我 N 個（點選或拖曳放進籃子，按「好了」確認）
  * - dragSort：拖曳歸類（點選物件再點籃子也可以）
+ * - dragOrder：拖曳排序（點選物件再點格子也可以）
+ * - place：放到某個位置（點選物件再點位置也可以）
+ * - flip：記憶翻牌（點牌翻開，找出一樣的兩張）
  */
-export type Interaction = 'pick' | 'tapN' | 'dragSort'
+export type Interaction = 'pick' | 'tapN' | 'dragSort' | 'dragOrder' | 'place' | 'flip'
 
 /** 題幹上的物件。obj 為 null 代表空格 */
 export interface Visual {
@@ -79,6 +109,28 @@ export interface Visual {
   label?: string | null
   /** 兩堆比較時用顏色區分：blue / orange */
   tone?: 'blue' | 'orange'
+  /** 比大小與排序：用 CSS 縮放的倍率（0.3–1） */
+  scale?: number
+}
+
+/** 小場景：一個東西相對於家具的位置（空間方位題的選項卡片、題幹） */
+export type Rel = 'above' | 'below' | 'inside' | 'outside' | 'left' | 'right' | 'between'
+export interface SceneSpec {
+  /** 家具（見 space.ts 的 PROPS） */
+  anchor: string
+  /** 東西（obj-* 物件 id） */
+  subject: string
+  rel: Rel
+}
+
+/** 找不一樣：和別人不同的地方（沒有欄位 = 和大家一樣） */
+export interface Variant {
+  /** 色相旋轉（度） */
+  hue?: number
+  /** 轉一個角度（度）：180 = 倒過來 */
+  rot?: number
+  /** 變灰色 */
+  gray?: boolean
 }
 
 /** 選項：物件卡片（obj，可含 count 代表一堆）或數字卡片（label） */
@@ -93,6 +145,24 @@ export interface Choice {
   art?: string
   swatch?: string
   text?: string
+  /** 比大小：縮放倍率與比較的方向（size = 整個放大縮小、height = 高矮、length = 長短） */
+  scale?: number
+  dim?: MeasureDim
+  /** 找不一樣：這張卡和別人不同的地方 */
+  variant?: Variant
+  /** 空間方位：小場景卡片 */
+  scene?: SceneSpec
+}
+
+/** 比較的方向 */
+export type MeasureDim = 'size' | 'height' | 'length'
+
+/** 放到某個位置：一個可以放的位置（相對於第幾個家具） */
+export interface PlaceZone {
+  id: string
+  rel: Rel
+  /** 相對於第幾個家具（0 起算）；between 兩個家具中間不用填 */
+  of?: number
 }
 
 /** 拖曳歸類的籃子 */
@@ -140,6 +210,33 @@ export interface QuestionParams {
   /** spell：缺一個字母的樣子，例如 c_t；缺的位置 */
   pattern?: string
   blankAt?: number
+  /** order：由小排到大（asc）還是由大排到小（desc）；bigger：問大的（max）還是小的（min） */
+  dir?: 'asc' | 'desc'
+  /** order：依答案的順序，每格該放的物件編號（items 的索引；items 是洗過牌的） */
+  order?: number[]
+  /** bigger / order：比較的方向 */
+  dim?: MeasureDim
+  /** bigger：問最大（或最長、最高）還是最小 */
+  ask?: 'max' | 'min'
+  /** whereIs：題幹的小場景 */
+  scene?: SceneSpec
+  /** row：問第幾個、最中間、最左邊、最右邊 */
+  pos?: 'middle' | 'first' | 'last' | 'nth'
+  nth?: number
+  /** place：場景（家具與東西）、可以放的位置、正確的位置 */
+  anchors?: string[]
+  subject?: string
+  zones?: PlaceZone[]
+  target?: string
+  /** place：要放到哪一個關係（對應 target 位置） */
+  rel?: Rel
+  /** place / whereIs / where：相對於第幾個家具 */
+  of?: number
+  /** flip：幾欄幾列（items 依序是每張牌的圖，每種圖剛好兩張） */
+  cols?: number
+  rows?: number
+  /** gone：不見的是題幹的第幾個 */
+  goneAt?: number
 }
 
 export interface Question {
@@ -153,7 +250,7 @@ export interface Question {
   prompt: string
   items: Visual[]
   choices: Choice[]
-  /** 正確選項的 id（give 題是要拿的個數；bins 題是 'sorted'） */
+  /** 正確選項的 id（give 題是要拿的個數；bins、order、place 題是 'sorted'；flip 題是 'matched'） */
   answer: string
   /** 提示（語音與字幕） */
   hint: string

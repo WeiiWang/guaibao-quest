@@ -1,4 +1,5 @@
-import type { Interaction, MaterialCost, MaterialId } from './types'
+import type { Interaction, MaterialCost, MaterialId, Progress, SkillId } from './types'
+import { MATH2_SKILLS, MATH_SKILLS } from './types'
 
 /**
  * 站型：決定這一站 5 題的節奏。
@@ -27,6 +28,16 @@ export interface ChapterDef {
   stations: StationDef[]
   /** 章末寶箱的額外材料 */
   chest: MaterialCost
+  /** 這一章要先通關哪一章才開放（沒寫 = 一開始就開放）。這是章節選擇裡唯一的鎖 */
+  unlockAfter?: string
+  /** 這一章一站會混合哪些技能（沒寫 = 科目的預設技能，見 subject.ts） */
+  skills?: SkillId[]
+  /** 每站最後一題從這些技能抽（輪流）：新章節裡保留少量舊章節技能的複習 */
+  tail?: SkillId[]
+  /** 地圖背景圖（public/art/<scene>.png）；沒有就用花果山的地圖換色調 */
+  scene?: string
+  /** 站點與寶箱在背景圖上的位置（佔場景寬高的 %，5 站 + 寶箱）；只在用到自己的背景圖時才用，沒有就是花果山的位置 */
+  points?: [number, number][]
 }
 
 export const HUAGUOSHAN: ChapterDef = {
@@ -58,13 +69,53 @@ export const ENGLISH_ISLAND: ChapterDef = {
   chest: { wood: 2, stone: 2, flower: 2 },
 }
 
-export const CHAPTERS: ChapterDef[] = [HUAGUOSHAN, ENGLISH_ISLAND]
+/**
+ * 數學第二章：水簾洞。花果山通關後解鎖。
+ * 一站 5 題：前 4 題輪流出三個新技能（比較與排序、空間方位、觀察與記憶），最後 1 題是第 1 章技能的複習。
+ * 三種新互動（排序、放到位置、翻牌）分散在各站，第一次遇到時阿悟先示範。
+ */
+export const SHUILIANDONG: ChapterDef = {
+  id: 'shuiliandong',
+  name: '水簾洞',
+  subtitle: '第二章',
+  unlockAfter: 'huaguoshan',
+  skills: MATH2_SKILLS,
+  tail: MATH_SKILLS,
+  scene: 'scene-map-shuiliandong',
+  // 對應 scene-map-shuiliandong.png 裡的石板小路：由左下角出發，過小溪、瀑布旁的石階，爬到右上角的水簾洞口
+  points: [[10, 84], [24, 76], [40, 72], [56, 56], [75, 40], [87, 19]],
+  stations: [
+    { index: 1, name: '水簾洞口', material: 'flower', kind: 'tutorial', slots: ['pick', 'dragOrder', 'pick', 'pick', 'pick'] },
+    { index: 2, name: '石橋', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'place', 'pick', 'pick'] },
+    { index: 3, name: '石桌石椅', material: 'stone', kind: 'minigame', slots: ['pick', 'flip', 'pick', 'dragOrder', 'pick'] },
+    { index: 4, name: '猴子大廳', material: 'flower', kind: 'normal', slots: ['place', 'pick', 'pick', 'flip', 'pick'] },
+    { index: 5, name: '美猴王寶座', material: 'stone', kind: 'boss', slots: ['dragOrder', 'place', 'pick', 'flip', 'pick'] },
+  ],
+  chest: { wood: 3, stone: 2, flower: 3 },
+}
+
+export const CHAPTERS: ChapterDef[] = [HUAGUOSHAN, SHUILIANDONG, ENGLISH_ISLAND]
 
 /** 還沒開放的章節（數學科目的地圖上顯示「即將開放」；其他科目見 subject.ts） */
 export const UPCOMING_CHAPTERS = [
-  { id: 'shuilian', name: '水簾洞' },
+  { id: 'putishan', name: '菩提山' },
   { id: 'longgong', name: '龍宮' },
 ]
+
+/** 這一章通關了嗎：5 站都過，或是已經開過寶箱（再玩一輪時關卡重置，但 completedRuns 還在） */
+export function chapterCleared(prog: Pick<Progress, 'stations' | 'completedRuns'> | undefined): boolean {
+  if (!prog) return false
+  return prog.completedRuns > 0 || (prog.stations.length > 0 && prog.stations.every((s) => s.done))
+}
+
+/**
+ * 這一章開放了嗎。沒有前置章節就是開放；有的話要先通關前一章，或家長（PM 預覽）直接解鎖。
+ * progs：各章節進度（章節 id → 進度）；pmUnlocked：直接解鎖的章節 id。
+ */
+export function chapterUnlocked(ch: ChapterDef, progs: Readonly<Record<string, Pick<Progress, 'stations' | 'completedRuns'> | undefined>>, pmUnlocked: readonly string[] = []): boolean {
+  if (!ch.unlockAfter) return true
+  return pmUnlocked.includes(ch.id) || chapterCleared(progs[ch.unlockAfter])
+}
 
 export function getChapter(id: string): ChapterDef | undefined {
   return CHAPTERS.find((c) => c.id === id)

@@ -188,6 +188,8 @@ export interface Settings {
   collectionRewarded?: number
   /** v5：待慶祝的新招（依序跳全螢幕慶祝，關掉後移除） */
   pendingTricks?: string[]
+  /** v6：家長（PM 預覽）直接解鎖的章節 id（正常是通關前一章才解鎖） */
+  unlockedChapters?: string[]
 }
 
 /** 年齡檔：3 歲 = 幼幼模式；4–5 歲從難度 1；6–7 歲從難度 2 */

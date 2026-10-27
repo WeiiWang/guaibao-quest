@@ -83,10 +83,23 @@ export type BehaviorId =
   | 'trickRhythm'
   | 'trickHello'
   | 'trickFlip'
+  // v6：數學第 2 章的新招
+  | 'trickHeight'
+  | 'trickHide'
+  | 'trickMemory'
 
-export const TRICK_BEHAVIORS = ['trickCount', 'trickTidy', 'trickRhythm', 'trickHello', 'trickFlip'] as const satisfies readonly BehaviorId[]
+export const TRICK_BEHAVIORS = ['trickCount', 'trickTidy', 'trickRhythm', 'trickHello', 'trickFlip', 'trickHeight', 'trickHide', 'trickMemory'] as const satisfies readonly BehaviorId[]
 /** 新招 id（domain/tricks.ts）→ 行為 id */
-export const TRICK_BEHAVIOR: Record<TrickId, BehaviorId> = { count: 'trickCount', tidy: 'trickTidy', rhythm: 'trickRhythm', hello: 'trickHello', flip: 'trickFlip' }
+export const TRICK_BEHAVIOR: Record<TrickId, BehaviorId> = {
+  count: 'trickCount',
+  tidy: 'trickTidy',
+  rhythm: 'trickRhythm',
+  hello: 'trickHello',
+  flip: 'trickFlip',
+  height: 'trickHeight',
+  hide: 'trickHide',
+  memory: 'trickMemory',
+}
 
 export const BEHAVIOR_IDS: readonly BehaviorId[] = [
   'sing', 'dance', 'walk', 'yawn', 'sneeze', 'gaze', 'wave', 'rubTummy', 'pinchNose', 'ballPlay', 'eggWobble', 'eggSparkle',
@@ -348,6 +361,76 @@ export function planBehavior(id: BehaviorId, env: PlanEnv): Scene {
           step(2300, { do: 'sound', sound: 'sparkle' }),
           step(2300, { do: 'say', text: '耶！', ms: 800 }),
           step(2900, { do: 'anim', anim: null }),
+        ],
+      }
+    case 'trickHeight':
+      // 量身高：先蹲下變矮，再跳起來變高（用現有的蹲下、彈跳動畫）
+      return {
+        id,
+        kind: 'behavior',
+        ms: 3500,
+        steps: [
+          step(0, { do: 'flip', on: false }),
+          step(0, { do: 'pose', pose: 'idle' }),
+          step(0, { do: 'anim', anim: 'squat' }),
+          step(150, { do: 'say', text: '矮矮的', ms: 1000 }),
+          step(150, { do: 'voice', text: '矮矮的' }),
+          step(1300, { do: 'anim', anim: null }),
+          step(1330, { do: 'pose', pose: 'cheer' }),
+          step(1330, { do: 'anim', anim: 'bounce' }),
+          step(1350, { do: 'say', text: '高高！', ms: 1000 }),
+          step(1350, { do: 'voice', text: '高高！' }),
+          step(1350, { do: 'sound', sound: 'boing' }),
+          step(2500, { do: 'fx', fx: 'sparkles', ms: 800 }),
+          step(2500, { do: 'sound', sound: 'sparkle' }),
+          step(3400, { do: 'anim', anim: null }),
+        ],
+      }
+    case 'trickHide':
+      // 捉迷藏：用手蓋住臉躲起來，再跳出來「找到我了」
+      return {
+        id,
+        kind: 'behavior',
+        ms: 3600,
+        steps: [
+          step(0, { do: 'flip', on: false }),
+          step(0, { do: 'pose', pose: 'shy' }),
+          step(0, { do: 'anim', anim: 'wobble' }),
+          step(150, { do: 'say', text: '我躲起來囉', ms: 1500 }),
+          step(150, { do: 'voice', text: '我躲起來囉' }),
+          step(1900, { do: 'anim', anim: null }),
+          step(1930, { do: 'pose', pose: 'happy' }),
+          step(1930, { do: 'anim', anim: 'bounce' }),
+          step(1950, { do: 'say', text: '找到我了！', ms: 1300 }),
+          step(1950, { do: 'voice', text: '找到我了！' }),
+          step(1950, { do: 'sound', sound: 'giggle' }),
+          step(1950, { do: 'fx', fx: 'hearts', ms: 1200 }),
+          step(3500, { do: 'anim', anim: null }),
+        ],
+      }
+    case 'trickMemory':
+      // 記憶魔術：香蕉出現、消失，轉一圈再變回來
+      return {
+        id,
+        kind: 'behavior',
+        ms: 4000,
+        steps: [
+          step(0, { do: 'flip', on: false }),
+          step(0, { do: 'pose', pose: 'idle' }),
+          step(0, { do: 'anim', anim: 'gaze' }),
+          step(100, { do: 'say', icon: 'obj-banana', ms: 900 }),
+          step(100, { do: 'voice', text: '記住囉' }),
+          step(100, { do: 'sound', sound: 'pop' }),
+          step(1200, { do: 'say', text: '？', ms: 800 }),
+          step(1200, { do: 'sound', sound: 'pop' }),
+          step(2100, { do: 'anim', anim: null }),
+          step(2130, { do: 'pose', pose: 'happy' }),
+          step(2130, { do: 'anim', anim: 'spin' }),
+          step(2200, { do: 'say', icon: 'obj-banana', ms: 1200 }),
+          step(2200, { do: 'voice', text: '是香蕉！' }),
+          step(2200, { do: 'fx', fx: 'sparkles', ms: 1200 }),
+          step(2200, { do: 'sound', sound: 'sparkle' }),
+          step(3500, { do: 'anim', anim: null }),
         ],
       }
     case 'eggWobble':

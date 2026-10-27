@@ -2,13 +2,13 @@
 // 只「讀」skillState 與章節進度，不改學習邏輯。純函式。
 import type { Difficulty, SkillState } from '../learning/types'
 
-export type TrickId = 'count' | 'tidy' | 'rhythm' | 'hello' | 'flip'
+export type TrickId = 'count' | 'tidy' | 'rhythm' | 'hello' | 'flip' | 'height' | 'hide' | 'memory'
 
 export interface TrickDef {
   id: TrickId
   name: string
   emoji: string
-  /** 數感 / 分類 / 規律 / 英文：該技能難度升級或首次 mastered 就學會；chapter：通關第一章 */
+  /** 數感 / 分類 / 規律 / 比較與排序 / 空間方位 / 觀察與記憶 / 英文：該技能難度升級或首次 mastered 就學會；chapter：通關第一章 */
   unlock: { skill: string } | { chapter: string }
   /** 一句話說明（家長看的） */
   hint: string
@@ -24,6 +24,10 @@ export const TRICKS: TrickDef[] = [
   // 英文科目還沒上線；技能 id 先預留成 'english'，上線後自然生效
   { id: 'hello', name: '說 Hello', emoji: '👋', unlock: { skill: 'english' }, hint: '英文進步了：阿悟揮手說 Hello' },
   { id: 'flip', name: '翻筋斗', emoji: '🤸', unlock: { chapter: FIRST_CHAPTER_ID }, hint: '通關第一章：阿悟翻筋斗' },
+  // v6 數學第 2 章的三個新技能
+  { id: 'height', name: '量身高', emoji: '📏', unlock: { skill: 'measure' }, hint: '比較與排序進步了：阿悟蹲下又站高，比比誰高' },
+  { id: 'hide', name: '捉迷藏', emoji: '🙈', unlock: { skill: 'space' }, hint: '空間方位進步了：阿悟躲起來又跳出來' },
+  { id: 'memory', name: '記憶魔術', emoji: '🎩', unlock: { skill: 'observe' }, hint: '觀察與記憶進步了：阿悟讓香蕉消失又變回來' },
 ]
 
 export const TRICK_IDS: TrickId[] = TRICKS.map((t) => t.id)

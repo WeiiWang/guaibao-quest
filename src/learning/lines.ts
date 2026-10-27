@@ -61,6 +61,16 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'bins.hint': '把東西放進對的籃子裡。',
   'bins.wrong': '這個不是這一籃喔，再試試看。',
   'bins.done': '都放好了！',
+  // v6 排序：把東西排進格子
+  'order.wrong': '這一格不是它喔，再想一想。',
+  'order.done': '排好了！',
+  // v6 放到某個位置
+  'place.wrong': '不是這裡喔，再試試看。',
+  'place.done': '放好了！',
+  // v6 記憶翻牌
+  'flip.match': ['一樣！找到了！', '配對成功！', '哇，一樣的！'],
+  'flip.miss': '不一樣喔，記住它們在哪裡。',
+  'flip.done': '全部都找到了！',
   'audio.test': '數一數，有幾根香蕉？',
   'lock.sleepy': '我想睡覺了，明天再一起冒險吧',
   'ceremony.done': '今天的冒險完成了！',
@@ -81,10 +91,15 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'companion.boss.done': ['我們一起完成了！', '好多好多星星！'],
   'companion.tutorial.give': ['看我拿一個，再拿一個。', '拿到剛好，就按好了。'],
   'companion.tutorial.bins': ['看我把它放進籃子裡。', '你也來試試看。'],
+  'companion.tutorial.order': ['看我把最小的放在第一格。', '你也來排排看。'],
+  'companion.tutorial.place': ['看我把它放到亮亮的位置。', '你也來試試看。'],
+  'companion.tutorial.flip': ['看我翻開兩張牌。', '你也來翻翻看。'],
   // 介面旁白（非阿悟）：成功回饋、首頁引導、地圖提示、著色本價格。用 sayText(文字) 依文字找音檔
   'ui.feedback': ['買到囉！', '做好了！', '好棒喔！', '乾淨了！', '放好了！', '好，退回囉'],
   'ui.home.guide': '我們去冒險吧',
   'ui.map': ['這一站過關囉，好棒！', '還沒到喔，先去前面的站', '寶箱還鎖著，通關五站就能打開喔'],
+  // v6 章節選擇
+  'ui.chapter': ['水簾洞還沒開，先通關花果山喔', '水簾洞開門囉！'],
   'ui.coloring.price': ['這張要用30顆星星，在商店換喔', '這張要用40顆星星，在商店換喔'],
   // v5 禮物：阿悟拿出禮物時說的話（句型見 src/domain/giftLines.ts，兩邊要一字不差，gifts.test.ts 會檢查）
   'ui.gift.daily': '今天的小禮物！',
@@ -107,7 +122,12 @@ export const STATIC_LINES: Record<string, string | string[]> = {
     '阿悟學會了新本領：節奏舞！',
     '阿悟學會了新本領：說 Hello！',
     '阿悟學會了新本領：翻筋斗！',
+    '阿悟學會了新本領：量身高！',
+    '阿悟學會了新本領：捉迷藏！',
+    '阿悟學會了新本領：記憶魔術！',
   ],
+  // v6 新招表演時阿悟說的話（pet/plan.ts 的 voice，兩邊要一字不差，有單元測試）
+  'ui.trick.say': ['矮矮的', '高高！', '我躲起來囉', '找到我了！', '記住囉', '是香蕉！'],
   // v5 圖鑑：點一下唸名字（物件名稱；英文名稱等英文科目上線後再加）
   'ui.friend.name': ['香蕉', '桃子', '蘋果', '葡萄', '小魚', '小雞', '小兔子', '花', '貝殼', '星星', '汽車', '火箭', '皮球', '恐龍', '鋼琴'],
   // v5 結束儀式：遊玩時間剩 2 分鐘

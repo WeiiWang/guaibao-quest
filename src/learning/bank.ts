@@ -1,6 +1,9 @@
 import numberJson from './content/number.json'
 import classifyJson from './content/classify.json'
 import patternJson from './content/pattern.json'
+import measureJson from './content/measure.json'
+import spaceJson from './content/space.json'
+import observeJson from './content/observe.json'
 import englishJson from './content/english.json'
 import type { Difficulty, Question, SkillId } from './types'
 
@@ -9,6 +12,9 @@ export const QUESTIONS: Question[] = [
   ...(numberJson as unknown as Question[]),
   ...(classifyJson as unknown as Question[]),
   ...(patternJson as unknown as Question[]),
+  ...(measureJson as unknown as Question[]),
+  ...(spaceJson as unknown as Question[]),
+  ...(observeJson as unknown as Question[]),
   ...(englishJson as unknown as Question[]),
 ]
 
