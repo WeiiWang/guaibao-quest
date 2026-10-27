@@ -16,6 +16,7 @@ import { Icon } from '../components/Icon'
 import { RoomView } from '../components/RoomView'
 import { usePetFace } from '../components/PetSprite'
 import { useBalance } from '../hooks'
+import { PersonSwitch } from '../../profiles/PersonSwitch'
 import type { Screen } from '../App'
 import type { Pet } from '../../domain/types'
 
@@ -30,9 +31,9 @@ interface Props {
 function Avatar({ pet, now }: { pet: Pet; now: number }) {
   const face = usePetFace(pet, moodAt(pet, now))
   return (
-    <span className="avatar" aria-hidden>
+    <PersonSwitch pet={pet}>
       {face ? <Art name={face} className="avatar-img" /> : <span className="avatar-emoji">🐵</span>}
-    </span>
+    </PersonSwitch>
   )
 }
 

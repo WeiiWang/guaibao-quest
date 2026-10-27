@@ -1,0 +1,53 @@
+/* 選孩子畫面 */
+.picker { min-height: 100dvh; display: grid; align-content: center; justify-items: center; gap: 24px; padding: 24px 16px; background: var(--cream, #fff8e8); }
+.picker-title { margin: 0; font-size: 2rem; text-align: center; }
+.picker-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; width: 100%; max-width: 900px; }
+.picker-card {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: min(240px, 42vw);
+  min-width: 150px;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 18px 12px 16px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 6px 0 var(--butter-deep, #e8c66a), 0 10px 18px rgba(74, 59, 53, 0.12);
+  transition: transform 0.12s;
+}
+.picker-card:hover { transform: translateY(-3px); }
+.picker-card:active { transform: translateY(4px) scale(0.97); box-shadow: 0 2px 0 var(--butter-deep, #e8c66a); }
+.picker-card:focus-visible { outline: 4px solid var(--mint-deep, #5cb89a); outline-offset: 3px; }
+.picker-face { width: 150px; height: 150px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: linear-gradient(160deg, var(--butter-soft, #fff3c4), var(--peach-soft, #ffe0d0)); box-shadow: inset 0 0 0 5px #fff; }
+.picker-face .picker-pet { width: 130px; height: 130px; display: grid; place-items: center; }
+.picker-face .pet-img { width: 100%; height: 100%; object-fit: contain; }
+.picker-emoji { font-size: 4.4rem; line-height: 1; }
+.picker-name { font-size: 1.6rem; font-weight: 900; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 520px) {
+  .picker-face { width: 110px; height: 110px; }
+  .picker-face .picker-pet { width: 96px; height: 96px; }
+  .picker-name { font-size: 1.3rem; }
+  .picker-title { font-size: 1.6rem; }
+}
+
+/* 首頁頭像變成按鈕（換人玩） */
+button.avatar-btn { border: 0; padding: 0; cursor: pointer; font: inherit; color: inherit; }
+button.avatar-btn:active { transform: scale(0.94); }
+button.avatar-btn:focus-visible { outline: 3px solid var(--mint-deep, #5cb89a); outline-offset: 2px; }
+
+/* 換人確認 */
+.switch-ask { display: grid; justify-items: center; gap: 10px; }
+.switch-ask .switch-pet { width: 150px; height: 150px; display: grid; place-items: center; }
+.switch-ask .pet-img { width: 100%; height: 100%; object-fit: contain; }
+.switch-say { margin: 0; font-size: 1.3rem; font-weight: 800; text-align: center; }
+.switch-actions { display: grid; gap: 8px; width: 100%; }
+
+/* 家長：孩子們 */
+.kid-list { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 8px; }
+.kid-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border-radius: 14px; background: rgba(74, 59, 53, 0.05); }
+.kid-avatar { font-size: 1.8rem; line-height: 1; }
+.kid-info { display: grid; flex: 1 1 8em; min-width: 0; }
+.kid-info small { opacity: 0.7; }
+.kid-warn { color: var(--warn, #c0392b); font-weight: 800; text-align: center; margin: 4px 0 12px; }
