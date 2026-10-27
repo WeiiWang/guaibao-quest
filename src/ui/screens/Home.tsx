@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { repo } from '../../db/repo'
 import { learningSettingsOf } from '../../learning/playtime'
-import { speak } from '../../learning/speech'
+import { sayText } from '../../learning/speech'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { localDateStr } from '../../domain/date'
@@ -100,7 +100,7 @@ export function Home({ childName, now, go, initialEdit }: Props) {
   const guideVoiceOn = learningSettingsOf(settings).voiceOn
   useEffect(() => {
     if (!showGuide) return
-    speak('我們去冒險吧', { enabled: guideVoiceOn })
+    sayText('我們去冒險吧', { enabled: guideVoiceOn })
     const t = window.setTimeout(() => void repo.markHomeGuideShown(), 15_000)
     return () => window.clearTimeout(t)
     // 只在引導開始時說一次

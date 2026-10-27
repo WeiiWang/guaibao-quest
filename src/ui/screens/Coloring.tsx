@@ -27,7 +27,7 @@ import { Modal } from '../components/Modal'
 import { Icon } from '../components/Icon'
 import { useToast } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
-import { speak } from '../../learning/speech'
+import { sayText } from '../../learning/speech'
 import { SHOP_ITEMS } from '../../domain/constants'
 import { playChime, playPop } from '../sounds'
 import { PaintBoard, type PaintTool } from './coloring/PaintBoard'
@@ -76,7 +76,7 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
     setShaking(id)
     window.setTimeout(() => setShaking((v) => (v === id ? null : v)), 520)
     setGuide({ id, name, price })
-    speak(`這張要用${price}顆星星，在商店換喔`, { enabled: voiceOn })
+    sayText(`這張要用${price}顆星星，在商店換喔`, { enabled: voiceOn })
   }
 
   return (

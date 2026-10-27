@@ -10,7 +10,7 @@ import { MaterialsChip } from '../../components/MaterialsChip'
 import { useArtStatus } from '../../artProbe'
 import { useToast } from '../../hooks'
 import { useLearningSettings } from '../../learningHooks'
-import { speak } from '../../../learning/speech'
+import { sayText } from '../../../learning/speech'
 import type { Screen } from '../../App'
 import { Companion } from './Companion'
 import './adventure.css'
@@ -68,7 +68,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
     window.clearTimeout(wobbleTimer.current)
     setWobble(key)
     wobbleTimer.current = window.setTimeout(() => setWobble(null), 560)
-    speak(say, { enabled: voiceOn })
+    sayText(say, { enabled: voiceOn })
   }
 
   const run = prog?.run

@@ -78,6 +78,11 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'companion.boss.done': ['我們一起完成了！', '好多好多星星！'],
   'companion.tutorial.give': ['看我拿一個，再拿一個。', '拿到剛好，就按好了。'],
   'companion.tutorial.bins': ['看我把它放進籃子裡。', '你也來試試看。'],
+  // 介面旁白（非阿悟）：成功回饋、首頁引導、地圖提示、著色本價格。用 sayText(文字) 依文字找音檔
+  'ui.feedback': ['買到囉！', '做好了！', '好棒喔！', '乾淨了！', '放好了！', '好，退回囉'],
+  'ui.home.guide': '我們去冒險吧',
+  'ui.map': ['這一站過關囉，好棒！', '還沒到喔，先去前面的站', '寶箱還鎖著，通關五站就能打開喔'],
+  'ui.coloring.price': ['這張要用30顆星星，在商店換喔', '這張要用40顆星星，在商店換喔'],
 }
 
 /** 取出固定台詞的所有句子：key → 文字 */

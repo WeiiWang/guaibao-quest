@@ -5,7 +5,7 @@ import { repo } from '../../db/repo'
 import { canCraft, craftableOf } from '../../learning/materials'
 import { THEME_DEFS, themesOf, ownsTheme, sortThemesByCost } from '../../domain/theme'
 import { MATERIAL_IDS, MATERIAL_NAMES } from '../../learning/types'
-import { speak } from '../../learning/speech'
+import { sayText } from '../../learning/speech'
 import type { MaterialCost } from '../../learning/types'
 import { DECOR_EMOJI, MAT_EMOJI } from '../../art/items'
 import type { ShopItem, ThemeSlot } from '../../domain/types'
@@ -105,7 +105,7 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
   const explainShort = (id: string, short: Partial<MaterialCost>) => {
     setShaking(id)
     window.setTimeout(() => setShaking((v) => (v === id ? null : v)), 520)
-    speak(shortSpeech(short), { enabled: voiceOn })
+    sayText(shortSpeech(short), { enabled: voiceOn })
   }
 
   const qtyOf = (id: string) => inventory.find((v) => v.itemId === id)?.qty ?? 0

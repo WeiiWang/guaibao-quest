@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { playSfx } from '../learning/sfx'
-import { speak } from '../learning/speech'
+import { sayText } from '../learning/speech'
 import { peekArt } from './artProbe'
 import { useLearningSettings } from './learningHooks'
 import './ux.css'
@@ -123,7 +123,7 @@ export function celebrateSmall(kind: FeedbackKind, opts: FeedbackOpts = {}): { s
       playSfx(spec.sfx, true)
       sound = true
     }
-    voice = speak(opts.phrase ?? spec.phrase, { enabled: voiceOn })
+    voice = sayText(opts.phrase ?? spec.phrase, { enabled: voiceOn })
     if (typeof document !== 'undefined') particles = burst(kind, spec, originOf(opts.at))
     window.dispatchEvent(new CustomEvent('gq-feedback', { detail: { kind, sound, voice, particles } }))
   } catch {
