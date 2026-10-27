@@ -1,9 +1,9 @@
 /** 學習系統的型別（題目、作答、進度） */
 
-export type SkillId = 'number' | 'classify' | 'pattern' | 'english'
+export type SkillId = 'number' | 'classify' | 'pattern' | 'english' | 'life' | 'nature'
 export type Difficulty = 1 | 2 | 3 | 4
 /** 全部技能（家長報告、作答統計、技能狀態都看這份） */
-export const SKILLS: SkillId[] = ['number', 'classify', 'pattern', 'english']
+export const SKILLS: SkillId[] = ['number', 'classify', 'pattern', 'english', 'life', 'nature']
 /** 數學科目的三個技能：一站混合這三種（英文科目只有 english 一種，見 subject.ts） */
 export const MATH_SKILLS: SkillId[] = ['number', 'classify', 'pattern']
 export const DIFFICULTIES: Difficulty[] = [1, 2, 3, 4]
@@ -14,6 +14,8 @@ export const SKILL_NAMES: Record<SkillId, string> = {
   classify: '分類',
   pattern: '規律',
   english: '英文單字',
+  life: '生活禮儀',
+  nature: '自然常識',
 }
 
 /**
@@ -38,6 +40,23 @@ export const SKILL_NAMES: Record<SkillId, string> = {
  * - pic2en：看圖（物件、色塊或數字），選出英文單字
  * - zh2en：聽中文，選出英文單字
  * - spell：看圖補上缺的那個字母
+ * 生活與禮儀（v6）：
+ * - lifeSee：哪一張是在做某件事（看圖找動作，3 歲也適用）
+ * - lifeRight：哪一個是對的做法（兩到四張情境圖，選對的那一張）
+ * - lifeOk：阿悟這樣好不好呢（看一張圖，選「好」或「不好」）
+ * - lifeSay：這時候要說什麼（謝謝、對不起、請、不客氣）
+ * - lifeLight：紅綠燈（紅燈要停還是走）
+ * - lifeStep：洗手要先做什麼（步驟的第一步或最後一步）
+ * - lifeWhy：為什麼要這樣做（選出理由）
+ * - lifeOrder：步驟排序（互動是 stepOrder）
+ * 自然常識（v6）：
+ * - natWeather：天氣圖配對
+ * - natBring：天氣要帶什麼（雨傘、太陽眼鏡、外套）
+ * - natSeason：四季（看圖說季節、依特徵找季節、什麼季節下雪）
+ * - natHome：動物住哪裡（選場景；拖曳版是 bins）
+ * - natPlant：植物（種子、發芽、開花、植物需要什麼）
+ * - natAnimal：動物的特徵與認識
+ * - natOrder：四季或植物生長的排序（互動是 stepOrder）
  */
 export type QuestionType =
   | 'count'
@@ -60,6 +79,21 @@ export type QuestionType =
   | 'pic2en'
   | 'zh2en'
   | 'spell'
+  | 'lifeSee'
+  | 'lifeRight'
+  | 'lifeOk'
+  | 'lifeSay'
+  | 'lifeLight'
+  | 'lifeStep'
+  | 'lifeWhy'
+  | 'lifeOrder'
+  | 'natWeather'
+  | 'natBring'
+  | 'natSeason'
+  | 'natHome'
+  | 'natPlant'
+  | 'natAnimal'
+  | 'natOrder'
 
 /**
  * 互動方式。每種互動自己判斷對錯，再對應成 firstTryCorrect / hintsUsed，
@@ -67,8 +101,9 @@ export type QuestionType =
  * - pick：點選選項卡（預設，舊題庫沒有這個欄位）
  * - tapN：拿給我 N 個（點選或拖曳放進籃子，按「好了」確認）
  * - dragSort：拖曳歸類（點選物件再點籃子也可以）
+ * - stepOrder：把幾張卡片依順序放進格子（洗手步驟、四季、植物生長；點卡片會放進下一格，也可以拖到格子）
  */
-export type Interaction = 'pick' | 'tapN' | 'dragSort'
+export type Interaction = 'pick' | 'tapN' | 'dragSort' | 'stepOrder'
 
 /** 題幹上的物件。obj 為 null 代表空格 */
 export interface Visual {
@@ -93,6 +128,10 @@ export interface Choice {
   art?: string
   swatch?: string
   text?: string
+  /** 生活／自然科目：文字選項旁邊的圖示（emoji）。有 art 的選項缺圖時也用 ART_EMOJI 補 */
+  emoji?: string
+  /** 生活／自然科目：圖片選項的替代文字（螢幕閱讀器用） */
+  alt?: string
 }
 
 /** 拖曳歸類的籃子 */
@@ -104,6 +143,8 @@ export interface Bin {
   obj?: string
   /** 依顏色分的籃子：色票（CSS 顏色） */
   swatch?: string
+  /** 自然科目：籃子的場景圖（public/art 的檔名，例如 nat-sea） */
+  art?: string
 }
 
 /** 各題型自己的參數（產生器寫入，介面據此畫提示與互動） */
@@ -136,7 +177,14 @@ export interface QuestionParams {
   /** 英文單字的中文意思（zh2en 的題目與提示用） */
   zh?: string
   /** 英文科目題幹上的圖（物件圖檔名、色塊或數字），沒有就是不顯示圖 */
-  stem?: { art?: string; swatch?: string; digit?: string }
+  stem?: { art?: string; swatch?: string; digit?: string; emoji?: string }
+  /**
+   * 生活／自然科目：這一題考的事實，格式「<類型>:<內容>」（例如 bring:rain、home:obj-fish、say:thanks）。
+   * 單元測試用另一份獨立的對照表，從這個標記重新算出唯一正解。
+   */
+  fact?: string
+  /** stepOrder：正確順序（選項 id 由第一步到最後一步）；choices 是打散後的卡片 */
+  order?: string[]
   /** spell：缺一個字母的樣子，例如 c_t；缺的位置 */
   pattern?: string
   blankAt?: number
@@ -228,7 +276,7 @@ export interface SkillState {
 }
 
 /** 科目 id。之後加科目（生活、注音、自然…）就在 subject.ts 的清單加一筆 */
-export type SubjectId = 'math' | 'english'
+export type SubjectId = 'math' | 'english' | 'life' | 'nature'
 
 /** 每日冒險的一天 */
 export interface DailyDay {

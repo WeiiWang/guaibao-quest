@@ -31,6 +31,8 @@ export type AnimId =
   | 'flip'
   /** v5：跟著節拍原地小跳 */
   | 'hop'
+  /** v6：有禮貌地鞠躬（往前彎腰再起身） */
+  | 'bow'
 export type FxId = 'notes' | 'sparkles' | 'cloud' | 'hearts' | 'bigHearts' | 'orbit' | 'glow'
 export type SceneKind = 'eat' | 'poop' | 'behavior' | 'reaction'
 
@@ -83,10 +85,11 @@ export type BehaviorId =
   | 'trickRhythm'
   | 'trickHello'
   | 'trickFlip'
+  | 'trickBow'
 
-export const TRICK_BEHAVIORS = ['trickCount', 'trickTidy', 'trickRhythm', 'trickHello', 'trickFlip'] as const satisfies readonly BehaviorId[]
+export const TRICK_BEHAVIORS = ['trickCount', 'trickTidy', 'trickRhythm', 'trickHello', 'trickFlip', 'trickBow'] as const satisfies readonly BehaviorId[]
 /** 新招 id（domain/tricks.ts）→ 行為 id */
-export const TRICK_BEHAVIOR: Record<TrickId, BehaviorId> = { count: 'trickCount', tidy: 'trickTidy', rhythm: 'trickRhythm', hello: 'trickHello', flip: 'trickFlip' }
+export const TRICK_BEHAVIOR: Record<TrickId, BehaviorId> = { count: 'trickCount', tidy: 'trickTidy', rhythm: 'trickRhythm', hello: 'trickHello', flip: 'trickFlip', bow: 'trickBow' }
 
 export const BEHAVIOR_IDS: readonly BehaviorId[] = [
   'sing', 'dance', 'walk', 'yawn', 'sneeze', 'gaze', 'wave', 'rubTummy', 'pinchNose', 'ballPlay', 'eggWobble', 'eggSparkle',
@@ -328,6 +331,23 @@ export function planBehavior(id: BehaviorId, env: PlanEnv): Scene {
           step(300, { do: 'say', text: 'Hello!', ms: 2200 }),
           step(300, { do: 'sound', sound: 'giggle' }),
           step(300, { do: 'fx', fx: 'sparkles', ms: 2000 }),
+        ],
+      }
+    case 'trickBow':
+      // 有禮貌地鞠躬：站好、往前彎腰、停一下、起身，說「謝謝你！」（生活禮儀科目的新招）
+      return {
+        id,
+        kind: 'behavior',
+        ms: 3200,
+        steps: [
+          step(0, { do: 'flip', on: false }),
+          step(0, { do: 'pose', pose: 'happy' }),
+          step(300, { do: 'anim', anim: 'bow' }),
+          step(700, { do: 'say', text: '謝謝你！', ms: 1800 }),
+          step(700, { do: 'sound', sound: 'giggle' }),
+          step(2000, { do: 'fx', fx: 'sparkles', ms: 900 }),
+          step(2000, { do: 'sound', sound: 'sparkle' }),
+          step(3000, { do: 'anim', anim: null }),
         ],
       }
     case 'trickFlip':

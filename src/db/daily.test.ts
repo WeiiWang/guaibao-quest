@@ -34,10 +34,17 @@ async function answerAll(sessionId: string, plan: PlannedQuestion[], now: number
 const ids = (plan: PlannedQuestion[]) => plan.map((p) => p.question.id)
 
 describe('科目與每日冒險的 id', () => {
-  it('科目清單：數學（花果山，三個技能）與英文（英文小島，english 技能），可擴充', () => {
-    expect(SUBJECTS.map((s) => [s.id, s.name, s.chapter.id])).toEqual([['math', '數學', 'huaguoshan'], ['english', '英文', 'english-island']])
+  it('科目清單：數學（花果山，三個技能）、英文（英文小島）、生活（生活小鎮）、自然（自然森林），可擴充', () => {
+    expect(SUBJECTS.map((s) => [s.id, s.name, s.chapter.id])).toEqual([
+      ['math', '數學', 'huaguoshan'],
+      ['english', '英文', 'english-island'],
+      ['life', '生活', 'life-town'],
+      ['nature', '自然', 'nature-forest'],
+    ])
     expect(SUBJECTS[0].skills).toEqual(['number', 'classify', 'pattern'])
     expect(SUBJECTS[1].skills).toEqual(['english'])
+    expect(SUBJECTS[2].skills).toEqual(['life'])
+    expect(SUBJECTS[3].skills).toEqual(['nature'])
     for (const s of SUBJECTS) {
       expect(s.chapter.stations).toHaveLength(5)
       expect(s.chapter.stations[4].kind).toBe('boss')

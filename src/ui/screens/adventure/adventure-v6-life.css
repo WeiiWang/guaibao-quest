@@ -1,0 +1,117 @@
+/* v6 線 B：生活與禮儀、自然常識兩個科目。既有規則在 adventure*.css，這裡只新增（class 一律用 lw-、ord- 開頭，避免撞名） */
+
+/* ---------- 科目分頁的色系 ---------- */
+.adv-subject.tone-life { --tab-tone: var(--peach-deep); --tab-soft: var(--peach-soft); }
+.adv-subject.tone-nature { --tab-tone: var(--butter-deep); --tab-soft: var(--butter-soft); }
+.adv-subject.tone-nature .adv-subject-glyph { color: #4a3b35; }
+/* 四個分頁在手機上一排放不下：兩欄兩列 */
+@media (max-width: 560px) {
+  .adv-subjects { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .adv-subject { min-width: 0; min-height: 56px; padding: 4px 12px 4px 8px; gap: 8px; font-size: 1.15rem; }
+  .adv-subject-glyph { width: 42px; height: 42px; font-size: 0.95rem; border-radius: 14px; flex: none; }
+}
+
+/* ---------- 地圖：同一張場景轉色相，不需要新素材 ---------- */
+.adv-map.subject-life .adv-scroll { background: #fde3d0; box-shadow: 0 8px 0 color-mix(in srgb, var(--peach-deep) 40%, transparent), 0 16px 28px rgba(74, 59, 53, 0.14); }
+.adv-scene.scene-life { background: linear-gradient(180deg, #ffe3cf 0%, #fff1e4 46%, #ffd9c0 100%); }
+.adv-scene.scene-life.has-art { background: #fde3d0; }
+.adv-scene.scene-life.has-art::before { content: ''; position: absolute; inset: 0; z-index: 0; background: var(--map-bg) center / cover no-repeat; filter: hue-rotate(-38deg) saturate(1.05) brightness(1.04); }
+.adv-scene.scene-life .adv-hills .h1 { background: #ffd9a8; }
+.adv-scene.scene-life .adv-hills .h2 { background: #ffc98a; }
+.adv-scene.scene-life .adv-hills .h3 { background: #f6b46f; }
+.subject-life .adv-daily { --tone: var(--peach-deep); --tone-soft: var(--peach-soft); }
+
+.adv-map.subject-nature .adv-scroll { background: #e6f0b8; box-shadow: 0 8px 0 color-mix(in srgb, var(--butter-deep) 40%, transparent), 0 16px 28px rgba(74, 59, 53, 0.14); }
+.adv-scene.scene-nature { background: linear-gradient(180deg, #e7f4b6 0%, #f4fadc 46%, #d6ecaa 100%); }
+.adv-scene.scene-nature.has-art { background: #e6f0b8; }
+.adv-scene.scene-nature.has-art::before { content: ''; position: absolute; inset: 0; z-index: 0; background: var(--map-bg) center / cover no-repeat; filter: hue-rotate(-12deg) saturate(1.2) brightness(1.02); }
+.adv-scene.scene-nature .adv-hills .h1 { background: #b9e08a; }
+.adv-scene.scene-nature .adv-hills .h2 { background: #9fd479; }
+.adv-scene.scene-nature .adv-hills .h3 { background: #86c768; }
+.subject-nature .adv-daily { --tone: var(--butter-deep); --tone-soft: var(--butter-soft); }
+
+/* ---------- 生活與自然的點選題 ---------- */
+.qv-lw .lw-stem { flex: 1 1 auto; min-height: clamp(120px, 24dvh, 240px); }
+.lw-pic { display: grid; place-items: center; width: clamp(110px, 24dvh, 220px); aspect-ratio: 1; filter: drop-shadow(0 6px 4px rgba(90, 50, 20, 0.18)); animation: adv-pop 0.4s both; }
+.lw-pic .art, .lw-pic .art-emoji { width: 100%; height: 100%; }
+.lw-pic.lw-emoji { font-size: clamp(4.4rem, 14dvh, 7.6rem); line-height: 1; filter: none; }
+.lw-pic.lw-lamp { width: clamp(96px, 20dvh, 170px); border-radius: 50%; border: 8px solid #fff; box-shadow: 0 0 0 5px var(--ink-soft), 0 8px 0 rgba(0, 0, 0, 0.18); filter: none; }
+.lw-choice .lw-art { width: min(78cqw, 220px); aspect-ratio: auto; height: 100%; max-height: 100%; min-height: 0; display: grid; place-items: center; }
+.lw-choice .lw-art .art, .lw-choice .lw-art .art-emoji { width: 100%; height: 100%; }
+.lw-choice .lw-art { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+.lw-choice .lw-art .art { min-width: 0; min-height: 0; }
+.qv-lw.has-stem .lw-choice .lw-art { width: min(66cqw, 150px); }
+.qv-lw .qv-choices.lw-pics { grid-auto-rows: clamp(150px, 36dvh, 330px); }
+.qv-lw.has-stem .qv-choices.lw-pics { grid-auto-rows: clamp(130px, 24dvh, 220px); }
+.qv-lw .qv-choices.lw-words { grid-auto-rows: clamp(104px, 19dvh, 170px); }
+.lw-choice.lw-picture { grid-template-rows: minmax(0, 1fr) auto; gap: 8px; }
+.qv-lw.no-stem .lw-choice .lw-art { width: min(92cqw, 280px); }
+.lw-caption { font-weight: 900; font-size: 1.3rem; }
+.lw-choice.lw-word { grid-auto-flow: row; gap: 2px; }
+.lw-icon { font-size: clamp(2.4rem, 7.5dvh, 3.8rem); line-height: 1; }
+.lw-text { font-size: clamp(1.6rem, 4.6dvh, 2.3rem); font-weight: 900; letter-spacing: 0.02em; line-height: 1.2; text-align: center; word-break: keep-all; overflow-wrap: anywhere; }
+.qv-lw .qv-choices.lw-words.n2 { grid-template-columns: repeat(2, minmax(96px, 1fr)); }
+.qv-lw .qv-choices.lw-words.n3 { grid-template-columns: repeat(3, minmax(96px, 1fr)); }
+/* 理由、步驟這種比較長的文字選項：一格一列，字放小一點 */
+.qv-lifeWhy .qv-choices.lw-words, .qv-lifeStep .qv-choices.lw-words { grid-template-columns: 1fr; grid-auto-rows: minmax(84px, auto); }
+.qv-lifeWhy .lw-choice.lw-word, .qv-lifeStep .lw-choice.lw-word { grid-auto-flow: column; justify-content: start; justify-items: start; gap: 16px; padding: 10px 22px; }
+.qv-lifeWhy .lw-text, .qv-lifeStep .lw-text { text-align: left; font-size: clamp(1.25rem, 3.6dvh, 1.7rem); }
+.qv-lifeWhy .lw-icon, .qv-lifeStep .lw-icon { font-size: clamp(2rem, 6dvh, 3rem); }
+
+/* ---------- 步驟排序 ---------- */
+.ord { flex: 1; display: grid; grid-template-rows: auto 1fr; gap: 14px; align-content: center; min-height: 0; }
+.ord-slots { list-style: none; margin: 0; padding: 12px; display: flex; flex-wrap: nowrap; gap: 8px; justify-content: center; border-radius: 32px; background: rgba(255, 255, 255, 0.85); box-shadow: inset 0 3px 0 #fff, 0 5px 0 rgba(74, 59, 53, 0.06); }
+.ord-slot { position: relative; flex: 1 1 0; min-width: 0; max-width: 170px; min-height: clamp(96px, 19dvh, 160px); border-radius: 24px; border: 4px dashed var(--ink-soft); background: var(--butter-soft); display: grid; place-items: center; transition: background 0.15s, border-color 0.15s, transform 0.15s; }
+.ord-slot.filled { border-style: solid; border-color: var(--mint-deep); background: var(--mint-soft); }
+.ord-slot.over { border-color: var(--mint-deep); background: var(--mint-soft); transform: scale(1.04); }
+.ord-slot.demo { animation: adv-glow 0.9s ease-in-out infinite; border-color: var(--butter-deep); }
+.ord-no { position: absolute; top: -12px; left: -6px; z-index: 1; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 900; font-size: 1.2rem; display: grid; place-items: center; box-shadow: 0 0 0 3px #fff; }
+.ord-placed { display: grid; place-items: center; gap: 2px; width: 100%; padding: 4px; animation: adv-pop 0.35s cubic-bezier(0.3, 1.6, 0.6, 1) both; }
+.ord-tray { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-content: center; padding: 12px; min-height: clamp(120px, 24dvh, 200px); }
+.ord-card, .ord-gap { width: clamp(96px, 18vw, 150px); min-height: clamp(104px, 20dvh, 170px); border-radius: 26px; }
+.ord-card { border: 4px solid transparent; background: #fff; display: grid; place-items: center; align-content: center; gap: 4px; padding: 6px; color: var(--ink); box-shadow: 0 6px 0 rgba(74, 59, 53, 0.14), inset 0 3px 0 #fff; cursor: grab; transition: transform 0.12s; }
+.ord-card:active:not(:disabled) { transform: translateY(4px) scale(0.97); }
+.ord-card.dragging { opacity: 0.35; }
+.ord-card.bounce { animation: adv-shake 0.5s; border-color: var(--peach-deep); }
+.ord-card.demo { animation: adv-glow 0.9s ease-in-out infinite; border-color: var(--butter-deep); }
+.ord-gap { background: rgba(74, 59, 53, 0.06); }
+.ord-art { display: block; width: clamp(52px, 11dvh, 92px); aspect-ratio: 1; filter: drop-shadow(0 4px 3px rgba(90, 50, 20, 0.16)); }
+.ord-art.big { width: clamp(64px, 14dvh, 110px); }
+.ord-art .art, .ord-art .art-emoji { width: 100%; height: 100%; }
+.ord-slot .ord-art { width: clamp(44px, 8dvh, 72px); }
+.ord-emoji { font-size: clamp(2rem, 6dvh, 3rem); line-height: 1; }
+.ord-emoji.big { font-size: clamp(2.6rem, 8dvh, 4.2rem); }
+.ord-text { font-size: clamp(1rem, 2.6dvh, 1.3rem); font-weight: 900; line-height: 1.25; text-align: center; word-break: keep-all; overflow-wrap: anywhere; }
+.ord-slot .ord-text { font-size: clamp(0.9rem, 2.2dvh, 1.15rem); }
+
+/* 直向（iPad 直放）：沒有題幹的圖片選項長高一點，把空白用掉 */
+@media (max-aspect-ratio: 1 / 1) and (min-width: 481px) {
+  .qv-lw.no-stem .qv-choices.lw-pics { grid-auto-rows: clamp(240px, 42dvh, 440px); }
+}
+@media (max-width: 480px) {
+  .ord-slots { gap: 5px; padding: 10px 8px; }
+  .ord-slot { min-height: 92px; border-width: 3px; border-radius: 18px; }
+  .ord-no { width: 28px; height: 28px; font-size: 1rem; top: -10px; left: -4px; }
+  .ord-tray { gap: 8px; padding: 8px 4px; }
+  .ord-text, .ord-slot .ord-text { font-size: 0.95rem; }
+  .lw-caption { font-size: 1.05rem; }
+  .lw-text { font-size: clamp(1.3rem, 3.6dvh, 1.8rem); }
+  .sort-bin-head.scene { flex-direction: column; gap: 2px; }
+  .sort-bin-icon.sort-bin-scene { width: 64px; height: 50px; }
+  /* 手機：沒有題幹的圖片選項，兩張左右並排、三張以上一張一列（圖才看得清楚） */
+  .qv-lw.no-stem .qv-choices.lw-pics { grid-auto-rows: clamp(150px, 32dvh, 280px); }
+  .qv-lw.no-stem .qv-choices.lw-pics.n3 { grid-template-columns: 1fr; grid-auto-rows: clamp(104px, 19dvh, 160px); }
+  .qv-lw.no-stem .qv-choices.lw-pics.n3 .lw-choice.lw-picture { grid-template-rows: minmax(0, 1fr); }
+  .qv-lw.has-stem .qv-choices.lw-pics { grid-auto-rows: clamp(110px, 20dvh, 170px); }
+  .qv-lw.has-stem .lw-choice .lw-art { width: min(86cqw, 130px); }
+  /* 排序卡片：一排三張、小一點，五張也只佔兩排 */
+  .ord-card, .ord-gap { width: calc((100% - 16px) / 3); min-height: 84px; }
+  .ord-card .ord-art.big { width: 52px; }
+  .ord-card .ord-emoji.big { font-size: 2.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lw-pic, .ord-placed, .ord-card.demo, .ord-slot.demo, .ord-card.bounce { animation: none !important; }
+}
+
+/* 動物的家：籃子上的場景圖比一般籃子的小圖大一點 */
+.sort-bin-icon.sort-bin-scene { width: clamp(52px, 10dvh, 84px); height: clamp(40px, 8dvh, 64px); }

@@ -1,4 +1,4 @@
-import { ENGLISH_ISLAND, HUAGUOSHAN, UPCOMING_CHAPTERS, type ChapterDef, type StationDef } from './chapter'
+import { ENGLISH_ISLAND, HUAGUOSHAN, LIFE_TOWN, NATURE_FOREST, UPCOMING_CHAPTERS, type ChapterDef, type StationDef } from './chapter'
 import type { Interaction, MaterialId, SkillId, SubjectId } from './types'
 import { MATH_SKILLS } from './types'
 
@@ -20,6 +20,8 @@ export interface SubjectDef {
   upcoming: { id: string; name: string }[]
   /** 每日冒險 5 個位置的互動（沒有該互動的題就退回點選） */
   dailySlots: Interaction[]
+  /** 地圖頁的色系（styles.css 的 .theme-<名稱>） */
+  theme: 'mint' | 'sky' | 'peach' | 'butter'
 }
 
 export const SUBJECTS: SubjectDef[] = [
@@ -31,6 +33,7 @@ export const SUBJECTS: SubjectDef[] = [
     skills: MATH_SKILLS,
     upcoming: UPCOMING_CHAPTERS,
     dailySlots: ['pick', 'tapN', 'pick', 'dragSort', 'pick'],
+    theme: 'mint',
   },
   {
     id: 'english',
@@ -40,6 +43,27 @@ export const SUBJECTS: SubjectDef[] = [
     skills: ['english'],
     upcoming: [{ id: 'english-city', name: '單字城市' }],
     dailySlots: ['pick', 'pick', 'pick', 'pick', 'pick'],
+    theme: 'sky',
+  },
+  {
+    id: 'life',
+    name: '生活',
+    glyph: '禮貌',
+    chapter: LIFE_TOWN,
+    skills: ['life'],
+    upcoming: [{ id: 'life-school', name: '學校生活' }],
+    dailySlots: ['pick', 'pick', 'stepOrder', 'pick', 'pick'],
+    theme: 'peach',
+  },
+  {
+    id: 'nature',
+    name: '自然',
+    glyph: '花草',
+    chapter: NATURE_FOREST,
+    skills: ['nature'],
+    upcoming: [{ id: 'nature-ocean', name: '海洋世界' }],
+    dailySlots: ['pick', 'dragSort', 'pick', 'stepOrder', 'pick'],
+    theme: 'butter',
   },
 ]
 

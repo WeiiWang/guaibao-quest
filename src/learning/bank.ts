@@ -2,6 +2,8 @@ import numberJson from './content/number.json'
 import classifyJson from './content/classify.json'
 import patternJson from './content/pattern.json'
 import englishJson from './content/english.json'
+import lifeJson from './content/life.json'
+import natureJson from './content/nature.json'
 import type { Difficulty, Question, SkillId } from './types'
 
 /** 題庫（固定 JSON，由 scripts/gen-questions.mjs 產生後人工審閱） */
@@ -10,6 +12,8 @@ export const QUESTIONS: Question[] = [
   ...(classifyJson as unknown as Question[]),
   ...(patternJson as unknown as Question[]),
   ...(englishJson as unknown as Question[]),
+  ...(lifeJson as unknown as Question[]),
+  ...(natureJson as unknown as Question[]),
 ]
 
 const BY_ID = new Map(QUESTIONS.map((q) => [q.id, q]))

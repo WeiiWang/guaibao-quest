@@ -22,6 +22,8 @@ import { useLearningSettings } from '../../learningHooks'
 import { Companion, type Pose } from './Companion'
 import { EnglishView } from './EnglishView'
 import { GiveView } from './GiveView'
+import { LifeNatureView } from './LifeNatureView'
+import { OrderView } from './OrderView'
 import { QuestionView, type HintStage } from './QuestionView'
 import { SortView } from './SortView'
 import './adventure.css'
@@ -508,6 +510,10 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
               <GiveView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} onFeel={setFeel} />
             ) : q.interaction === 'dragSort' ? (
               <SortView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
+            ) : q.interaction === 'stepOrder' ? (
+              <OrderView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
+            ) : q.skill === 'life' || q.skill === 'nature' ? (
+              <LifeNatureView key={q.id} q={q} hintStage={hintStage} tapped={tapped} solved={solved} voiceOn={voiceOn} onPick={pick} />
             ) : q.skill === 'english' ? (
               <EnglishView key={q.id} q={q} hintStage={hintStage} tapped={tapped} solved={solved} onPick={pick} />
             ) : (

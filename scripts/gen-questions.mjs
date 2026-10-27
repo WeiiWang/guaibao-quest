@@ -1,6 +1,6 @@
 // 題庫產生器（固定 seed，輸出可重現）。
 // 用法：node scripts/gen-questions.mjs
-// 輸出：src/learning/content/{number,classify,pattern,english}.json
+// 輸出：src/learning/content/{number,classify,pattern,english,life,nature}.json
 // 產出的 JSON 會進版控，供人工審閱；執行期不跑這支程式。
 // 物件屬性（種類、顏色）直接讀 src/learning/objects.ts（Node 24 可直接載入 .ts），不另外抄一份。
 // 題目是否合理由 src/learning/bank.test.ts 用獨立的解題邏輯驗證（含多屬性檢查）。
@@ -9,6 +9,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { OBJECTS, CATEGORY_NAMES, CATEGORIES, colorWord } from '../src/learning/objects.ts'
 import { EN_WORDS, EN_GENTLE_WORDS } from '../src/learning/english.ts'
+import * as LN from '../src/learning/lifeNature.ts'
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '../src/learning/content')
 
@@ -54,7 +55,9 @@ const reject = () => {
 
 /** 題幹 + 答案 去重。找不同（odd）的題幹就是那四個物件，所以選項也算進去 */
 function dedupKey(q) {
-  return JSON.stringify([q.type, q.prompt, q.items, q.answer, q.type === 'odd' ? q.choices.map((c) => c.id).sort() : null, q.params?.n ?? null, q.params?.word ?? null, q.params?.pattern ?? null])
+  // 找不同、生活與自然的點選題：選項組合不同才算不同題（排序題的卡片順序也算）
+  const ck = q.type === 'odd' || /^(life|nat)/.test(q.type) ? (q.type.endsWith('Order') ? q.choices.map((c) => c.id) : q.choices.map((c) => c.id).sort()) : null
+  return JSON.stringify([q.type, q.prompt, q.items, q.answer, ck, q.params?.n ?? null, q.params?.word ?? null, q.params?.pattern ?? null, q.params?.stem ?? null, q.params?.order ?? null, q.params?.targets ?? null])
 }
 
 /**
@@ -901,6 +904,504 @@ const english1g = cell(
   { gentle: true },
 )
 
+// ---------- 生活與禮儀、自然常識（v6 線 B） ----------
+// 內容表見 src/learning/lifeNature.ts。只用「畫得符合題意」的圖（WORLD_ART[name].ok）。
+// 每題的 params.fact 記下它考的事實（<類型>:<內容>），單元測試用另一份獨立的對照表重新算正解。
+const okArt = (a) => {
+  if (!LN.artOk(a)) throw new Error(`素材 ${a} 不能用在題目裡（見 lifeNature.ts 的 WORLD_ART）`)
+  return a
+}
+const artChoice = (a) => ({ id: okArt(a), art: a })
+const wordChoice = (id, text, emoji) => ({ id, text, emoji })
+/** 答案放第 pos 個，其他選項隨機排；回傳選項陣列 */
+function arrange(answer, others, ctx) {
+  const k = others.length + 1
+  const pos = ctx.pos(k)
+  const arr = shuffle(others)
+  arr.splice(pos, 0, answer)
+  ctx.mark(k, pos)
+  return arr
+}
+const withP = (list, phrases = 3) => shuffle(list.flatMap((x) => Array.from({ length: phrases }, (_, p) => [x, p])))
+const textsOf = (choices) => choices.map((c) => c.text)
+
+// ----- 生活 -----
+const LP = LN.LIFE_PICS.filter((p) => LN.artOk(p.art))
+const LP_GOOD = LP.filter((p) => p.good)
+const LP_BAD = LP.filter((p) => !p.good)
+const LP_SEE = LP.filter((p) => p.see)
+const pairOf = (goodArt) => LN.LIFE_PAIRS.find((x) => x.good === goodArt && LN.artOk(x.bad))
+
+function lifeSeeQ(i, ctx, target, k, phrase) {
+  const others = sample(LP.filter((p) => p.art !== target.art).map((p) => p.art), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(target.art, others, ctx).map(artChoice)
+  return {
+    type: 'lifeSee',
+    prompt: LN.SEE_ASKS[phrase % 3](target.see),
+    items: [],
+    choices,
+    answer: target.art,
+    hint: `看看每一張圖裡，阿悟正在做什麼？找出阿悟${target.see}${target.see.endsWith('的') ? '' : '的'}那一張。`,
+    params: { fact: `see:${target.art}` },
+  }
+}
+function lifeRightQ(i, ctx, good, k, phrase) {
+  const pr = pairOf(good.art)
+  // 排隊那張圖只畫了站在一起，一定要和插隊那張成對才看得出情境
+  if (good.art === 'life-queue' && !pr) reject()
+  const others = LP_BAD.filter((b) => !pr || b.art !== pr.bad)
+  // 有成對情境的好做法，大多和它成對的那張一起出現（問法比較具體）；排隊一定要成對
+  const withPair = pr && (good.art === 'life-queue' || rnd() < 0.65)
+  const bads = withPair ? [LP_BAD.find((b) => b.art === pr.bad), ...sample(others, k - 2)] : sample(others, k - 1)
+  if (bads.length < k - 1 || bads.some((b) => !b)) reject()
+  const matched = !!pr && bads.some((b) => b.art === pr.bad)
+  const choices = arrange(good.art, bads.map((b) => b.art), ctx).map(artChoice)
+  return {
+    type: 'lifeRight',
+    prompt: matched ? pr.asks[phrase % 3] : LN.RIGHT_ASKS[phrase % 3],
+    items: [],
+    choices,
+    answer: good.art,
+    hint: matched ? LN.LIFE_PIC_BY_ART[pr.bad].why : good.why,
+    params: { fact: `right:${good.art}` },
+  }
+}
+const OK_CHOICES = (ctx) => {
+  const yes = wordChoice('yes', '好', '👍')
+  const no = wordChoice('no', '不好', '👎')
+  const pos = ctx.pos(2)
+  ctx.mark(2, pos)
+  return pos === 0 ? [yes, no] : [no, yes]
+}
+function lifeOkPicQ(i, ctx, pic, v) {
+  if (pic.art === 'life-queue') reject() // 只畫了站在一起，單看一張看不出在排隊
+  return {
+    type: 'lifeOk',
+    prompt: `${pic.okay[v % pic.okay.length]}。${LN.OKAY_TAIL}`,
+    items: [],
+    choices: OK_CHOICES(ctx),
+    answer: pic.good ? 'yes' : 'no',
+    hint: pic.why,
+    params: { stem: { art: okArt(pic.art) }, words: ['好', '不好'], fact: `ok:${pic.art}:${pic.good ? 'yes' : 'no'}` },
+  }
+}
+function lifeOkStoryQ(i, ctx, story, idx) {
+  return {
+    type: 'lifeOk',
+    prompt: `${story.text}。${LN.OKAY_TAIL}`,
+    items: [],
+    choices: OK_CHOICES(ctx),
+    answer: story.good ? 'yes' : 'no',
+    hint: story.why,
+    params: { stem: { emoji: story.emoji }, words: ['好', '不好'], fact: `story:${idx}:${story.good ? 'yes' : 'no'}` },
+  }
+}
+function lifeSayQ(i, ctx, scene, k, phrase) {
+  const ans = LN.SAY_BY_ID[scene.say]
+  const others = sample(LN.SAY_WORDS.filter((w) => w.id !== ans.id), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(ans, others, ctx).map((w) => wordChoice(w.id, w.text, w.emoji))
+  return {
+    type: 'lifeSay',
+    prompt: `${scene.text}。${LN.SAY_ASKS[phrase % 3]}`,
+    items: [],
+    choices,
+    answer: ans.id,
+    hint: scene.hint,
+    params: { stem: scene.art ? { art: okArt(scene.art) } : { emoji: scene.emoji }, words: textsOf(choices), fact: `say:${ans.id}` },
+  }
+}
+function lifeLightQ(i, ctx, lq) {
+  const choices = arrange(lq.right, [lq.other], ctx).map((c) => wordChoice(c.id, c.text, c.emoji))
+  return {
+    type: 'lifeLight',
+    prompt: lq.prompt,
+    items: [],
+    choices,
+    answer: lq.right.id,
+    hint: lq.hint,
+    params: { stem: { swatch: lq.swatch }, words: textsOf(choices), fact: `light:${lq.color}:${lq.right.id}` },
+  }
+}
+function lifeLightPicQ(i, ctx, lq) {
+  const choices = arrange(lq.right, [lq.other], ctx).map(artChoice)
+  const color = lq.prompt.includes('紅燈') ? 'red' : 'green'
+  return { type: 'lifeLight', prompt: lq.prompt, items: [], choices, answer: lq.right, hint: lq.hint, params: { fact: `lightpic:${color}:${lq.right}` } }
+}
+const STEP_FIRST = [(t) => `${t}要先做什麼呢？`, (t) => `${t}，第一步要做什麼呢？`, (t) => `${t}，最先要做哪一件事呢？`]
+const STEP_LAST = [(t) => `${t}最後要做什麼呢？`, (t) => `${t}的最後一步是什麼呢？`, (t) => `${t}，最後要做哪一件事呢？`]
+const stepChoice = (st) => wordChoice(st.id, st.text, st.emoji)
+function lifeStepQ(i, ctx, routine, which, k, phrase) {
+  const st = routine.steps
+  const ans = which === 'first' ? st[0] : st[st.length - 1]
+  const others = sample(st.filter((x) => x.id !== ans.id), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(ans, others, ctx).map(stepChoice)
+  const title = routine.title === '吃飯' ? '吃飯前' : routine.title
+  return {
+    type: 'lifeStep',
+    prompt: (which === 'first' ? STEP_FIRST : STEP_LAST)[phrase % 3](title),
+    items: [],
+    choices,
+    answer: ans.id,
+    hint: `${title}的順序是：${st.map((x) => x.text).join('，再')}。`,
+    params: { words: textsOf(choices), fact: `step:${routine.id}:${which}` },
+  }
+}
+/** 在 steps 裡挑 n 張依原順序（不一定連續）的卡片，打散成不是正確順序的樣子 */
+function orderCards(steps, n) {
+  const idx = shuffle(steps.map((_, k) => k)).slice(0, n).sort((a, b) => a - b)
+  const chosen = idx.map((k) => steps[k])
+  let cards = shuffle(chosen)
+  let guard = 0
+  while (cards.every((c, k) => c.id === chosen[k].id) && guard++ < 50) cards = shuffle(chosen)
+  if (cards.every((c, k) => c.id === chosen[k].id)) reject()
+  return { chosen, cards }
+}
+const cardChoice = (c) => ({ id: c.id, text: c.text, emoji: c.emoji, ...(c.art ? { art: okArt(c.art) } : {}) })
+function lifeOrderQ(i, ctx, routine, n, phrase) {
+  if (n > routine.steps.length) reject()
+  const { chosen, cards } = orderCards(routine.steps, n)
+  const title = routine.title === '吃飯' ? '吃飯前' : routine.title
+  const asks = [`請把${title}的步驟，依順序排好。`, `${title}要怎麼做呢？請依順序排好。`, `把${title}的每一步，從第一步開始排好。`]
+  return {
+    type: 'lifeOrder',
+    interaction: 'stepOrder',
+    prompt: asks[phrase % 3],
+    items: [],
+    choices: cards.map(cardChoice),
+    answer: 'sorted',
+    hint: `${title}的順序是：${chosen.map((x) => x.text).join('，再')}。`,
+    params: { order: chosen.map((x) => x.id), words: chosen.map((x) => x.text), fact: `order:${routine.id}:${chosen.map((x) => x.id).join('>')}` },
+  }
+}
+function lifeWhyQ(i, ctx, why, wrongIds) {
+  const wrong = wrongIds.map((k) => why.wrong[k])
+  const choices = arrange(why.right, wrong, ctx).map((c) => wordChoice(c.text, c.text, c.emoji))
+  return {
+    type: 'lifeWhy',
+    prompt: why.ask,
+    items: [],
+    choices,
+    answer: why.right.text,
+    hint: why.hint,
+    params: { words: textsOf(choices), fact: `why:${why.id}` },
+  }
+}
+
+const SEE_CANDS = withP(LP_SEE, 3).map(([p, ph]) => [p, ph])
+const RIGHT2 = withP(LP_GOOD, 3)
+const RIGHT3 = withP(LP_GOOD, 3)
+const SAY_ALL = withP(LN.SAY_SCENES, 3)
+// 難度 2 先出有圖的那一個情境（兔子送禮物給阿悟），讓孩子看圖說「謝謝」
+const SAY_D2 = [...SAY_ALL].sort((a, b) => (b[0].art ? 1 : 0) - (a[0].art ? 1 : 0))
+const SAY_THANKS_SORRY = withP(LN.SAY_SCENES.filter((s) => s.say === 'thanks' || s.say === 'sorry'), 3)
+const OK_PICS = withP(LP, 2)
+const OK_STORIES = withP(LN.LIFE_STORIES.map((s, idx) => [s, idx]), 1)
+// 難度 2 用前五個故事、難度 3 用後五個，兩個難度不重複
+const OK_STORIES_A = OK_STORIES.filter(([[, idx]]) => idx < 5)
+const OK_STORIES_B = OK_STORIES.filter(([[, idx]]) => idx >= 5)
+// 每個「為什麼」先各出一次（同一組干擾項），再換下一組干擾項，所以前面幾題一定涵蓋全部十個
+const WHY_CANDS = [[0, 1], [0, 2], [1, 2]].flatMap((pair) => shuffle(LN.WHYS).map((w) => [w, pair]))
+const STEP_CANDS = (which) => shuffle(LN.ROUTINES.flatMap((r) => Array.from({ length: 3 }, (_, p) => [r, which, p])))
+const ORDER_CANDS = (n) => shuffle(LN.ROUTINES.flatMap((r) => Array.from({ length: 6 }, (_, p) => [r, n, p])))
+
+const life1 = cell('life', 1, [
+  { count: 14, cands: SEE_CANDS, build: (i, ctx, [p, ph]) => lifeSeeQ(i, ctx, p, 3, ph) },
+  { count: 22, cands: RIGHT2, build: (i, ctx, [g, ph]) => lifeRightQ(i, ctx, g, 2, ph) },
+])
+const life2 = cell('life', 2, [
+  { count: 12, cands: RIGHT3, build: (i, ctx, [g, ph]) => lifeRightQ(i, ctx, g, 3, ph) },
+  { count: 14, cands: OK_PICS, build: (i, ctx, [p, v]) => lifeOkPicQ(i, ctx, p, v) },
+  { count: 5, cands: OK_STORIES_A, build: (i, ctx, [[s, idx]]) => lifeOkStoryQ(i, ctx, s, idx) },
+  { count: 4, cands: LN.LIGHT_QS, build: (i, ctx, lq) => lifeLightQ(i, ctx, lq) },
+  { count: 3, cands: LN.LIGHT_PIC_QS, build: (i, ctx, lq) => lifeLightPicQ(i, ctx, lq) },
+  { count: 10, cands: SAY_D2, build: (i, ctx, [sc, ph]) => lifeSayQ(i, ctx, sc, 3, ph) },
+])
+const life3 = cell('life', 3, [
+  { count: 14, cands: SAY_ALL, build: (i, ctx, [sc, ph]) => lifeSayQ(i, ctx, sc, 4, ph) },
+  { count: 6, cands: STEP_CANDS('first'), build: (i, ctx, [r, w, ph]) => lifeStepQ(i, ctx, r, w, 3, ph) },
+  { count: 6, cands: STEP_CANDS('last'), build: (i, ctx, [r, w, ph]) => lifeStepQ(i, ctx, r, w, 3, ph) },
+  { count: 8, cands: ORDER_CANDS(3), build: (i, ctx, [r, n, ph]) => lifeOrderQ(i, ctx, r, n, ph) },
+  { count: 5, cands: OK_STORIES_B, build: (i, ctx, [[s, idx]]) => lifeOkStoryQ(i, ctx, s, idx) },
+])
+const life4 = cell('life', 4, [
+  { count: 12, cands: ORDER_CANDS(4), build: (i, ctx, [r, n, ph]) => lifeOrderQ(i, ctx, r, n, ph) },
+  { count: 4, cands: ORDER_CANDS(5), build: (i, ctx, [r, n, ph]) => lifeOrderQ(i, ctx, r, n, ph) },
+  { count: 16, cands: WHY_CANDS, build: (i, ctx, [w, pair]) => lifeWhyQ(i, ctx, w, pair) },
+  { count: 6, cands: STEP_CANDS('first'), build: (i, ctx, [r, w, ph]) => lifeStepQ(i, ctx, r, w, 4, ph) },
+  { count: 6, cands: STEP_CANDS('last'), build: (i, ctx, [r, w, ph]) => lifeStepQ(i, ctx, r, w, 4, ph) },
+  { count: 6, cands: SAY_ALL, build: (i, ctx, [sc, ph]) => lifeSayQ(i, ctx, sc, 4, ph) },
+])
+// 幼幼模式：只有 2 選 1 的配對、對錯題與簡單的「要說什麼」
+const life1g = cell(
+  'life',
+  1,
+  [
+    { count: 12, cands: SEE_CANDS, build: (i, ctx, [p, ph]) => lifeSeeQ(i, ctx, p, 2, ph) },
+    { count: 14, cands: RIGHT2, build: (i, ctx, [g, ph]) => lifeRightQ(i, ctx, g, 2, ph) },
+    { count: 8, cands: SAY_THANKS_SORRY, build: (i, ctx, [sc, ph]) => lifeSayQ(i, ctx, sc, 2, ph) },
+  ],
+  { gentle: true },
+)
+
+// ----- 自然 -----
+const NP = { seed: 7 }
+const ANIMAL_PICS = LN.ANIMALS.map((a) => a.id)
+const ANIMALS_HOME = LN.ANIMALS.filter((a) => a.home)
+
+function natWeatherQ(i, ctx, w, k, phrase) {
+  const others = sample(LN.WEATHERS.filter((x) => x.id !== w.id).map((x) => x.art), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(w.art, others, ctx).map(artChoice)
+  return { type: 'natWeather', prompt: w.asks[phrase % 3], items: [], choices, answer: w.art, hint: w.hint, params: { fact: `weather:${w.id}` } }
+}
+const WEATHER_PIC_ASKS = ['這是什麼天氣呢？', '看看圖，今天是什麼天氣呢？', '阿悟看到這樣的天空，是什麼天氣呢？']
+function natWeatherNameQ(i, ctx, w, k, phrase) {
+  const others = sample(LN.WEATHERS.filter((x) => x.id !== w.id), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(w, others, ctx).map((x) => wordChoice(x.id, x.name, LN.artEmojiOf(x.art)))
+  return {
+    type: 'natWeather',
+    prompt: WEATHER_PIC_ASKS[phrase % 3],
+    items: [],
+    choices,
+    answer: w.id,
+    hint: w.hint,
+    params: { stem: { art: okArt(w.art) }, words: textsOf(choices), fact: `weatherName:${w.id}` },
+  }
+}
+function natBringQ(i, ctx, bq, phrase, withArt) {
+  const gear = LN.GEAR_BY_ID[bq.gear]
+  const others = LN.GEARS.filter((g) => g.id !== gear.id)
+  const choices = arrange(gear, others, ctx).map((g) => wordChoice(g.id, g.text, g.emoji))
+  return {
+    type: 'natBring',
+    prompt: bq.prompts[phrase % 3],
+    items: [],
+    choices,
+    answer: gear.id,
+    hint: bq.hint,
+    params: { stem: withArt ? { art: okArt(bq.art) } : { emoji: bq.emoji }, words: textsOf(choices), fact: `bring:${bq.cond}` },
+  }
+}
+function natHomeQ(i, ctx, animal, k, phrase) {
+  const others = sample(LN.HOMES.filter((h) => h.art !== animal.home).map((h) => h.art), k - 1)
+  if (others.length < k - 1) reject()
+  const asks = [`${animal.name}住在哪裡呢？`, `${animal.name}的家在哪裡呢？`, `找找看，${animal.name}住在哪一個地方？`]
+  const choices = arrange(animal.home, others, ctx).map((a) => ({ ...artChoice(a), text: LN.HOME_LABEL[a] }))
+  return {
+    type: 'natHome',
+    prompt: asks[phrase % 3],
+    items: [],
+    choices,
+    answer: animal.home,
+    hint: animal.homeHint,
+    params: { stem: { art: okArt(animal.id) }, fact: `home:${animal.id}` },
+  }
+}
+function natSeasonPicQ(i, ctx, season, phrase) {
+  const others = LN.SEASONS.filter((x) => x.id !== season.id)
+  const pickOthers = sample(others, 2)
+  const choices = arrange(season, pickOthers, ctx).map((x) => wordChoice(x.id, x.name, x.emoji))
+  return {
+    type: 'natSeason',
+    prompt: LN.SEASON_PIC_ASKS[phrase % 3],
+    items: [],
+    choices,
+    answer: season.id,
+    hint: season.picHint,
+    params: { stem: { art: okArt(season.art) }, words: textsOf(choices), fact: `seasonPic:${season.id}` },
+  }
+}
+function natSeasonNameQ(i, ctx, season, k, phrase) {
+  const others = sample(LN.SEASONS.filter((x) => x.id !== season.id).map((x) => x.art), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(season.art, others, ctx).map(artChoice)
+  return {
+    type: 'natSeason',
+    prompt: LN.SEASON_NAME_ASKS[phrase % 3](season.name),
+    items: [],
+    choices,
+    answer: season.art,
+    hint: LN.SEASON_FACTS.find((f) => f.season === season.id).hint,
+    params: { fact: `seasonName:${season.id}` },
+  }
+}
+function natSeasonFactQ(i, ctx, f, phrase) {
+  const choices = arrange(LN.SEASON_BY_ID[f.season], LN.SEASONS.filter((x) => x.id !== f.season), ctx).map((x) => wordChoice(x.id, x.name, x.emoji))
+  return { type: 'natSeason', prompt: f.asks[phrase % 3], items: [], choices, answer: f.season, hint: f.hint, params: { words: textsOf(choices), fact: `season:${f.id}` } }
+}
+function natSnowQ(i, ctx, phrase) {
+  const win = LN.SEASON_BY_ID.winter
+  const choices = arrange(win, LN.SEASONS.filter((x) => x.id !== 'winter'), ctx).map((x) => wordChoice(x.id, x.name, x.emoji))
+  return { type: 'natSeason', prompt: LN.SNOW_ASKS[phrase % 3], items: [], choices, answer: 'winter', hint: LN.SNOW_HINT, params: { words: textsOf(choices), fact: 'snow:winter' } }
+}
+function natPlantStageQ(i, ctx, st, k, phrase) {
+  const others = sample(LN.PLANT_STAGES.filter((x) => x.id !== st.id).map((x) => x.art), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(st.art, others, ctx).map(artChoice)
+  return { type: 'natPlant', prompt: st.asks[phrase % 3], items: [], choices, answer: st.art, hint: st.hint, params: { fact: `plant:${st.id}` } }
+}
+function natPlantNeedQ(i, ctx, need, wrongIds) {
+  const wrong = wrongIds.map((k) => need.wrong[k])
+  const choices = arrange(need.right, wrong, ctx).map((c) => wordChoice(c.text, c.text, c.emoji))
+  return { type: 'natPlant', prompt: need.ask, items: [], choices, answer: need.right.text, hint: need.hint, params: { words: textsOf(choices), fact: 'need:plant' } }
+}
+const ANIMAL_NAME_ASKS = [(n) => `哪一個是${n}呢？`, (n) => `找找看，${n}在哪裡？`, (n) => `阿悟想找${n}，是哪一個呢？`]
+function natAnimalNameQ(i, ctx, animal, k, phrase) {
+  const others = sample(ANIMAL_PICS.filter((a) => a !== animal.id), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(animal.id, others, ctx).map(artChoice)
+  return {
+    type: 'natAnimal',
+    prompt: ANIMAL_NAME_ASKS[phrase % 3](animal.name),
+    items: [],
+    choices,
+    answer: animal.id,
+    hint: `看看每一個動物，哪一個是${animal.name}呢？`,
+    params: { fact: `name:${animal.id}` },
+  }
+}
+function natAnimalTraitQ(i, ctx, trait, ansId, k, phrase) {
+  const others = sample(ANIMAL_PICS.filter((a) => !trait.who.includes(a)), k - 1)
+  if (others.length < k - 1) reject()
+  const choices = arrange(ansId, others, ctx).map(artChoice)
+  return { type: 'natAnimal', prompt: trait.asks[phrase % 3], items: [], choices, answer: ansId, hint: trait.hint, params: { fact: `trait:${trait.id}` } }
+}
+const BINS_ASKS = ['小動物們要回家了，請把牠們放進自己的家。', '請送小動物回家，看看牠們住在哪裡。', '每一個小動物都有自己的家，請把牠們放進對的地方。']
+function natBinsQ(i, ctx, nBins, phrase) {
+  const homes = sample(LN.HOMES, nBins)
+  const items = []
+  for (const h of homes) {
+    const pool = ANIMALS_HOME.filter((a) => a.home === h.art)
+    const n = Math.min(pool.length, 1 + Math.floor(rnd() * 2))
+    items.push(...sample(pool, n))
+  }
+  if (items.length < nBins || items.length > 5) reject()
+  const order = shuffle(items)
+  const bins = homes.map((h, k) => ({ id: `b${k + 1}`, label: h.label, art: okArt(h.art) }))
+  const targets = order.map((a) => bins[homes.findIndex((h) => h.art === a.home)].id)
+  const set = [...order.map((a) => a.id)].sort().join('+') + '|' + homes.map((h) => h.art).sort().join('+')
+  if (binSets.has(set)) reject()
+  binSets.add(set)
+  return {
+    type: 'bins',
+    interaction: 'dragSort',
+    prompt: BINS_ASKS[phrase % 3],
+    items: order.map((a) => ({ obj: a.id })),
+    choices: [],
+    answer: 'sorted',
+    hint: bins.map((b, k) => `${order.filter((a) => a.home === homes[k].art).map((a) => a.name).join('和')}住在${b.label}`).join('，') + '。',
+    params: { bins, targets, fact: 'bins:home' },
+  }
+}
+const binSets = new Set()
+function natOrderQ(i, ctx, kind, phrase) {
+  if (kind === 'plant') {
+    const stages = LN.PLANT_STAGES
+    let cards = shuffle(stages)
+    let g = 0
+    while (cards.every((c, k) => c.id === stages[k].id) && g++ < 50) cards = shuffle(stages)
+    return {
+      type: 'natOrder',
+      interaction: 'stepOrder',
+      prompt: LN.PLANT_ORDER_ASKS[phrase % 3],
+      items: [],
+      choices: cards.map((c) => ({ id: c.id, text: c.name, emoji: c.emoji, art: okArt(c.art) })),
+      answer: 'sorted',
+      hint: LN.PLANT_ORDER_HINT,
+      params: { order: stages.map((c) => c.id), words: stages.map((c) => c.name), fact: 'order:plant' },
+    }
+  }
+  const seasons = LN.SEASONS
+  let cards = shuffle(seasons)
+  let g = 0
+  while (cards.every((c, k) => c.id === seasons[k].id) && g++ < 50) cards = shuffle(seasons)
+  return {
+    type: 'natOrder',
+    interaction: 'stepOrder',
+    prompt: LN.SEASON_ORDER_ASKS[phrase % 3],
+    items: [],
+    choices: cards.map((c) => ({ id: c.id, text: c.name, emoji: c.emoji, art: okArt(c.art) })),
+    answer: 'sorted',
+    hint: LN.SEASON_ORDER_HINT,
+    params: { order: seasons.map((c) => c.id), words: seasons.map((c) => c.name), fact: 'order:season' },
+  }
+}
+
+const WEATHER_C = withP(LN.WEATHERS, 3)
+const ANIMAL_C = withP(LN.ANIMALS, 3)
+const BRING_C = shuffle(LN.BRING_QS.flatMap((b) => Array.from({ length: 6 }, (_, p) => [b, p % 3, p >= 3])))
+const HOME_C = withP(ANIMALS_HOME, 3)
+const SEASON_C = withP(LN.SEASONS, 3)
+const PLANT_C = withP(LN.PLANT_STAGES, 3)
+const SFACT_C = withP(LN.SEASON_FACTS, 3)
+// 先把每個特徵都用同一種問法排過一輪，再換下一種問法（所以前幾題一定涵蓋所有特徵）；order 決定問法的輪流順序
+const TRAIT_C = (order) => order.flatMap((p) => shuffle(LN.TRAITS.flatMap((t) => t.who.map((a) => [t, a, p]))))
+const NEED_C = shuffle(LN.PLANT_NEEDS.flatMap((n) => [[0, 1], [0, 2], [1, 2]].map((pair) => [n, pair])))
+const ORDER_C = (kind) => Array.from({ length: 12 }, (_, p) => [kind, p])
+const BINS_C = (n) => Array.from({ length: 60 }, (_, p) => [n, p])
+
+const nature1 = cell(
+  'nature',
+  1,
+  [
+    { count: 12, cands: WEATHER_C, build: (i, ctx, [w, ph]) => natWeatherQ(i, ctx, w, 3, ph) },
+    { count: 20, cands: ANIMAL_C, build: (i, ctx, [a, ph]) => natAnimalNameQ(i, ctx, a, 3, ph) },
+  ],
+  NP,
+)
+const nature2 = cell(
+  'nature',
+  2,
+  [
+    { count: 12, cands: BRING_C, build: (i, ctx, [b, ph, art]) => natBringQ(i, ctx, b, ph, art) },
+    { count: 14, cands: HOME_C, build: (i, ctx, [a, ph]) => natHomeQ(i, ctx, a, 3, ph) },
+    { count: 8, cands: SEASON_C, build: (i, ctx, [s, ph]) => natSeasonPicQ(i, ctx, s, ph) },
+    { count: 9, cands: PLANT_C, build: (i, ctx, [p, ph]) => natPlantStageQ(i, ctx, p, 3, ph) },
+    { count: 6, cands: WEATHER_C, build: (i, ctx, [w, ph]) => natWeatherNameQ(i, ctx, w, 3, ph) },
+  ],
+  NP,
+)
+const nature3 = cell(
+  'nature',
+  3,
+  [
+    { count: 8, cands: BINS_C(2), build: (i, ctx, [n, ph]) => natBinsQ(i, ctx, n, ph) },
+    { count: 10, cands: SFACT_C, build: (i, ctx, [f, ph]) => natSeasonFactQ(i, ctx, f, ph) },
+    { count: 8, cands: SEASON_C, build: (i, ctx, [s, ph]) => natSeasonNameQ(i, ctx, s, 3, ph) },
+    { count: 8, cands: ORDER_C('plant'), build: (i, ctx, [k, ph]) => natOrderQ(i, ctx, k, ph) },
+    { count: 10, cands: TRAIT_C([0, 1, 2]), build: (i, ctx, [t, a, ph]) => natAnimalTraitQ(i, ctx, t, a, 3, ph) },
+  ],
+  NP,
+)
+const nature4 = cell(
+  'nature',
+  4,
+  [
+    { count: 8, cands: BINS_C(3), build: (i, ctx, [n, ph]) => natBinsQ(i, ctx, n, ph) },
+    { count: 10, cands: ORDER_C('season'), build: (i, ctx, [k, ph]) => natOrderQ(i, ctx, k, ph) },
+    { count: 3, cands: [0, 1, 2], build: (i, ctx, ph) => natSnowQ(i, ctx, ph) },
+    { count: 8, cands: SFACT_C, build: (i, ctx, [f, ph]) => natSeasonFactQ(i, ctx, f, ph) },
+    { count: 6, cands: NEED_C, build: (i, ctx, [n, pair]) => natPlantNeedQ(i, ctx, n, pair) },
+    { count: 8, cands: TRAIT_C([1, 2, 0]), build: (i, ctx, [t, a, ph]) => natAnimalTraitQ(i, ctx, t, a, 4, ph) },
+  ],
+  NP,
+)
+// 幼幼模式：天氣圖、認動物、動物住哪裡，都是 2 選 1
+const nature1g = cell(
+  'nature',
+  1,
+  [
+    { count: 10, cands: WEATHER_C, build: (i, ctx, [w, ph]) => natWeatherQ(i, ctx, w, 2, ph) },
+    { count: 14, cands: ANIMAL_C, build: (i, ctx, [a, ph]) => natAnimalNameQ(i, ctx, a, 2, ph) },
+    { count: 8, cands: HOME_C, build: (i, ctx, [a, ph]) => natHomeQ(i, ctx, a, 2, ph) },
+  ],
+  { ...NP, gentle: true },
+)
+
 // ---------- 輸出 ----------
 /** 每題一個區塊、items/choices 每個元素一行，方便人工審閱與 diff */
 function toReadableJson(questions) {
@@ -933,3 +1434,5 @@ dump('number', [number1, number2, number3, number4, number1g])
 dump('classify', [classify1, classify2, classify3, classify4, classify1g])
 dump('pattern', [pattern1, pattern2, pattern3, pattern4, pattern1g])
 dump('english', [english1, english2, english3, english4, english1g])
+dump('life', [life1, life2, life3, life4, life1g])
+dump('nature', [nature1, nature2, nature3, nature4, nature1g])
