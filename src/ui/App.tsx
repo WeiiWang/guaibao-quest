@@ -23,12 +23,14 @@ import type { ChildProfile } from '../profiles/registry'
 import { BackdropPreview, parseBackdropHash } from './screens/BackdropPreview'
 import { GalleryScreen } from './screens/Gallery'
 import { FriendsScreen } from './screens/Friends'
+import { AlbumScreen } from './screens/Album'
+import { HatPreview } from './screens/HatPreview'
 import './ux.css'
 
 export type Screen =
   | { name: 'home'; edit?: boolean }
   | { name: 'tasks' }
-  | { name: 'shop'; tab?: 'food' | 'coloring' }
+  | { name: 'shop'; tab?: 'food' | 'coloring' | 'hat' }
   | { name: 'bag' }
   | { name: 'coloring' }
   | { name: 'paint'; pageId: string }
@@ -40,6 +42,8 @@ export type Screen =
   | { name: 'workshop' }
   | { name: 'gallery' }
   | { name: 'friends' }
+  | { name: 'album' }
+  | { name: 'hatpreview'; hat: string }
   | { name: 'backdrop'; hash: string }
 
 /** 兒童端畫面中，時間到會被鎖住的（學習與餵食）；任務、著色、家長區不鎖 */
@@ -52,6 +56,8 @@ function screenFromHash(): Screen {
   if (h === 'workshop') return { name: 'workshop' }
   if (h === 'gallery') return { name: 'gallery' }
   if (h === 'friends') return { name: 'friends' }
+  if (h === 'album') return { name: 'album' }
+  if (h.startsWith('hatpreview')) return { name: 'hatpreview', hat: `hat-${h.split('/')[1] ?? 'crown'}` }
   if (h.startsWith('backdrop')) return { name: 'backdrop', hash: h }
   return { name: 'home' }
 }
@@ -177,6 +183,12 @@ function Main({ childName }: { childName: string }) {
         break
       case 'friends':
         body = <FriendsScreen onBack={home} />
+        break
+      case 'album':
+        body = <AlbumScreen onBack={home} />
+        break
+      case 'hatpreview':
+        body = <HatPreview hat={screen.hat} />
         break
       case 'backdrop': {
         const p = parseBackdropHash(screen.hash)

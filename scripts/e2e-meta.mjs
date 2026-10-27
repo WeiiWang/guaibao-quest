@@ -18,6 +18,11 @@ const CONTENT = join(dirname(fileURLToPath(import.meta.url)), '../src/learning/c
 const QUESTIONS = ['number', 'classify', 'pattern'].flatMap((f) => JSON.parse(readFileSync(join(CONTENT, `${f}.json`), 'utf8')))
 const BANK = Object.fromEntries(QUESTIONS.map((q) => [q.id, q]))
 const VP = { width: 1024, height: 768 }
+/** v6：右側按鈕整理成「更多」托盤（表演、朋友、相簿、衣櫃）；要先打開才點得到 */
+const openMore = async (page) => {
+  if (!(await page.getByTestId('more-tray').count())) await page.getByTestId('more-btn').click()
+  await page.waitForSelector('[data-testid=more-tray]')
+}
 
 /** 題目裡孩子看到的物件（跟 src/domain/friends.ts 的規則一致，這裡獨立再寫一次當對照） */
 const objectsOf = (q) => {
@@ -310,7 +315,9 @@ try {
   // =====================================================================
   // 3) PM：解鎖新招 → 表演按鈕 → 每一招的動作
   // =====================================================================
+  await openMore(page)
   check('還沒學會新招：首頁沒有「表演」按鈕', (await page.getByTestId('perform-btn').count()) === 0)
+  await page.getByTestId('more-btn').click()
   await openParentTab(page, 'PM 預覽')
   await page.locator('[data-pm=unlock-tricks]').click()
   await page.waitForTimeout(300)
@@ -318,6 +325,7 @@ try {
   check('PM 解鎖全部新招：pet.tricks 有 5 招', petT.tricks?.length === 5, JSON.stringify(petT.tricks))
   await page.getByRole('button', { name: '回首頁看看' }).click()
   await page.waitForSelector('[data-testid=pet]')
+  await openMore(page)
   check('學會新招後，首頁出現「表演」按鈕', (await page.getByTestId('perform-btn').count()) === 1)
   const pb = await page.getByTestId('perform-btn').boundingBox()
   check('「表演」按鈕夠大（>= 56px）', pb.width >= 56 && pb.height >= 56, `${Math.round(pb.width)}x${Math.round(pb.height)}`)
@@ -382,6 +390,7 @@ try {
   // =====================================================================
   const attemptsNow = await dump(page, 'attempts')
   const knownNow = new Set(attemptsNow.flatMap((a) => [...objectsOf(BANK[a.questionId])]))
+  await openMore(page)
   await page.getByTestId('friends-btn').click()
   await page.waitForSelector('[data-testid=friends]')
   await page.waitForSelector('[data-testid=friend]')
@@ -408,6 +417,7 @@ try {
   check('阿悟說「你認識好多朋友，這個送給你！」', (await bubbleText(page)) === '你認識好多朋友，這個送給你！', await bubbleText(page))
   const got = await drainGifts(page, 5000)
   check('圖鑑禮物依序收完、佇列清空', got.length === owed && ((await settingsOf(page)).pendingGifts ?? []).length === 0, `got=${got.length} owed=${owed}`)
+  await openMore(page)
   await page.getByTestId('friends-btn').click()
   await page.waitForSelector('[data-testid=friend]')
   await page.waitForTimeout(400)
@@ -511,6 +521,7 @@ try {
       await sp.getByTestId('trick-close').click()
       // 圖鑑
       await addAttempts(sp, QUESTIONS.slice(0, 40).map((q) => q.id))
+      await openMore(sp)
       await sp.getByTestId('friends-btn').click()
       await sp.waitForSelector('[data-testid=friend]')
       await sp.waitForTimeout(500)

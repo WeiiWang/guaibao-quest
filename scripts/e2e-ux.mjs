@@ -662,7 +662,7 @@ async function misc(browser) {
     check(`[${size}] 任務無 console 錯誤`, errors.length === 0, errors.join('|'))
     await ctx.close()
   }
-  // 家長分頁列：10 個分頁都找得到
+  // 家長分頁列：11 個分頁（v6 新增「本週」）都找得到
   for (const [size, vp] of Object.entries(SIZES)) {
     const { ctx, page } = await freshApp(browser, vp)
     await page.getByRole('button', { name: /家長入口/ }).click()
@@ -673,7 +673,7 @@ async function misc(browser) {
     })
     await page.waitForSelector('[data-testid=parent-tabs]')
     const tabs = await page.locator('[data-testid=parent-tabs] .tab').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { name: e.textContent, x: r.x, y: Math.round(r.y), w: r.width, h: r.height } }))
-    check(`[${size}] 家長分頁 10 個全部存在`, tabs.length === 10, String(tabs.length))
+    check(`[${size}] 家長分頁 11 個全部存在（含 v6「本週」）`, tabs.length === 11 && tabs.some((t) => t.name === '本週'), String(tabs.length))
     const rows = new Set(tabs.map((t) => t.y)).size
     check(`[${size}] 家長分頁排成兩列`, rows === 2, String(rows))
     if (size === 'land' || size === 'port') check(`[${size}] 家長分頁不需要捲動就全部看得到（含「設定」「PM 預覽」）`, tabs.every((t) => t.x >= 0 && t.x + t.w <= vp.width), JSON.stringify(tabs.filter((t) => t.x + t.w > vp.width).map((t) => t.name)))

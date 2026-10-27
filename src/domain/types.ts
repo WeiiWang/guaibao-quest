@@ -4,7 +4,7 @@ export type TaskStatus = 'todo' | 'pending' | 'approved' | 'rejected'
 export type LedgerKind = 'task' | 'bonus' | 'penalty' | 'purchase'
 export type Stage = 'egg' | 'baby' | 'adult'
 export type Expression = 'happy' | 'normal' | 'low' | 'eating'
-export type ShopKind = 'food' | 'decor' | 'coloring' | 'theme'
+export type ShopKind = 'food' | 'decor' | 'coloring' | 'theme' | 'hat'
 
 export interface Child {
   id: string
@@ -63,6 +63,8 @@ export interface Pet {
   feedStreak?: FeedStreak
   /** v5：阿悟學會的新招（id 見 domain/tricks.ts）。舊資料沒有這欄 = 還沒學會任何一招（不升 Dexie 版本） */
   tricks?: string[]
+  /** v6：戴著的帽子（商品 id，例 'hat-crown'）；沒有 = 沒戴。舊資料沒有這欄（不升 Dexie 版本） */
+  hat?: string
 }
 
 /** v5：阿悟拿給孩子的禮物（食物、材料或貼紙）。東西在發放當下就已經寫進背包，這裡只是「待展示」的佇列 */
@@ -188,6 +190,29 @@ export interface Settings {
   collectionRewarded?: number
   /** v5：待慶祝的新招（依序跳全螢幕慶祝，關掉後移除） */
   pendingTricks?: string[]
+  /** v6：成長相簿的回憶卡（依時間排序顯示；不升 Dexie 版本） */
+  album?: AlbumCard[]
+  /** v6：相簿已經依現況補建過舊里程碑（只補一次；之後新里程碑才會有「新卡」提示） */
+  albumInit?: boolean
+}
+
+/** v6：回憶卡的種類 */
+export type AlbumKind = 'hatch' | 'grow' | 'trick' | 'chapter' | 'hat'
+/** v6：成長相簿的一張回憶卡。畫面用元件即時繪製（不截圖）：阿悟當時的姿勢圖、日期、一句話 */
+export interface AlbumCard {
+  /** 固定規則的 id（hatch、grow、trick:<招>、chapter:<章>、hat:first），同一件事不會重複 */
+  id: string
+  at: number
+  kind: AlbumKind
+  /** 阿悟的姿勢圖（public/art 素材名，例 pet-adult-cheer） */
+  art: string
+  caption: string
+  /** 回憶當時戴的帽子（得到第一頂帽子那張才有） */
+  hat?: string
+  /** 還沒給孩子看過（首頁依序跳出來，看過後移除這個旗標） */
+  fresh?: boolean
+  /** 日期是估計的（補建的舊里程碑）：畫面顯示「以前」而不是日期 */
+  approx?: boolean
 }
 
 /** 年齡檔：3 歲 = 幼幼模式；4–5 歲從難度 1；6–7 歲從難度 2 */

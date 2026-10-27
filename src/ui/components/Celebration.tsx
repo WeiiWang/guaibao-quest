@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
 import { PetSprite } from './PetSprite'
 import type { CelebrateInfo } from '../hooks'
+import { markCelebration } from '../celebrating'
 
 /** 全螢幕孵化 / 進化慶祝：舊型態 → 閃光 → 新型態 */
 export function Celebration({ info, onClose }: { info: CelebrateInfo; onClose: () => void }) {
   const [phase, setPhase] = useState<'old' | 'burst' | 'new'>('old')
+  // v6：讓首頁知道慶祝還開著（回憶卡要等它關掉才跳）
+  useEffect(() => {
+    markCelebration(1)
+    return () => markCelebration(-1)
+  }, [])
   useEffect(() => {
     const a = window.setTimeout(() => setPhase('burst'), 1500)
     const b = window.setTimeout(() => setPhase('new'), 2000)

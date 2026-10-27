@@ -1,3 +1,4 @@
+import { HATS } from './hats'
 import { THEME_DEFS } from './theme'
 import type { ShopItem, TaskTemplate } from './types'
 
@@ -160,6 +161,8 @@ export const SHOP_ITEMS: ShopItem[] = [
   ...THEME_DEFS.filter((t) => !t.isDefault).map(
     (t): ShopItem => ({ id: t.id, kind: 'theme', name: t.name, price: 0, asset: t.id, themeSlot: t.slot, cost: t.cost }),
   ),
+  // v6：阿悟的帽子（商店「衣櫃」分頁；素材名 = 商品 id）
+  ...HATS.map((h): ShopItem => ({ id: h.id, kind: 'hat', name: h.name, price: h.price, asset: h.id })),
   ...COLORING_PAGE_IDS.map(
     (p): ShopItem => ({
       id: `coloring-${p}`,

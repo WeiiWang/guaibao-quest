@@ -13,11 +13,14 @@ import { AudioTab } from './AudioTab'
 import { SubscriptionTab } from './SubscriptionTab'
 import { TaskLimitNote } from './TaskLimitNote'
 import { PmTab } from './PmTab'
+import { WeeklyTab } from './WeeklyTab'
+import { DailyTip } from './DailyTip'
 import { PM_TOOLS_ENABLED } from '../../../db/pm'
 
-type Tab = 'review' | 'points' | 'tasks' | 'ledger' | 'learning' | 'playtime' | 'audio' | 'plan' | 'settings' | 'pm'
+type Tab = 'review' | 'weekly' | 'points' | 'tasks' | 'ledger' | 'learning' | 'playtime' | 'audio' | 'plan' | 'settings' | 'pm'
 const TABS: { id: Tab; label: string }[] = [
   { id: 'review', label: '審核' },
+  { id: 'weekly', label: '本週' },
   { id: 'points', label: '加/扣點' },
   { id: 'tasks', label: '任務管理' },
   { id: 'ledger', label: '點數紀錄' },
@@ -97,6 +100,7 @@ export function ParentArea({ onExit }: { onExit: () => void }) {
         <h1>家長專區</h1>
         <div className="header-right" />
       </header>
+      <DailyTip />
       <div className="tabs parent-tabs" role="tablist" data-testid="parent-tabs">
         {TABS.map((t) => (
           <button key={t.id} role="tab" aria-selected={tab === t.id} className={`tab ${tab === t.id ? 'on' : ''}`} onClick={() => setTab(t.id)}>
@@ -105,6 +109,7 @@ export function ParentArea({ onExit }: { onExit: () => void }) {
         ))}
       </div>
       {tab === 'review' && <ReviewTab />}
+      {tab === 'weekly' && <WeeklyTab />}
       {tab === 'points' && <PointsTab />}
       {tab === 'tasks' && (
         <>

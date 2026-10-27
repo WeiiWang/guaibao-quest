@@ -738,6 +738,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                               mood={mood}
                               eating={hovering}
                               pose={pv.pose ?? (life.asleep ? 'sleep' : undefined)}
+                              hat={pet.hat}
                               className={pv.anim || life.asleep ? '' : `idle ${mood === 'low' ? 'idle-slow' : ''}`}
                             />
                           </div>

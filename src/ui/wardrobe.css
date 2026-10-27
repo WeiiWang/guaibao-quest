@@ -1,0 +1,134 @@
+/* ============ v6 線 C：帽子衣櫃、成長相簿、首頁「更多」、家長週報 ============
+   新樣式都用 wd-（衣櫃）、al-（相簿）、more-（首頁更多）、wk-（家長週報）前綴，不用通用 class 名稱。 */
+
+/* ---------- 阿悟的帽子 ----------
+   帽子疊在 .wd-art 裡：.wd-art 永遠和阿悟圖本身一樣大（高度取容器高度與「容器寬度 / 圖片寬高比」較小者，貼底置中），
+   所以 x / y / w 的百分比就是圖片上的位置。 */
+.pet-sprite.wd-has-hat { position: relative; container-type: size; }
+.wd-art {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); height: 100%; aspect-ratio: var(--ar, 0.75);
+  height: min(100cqh, calc(100cqw / var(--ar, 0.75)));
+}
+.wd-art .pet-img { width: 100%; height: 100%; }
+.wd-hat { position: absolute; z-index: 3; pointer-events: none; display: block; }
+.wd-hat .wd-hat-img { width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%; filter: drop-shadow(0 3px 2px rgba(74, 40, 10, 0.3)); }
+.wd-hat .wd-hat-emoji {
+  position: absolute; inset: 0; display: grid; place-items: end center; line-height: 1; font-size: calc(var(--hw, 46) * 0.9cqw);
+  filter: drop-shadow(0 3px 2px rgba(74, 40, 10, 0.3)); -webkit-text-stroke: 0;
+}
+@supports not (height: 1cqh) {
+  .wd-hat .wd-hat-emoji { font-size: 3rem; }
+}
+
+/* ---------- 開發用：帽子錨點檢查頁（#hatpreview） ---------- */
+.wd-preview { padding: 12px 14px 40px; background: #fbf3e6; min-height: 100dvh; }
+.wd-preview h1 { font-size: 1.1rem; margin: 0 0 8px; }
+.wd-preview h2 { font-size: 1rem; margin: 10px 0 4px; }
+.wd-preview ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 6px; }
+.wd-preview li { display: grid; justify-items: center; gap: 2px; font-size: 0.8rem; font-weight: 800; }
+.wd-preview-box { width: 100%; aspect-ratio: 0.8; background: #fff; border-radius: 14px; position: relative; overflow: visible; box-shadow: inset 0 0 0 1px rgba(74, 59, 53, 0.1); }
+.wd-preview-box .pet-sprite { position: absolute; inset: 14% 0 0; width: auto; height: auto; }
+
+/* ---------- 首頁右側：工坊、背包、更多（托盤） ---------- */
+.mini-candy.sky { --c: var(--sky); --cd: var(--sky-deep); }
+.more-wrap { position: relative; }
+.more-btn { width: 100%; }
+.more-btn .mini-emoji { font-weight: 900; }
+.more-tray {
+  position: absolute; right: calc(100% + 12px); bottom: 0; z-index: 3; width: max-content; display: grid; grid-template-columns: repeat(2, auto); gap: 12px; padding: 12px; border-radius: 32px;
+  background: rgba(255, 253, 249, 0.97); box-shadow: 0 5px 0 rgba(74, 59, 53, 0.12), 0 14px 26px rgba(74, 59, 53, 0.24); animation: more-in 0.18s ease-out both; transform-origin: 100% 100%;
+}
+.more-tray::after { content: ''; position: absolute; right: -8px; bottom: 24px; width: 18px; height: 18px; background: rgba(255, 253, 249, 0.97); transform: rotate(45deg); border-radius: 4px; }
+.more-tray .mini-candy { position: relative; z-index: 1; }
+@keyframes more-in { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
+
+/* ---------- 衣櫃（首頁的底部面板） ---------- */
+.wd-back { position: fixed; inset: 0; z-index: 95; display: grid; align-items: end; justify-items: center; background: rgba(74, 59, 53, 0.38); animation: fade-in 0.2s; }
+.wd-sheet {
+  width: min(100%, 600px); max-height: 82dvh; overflow-y: auto; padding: 14px 16px max(18px, env(safe-area-inset-bottom)); border-radius: 32px 32px 0 0;
+  background: #fffdf9; box-shadow: 0 -8px 30px rgba(74, 59, 53, 0.25); animation: wd-up 0.25s cubic-bezier(0.2, 1.1, 0.4, 1) both;
+}
+@keyframes wd-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.wd-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.wd-head h2 { margin: 0; font-size: 1.35rem; }
+.wd-close { width: 56px; height: 56px; border-radius: 50%; border: 0; background: #f3ede4; font-size: 1.3rem; font-weight: 900; color: var(--ink); }
+.wd-grid { list-style: none; margin: 0; padding: 0 0 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
+.wd-tile {
+  position: relative; width: 100%; min-height: 112px; padding: 8px 4px 8px; border-radius: 24px; border: 4px solid transparent; display: grid; justify-items: center; align-content: center; gap: 2px;
+  background: #fff; color: var(--ink); font: inherit; font-weight: 900; box-shadow: 0 4px 0 rgba(74, 59, 53, 0.12), 0 8px 14px rgba(74, 59, 53, 0.1);
+}
+.wd-tile:active { transform: translateY(3px); }
+.wd-tile.on { border-color: var(--mint-deep); background: color-mix(in srgb, var(--mint) 22%, #fff); }
+.wd-tile.locked { background: #f3ede4; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.06); }
+.wd-tile.locked .wd-tile-art { filter: grayscale(1) opacity(0.45); }
+.wd-tile-art { display: grid; place-items: center; width: 64px; height: 64px; font-size: 2.6rem; line-height: 1; }
+.wd-tile-art .art, .wd-tile-art .art-emoji { width: 64px; height: 64px; }
+.wd-tile-name { font-size: 0.95rem; }
+.wd-tile-price { display: inline-flex; align-items: center; gap: 2px; font-size: 0.9rem; color: #8a7b72; }
+.wd-tile-badge { position: absolute; right: -4px; top: -6px; padding: 2px 10px; border-radius: 999px; background: var(--mint-deep); color: #fff; font-size: 0.75rem; }
+.wd-shop { width: 100%; min-height: 56px; margin-top: 4px; }
+.wd-shop-note { margin: 0 0 12px; padding: 10px 14px; border-radius: 18px; background: color-mix(in srgb, var(--butter) 40%, #fff); font-weight: 800; line-height: 1.5; font-size: 0.95rem; }
+
+/* ---------- 成長相簿 ---------- */
+.al-progress { text-align: center; font-weight: 900; font-size: 1.15rem; color: var(--ink); margin: 4px 0 12px; }
+.al-progress small { display: block; font-size: 0.9rem; color: #8a7b72; font-weight: 800; }
+.al-grid { list-style: none; margin: 0 auto; padding: 4px 14px 28px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; max-width: 920px; }
+.al-grid > li:nth-child(odd) .al-card { transform: rotate(-1.2deg); }
+.al-grid > li:nth-child(even) .al-card { transform: rotate(1.2deg); }
+.al-card {
+  display: grid; gap: 6px; width: 100%; margin: 0; padding: 10px 10px 12px; border: 0; border-radius: 20px; background: #fff; color: var(--ink); font: inherit; text-align: center;
+  box-shadow: 0 5px 0 rgba(74, 59, 53, 0.1), 0 12px 20px rgba(74, 59, 53, 0.12);
+}
+button.al-card { cursor: pointer; }
+button.al-card:active { transform: translateY(3px) !important; }
+.al-card.fresh { box-shadow: 0 0 0 4px var(--butter), 0 5px 0 var(--butter-deep), 0 12px 20px rgba(74, 59, 53, 0.12); }
+.al-photo { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: linear-gradient(160deg, var(--butter-soft), var(--peach-soft)); }
+.al-kind-hatch .al-photo { background: linear-gradient(160deg, #fff3c9, #ffd9c2); }
+.al-kind-grow .al-photo { background: linear-gradient(160deg, #e3f5ff, #d6f2e4); }
+.al-kind-trick .al-photo { background: linear-gradient(160deg, #f1e7ff, #ffe0ee); }
+.al-kind-chapter .al-photo { background: linear-gradient(160deg, #dff7ea, #fff3c9); }
+.al-kind-hat .al-photo { background: linear-gradient(160deg, #fff0b8, #ffd2e0); }
+.al-photo .al-pet { position: absolute; left: 8%; right: 8%; top: 24%; bottom: 3%; width: auto; height: auto; }
+.al-tag { position: absolute; left: 6px; top: 6px; z-index: 4; padding: 2px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.92); font-size: 0.75rem; font-weight: 900; color: #6b5a50; box-shadow: 0 2px 0 rgba(74, 59, 53, 0.08); }
+.al-meta { display: grid; gap: 2px; }
+.al-date { font-size: 0.85rem; font-weight: 800; color: #8a7b72; }
+.al-caption { margin: 0; font-size: 1rem; font-weight: 900; line-height: 1.35; text-wrap: balance; }
+.al-card.big { width: min(76vw, 320px); margin: 0 auto; }
+.al-card.big .al-caption { font-size: 1.2rem; }
+.al-view { display: grid; justify-items: center; padding: 4px 0 10px; }
+/* 新的回憶卡：不擋住畫面（外框不接觸碰，只有卡片和按鈕可以點），幾秒後自己收進相簿 */
+.al-pop { position: fixed; left: 0; right: 0; top: calc(max(14px, env(safe-area-inset-top)) + 70px); z-index: 100; display: grid; justify-items: center; pointer-events: none; }
+.al-pop-sheet {
+  pointer-events: auto; display: grid; justify-items: center; gap: 8px; padding: 10px 14px 12px; border-radius: 28px; background: rgba(255, 244, 200, 0.97);
+  box-shadow: 0 6px 0 rgba(224, 165, 44, 0.4), 0 18px 30px rgba(120, 70, 30, 0.26); animation: al-drop 0.5s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+@keyframes al-drop { from { opacity: 0; transform: translateY(-40px) scale(0.8); } to { opacity: 1; transform: none; } }
+.al-pop-title { margin: 0; font-size: 1.15rem; font-weight: 900; color: var(--ink); }
+.al-pop .al-card.big { width: min(56vw, 210px); transform: rotate(-1.5deg); }
+.al-pop .al-card.big .al-caption { font-size: 1.05rem; }
+.al-pop-actions { display: flex; gap: 10px; }
+.al-pop-actions .btn { min-width: 96px; min-height: 56px; font-size: 1.05rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .more-tray, .wd-sheet, .al-pop-sheet { animation: none; }
+}
+
+/* ---------- v6 版面修正 ---------- */
+/* 手機：狀態卡縮成一小條（名字與心情同一行、飽足條變細），掛在牆上的畫比較不會被蓋到。
+   卡片本來就是半透明、不接觸碰（pointer-events: none）。 */
+@media (max-width: 560px) {
+  .home .room-frame .pet-hud { left: 10px; gap: 0; padding: 4px 10px 5px; border-radius: 16px; max-width: 58%; }
+  .home .room-frame .pet-hud .pet-name { font-size: 0.98rem; line-height: 1.25; white-space: nowrap; }
+  .home .room-frame .pet-hud .pet-name .mood-text { margin-left: 4px; font-size: 0.78rem; }
+  .home .room-frame .pet-hud .hunger { gap: 6px; font-size: 0.78rem; line-height: 1.1; }
+  .home .room-frame .pet-hud .hunger .bar { height: 9px; min-width: 64px; }
+  .home .room-frame .pet-hud .grow-hint { font-size: 0.74rem; line-height: 1.2; }
+  .more-tray { gap: 10px; padding: 10px; border-radius: 28px; }
+}
+
+/* 直向地圖：場景高度原本固定 62dvh，平板直向（高度 > 1100px）下方會空出一大片。
+   改成「至少 62dvh、但填滿扣掉標題 / 今日冒險 / 章節列之後剩下的高度」；手機與一般直向不受影響（62dvh 比較大）。
+   只改 CSS（MapScreen 屬於其他線）。 */
+@media (max-aspect-ratio: 1 / 1) {
+  .adv-map .adv-scene { width: max(100%, calc(max(62dvh, 100dvh - 410px) * 16 / 9)); }
+}

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
-import { pmAddFood, pmAddMaterials, pmAddStars, pmClearPoops, pmGrantGift, pmOwnAllDecor, pmQueueTrickCelebrations, pmSetHunger, pmSetStage, pmUnlockAllTricks } from '../../../db/pm'
+import { pmAddFood, pmAddMaterials, pmAddStars, pmClearPoops, pmGrantGift, pmOwnAllDecor, pmOwnAllHats, pmRebuildAlbum, pmQueueTrickCelebrations, pmSetHunger, pmSetStage, pmUnlockAllTricks } from '../../../db/pm'
 import { TRICKS } from '../../../domain/tricks'
 import { getFastSchedule, sendPetCommand, setFastSchedule, setTodMode, type PetCommand } from '../../../pet/bus'
 import type { TodMode } from '../../../pet/daynight'
@@ -174,6 +174,8 @@ export function PmTab({ onExit }: { onExit: () => void }) {
           <button className="btn" onClick={() => run(() => pmAddMaterials(20), '每種材料 +20')}>材料各 +20</button>
           <button className="btn" onClick={() => run(async () => toast(`${await pmAddFood(5)} 種食物各 +5`, 'ok'), '')}>食物各 +5</button>
           <button className="btn" onClick={() => run(async () => toast(`擁有全部 ${await pmOwnAllDecor()} 件家具`, 'ok'), '')}>擁有全部家具</button>
+          <button className="btn" data-pm="own-hats" onClick={() => run(async () => toast(`擁有全部 ${await pmOwnAllHats()} 頂帽子`, 'ok'), '')}>買下全部帽子</button>
+          <button className="btn" data-pm="rebuild-album" onClick={() => run(async () => toast(`相簿補建完成：${await pmRebuildAlbum()} 張卡`, 'ok'), '')}>補建相簿</button>
         </div>
       </div>
 

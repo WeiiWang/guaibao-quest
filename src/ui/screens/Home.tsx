@@ -15,10 +15,17 @@ import { Art } from '../components/Art'
 import { Icon } from '../components/Icon'
 import { RoomView } from '../components/RoomView'
 import { TrickCelebrate } from '../components/TrickCelebrate'
+import { MoreTray, type MoreItem } from '../components/MoreTray'
+import { Wardrobe } from '../components/Wardrobe'
+import { MemoryPop } from '../components/MemoryPop'
+import { useCelebrationOpen } from '../celebrating'
+import { useCelebrateSmall } from '../feedback'
+import { freshCards } from '../../domain/album'
+import { HAT_IDS, hatEggLine, hatOf, hatOffLine, hatWearLine } from '../../domain/hats'
 import { isTrickId, type TrickId } from '../../domain/tricks'
 import '../meta.css'
 import { usePetFace } from '../components/PetSprite'
-import { useBalance } from '../hooks'
+import { useBalance, useToast } from '../hooks'
 import { PersonSwitch } from '../../profiles/PersonSwitch'
 import type { Screen } from '../App'
 import type { Pet } from '../../domain/types'
@@ -107,6 +114,7 @@ export function Home({ childName, now, go, initialEdit }: Props) {
       await repo.grantDailyGift(now)
       await repo.syncCollection(now)
       await repo.syncTricks()
+      await repo.syncAlbum(now) // v6：成長相簿：補建舊里程碑、新增剛發生的（排在最後，獎勵才會依序出現）
     })()
     // now 每 15 秒變一次；只在日期變動時重新檢查
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,6 +136,14 @@ export function Home({ childName, now, go, initialEdit }: Props) {
     }, 1400)
     return () => window.clearTimeout(t)
   }, [showTrick, celebrating])
+
+  // v6：回憶卡是獎勵依序出現的最後一個（材料 → 食物 → 新招 → 回憶卡）：禮物收完、新招慶祝關掉、孵化慶祝關掉之後才跳
+  const toast = useToast()
+  const small = useCelebrateSmall()
+  const celebrationOpen = useCelebrationOpen()
+  const [wardrobeOpen, setWardrobeOpen] = useState(false)
+  const nextCard = freshCards(settings?.album)[0]
+  const showMemory = !!nextCard && !!pet && !initialEdit && pendingGifts.length === 0 && !showTrick && !celebrationOpen && !wardrobeOpen
 
   // 首次進首頁的引導：冒險地圖按鈕亮起、手指指著它，語音「我們去冒險吧」（只出現一次）
   const showGuide = !!settings && !settings.homeGuideShown && !initialEdit
@@ -157,6 +173,33 @@ export function Home({ childName, now, go, initialEdit }: Props) {
 
   const edit = !!initialEdit
   const canPerform = pet.stage !== 'egg' && (pet.tricks?.length ?? 0) > 0
+  const voiceOn = learningSettingsOf(settings).voiceOn
+  const ownedHats = HAT_IDS.filter((id) => qtyOf(id) > 0)
+  const openWardrobe = () => {
+    if (pet.stage === 'egg') {
+      const line = hatEggLine(pet.name)
+      toast(line, 'info')
+      sayText(line, { enabled: voiceOn })
+      return
+    }
+    setWardrobeOpen(true)
+  }
+  const pickHat = async (hatId: string | null) => {
+    const r = await repo.setHat(hatId)
+    if (!r.ok) {
+      toast(r.error, 'warn')
+      return
+    }
+    setWardrobeOpen(false)
+    const line = hatId ? hatWearLine(pet.name, hatOf(hatId)?.name ?? '帽子') : hatOffLine()
+    small('place', { at: document.querySelector('[data-testid=pet]'), phrase: line })
+  }
+  const moreItems: MoreItem[] = [
+    ...(canPerform ? [{ id: 'perform', label: '表演', emoji: '🎪', tone: 'mint' as const, onClick: () => askPerform('random'), testId: 'perform-btn', aria: `表演：叫${pet.name}表演一招` }] : []),
+    { id: 'friends', label: '朋友', emoji: '📖', tone: 'lavender', onClick: () => go('friends'), testId: 'friends-btn' },
+    { id: 'album', label: '相簿', emoji: '📷', tone: 'bubblegum', onClick: () => go('album'), testId: 'album-btn', aria: '成長相簿' },
+    { id: 'wardrobe', label: '衣櫃', emoji: '👒', tone: 'butter', onClick: openWardrobe, testId: 'wardrobe-btn', aria: `${pet.name}的衣櫃` },
+  ]
 
   return (
     <main className="home theme-cream">
@@ -174,12 +217,6 @@ export function Home({ childName, now, go, initialEdit }: Props) {
       </header>
 
       <div className="side-tools">
-        {canPerform && (
-          <button className="mini-candy mint" onClick={() => askPerform('random')} data-testid="perform-btn" aria-label={`表演：叫${pet.name}表演一招`}>
-            <span className="mini-emoji" aria-hidden>🎪</span>
-            <span>表演</span>
-          </button>
-        )}
         <button className="mini-candy butter" onClick={() => go('workshop')} data-gift-target="material">
           <Icon name="ui-workshop" emoji="🔨" size={34} />
           <span>工坊</span>
@@ -188,10 +225,7 @@ export function Home({ childName, now, go, initialEdit }: Props) {
           <Icon name="ui-bag" emoji="🎒" size={34} />
           <span>背包</span>
         </button>
-        <button className="mini-candy lavender" onClick={() => go('friends')} data-testid="friends-btn">
-          <span className="mini-emoji" aria-hidden>📖</span>
-          <span>朋友</span>
-        </button>
+        <MoreTray items={moreItems} />
       </div>
 
       <RoomView
@@ -218,6 +252,32 @@ export function Home({ childName, now, go, initialEdit }: Props) {
           onClose={() => {
             demoed.current = null
             void repo.popPendingTrick()
+          }}
+        />
+      )}
+
+      {wardrobeOpen && (
+        <Wardrobe
+          petName={pet.name}
+          owned={ownedHats}
+          wearing={pet.hat}
+          voiceOn={voiceOn}
+          onPick={(id) => void pickHat(id)}
+          onClose={() => setWardrobeOpen(false)}
+          goShop={() => go({ name: 'shop', tab: 'hat' })}
+        />
+      )}
+      {showMemory && nextCard && (
+        <MemoryPop
+          key={nextCard.id}
+          card={nextCard}
+          petName={pet.name}
+          voiceOn={voiceOn}
+          soundOn={learningSettingsOf(settings).soundOn}
+          onClose={() => void repo.seeAlbumCard(nextCard.id)}
+          onOpenAlbum={() => {
+            void repo.seeAlbumCard(nextCard.id)
+            go('album')
           }}
         />
       )}

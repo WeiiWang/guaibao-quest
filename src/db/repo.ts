@@ -40,6 +40,8 @@ import { docOf, type PaintDoc } from '../domain/coloring'
 import { artworkSpot, clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
 import * as meta from './meta'
+import * as album from './album'
+import { isHatId } from '../domain/hats'
 import { getChapter } from '../learning/chapter'
 import { addMaterial, emptyCost, stationRewardQty, STATION_SIZE } from '../learning/scoring'
 import { SHOP_CATALOG, balanceOfMaterials, canCraft, type MaterialBalance } from '../learning/materials'
@@ -380,7 +382,7 @@ export class Repo {
    */
   async undoPurchase(ledgerId: string, now = this.clock()): Promise<Result<{ itemId: string; refunded: number }>> {
     const d = this.db
-    return d.transaction('rw', [d.ledger, d.inventory], async () => {
+    return d.transaction('rw', [d.ledger, d.inventory, d.pets, d.settings], async () => {
       const entry = await d.ledger.get(ledgerId)
       if (!entry || entry.kind !== 'purchase' || !entry.refId) return { ok: false, error: '找不到這筆購買' } as const
       if (now - entry.at > PURCHASE_UNDO_MS + 1500) return { ok: false, error: '太久了，不能退回了', reason: 'expired' } as const
@@ -388,6 +390,7 @@ export class Repo {
       if (!inv || inv.qty < 1) return { ok: false, error: '已經用掉了，不能退回', reason: 'used' } as const
       await d.ledger.delete(ledgerId)
       await d.inventory.put({ ...inv, qty: inv.qty - 1 })
+      if (isHatId(entry.refId)) await album.afterHatUndone(d, entry.refId) // v6：帽子退回：正戴著就拿下、第一頂帽子的回憶卡收回
       return { ok: true, itemId: entry.refId, refunded: -entry.delta } as const
     })
   }
@@ -419,6 +422,7 @@ export class Repo {
       if (pp.due !== null) r.pet.poopDue = [...(pet.poopDue ?? []), pp.due]
       await d.pets.put(r.pet)
       await d.inventory.put({ ...inv, qty: inv.qty - 1 })
+      if (r.evolvedTo) await album.addGrowthCard(d, r.pet.name, r.evolvedTo, now) // v6：孵化 / 長大的當下新增一張回憶卡
       return { ok: true, pet: r.pet, evolvedTo: r.evolvedTo } as const
     })
   }
@@ -855,6 +859,26 @@ export class Repo {
   }
   popPendingTrick() {
     return meta.popPendingTrick(this.db)
+  }
+
+  // ---------- v6：帽子衣櫃 / 成長相簿（實作在 db/album.ts） ----------
+  setHat(hatId: string | null) {
+    return album.setHat(this.db, hatId)
+  }
+  ownedHats() {
+    return album.ownedHats(this.db)
+  }
+  getAlbum() {
+    return album.getAlbum(this.db)
+  }
+  syncAlbum(now = this.clock()) {
+    return album.syncAlbum(this.db, now)
+  }
+  seeAlbumCard(id: string) {
+    return album.seeCard(this.db, id)
+  }
+  rebuildAlbum(now = this.clock()) {
+    return album.rebuildAlbum(this.db, now)
   }
 
   /** 章末寶箱：5 站都通關後才能開，每輪一次 */

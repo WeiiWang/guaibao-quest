@@ -1,0 +1,23 @@
+/* 家長週報（v6 線 C）與今日小提示。class 一律 wk- 前綴；其餘沿用 learning.css 的 lt- 樣式 */
+.wk-head h2 { margin-bottom: 2px; }
+.wk-subject + .wk-subject { border-top: 1px solid rgba(74, 59, 53, 0.1); margin-top: 8px; }
+.wk-skills { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.wk-skills li { position: relative; padding: 6px 14px 6px 14px; border-radius: 16px; background: color-mix(in srgb, var(--sky) 14%, #fff); }
+.wk-skills li.new { background: color-mix(in srgb, var(--mint) 26%, #fff); }
+.wk-flag { display: inline-block; background: var(--mint); margin-bottom: 2px; }
+.wk-head .lt-big { gap: 10px 26px; }
+.wk-tricks { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.wk-tricks li { display: flex; gap: 12px; align-items: center; padding: 8px 14px; border-radius: 16px; background: color-mix(in srgb, var(--butter) 30%, #fff); }
+.wk-tricks b { font-size: 1.1rem; }
+.wk-tricks .lt-note { margin: 0; }
+.wk-trick-emoji { font-size: 2rem; line-height: 1; }
+.wk-tip-group + .wk-tip-group { border-top: 1px solid rgba(74, 59, 53, 0.1); }
+.wk-tip-list { list-style: disc; padding-left: 1.3em; margin: 4px 0 8px; display: grid; gap: 2px; }
+.wk-album { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+/* 今日小提示：家長區最上方 */
+.wk-daily {
+  display: flex; gap: 10px; align-items: flex-start; margin: 0 0 12px; padding: 10px 16px; border-radius: 20px; line-height: 1.5; font-weight: 700;
+  background: color-mix(in srgb, var(--butter) 40%, #fff); box-shadow: 0 3px 0 rgba(224, 165, 44, 0.3);
+}
+.wk-daily b { flex: none; font-size: 0.85rem; padding: 2px 10px; border-radius: 999px; background: var(--butter-deep, #e0a52c); color: #fff; margin-top: 2px; }
+.wk-daily span { flex: 1; min-width: 0; }

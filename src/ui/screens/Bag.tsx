@@ -15,7 +15,7 @@ export function BagScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const owned = inventory
     .filter((v) => v.qty > 0)
     .map((v) => ({ inv: v, item: shopItems.find((i) => i.id === v.itemId) }))
-    .filter((x) => x.item && x.item.kind !== 'coloring' && x.item.kind !== 'theme')
+    .filter((x) => x.item && x.item.kind !== 'coloring' && x.item.kind !== 'theme' && x.item.kind !== 'hat')
 
   return (
     <main className="screen theme-bubblegum">

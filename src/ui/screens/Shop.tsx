@@ -8,6 +8,9 @@ import { localDateStr } from '../../domain/date'
 import { canBuy } from '../../domain/shop'
 import { PURCHASE_UNDO_MS } from '../../domain/constants'
 import { artName, FOOD_EMOJI } from '../../art/items'
+import { hatBuyLine, hatEggLine, hatOffLine, hatOf, hatWearLine } from '../../domain/hats'
+import { sayText } from '../../learning/speech'
+import { useLearningSettings } from '../learningHooks'
 import type { ShopItem, ShopKind } from '../../domain/types'
 import { ColoringSvg } from '../components/ColoringThumb'
 import { Icon } from '../components/Icon'
@@ -26,6 +29,7 @@ export const BUY_LOCK_MS = 600
 const TABS: { kind: ShopKind; label: string }[] = [
   { kind: 'food', label: '飼料' },
   { kind: 'coloring', label: '著色頁' },
+  { kind: 'hat', label: '衣櫃' },
 ]
 
 /** 飽足值：用 1–5 顆小愛心表示 */
@@ -40,7 +44,8 @@ function Hearts({ n, hunger }: { n: number; hunger?: number }) {
 }
 
 /** 買到的東西用什麼小圖飛、退回鈕上放什麼：食物用食物圖，著色頁用調色盤 */
-const iconOf = (item: ShopItem) => (item.kind === 'coloring' ? { name: 'ui-coloring', emoji: '🎨' } : { name: artName(item), emoji: FOOD_EMOJI[item.asset] ?? '🎁' })
+const emojiOf = (item: ShopItem): string => (item.kind === 'hat' ? hatOf(item.id)?.emoji ?? '🎩' : FOOD_EMOJI[item.asset] ?? '🎁')
+const iconOf = (item: ShopItem) => (item.kind === 'coloring' ? { name: 'ui-coloring', emoji: '🎨' } : { name: artName(item), emoji: emojiOf(item) })
 
 interface Undo {
   ledgerId: string
@@ -51,6 +56,8 @@ interface Undo {
 export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void; initialTab?: Extract<Screen, { name: 'shop' }>['tab'] }) {
   const toast = useToast()
   const small = useCelebrateSmall()
+  const { voiceOn } = useLearningSettings()
+  const pet = useLiveQuery(() => db.pets.get('pet'), [])
   const [tab, setTab] = useState<ShopKind>(initialTab ?? 'food')
   const [undo, setUndo] = useState<Undo | null>(null)
   const undoTimer = useRef<number | undefined>(undefined)
@@ -77,7 +84,7 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
       if (!r.ok) return toast(r.error, 'warn')
       const card = btn.closest('.shop-item')
       const art = card?.querySelector('.shop-art') ?? btn
-      small('buy', { at: art, phrase: `買到${item.name.replace('著色頁：', '')}囉！` })
+      small('buy', { at: art, phrase: item.kind === 'hat' ? hatBuyLine(item.name) : `買到${item.name.replace('著色頁：', '')}囉！` })
       // 買到的東西飛進右上角的背包
       const rect = art.getBoundingClientRect()
       const px = Math.min(72, rect.height)
@@ -93,6 +100,17 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
     } finally {
       busy.current = false
     }
+  }
+  /** 衣櫃：已經擁有的帽子，在這裡直接戴上或拿下 */
+  const wear = async (item: ShopItem) => {
+    const off = pet?.hat === item.id
+    const r = await repo.setHat(off ? null : item.id)
+    if (!r.ok) {
+      toast(r.error, 'warn')
+      sayText(r.reason === 'egg' ? hatEggLine(pet?.name ?? '阿悟') : r.error, { enabled: voiceOn })
+      return
+    }
+    small('place', { phrase: off ? hatOffLine() : hatWearLine(pet?.name ?? '阿悟', item.name) })
   }
   const doUndo = async () => {
     if (!undo) return
@@ -127,6 +145,11 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
           </button>
         ))}
       </div>
+      {tab === 'hat' && (
+        <p className="wd-shop-note" data-testid="hat-note">
+          用星星買帽子給{pet?.name ?? '阿悟'}戴！買好之後在這裡按「戴上」，或回首頁點「更多」裡的衣櫃。
+        </p>
+      )}
       <ul className={`shop-grid ${tab === 'food' ? 'food-grid' : ''}`} data-testid={`shop-grid-${tab}`}>
         {items.map((item) => {
           const owned = inventory.find((v) => v.itemId === item.id)?.qty ?? 0
@@ -139,7 +162,7 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
                 {item.kind === 'coloring' ? (
                   <ColoringSvg pageId={item.asset} className="shop-thumb" />
                 ) : (
-                  <Icon name={artName(item)} emoji={FOOD_EMOJI[item.asset]} alt={item.name} className="shop-sprite" />
+                  <Icon name={artName(item)} emoji={emojiOf(item)} alt={item.name} className="shop-sprite" />
                 )}
               </div>
               <div className="shop-name">{item.name}</div>
@@ -148,6 +171,11 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
                 <Icon name="ui-star" emoji="⭐" size={20} /> {item.price}
                 {item.kind === 'food' && owned > 0 ? <small>背包 {owned}</small> : null}
               </div>
+              {item.kind === 'hat' && owned > 0 ? (
+                <button className={`btn buy-btn ${pet?.hat === item.id ? '' : 'primary'}`} onClick={() => void wear(item)} data-testid="wear-btn" aria-pressed={pet?.hat === item.id}>
+                  {pet?.hat === item.id ? '拿下' : '戴上'}
+                </button>
+              ) : (
               <button className="btn primary buy-btn" disabled={!check.ok} onClick={(e) => buy(item, e.currentTarget)} data-testid="buy-btn">
                 {check.ok ? (
                   <>
@@ -159,6 +187,7 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
                   `還差 ${check.shortBy} 點`
                 )}
               </button>
+              )}
             </li>
           )
         })}

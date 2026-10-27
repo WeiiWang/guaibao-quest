@@ -3,11 +3,13 @@
 import { ADULT_AT_FEED_COUNT, BABY_AT_FEED_COUNT } from '../domain/constants'
 import { localDateStr } from '../domain/date'
 import { rollDailyGift } from '../domain/gifts'
+import { HAT_IDS } from '../domain/hats'
 import { TRICK_IDS } from '../domain/tricks'
 import type { Stage } from '../domain/types'
 import { MATERIAL_IDS } from '../learning/types'
 import { db } from './db'
 import { queueGifts } from './meta'
+import { rebuildAlbum } from './album'
 import { newId } from './repo'
 
 export const PM_TOOLS_ENABLED = true
@@ -80,4 +82,17 @@ export async function pmGrantGift(): Promise<void> {
   await db.transaction('rw', [db.settings, db.inventory, db.materialLedger], async () => {
     await queueGifts(db, [rollDailyGift(Math.random, localDateStr(at), at)])
   })
+}
+
+/** 擁有全部帽子（不戴上；回首頁點「更多」→「衣櫃」，或到商店「衣櫃」分頁戴） */
+export async function pmOwnAllHats(): Promise<number> {
+  await db.transaction('rw', db.inventory, async () => {
+    for (const id of HAT_IDS) await db.inventory.put({ id, itemId: id, qty: 1 })
+  })
+  return HAT_IDS.length
+}
+
+/** 清掉成長相簿，依現況整個重新補建（舊里程碑；不標「新」）。回傳補了幾張 */
+export async function pmRebuildAlbum(): Promise<number> {
+  return rebuildAlbum(db, Date.now())
 }
