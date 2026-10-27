@@ -109,7 +109,7 @@ export function Home({ childName, now, go, initialEdit }: Props) {
       <header className="home-top">
         <NameCapsule childName={childName} pet={pet} now={now} />
         <button
-          className="lock-btn"
+          className="parent-lock"
           onClick={() => go('parent')}
           aria-label={pending > 0 ? `家長入口，${pending} 項等待確認` : '家長入口'}
           title="家長入口"

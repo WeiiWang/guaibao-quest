@@ -274,14 +274,14 @@ img.art { object-fit: contain; }
 .hello-name { font-size: 1.35rem; font-weight: 900; max-width: 8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hello-sep { width: 2px; height: 28px; border-radius: 2px; background: rgba(74, 59, 53, 0.15); }
 .points-inline { display: inline-flex; align-items: center; gap: 4px; font-size: 1.45rem; font-weight: 900; }
-.lock-btn {
+.parent-lock {
   position: relative; width: 58px; height: 58px; border-radius: 50%; border: 0; padding: 0; display: grid; place-items: center;
   background: rgba(255, 253, 249, 0.94); backdrop-filter: blur(6px);
   box-shadow: 0 5px 0 rgba(74, 59, 53, 0.1), 0 10px 20px rgba(74, 59, 53, 0.12);
   transition: transform 0.12s, box-shadow 0.12s;
 }
-.lock-btn:active { transform: translateY(4px) scale(0.95); box-shadow: 0 1px 0 rgba(74, 59, 53, 0.1); }
-.lock-btn .badge { top: -8px; right: -8px; }
+.parent-lock:active { transform: translateY(4px) scale(0.95); box-shadow: 0 1px 0 rgba(74, 59, 53, 0.1); }
+.parent-lock .badge { top: -8px; right: -8px; }
 
 /* 右側小按鈕：工坊、背包 */
 .side-tools { position: absolute; z-index: 40; right: 14px; top: calc(max(14px, env(safe-area-inset-top)) + 74px); display: grid; gap: 14px; }
@@ -446,7 +446,7 @@ img.art { object-fit: contain; }
   .avatar { width: 46px; height: 46px; }
   .hello-name { font-size: 1.15rem; max-width: 4.5em; }
   .points-inline { font-size: 1.25rem; }
-  .lock-btn { width: 56px; height: 56px; }
+  .parent-lock { width: 56px; height: 56px; }
   .side-tools { gap: 10px; top: calc(max(14px, env(safe-area-inset-top)) + 66px); }
   .mini-candy { width: 62px; font-size: 0.78rem; border-radius: 22px; }
   .candy { border-radius: 28px 28px 32px 32px / 32px 32px 36px 36px; }

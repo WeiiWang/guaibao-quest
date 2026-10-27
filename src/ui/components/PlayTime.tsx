@@ -10,6 +10,7 @@ import { speak } from '../../learning/speech'
 import { useNow } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
 import { Companion } from '../screens/adventure/Companion'
+import { Icon } from './Icon'
 import { Modal } from './Modal'
 import { PinPad } from './PinPad'
 import type { Screen } from '../App'
@@ -152,8 +153,14 @@ export function LockScreen({ go }: { go: (s: Screen['name'] | Screen) => void })
         <p className="lock-say">明天再一起冒險吧！</p>
         <p className="lock-sub">今天的遊玩時間用完了，可以先去寫任務、畫畫圖。</p>
         <div className="lock-actions">
-          <button className="lock-btn" onClick={() => go('tasks')}>今日任務</button>
-          <button className="lock-btn" onClick={() => go('coloring')}>著色本</button>
+          <button className="lock-go" onClick={() => go('tasks')} data-testid="lock-tasks">
+            <Icon name="ui-tasks" emoji="📝" size={46} />
+            <span>今日任務</span>
+          </button>
+          <button className="lock-go coloring" onClick={() => go('coloring')} data-testid="lock-coloring">
+            <Icon name="ui-coloring" emoji="🎨" size={46} />
+            <span>著色本</span>
+          </button>
         </div>
         <div className="lock-parent">
           <button className="lock-link" onClick={() => setAsking(true)} data-testid="lock-extend">家長：延長 {EXTEND_MINUTES} 分鐘</button>
