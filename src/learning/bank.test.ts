@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { QUESTIONS, getQuestion, isGentleOk, questionsFor } from './bank'
+import { QUESTIONS as ALL_QUESTIONS, getQuestion, isGentleOk, questionsFor } from './bank'
 import { CATEGORY_NAMES, COLOR_WORDS, getObject, mustObject, OBJECTS, type LearnObject } from './objects'
-import { DIFFICULTIES, SKILLS, type Question } from './types'
+import { DIFFICULTIES, MATH_SKILLS as SKILLS, type Question } from './types'
+
+/** 這個檔案驗證數學題庫（物件、種類、顏色）；英文題庫見 english.test.ts */
+const QUESTIONS = ALL_QUESTIONS.filter((q) => q.skill !== 'english')
 
 type ObjOf = (id: string | undefined) => LearnObject
 
@@ -109,6 +112,8 @@ export function solve(q: Question, obj: ObjOf = defaultObj): string[] {
       })
       return ok ? ['sorted'] : []
     }
+    default:
+      throw new Error(`${q.id}：${q.type} 不是數學題型（英文題見 english.test.ts）`)
   }
 }
 
@@ -204,6 +209,7 @@ describe('題庫完整性', () => {
   it('id 不重複、可由 id 取回', () => {
     expect(new Set(QUESTIONS.map((q) => q.id)).size).toBe(QUESTIONS.length)
     expect(getQuestion(QUESTIONS[0].id)).toBe(QUESTIONS[0])
+    expect(new Set(ALL_QUESTIONS.map((q) => q.id)).size).toBe(ALL_QUESTIONS.length)
     expect(getQuestion('nope')).toBeUndefined()
   })
   it('欄位齊全、答案在選項內、選項 id 不重複、引用的物件存在', () => {

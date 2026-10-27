@@ -139,7 +139,7 @@ function Main({ childName }: { childName: string }) {
         break
       case 'stage':
         body = screen.ceremony ? (
-          <Ceremony onMap={() => go('map')} go={go} />
+          <Ceremony chapterId={screen.chapterId} onMap={() => go('map')} go={go} />
         ) : (
           <StageScreen
             key={`${screen.chapterId}-${screen.station}`}

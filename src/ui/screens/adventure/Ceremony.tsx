@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
-import { HUAGUOSHAN } from '../../../learning/chapter'
+import { getChapter, HUAGUOSHAN } from '../../../learning/chapter'
 import { playSfx } from '../../../learning/sfx'
 import { say } from '../../../learning/speech'
 import { pickLine } from '../../../learning/lines'
@@ -15,10 +15,9 @@ import type { Screen } from '../../App'
 import { Companion } from './Companion'
 import './adventure.css'
 
-const ch = HUAGUOSHAN
-
-/** 章末儀式：打開寶箱 → 阿悟歡呼 → 額外材料 → 「今天的冒險完成了！」 */
-export function Ceremony({ onMap, go }: { onMap: () => void; go: (s: Screen) => void }) {
+/** 章末儀式：打開寶箱 → 阿悟歡呼 → 額外材料 → 「今天的冒險完成了！」（chapterId 是哪一章的寶箱，沒給就是花果山） */
+export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: () => void; go: (s: Screen) => void }) {
+  const ch = (chapterId && getChapter(chapterId)) || HUAGUOSHAN
   const { soundOn, voiceOn } = useLearningSettings()
   const prog = useLiveQuery(() => db.progress.get(ch.id), [])
   const [rewards, setRewards] = useState<MaterialCost | null>(null)

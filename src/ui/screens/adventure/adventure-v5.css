@@ -1,0 +1,160 @@
+/* v5 學習線：科目分頁、英文小島、每日冒險、英文單字題。既有規則在 adventure.css / adventure-v4.css，這裡只新增 */
+
+/* ---------- 科目分頁（地圖上方） ---------- */
+.adv-subjects { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.adv-subject {
+  --tab-tone: var(--mint-deep);
+  --tab-soft: var(--mint-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  min-width: 150px;
+  padding: 6px 26px 6px 10px;
+  border: 0;
+  border-radius: 34px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink);
+  font-weight: 900;
+  font-size: 1.4rem;
+  box-shadow: 0 5px 0 rgba(74, 59, 53, 0.12), inset 0 2px 0 #fff;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+}
+.adv-subject.tone-english { --tab-tone: var(--sky-deep); --tab-soft: var(--sky-soft); }
+.adv-subject:active { transform: translateY(4px) scale(0.97); box-shadow: 0 1px 0 rgba(74, 59, 53, 0.12); }
+.adv-subject-glyph {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: var(--tab-tone);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.16), inset 0 3px 0 rgba(255, 255, 255, 0.3);
+}
+.adv-subject[aria-selected='true'] { background: var(--tab-soft); box-shadow: 0 5px 0 var(--tab-tone), 0 0 0 4px var(--tab-tone); }
+
+/* ---------- 英文小島：同一張地圖轉色相（湖水變藍紫、樹變暖色），不需要新素材 ---------- */
+.adv-map.subject-english .adv-scroll { background: #cfeaf6; box-shadow: 0 8px 0 color-mix(in srgb, var(--sky-deep) 40%, transparent), 0 16px 28px rgba(74, 59, 53, 0.14); }
+.adv-scene.scene-english { background: linear-gradient(180deg, #bfe6f7 0%, #e6f6fb 46%, #bfe3f2 100%); }
+.adv-scene.scene-english.has-art { background: #cfeaf6; }
+.adv-scene.scene-english.has-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--map-bg) center / cover no-repeat;
+  filter: hue-rotate(50deg) saturate(0.95) brightness(1.04);
+}
+.adv-scene.scene-english .adv-hills .h1 { background: #ffe8b8; }
+.adv-scene.scene-english .adv-hills .h2 { background: #ffdca0; }
+.adv-scene.scene-english .adv-hills .h3 { background: #f6c97f; }
+
+/* ---------- 每日冒險 ---------- */
+.adv-daily {
+  --tone: var(--mint-deep);
+  --tone-soft: var(--mint-soft);
+  display: flex;
+  align-items: center;
+  gap: 14px 18px;
+  padding: 12px 22px 12px 14px;
+  border-radius: 36px;
+  background: linear-gradient(180deg, #fff, var(--tone-soft));
+  box-shadow: 0 6px 0 var(--tone), 0 14px 22px rgba(74, 59, 53, 0.1);
+}
+.subject-english .adv-daily { --tone: var(--sky-deep); --tone-soft: var(--sky-soft); }
+.adv-daily-text { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.adv-daily-text b { font-size: 1.5rem; font-weight: 900; line-height: 1.2; }
+.adv-daily-text span { font-size: 1.1rem; font-weight: 800; color: var(--ink-soft); line-height: 1.35; }
+.adv-daily.featured { animation: adv-daily-glow 2.4s ease-in-out infinite; }
+@keyframes adv-daily-glow {
+  0%, 100% { box-shadow: 0 6px 0 var(--tone), 0 14px 22px rgba(74, 59, 53, 0.1), 0 0 0 0 rgba(255, 214, 107, 0.7); }
+  50% { box-shadow: 0 6px 0 var(--tone), 0 14px 22px rgba(74, 59, 53, 0.1), 0 0 0 12px rgba(255, 214, 107, 0.35); }
+}
+.adv-daily .adv-btn { flex: none; }
+
+/* 今日徽章：金色圓章加緞帶，純 CSS */
+.daily-medal {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--medal, 64px);
+  height: var(--medal, 64px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #fff3b8, #ffd24d 55%, #f0a92a);
+  color: #fff;
+  font-size: calc(var(--medal, 64px) * 0.5);
+  line-height: 1;
+  text-shadow: 0 2px 0 rgba(176, 108, 0, 0.55);
+  box-shadow: 0 0 0 4px #fff, 0 5px 0 4px #d98f12, 0 10px 14px rgba(120, 70, 0, 0.25);
+  animation: adv-pop 0.5s cubic-bezier(0.3, 1.6, 0.6, 1) both;
+}
+.daily-got b { font-size: 1.5rem; font-weight: 900; }
+
+/* ---------- 英文單字題 ---------- */
+.qv-en .en-stem { flex: 1 1 auto; gap: 18px 22px; flex-wrap: wrap; min-height: clamp(150px, 26dvh, 260px); }
+.en-speak {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-width: 76px;
+  min-height: 76px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 38px;
+  background: radial-gradient(120% 100% at 30% 6%, #c9e8fb, var(--sky) 60%);
+  box-shadow: 0 6px 0 var(--sky-deep), 0 12px 16px rgba(74, 59, 53, 0.14), inset 0 3px 0 rgba(255, 255, 255, 0.6);
+  font-size: 2.2rem;
+  color: var(--ink);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.en-speak:active { transform: translateY(5px) scale(0.96); box-shadow: 0 1px 0 var(--sky-deep); }
+.en-speak.big { min-height: clamp(96px, 16dvh, 140px); padding: 0 34px; gap: 22px; font-size: clamp(2.6rem, 7dvh, 3.6rem); }
+.en-word { font-size: clamp(2.4rem, 7dvh, 3.8rem); font-weight: 900; letter-spacing: 0.02em; }
+.en-zh { font-size: clamp(2.8rem, 9dvh, 4.4rem); font-weight: 900; padding: 0 20px; }
+.en-pic { display: grid; place-items: center; width: clamp(110px, 20dvh, 180px); aspect-ratio: 1; filter: drop-shadow(0 6px 4px rgba(90, 50, 20, 0.18)); animation: adv-pop 0.4s both; }
+.en-pic .art, .en-pic .art-emoji { width: 100%; height: 100%; }
+.en-pic.swatch { border-radius: 50%; border: 6px solid #fff; box-shadow: 0 0 0 4px var(--ink-soft), 0 6px 0 rgba(0, 0, 0, 0.15); filter: none; }
+.en-pic.digit { border-radius: 36px; background: #fff; box-shadow: 0 0 0 4px var(--ink-soft), 0 6px 0 rgba(0, 0, 0, 0.12); filter: none; }
+.en-pic.digit b { font-size: clamp(4rem, 12dvh, 6.4rem); line-height: 1; }
+.en-swatch { width: min(60cqw, 130px); aspect-ratio: 1; border-radius: 50%; border: 6px solid #fff; box-shadow: 0 0 0 4px var(--ink-soft), 0 6px 0 rgba(0, 0, 0, 0.15); display: block; }
+.choice-word { font-size: clamp(2rem, 6dvh, 3rem); font-weight: 900; letter-spacing: 0.02em; word-break: keep-all; overflow-wrap: anywhere; }
+.qv-choices.en-text-choices { grid-auto-rows: clamp(96px, 17dvh, 170px); }
+.en-spell { display: inline-flex; gap: 8px; align-items: center; }
+.en-letter { display: grid; place-items: center; width: clamp(46px, 9dvh, 76px); height: clamp(60px, 12dvh, 96px); border-radius: 18px; background: #fff; font-size: clamp(2.2rem, 6.5dvh, 3.6rem); font-weight: 900; box-shadow: 0 5px 0 rgba(74, 59, 53, 0.12); }
+.en-letter.blank { background: var(--butter-soft); border: 4px dashed var(--ink); box-shadow: none; }
+.en-letter.blank.filled { border-style: solid; border-color: var(--mint-deep); background: var(--mint-soft); animation: adv-cheer 0.7s ease-in-out 2; }
+
+@media (max-width: 480px) {
+  .adv-subject { min-width: 0; flex: 1; padding-right: 16px; font-size: 1.2rem; gap: 8px; }
+  .adv-subject-glyph { width: 44px; height: 44px; font-size: 1rem; }
+  .adv-daily { flex-wrap: wrap; padding: 12px 14px; }
+  .adv-daily .adv-btn { width: 100%; }
+  .qv-en .en-stem { gap: 10px; }
+  .qv-en .en-stem-spell { flex-direction: column; }
+  .qv-en .en-stem { min-height: 0; padding: 8px; }
+  .qv-en .en-stem-spell .en-pic { width: clamp(72px, 11dvh, 110px); }
+  .en-letter { width: 38px; height: clamp(46px, 7.5dvh, 62px); font-size: 2rem; border-radius: 14px; }
+  .en-speak:not(.big) { min-width: 56px; min-height: 56px; font-size: 1.6rem; padding: 0 12px; }
+  .en-stem-spell .en-speak { margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adv-daily.featured, .daily-medal, .en-pic, .en-letter { animation: none !important; }
+}
+.adv-daily-icon { flex: none; display: grid; place-items: center; width: 84px; height: 84px; border-radius: 50%; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 4px 0 rgba(74, 59, 53, 0.12); }
+
+/* 橫向的平板：地圖縮到「整頁一屏放得下」（約 360px 留給標題、分頁、今日冒險卡片與章節進度），今日冒險不用捲動就看得到。
+   比這更窄就照舊左右捲動；直向與手機不受影響 */
+@media (min-aspect-ratio: 1 / 1) and (min-width: 700px) {
+  .adv-map .adv-scroll,
+  .adv-map .adv-daily { width: 100%; max-width: max(calc((100dvh - 360px) * 16 / 9), 560px); margin-inline: auto; }
+}
+
+/* 今日徽章（結算）：橫排，不把結算卡撐太高 */
+.daily-got { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 4px 0; }
+.daily-medal.big { --medal: 76px; }

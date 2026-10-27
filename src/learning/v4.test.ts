@@ -10,7 +10,7 @@ import { adaptPlan, displayQuestion, pickQuestion, planStation, seenFromAttempts
 import { applyAttempt, dueReviews, initialSkillState, MISSES_TO_UNMASTER, recordReview } from './skills'
 import { buildReport } from './report'
 import { say, registerLineAudio } from './speech'
-import { SKILLS, type Attempt, type Difficulty, type SkillId, type SkillState } from './types'
+import { MATH_SKILLS, SKILLS, type Attempt, type Difficulty, type SkillId, type SkillState } from './types'
 
 const T0 = new Date(2026, 5, 10, 9, 0, 0).getTime()
 const DAY = 24 * 60 * 60 * 1000
@@ -268,7 +268,8 @@ describe('站型模板（L-B）', () => {
       const plan = planStation({ stationIndex: st, states: states(), attempts: [], now: T0, rng: makeRng(st + 11), slots: slotsOf(st) })
       expect(plan).toHaveLength(5)
       expect(new Set(plan.map((p) => p.question.id)).size).toBe(5)
-      expect(SKILLS.map((s) => plan.filter((p) => p.question.skill === s).length).sort().join()).toBe('1,2,2')
+      expect(MATH_SKILLS.map((s) => plan.filter((p) => p.question.skill === s).length).sort().join()).toBe('1,2,2')
+      expect(plan.every((p) => p.question.skill !== 'english')).toBe(true) // 數學站不會混進英文
       // 難度 1 的數感有「拿給我」、分類難度 1 沒有拖曳歸類（退回點選）
       slotsOf(st).forEach((want, i) => {
         if (want === 'tapN') expect(interactionOf(plan[i])).toBe('tapN')

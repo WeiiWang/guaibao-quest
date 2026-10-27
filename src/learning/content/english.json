@@ -1,0 +1,2520 @@
+[
+  {
+    "id": "english-1-01", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"star","art":"obj-star"},
+      {"id":"watermelon","art":"food-watermelon"},
+      {"id":"rocket","art":"decor-rocket"}
+    ],
+    "answer": "star",
+    "hint": "星星的英文就是剛剛聽到的字。找找看，哪一個是星星？",
+    "params": {"word":"star","zh":"星星"}
+  },
+  {
+    "id": "english-1-02", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"bed","art":"decor-bed"},
+      {"id":"banana","art":"obj-banana"},
+      {"id":"carrot","art":"food-carrot"}
+    ],
+    "answer": "banana",
+    "hint": "香蕉的英文就是剛剛聽到的字。找找看，哪一個是香蕉？",
+    "params": {"word":"banana","zh":"香蕉"}
+  },
+  {
+    "id": "english-1-03", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"fish","art":"obj-fish"},
+      {"id":"chick","art":"obj-chick"},
+      {"id":"car","art":"decor-car"}
+    ],
+    "answer": "car",
+    "hint": "汽車的英文就是剛剛聽到的字。找找看，哪一個是汽車？",
+    "params": {"word":"car","zh":"汽車"}
+  },
+  {
+    "id": "english-1-04", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"car","art":"decor-car"},
+      {"id":"cookie","art":"food-cookie"},
+      {"id":"piano","art":"decor-piano"}
+    ],
+    "answer": "car",
+    "hint": "汽車的英文就是剛剛聽到的字。找找看，哪一個是汽車？",
+    "params": {"word":"car","zh":"汽車"}
+  },
+  {
+    "id": "english-1-05", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"cookie","art":"food-cookie"},
+      {"id":"watermelon","art":"food-watermelon"},
+      {"id":"ball","art":"decor-ball"}
+    ],
+    "answer": "watermelon",
+    "hint": "西瓜的英文就是剛剛聽到的字。找找看，哪一個是西瓜？",
+    "params": {"word":"watermelon","zh":"西瓜"}
+  },
+  {
+    "id": "english-1-06", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"cookie","art":"food-cookie"},
+      {"id":"fish","art":"obj-fish"},
+      {"id":"milk","art":"food-milk"}
+    ],
+    "answer": "milk",
+    "hint": "牛奶的英文就是剛剛聽到的字。找找看，哪一個是牛奶？",
+    "params": {"word":"milk","zh":"牛奶"}
+  },
+  {
+    "id": "english-1-07", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"rabbit","art":"obj-rabbit"},
+      {"id":"carrot","art":"food-carrot"},
+      {"id":"fish","art":"obj-fish"}
+    ],
+    "answer": "carrot",
+    "hint": "紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？",
+    "params": {"word":"carrot","zh":"紅蘿蔔"}
+  },
+  {
+    "id": "english-1-08", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"bed","art":"decor-bed"},
+      {"id":"rabbit","art":"obj-rabbit"},
+      {"id":"star","art":"obj-star"}
+    ],
+    "answer": "star",
+    "hint": "星星的英文就是剛剛聽到的字。找找看，哪一個是星星？",
+    "params": {"word":"star","zh":"星星"}
+  },
+  {
+    "id": "english-1-09", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"fish","art":"obj-fish"},
+      {"id":"watermelon","art":"food-watermelon"},
+      {"id":"cake","art":"food-cake"}
+    ],
+    "answer": "fish",
+    "hint": "小魚的英文就是剛剛聽到的字。找找看，哪一個是小魚？",
+    "params": {"word":"fish","zh":"小魚"}
+  },
+  {
+    "id": "english-1-10", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"carrot","art":"food-carrot"},
+      {"id":"rocket","art":"decor-rocket"},
+      {"id":"piano","art":"decor-piano"}
+    ],
+    "answer": "rocket",
+    "hint": "火箭的英文就是剛剛聽到的字。找找看，哪一個是火箭？",
+    "params": {"word":"rocket","zh":"火箭"}
+  },
+  {
+    "id": "english-1-11", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"rocket","art":"decor-rocket"},
+      {"id":"flower","art":"obj-flower"},
+      {"id":"clock","art":"decor-clock"}
+    ],
+    "answer": "clock",
+    "hint": "時鐘的英文就是剛剛聽到的字。找找看，哪一個是時鐘？",
+    "params": {"word":"clock","zh":"時鐘"}
+  },
+  {
+    "id": "english-1-12", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"bed","art":"decor-bed"},
+      {"id":"grape","art":"obj-grape"},
+      {"id":"rabbit","art":"obj-rabbit"}
+    ],
+    "answer": "bed",
+    "hint": "床的英文就是剛剛聽到的字。找找看，哪一個是床？",
+    "params": {"word":"bed","zh":"床"}
+  },
+  {
+    "id": "english-1-13", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"ball","art":"decor-ball"},
+      {"id":"carrot","art":"food-carrot"},
+      {"id":"cake","art":"food-cake"}
+    ],
+    "answer": "cake",
+    "hint": "蛋糕的英文就是剛剛聽到的字。找找看，哪一個是蛋糕？",
+    "params": {"word":"cake","zh":"蛋糕"}
+  },
+  {
+    "id": "english-1-14", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"chick","art":"obj-chick"},
+      {"id":"apple","art":"obj-apple"},
+      {"id":"ball","art":"decor-ball"}
+    ],
+    "answer": "chick",
+    "hint": "小雞的英文就是剛剛聽到的字。找找看，哪一個是小雞？",
+    "params": {"word":"chick","zh":"小雞"}
+  },
+  {
+    "id": "english-1-15", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"banana","art":"obj-banana"},
+      {"id":"tent","art":"decor-tent"},
+      {"id":"peach","art":"obj-peach"}
+    ],
+    "answer": "tent",
+    "hint": "帳篷的英文就是剛剛聽到的字。找找看，哪一個是帳篷？",
+    "params": {"word":"tent","zh":"帳篷"}
+  },
+  {
+    "id": "english-1-16", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"banana","art":"obj-banana"},
+      {"id":"rocket","art":"decor-rocket"},
+      {"id":"grape","art":"obj-grape"}
+    ],
+    "answer": "banana",
+    "hint": "香蕉的英文就是剛剛聽到的字。找找看，哪一個是香蕉？",
+    "params": {"word":"banana","zh":"香蕉"}
+  },
+  {
+    "id": "english-1-17", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"tent","art":"decor-tent"},
+      {"id":"car","art":"decor-car"},
+      {"id":"rocket","art":"decor-rocket"}
+    ],
+    "answer": "car",
+    "hint": "汽車的英文就是剛剛聽到的字。找找看，哪一個是汽車？",
+    "params": {"word":"car","zh":"汽車"}
+  },
+  {
+    "id": "english-1-18", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"lamp","art":"decor-lamp"},
+      {"id":"flower","art":"obj-flower"},
+      {"id":"carrot","art":"food-carrot"}
+    ],
+    "answer": "carrot",
+    "hint": "紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？",
+    "params": {"word":"carrot","zh":"紅蘿蔔"}
+  },
+  {
+    "id": "english-1-19", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"cookie","art":"food-cookie"},
+      {"id":"peach","art":"obj-peach"},
+      {"id":"bed","art":"decor-bed"}
+    ],
+    "answer": "cookie",
+    "hint": "餅乾的英文就是剛剛聽到的字。找找看，哪一個是餅乾？",
+    "params": {"word":"cookie","zh":"餅乾"}
+  },
+  {
+    "id": "english-1-20", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"peach","art":"obj-peach"},
+      {"id":"lamp","art":"decor-lamp"},
+      {"id":"flower","art":"obj-flower"}
+    ],
+    "answer": "flower",
+    "hint": "花的英文就是剛剛聽到的字。找找看，哪一個是花？",
+    "params": {"word":"flower","zh":"花"}
+  },
+  {
+    "id": "english-1-21", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"rabbit","art":"obj-rabbit"},
+      {"id":"flower","art":"obj-flower"},
+      {"id":"cake","art":"food-cake"}
+    ],
+    "answer": "flower",
+    "hint": "花的英文就是剛剛聽到的字。找找看，哪一個是花？",
+    "params": {"word":"flower","zh":"花"}
+  },
+  {
+    "id": "english-1-22", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"rabbit","art":"obj-rabbit"},
+      {"id":"tent","art":"decor-tent"},
+      {"id":"piano","art":"decor-piano"}
+    ],
+    "answer": "piano",
+    "hint": "鋼琴的英文就是剛剛聽到的字。找找看，哪一個是鋼琴？",
+    "params": {"word":"piano","zh":"鋼琴"}
+  },
+  {
+    "id": "english-1-23", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"cake","art":"food-cake"},
+      {"id":"peach","art":"obj-peach"},
+      {"id":"star","art":"obj-star"}
+    ],
+    "answer": "peach",
+    "hint": "桃子的英文就是剛剛聽到的字。找找看，哪一個是桃子？",
+    "params": {"word":"peach","zh":"桃子"}
+  },
+  {
+    "id": "english-1-24", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"grape","art":"obj-grape"},
+      {"id":"tent","art":"decor-tent"},
+      {"id":"watermelon","art":"food-watermelon"}
+    ],
+    "answer": "grape",
+    "hint": "葡萄的英文就是剛剛聽到的字。找找看，哪一個是葡萄？",
+    "params": {"word":"grape","zh":"葡萄"}
+  },
+  {
+    "id": "english-1-25", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"piano","art":"decor-piano"},
+      {"id":"apple","art":"obj-apple"},
+      {"id":"cookie","art":"food-cookie"}
+    ],
+    "answer": "piano",
+    "hint": "鋼琴的英文就是剛剛聽到的字。找找看，哪一個是鋼琴？",
+    "params": {"word":"piano","zh":"鋼琴"}
+  },
+  {
+    "id": "english-1-26", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"star","art":"obj-star"},
+      {"id":"apple","art":"obj-apple"},
+      {"id":"carrot","art":"food-carrot"}
+    ],
+    "answer": "apple",
+    "hint": "蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？",
+    "params": {"word":"apple","zh":"蘋果"}
+  },
+  {
+    "id": "english-1-27", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"rabbit","art":"obj-rabbit"},
+      {"id":"peach","art":"obj-peach"},
+      {"id":"lamp","art":"decor-lamp"}
+    ],
+    "answer": "lamp",
+    "hint": "燈的英文就是剛剛聽到的字。找找看，哪一個是燈？",
+    "params": {"word":"lamp","zh":"燈"}
+  },
+  {
+    "id": "english-1-28", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"peach","art":"obj-peach"},
+      {"id":"flower","art":"obj-flower"},
+      {"id":"ball","art":"decor-ball"}
+    ],
+    "answer": "flower",
+    "hint": "花的英文就是剛剛聽到的字。找找看，哪一個是花？",
+    "params": {"word":"flower","zh":"花"}
+  },
+  {
+    "id": "english-1-29", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"peach","art":"obj-peach"},
+      {"id":"ball","art":"decor-ball"},
+      {"id":"watermelon","art":"food-watermelon"}
+    ],
+    "answer": "peach",
+    "hint": "桃子的英文就是剛剛聽到的字。找找看，哪一個是桃子？",
+    "params": {"word":"peach","zh":"桃子"}
+  },
+  {
+    "id": "english-1-30", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"apple","art":"obj-apple"},
+      {"id":"tent","art":"decor-tent"},
+      {"id":"lamp","art":"decor-lamp"}
+    ],
+    "answer": "lamp",
+    "hint": "燈的英文就是剛剛聽到的字。找找看，哪一個是燈？",
+    "params": {"word":"lamp","zh":"燈"}
+  },
+  {
+    "id": "english-1-31", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"chick","art":"obj-chick"},
+      {"id":"lamp","art":"decor-lamp"},
+      {"id":"tent","art":"decor-tent"}
+    ],
+    "answer": "tent",
+    "hint": "帳篷的英文就是剛剛聽到的字。找找看，哪一個是帳篷？",
+    "params": {"word":"tent","zh":"帳篷"}
+  },
+  {
+    "id": "english-1-32", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"ball","art":"decor-ball"},
+      {"id":"chick","art":"obj-chick"},
+      {"id":"cookie","art":"food-cookie"}
+    ],
+    "answer": "ball",
+    "hint": "皮球的英文就是剛剛聽到的字。找找看，哪一個是皮球？",
+    "params": {"word":"ball","zh":"皮球"}
+  },
+  {
+    "id": "english-1-33", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"piano","art":"decor-piano"},
+      {"id":"carrot","art":"food-carrot"},
+      {"id":"apple","art":"obj-apple"}
+    ],
+    "answer": "carrot",
+    "hint": "紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？",
+    "params": {"word":"carrot","zh":"紅蘿蔔"}
+  },
+  {
+    "id": "english-1-34", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"tent","art":"decor-tent"},
+      {"id":"lamp","art":"decor-lamp"},
+      {"id":"fish","art":"obj-fish"}
+    ],
+    "answer": "tent",
+    "hint": "帳篷的英文就是剛剛聽到的字。找找看，哪一個是帳篷？",
+    "params": {"word":"tent","zh":"帳篷"}
+  },
+  {
+    "id": "english-1-35", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"bed","art":"decor-bed"},
+      {"id":"clock","art":"decor-clock"},
+      {"id":"lamp","art":"decor-lamp"}
+    ],
+    "answer": "clock",
+    "hint": "時鐘的英文就是剛剛聽到的字。找找看，哪一個是時鐘？",
+    "params": {"word":"clock","zh":"時鐘"}
+  },
+  {
+    "id": "english-1-36", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"clock","art":"decor-clock"},
+      {"id":"milk","art":"food-milk"},
+      {"id":"banana","art":"obj-banana"}
+    ],
+    "answer": "banana",
+    "hint": "香蕉的英文就是剛剛聽到的字。找找看，哪一個是香蕉？",
+    "params": {"word":"banana","zh":"香蕉"}
+  },
+  {
+    "id": "english-1-37", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"flower","art":"obj-flower"},
+      {"id":"chick","art":"obj-chick"},
+      {"id":"fish","art":"obj-fish"}
+    ],
+    "answer": "chick",
+    "hint": "小雞的英文就是剛剛聽到的字。找找看，哪一個是小雞？",
+    "params": {"word":"chick","zh":"小雞"}
+  },
+  {
+    "id": "english-1-38", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"watermelon","art":"food-watermelon"},
+      {"id":"car","art":"decor-car"},
+      {"id":"cookie","art":"food-cookie"}
+    ],
+    "answer": "watermelon",
+    "hint": "西瓜的英文就是剛剛聽到的字。找找看，哪一個是西瓜？",
+    "params": {"word":"watermelon","zh":"西瓜"}
+  },
+  {
+    "id": "english-1-39", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"tent","art":"decor-tent"},
+      {"id":"watermelon","art":"food-watermelon"},
+      {"id":"ball","art":"decor-ball"}
+    ],
+    "answer": "ball",
+    "hint": "皮球的英文就是剛剛聽到的字。找找看，哪一個是皮球？",
+    "params": {"word":"ball","zh":"皮球"}
+  },
+  {
+    "id": "english-1-40", "skill": "english", "difficulty": 1, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"cookie","art":"food-cookie"},
+      {"id":"piano","art":"decor-piano"},
+      {"id":"chick","art":"obj-chick"}
+    ],
+    "answer": "cookie",
+    "hint": "餅乾的英文就是剛剛聽到的字。找找看，哪一個是餅乾？",
+    "params": {"word":"cookie","zh":"餅乾"}
+  },
+  {
+    "id": "english-2-01", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"yellow","swatch":"#ffd84d"},
+      {"id":"green","swatch":"#5cc98a"},
+      {"id":"purple","swatch":"#a874d8"}
+    ],
+    "answer": "yellow",
+    "hint": "黃色的英文就是剛剛聽到的字。找找看，哪一個是黃色的色塊？",
+    "params": {"word":"yellow","zh":"黃色"}
+  },
+  {
+    "id": "english-2-02", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"yellow","swatch":"#ffd84d"},
+      {"id":"red","swatch":"#ef5350"},
+      {"id":"blue","swatch":"#5aa9f0"}
+    ],
+    "answer": "blue",
+    "hint": "藍色的英文就是剛剛聽到的字。找找看，哪一個是藍色的色塊？",
+    "params": {"word":"blue","zh":"藍色"}
+  },
+  {
+    "id": "english-2-03", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"yellow","swatch":"#ffd84d"},
+      {"id":"purple","swatch":"#a874d8"},
+      {"id":"blue","swatch":"#5aa9f0"}
+    ],
+    "answer": "purple",
+    "hint": "紫色的英文就是剛剛聽到的字。找找看，哪一個是紫色的色塊？",
+    "params": {"word":"purple","zh":"紫色"}
+  },
+  {
+    "id": "english-2-04", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"purple","swatch":"#a874d8"},
+      {"id":"blue","swatch":"#5aa9f0"},
+      {"id":"pink","swatch":"#ffb3c7"}
+    ],
+    "answer": "pink",
+    "hint": "粉紅色的英文就是剛剛聽到的字。找找看，哪一個是粉紅色的色塊？",
+    "params": {"word":"pink","zh":"粉紅色"}
+  },
+  {
+    "id": "english-2-05", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"green","swatch":"#5cc98a"},
+      {"id":"blue","swatch":"#5aa9f0"},
+      {"id":"red","swatch":"#ef5350"}
+    ],
+    "answer": "green",
+    "hint": "綠色的英文就是剛剛聽到的字。找找看，哪一個是綠色的色塊？",
+    "params": {"word":"green","zh":"綠色"}
+  },
+  {
+    "id": "english-2-06", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"purple","swatch":"#a874d8"},
+      {"id":"blue","swatch":"#5aa9f0"},
+      {"id":"pink","swatch":"#ffb3c7"}
+    ],
+    "answer": "blue",
+    "hint": "藍色的英文就是剛剛聽到的字。找找看，哪一個是藍色的色塊？",
+    "params": {"word":"blue","zh":"藍色"}
+  },
+  {
+    "id": "english-2-07", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"blue","swatch":"#5aa9f0"},
+      {"id":"pink","swatch":"#ffb3c7"},
+      {"id":"purple","swatch":"#a874d8"}
+    ],
+    "answer": "purple",
+    "hint": "紫色的英文就是剛剛聽到的字。找找看，哪一個是紫色的色塊？",
+    "params": {"word":"purple","zh":"紫色"}
+  },
+  {
+    "id": "english-2-08", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"red","swatch":"#ef5350"},
+      {"id":"purple","swatch":"#a874d8"},
+      {"id":"pink","swatch":"#ffb3c7"}
+    ],
+    "answer": "red",
+    "hint": "紅色的英文就是剛剛聽到的字。找找看，哪一個是紅色的色塊？",
+    "params": {"word":"red","zh":"紅色"}
+  },
+  {
+    "id": "english-2-09", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"blue","swatch":"#5aa9f0"},
+      {"id":"yellow","swatch":"#ffd84d"},
+      {"id":"red","swatch":"#ef5350"}
+    ],
+    "answer": "yellow",
+    "hint": "黃色的英文就是剛剛聽到的字。找找看，哪一個是黃色的色塊？",
+    "params": {"word":"yellow","zh":"黃色"}
+  },
+  {
+    "id": "english-2-10", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"pink","swatch":"#ffb3c7"},
+      {"id":"purple","swatch":"#a874d8"},
+      {"id":"blue","swatch":"#5aa9f0"}
+    ],
+    "answer": "purple",
+    "hint": "紫色的英文就是剛剛聽到的字。找找看，哪一個是紫色的色塊？",
+    "params": {"word":"purple","zh":"紫色"}
+  },
+  {
+    "id": "english-2-11", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"green","swatch":"#5cc98a"},
+      {"id":"purple","swatch":"#a874d8"},
+      {"id":"pink","swatch":"#ffb3c7"}
+    ],
+    "answer": "pink",
+    "hint": "粉紅色的英文就是剛剛聽到的字。找找看，哪一個是粉紅色的色塊？",
+    "params": {"word":"pink","zh":"粉紅色"}
+  },
+  {
+    "id": "english-2-12", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"pink","swatch":"#ffb3c7"},
+      {"id":"blue","swatch":"#5aa9f0"},
+      {"id":"purple","swatch":"#a874d8"}
+    ],
+    "answer": "pink",
+    "hint": "粉紅色的英文就是剛剛聽到的字。找找看，哪一個是粉紅色的色塊？",
+    "params": {"word":"pink","zh":"粉紅色"}
+  },
+  {
+    "id": "english-2-13", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"red","swatch":"#ef5350"},
+      {"id":"green","swatch":"#5cc98a"},
+      {"id":"pink","swatch":"#ffb3c7"}
+    ],
+    "answer": "green",
+    "hint": "綠色的英文就是剛剛聽到的字。找找看，哪一個是綠色的色塊？",
+    "params": {"word":"green","zh":"綠色"}
+  },
+  {
+    "id": "english-2-14", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"yellow","swatch":"#ffd84d"},
+      {"id":"green","swatch":"#5cc98a"},
+      {"id":"red","swatch":"#ef5350"}
+    ],
+    "answer": "red",
+    "hint": "紅色的英文就是剛剛聽到的字。找找看，哪一個是紅色的色塊？",
+    "params": {"word":"red","zh":"紅色"}
+  },
+  {
+    "id": "english-2-15", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"six","label":"6"},
+      {"id":"seven","label":"7"},
+      {"id":"nine","label":"9"}
+    ],
+    "answer": "six",
+    "hint": "數字六的英文就是剛剛聽到的字。找找看，哪一個是數字六？",
+    "params": {"word":"six","zh":"數字六"}
+  },
+  {
+    "id": "english-2-16", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"one","label":"1"},
+      {"id":"two","label":"2"},
+      {"id":"three","label":"3"}
+    ],
+    "answer": "two",
+    "hint": "數字二的英文就是剛剛聽到的字。找找看，哪一個是數字二？",
+    "params": {"word":"two","zh":"數字二"}
+  },
+  {
+    "id": "english-2-17", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"one","label":"1"},
+      {"id":"two","label":"2"},
+      {"id":"four","label":"4"}
+    ],
+    "answer": "one",
+    "hint": "數字一的英文就是剛剛聽到的字。找找看，哪一個是數字一？",
+    "params": {"word":"one","zh":"數字一"}
+  },
+  {
+    "id": "english-2-18", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"two","label":"2"},
+      {"id":"four","label":"4"},
+      {"id":"five","label":"5"}
+    ],
+    "answer": "five",
+    "hint": "數字五的英文就是剛剛聽到的字。找找看，哪一個是數字五？",
+    "params": {"word":"five","zh":"數字五"}
+  },
+  {
+    "id": "english-2-19", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"one","label":"1"},
+      {"id":"three","label":"3"},
+      {"id":"four","label":"4"}
+    ],
+    "answer": "four",
+    "hint": "數字四的英文就是剛剛聽到的字。找找看，哪一個是數字四？",
+    "params": {"word":"four","zh":"數字四"}
+  },
+  {
+    "id": "english-2-20", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"one","label":"1"},
+      {"id":"two","label":"2"},
+      {"id":"four","label":"4"}
+    ],
+    "answer": "one",
+    "hint": "數字一的英文就是剛剛聽到的字。找找看，哪一個是數字一？",
+    "params": {"word":"one","zh":"數字一"}
+  },
+  {
+    "id": "english-2-21", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"eight","label":"8"},
+      {"id":"nine","label":"9"},
+      {"id":"ten","label":"10"}
+    ],
+    "answer": "nine",
+    "hint": "數字九的英文就是剛剛聽到的字。找找看，哪一個是數字九？",
+    "params": {"word":"nine","zh":"數字九"}
+  },
+  {
+    "id": "english-2-22", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"seven","label":"7"},
+      {"id":"nine","label":"9"},
+      {"id":"ten","label":"10"}
+    ],
+    "answer": "ten",
+    "hint": "數字十的英文就是剛剛聽到的字。找找看，哪一個是數字十？",
+    "params": {"word":"ten","zh":"數字十"}
+  },
+  {
+    "id": "english-2-23", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"three","label":"3"},
+      {"id":"four","label":"4"},
+      {"id":"six","label":"6"}
+    ],
+    "answer": "four",
+    "hint": "數字四的英文就是剛剛聽到的字。找找看，哪一個是數字四？",
+    "params": {"word":"four","zh":"數字四"}
+  },
+  {
+    "id": "english-2-24", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"eight","label":"8"},
+      {"id":"nine","label":"9"},
+      {"id":"ten","label":"10"}
+    ],
+    "answer": "eight",
+    "hint": "數字八的英文就是剛剛聽到的字。找找看，哪一個是數字八？",
+    "params": {"word":"eight","zh":"數字八"}
+  },
+  {
+    "id": "english-2-25", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"five","label":"5"},
+      {"id":"six","label":"6"},
+      {"id":"seven","label":"7"}
+    ],
+    "answer": "five",
+    "hint": "數字五的英文就是剛剛聽到的字。找找看，哪一個是數字五？",
+    "params": {"word":"five","zh":"數字五"}
+  },
+  {
+    "id": "english-2-26", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"five","label":"5"},
+      {"id":"six","label":"6"},
+      {"id":"seven","label":"7"}
+    ],
+    "answer": "six",
+    "hint": "數字六的英文就是剛剛聽到的字。找找看，哪一個是數字六？",
+    "params": {"word":"six","zh":"數字六"}
+  },
+  {
+    "id": "english-2-27", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"one","label":"1"},
+      {"id":"two","label":"2"},
+      {"id":"five","label":"5"}
+    ],
+    "answer": "two",
+    "hint": "數字二的英文就是剛剛聽到的字。找找看，哪一個是數字二？",
+    "params": {"word":"two","zh":"數字二"}
+  },
+  {
+    "id": "english-2-28", "skill": "english", "difficulty": 2, "type": "hear", "version": 2,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"one","label":"1"},
+      {"id":"two","label":"2"},
+      {"id":"four","label":"4"}
+    ],
+    "answer": "one",
+    "hint": "數字一的英文就是剛剛聽到的字。找找看，哪一個是數字一？",
+    "params": {"word":"one","zh":"數字一"}
+  },
+  {
+    "id": "english-2-29", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "看看圖，英文是哪一個字？",
+    "items": [],
+    "choices": [
+      {"id":"rabbit","text":"rabbit"},
+      {"id":"milk","text":"milk"},
+      {"id":"watermelon","text":"watermelon"}
+    ],
+    "answer": "watermelon",
+    "hint": "這個是西瓜。聽聽看西瓜的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"watermelon","zh":"西瓜","stem":{"art":"food-watermelon"}}
+  },
+  {
+    "id": "english-2-30", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "看看圖，英文是哪一個字？",
+    "items": [],
+    "choices": [
+      {"id":"car","text":"car"},
+      {"id":"cookie","text":"cookie"},
+      {"id":"rocket","text":"rocket"}
+    ],
+    "answer": "rocket",
+    "hint": "這個是火箭。聽聽看火箭的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"rocket","zh":"火箭","stem":{"art":"decor-rocket"}}
+  },
+  {
+    "id": "english-2-31", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"lamp","text":"lamp"},
+      {"id":"rabbit","text":"rabbit"},
+      {"id":"watermelon","text":"watermelon"}
+    ],
+    "answer": "watermelon",
+    "hint": "這個是西瓜。聽聽看西瓜的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"watermelon","zh":"西瓜","stem":{"art":"food-watermelon"}}
+  },
+  {
+    "id": "english-2-32", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"bed","text":"bed"},
+      {"id":"tent","text":"tent"},
+      {"id":"milk","text":"milk"}
+    ],
+    "answer": "bed",
+    "hint": "這個是床。聽聽看床的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"bed","zh":"床","stem":{"art":"decor-bed"}}
+  },
+  {
+    "id": "english-2-33", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"flower","text":"flower"},
+      {"id":"car","text":"car"},
+      {"id":"fish","text":"fish"}
+    ],
+    "answer": "car",
+    "hint": "這個是汽車。聽聽看汽車的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"car","zh":"汽車","stem":{"art":"decor-car"}}
+  },
+  {
+    "id": "english-2-34", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "找出這個的英文。",
+    "items": [],
+    "choices": [
+      {"id":"tent","text":"tent"},
+      {"id":"banana","text":"banana"},
+      {"id":"apple","text":"apple"}
+    ],
+    "answer": "apple",
+    "hint": "這個是蘋果。聽聽看蘋果的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"apple","zh":"蘋果","stem":{"art":"obj-apple"}}
+  },
+  {
+    "id": "english-2-35", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "看看圖，英文是哪一個字？",
+    "items": [],
+    "choices": [
+      {"id":"tent","text":"tent"},
+      {"id":"piano","text":"piano"},
+      {"id":"car","text":"car"}
+    ],
+    "answer": "piano",
+    "hint": "這個是鋼琴。聽聽看鋼琴的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"piano","zh":"鋼琴","stem":{"art":"decor-piano"}}
+  },
+  {
+    "id": "english-2-36", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "找出這個的英文。",
+    "items": [],
+    "choices": [
+      {"id":"carrot","text":"carrot"},
+      {"id":"lamp","text":"lamp"},
+      {"id":"rabbit","text":"rabbit"}
+    ],
+    "answer": "carrot",
+    "hint": "這個是紅蘿蔔。聽聽看紅蘿蔔的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"carrot","zh":"紅蘿蔔","stem":{"art":"food-carrot"}}
+  },
+  {
+    "id": "english-2-37", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "找出這個的英文。",
+    "items": [],
+    "choices": [
+      {"id":"flower","text":"flower"},
+      {"id":"milk","text":"milk"},
+      {"id":"banana","text":"banana"}
+    ],
+    "answer": "milk",
+    "hint": "這個是牛奶。聽聽看牛奶的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"milk","zh":"牛奶","stem":{"art":"food-milk"}}
+  },
+  {
+    "id": "english-2-38", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"cake","text":"cake"},
+      {"id":"cookie","text":"cookie"},
+      {"id":"watermelon","text":"watermelon"}
+    ],
+    "answer": "cake",
+    "hint": "這個是蛋糕。聽聽看蛋糕的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"cake","zh":"蛋糕","stem":{"art":"food-cake"}}
+  },
+  {
+    "id": "english-2-39", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"car","text":"car"},
+      {"id":"cookie","text":"cookie"},
+      {"id":"ball","text":"ball"}
+    ],
+    "answer": "ball",
+    "hint": "這個是皮球。聽聽看皮球的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"ball","zh":"皮球","stem":{"art":"decor-ball"}}
+  },
+  {
+    "id": "english-2-40", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "看看圖，英文是哪一個字？",
+    "items": [],
+    "choices": [
+      {"id":"peach","text":"peach"},
+      {"id":"banana","text":"banana"},
+      {"id":"car","text":"car"}
+    ],
+    "answer": "banana",
+    "hint": "這個是香蕉。聽聽看香蕉的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"banana","zh":"香蕉","stem":{"art":"obj-banana"}}
+  },
+  {
+    "id": "english-2-41", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"milk","text":"milk"},
+      {"id":"peach","text":"peach"},
+      {"id":"rocket","text":"rocket"}
+    ],
+    "answer": "milk",
+    "hint": "這個是牛奶。聽聽看牛奶的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"milk","zh":"牛奶","stem":{"art":"food-milk"}}
+  },
+  {
+    "id": "english-2-42", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"piano","text":"piano"},
+      {"id":"fish","text":"fish"},
+      {"id":"peach","text":"peach"}
+    ],
+    "answer": "peach",
+    "hint": "這個是桃子。聽聽看桃子的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"peach","zh":"桃子","stem":{"art":"obj-peach"}}
+  },
+  {
+    "id": "english-2-43", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"watermelon","text":"watermelon"},
+      {"id":"piano","text":"piano"},
+      {"id":"ball","text":"ball"}
+    ],
+    "answer": "piano",
+    "hint": "這個是鋼琴。聽聽看鋼琴的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"piano","zh":"鋼琴","stem":{"art":"decor-piano"}}
+  },
+  {
+    "id": "english-2-44", "skill": "english", "difficulty": 2, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"milk","text":"milk"},
+      {"id":"grape","text":"grape"},
+      {"id":"carrot","text":"carrot"}
+    ],
+    "answer": "carrot",
+    "hint": "這個是紅蘿蔔。聽聽看紅蘿蔔的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"carrot","zh":"紅蘿蔔","stem":{"art":"food-carrot"}}
+  },
+  {
+    "id": "english-3-01", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是火箭的英文？",
+    "items": [],
+    "choices": [
+      {"id":"grape","text":"grape"},
+      {"id":"rocket","text":"rocket"},
+      {"id":"lamp","text":"lamp"}
+    ],
+    "answer": "rocket",
+    "hint": "火箭是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"rocket","zh":"火箭","stem":{"art":"decor-rocket"}}
+  },
+  {
+    "id": "english-3-02", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "鋼琴，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"cake","text":"cake"},
+      {"id":"tent","text":"tent"},
+      {"id":"piano","text":"piano"}
+    ],
+    "answer": "piano",
+    "hint": "鋼琴是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"piano","zh":"鋼琴","stem":{"art":"decor-piano"}}
+  },
+  {
+    "id": "english-3-03", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是牛奶的英文？",
+    "items": [],
+    "choices": [
+      {"id":"milk","text":"milk"},
+      {"id":"tent","text":"tent"},
+      {"id":"bed","text":"bed"}
+    ],
+    "answer": "milk",
+    "hint": "牛奶是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"milk","zh":"牛奶","stem":{"art":"food-milk"}}
+  },
+  {
+    "id": "english-3-04", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "帳篷，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"tent","text":"tent"},
+      {"id":"fish","text":"fish"},
+      {"id":"flower","text":"flower"}
+    ],
+    "answer": "tent",
+    "hint": "帳篷是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"tent","zh":"帳篷","stem":{"art":"decor-tent"}}
+  },
+  {
+    "id": "english-3-05", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "皮球，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"peach","text":"peach"},
+      {"id":"ball","text":"ball"},
+      {"id":"milk","text":"milk"}
+    ],
+    "answer": "ball",
+    "hint": "皮球是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"ball","zh":"皮球","stem":{"art":"decor-ball"}}
+  },
+  {
+    "id": "english-3-06", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出燈的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"star","text":"star"},
+      {"id":"rocket","text":"rocket"},
+      {"id":"lamp","text":"lamp"}
+    ],
+    "answer": "lamp",
+    "hint": "燈是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"lamp","zh":"燈","stem":{"art":"decor-lamp"}}
+  },
+  {
+    "id": "english-3-07", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是小兔子的英文？",
+    "items": [],
+    "choices": [
+      {"id":"apple","text":"apple"},
+      {"id":"rabbit","text":"rabbit"},
+      {"id":"flower","text":"flower"}
+    ],
+    "answer": "rabbit",
+    "hint": "小兔子是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"rabbit","zh":"小兔子","stem":{"art":"obj-rabbit"}}
+  },
+  {
+    "id": "english-3-08", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出蛋糕的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"cake","text":"cake"},
+      {"id":"milk","text":"milk"},
+      {"id":"banana","text":"banana"}
+    ],
+    "answer": "cake",
+    "hint": "蛋糕是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"cake","zh":"蛋糕","stem":{"art":"food-cake"}}
+  },
+  {
+    "id": "english-3-09", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出紅蘿蔔的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"ball","text":"ball"},
+      {"id":"chick","text":"chick"},
+      {"id":"carrot","text":"carrot"}
+    ],
+    "answer": "carrot",
+    "hint": "紅蘿蔔是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"carrot","zh":"紅蘿蔔","stem":{"art":"food-carrot"}}
+  },
+  {
+    "id": "english-3-10", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是小魚的英文？",
+    "items": [],
+    "choices": [
+      {"id":"fish","text":"fish"},
+      {"id":"carrot","text":"carrot"},
+      {"id":"cake","text":"cake"}
+    ],
+    "answer": "fish",
+    "hint": "小魚是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"fish","zh":"小魚","stem":{"art":"obj-fish"}}
+  },
+  {
+    "id": "english-3-11", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出蘋果的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"carrot","text":"carrot"},
+      {"id":"apple","text":"apple"},
+      {"id":"grape","text":"grape"}
+    ],
+    "answer": "apple",
+    "hint": "蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"apple","zh":"蘋果","stem":{"art":"obj-apple"}}
+  },
+  {
+    "id": "english-3-12", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出鋼琴的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"bed","text":"bed"},
+      {"id":"watermelon","text":"watermelon"},
+      {"id":"piano","text":"piano"}
+    ],
+    "answer": "piano",
+    "hint": "鋼琴是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"piano","zh":"鋼琴","stem":{"art":"decor-piano"}}
+  },
+  {
+    "id": "english-3-13", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出葡萄的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"grape","text":"grape"},
+      {"id":"car","text":"car"},
+      {"id":"flower","text":"flower"}
+    ],
+    "answer": "grape",
+    "hint": "葡萄是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"grape","zh":"葡萄","stem":{"art":"obj-grape"}}
+  },
+  {
+    "id": "english-3-14", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "小雞，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"bed","text":"bed"},
+      {"id":"chick","text":"chick"},
+      {"id":"flower","text":"flower"}
+    ],
+    "answer": "chick",
+    "hint": "小雞是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"chick","zh":"小雞","stem":{"art":"obj-chick"}}
+  },
+  {
+    "id": "english-3-15", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是汽車的英文？",
+    "items": [],
+    "choices": [
+      {"id":"lamp","text":"lamp"},
+      {"id":"chick","text":"chick"},
+      {"id":"car","text":"car"}
+    ],
+    "answer": "car",
+    "hint": "汽車是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"car","zh":"汽車","stem":{"art":"decor-car"}}
+  },
+  {
+    "id": "english-3-16", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是餅乾的英文？",
+    "items": [],
+    "choices": [
+      {"id":"peach","text":"peach"},
+      {"id":"ball","text":"ball"},
+      {"id":"cookie","text":"cookie"}
+    ],
+    "answer": "cookie",
+    "hint": "餅乾是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"cookie","zh":"餅乾","stem":{"art":"food-cookie"}}
+  },
+  {
+    "id": "english-3-17", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是帳篷的英文？",
+    "items": [],
+    "choices": [
+      {"id":"tent","text":"tent"},
+      {"id":"grape","text":"grape"},
+      {"id":"clock","text":"clock"}
+    ],
+    "answer": "tent",
+    "hint": "帳篷是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"tent","zh":"帳篷","stem":{"art":"decor-tent"}}
+  },
+  {
+    "id": "english-3-18", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是皮球的英文？",
+    "items": [],
+    "choices": [
+      {"id":"milk","text":"milk"},
+      {"id":"ball","text":"ball"},
+      {"id":"bed","text":"bed"}
+    ],
+    "answer": "ball",
+    "hint": "皮球是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"ball","zh":"皮球","stem":{"art":"decor-ball"}}
+  },
+  {
+    "id": "english-3-19", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出紅色的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"red","text":"red"},
+      {"id":"green","text":"green"},
+      {"id":"purple","text":"purple"}
+    ],
+    "answer": "red",
+    "hint": "紅色是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"red","zh":"紅色","stem":{"swatch":"#ef5350"}}
+  },
+  {
+    "id": "english-3-20", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是綠色的英文？",
+    "items": [],
+    "choices": [
+      {"id":"purple","text":"purple"},
+      {"id":"pink","text":"pink"},
+      {"id":"green","text":"green"}
+    ],
+    "answer": "green",
+    "hint": "綠色是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"green","zh":"綠色","stem":{"swatch":"#5cc98a"}}
+  },
+  {
+    "id": "english-3-21", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是藍色的英文？",
+    "items": [],
+    "choices": [
+      {"id":"purple","text":"purple"},
+      {"id":"blue","text":"blue"},
+      {"id":"yellow","text":"yellow"}
+    ],
+    "answer": "blue",
+    "hint": "藍色是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"blue","zh":"藍色","stem":{"swatch":"#5aa9f0"}}
+  },
+  {
+    "id": "english-3-22", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出綠色的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"green","text":"green"},
+      {"id":"pink","text":"pink"},
+      {"id":"purple","text":"purple"}
+    ],
+    "answer": "green",
+    "hint": "綠色是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"green","zh":"綠色","stem":{"swatch":"#5cc98a"}}
+  },
+  {
+    "id": "english-3-23", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "粉紅色，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"purple","text":"purple"},
+      {"id":"pink","text":"pink"},
+      {"id":"blue","text":"blue"}
+    ],
+    "answer": "pink",
+    "hint": "粉紅色是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"pink","zh":"粉紅色","stem":{"swatch":"#ffb3c7"}}
+  },
+  {
+    "id": "english-3-24", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "黃色，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"red","text":"red"},
+      {"id":"pink","text":"pink"},
+      {"id":"yellow","text":"yellow"}
+    ],
+    "answer": "yellow",
+    "hint": "黃色是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"yellow","zh":"黃色","stem":{"swatch":"#ffd84d"}}
+  },
+  {
+    "id": "english-3-25", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "綠色，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"green","text":"green"},
+      {"id":"pink","text":"pink"},
+      {"id":"blue","text":"blue"}
+    ],
+    "answer": "green",
+    "hint": "綠色是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"green","zh":"綠色","stem":{"swatch":"#5cc98a"}}
+  },
+  {
+    "id": "english-3-26", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "藍色，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"pink","text":"pink"},
+      {"id":"blue","text":"blue"},
+      {"id":"red","text":"red"}
+    ],
+    "answer": "blue",
+    "hint": "藍色是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"blue","zh":"藍色","stem":{"swatch":"#5aa9f0"}}
+  },
+  {
+    "id": "english-3-27", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是數字一的英文？",
+    "items": [],
+    "choices": [
+      {"id":"seven","text":"seven"},
+      {"id":"eight","text":"eight"},
+      {"id":"one","text":"one"}
+    ],
+    "answer": "one",
+    "hint": "數字一是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"one","zh":"數字一","stem":{"digit":"1"}}
+  },
+  {
+    "id": "english-3-28", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "數字九，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"seven","text":"seven"},
+      {"id":"four","text":"four"},
+      {"id":"nine","text":"nine"}
+    ],
+    "answer": "nine",
+    "hint": "數字九是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"nine","zh":"數字九","stem":{"digit":"9"}}
+  },
+  {
+    "id": "english-3-29", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是數字五的英文？",
+    "items": [],
+    "choices": [
+      {"id":"five","text":"five"},
+      {"id":"three","text":"three"},
+      {"id":"six","text":"six"}
+    ],
+    "answer": "five",
+    "hint": "數字五是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"five","zh":"數字五","stem":{"digit":"5"}}
+  },
+  {
+    "id": "english-3-30", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "數字五，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"three","text":"three"},
+      {"id":"five","text":"five"},
+      {"id":"two","text":"two"}
+    ],
+    "answer": "five",
+    "hint": "數字五是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"five","zh":"數字五","stem":{"digit":"5"}}
+  },
+  {
+    "id": "english-3-31", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "數字六，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"six","text":"six"},
+      {"id":"one","text":"one"},
+      {"id":"ten","text":"ten"}
+    ],
+    "answer": "six",
+    "hint": "數字六是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"six","zh":"數字六","stem":{"digit":"6"}}
+  },
+  {
+    "id": "english-3-32", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "數字三，用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"four","text":"four"},
+      {"id":"two","text":"two"},
+      {"id":"three","text":"three"}
+    ],
+    "answer": "three",
+    "hint": "數字三是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"three","zh":"數字三","stem":{"digit":"3"}}
+  },
+  {
+    "id": "english-3-33", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出數字九的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"two","text":"two"},
+      {"id":"nine","text":"nine"},
+      {"id":"four","text":"four"}
+    ],
+    "answer": "nine",
+    "hint": "數字九是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"nine","zh":"數字九","stem":{"digit":"9"}}
+  },
+  {
+    "id": "english-3-34", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是數字八的英文？",
+    "items": [],
+    "choices": [
+      {"id":"five","text":"five"},
+      {"id":"eight","text":"eight"},
+      {"id":"one","text":"one"}
+    ],
+    "answer": "eight",
+    "hint": "數字八是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"eight","zh":"數字八","stem":{"digit":"8"}}
+  },
+  {
+    "id": "english-3-35", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "哪一個是數字九的英文？",
+    "items": [],
+    "choices": [
+      {"id":"nine","text":"nine"},
+      {"id":"two","text":"two"},
+      {"id":"three","text":"three"}
+    ],
+    "answer": "nine",
+    "hint": "數字九是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"nine","zh":"數字九","stem":{"digit":"9"}}
+  },
+  {
+    "id": "english-3-36", "skill": "english", "difficulty": 3, "type": "zh2en", "version": 2,
+    "prompt": "找出數字六的英文字。",
+    "items": [],
+    "choices": [
+      {"id":"nine","text":"nine"},
+      {"id":"five","text":"five"},
+      {"id":"six","text":"six"}
+    ],
+    "answer": "six",
+    "hint": "數字六是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"six","zh":"數字六","stem":{"digit":"6"}}
+  },
+  {
+    "id": "english-3-37", "skill": "english", "difficulty": 3, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"nine","text":"nine"},
+      {"id":"four","text":"four"},
+      {"id":"six","text":"six"}
+    ],
+    "answer": "six",
+    "hint": "這個是數字六。聽聽看數字六的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"six","zh":"數字六","stem":{"digit":"6"}}
+  },
+  {
+    "id": "english-3-38", "skill": "english", "difficulty": 3, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"yellow","text":"yellow"},
+      {"id":"purple","text":"purple"},
+      {"id":"green","text":"green"}
+    ],
+    "answer": "yellow",
+    "hint": "這個是黃色。聽聽看黃色的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"yellow","zh":"黃色","stem":{"swatch":"#ffd84d"}}
+  },
+  {
+    "id": "english-3-39", "skill": "english", "difficulty": 3, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"blue","text":"blue"},
+      {"id":"pink","text":"pink"},
+      {"id":"yellow","text":"yellow"}
+    ],
+    "answer": "pink",
+    "hint": "這個是粉紅色。聽聽看粉紅色的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"pink","zh":"粉紅色","stem":{"swatch":"#ffb3c7"}}
+  },
+  {
+    "id": "english-3-40", "skill": "english", "difficulty": 3, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"one","text":"one"},
+      {"id":"six","text":"six"},
+      {"id":"seven","text":"seven"}
+    ],
+    "answer": "one",
+    "hint": "這個是數字一。聽聽看數字一的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"one","zh":"數字一","stem":{"digit":"1"}}
+  },
+  {
+    "id": "english-3-41", "skill": "english", "difficulty": 3, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"nine","text":"nine"},
+      {"id":"ten","text":"ten"},
+      {"id":"two","text":"two"}
+    ],
+    "answer": "two",
+    "hint": "這個是數字二。聽聽看數字二的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"two","zh":"數字二","stem":{"digit":"2"}}
+  },
+  {
+    "id": "english-3-42", "skill": "english", "difficulty": 3, "type": "pic2en", "version": 2,
+    "prompt": "這個用英文怎麼說？",
+    "items": [],
+    "choices": [
+      {"id":"green","text":"green"},
+      {"id":"purple","text":"purple"},
+      {"id":"pink","text":"pink"}
+    ],
+    "answer": "purple",
+    "hint": "這個是紫色。聽聽看紫色的英文怎麼說，再找找看是哪一個字。",
+    "params": {"word":"purple","zh":"紫色","stem":{"swatch":"#a874d8"}}
+  },
+  {
+    "id": "english-4-01", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"w","text":"w"},
+      {"id":"h","text":"h"},
+      {"id":"s","text":"s"}
+    ],
+    "answer": "s",
+    "hint": "這個是數字七。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"seven","zh":"數字七","stem":{"digit":"7"},"pattern":"_even","blankAt":0}
+  },
+  {
+    "id": "english-4-02", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"a","text":"a"},
+      {"id":"i","text":"i"},
+      {"id":"e","text":"e"}
+    ],
+    "answer": "a",
+    "hint": "這個是葡萄。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"grape","zh":"葡萄","stem":{"art":"obj-grape"},"pattern":"gr_pe","blankAt":2}
+  },
+  {
+    "id": "english-4-03", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"p","text":"p"},
+      {"id":"c","text":"c"},
+      {"id":"d","text":"d"}
+    ],
+    "answer": "c",
+    "hint": "這個是時鐘。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"clock","zh":"時鐘","stem":{"art":"decor-clock"},"pattern":"_lock","blankAt":0}
+  },
+  {
+    "id": "english-4-04", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"d","text":"d"},
+      {"id":"l","text":"l"},
+      {"id":"j","text":"j"}
+    ],
+    "answer": "l",
+    "hint": "這個是蘋果。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"apple","zh":"蘋果","stem":{"art":"obj-apple"},"pattern":"app_e","blankAt":3}
+  },
+  {
+    "id": "english-4-05", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"a","text":"a"},
+      {"id":"i","text":"i"},
+      {"id":"u","text":"u"}
+    ],
+    "answer": "a",
+    "hint": "這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"lamp","zh":"燈","stem":{"art":"decor-lamp"},"pattern":"l_mp","blankAt":1}
+  },
+  {
+    "id": "english-4-06", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"t","text":"t"},
+      {"id":"c","text":"c"},
+      {"id":"w","text":"w"}
+    ],
+    "answer": "w",
+    "hint": "這個是數字二。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"two","zh":"數字二","stem":{"digit":"2"},"pattern":"t_o","blankAt":1}
+  },
+  {
+    "id": "english-4-07", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"g","text":"g"},
+      {"id":"b","text":"b"},
+      {"id":"h","text":"h"}
+    ],
+    "answer": "h",
+    "hint": "這個是數字三。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"three","zh":"數字三","stem":{"digit":"3"},"pattern":"t_ree","blankAt":1}
+  },
+  {
+    "id": "english-4-08", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"k","text":"k"},
+      {"id":"l","text":"l"},
+      {"id":"y","text":"y"}
+    ],
+    "answer": "l",
+    "hint": "這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"lamp","zh":"燈","stem":{"art":"decor-lamp"},"pattern":"_amp","blankAt":0}
+  },
+  {
+    "id": "english-4-09", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"e","text":"e"},
+      {"id":"o","text":"o"},
+      {"id":"a","text":"a"}
+    ],
+    "answer": "e",
+    "hint": "這個是蛋糕。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"cake","zh":"蛋糕","stem":{"art":"food-cake"},"pattern":"cak_","blankAt":3}
+  },
+  {
+    "id": "english-4-10", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"u","text":"u"},
+      {"id":"e","text":"e"},
+      {"id":"o","text":"o"}
+    ],
+    "answer": "e",
+    "hint": "這個是數字五。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"five","zh":"數字五","stem":{"digit":"5"},"pattern":"fiv_","blankAt":3}
+  },
+  {
+    "id": "english-4-11", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"f","text":"f"},
+      {"id":"l","text":"l"},
+      {"id":"n","text":"n"}
+    ],
+    "answer": "n",
+    "hint": "這個是數字九。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"nine","zh":"數字九","stem":{"digit":"9"},"pattern":"_ine","blankAt":0}
+  },
+  {
+    "id": "english-4-12", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"e","text":"e"},
+      {"id":"i","text":"i"},
+      {"id":"u","text":"u"}
+    ],
+    "answer": "e",
+    "hint": "這個是數字十。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"ten","zh":"數字十","stem":{"digit":"10"},"pattern":"t_n","blankAt":1}
+  },
+  {
+    "id": "english-4-13", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"a","text":"a"},
+      {"id":"e","text":"e"},
+      {"id":"u","text":"u"}
+    ],
+    "answer": "e",
+    "hint": "這個是數字七。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"seven","zh":"數字七","stem":{"digit":"7"},"pattern":"sev_n","blankAt":3}
+  },
+  {
+    "id": "english-4-14", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"r","text":"r"},
+      {"id":"t","text":"t"},
+      {"id":"y","text":"y"}
+    ],
+    "answer": "r",
+    "hint": "這個是星星。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"star","zh":"星星","stem":{"art":"obj-star"},"pattern":"sta_","blankAt":3}
+  },
+  {
+    "id": "english-4-15", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"t","text":"t"},
+      {"id":"c","text":"c"},
+      {"id":"b","text":"b"}
+    ],
+    "answer": "b",
+    "hint": "這個是皮球。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"ball","zh":"皮球","stem":{"art":"decor-ball"},"pattern":"_all","blankAt":0}
+  },
+  {
+    "id": "english-4-16", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"w","text":"w"},
+      {"id":"v","text":"v"},
+      {"id":"d","text":"d"}
+    ],
+    "answer": "v",
+    "hint": "這個是數字七。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"seven","zh":"數字七","stem":{"digit":"7"},"pattern":"se_en","blankAt":2}
+  },
+  {
+    "id": "english-4-17", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"w","text":"w"},
+      {"id":"h","text":"h"},
+      {"id":"p","text":"p"}
+    ],
+    "answer": "p",
+    "hint": "這個是鋼琴。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"piano","zh":"鋼琴","stem":{"art":"decor-piano"},"pattern":"_iano","blankAt":0}
+  },
+  {
+    "id": "english-4-18", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"e","text":"e"},
+      {"id":"i","text":"i"},
+      {"id":"u","text":"u"}
+    ],
+    "answer": "e",
+    "hint": "這個是數字三。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"three","zh":"數字三","stem":{"digit":"3"},"pattern":"thre_","blankAt":4}
+  },
+  {
+    "id": "english-4-19", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"p","text":"p"},
+      {"id":"m","text":"m"},
+      {"id":"y","text":"y"}
+    ],
+    "answer": "p",
+    "hint": "這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"lamp","zh":"燈","stem":{"art":"decor-lamp"},"pattern":"lam_","blankAt":3}
+  },
+  {
+    "id": "english-4-20", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"u","text":"u"},
+      {"id":"e","text":"e"},
+      {"id":"i","text":"i"}
+    ],
+    "answer": "e",
+    "hint": "這個是帳篷。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"tent","zh":"帳篷","stem":{"art":"decor-tent"},"pattern":"t_nt","blankAt":1}
+  },
+  {
+    "id": "english-4-21", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"n","text":"n"},
+      {"id":"j","text":"j"},
+      {"id":"k","text":"k"}
+    ],
+    "answer": "k",
+    "hint": "這個是小雞。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"chick","zh":"小雞","stem":{"art":"obj-chick"},"pattern":"chic_","blankAt":4}
+  },
+  {
+    "id": "english-4-22", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"g","text":"g"},
+      {"id":"f","text":"f"},
+      {"id":"p","text":"p"}
+    ],
+    "answer": "p",
+    "hint": "這個是蘋果。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"apple","zh":"蘋果","stem":{"art":"obj-apple"},"pattern":"a_ple","blankAt":1}
+  },
+  {
+    "id": "english-4-23", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"p","text":"p"},
+      {"id":"j","text":"j"},
+      {"id":"b","text":"b"}
+    ],
+    "answer": "p",
+    "hint": "這個是葡萄。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"grape","zh":"葡萄","stem":{"art":"obj-grape"},"pattern":"gra_e","blankAt":3}
+  },
+  {
+    "id": "english-4-24", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"r","text":"r"},
+      {"id":"b","text":"b"},
+      {"id":"l","text":"l"}
+    ],
+    "answer": "b",
+    "hint": "這個是床。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"bed","zh":"床","stem":{"art":"decor-bed"},"pattern":"_ed","blankAt":0}
+  },
+  {
+    "id": "english-4-25", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"u","text":"u"},
+      {"id":"e","text":"e"},
+      {"id":"i","text":"i"}
+    ],
+    "answer": "i",
+    "hint": "這個是數字五。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"five","zh":"數字五","stem":{"digit":"5"},"pattern":"f_ve","blankAt":1}
+  },
+  {
+    "id": "english-4-26", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"d","text":"d"},
+      {"id":"s","text":"s"},
+      {"id":"p","text":"p"}
+    ],
+    "answer": "s",
+    "hint": "這個是小魚。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"fish","zh":"小魚","stem":{"art":"obj-fish"},"pattern":"fi_h","blankAt":2}
+  },
+  {
+    "id": "english-4-27", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"o","text":"o"},
+      {"id":"e","text":"e"},
+      {"id":"u","text":"u"}
+    ],
+    "answer": "o",
+    "hint": "這個是時鐘。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"clock","zh":"時鐘","stem":{"art":"decor-clock"},"pattern":"cl_ck","blankAt":2}
+  },
+  {
+    "id": "english-4-28", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"h","text":"h"},
+      {"id":"b","text":"b"},
+      {"id":"p","text":"p"}
+    ],
+    "answer": "h",
+    "hint": "這個是數字八。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"eight","zh":"數字八","stem":{"digit":"8"},"pattern":"eig_t","blankAt":3}
+  },
+  {
+    "id": "english-4-29", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"j","text":"j"},
+      {"id":"b","text":"b"},
+      {"id":"t","text":"t"}
+    ],
+    "answer": "t",
+    "hint": "這個是數字十。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"ten","zh":"數字十","stem":{"digit":"10"},"pattern":"_en","blankAt":0}
+  },
+  {
+    "id": "english-4-30", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"g","text":"g"},
+      {"id":"r","text":"r"},
+      {"id":"f","text":"f"}
+    ],
+    "answer": "r",
+    "hint": "這個是數字四。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"four","zh":"數字四","stem":{"digit":"4"},"pattern":"fou_","blankAt":3}
+  },
+  {
+    "id": "english-4-31", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"e","text":"e"},
+      {"id":"o","text":"o"},
+      {"id":"a","text":"a"}
+    ],
+    "answer": "a",
+    "hint": "這個是桃子。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"peach","zh":"桃子","stem":{"art":"obj-peach"},"pattern":"pe_ch","blankAt":2}
+  },
+  {
+    "id": "english-4-32", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"p","text":"p"},
+      {"id":"n","text":"n"},
+      {"id":"k","text":"k"}
+    ],
+    "answer": "p",
+    "hint": "這個是桃子。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"peach","zh":"桃子","stem":{"art":"obj-peach"},"pattern":"_each","blankAt":0}
+  },
+  {
+    "id": "english-4-33", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"t","text":"t"},
+      {"id":"b","text":"b"},
+      {"id":"s","text":"s"}
+    ],
+    "answer": "b",
+    "hint": "這個是藍色。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"blue","zh":"藍色","stem":{"swatch":"#5aa9f0"},"pattern":"_lue","blankAt":0}
+  },
+  {
+    "id": "english-4-34", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"s","text":"s"},
+      {"id":"t","text":"t"},
+      {"id":"l","text":"l"}
+    ],
+    "answer": "t",
+    "hint": "這個是星星。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"star","zh":"星星","stem":{"art":"obj-star"},"pattern":"s_ar","blankAt":1}
+  },
+  {
+    "id": "english-4-35", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"a","text":"a"},
+      {"id":"i","text":"i"},
+      {"id":"o","text":"o"}
+    ],
+    "answer": "a",
+    "hint": "這個是汽車。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"car","zh":"汽車","stem":{"art":"decor-car"},"pattern":"c_r","blankAt":1}
+  },
+  {
+    "id": "english-4-36", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"b","text":"b"},
+      {"id":"d","text":"d"},
+      {"id":"n","text":"n"}
+    ],
+    "answer": "n",
+    "hint": "這個是數字七。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"seven","zh":"數字七","stem":{"digit":"7"},"pattern":"seve_","blankAt":4}
+  },
+  {
+    "id": "english-4-37", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"j","text":"j"},
+      {"id":"t","text":"t"},
+      {"id":"r","text":"r"}
+    ],
+    "answer": "t",
+    "hint": "這個是帳篷。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"tent","zh":"帳篷","stem":{"art":"decor-tent"},"pattern":"_ent","blankAt":0}
+  },
+  {
+    "id": "english-4-38", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "少了一個字母，幫忙補上去。",
+    "items": [],
+    "choices": [
+      {"id":"o","text":"o"},
+      {"id":"u","text":"u"},
+      {"id":"i","text":"i"}
+    ],
+    "answer": "i",
+    "hint": "這個是粉紅色。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"pink","zh":"粉紅色","stem":{"swatch":"#ffb3c7"},"pattern":"p_nk","blankAt":1}
+  },
+  {
+    "id": "english-4-39", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "聽聽看，缺的是哪一個字母？",
+    "items": [],
+    "choices": [
+      {"id":"k","text":"k"},
+      {"id":"n","text":"n"},
+      {"id":"c","text":"c"}
+    ],
+    "answer": "k",
+    "hint": "這個是牛奶。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"milk","zh":"牛奶","stem":{"art":"food-milk"},"pattern":"mil_","blankAt":3}
+  },
+  {
+    "id": "english-4-40", "skill": "english", "difficulty": 4, "type": "spell", "version": 2,
+    "prompt": "點一個字母，把這個字拼完整。",
+    "items": [],
+    "choices": [
+      {"id":"t","text":"t"},
+      {"id":"l","text":"l"},
+      {"id":"h","text":"h"}
+    ],
+    "answer": "t",
+    "hint": "這個是帳篷。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
+    "params": {"word":"tent","zh":"帳篷","stem":{"art":"decor-tent"},"pattern":"ten_","blankAt":3}
+  },
+  {
+    "id": "english-1-g01", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"milk","art":"food-milk"},
+      {"id":"flower","art":"obj-flower"}
+    ],
+    "answer": "milk",
+    "hint": "牛奶的英文就是剛剛聽到的字。找找看，哪一個是牛奶？",
+    "params": {"word":"milk","zh":"牛奶"}
+  },
+  {
+    "id": "english-1-g02", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"ball","art":"decor-ball"},
+      {"id":"fish","art":"obj-fish"}
+    ],
+    "answer": "fish",
+    "hint": "小魚的英文就是剛剛聽到的字。找找看，哪一個是小魚？",
+    "params": {"word":"fish","zh":"小魚"}
+  },
+  {
+    "id": "english-1-g03", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"ball","art":"decor-ball"},
+      {"id":"apple","art":"obj-apple"}
+    ],
+    "answer": "ball",
+    "hint": "皮球的英文就是剛剛聽到的字。找找看，哪一個是皮球？",
+    "params": {"word":"ball","zh":"皮球"}
+  },
+  {
+    "id": "english-1-g04", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"milk","art":"food-milk"},
+      {"id":"star","art":"obj-star"}
+    ],
+    "answer": "star",
+    "hint": "星星的英文就是剛剛聽到的字。找找看，哪一個是星星？",
+    "params": {"word":"star","zh":"星星"}
+  },
+  {
+    "id": "english-1-g05", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"apple","art":"obj-apple"},
+      {"id":"milk","art":"food-milk"}
+    ],
+    "answer": "apple",
+    "hint": "蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？",
+    "params": {"word":"apple","zh":"蘋果"}
+  },
+  {
+    "id": "english-1-g06", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"cake","art":"food-cake"},
+      {"id":"fish","art":"obj-fish"}
+    ],
+    "answer": "fish",
+    "hint": "小魚的英文就是剛剛聽到的字。找找看，哪一個是小魚？",
+    "params": {"word":"fish","zh":"小魚"}
+  },
+  {
+    "id": "english-1-g07", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"apple","art":"obj-apple"},
+      {"id":"banana","art":"obj-banana"}
+    ],
+    "answer": "banana",
+    "hint": "香蕉的英文就是剛剛聽到的字。找找看，哪一個是香蕉？",
+    "params": {"word":"banana","zh":"香蕉"}
+  },
+  {
+    "id": "english-1-g08", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"cake","art":"food-cake"},
+      {"id":"banana","art":"obj-banana"}
+    ],
+    "answer": "cake",
+    "hint": "蛋糕的英文就是剛剛聽到的字。找找看，哪一個是蛋糕？",
+    "params": {"word":"cake","zh":"蛋糕"}
+  },
+  {
+    "id": "english-1-g09", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"car","art":"decor-car"},
+      {"id":"cake","art":"food-cake"}
+    ],
+    "answer": "car",
+    "hint": "汽車的英文就是剛剛聽到的字。找找看，哪一個是汽車？",
+    "params": {"word":"car","zh":"汽車"}
+  },
+  {
+    "id": "english-1-g10", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"cake","art":"food-cake"},
+      {"id":"milk","art":"food-milk"}
+    ],
+    "answer": "milk",
+    "hint": "牛奶的英文就是剛剛聽到的字。找找看，哪一個是牛奶？",
+    "params": {"word":"milk","zh":"牛奶"}
+  },
+  {
+    "id": "english-1-g11", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"cake","art":"food-cake"},
+      {"id":"ball","art":"decor-ball"}
+    ],
+    "answer": "cake",
+    "hint": "蛋糕的英文就是剛剛聽到的字。找找看，哪一個是蛋糕？",
+    "params": {"word":"cake","zh":"蛋糕"}
+  },
+  {
+    "id": "english-1-g12", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"apple","art":"obj-apple"},
+      {"id":"car","art":"decor-car"}
+    ],
+    "answer": "car",
+    "hint": "汽車的英文就是剛剛聽到的字。找找看，哪一個是汽車？",
+    "params": {"word":"car","zh":"汽車"}
+  },
+  {
+    "id": "english-1-g13", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"flower","art":"obj-flower"},
+      {"id":"banana","art":"obj-banana"}
+    ],
+    "answer": "banana",
+    "hint": "香蕉的英文就是剛剛聽到的字。找找看，哪一個是香蕉？",
+    "params": {"word":"banana","zh":"香蕉"}
+  },
+  {
+    "id": "english-1-g14", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"milk","art":"food-milk"},
+      {"id":"apple","art":"obj-apple"}
+    ],
+    "answer": "milk",
+    "hint": "牛奶的英文就是剛剛聽到的字。找找看，哪一個是牛奶？",
+    "params": {"word":"milk","zh":"牛奶"}
+  },
+  {
+    "id": "english-1-g15", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"fish","art":"obj-fish"},
+      {"id":"chick","art":"obj-chick"}
+    ],
+    "answer": "chick",
+    "hint": "小雞的英文就是剛剛聽到的字。找找看，哪一個是小雞？",
+    "params": {"word":"chick","zh":"小雞"}
+  },
+  {
+    "id": "english-1-g16", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"flower","art":"obj-flower"},
+      {"id":"milk","art":"food-milk"}
+    ],
+    "answer": "flower",
+    "hint": "花的英文就是剛剛聽到的字。找找看，哪一個是花？",
+    "params": {"word":"flower","zh":"花"}
+  },
+  {
+    "id": "english-1-g17", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"chick","art":"obj-chick"},
+      {"id":"flower","art":"obj-flower"}
+    ],
+    "answer": "flower",
+    "hint": "花的英文就是剛剛聽到的字。找找看，哪一個是花？",
+    "params": {"word":"flower","zh":"花"}
+  },
+  {
+    "id": "english-1-g18", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"fish","art":"obj-fish"},
+      {"id":"flower","art":"obj-flower"}
+    ],
+    "answer": "fish",
+    "hint": "小魚的英文就是剛剛聽到的字。找找看，哪一個是小魚？",
+    "params": {"word":"fish","zh":"小魚"}
+  },
+  {
+    "id": "english-1-g19", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"star","art":"obj-star"},
+      {"id":"cake","art":"food-cake"}
+    ],
+    "answer": "cake",
+    "hint": "蛋糕的英文就是剛剛聽到的字。找找看，哪一個是蛋糕？",
+    "params": {"word":"cake","zh":"蛋糕"}
+  },
+  {
+    "id": "english-1-g20", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"car","art":"decor-car"},
+      {"id":"star","art":"obj-star"}
+    ],
+    "answer": "car",
+    "hint": "汽車的英文就是剛剛聽到的字。找找看，哪一個是汽車？",
+    "params": {"word":"car","zh":"汽車"}
+  },
+  {
+    "id": "english-1-g21", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"apple","art":"obj-apple"},
+      {"id":"banana","art":"obj-banana"}
+    ],
+    "answer": "apple",
+    "hint": "蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？",
+    "params": {"word":"apple","zh":"蘋果"}
+  },
+  {
+    "id": "english-1-g22", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"milk","art":"food-milk"},
+      {"id":"star","art":"obj-star"}
+    ],
+    "answer": "star",
+    "hint": "星星的英文就是剛剛聽到的字。找找看，哪一個是星星？",
+    "params": {"word":"star","zh":"星星"}
+  },
+  {
+    "id": "english-1-g23", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"banana","art":"obj-banana"},
+      {"id":"fish","art":"obj-fish"}
+    ],
+    "answer": "banana",
+    "hint": "香蕉的英文就是剛剛聽到的字。找找看，哪一個是香蕉？",
+    "params": {"word":"banana","zh":"香蕉"}
+  },
+  {
+    "id": "english-1-g24", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"flower","art":"obj-flower"},
+      {"id":"ball","art":"decor-ball"}
+    ],
+    "answer": "ball",
+    "hint": "皮球的英文就是剛剛聽到的字。找找看，哪一個是皮球？",
+    "params": {"word":"ball","zh":"皮球"}
+  },
+  {
+    "id": "english-1-g25", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "阿悟說英文，你來找找看！",
+    "items": [],
+    "choices": [
+      {"id":"chick","art":"obj-chick"},
+      {"id":"apple","art":"obj-apple"}
+    ],
+    "answer": "chick",
+    "hint": "小雞的英文就是剛剛聽到的字。找找看，哪一個是小雞？",
+    "params": {"word":"chick","zh":"小雞"}
+  },
+  {
+    "id": "english-1-g26", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"flower","art":"obj-flower"},
+      {"id":"chick","art":"obj-chick"}
+    ],
+    "answer": "chick",
+    "hint": "小雞的英文就是剛剛聽到的字。找找看，哪一個是小雞？",
+    "params": {"word":"chick","zh":"小雞"}
+  },
+  {
+    "id": "english-1-g27", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"star","art":"obj-star"},
+      {"id":"milk","art":"food-milk"}
+    ],
+    "answer": "star",
+    "hint": "星星的英文就是剛剛聽到的字。找找看，哪一個是星星？",
+    "params": {"word":"star","zh":"星星"}
+  },
+  {
+    "id": "english-1-g28", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "仔細聽，哪一個是你聽到的英文？",
+    "items": [],
+    "choices": [
+      {"id":"car","art":"decor-car"},
+      {"id":"apple","art":"obj-apple"}
+    ],
+    "answer": "apple",
+    "hint": "蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？",
+    "params": {"word":"apple","zh":"蘋果"}
+  },
+  {
+    "id": "english-1-g29", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"milk","art":"food-milk"},
+      {"id":"ball","art":"decor-ball"}
+    ],
+    "answer": "ball",
+    "hint": "皮球的英文就是剛剛聽到的字。找找看，哪一個是皮球？",
+    "params": {"word":"ball","zh":"皮球"}
+  },
+  {
+    "id": "english-1-g30", "skill": "english", "difficulty": 1, "type": "hear", "version": 2, "gentle": true,
+    "prompt": "聽聽看，這個英文字是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"flower","art":"obj-flower"},
+      {"id":"banana","art":"obj-banana"}
+    ],
+    "answer": "flower",
+    "hint": "花的英文就是剛剛聽到的字。找找看，哪一個是花？",
+    "params": {"word":"flower","zh":"花"}
+  }
+]

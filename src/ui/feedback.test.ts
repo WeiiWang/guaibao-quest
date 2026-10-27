@@ -2,7 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const speak = vi.fn(() => true)
 const playSfx = vi.fn()
-vi.mock('../learning/speech', () => ({ speak: (...a: unknown[]) => speak(...(a as [])) }))
+// feedback.ts 用 sayText（依文字找預錄語音，找不到才退回 Web Speech）
+vi.mock('../learning/speech', () => ({ sayText: (...a: unknown[]) => speak(...(a as [])) }))
 vi.mock('../learning/sfx', () => ({ playSfx: (...a: unknown[]) => playSfx(...a) }))
 
 const { celebrateSmall, FEEDBACK } = await import('./feedback')

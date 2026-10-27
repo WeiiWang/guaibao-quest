@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { repo } from '../../../db/repo'
-import { getChapter } from '../../../learning/chapter'
+import { localDateStr } from '../../../domain/date'
+import { now as clockNow } from '../../../domain/clock'
+import { resolveStage } from '../../../learning/subject'
+import { englishAnswerParts, englishHintParts, englishPromptParts } from '../../../learning/englishSpeech'
 import { STATION_SIZE } from '../../../learning/scoring'
 import { hintDriven } from '../../../learning/hint'
 import { gentleHintKey, gentleHintText, pickLine, questionKey } from '../../../learning/lines'
 import { learnerProfileOf, type LearnerProfile } from '../../../learning/profile'
 import { needsTutorial, tutorialQuestion } from '../../../learning/tutorial'
 import { displayQuestion } from '../../../learning/select'
-import { cancelSpeech, say } from '../../../learning/speech'
+import { cancelSpeech, say, sayChain } from '../../../learning/speech'
 import { playSfx } from '../../../learning/sfx'
 import { MATERIAL_NAMES, type Interaction, type MaterialId, type SkillId } from '../../../learning/types'
 import type { PlannedQuestion } from '../../../learning/select'
@@ -17,11 +20,13 @@ import { MaterialsChip } from '../../components/MaterialsChip'
 import { flyOne } from '../../fly'
 import { useLearningSettings } from '../../learningHooks'
 import { Companion, type Pose } from './Companion'
+import { EnglishView } from './EnglishView'
 import { GiveView } from './GiveView'
 import { QuestionView, type HintStage } from './QuestionView'
 import { SortView } from './SortView'
 import './adventure.css'
 import './adventure-v4.css'
+import './adventure-v5.css'
 
 const AUTO_NEXT_MS = 1600
 
@@ -32,6 +37,8 @@ interface StationResult {
   qty: number
   chapterDone: boolean
   newlyMastered: SkillId[]
+  /** 每日冒險：今天第一次完成，拿到今日徽章 */
+  badge?: boolean
 }
 
 interface Props {
@@ -44,8 +51,10 @@ interface Props {
 
 /** 關卡答題畫面：一站 5 題，混合三種技能 */
 export function StageScreen({ chapterId, station, onExit, onNextStation, onCeremony }: Props) {
-  const chapter = getChapter(chapterId)
-  const def = chapter?.stations[station - 1]
+  // 一般的一站，或每日冒險（chapterId = daily:<科目>）
+  const info = useMemo(() => resolveStage(chapterId, station, localDateStr(clockNow())), [chapterId, station])
+  const def = info?.def
+  const daily = !!info?.daily
   const { soundOn, voiceOn } = useLearningSettings()
   const sessionId = useRef('')
   const [plan, setPlan] = useState<PlannedQuestion[] | null>(null)
@@ -90,7 +99,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
         setPlan(o.plan)
         setIdx(o.idx)
         if (o.idx === 0 && !o.resumed) {
-          const boss = getChapter(chapterId)?.stations[station - 1]?.kind === 'boss'
+          const boss = resolveStage(chapterId, station, localDateStr(clockNow()))?.def.kind === 'boss'
           setOpener(pickLine(boss ? 'companion.boss.open' : 'companion.open', station))
           openerRef.current = true
         }
@@ -162,7 +171,11 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     // 第一題前面有開場白：等它唸完再唸題目
     const delay = openerRef.current ? 2800 : 350
     openerRef.current = false
-    const id = window.setTimeout(() => say(questionKey(q.id, 'prompt'), q.prompt, { enabled: voiceOn }), delay)
+    // 英文題：中文題目唸完接著唸英文單字（見 englishSpeech.ts）
+    const id = window.setTimeout(
+      () => (q.skill === 'english' ? sayChain(englishPromptParts(q), { enabled: voiceOn }) : say(questionKey(q.id, 'prompt'), q.prompt, { enabled: voiceOn })),
+      delay,
+    )
     return () => window.clearTimeout(id)
     // 只在換題（或教學結束）時唸；語音開關變動不重唸
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -172,16 +185,18 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     if (finishing.current) return
     finishing.current = true
     await Promise.all(writes.current)
-    const r = await repo.completeStation({ chapterId, station, sessionId: sessionId.current })
+    const r = daily
+      ? await repo.completeDaily({ chapterId, sessionId: sessionId.current })
+      : await repo.completeStation({ chapterId, station, sessionId: sessionId.current })
     if (!r.ok) {
       setError(r.error)
       return
     }
     playSfx('reward', soundOn)
-    const l = pickLine(r.chapterDone ? 'chapter.done' : 'station.done')
+    const l = pickLine(daily ? (r as { badge?: boolean }).badge ? 'daily.badge' : 'daily.done' : r.chapterDone ? 'chapter.done' : 'station.done')
     say(l.key, l.text, { enabled: voiceOn })
     setResult(r)
-  }, [chapterId, station, soundOn, voiceOn])
+  }, [chapterId, station, daily, soundOn, voiceOn])
 
   const advance = useCallback(async () => {
     window.clearTimeout(nextTimer.current)
@@ -253,7 +268,10 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     playSfx('wrong', soundOn)
     const stage: HintStage = profile.gentle || wrongs.current >= 2 ? 2 : 1
     setHintStage(stage)
-    if (profile.gentle) {
+    if (q.skill === 'english') {
+      // 英文題的提示：中文提示（幼幼模式加鼓勵）→ 英文單字；第二次錯標出答案時再唸一次英文
+      sayChain(stage === 2 && !profile.gentle ? englishAnswerParts(q) : englishHintParts(q, profile.gentle), { enabled: voiceOn })
+    } else if (profile.gentle) {
       if (hintDriven(q)) {
         const l = pickLine('gentle.wrong', Math.floor(Math.random() * 3))
         say(l.key, l.text, { enabled: voiceOn })
@@ -302,7 +320,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
 
   const replay = () => {
     if (!q) return
-    if (hintStage > 0 && !solved) say(questionKey(q.id, 'hint'), q.hint, { enabled: true })
+    if (q.skill === 'english') sayChain(hintStage > 0 && !solved ? englishHintParts(q, false) : englishPromptParts(q), { enabled: true })
+    else if (hintStage > 0 && !solved) say(questionKey(q.id, 'hint'), q.hint, { enabled: true })
     else say(questionKey(q.id, 'prompt'), q.prompt, { enabled: true })
   }
 
@@ -331,7 +350,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     cancelSpeech()
   }
 
-  if (!chapter || !def) {
+  if (!info || !def) {
     return (
       <main className="adv adv-stage">
         <p className="adv-error">找不到這一站</p>
@@ -357,8 +376,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
             </div>
           )}
           <Companion pose={pose} size="clamp(110px, 20dvh, 170px)" className="adv-result-pet" />
-          <h1>第 {station} 站過關了！</h1>
-          <p className="adv-sub">{chapter.name}・{def.name}</p>
+          <h1>{daily ? '今日冒險完成了！' : `第 ${station} 站過關了！`}</h1>
+          <p className="adv-sub">{daily ? `${info.chapterName}・5 題新題目` : `${info.chapterName}・${def.name}`}</p>
           <p className="adv-sub adv-wrapup" data-testid="wrapup">{pickLine(def.kind === 'boss' ? 'companion.boss.done' : 'companion.wrapup', station).text}</p>
           <div className="adv-reward" aria-label={`獲得${MATERIAL_NAMES[result.material]} ${result.qty} 個`}>
             {Array.from({ length: result.qty }, (_, i) => (
@@ -377,13 +396,21 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
                 ? `跟阿悟一起想出 ${result.total} 題，好棒！`
                 : `自己想出 ${result.independent} 題，跟阿悟一起想出 ${together} 題！`}
           </p>
+          {result.badge && (
+            <div className="daily-got" data-testid="daily-badge">
+              <span className="daily-medal big" aria-hidden>★</span>
+              <b>拿到今日徽章了！</b>
+            </div>
+          )}
           <div className="adv-actions">
-            {result.chapterDone ? (
+            {daily ? (
+              <button className="adv-btn primary" onClick={onExit} data-testid="back-to-map">回地圖</button>
+            ) : result.chapterDone ? (
               <button className="adv-btn primary" onClick={onCeremony} data-testid="open-chest">去開寶箱</button>
             ) : (
               <button className="adv-btn primary" onClick={() => onNextStation(station + 1)} data-testid="next-station">下一站</button>
             )}
-            <button className="adv-btn" onClick={onExit} data-testid="back-to-map">回地圖</button>
+            {!daily && <button className="adv-btn" onClick={onExit} data-testid="back-to-map">回地圖</button>}
           </div>
         </div>
       </main>
@@ -391,15 +418,15 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   }
 
   return (
-    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`} data-testid="stage" data-kind={def.kind} data-station={station} data-gentle={profile.gentle ? 'true' : undefined}>
+    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`} data-testid="stage" data-kind={def.kind} data-station={station} data-daily={daily ? 'true' : undefined} data-subject={info.subject} data-gentle={profile.gentle ? 'true' : undefined}>
       <header className="adv-top">
         <button className="adv-btn small" onClick={askLeave} aria-label="離開關卡" data-testid="leave">←<span className="adv-leave-label"> 離開</span></button>
         {def.kind === 'boss' ? (
-          <div className="boss-bar" role="progressbar" aria-valuemin={0} aria-valuemax={plan?.length ?? STATION_SIZE} aria-valuenow={Math.min(idx + (solved ? 1 : 0), STATION_SIZE)} aria-label="猴王石的進度" data-testid="boss-bar">
+          <div className="boss-bar" role="progressbar" aria-valuemin={0} aria-valuemax={plan?.length ?? STATION_SIZE} aria-valuenow={Math.min(idx + (solved ? 1 : 0), STATION_SIZE)} aria-label={`${def.name}的進度`} data-testid="boss-bar">
             <i style={{ width: `${(Math.min(idx + (solved ? 1 : 0), plan?.length ?? STATION_SIZE) / (plan?.length ?? STATION_SIZE)) * 100}%` }} />
           </div>
         ) : (
-        <div className="adv-dots" role="progressbar" aria-valuemin={0} aria-valuemax={STATION_SIZE} aria-valuenow={Math.min(idx + (solved ? 1 : 0), STATION_SIZE)} aria-label={`第 ${station} 站，第 ${idx + 1} 題`}>
+        <div className="adv-dots" role="progressbar" aria-valuemin={0} aria-valuemax={STATION_SIZE} aria-valuenow={Math.min(idx + (solved ? 1 : 0), STATION_SIZE)} aria-label={daily ? `今日冒險，第 ${idx + 1} 題` : `第 ${station} 站，第 ${idx + 1} 題`}>
           {Array.from({ length: plan?.length ?? STATION_SIZE }, (_, i) => (
             <span key={i} className={`adv-dot ${i < idx || (i === idx && solved) ? 'done' : i === idx ? 'now' : ''}`} />
           ))}
@@ -481,6 +508,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
               <GiveView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} onFeel={setFeel} />
             ) : q.interaction === 'dragSort' ? (
               <SortView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
+            ) : q.skill === 'english' ? (
+              <EnglishView key={q.id} q={q} hintStage={hintStage} tapped={tapped} solved={solved} onPick={pick} />
             ) : (
               <QuestionView key={q.id} q={q} hintStage={hintStage} tapped={tapped} solved={solved} onPick={pick} voiceOn={voiceOn} startDelay={profile.gentle ? 2400 : 350} />
             )}

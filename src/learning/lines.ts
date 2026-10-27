@@ -44,6 +44,9 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'gentle.answer': '你看，答案在這裡，點點看。',
   // 關卡
   'station.done': '這一站過關了！',
+  // 每日冒險
+  'daily.done': '今天的冒險完成了！',
+  'daily.badge': '今天的冒險完成了，拿到今日徽章囉！',
   'chapter.done': '太棒了，這一章全部通關了！',
   'station.loading': '阿悟正在準備題目。',
   // 離開關卡
