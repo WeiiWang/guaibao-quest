@@ -17,6 +17,9 @@ import { StageScreen } from './screens/adventure/StageScreen'
 import { Ceremony } from './screens/adventure/Ceremony'
 import { WorkshopScreen } from './screens/Workshop'
 import { LockScreen, PlayTimeWatcher } from './components/PlayTime'
+import { ProfileGate } from '../profiles/ProfileGate'
+import { profiles } from '../profiles/manager'
+import type { ChildProfile } from '../profiles/registry'
 import { BackdropPreview, parseBackdropHash } from './screens/BackdropPreview'
 import { GalleryScreen } from './screens/Gallery'
 import { FriendsScreen } from './screens/Friends'
@@ -54,7 +57,6 @@ function screenFromHash(): Screen {
 }
 
 export function App() {
-  const settings = useLiveQuery(async () => ({ value: await db.settings.get('main') }), [])
   const [toastMsg, setToastMsg] = useState<{ text: string; tone: ToastTone; id: number } | null>(null)
   const [celebration, setCelebration] = useState<CelebrateInfo | null>(null)
   const toastTimer = useRef<number | undefined>(undefined)
@@ -65,14 +67,11 @@ export function App() {
     toastTimer.current = window.setTimeout(() => setToastMsg(null), 2800)
   }, [])
 
-  let body
-  if (!settings) body = <div className="splash">載入中…</div>
-  else if (!settings.value?.onboarded) body = <Onboarding />
-  else body = <Main childName={settings.value.childName} />
-
   return (
     <ToastContext.Provider value={toast}>
-      <CelebrateContext.Provider value={setCelebration}>{body}</CelebrateContext.Provider>
+      <CelebrateContext.Provider value={setCelebration}>
+        <ProfileGate>{(child) => <ChildApp key={child.id} child={child} />}</ProfileGate>
+      </CelebrateContext.Provider>
       {celebration && <Celebration info={celebration} onClose={() => setCelebration(null)} />}
       {toastMsg && (
         <div key={toastMsg.id} className={`toast ${toastMsg.tone}`} role="status">
@@ -81,6 +80,22 @@ export function App() {
       )}
     </ToastContext.Provider>
   )
+}
+
+/** 一個孩子的整個 App：資料庫已經切到他的檔案。資料是空的（重設之後）就走簡化 onboarding，不再問 PIN */
+function ChildApp({ child }: { child: ChildProfile }) {
+  const settings = useLiveQuery(async () => ({ value: await db.settings.get('main') }), [])
+  if (!settings) return <div className="splash">載入中…</div>
+  if (!settings.value?.onboarded) {
+    return (
+      <Onboarding
+        withPin={false}
+        defaultName={child.name}
+        onFinish={(i) => profiles.onboardExisting(child.id, { childName: i.childName, petName: i.petName })}
+      />
+    )
+  }
+  return <Main childName={settings.value.childName} />
 }
 
 function Main({ childName }: { childName: string }) {

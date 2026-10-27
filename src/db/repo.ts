@@ -16,6 +16,7 @@ import { dayRange, localDateStr } from '../domain/date'
 import { currentHunger, feed } from '../domain/pet'
 import { planFeedPoop, POOP_CAP, resolveDuePoops, type PoopSpread } from '../pet/poop'
 import { checkPin, hashPin, isValidPin } from '../domain/pin'
+import { registry, type PinStore } from '../profiles/registry'
 import { balanceOf, checkPenalty, grantPoints } from '../domain/points'
 import { canBuy } from '../domain/shop'
 import { clampTaskPoints, instancesToCreate, transition } from '../domain/tasks'
@@ -80,6 +81,8 @@ export class Repo {
     private readonly clock: () => number = clockNow,
     /** 亂數來源（大便機率用；測試可注入固定值） */
     private readonly rng: () => number = Math.random,
+    /** 家長 PIN 存放處：預設是全家共用的名冊；名冊沒有 PIN 時退回這個資料庫 settings 裡的 pinHash */
+    private readonly pins: PinStore = registry.pinStore(),
   ) {}
 
   // ---------- 啟動 / 設定 ----------
@@ -115,8 +118,12 @@ export class Repo {
     return this.db.settings.get(SETTINGS_ID)
   }
 
-  async onboard(input: { pin: string; childName: string; petName: string }, now = this.clock()): Promise<Result> {
-    if (!isValidPin(input.pin)) return { ok: false, error: 'PIN 需為 4 位數字' }
+  /**
+   * 建立這個孩子的初始資料。第一個孩子帶 pin（同時成為全家共用的 PIN）；
+   * 之後新增的孩子帶 pinHash（沿用共用 PIN 的雜湊，不再要求設定 PIN）。
+   */
+  async onboard(input: { pin?: string; pinHash?: string; childName: string; petName: string }, now = this.clock()): Promise<Result> {
+    if (input.pinHash === undefined && !isValidPin(input.pin ?? '')) return { ok: false, error: 'PIN 需為 4 位數字' }
     const childName = input.childName.trim()
     if (!childName) return { ok: false, error: '請輸入小孩的名字' }
     const petName = input.petName.trim() || DEFAULT_PET_NAME
@@ -124,7 +131,7 @@ export class Repo {
     await d.transaction('rw', [d.settings, d.children, d.pets, d.templates, d.shopItems], async () => {
       await d.settings.put({
         id: SETTINGS_ID,
-        pinHash: hashPin(input.pin),
+        pinHash: input.pinHash ?? hashPin(input.pin ?? ''),
         childName,
         onboarded: true,
         ...learningSettingsOf(undefined),
@@ -147,6 +154,8 @@ export class Repo {
   }
 
   async verifyPin(pin: string): Promise<boolean> {
+    const shared = await this.pins.get()
+    if (shared) return checkPin(pin, shared)
     const s = await this.getSettings()
     return !!s && checkPin(pin, s.pinHash)
   }
@@ -154,7 +163,10 @@ export class Repo {
   async changePin(oldPin: string, newPin: string): Promise<Result> {
     if (!isValidPin(newPin)) return { ok: false, error: '新 PIN 需為 4 位數字' }
     if (!(await this.verifyPin(oldPin))) return { ok: false, error: '目前的 PIN 不正確' }
-    await this.db.settings.update(SETTINGS_ID, { pinHash: hashPin(newPin) })
+    const hash = hashPin(newPin)
+    await this.pins.set(hash)
+    // 這個孩子資料庫裡的 pinHash 保留並同步（相容舊版；實際驗證以共用 PIN 為準）
+    await this.db.settings.update(SETTINGS_ID, { pinHash: hash })
     return { ok: true }
   }
 

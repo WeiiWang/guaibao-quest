@@ -8,6 +8,9 @@ import { PinPad } from '../../components/PinPad'
 import { useToast } from '../../hooks'
 import { usePoopSetting } from '../../pet/hooks'
 import { Switch } from './AudioTab'
+import { ChildrenManager } from '../../../profiles/ChildrenManager'
+import { useProfiles } from '../../../profiles/context'
+import { profiles } from '../../../profiles/manager'
 import { AGE_BANDS, AGE_LABEL } from '../../../learning/profile'
 import { useLearnerProfile } from '../../learningHooks'
 import './learning.css'
@@ -25,6 +28,7 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
   const [confirmReset, setConfirmReset] = useState(false)
   const poopOn = usePoopSetting()
   const profile = useLearnerProfile()
+  const ctx = useProfiles()
 
   const changePin = async () => {
     if (!isValidPin(newPin)) return setPinMsg('新 PIN 需為 4 位數字')
@@ -40,6 +44,8 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
 
   return (
     <section className="settings">
+      <ChildrenManager />
+
       <div className="card" data-testid="age-card">
         <h2>孩子的年齡</h2>
         <p className="lt-text">決定學習從哪裡開始。已經玩過的技能不會被改動，只影響還沒玩過的。</p>
@@ -52,7 +58,8 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
               className={`lt-choice ${profile.configured && profile.ageBand === b ? 'on' : ''}`}
               data-testid={`age-${b}`}
               onClick={async () => {
-                const r = await repo.setAgeBand(b)
+                // 年齡以孩子名冊為準，同步寫進這個孩子資料庫的 settings.ageBand
+                const r = ctx ? await profiles.setChildAge(ctx.activeId, b) : await repo.setAgeBand(b)
                 toast(r.ok ? `已設定：${AGE_LABEL[b]}` : r.error, r.ok ? 'ok' : 'warn')
               }}
             >
@@ -80,7 +87,7 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
       </div>
 
       <div className="card form">
-        <h2>名字</h2>
+        <h2>這個孩子的名字</h2>
         <label className="field">
           小孩名字
           <input className="input" value={childName ?? settings?.childName ?? ''} maxLength={10} onChange={(e) => setChildName(e.target.value)} />
@@ -92,7 +99,10 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
         <button
           className="btn primary"
           onClick={async () => {
-            if (childName !== null) await repo.setChildName(childName)
+            if (childName !== null) {
+              if (ctx) await profiles.renameChild(ctx.activeId, childName)
+              else await repo.setChildName(childName)
+            }
             if (petName !== null) await repo.setPetName(petName)
             setChildName(null)
             setPetName(null)
@@ -104,7 +114,7 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
       </div>
 
       <div className="card form">
-        <h2>更改 PIN</h2>
+        <h2>更改 PIN（全家共用）</h2>
         <label className="field">
           目前的 PIN
           <input className="input" type="password" inputMode="numeric" maxLength={4} value={oldPin} onChange={(e) => setOldPin(e.target.value.replace(/\D/g, ''))} />
@@ -122,15 +132,18 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
       </div>
 
       <div className="card form danger-zone">
-        <h2>重設全部資料</h2>
-        <p>會清除所有任務、點數、寵物與著色進度，並回到初次設定。</p>
-        <button className="btn danger" onClick={() => setConfirmReset(true)}>重設全部資料</button>
+        <h2>重設這個孩子的資料</h2>
+        <p>
+          只會清除目前這個孩子{settings?.childName ? `「${settings.childName}」` : ''}的任務、點數、寵物與著色進度，讓他重新領一顆蛋。
+          其他孩子和家長 PIN 都不受影響。
+        </p>
+        <button className="btn danger" onClick={() => setConfirmReset(true)}>重設這個孩子的資料</button>
       </div>
 
       {confirmReset && (
         <Modal title="再輸入一次 PIN 確認重設" onClose={() => setConfirmReset(false)}>
           <PinPad
-            label="輸入 PIN 後立即清除全部資料"
+            label="輸入 PIN 後立即清除這個孩子的資料"
             onComplete={async (pin) => {
               const r = await repo.resetAll(pin)
               if (!r.ok) return r.error

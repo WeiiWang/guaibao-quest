@@ -1,22 +1,28 @@
 import { useState } from 'react'
-import { repo } from '../../db/repo'
 import { DEFAULT_PET_NAME } from '../../domain/constants'
 import { PetSprite } from '../components/PetSprite'
 import { PinPad } from '../components/PinPad'
 
 type Step = 'pin1' | 'pin2' | 'child' | 'pet' | 'egg'
 
-export function Onboarding() {
-  const [step, setStep] = useState<Step>('pin1')
+interface Props {
+  /** true = 全新安裝（要先設定全家共用的家長 PIN）；false = 簡化版（孩子已在名冊裡，例如重設之後），不問 PIN */
+  withPin: boolean
+  defaultName?: string
+  onFinish: (input: { pin?: string; childName: string; petName: string }) => Promise<{ ok: true } | { ok: false; error: string }>
+}
+
+export function Onboarding({ withPin, defaultName = '', onFinish }: Props) {
+  const [step, setStep] = useState<Step>(withPin ? 'pin1' : 'child')
   const [pin, setPin] = useState('')
-  const [childName, setChildName] = useState('')
+  const [childName, setChildName] = useState(defaultName)
   const [petName, setPetName] = useState(DEFAULT_PET_NAME)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
 
   const finish = async () => {
     setBusy(true)
-    const r = await repo.onboard({ pin, childName, petName })
+    const r = await onFinish({ pin: withPin ? pin : undefined, childName, petName })
     if (!r.ok) {
       setErr(r.error)
       setBusy(false)

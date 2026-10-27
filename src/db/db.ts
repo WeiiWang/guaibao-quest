@@ -16,6 +16,9 @@ import type { Attempt, MaterialLedgerEntry, PlayTime, Progress, SkillState } fro
 import { SHOP_CATALOG } from '../learning/materials'
 import { DEFAULT_DAILY_LIMIT_MIN } from '../learning/playtime'
 
+/** 第一個孩子（含升級前的舊玩家）沿用的資料庫名稱；之後的孩子用 `guaibao-quest-<childId>` */
+export const DEFAULT_DB_NAME = 'guaibao-quest'
+
 export class GuaibaoDB extends Dexie {
   children!: Table<Child, string>
   templates!: Table<TaskTemplate, string>
@@ -33,7 +36,7 @@ export class GuaibaoDB extends Dexie {
   skillState!: Table<SkillState, string>
   playTime!: Table<PlayTime, string>
 
-  constructor(name = 'guaibao-quest') {
+  constructor(name = DEFAULT_DB_NAME) {
     super(name)
     this.version(1).stores({
       children: 'id',
@@ -91,4 +94,53 @@ export class GuaibaoDB extends Dexie {
   }
 }
 
-export const db = new GuaibaoDB()
+// ---------- 多孩子：每個孩子各自一個資料庫 ----------
+// `db` 是一個 Proxy，永遠指向「目前這個孩子」的資料庫；所有既有程式（repo、useLiveQuery、pm）照舊 import { db }。
+// 切換孩子只透過 setActiveDb()，而且 App 會先把舊孩子的畫面整個卸載、再切換，所以不會有寫錯資料庫的問題。
+const instances = new Map<string, GuaibaoDB>()
+let activeName = DEFAULT_DB_NAME
+
+/** 取得（必要時建立）指定名稱的資料庫實例；不帶名稱就是目前的孩子。同名永遠回同一個實例 */
+export function getDb(name: string = activeName): GuaibaoDB {
+  let inst = instances.get(name)
+  if (!inst) {
+    inst = new GuaibaoDB(name)
+    instances.set(name, inst)
+  }
+  return inst
+}
+
+/** 把 `db` 指向另一個孩子的資料庫 */
+export function setActiveDb(name: string): void {
+  activeName = name
+}
+
+export function activeDbName(): string {
+  return activeName
+}
+
+/** 關閉並刪除一個孩子的資料庫（家長刪除孩子時用） */
+export async function deleteDb(name: string): Promise<void> {
+  const inst = instances.get(name)
+  if (inst) {
+    inst.close()
+    instances.delete(name)
+  }
+  await Dexie.delete(name)
+}
+
+export const db: GuaibaoDB = new Proxy({} as GuaibaoDB, {
+  get(_t, prop) {
+    const target = getDb()
+    const v = Reflect.get(target, prop, target)
+    // 方法綁回真正的實例；Dexie 的 on（事件物件）不能綁
+    return typeof v === 'function' && prop !== 'on' ? v.bind(target) : v
+  },
+  set(_t, prop, value) {
+    const target = getDb()
+    return Reflect.set(target, prop, value, target)
+  },
+  has(_t, prop) {
+    return Reflect.has(getDb(), prop)
+  },
+})
