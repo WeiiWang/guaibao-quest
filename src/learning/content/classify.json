@@ -516,63 +516,244 @@
     "params": {"groupName":"水果"}
   },
   {
-    "id": "classify-2-01", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-01", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把水果和動物分開，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像蘋果，動物像小雞。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-apple"},{"id":"b2","label":"動物","obj":"obj-chick"}],"targets":["b1","b2","b2","b1"]}
+  },
+  {
+    "id": "classify-2-02", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：交通工具放一邊，水果放另一邊。",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "交通工具像汽車，水果像蘋果。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"交通工具","obj":"decor-car"},{"id":"b2","label":"水果","obj":"obj-apple"}],"targets":["b1","b2","b2","b2"]}
+  },
+  {
+    "id": "classify-2-03", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把水果和玩具分開，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-piano"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像桃子，玩具像皮球。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-peach"},{"id":"b2","label":"玩具","obj":"decor-ball"}],"targets":["b1","b2","b1","b2"]}
+  },
+  {
+    "id": "classify-2-04", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：玩具放一邊，水果放另一邊。",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "玩具像皮球，水果像香蕉。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"玩具","obj":"decor-ball"},{"id":"b2","label":"水果","obj":"obj-banana"}],"targets":["b2","b2","b1","b2"]}
+  },
+  {
+    "id": "classify-2-05", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把水果和玩具分開，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像蘋果，玩具像恐龍。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-apple"},{"id":"b2","label":"玩具","obj":"decor-dino"}],"targets":["b1","b2","b2","b1"]}
+  },
+  {
+    "id": "classify-2-06", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：水果放一邊，交通工具放另一邊。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像蘋果，交通工具像汽車。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-apple"},{"id":"b2","label":"交通工具","obj":"decor-car"}],"targets":["b1","b1","b2","b1"]}
+  },
+  {
+    "id": "classify-2-07", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把水果和玩具分開，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像桃子，玩具像皮球。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-peach"},{"id":"b2","label":"玩具","obj":"decor-ball"}],"targets":["b1","b2","b2","b1"]}
+  },
+  {
+    "id": "classify-2-08", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：水果放一邊，玩具放另一邊。",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像桃子，玩具像鋼琴。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-peach"},{"id":"b2","label":"玩具","obj":"decor-piano"}],"targets":["b2","b1","b1","b2"]}
+  },
+  {
+    "id": "classify-2-09", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把玩具和水果分開，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-piano"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "玩具像恐龍，水果像桃子。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"玩具","obj":"decor-dino"},{"id":"b2","label":"水果","obj":"obj-peach"}],"targets":["b2","b1","b2","b1"]}
+  },
+  {
+    "id": "classify-2-10", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：玩具放一邊，動物放另一邊。",
+    "items": [
+      {"obj":"decor-ball"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "玩具像恐龍，動物像小兔子。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"玩具","obj":"decor-dino"},{"id":"b2","label":"動物","obj":"obj-rabbit"}],"targets":["b1","b1","b2","b2"]}
+  },
+  {
+    "id": "classify-2-11", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把玩具和動物分開，放進對的籃子裡。",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "玩具像恐龍，動物像小雞。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"玩具","obj":"decor-dino"},{"id":"b2","label":"動物","obj":"obj-chick"}],"targets":["b1","b2","b2","b1"]}
+  },
+  {
+    "id": "classify-2-12", "skill": "classify", "difficulty": 2, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：水果放一邊，交通工具放另一邊。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像香蕉，交通工具像火箭。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-banana"},{"id":"b2","label":"交通工具","obj":"decor-rocket"}],"targets":["b1","b2","b1","b1"]}
+  },
+  {
+    "id": "classify-2-13", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "找找看，黃色的是哪一個？",
     "items": [],
     "choices": [
       {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-star","obj":"obj-star"}
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-car","obj":"decor-car"}
     ],
     "answer": "obj-star",
     "hint": "黃色，像太陽，像小鴨。找找看，哪一個是黃色的？",
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-02", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-14", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "prompt": "哪一個是白色的？",
+    "items": [],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "白色，像雲朵，像牛奶。找找看，哪一個是白色的？",
+    "params": {"colorWord":"白色","swatch":"#f4f4f4"}
+  },
+  {
+    "id": "classify-2-15", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "哪一個是黃色的？",
     "items": [],
     "choices": [
       {"id":"obj-star","obj":"obj-star"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
     ],
     "answer": "obj-star",
     "hint": "黃色，像太陽，像小鴨。找找看，哪一個是黃色的？",
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-03", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-16", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "找找看，黃色的是哪一個？",
     "items": [],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"},
       {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-peach","obj":"obj-peach"}
+      {"id":"obj-flower","obj":"obj-flower"}
     ],
     "answer": "obj-banana",
     "hint": "黃色，像太陽，像小鴨。找找看，哪一個是黃色的？",
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-04", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-17", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "哪一個是黃色的？",
     "items": [],
     "choices": [
       {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
     "answer": "obj-chick",
     "hint": "黃色，像太陽，像小鴨。找找看，哪一個是黃色的？",
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-05", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-18", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "哪一個是綠色的？",
     "items": [],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-flower","obj":"obj-flower"},
       {"id":"obj-banana","obj":"obj-banana"},
       {"id":"decor-car","obj":"decor-car"}
     ],
@@ -581,11 +762,11 @@
     "params": {"colorWord":"綠色","swatch":"#5cc98a"}
   },
   {
-    "id": "classify-2-06", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-19", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "哪一個是粉紅色的？",
     "items": [],
     "choices": [
-      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-chick","obj":"obj-chick"},
       {"id":"obj-peach","obj":"obj-peach"},
       {"id":"decor-rocket","obj":"decor-rocket"}
     ],
@@ -594,51 +775,64 @@
     "params": {"colorWord":"粉紅色","swatch":"#ffb3c7"}
   },
   {
-    "id": "classify-2-07", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-20", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "哪一個是紅色的？",
     "items": [],
     "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-star","obj":"obj-star"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
     ],
     "answer": "decor-rocket",
     "hint": "紅色，像消防車，像草莓。找找看，哪一個是紅色的？",
     "params": {"colorWord":"紅色","swatch":"#ef5350"}
   },
   {
-    "id": "classify-2-08", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-21", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "找找看，粉紅色的是哪一個？",
     "items": [],
     "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
       {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-car","obj":"decor-car"}
     ],
     "answer": "obj-peach",
     "hint": "粉紅色，像棉花糖，像櫻花。找找看，哪一個是粉紅色的？",
     "params": {"colorWord":"粉紅色","swatch":"#ffb3c7"}
   },
   {
-    "id": "classify-2-09", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-22", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "找找看，藍色的是哪一個？",
     "items": [],
     "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-star","obj":"obj-star"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
     ],
     "answer": "obj-fish",
     "hint": "藍色，像天空，像大海。找找看，哪一個是藍色的？",
     "params": {"colorWord":"藍色","swatch":"#5aa9f0"}
   },
   {
-    "id": "classify-2-10", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-23", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "找找看，紫色的是哪一個？",
     "items": [],
     "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-grape",
+    "hint": "紫色，像茄子，像薰衣草。找找看，哪一個是紫色的？",
+    "params": {"colorWord":"紫色","swatch":"#a874d8"}
+  },
+  {
+    "id": "classify-2-24", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "prompt": "哪一個是紫色的？",
+    "items": [],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"obj-grape","obj":"obj-grape"}
     ],
     "answer": "obj-grape",
@@ -646,38 +840,25 @@
     "params": {"colorWord":"紫色","swatch":"#a874d8"}
   },
   {
-    "id": "classify-2-11", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
-    "prompt": "哪一個是紫色的？",
-    "items": [],
-    "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-star","obj":"obj-star"}
-    ],
-    "answer": "obj-grape",
-    "hint": "紫色，像茄子，像薰衣草。找找看，哪一個是紫色的？",
-    "params": {"colorWord":"紫色","swatch":"#a874d8"}
-  },
-  {
-    "id": "classify-2-12", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-25", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "哪一個是黃色的？",
     "items": [],
     "choices": [
       {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-car","obj":"decor-car"}
     ],
     "answer": "obj-banana",
     "hint": "黃色，像太陽，像小鴨。找找看，哪一個是黃色的？",
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-13", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
+    "id": "classify-2-26", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
     "prompt": "找找看，粉紅色的是哪一個？",
     "items": [],
     "choices": [
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"obj-flower","obj":"obj-flower"}
     ],
     "answer": "obj-flower",
@@ -685,42 +866,29 @@
     "params": {"colorWord":"粉紅色","swatch":"#ffb3c7"}
   },
   {
-    "id": "classify-2-14", "skill": "classify", "difficulty": 2, "type": "color", "version": 2,
-    "prompt": "找找看，白色的是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-star","obj":"obj-star"},
-      {"id":"decor-car","obj":"decor-car"}
-    ],
-    "answer": "obj-rabbit",
-    "hint": "白色，像雲朵，像牛奶。找找看，哪一個是白色的？",
-    "params": {"colorWord":"白色","swatch":"#f4f4f4"}
-  },
-  {
-    "id": "classify-2-15", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-27", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "哪一個跟這個是一樣的顏色？",
     "items": [
       {"obj":"decor-car"}
     ],
     "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-flower","obj":"obj-flower"},
       {"id":"decor-dino","obj":"decor-dino"},
-      {"id":"obj-apple","obj":"obj-apple"}
+      {"id":"obj-grape","obj":"obj-grape"}
     ],
     "answer": "decor-dino",
     "hint": "這個是綠色，像青蛙，像小草。找找看，哪一個也是綠色？",
     "params": {"colorWord":"綠色","swatch":"#5cc98a"}
   },
   {
-    "id": "classify-2-16", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-28", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "找出和這個顏色一樣的。",
     "items": [
       {"obj":"decor-dino"}
     ],
     "choices": [
       {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-flower","obj":"obj-flower"},
       {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "decor-car",
@@ -728,7 +896,7 @@
     "params": {"colorWord":"綠色","swatch":"#5cc98a"}
   },
   {
-    "id": "classify-2-17", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-29", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "哪一個跟這個是一樣的顏色？",
     "items": [
       {"obj":"obj-banana"}
@@ -743,13 +911,13 @@
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-18", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-30", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "找出和這個顏色一樣的。",
     "items": [
       {"obj":"obj-banana"}
     ],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
       {"id":"obj-chick","obj":"obj-chick"},
       {"id":"obj-flower","obj":"obj-flower"}
     ],
@@ -758,102 +926,115 @@
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-19", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-31", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "哪一個跟這個是一樣的顏色？",
     "items": [
       {"obj":"obj-star"}
     ],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-car","obj":"decor-car"},
       {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-flower","obj":"obj-flower"}
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
     "answer": "obj-banana",
     "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-20", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-32", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "找出和這個顏色一樣的。",
     "items": [
       {"obj":"decor-rocket"}
     ],
     "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "obj-apple",
     "hint": "這個是紅色，像消防車，像草莓。找找看，哪一個也是紅色？",
     "params": {"colorWord":"紅色","swatch":"#ef5350"}
   },
   {
-    "id": "classify-2-21", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-33", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "哪一個跟這個是一樣的顏色？",
     "items": [
       {"obj":"obj-chick"}
     ],
     "choices": [
-      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-banana","obj":"obj-banana"},
       {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-banana","obj":"obj-banana"}
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "obj-banana",
     "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-22", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-34", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "找出和這個顏色一樣的。",
     "items": [
       {"obj":"obj-chick"}
     ],
     "choices": [
       {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-star","obj":"obj-star"}
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-flower","obj":"obj-flower"}
     ],
     "answer": "obj-star",
     "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
     "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-2-23", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "id": "classify-2-35", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
     "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "這個是粉紅色，像棉花糖，像櫻花。找找看，哪一個也是粉紅色？",
+    "params": {"colorWord":"粉紅色","swatch":"#ffb3c7"}
+  },
+  {
+    "id": "classify-2-36", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
+    "prompt": "找出和這個顏色一樣的。",
     "items": [
       {"obj":"obj-peach"}
     ],
     "choices": [
       {"id":"obj-flower","obj":"obj-flower"},
       {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"decor-rocket","obj":"decor-rocket"}
+      {"id":"decor-car","obj":"decor-car"}
     ],
     "answer": "obj-flower",
     "hint": "這個是粉紅色，像棉花糖，像櫻花。找找看，哪一個也是粉紅色？",
     "params": {"colorWord":"粉紅色","swatch":"#ffb3c7"}
   },
   {
-    "id": "classify-2-24", "skill": "classify", "difficulty": 2, "type": "same", "version": 2,
-    "prompt": "找出和這個顏色一樣的。",
-    "items": [
-      {"obj":"obj-apple"}
-    ],
-    "choices": [
-      {"id":"decor-dino","obj":"decor-dino"},
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-flower","obj":"obj-flower"}
-    ],
-    "answer": "decor-rocket",
-    "hint": "這個是紅色，像消防車，像草莓。找找看，哪一個也是紅色？",
-    "params": {"colorWord":"紅色","swatch":"#ef5350"}
-  },
-  {
-    "id": "classify-2-25", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
-    "prompt": "找找看，水果是哪一個？",
+    "id": "classify-2-37", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "prompt": "哪一個是交通工具？",
     "items": [],
     "choices": [
-      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "交通工具像汽車，可以載著我們去好遠的地方。找找看，哪一個也是交通工具？",
+    "params": {"groupName":"交通工具"}
+  },
+  {
+    "id": "classify-2-38", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "prompt": "請你指出水果。",
+    "items": [],
+    "choices": [
       {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"},
       {"id":"decor-rocket","obj":"decor-rocket"}
     ],
     "answer": "obj-apple",
@@ -861,147 +1042,134 @@
     "params": {"groupName":"水果"}
   },
   {
-    "id": "classify-2-26", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
-    "prompt": "哪一個是交通工具？",
-    "items": [],
-    "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
-    ],
-    "answer": "decor-rocket",
-    "hint": "交通工具像汽車，可以載著我們去好遠的地方。找找看，哪一個也是交通工具？",
-    "params": {"groupName":"交通工具"}
-  },
-  {
-    "id": "classify-2-27", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
-    "prompt": "哪一個是動物？",
-    "items": [],
-    "choices": [
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-fish","obj":"obj-fish"}
-    ],
-    "answer": "obj-fish",
-    "hint": "動物像小雞、小兔子，是活的，會動，會吃東西。找找看，哪一個也是動物？",
-    "params": {"groupName":"動物"}
-  },
-  {
-    "id": "classify-2-28", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "id": "classify-2-39", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
     "prompt": "哪一個是水果？",
     "items": [],
     "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "obj-peach",
+    "hint": "水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
+    "params": {"groupName":"水果"}
+  },
+  {
+    "id": "classify-2-40", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
       {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-banana","obj":"obj-banana"}
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-ball","obj":"decor-ball"}
     ],
     "answer": "obj-banana",
     "hint": "水果像桃子、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
     "params": {"groupName":"水果"}
   },
   {
-    "id": "classify-2-29", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
-    "prompt": "請你指出玩具。",
+    "id": "classify-2-41", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "prompt": "找找看，動物是哪一個？",
     "items": [],
     "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"decor-dino","obj":"decor-dino"},
-      {"id":"obj-grape","obj":"obj-grape"}
-    ],
-    "answer": "decor-dino",
-    "hint": "玩具像皮球、鋼琴，是小朋友拿來玩的。找找看，哪一個也是玩具？",
-    "params": {"groupName":"玩具"}
-  },
-  {
-    "id": "classify-2-30", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
-    "prompt": "找找看，交通工具是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-banana","obj":"obj-banana"}
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
-    "answer": "decor-rocket",
-    "hint": "交通工具像汽車，可以載著我們去好遠的地方。找找看，哪一個也是交通工具？",
-    "params": {"groupName":"交通工具"}
+    "answer": "obj-fish",
+    "hint": "動物像小雞、小兔子，是活的，會動，會吃東西。找找看，哪一個也是動物？",
+    "params": {"groupName":"動物"}
   },
   {
-    "id": "classify-2-31", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "id": "classify-2-42", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "prompt": "請你指出動物。",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "動物像小魚、小兔子，是活的，會動，會吃東西。找找看，哪一個也是動物？",
+    "params": {"groupName":"動物"}
+  },
+  {
+    "id": "classify-2-43", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
     "prompt": "找找看，玩具是哪一個？",
     "items": [],
     "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"decor-piano","obj":"decor-piano"}
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
     ],
     "answer": "decor-piano",
     "hint": "玩具像皮球、恐龍，是小朋友拿來玩的。找找看，哪一個也是玩具？",
     "params": {"groupName":"玩具"}
   },
   {
-    "id": "classify-2-32", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "id": "classify-2-44", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
     "prompt": "請你指出玩具。",
     "items": [],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"decor-ball","obj":"decor-ball"},
-      {"id":"decor-rocket","obj":"decor-rocket"}
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
     "answer": "decor-ball",
     "hint": "玩具像恐龍、鋼琴，是小朋友拿來玩的。找找看，哪一個也是玩具？",
     "params": {"groupName":"玩具"}
   },
   {
-    "id": "classify-2-33", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "id": "classify-2-45", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
     "prompt": "哪一個是水果？",
     "items": [],
     "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"decor-car","obj":"decor-car"}
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-grape","obj":"obj-grape"}
     ],
     "answer": "obj-grape",
     "hint": "水果像香蕉、桃子，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
     "params": {"groupName":"水果"}
   },
   {
-    "id": "classify-2-34", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "id": "classify-2-46", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
     "prompt": "請你指出水果。",
     "items": [],
     "choices": [
       {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"decor-car","obj":"decor-car"}
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-piano","obj":"decor-piano"}
     ],
     "answer": "obj-peach",
     "hint": "水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
     "params": {"groupName":"水果"}
   },
   {
-    "id": "classify-2-35", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "id": "classify-2-47", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
     "prompt": "找找看，水果是哪一個？",
     "items": [],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"decor-ball","obj":"decor-ball"}
+      {"id":"decor-piano","obj":"decor-piano"}
     ],
     "answer": "obj-peach",
     "hint": "水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
     "params": {"groupName":"水果"}
   },
   {
-    "id": "classify-2-36", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
-    "prompt": "哪一個是水果？",
+    "id": "classify-2-48", "skill": "classify", "difficulty": 2, "type": "kind", "version": 2,
+    "prompt": "哪一個是交通工具？",
     "items": [],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-apple","obj":"obj-apple"}
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-car","obj":"decor-car"}
     ],
-    "answer": "obj-apple",
-    "hint": "水果像香蕉、桃子，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
-    "params": {"groupName":"水果"}
+    "answer": "decor-car",
+    "hint": "交通工具像火箭，可以載著我們去好遠的地方。找找看，哪一個也是交通工具？",
+    "params": {"groupName":"交通工具"}
   },
   {
     "id": "classify-3-01", "skill": "classify", "difficulty": 3, "type": "odd", "version": 2,
@@ -1508,60 +1676,240 @@
     "params": {"same":["obj-rabbit","obj-fish","obj-chick"],"groupName":"動物"}
   },
   {
+    "id": "classify-3-37", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把水果、交通工具、動物分一分，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-car"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像香蕉，交通工具像火箭，動物像小魚。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-banana"},{"id":"b2","label":"交通工具","obj":"decor-rocket"},{"id":"b3","label":"動物","obj":"obj-fish"}],"targets":["b1","b3","b1","b2","b1"]}
+  },
+  {
+    "id": "classify-3-38", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：水果、玩具、動物，各放各的籃子。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像香蕉，玩具像恐龍，動物像小兔子。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-banana"},{"id":"b2","label":"玩具","obj":"decor-dino"},{"id":"b3","label":"動物","obj":"obj-rabbit"}],"targets":["b1","b1","b3","b2","b2","b3"]}
+  },
+  {
+    "id": "classify-3-39", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把水果、玩具、動物分一分，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像香蕉，玩具像恐龍，動物像小魚。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-banana"},{"id":"b2","label":"玩具","obj":"decor-dino"},{"id":"b3","label":"動物","obj":"obj-fish"}],"targets":["b1","b3","b1","b1","b2"]}
+  },
+  {
+    "id": "classify-3-40", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：水果、動物、玩具，各放各的籃子。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "水果像蘋果，動物像小雞，玩具像皮球。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"水果","obj":"obj-apple"},{"id":"b2","label":"動物","obj":"obj-chick"},{"id":"b3","label":"玩具","obj":"decor-ball"}],"targets":["b1","b2","b1","b3","b1","b2"]}
+  },
+  {
+    "id": "classify-3-41", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把玩具、動物、水果分一分，放進對的籃子裡。",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "玩具像恐龍，動物像小雞，水果像香蕉。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"玩具","obj":"decor-dino"},{"id":"b2","label":"動物","obj":"obj-chick"},{"id":"b3","label":"水果","obj":"obj-banana"}],"targets":["b1","b3","b3","b1","b2"]}
+  },
+  {
+    "id": "classify-3-42", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：動物、玩具、水果，各放各的籃子。",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "動物像小雞，玩具像恐龍，水果像葡萄。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"動物","obj":"obj-chick"},{"id":"b2","label":"玩具","obj":"decor-dino"},{"id":"b3","label":"水果","obj":"obj-grape"}],"targets":["b1","b3","b1","b3","b3","b2"]}
+  },
+  {
+    "id": "classify-3-43", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把交通工具、玩具、水果分一分，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-car"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "交通工具像火箭，玩具像恐龍，水果像蘋果。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"交通工具","obj":"decor-rocket"},{"id":"b2","label":"玩具","obj":"decor-dino"},{"id":"b3","label":"水果","obj":"obj-apple"}],"targets":["b3","b3","b3","b1","b2"]}
+  },
+  {
+    "id": "classify-3-44", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：動物、玩具、水果，各放各的籃子。",
+    "items": [
+      {"obj":"decor-ball"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "動物像小雞，玩具像恐龍，水果像桃子。看看每一個是什麼，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"動物","obj":"obj-chick"},{"id":"b2","label":"玩具","obj":"decor-dino"},{"id":"b3","label":"水果","obj":"obj-peach"}],"targets":["b2","b3","b3","b2","b3","b1"]}
+  },
+  {
+    "id": "classify-3-45", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把綠色的和粉紅色的分開，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "綠色，像青蛙，像小草。粉紅色，像棉花糖，像櫻花。看看每一個是什麼顏色，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"綠色","swatch":"#5cc98a"},{"id":"b2","label":"粉紅色","swatch":"#ffb3c7"}],"targets":["b2","b1","b2","b1"]}
+  },
+  {
+    "id": "classify-3-46", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：黃色的放一邊，粉紅色的放另一邊。",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "黃色，像太陽，像小鴨。粉紅色，像棉花糖，像櫻花。看看每一個是什麼顏色，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"黃色","swatch":"#ffd84d"},{"id":"b2","label":"粉紅色","swatch":"#ffb3c7"}],"targets":["b1","b2","b1","b2"]}
+  },
+  {
+    "id": "classify-3-47", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "把黃色的和粉紅色的分開，放進對的籃子裡。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "黃色，像太陽，像小鴨。粉紅色，像棉花糖，像櫻花。看看每一個是什麼顏色，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"黃色","swatch":"#ffd84d"},{"id":"b2","label":"粉紅色","swatch":"#ffb3c7"}],"targets":["b2","b1","b1","b2"]}
+  },
+  {
+    "id": "classify-3-48", "skill": "classify", "difficulty": 3, "type": "bins", "version": 2, "interaction": "dragSort",
+    "prompt": "幫忙整理：綠色的放一邊，紅色的放另一邊。",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"decor-car"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [],
+    "answer": "sorted",
+    "hint": "綠色，像青蛙，像小草。紅色，像消防車，像草莓。看看每一個是什麼顏色，放進對的籃子。",
+    "params": {"bins":[{"id":"b1","label":"綠色","swatch":"#5cc98a"},{"id":"b2","label":"紅色","swatch":"#ef5350"}],"targets":["b1","b1","b2","b2"]}
+  },
+  {
     "id": "classify-4-01", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "請選出紫色的水果。",
-    "items": [],
-    "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-grape",
-    "hint": "先找水果，再看是不是紫色的。亮起來的都是水果。",
-    "params": {"same":["obj-grape","obj-banana"],"groupName":"水果","colorWord":"紫色","swatch":"#a874d8"}
-  },
-  {
-    "id": "classify-4-02", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是黃色的水果？",
-    "items": [],
-    "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-banana",
-    "hint": "先找水果，再看是不是黃色的。亮起來的都是水果。",
-    "params": {"same":["obj-grape","obj-banana"],"groupName":"水果","colorWord":"黃色","swatch":"#ffd84d"}
-  },
-  {
-    "id": "classify-4-03", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是紅色的水果？",
-    "items": [],
-    "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-peach","obj":"obj-peach"}
-    ],
-    "answer": "obj-apple",
-    "hint": "先找水果，再看是不是紅色的。亮起來的都是水果。",
-    "params": {"same":["obj-apple","obj-peach"],"groupName":"水果","colorWord":"紅色","swatch":"#ef5350"}
-  },
-  {
-    "id": "classify-4-04", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "找找看，哪一個是水果，而且是粉紅色的？",
+    "prompt": "找找看，哪一個是動物，而且是白色的？",
     "items": [],
     "choices": [
       {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-apple","obj":"obj-apple"}
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
-    "answer": "obj-peach",
-    "hint": "先找水果，再看是不是粉紅色的。亮起來的都是水果。",
-    "params": {"same":["obj-peach","obj-apple"],"groupName":"水果","colorWord":"粉紅色","swatch":"#ffb3c7"}
+    "answer": "obj-rabbit",
+    "hint": "先找動物，再看是不是白色的。亮起來的都是動物。",
+    "params": {"same":["obj-rabbit","obj-fish"],"groupName":"動物","colorWord":"白色","swatch":"#f4f4f4"}
+  },
+  {
+    "id": "classify-4-02", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "哪一個是紫色的水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-grape",
+    "hint": "先找水果，再看是不是紫色的。亮起來的都是水果。",
+    "params": {"same":["obj-apple","obj-grape"],"groupName":"水果","colorWord":"紫色","swatch":"#a874d8"}
+  },
+  {
+    "id": "classify-4-03", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "紅色、又是交通工具的，是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "先找交通工具，再看是不是紅色的。亮起來的都是交通工具。",
+    "params": {"same":["decor-rocket","decor-car"],"groupName":"交通工具","colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-4-04", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "哪一個是綠色的交通工具？",
+    "items": [],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-car",
+    "hint": "先找交通工具，再看是不是綠色的。亮起來的都是交通工具。",
+    "params": {"same":["decor-car","decor-rocket"],"groupName":"交通工具","colorWord":"綠色","swatch":"#5cc98a"}
   },
   {
     "id": "classify-4-05", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "找找看，哪一個是交通工具，而且是紅色的？",
+    "prompt": "請選出紅色的交通工具。",
     "items": [],
     "choices": [
       {"id":"decor-car","obj":"decor-car"},
@@ -1574,58 +1922,19 @@
   },
   {
     "id": "classify-4-06", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是藍色的動物？",
+    "prompt": "找找看，哪一個是水果，而且是紅色的？",
     "items": [],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-peach","obj":"obj-peach"}
     ],
-    "answer": "obj-fish",
-    "hint": "先找動物，再看是不是藍色的。亮起來的都是動物。",
-    "params": {"same":["obj-fish","obj-rabbit"],"groupName":"動物","colorWord":"藍色","swatch":"#5aa9f0"}
+    "answer": "obj-apple",
+    "hint": "先找水果，再看是不是紅色的。亮起來的都是水果。",
+    "params": {"same":["obj-apple","obj-peach"],"groupName":"水果","colorWord":"紅色","swatch":"#ef5350"}
   },
   {
     "id": "classify-4-07", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "黃色、又是水果的，是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"decor-dino","obj":"decor-dino"}
-    ],
-    "answer": "obj-banana",
-    "hint": "先找水果，再看是不是黃色的。亮起來的都是水果。",
-    "params": {"same":["obj-grape","obj-banana"],"groupName":"水果","colorWord":"黃色","swatch":"#ffd84d"}
-  },
-  {
-    "id": "classify-4-08", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "找找看，哪一個是水果，而且是紫色的？",
-    "items": [],
-    "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-chick","obj":"obj-chick"}
-    ],
-    "answer": "obj-grape",
-    "hint": "先找水果，再看是不是紫色的。亮起來的都是水果。",
-    "params": {"same":["obj-grape","obj-peach"],"groupName":"水果","colorWord":"紫色","swatch":"#a874d8"}
-  },
-  {
-    "id": "classify-4-09", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "綠色、又是交通工具的，是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"decor-dino","obj":"decor-dino"},
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"decor-car","obj":"decor-car"}
-    ],
-    "answer": "decor-car",
-    "hint": "先找交通工具，再看是不是綠色的。亮起來的都是交通工具。",
-    "params": {"same":["decor-rocket","decor-car"],"groupName":"交通工具","colorWord":"綠色","swatch":"#5cc98a"}
-  },
-  {
-    "id": "classify-4-10", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
     "prompt": "找找看，哪一個是交通工具，而且是綠色的？",
     "items": [],
     "choices": [
@@ -1638,38 +1947,12 @@
     "params": {"same":["decor-rocket","decor-car"],"groupName":"交通工具","colorWord":"綠色","swatch":"#5cc98a"}
   },
   {
-    "id": "classify-4-11", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是白色的動物？",
-    "items": [],
-    "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-grape","obj":"obj-grape"}
-    ],
-    "answer": "obj-rabbit",
-    "hint": "先找動物，再看是不是白色的。亮起來的都是動物。",
-    "params": {"same":["obj-rabbit","obj-chick"],"groupName":"動物","colorWord":"白色","swatch":"#f4f4f4"}
-  },
-  {
-    "id": "classify-4-12", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是紅色的交通工具？",
-    "items": [],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"decor-car","obj":"decor-car"}
-    ],
-    "answer": "decor-rocket",
-    "hint": "先找交通工具，再看是不是紅色的。亮起來的都是交通工具。",
-    "params": {"same":["decor-rocket","decor-car"],"groupName":"交通工具","colorWord":"紅色","swatch":"#ef5350"}
-  },
-  {
-    "id": "classify-4-13", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "id": "classify-4-08", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
     "prompt": "請選出粉紅色的水果。",
     "items": [],
     "choices": [
-      {"id":"obj-peach","obj":"obj-peach"},
       {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-peach","obj":"obj-peach"},
       {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "obj-peach",
@@ -1677,129 +1960,90 @@
     "params": {"same":["obj-peach","obj-apple"],"groupName":"水果","colorWord":"粉紅色","swatch":"#ffb3c7"}
   },
   {
-    "id": "classify-4-14", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是粉紅色的水果？",
-    "items": [],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
-    ],
-    "answer": "obj-peach",
-    "hint": "先找水果，再看是不是粉紅色的。亮起來的都是水果。",
-    "params": {"same":["obj-apple","obj-peach"],"groupName":"水果","colorWord":"粉紅色","swatch":"#ffb3c7"}
-  },
-  {
-    "id": "classify-4-15", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "紅色、又是交通工具的，是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"decor-rocket","obj":"decor-rocket"}
-    ],
-    "answer": "decor-rocket",
-    "hint": "先找交通工具，再看是不是紅色的。亮起來的都是交通工具。",
-    "params": {"same":["decor-car","decor-rocket"],"groupName":"交通工具","colorWord":"紅色","swatch":"#ef5350"}
-  },
-  {
-    "id": "classify-4-16", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是紫色的水果？",
-    "items": [],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"decor-dino","obj":"decor-dino"},
-      {"id":"obj-grape","obj":"obj-grape"}
-    ],
-    "answer": "obj-grape",
-    "hint": "先找水果，再看是不是紫色的。亮起來的都是水果。",
-    "params": {"same":["obj-apple","obj-grape"],"groupName":"水果","colorWord":"紫色","swatch":"#a874d8"}
-  },
-  {
-    "id": "classify-4-17", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "黃色、又是動物的，是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-chick",
-    "hint": "先找動物，再看是不是黃色的。亮起來的都是動物。",
-    "params": {"same":["obj-fish","obj-chick"],"groupName":"動物","colorWord":"黃色","swatch":"#ffd84d"}
-  },
-  {
-    "id": "classify-4-18", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "請選出紅色的交通工具。",
-    "items": [],
-    "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-apple","obj":"obj-apple"}
-    ],
-    "answer": "decor-rocket",
-    "hint": "先找交通工具，再看是不是紅色的。亮起來的都是交通工具。",
-    "params": {"same":["decor-rocket","decor-car"],"groupName":"交通工具","colorWord":"紅色","swatch":"#ef5350"}
-  },
-  {
-    "id": "classify-4-19", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "紅色、又是水果的，是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-grape","obj":"obj-grape"}
-    ],
-    "answer": "obj-apple",
-    "hint": "先找水果，再看是不是紅色的。亮起來的都是水果。",
-    "params": {"same":["obj-apple","obj-grape"],"groupName":"水果","colorWord":"紅色","swatch":"#ef5350"}
-  },
-  {
-    "id": "classify-4-20", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "請選出白色的動物。",
-    "items": [],
-    "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
-    ],
-    "answer": "obj-rabbit",
-    "hint": "先找動物，再看是不是白色的。亮起來的都是動物。",
-    "params": {"same":["obj-fish","obj-rabbit"],"groupName":"動物","colorWord":"白色","swatch":"#f4f4f4"}
-  },
-  {
-    "id": "classify-4-21", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "找找看，哪一個是水果，而且是黃色的？",
+    "id": "classify-4-09", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "請選出黃色的水果。",
     "items": [],
     "choices": [
       {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-chick","obj":"obj-chick"}
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "obj-banana",
     "hint": "先找水果，再看是不是黃色的。亮起來的都是水果。",
     "params": {"same":["obj-banana","obj-apple"],"groupName":"水果","colorWord":"黃色","swatch":"#ffd84d"}
   },
   {
-    "id": "classify-4-22", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "白色、又是動物的，是哪一個？",
+    "id": "classify-4-10", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "哪一個是紅色的水果？",
     "items": [],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-peach","obj":"obj-peach"}
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
     ],
-    "answer": "obj-rabbit",
-    "hint": "先找動物，再看是不是白色的。亮起來的都是動物。",
-    "params": {"same":["obj-rabbit","obj-chick"],"groupName":"動物","colorWord":"白色","swatch":"#f4f4f4"}
+    "answer": "obj-apple",
+    "hint": "先找水果，再看是不是紅色的。亮起來的都是水果。",
+    "params": {"same":["obj-apple","obj-banana"],"groupName":"水果","colorWord":"紅色","swatch":"#ef5350"}
   },
   {
-    "id": "classify-4-23", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "請選出紅色的水果。",
+    "id": "classify-4-11", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "請選出藍色的動物。",
     "items": [],
     "choices": [
       {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "先找動物，再看是不是藍色的。亮起來的都是動物。",
+    "params": {"same":["obj-rabbit","obj-fish"],"groupName":"動物","colorWord":"藍色","swatch":"#5aa9f0"}
+  },
+  {
+    "id": "classify-4-12", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "找找看，哪一個是交通工具，而且是紅色的？",
+    "items": [],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "先找交通工具，再看是不是紅色的。亮起來的都是交通工具。",
+    "params": {"same":["decor-car","decor-rocket"],"groupName":"交通工具","colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-4-13", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "綠色、又是交通工具的，是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-car",
+    "hint": "先找交通工具，再看是不是綠色的。亮起來的都是交通工具。",
+    "params": {"same":["decor-car","decor-rocket"],"groupName":"交通工具","colorWord":"綠色","swatch":"#5cc98a"}
+  },
+  {
+    "id": "classify-4-14", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "粉紅色、又是水果的，是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
       {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-peach",
+    "hint": "先找水果，再看是不是粉紅色的。亮起來的都是水果。",
+    "params": {"same":["obj-peach","obj-apple"],"groupName":"水果","colorWord":"粉紅色","swatch":"#ffb3c7"}
+  },
+  {
+    "id": "classify-4-15", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "請選出紅色的水果。",
+    "items": [],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "obj-apple",
@@ -1807,21 +2051,125 @@
     "params": {"same":["obj-peach","obj-apple"],"groupName":"水果","colorWord":"紅色","swatch":"#ef5350"}
   },
   {
-    "id": "classify-4-24", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "找找看，哪一個是水果，而且是紅色的？",
+    "id": "classify-4-16", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "請選出黃色的動物。",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "先找動物，再看是不是黃色的。亮起來的都是動物。",
+    "params": {"same":["obj-rabbit","obj-chick"],"groupName":"動物","colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-4-17", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "紫色、又是水果的，是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "obj-grape",
+    "hint": "先找水果，再看是不是紫色的。亮起來的都是水果。",
+    "params": {"same":["obj-apple","obj-grape"],"groupName":"水果","colorWord":"紫色","swatch":"#a874d8"}
+  },
+  {
+    "id": "classify-4-18", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "找找看，哪一個是水果，而且是紫色的？",
     "items": [],
     "choices": [
       {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-grape",
+    "hint": "先找水果，再看是不是紫色的。亮起來的都是水果。",
+    "params": {"same":["obj-grape","obj-banana"],"groupName":"水果","colorWord":"紫色","swatch":"#a874d8"}
+  },
+  {
+    "id": "classify-4-19", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "紅色、又是水果的，是哪一個？",
+    "items": [],
+    "choices": [
       {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"},
       {"id":"decor-rocket","obj":"decor-rocket"}
     ],
     "answer": "obj-apple",
     "hint": "先找水果，再看是不是紅色的。亮起來的都是水果。",
-    "params": {"same":["obj-grape","obj-apple"],"groupName":"水果","colorWord":"紅色","swatch":"#ef5350"}
+    "params": {"same":["obj-apple","obj-banana"],"groupName":"水果","colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-4-20", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "找找看，哪一個是水果，而且是黃色的？",
+    "items": [],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-banana",
+    "hint": "先找水果，再看是不是黃色的。亮起來的都是水果。",
+    "params": {"same":["obj-banana","obj-apple"],"groupName":"水果","colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-4-21", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "請選出綠色的交通工具。",
+    "items": [],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "先找交通工具，再看是不是綠色的。亮起來的都是交通工具。",
+    "params": {"same":["decor-rocket","decor-car"],"groupName":"交通工具","colorWord":"綠色","swatch":"#5cc98a"}
+  },
+  {
+    "id": "classify-4-22", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "哪一個是粉紅色的水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "先找水果，再看是不是粉紅色的。亮起來的都是水果。",
+    "params": {"same":["obj-apple","obj-peach"],"groupName":"水果","colorWord":"粉紅色","swatch":"#ffb3c7"}
+  },
+  {
+    "id": "classify-4-23", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "找找看，哪一個是動物，而且是黃色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "obj-chick",
+    "hint": "先找動物，再看是不是黃色的。亮起來的都是動物。",
+    "params": {"same":["obj-chick","obj-rabbit"],"groupName":"動物","colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-4-24", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "哪一個是藍色的動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-fish",
+    "hint": "先找動物，再看是不是藍色的。亮起來的都是動物。",
+    "params": {"same":["obj-rabbit","obj-fish"],"groupName":"動物","colorWord":"藍色","swatch":"#5aa9f0"}
   },
   {
     "id": "classify-4-25", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "請選出黃色的動物。",
+    "prompt": "哪一個是黃色的動物？",
     "items": [],
     "choices": [
       {"id":"obj-banana","obj":"obj-banana"},
@@ -1834,127 +2182,36 @@
   },
   {
     "id": "classify-4-26", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "請選出綠色的交通工具。",
+    "prompt": "請選出紫色的水果。",
     "items": [],
     "choices": [
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"decor-dino","obj":"decor-dino"},
-      {"id":"decor-rocket","obj":"decor-rocket"}
-    ],
-    "answer": "decor-car",
-    "hint": "先找交通工具，再看是不是綠色的。亮起來的都是交通工具。",
-    "params": {"same":["decor-car","decor-rocket"],"groupName":"交通工具","colorWord":"綠色","swatch":"#5cc98a"}
-  },
-  {
-    "id": "classify-4-27", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "請選出黃色的水果。",
-    "items": [],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-banana",
-    "hint": "先找水果，再看是不是黃色的。亮起來的都是水果。",
-    "params": {"same":["obj-apple","obj-banana"],"groupName":"水果","colorWord":"黃色","swatch":"#ffd84d"}
-  },
-  {
-    "id": "classify-4-28", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "粉紅色、又是水果的，是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-peach",
-    "hint": "先找水果，再看是不是粉紅色的。亮起來的都是水果。",
-    "params": {"same":["obj-peach","obj-banana"],"groupName":"水果","colorWord":"粉紅色","swatch":"#ffb3c7"}
-  },
-  {
-    "id": "classify-4-29", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "找找看，哪一個是動物，而且是藍色的？",
-    "items": [],
-    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"decor-car","obj":"decor-car"}
-    ],
-    "answer": "obj-fish",
-    "hint": "先找動物，再看是不是藍色的。亮起來的都是動物。",
-    "params": {"same":["obj-fish","obj-rabbit"],"groupName":"動物","colorWord":"藍色","swatch":"#5aa9f0"}
-  },
-  {
-    "id": "classify-4-30", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "紫色、又是水果的，是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"obj-banana","obj":"obj-banana"}
     ],
     "answer": "obj-grape",
     "hint": "先找水果，再看是不是紫色的。亮起來的都是水果。",
-    "params": {"same":["obj-apple","obj-grape"],"groupName":"水果","colorWord":"紫色","swatch":"#a874d8"}
+    "params": {"same":["obj-grape","obj-banana"],"groupName":"水果","colorWord":"紫色","swatch":"#a874d8"}
   },
   {
-    "id": "classify-4-31", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是綠色的交通工具？",
+    "id": "classify-4-27", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "找找看，哪一個是水果，而且是粉紅色的？",
     "items": [],
     "choices": [
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"decor-dino","obj":"decor-dino"}
-    ],
-    "answer": "decor-car",
-    "hint": "先找交通工具，再看是不是綠色的。亮起來的都是交通工具。",
-    "params": {"same":["decor-car","decor-rocket"],"groupName":"交通工具","colorWord":"綠色","swatch":"#5cc98a"}
-  },
-  {
-    "id": "classify-4-32", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "找找看，哪一個是動物，而且是黃色的？",
-    "items": [],
-    "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"decor-rocket","obj":"decor-rocket"}
-    ],
-    "answer": "obj-chick",
-    "hint": "先找動物，再看是不是黃色的。亮起來的都是動物。",
-    "params": {"same":["obj-fish","obj-chick"],"groupName":"動物","colorWord":"黃色","swatch":"#ffd84d"}
-  },
-  {
-    "id": "classify-4-33", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "哪一個是黃色的動物？",
-    "items": [],
-    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
       {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-chick","obj":"obj-chick"}
+      {"id":"obj-peach","obj":"obj-peach"}
     ],
-    "answer": "obj-chick",
-    "hint": "先找動物，再看是不是黃色的。亮起來的都是動物。",
-    "params": {"same":["obj-rabbit","obj-chick"],"groupName":"動物","colorWord":"黃色","swatch":"#ffd84d"}
+    "answer": "obj-peach",
+    "hint": "先找水果，再看是不是粉紅色的。亮起來的都是水果。",
+    "params": {"same":["obj-apple","obj-peach"],"groupName":"水果","colorWord":"粉紅色","swatch":"#ffb3c7"}
   },
   {
-    "id": "classify-4-34", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "找找看，哪一個是動物，而且是白色的？",
+    "id": "classify-4-28", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "找找看，哪一個是動物，而且是藍色的？",
     "items": [],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-rabbit",
-    "hint": "先找動物，再看是不是白色的。亮起來的都是動物。",
-    "params": {"same":["obj-rabbit","obj-fish"],"groupName":"動物","colorWord":"白色","swatch":"#f4f4f4"}
-  },
-  {
-    "id": "classify-4-35", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
-    "prompt": "請選出藍色的動物。",
-    "items": [],
-    "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-apple","obj":"obj-apple"},
       {"id":"obj-fish","obj":"obj-fish"},
       {"id":"obj-chick","obj":"obj-chick"}
     ],
@@ -1963,12 +2220,51 @@
     "params": {"same":["obj-fish","obj-chick"],"groupName":"動物","colorWord":"藍色","swatch":"#5aa9f0"}
   },
   {
-    "id": "classify-4-36", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "id": "classify-4-29", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "哪一個是紅色的交通工具？",
+    "items": [],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "先找交通工具，再看是不是紅色的。亮起來的都是交通工具。",
+    "params": {"same":["decor-rocket","decor-car"],"groupName":"交通工具","colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-4-30", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "黃色、又是水果的，是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "先找水果，再看是不是黃色的。亮起來的都是水果。",
+    "params": {"same":["obj-grape","obj-banana"],"groupName":"水果","colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-4-31", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "哪一個是黃色的水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "obj-banana",
+    "hint": "先找水果，再看是不是黃色的。亮起來的都是水果。",
+    "params": {"same":["obj-banana","obj-grape"],"groupName":"水果","colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-4-32", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
     "prompt": "藍色、又是動物的，是哪一個？",
     "items": [],
     "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-peach","obj":"obj-peach"},
       {"id":"obj-fish","obj":"obj-fish"}
     ],
     "answer": "obj-fish",
@@ -1976,32 +2272,84 @@
     "params": {"same":["obj-rabbit","obj-fish"],"groupName":"動物","colorWord":"藍色","swatch":"#5aa9f0"}
   },
   {
-    "id": "classify-1-g01", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "哪一個是動物？",
+    "id": "classify-4-33", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "白色、又是動物的，是哪一個？",
     "items": [],
     "choices": [
       {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-apple","obj":"obj-apple"}
-    ],
-    "answer": "obj-fish",
-    "hint": "動物，是活的，會動，會吃東西。你看，這個是小魚，它是動物喔。",
-    "params": {"groupName":"動物"}
-  },
-  {
-    "id": "classify-1-g02", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "哪一個是水果？",
-    "items": [],
-    "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
       {"id":"obj-banana","obj":"obj-banana"}
     ],
-    "answer": "obj-banana",
-    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是香蕉，它是水果喔。",
+    "answer": "obj-rabbit",
+    "hint": "先找動物，再看是不是白色的。亮起來的都是動物。",
+    "params": {"same":["obj-fish","obj-rabbit"],"groupName":"動物","colorWord":"白色","swatch":"#f4f4f4"}
+  },
+  {
+    "id": "classify-4-34", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "黃色、又是動物的，是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "先找動物，再看是不是黃色的。亮起來的都是動物。",
+    "params": {"same":["obj-rabbit","obj-chick"],"groupName":"動物","colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-4-35", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "請選出白色的動物。",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "先找動物，再看是不是白色的。亮起來的都是動物。",
+    "params": {"same":["obj-rabbit","obj-chick"],"groupName":"動物","colorWord":"白色","swatch":"#f4f4f4"}
+  },
+  {
+    "id": "classify-4-36", "skill": "classify", "difficulty": 4, "type": "dual", "version": 2,
+    "prompt": "哪一個是白色的動物？",
+    "items": [],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "先找動物，再看是不是白色的。亮起來的都是動物。",
+    "params": {"same":["obj-rabbit","obj-chick"],"groupName":"動物","colorWord":"白色","swatch":"#f4f4f4"}
+  },
+  {
+    "id": "classify-1-g01", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "請你指出水果。",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-apple",
+    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
     "params": {"groupName":"水果"}
   },
   {
+    "id": "classify-1-g02", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "請你指出動物。",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "動物，是活的，會動，會吃東西。你看，這個是小雞，它是動物喔。",
+    "params": {"groupName":"動物"}
+  },
+  {
     "id": "classify-1-g03", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "哪一個是動物？",
+    "prompt": "動物在哪裡呢？",
     "items": [],
     "choices": [
       {"id":"obj-chick","obj":"obj-chick"},
@@ -2013,27 +2361,27 @@
   },
   {
     "id": "classify-1-g04", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "請你指出動物。",
-    "items": [],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-fish","obj":"obj-fish"}
-    ],
-    "answer": "obj-fish",
-    "hint": "動物，是活的，會動，會吃東西。你看，這個是小魚，它是動物喔。",
-    "params": {"groupName":"動物"}
-  },
-  {
-    "id": "classify-1-g05", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "找找看，動物是哪一個？",
+    "prompt": "水果在哪裡呢？",
     "items": [],
     "choices": [
       {"id":"obj-chick","obj":"obj-chick"},
       {"id":"obj-banana","obj":"obj-banana"}
     ],
-    "answer": "obj-chick",
-    "hint": "動物，是活的，會動，會吃東西。你看，這個是小雞，它是動物喔。",
-    "params": {"groupName":"動物"}
+    "answer": "obj-banana",
+    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是香蕉，它是水果喔。",
+    "params": {"groupName":"水果"}
+  },
+  {
+    "id": "classify-1-g05", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "水果在哪裡呢？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-apple",
+    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
+    "params": {"groupName":"水果"}
   },
   {
     "id": "classify-1-g06", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
@@ -2041,23 +2389,23 @@
     "items": [],
     "choices": [
       {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是香蕉，它是水果喔。",
+    "params": {"groupName":"水果"}
+  },
+  {
+    "id": "classify-1-g07", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
       {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "obj-apple",
     "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
     "params": {"groupName":"水果"}
-  },
-  {
-    "id": "classify-1-g07", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "你知道哪一個是動物嗎？",
-    "items": [],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-fish","obj":"obj-fish"}
-    ],
-    "answer": "obj-fish",
-    "hint": "動物，是活的，會動，會吃東西。你看，這個是小魚，它是動物喔。",
-    "params": {"groupName":"動物"}
   },
   {
     "id": "classify-1-g08", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
@@ -2073,31 +2421,7 @@
   },
   {
     "id": "classify-1-g09", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "你知道哪一個是水果嗎？",
-    "items": [],
-    "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-chick","obj":"obj-chick"}
-    ],
-    "answer": "obj-banana",
-    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是香蕉，它是水果喔。",
-    "params": {"groupName":"水果"}
-  },
-  {
-    "id": "classify-1-g10", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "水果在哪裡呢？",
-    "items": [],
-    "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-banana",
-    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是香蕉，它是水果喔。",
-    "params": {"groupName":"水果"}
-  },
-  {
-    "id": "classify-1-g11", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "你知道哪一個是動物嗎？",
+    "prompt": "哪一個是動物？",
     "items": [],
     "choices": [
       {"id":"obj-chick","obj":"obj-chick"},
@@ -2108,19 +2432,7 @@
     "params": {"groupName":"動物"}
   },
   {
-    "id": "classify-1-g12", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "找找看，水果是哪一個？",
-    "items": [],
-    "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-apple","obj":"obj-apple"}
-    ],
-    "answer": "obj-apple",
-    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
-    "params": {"groupName":"水果"}
-  },
-  {
-    "id": "classify-1-g13", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "id": "classify-1-g10", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
     "prompt": "你知道哪一個是水果嗎？",
     "items": [],
     "choices": [
@@ -2132,20 +2444,56 @@
     "params": {"groupName":"水果"}
   },
   {
-    "id": "classify-1-g14", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "動物在哪裡呢？",
+    "id": "classify-1-g11", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "找找看，水果是哪一個？",
     "items": [],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-banana","obj":"obj-banana"}
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-banana",
+    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是香蕉，它是水果喔。",
+    "params": {"groupName":"水果"}
+  },
+  {
+    "id": "classify-1-g12", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "你知道哪一個是動物嗎？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
     "answer": "obj-fish",
     "hint": "動物，是活的，會動，會吃東西。你看，這個是小魚，它是動物喔。",
     "params": {"groupName":"動物"}
   },
   {
+    "id": "classify-1-g13", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "哪一個是水果？",
+    "items": [],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是香蕉，它是水果喔。",
+    "params": {"groupName":"水果"}
+  },
+  {
+    "id": "classify-1-g14", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "找找看，動物是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-chick",
+    "hint": "動物，是活的，會動，會吃東西。你看，這個是小雞，它是動物喔。",
+    "params": {"groupName":"動物"}
+  },
+  {
     "id": "classify-1-g15", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "請你指出水果。",
+    "prompt": "你知道哪一個是水果嗎？",
     "items": [],
     "choices": [
       {"id":"obj-chick","obj":"obj-chick"},
@@ -2160,11 +2508,11 @@
     "prompt": "動物在哪裡呢？",
     "items": [],
     "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"},
       {"id":"obj-banana","obj":"obj-banana"}
     ],
-    "answer": "obj-chick",
-    "hint": "動物，是活的，會動，會吃東西。你看，這個是小雞，它是動物喔。",
+    "answer": "obj-fish",
+    "hint": "動物，是活的，會動，會吃東西。你看，這個是小魚，它是動物喔。",
     "params": {"groupName":"動物"}
   },
   {
@@ -2173,78 +2521,50 @@
     "items": [],
     "choices": [
       {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-banana","obj":"obj-banana"}
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
-    "answer": "obj-banana",
-    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是香蕉，它是水果喔。",
+    "answer": "obj-apple",
+    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
     "params": {"groupName":"水果"}
   },
   {
     "id": "classify-1-g18", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "水果在哪裡呢？",
-    "items": [],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-fish","obj":"obj-fish"}
-    ],
-    "answer": "obj-apple",
-    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
-    "params": {"groupName":"水果"}
-  },
-  {
-    "id": "classify-1-g19", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
-    "prompt": "哪一個是水果？",
-    "items": [],
-    "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-apple","obj":"obj-apple"}
-    ],
-    "answer": "obj-apple",
-    "hint": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
-    "params": {"groupName":"水果"}
-  },
-  {
-    "id": "classify-1-g20", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
     "prompt": "請你指出動物。",
     "items": [],
     "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-apple","obj":"obj-apple"}
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-fish",
+    "hint": "動物，是活的，會動，會吃東西。你看，這個是小魚，它是動物喔。",
+    "params": {"groupName":"動物"}
+  },
+  {
+    "id": "classify-1-g19", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "你知道哪一個是動物嗎？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-chick","obj":"obj-chick"}
     ],
     "answer": "obj-chick",
     "hint": "動物，是活的，會動，會吃東西。你看，這個是小雞，它是動物喔。",
     "params": {"groupName":"動物"}
   },
   {
-    "id": "classify-1-g21", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
-    "prompt": "哪一個跟這個是同一類？",
-    "items": [
-      {"obj":"obj-apple"}
-    ],
+    "id": "classify-1-g20", "skill": "classify", "difficulty": 1, "type": "kind", "version": 2, "gentle": true,
+    "prompt": "哪一個是動物？",
+    "items": [],
     "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-chick","obj":"obj-chick"}
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
-    "answer": "obj-banana",
-    "hint": "這個是水果。找找看，哪一個也是水果？",
-    "params": {"groupName":"水果"}
-  },
-  {
-    "id": "classify-1-g22", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
-    "prompt": "找出和這個同一類的。",
-    "items": [
-      {"obj":"obj-fish"}
-    ],
-    "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-chick","obj":"obj-chick"}
-    ],
-    "answer": "obj-chick",
-    "hint": "這個是動物。找找看，哪一個也是動物？",
+    "answer": "obj-fish",
+    "hint": "動物，是活的，會動，會吃東西。你看，這個是小魚，它是動物喔。",
     "params": {"groupName":"動物"}
   },
   {
-    "id": "classify-1-g23", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "id": "classify-1-g21", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
     "prompt": "哪一個跟這個是同一類？",
     "items": [
       {"obj":"obj-banana"}
@@ -2258,7 +2578,7 @@
     "params": {"groupName":"水果"}
   },
   {
-    "id": "classify-1-g24", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "id": "classify-1-g22", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
     "prompt": "找出和這個同一類的。",
     "items": [
       {"obj":"obj-chick"}
@@ -2270,5 +2590,33 @@
     "answer": "obj-fish",
     "hint": "這個是動物。找找看，哪一個也是動物？",
     "params": {"groupName":"動物"}
+  },
+  {
+    "id": "classify-1-g23", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是同一類？",
+    "items": [
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-chick",
+    "hint": "這個是動物。找找看，哪一個也是動物？",
+    "params": {"groupName":"動物"}
+  },
+  {
+    "id": "classify-1-g24", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個同一類的。",
+    "items": [
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "這個是水果。找找看，哪一個也是水果？",
+    "params": {"groupName":"水果"}
   }
 ]

@@ -2,7 +2,7 @@ import { QUESTIONS, questionsFor } from './bank'
 import { dueReviews } from './skills'
 import { STATION_SIZE } from './scoring'
 import { makeRng, pickOne, shuffled, type Rng } from './rng'
-import type { Attempt, Difficulty, Question, SkillId, SkillState } from './types'
+import type { Attempt, Difficulty, Interaction, Question, SkillId, SkillState } from './types'
 import { SKILLS } from './types'
 
 /** 每題被作答過幾次、最近一次的時間（用來讓重玩時優先抽沒看過的題面） */
@@ -31,7 +31,11 @@ export interface PickOptions {
   bank?: Question[]
   /** 幼幼模式 */
   gentle?: boolean
+  /** 只抽這種互動的題（沒寫 = 不限）；沒有這種題就回傳 null */
+  interaction?: Interaction
 }
+
+const interactionOf = (q: Question): Interaction => q.interaction ?? 'pick'
 
 /**
  * 抽一題：排除 exclude；在剩下的題裡，優先「作答次數最少」的，
@@ -39,7 +43,9 @@ export interface PickOptions {
  * 舊紀錄裡已經不存在的題目 id 只會被當成「沒有人用到」，不影響抽題。
  */
 export function pickQuestion(opts: PickOptions): Question | null {
-  const pool = questionsFor(opts.skill, opts.difficulty, opts.bank ?? QUESTIONS, opts.gentle).filter((q) => !opts.exclude?.has(q.id))
+  const pool = questionsFor(opts.skill, opts.difficulty, opts.bank ?? QUESTIONS, opts.gentle).filter(
+    (q) => !opts.exclude?.has(q.id) && (!opts.interaction || interactionOf(q) === opts.interaction),
+  )
   if (pool.length === 0) return null
   const cnt = (q: Question) => opts.seen.count.get(q.id) ?? 0
   const fewest = Math.min(...pool.map(cnt))
@@ -67,7 +73,12 @@ export interface PlanOptions {
   size?: number
   bank?: Question[]
   gentle?: boolean
+  /** 站型的 5 個互動位置（見 chapter.ts）。沒給就照舊：三種技能輪替、互動隨機 */
+  slots?: Interaction[]
 }
+
+/** 各互動出在哪個技能：拿給我 N 個是數感、拖曳歸類是分類 */
+export const SKILL_OF_INTERACTION: Partial<Record<Interaction, SkillId>> = { tapN: 'number', dragSort: 'classify' }
 
 /**
  * 規劃一站的題目：
@@ -81,7 +92,29 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
   const seen = seenFromAttempts(opts.attempts)
   const used = new Set<string>()
   const plan: PlannedQuestion[] = []
-  const order: SkillId[] = Array.from({ length: size }, (_, i) => SKILLS[(opts.stationIndex + i) % SKILLS.length])
+  const rotation: SkillId[] = Array.from({ length: size }, (_, i) => SKILLS[(opts.stationIndex + i) % SKILLS.length])
+  const order = [...rotation]
+  // 站型：主互動的位置指定技能（技能數量仍維持 2/2/1），該技能目前難度沒有這種題就退回點選
+  const wantInteraction: (Interaction | undefined)[] = Array(size).fill(undefined)
+  if (opts.slots) {
+    const spare = [...rotation]
+    const fixed = new Set<number>()
+    opts.slots.slice(0, size).forEach((it, i) => {
+      const skill = SKILL_OF_INTERACTION[it]
+      if (!skill) return
+      const diff = opts.states[skill].difficulty
+      const has = pickQuestion({ skill, difficulty: diff, seen, rng: () => 0, bank: opts.bank, gentle: opts.gentle, interaction: it })
+      const at = spare.indexOf(skill)
+      if (!has || at < 0) return
+      spare.splice(at, 1)
+      order[i] = skill
+      wantInteraction[i] = it
+      fixed.add(i)
+    })
+    // 其餘位置用剩下的技能，維持原本的輪替順序
+    let k = 0
+    for (let i = 0; i < size; i++) if (!fixed.has(i)) order[i] = spare[k++]
+  }
 
   // 先決定複習：換掉該技能最後一個位置，若該技能這站沒出題就換最後一題
   const due = dueReviews(opts.states, opts.now)
@@ -107,7 +140,9 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
       exclude: used,
       bank: opts.bank,
       gentle: opts.gentle,
-    })
+      // 有站型時，主互動位置抽指定互動；其他位置抽點選題（沒有就不限）
+      interaction: opts.slots ? (wantInteraction[i] ?? 'pick') : undefined,
+    }) ?? (opts.slots ? pickQuestion({ skill, difficulty: opts.states[skill].difficulty, seen, rng: opts.rng, exclude: used, bank: opts.bank, gentle: opts.gentle }) : null)
     if (!q) throw new Error(`題庫不足：${skill} 難度 ${opts.states[skill].difficulty}`)
     used.add(q.id)
     plan[i] = { question: q, review: false, followUp: false }
@@ -156,7 +191,9 @@ export function adaptPlan(opts: AdaptOptions): PlannedQuestion[] {
     if (p.question.difficulty === target) continue
     const used = new Set(plan.map((x) => x.question.id))
     used.delete(p.question.id)
-    const q = pickQuestion({ skill, difficulty: target as Difficulty, seen, rng: opts.rng, exclude: used, bank: opts.bank, gentle: opts.gentle })
+    // 換題時保持同一種互動（拿給我 N 個還是拿給我、點選還是點選）；沒有就不限
+    const base = { skill, difficulty: target as Difficulty, seen, rng: opts.rng, exclude: used, bank: opts.bank, gentle: opts.gentle }
+    const q = pickQuestion({ ...base, interaction: interactionOf(p.question) }) ?? pickQuestion(base)
     if (q) plan[i] = { question: q, review: false, followUp: false }
   }
   return plan

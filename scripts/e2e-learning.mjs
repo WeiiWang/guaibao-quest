@@ -41,7 +41,7 @@ const clearSpoken = (page) => page.evaluate(() => (window.__spoken.length = 0))
 
 let sess = 0
 /** 把這一站的題目清單寫進 settings.stageDraft（可同時改年齡與技能狀態），再從地圖進站 */
-async function startPlan(page, ids, { age, states = [], clearAttempts = false } = {}) {
+async function startPlan(page, ids, { age, states = [], clearAttempts = false, fresh = false } = {}) {
   const sessionId = `e2e-${++sess}-${Date.now()}`
   await idb(
     page,
@@ -53,6 +53,7 @@ async function startPlan(page, ids, { age, states = [], clearAttempts = false } 
           const cur = e.target.result
           const next = { ...cur, stageDraft: { chapterId: 'huaguoshan', station: 1, run: 1, sessionId: o.sessionId, plan: o.ids.map((id) => ({ id, review: false, followUp: false })), savedAt: Date.now() } }
           if (o.age) next.ageBand = o.age
+          next.seenIntros = o.fresh ? [] : ['tapN', 'dragSort']
           st.put(next)
         }
         tx.objectStore('skillState').clear()
@@ -61,7 +62,7 @@ async function startPlan(page, ids, { age, states = [], clearAttempts = false } 
         if (o.clearAttempts) tx.objectStore('attempts').clear()
         tx.oncomplete = () => res(1)
       }),
-    { ids, sessionId, age, states, clearAttempts },
+    { ids, sessionId, age, states, clearAttempts, fresh },
   )
   // 直接改 IndexedDB 不會通知畫面的 liveQuery，所以重新載入再進地圖
   await page.evaluate(() => (location.hash = 'map'))
@@ -72,7 +73,11 @@ async function startPlan(page, ids, { age, states = [], clearAttempts = false } 
   return sessionId
 }
 const skillRow = (skill, o = {}) => ({ skill, difficulty: 1, recent: [], stationStreak: 0, mastered: {}, updatedAt: Date.now(), total: 50, ...o })
-const qid = (page) => page.locator('[data-testid=question]').getAttribute('data-question-id')
+const qid = async (page) => {
+  await page.waitForSelector('[data-testid=question]')
+  if (await clearTutorial(page)) await page.waitForSelector('[data-testid=question]')
+  return page.locator('[data-testid=question]').getAttribute('data-question-id')
+}
 const stage = (page) => page.locator('[data-testid=question]').getAttribute('data-hint-stage')
 const sub = async (page) => (await page.getByTestId('subtitle').innerText()).trim()
 const attempts = (page) => idb(page, (db) => new Promise((r) => (db.transaction('attempts').objectStore('attempts').getAll().onsuccess = (e) => r(e.target.result))))
@@ -115,6 +120,24 @@ async function next(page) {
     return !el || el.dataset.questionId !== o
   }, old, { timeout: 10000 })
 }
+/** 第一次遇到新互動時阿悟會先示範：等輪到孩子，照做一次（點選替代操作），等教學結束 */
+async function clearTutorial(page) {
+  if ((await page.getByTestId('tutorial').count()) === 0) return false
+  await page.waitForSelector('[data-testid=tutorial][data-phase=play]', { timeout: 10000 })
+  const kind = await page.getByTestId('tutorial').getAttribute('data-kind')
+  if (kind === 'tapN') {
+    await page.getByTestId('give-obj').first().click()
+    await page.getByTestId('give-done').click()
+  } else {
+    await page.locator('[data-testid=sort-item][data-item="0"]').click()
+    await page.locator('[data-testid=sort-bin][data-bin=b1]').click()
+    await page.locator('[data-testid=sort-item][data-item="1"]').click()
+    await page.locator('[data-testid=sort-bin][data-bin=b2]').click()
+  }
+  await page.waitForSelector('[data-testid=tutorial]', { state: 'detached', timeout: 10000 })
+  return true
+}
+
 const shot = (page, name) => page.screenshot({ path: join(SHOTS, `v4-learn-${name}.png`) })
 
 const browser = await launch()
@@ -276,7 +299,7 @@ try {
 
   // ---------- 站內救援：同技能連續 2 題第一次就答錯 → 下一題降 1 級（不改狀態） ----------
   const n2 = ALL.filter((q) => q.skill === 'number' && q.difficulty === 2 && !q.gentle && q.type === 'count')
-  const resc = [n2[0], n2[1], find((q) => q.skill === 'classify' && q.difficulty === 2), n2[2], find((q) => q.skill === 'pattern' && q.difficulty === 2)].map((q) => q.id)
+  const resc = [n2[0], n2[1], find((q) => q.skill === 'classify' && q.difficulty === 2 && q.type !== 'bins'), n2[2], find((q) => q.skill === 'pattern' && q.difficulty === 2)].map((q) => q.id)
   await startPlan(page, resc, { states: ['number', 'classify', 'pattern'].map((s) => skillRow(s, { difficulty: 2 })), clearAttempts: true })
   await answerWrongThenRight(page)
   await answerWrongThenRight(page)
@@ -289,7 +312,7 @@ try {
   await leaveStage(page)
 
   // ---------- 離開關卡：確認 + 保留進度 ----------
-  const keep = ALL.filter((q) => q.skill === 'classify' && q.difficulty === 3).slice(0, 2).concat(ALL.filter((q) => q.skill === 'classify' && q.difficulty === 3).slice(2, 5))
+  const keep = ALL.filter((q) => q.skill === 'classify' && q.difficulty === 3 && q.type === 'odd').slice(0, 5)
   const keepIds = keep.map((q) => q.id)
   const sid = await startPlan(page, keepIds, { states: [skillRow('classify', { difficulty: 3 })], clearAttempts: true })
   await answerRight(page)

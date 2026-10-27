@@ -122,3 +122,43 @@
 .qv .match, .qv .hint-swatch { flex: none; }
 .qv.has-board .qv-choices, .qv.no-stem.has-board .qv-choices { grid-auto-rows: clamp(100px, 20dvh, 170px); flex: 0 0 auto; }
 .qv.has-board .choice-art { width: min(52cqw, 110px); }
+
+/* 阿悟的新姿勢（學習流程：唱歌、跳舞、大笑、害羞、頭暈）。缺圖時 Companion 會退回 happy / idle */
+.companion.pose-dance { animation: adv-cheer 0.5s ease-in-out infinite; }
+.companion.pose-sing { animation: adv-sway 1.1s ease-in-out infinite; }
+.companion.pose-laugh { animation: adv-giggle 0.5s ease-in-out infinite; }
+.companion.pose-shy { animation: adv-think 2s ease-in-out infinite; }
+.companion.pose-dizzy { animation: adv-sway 0.7s ease-in-out infinite; }
+@keyframes adv-sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg) translateY(-4px); } }
+@keyframes adv-giggle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px) rotate(2deg); } }
+
+/* 拿給我：拖曳中、籃子接住時 */
+.give-obj.dragging { opacity: 0.35; }
+.give-obj.demo { animation: adv-glow 0.9s ease-in-out infinite; }
+.give-basket.over { background: var(--mint-soft); border-color: var(--mint-deep); transform: scale(1.02); }
+.give[data-dizzy='true'] .give-basket.off { border-color: var(--lavender-deep); }
+
+/* 節奏：開場一句話、連擊、Boss 進度條、教學 */
+.adv-board { position: relative; }
+.adv-opener { flex: none; margin: 0; padding: 4px 16px; border-radius: 999px; background: var(--butter); font-weight: 900; font-size: 1.15rem; box-shadow: 0 3px 0 var(--butter-deep); white-space: nowrap; animation: adv-pop 0.4s cubic-bezier(0.3, 1.6, 0.6, 1) both; }
+.adv-combo { position: absolute; z-index: 5; top: 4px; right: 4px; margin: 0; padding: 6px 20px; border-radius: 999px; background: var(--bubblegum); color: #fff; font-weight: 900; font-size: 1.4rem; box-shadow: 0 4px 0 var(--bubblegum-deep); animation: adv-pop 0.4s cubic-bezier(0.3, 1.6, 0.6, 1) both; pointer-events: none; }
+.adv-board.combo-glow .adv-qv { border-radius: 36px; animation: adv-glow 0.9s ease-in-out 2; }
+.boss-bar { flex: 1; max-width: 360px; height: 26px; border-radius: 13px; background: rgba(74, 59, 53, 0.16); box-shadow: inset 0 3px 0 rgba(74, 59, 53, 0.1); overflow: hidden; }
+.boss-bar i { display: block; height: 100%; border-radius: 13px; background: linear-gradient(90deg, var(--butter), var(--peach)); transition: width 0.5s ease; }
+.adv-stage.boss { background: linear-gradient(180deg, color-mix(in srgb, var(--butter) 40%, var(--cream)), var(--cream) 60%); }
+.adv-wrapup { font-weight: 900; }
+.adv-result-card { position: relative; overflow: hidden; }
+.tutorial { position: relative; flex: 1; display: grid; align-content: center; justify-items: center; gap: 8px; min-height: 0; border-radius: 36px; border: 5px dashed var(--lavender); padding: 14px 10px 10px; background: color-mix(in srgb, var(--lavender-soft) 55%, transparent); }
+.tutorial-tag { position: absolute; top: -16px; left: 18px; margin: 0; padding: 3px 14px; border-radius: 999px; background: var(--lavender); color: #fff; font-weight: 900; }
+.tutorial-skip { position: absolute; right: 10px; bottom: 6px; min-height: 48px; opacity: 0.85; }
+.tutorial .give, .tutorial .sort { width: 100%; }
+
+@media (max-width: 480px) {
+  .adv-opener { font-size: 0.95rem; padding: 3px 10px; }
+  .adv-combo { font-size: 1.1rem; padding: 4px 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adv-opener, .adv-combo, .adv-board.combo-glow .adv-qv, .give-obj.demo, .sort-item.demo, .sort-bin.demo, .sort-placed { animation: none !important; }
+  .boss-bar i { transition: none; }
+}
+.adv-bubble-body { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0; flex: 1; }

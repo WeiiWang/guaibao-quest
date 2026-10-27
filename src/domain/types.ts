@@ -157,6 +157,8 @@ export interface Settings {
   ageBand?: AgeBand
   /** v4：中途離開關卡時保留的進度（題目清單與目前題號） */
   stageDraft?: StageDraft
+  /** v4：已經看過教學示範的互動（tapN / dragSort）；每種互動第一次出現時阿悟先示範一次 */
+  seenIntros?: string[]
 }
 
 /** 年齡檔：3 歲 = 幼幼模式；4–5 歲從難度 1；6–7 歲從難度 2 */

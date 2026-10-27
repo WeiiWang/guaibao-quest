@@ -548,9 +548,11 @@ export class Repo {
     stationIndex: number,
     now = this.clock(),
     rng: Rng = makeRng(Math.floor(Math.random() * 2 ** 31)),
+    chapterId?: string,
   ): Promise<PlannedQuestion[]> {
     const [states, attempts, profile] = await Promise.all([this.getSkillStates(), this.db.attempts.toArray(), this.getLearnerProfile()])
-    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle })
+    const slots = chapterId ? getChapter(chapterId)?.stations[stationIndex]?.slots : undefined
+    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle, slots })
   }
 
   /**
@@ -578,7 +580,7 @@ export class Repo {
         return { sessionId: draft.sessionId, plan, idx: first < 0 ? plan.length - 1 : first, resumed: answered.size > 0 }
       }
     }
-    const plan = await this.planStation(station - 1, now, rng)
+    const plan = await this.planStation(station - 1, now, rng, chapterId)
     const sessionId = newId()
     await this.saveStageDraft({ chapterId, station, run: prog.run, sessionId, plan, now })
     return { sessionId, plan, idx: 0, resumed: false }
@@ -594,6 +596,18 @@ export class Repo {
       savedAt: input.now ?? this.clock(),
     }
     await this.db.settings.update(SETTINGS_ID, { stageDraft: draft })
+  }
+
+  /** 已經看過教學示範的互動 */
+  async getSeenIntros(): Promise<string[]> {
+    return (await this.getSettings())?.seenIntros ?? []
+  }
+
+  async markIntroSeen(interaction: string): Promise<void> {
+    await this.db.transaction('rw', this.db.settings, async () => {
+      const cur = (await this.db.settings.get(SETTINGS_ID))?.seenIntros ?? []
+      if (!cur.includes(interaction)) await this.db.settings.update(SETTINGS_ID, { seenIntros: [...cur, interaction] })
+    })
   }
 
   async clearStageDraft(): Promise<void> {

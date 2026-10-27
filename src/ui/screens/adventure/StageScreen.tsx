@@ -5,10 +5,11 @@ import { STATION_SIZE } from '../../../learning/scoring'
 import { hintDriven } from '../../../learning/hint'
 import { gentleHintKey, gentleHintText, pickLine, questionKey } from '../../../learning/lines'
 import { learnerProfileOf, type LearnerProfile } from '../../../learning/profile'
+import { needsTutorial, tutorialQuestion } from '../../../learning/tutorial'
 import { displayQuestion } from '../../../learning/select'
 import { cancelSpeech, say } from '../../../learning/speech'
 import { playSfx } from '../../../learning/sfx'
-import { MATERIAL_NAMES, type MaterialId, type SkillId } from '../../../learning/types'
+import { MATERIAL_NAMES, type Interaction, type MaterialId, type SkillId } from '../../../learning/types'
 import type { PlannedQuestion } from '../../../learning/select'
 import { MAT_EMOJI } from '../../../art/items'
 import { Icon } from '../../components/Icon'
@@ -18,7 +19,9 @@ import { useLearningSettings } from '../../learningHooks'
 import { Companion, type Pose } from './Companion'
 import { GiveView } from './GiveView'
 import { QuestionView, type HintStage } from './QuestionView'
+import { SortView } from './SortView'
 import './adventure.css'
+import './adventure-v4.css'
 
 const AUTO_NEXT_MS = 1600
 
@@ -50,6 +53,17 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   const [idx, setIdx] = useState(0)
   const [leaving, setLeaving] = useState(false)
   const wrongs = useRef(0)
+  /** 已經看過教學的互動 */
+  const [seen, setSeen] = useState<ReadonlySet<string>>(new Set())
+  const [introState, setIntroState] = useState<{ kind: Interaction | null; phase: 'demo' | 'play' | 'done' }>({ kind: null, phase: 'demo' })
+  /** 連續獨立答對幾題（站內；只算獨立答對，中斷就歸零，不顯示任何東西） */
+  const streak = useRef(0)
+  const [combo, setCombo] = useState(0)
+  /** 站開始時阿悟說的一句話 */
+  const [opener, setOpener] = useState<{ key: string; text: string } | null>(null)
+  const openerRef = useRef(false)
+  /** 阿悟臨時的表情（例如多拿了 → 頭暈），換題或答對就清掉 */
+  const [feel, setFeel] = useState<Pose | null>(null)
   const [hintStage, setHintStage] = useState<HintStage>(0)
   const [tapped, setTapped] = useState<ReadonlySet<string>>(new Set())
   const [solved, setSolved] = useState(false)
@@ -67,13 +81,19 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   // 載入這一站的題目
   useEffect(() => {
     let cancelled = false
-    Promise.all([repo.openStation(chapterId, station), repo.getLearnerProfile()])
-      .then(([o, prof]) => {
+    Promise.all([repo.openStation(chapterId, station), repo.getLearnerProfile(), repo.getSeenIntros()])
+      .then(([o, prof, intros]) => {
         if (cancelled) return
         sessionId.current = o.sessionId
         setProfile(prof)
+        setSeen(new Set(intros))
         setPlan(o.plan)
         setIdx(o.idx)
+        if (o.idx === 0 && !o.resumed) {
+          const boss = getChapter(chapterId)?.stations[station - 1]?.kind === 'boss'
+          setOpener(pickLine(boss ? 'companion.boss.open' : 'companion.open', station))
+          openerRef.current = true
+        }
       })
       .catch(() => !cancelled && setError('題目載入失敗，請回到地圖再試一次'))
     return () => {
@@ -113,17 +133,40 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     [current, profile.gentle],
   )
 
-  // 換題：重置狀態並唸題
+  // 第一次遇到新互動：阿悟先示範（不計分、不寫作答紀錄）。這是從題目直接算出來的，不會閃一下真的題目
+  const qInteraction = q?.interaction
+  const intro: Interaction | null = needsTutorial(qInteraction, seen) ? qInteraction : null
+  const introPhase = introState.kind === intro ? introState.phase : 'demo'
+  const setIntroPhase = (phase: 'demo' | 'play' | 'done') => setIntroState({ kind: intro, phase })
+
+  // 站開始的那句話：顯示一下就收起來（題目字幕照舊）
+  useEffect(() => {
+    if (!opener) return
+    say(opener.key, opener.text, { enabled: voiceOn })
+    const id = window.setTimeout(() => setOpener(null), 2600)
+    return () => window.clearTimeout(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [opener])
+
+  // 換題：重置狀態並唸題（教學示範時唸教學的話）
   useEffect(() => {
     if (!q) return
     startedAt.current = Date.now()
     solvedRef.current = false
     wrongs.current = 0
-    const id = window.setTimeout(() => say(questionKey(q.id, 'prompt'), q.prompt, { enabled: voiceOn }), 350)
+    if (intro) {
+      const l = pickLine(intro === 'tapN' ? 'companion.tutorial.give' : 'companion.tutorial.bins', 0)
+      const id = window.setTimeout(() => say(l.key, l.text, { enabled: voiceOn }), 350)
+      return () => window.clearTimeout(id)
+    }
+    // 第一題前面有開場白：等它唸完再唸題目
+    const delay = openerRef.current ? 2800 : 350
+    openerRef.current = false
+    const id = window.setTimeout(() => say(questionKey(q.id, 'prompt'), q.prompt, { enabled: voiceOn }), delay)
     return () => window.clearTimeout(id)
-    // 只在換題時唸；語音開關變動不重唸
+    // 只在換題（或教學結束）時唸；語音開關變動不重唸
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q?.id])
+  }, [q?.id, intro])
 
   const finish = useCallback(async () => {
     if (finishing.current) return
@@ -158,6 +201,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
       setTapped(new Set())
       setSolved(false)
       setPraise('')
+      setCombo(0)
+      setFeel(null)
     } finally {
       advancing.current = false
     }
@@ -168,7 +213,18 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     if (!q || !current || solvedRef.current) return
     solvedRef.current = true
     setSolved(true)
-    const l = pickLine(profile.gentle ? 'praise.gentle' : 'praise', Math.floor(Math.random() * 4))
+    setFeel(null)
+    // 連擊只算獨立答對；中斷時不顯示任何東西
+    const independent = wrongs.current === 0
+    streak.current = independent ? streak.current + 1 : 0
+    setCombo(independent ? streak.current : 0)
+    const rnd = Math.floor(Math.random() * 7)
+    const l =
+      independent && streak.current === 5
+        ? pickLine('companion.combo5', rnd)
+        : independent && streak.current === 3
+          ? pickLine('companion.combo3', rnd)
+          : pickLine(profile.gentle ? 'praise.gentle' : 'praise', rnd)
     setPraise(l.text)
     playSfx('correct', soundOn)
     say(l.key, l.text, { enabled: voiceOn })
@@ -217,7 +273,32 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     handleWrong()
   }
 
-  const pose: Pose = result ? 'cheer' : solved ? 'cheer' : hintStage > 0 ? 'think' : 'idle'
+  const pose: Pose = result
+    ? result.independent >= result.total
+      ? 'sing'
+      : 'cheer'
+    : solved
+      ? combo >= 5
+        ? 'sing'
+        : combo >= 3
+          ? 'dance'
+          : 'cheer'
+      : intro
+        ? introPhase === 'demo'
+          ? 'happy'
+          : 'think'
+        : feel ?? (hintStage === 2 ? 'shy' : hintStage === 1 ? 'think' : 'idle')
+
+  // ---- 教學示範：練習題（不計分）----
+  const tutorialQ = useMemo(() => (intro ? tutorialQuestion(intro) : null), [intro])
+  const finishTutorial = (skip = false) => {
+    if (!intro) return
+    setIntroPhase('done')
+    const l = pickLine(skip ? 'tutorial.skip' : 'tutorial.done')
+    say(l.key, l.text, { enabled: voiceOn })
+    void repo.markIntroSeen(intro)
+    window.setTimeout(() => setSeen((s0) => new Set(s0).add(intro)), skip ? 0 : 1300)
+  }
 
   const replay = () => {
     if (!q) return
@@ -227,11 +308,16 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
 
   const subtitle = useMemo(() => {
     if (!q) return ''
+    if (intro) {
+      if (introPhase === 'demo') return pickLine(intro === 'tapN' ? 'companion.tutorial.give' : 'companion.tutorial.bins', 0).text
+      if (introPhase === 'play') return pickLine('tutorial.again').text
+      return pickLine('tutorial.done').text
+    }
     if (solved) return praise
     if (hintStage === 1) return q.hint
     if (hintStage === 2) return profile.gentle ? `${q.hint}答案在這裡，點點看。` : '答案在這裡，點點看。'
     return q.prompt
-  }, [q, solved, hintStage, praise, profile.gentle])
+  }, [q, solved, hintStage, praise, profile.gentle, intro, introPhase])
 
   // 離開關卡：先確認；已答的題都已經記下來，回到同一站會接著玩
   const askLeave = () => {
@@ -263,9 +349,17 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
           <MaterialsChip />
         </header>
         <div className="adv-result-card" ref={cardRef}>
-          <Companion pose="cheer" size="clamp(110px, 20dvh, 170px)" className="adv-result-pet" />
+          {def.kind === 'boss' && (
+            <div className="adv-confetti" aria-hidden>
+              {Array.from({ length: 16 }, (_, i) => (
+                <i key={i} style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 5) * 0.12}s` }} />
+              ))}
+            </div>
+          )}
+          <Companion pose={pose} size="clamp(110px, 20dvh, 170px)" className="adv-result-pet" />
           <h1>第 {station} 站過關了！</h1>
           <p className="adv-sub">{chapter.name}・{def.name}</p>
+          <p className="adv-sub adv-wrapup" data-testid="wrapup">{pickLine(def.kind === 'boss' ? 'companion.boss.done' : 'companion.wrapup', station).text}</p>
           <div className="adv-reward" aria-label={`獲得${MATERIAL_NAMES[result.material]} ${result.qty} 個`}>
             {Array.from({ length: result.qty }, (_, i) => (
               <span key={i} className="reward-fly" data-reward style={{ animationDelay: `${i * 0.18}s` }}>
@@ -297,14 +391,20 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   }
 
   return (
-    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''}`} data-testid="stage" data-station={station} data-gentle={profile.gentle ? 'true' : undefined}>
+    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`} data-testid="stage" data-kind={def.kind} data-station={station} data-gentle={profile.gentle ? 'true' : undefined}>
       <header className="adv-top">
         <button className="adv-btn small" onClick={askLeave} aria-label="離開關卡" data-testid="leave">←<span className="adv-leave-label"> 離開</span></button>
+        {def.kind === 'boss' ? (
+          <div className="boss-bar" role="progressbar" aria-valuemin={0} aria-valuemax={plan?.length ?? STATION_SIZE} aria-valuenow={Math.min(idx + (solved ? 1 : 0), STATION_SIZE)} aria-label="猴王石的進度" data-testid="boss-bar">
+            <i style={{ width: `${(Math.min(idx + (solved ? 1 : 0), plan?.length ?? STATION_SIZE) / (plan?.length ?? STATION_SIZE)) * 100}%` }} />
+          </div>
+        ) : (
         <div className="adv-dots" role="progressbar" aria-valuemin={0} aria-valuemax={STATION_SIZE} aria-valuenow={Math.min(idx + (solved ? 1 : 0), STATION_SIZE)} aria-label={`第 ${station} 站，第 ${idx + 1} 題`}>
           {Array.from({ length: plan?.length ?? STATION_SIZE }, (_, i) => (
             <span key={i} className={`adv-dot ${i < idx || (i === idx && solved) ? 'done' : i === idx ? 'now' : ''}`} />
           ))}
         </div>
+        )}
         <MaterialsChip />
       </header>
 
@@ -318,10 +418,22 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
       {!plan && !error && <p className="adv-loading">阿悟正在準備題目…</p>}
 
       {q && (
-        <section className="adv-board">
+        <section className={`adv-board ${solved && combo >= 2 ? 'combo-glow' : ''}`} data-combo={solved && combo >= 2 ? combo : undefined}>
+          {solved && (combo === 3 || combo === 5) && (
+            <p className="adv-combo" data-testid="combo-tag" role="status">
+              {pickLine(combo === 5 ? 'companion.combo5' : 'companion.combo3', 0).text}
+            </p>
+          )}
           <Companion pose={pose} size="var(--pet)" className="adv-say-pet" />
           <div className={`adv-bubble ${hintStage > 0 && !solved ? 'hint' : ''} ${solved ? 'ok' : ''}`} aria-live="polite">
-            <p data-testid="subtitle">{subtitle}</p>
+            <div className="adv-bubble-body">
+              {opener && (
+                <span className="adv-opener" data-testid="opener" role="status">
+                  {opener.text}
+                </span>
+              )}
+              <p data-testid="subtitle">{subtitle}</p>
+            </div>
             {current?.review && !solved && <span className="adv-tag">複習一下</span>}
           </div>
           <button type="button" className="adv-speaker" onClick={replay} aria-label="再聽一次" data-testid="replay">
@@ -329,9 +441,46 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
             <span className="adv-speaker-label">再聽一次</span>
           </button>
           <div className="adv-qv">
-            {hintStage > 0 && !solved && <p className="adv-prompt-keep">{q.prompt}</p>}
-            {q.interaction === 'tapN' ? (
-              <GiveView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
+            {hintStage > 0 && !solved && !intro && <p className="adv-prompt-keep">{q.prompt}</p>}
+            {intro && tutorialQ ? (
+              <div className="tutorial" data-testid="tutorial" data-kind={intro} data-phase={introPhase}>
+                <p className="tutorial-tag">阿悟教你</p>
+                {intro === 'tapN' ? (
+                  <GiveView
+                    key="tutorial-give"
+                    q={tutorialQ}
+                    hintStage={0}
+                    solved={introPhase === 'done'}
+                    voiceOn={voiceOn}
+                    demo={introPhase === 'demo'}
+                    onDemoEnd={() => setIntroPhase('play')}
+                    onWrong={() => setFeel('shy')}
+                    onSolved={() => finishTutorial()}
+                    onFeel={setFeel}
+                  />
+                ) : (
+                  <SortView
+                    key="tutorial-sort"
+                    q={tutorialQ}
+                    hintStage={0}
+                    solved={introPhase === 'done'}
+                    voiceOn={voiceOn}
+                    demo={introPhase === 'demo'}
+                    onDemoEnd={() => setIntroPhase('play')}
+                    onWrong={() => setFeel('shy')}
+                    onSolved={() => finishTutorial()}
+                  />
+                )}
+                {introPhase !== 'done' && (
+                  <button type="button" className="adv-btn small tutorial-skip" onClick={() => finishTutorial(true)} data-testid="tutorial-skip">
+                    跳過
+                  </button>
+                )}
+              </div>
+            ) : q.interaction === 'tapN' ? (
+              <GiveView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} onFeel={setFeel} />
+            ) : q.interaction === 'dragSort' ? (
+              <SortView key={q.id} q={q} hintStage={hintStage} solved={solved} voiceOn={voiceOn} onWrong={handleWrong} onSolved={handleSolved} />
             ) : (
               <QuestionView key={q.id} q={q} hintStage={hintStage} tapped={tapped} solved={solved} onPick={pick} voiceOn={voiceOn} startDelay={profile.gentle ? 2400 : 350} />
             )}

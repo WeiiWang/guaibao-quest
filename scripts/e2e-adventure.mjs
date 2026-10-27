@@ -100,6 +100,53 @@ async function clickChoice(page, id) {
   }
 }
 
+/** 第一次遇到新互動時阿悟會先示範：等輪到孩子，照做一次（點選替代操作），等教學結束 */
+async function clearTutorial(page) {
+  if ((await page.getByTestId('tutorial').count()) === 0) return false
+  await page.waitForSelector('[data-testid=tutorial][data-phase=play]', { timeout: 10000 })
+  const kind = await page.getByTestId('tutorial').getAttribute('data-kind')
+  if (kind === 'tapN') {
+    await page.getByTestId('give-obj').first().click()
+    await page.getByTestId('give-done').click()
+  } else {
+    await page.locator('[data-testid=sort-item][data-item="0"]').click()
+    await page.locator('[data-testid=sort-bin][data-bin=b1]').click()
+    await page.locator('[data-testid=sort-item][data-item="1"]').click()
+    await page.locator('[data-testid=sort-bin][data-bin=b2]').click()
+  }
+  await page.waitForSelector('[data-testid=tutorial]', { state: 'detached', timeout: 10000 })
+  return true
+}
+
+/** 拖曳歸類（用「點選物件再點籃子」的替代操作）：wrongTimes 次先放錯籃子，再全部放對 */
+async function playSort(page, q, wrongTimes) {
+  const info = { qid: q.id, q, taps: 0, sort: true }
+  const bins = q.params.bins.map((b) => b.id)
+  for (let w = 0; w < wrongTimes; w++) {
+    const wrongBin = bins.find((b) => b !== q.params.targets[0])
+    await page.locator('[data-testid=sort-item][data-item="0"]').click()
+    await page.locator(`[data-testid=sort-bin][data-bin="${wrongBin}"]`).click()
+    await page.waitForTimeout(150)
+    info.taps++
+    if (w === 0) {
+      info.stageAfterFirstWrong = await page.locator('[data-testid=question]').getAttribute('data-hint-stage')
+      info.hintText = (await page.getByTestId('subtitle').innerText()).trim()
+      info.pose = await page.locator('.adv-say-pet').getAttribute('data-pose')
+      info.hintBubble = (await page.locator('.adv-bubble.hint').count()) === 1
+    }
+  }
+  if (wrongTimes >= 2) info.answerGlow = (await page.locator('.sort-bin.demo').count()) === 1
+  for (let i = 0; i < q.items.length; i++) {
+    await page.locator(`[data-testid=sort-item][data-item="${i}"]`).click()
+    await page.locator(`[data-testid=sort-bin][data-bin="${q.params.targets[i]}"]`).click()
+    await page.waitForTimeout(60)
+  }
+  await page.waitForSelector('[data-testid=next-question]')
+  info.cheer = await page.locator('.adv-say-pet').getAttribute('data-pose')
+  await nextQuestion(page, q.id)
+  return info
+}
+
 /** 拿給我 N 個：先拿 n（或 wrongTimes 次拿錯數量）個，按「好了」 */
 async function playGive(page, q, wrongTimes) {
   const n = Number(q.answer)
@@ -139,8 +186,11 @@ async function playGive(page, q, wrongTimes) {
 /** 答一題：先點 N 個錯的（N 由 decide(q) 決定），再點正確答案，等它亮起，按「下一題」 */
 async function playQuestion(page, decide) {
   await page.waitForSelector('[data-testid=question]')
+  await clearTutorial(page)
+  await page.waitForSelector('[data-testid=question]')
   const qid = await page.locator('[data-testid=question]').getAttribute('data-question-id')
   const q = BANK[qid]
+  if (q.type === 'bins') return playSort(page, q, typeof decide === 'function' ? Math.min(decide(q), 2) : Math.min(decide, 2))
   if (q.type === 'give') return playGive(page, q, typeof decide === 'function' ? Math.min(decide(q), 2) : Math.min(decide, 2))
   const wrong = q.choices.filter((c) => c.id !== q.answer)
   const taps = Math.min(typeof decide === 'function' ? decide(q) : decide, wrong.length)

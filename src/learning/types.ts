@@ -84,8 +84,10 @@ export interface Bin {
   id: string
   /** 籃子上的字（語音也唸這個） */
   label: string
-  /** 籃子的代表圖（物件 id） */
+  /** 籃子的代表圖（物件 id；挑沒有出現在要分類的東西裡的那個） */
   obj?: string
+  /** 依顏色分的籃子：色票（CSS 顏色） */
+  swatch?: string
 }
 
 /** 各題型自己的參數（產生器寫入，介面據此畫提示與互動） */

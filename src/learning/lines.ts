@@ -36,7 +36,7 @@ export function chineseNumber(n: number): string {
 /** 固定台詞。陣列的句子用 `<key>.<序號>` 當 key（從 1 起算），輪流取用 */
 export const STATIC_LINES: Record<string, string | string[]> = {
   // 答對
-  praise: ['答對了！', '好棒喔！', '太厲害了！', '你真聰明！'],
+  praise: ['答對了！', '好棒喔！', '太厲害了！', '你真聰明！', '你好會想！', '哇，答對了！', '我也想到了！'],
   'praise.gentle': ['哇，你好棒！', '答對了，好厲害喔！', '太棒了，阿悟好開心！'],
   // 答錯與提示
   'hint.answer': '答案在這裡，點點看。',
@@ -58,6 +58,12 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'bins.hint': '把東西放進對的籃子裡。',
   'bins.wrong': '這個不是這一籃喔，再試試看。',
   'bins.done': '都放好了！',
+  'audio.test': '數一數，有幾根香蕉？',
+  'lock.sleepy': '我想睡覺了，明天再一起冒險吧',
+  'ceremony.done': '今天的冒險完成了！',
+  'tutorial.skip': '好，我們直接開始。',
+  'tutorial.again': '換你試試看！',
+  'tutorial.done': '你學會了！',
   // 阿悟的台詞：開場
   'companion.open': ['今天要去哪裡呢？', '出發囉！', '我準備好了！'],
   'companion.open.tutorial': ['看我做一次喔。', '換你試試看。'],

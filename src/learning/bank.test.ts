@@ -99,8 +99,16 @@ export function solve(q: Question, obj: ObjOf = defaultObj): string[] {
         })
         .map((c) => c.id)
     }
-    case 'bins':
-      return ['sorted']
+    case 'bins': {
+      // 每個東西依籃子的標籤（種類名或顏色）算出該放哪個籃子，必須和題庫的 targets 一致，而且恰好一個籃子對得上
+      const bins = q.params!.bins!
+      const ok = q.items.every((it, i) => {
+        const o = obj(it.obj as string)
+        const hit = bins.filter((b) => (b.swatch ? colorIn(b.label) === fam(o.color) : b.label === (o.category ? CATEGORY_NAMES[o.category] : '')))
+        return hit.length === 1 && hit[0].id === q.params!.targets![i]
+      })
+      return ok ? ['sorted'] : []
+    }
   }
 }
 
@@ -156,6 +164,20 @@ export function ambiguities(q: Question, obj: ObjOf = defaultObj): string[] {
       for (const c of others) if (c.o!.category === cat && hasColor(c.o!, color)) out.push(`${c.id} 也是${color}色的${cat}`)
       break
     }
+    case 'bins': {
+      const bins = q.params!.bins!
+      const used = new Set(q.items.map((i) => i.obj))
+      // 籃子上的代表圖不能是要分類的東西；每個籃子都要有東西；不同籃子的東西不同色（不然孩子會用顏色分）
+      for (const b of bins) if (b.obj && used.has(b.obj)) out.push(`籃子代表圖 ${b.obj} 也在要分類的東西裡`)
+      for (const b of bins) if (!q.params!.targets!.includes(b.id)) out.push(`籃子 ${b.id} 是空的`)
+      if (!bins.some((b) => b.swatch)) {
+        const byBin: Record<string, Set<string>> = {}
+        q.items.forEach((it, i) => (byBin[q.params!.targets![i]] ??= new Set()).add(fam(obj(it.obj as string).color)))
+        const bs = Object.values(byBin)
+        for (let a = 0; a < bs.length; a++) for (let b = a + 1; b < bs.length; b++) if ([...bs[a]].some((c) => bs[b].has(c))) out.push('不同籃子的東西同色')
+      }
+      break
+    }
     case 'attr': {
       // 題目問顏色就檢查種類與物件本身，反之亦然：這些屬性不能讓別的選項也呈現週期
       const by = q.prompt.includes('顏色') ? 'color' : 'category'
@@ -191,6 +213,7 @@ describe('題庫完整性', () => {
       expect(q.hint.length, tag).toBeGreaterThan(3)
       expect(q.version, tag).toBeGreaterThanOrEqual(1)
       expect(q.id.startsWith(`${q.skill}-${q.difficulty}-`), tag).toBe(true)
+      if (q.type === 'bins') expect(q.items.length, tag).toBeGreaterThan(0)
       const ids = q.choices.map((c) => c.id)
       expect(new Set(ids).size, tag).toBe(ids.length)
       if (q.interaction === 'tapN' || q.interaction === 'dragSort') expect(q.choices.length, tag).toBe(0)
@@ -346,15 +369,28 @@ describe('各難度符合規格範圍', () => {
       expect(q.choices).toHaveLength(3)
       expect(q.interaction ?? 'pick').toBe('pick')
     }
-    for (const q of of('classify', 2)) {
+    for (const q of of('classify', 2).filter((x) => x.type !== 'bins')) {
       expect(['color', 'kind', 'same']).toContain(q.type)
       expect(q.choices).toHaveLength(3)
     }
     expect(of('classify', 2).some((q) => q.type === 'color')).toBe(true)
-    for (const q of of('classify', 3)) {
+    for (const q of of('classify', 3).filter((x) => x.type !== 'bins')) {
       expect(q.type).toBe('odd')
       expect(q.choices).toHaveLength(4)
     }
+    // 拖曳歸類：難度 2 有 2 個籃子、難度 3 有 2–3 個籃子，都是 dragSort 互動
+    for (const q of of('classify', 2).filter((x) => x.type === 'bins')) expect(q.params!.bins).toHaveLength(2)
+    for (const q of of('classify', 3).filter((x) => x.type === 'bins')) expect([2, 3]).toContain(q.params!.bins!.length)
+    for (const d of [2, 3] as const) {
+      const bins = of('classify', d).filter((x) => x.type === 'bins')
+      expect(bins.length, `d${d} bins`).toBeGreaterThanOrEqual(8)
+      for (const q of bins) {
+        expect(q.interaction).toBe('dragSort')
+        expect(q.items.length).toBeGreaterThanOrEqual(4)
+        expect(q.items.length).toBeLessThanOrEqual(6)
+      }
+    }
+    expect(of('classify', 3).some((x) => x.type === 'bins' && x.params!.bins!.some((b) => b.swatch))).toBe(true)
     for (const q of of('classify', 4)) expect(q.type).toBe('dual')
     // 找不同類：三個同類物件，各類別都出現過（不是永遠同一類）
     const majors = new Set(of('classify', 3).map((q) => q.params?.groupName))

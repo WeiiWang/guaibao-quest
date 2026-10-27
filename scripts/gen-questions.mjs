@@ -526,6 +526,78 @@ function dualQ(i, ctx, answer, phraseIdx) {
   }
 }
 
+// 拖曳歸類：把東西放進對的籃子。每一類要留一個沒用到的物件當籃子上的代表圖；
+// 不同籃子的東西顏色不重疊（否則孩子會用顏色分）
+const CAT_CAP = { fruit: 3, animal: 2, vehicle: 1, toy: 2 }
+const BIN_PROMPTS2 = [(a, b) => `把${a}和${b}分開，放進對的籃子裡。`, (a, b) => `幫忙整理：${a}放一邊，${b}放另一邊。`]
+const BIN_PROMPTS3 = [(a, b, c) => `把${a}、${b}、${c}分一分，放進對的籃子裡。`, (a, b, c) => `幫忙整理：${a}、${b}、${c}，各放各的籃子。`]
+function colorsOf(ids) {
+  return new Set(ids.map((id) => (OBJ[id].color === '粉橘' ? '粉' : OBJ[id].color)))
+}
+function binsByCategory(i, ctx, nBins, itemTotal) {
+  const cats = sample(CATEGORIES, nBins)
+  // 每一類放幾個（至少 1、不超過上限），加起來剛好 itemTotal
+  const counts = cats.map(() => 1)
+  let left = itemTotal - nBins
+  let guard = 0
+  while (left > 0 && guard++ < 50) {
+    const k = Math.floor(rnd() * nBins)
+    if (counts[k] < CAT_CAP[cats[k]]) {
+      counts[k]++
+      left--
+    }
+  }
+  if (left > 0) reject()
+  const groups = cats.map((c, k) => sample(byCat(c), counts[k]))
+  const all = groups.flat()
+  if (conflict(all)) reject()
+  // 不同籃子的東西不能同色
+  for (let a = 0; a < groups.length; a++)
+    for (let b = a + 1; b < groups.length; b++) {
+      const ca = colorsOf(groups[a])
+      if ([...colorsOf(groups[b])].some((c) => ca.has(c))) reject()
+    }
+  const bins = cats.map((c, k) => {
+    const emblem = byCat(c).find((id) => !all.includes(id))
+    if (!emblem) reject()
+    return { id: `b${k + 1}`, label: CATEGORY_NAMES[c], obj: emblem }
+  })
+  const order = shuffle(all.map((id) => id))
+  const targets = order.map((id) => bins[cats.indexOf(catOf(id))].id)
+  const names = cats.map((c) => CATEGORY_NAMES[c])
+  return {
+    type: 'bins',
+    interaction: 'dragSort',
+    prompt: nBins === 2 ? variant(BIN_PROMPTS2, i)(...names) : variant(BIN_PROMPTS3, i)(...names),
+    items: order.map((obj) => ({ obj })),
+    choices: [],
+    answer: 'sorted',
+    hint: `${bins.map((b) => `${b.label}像${nm(b.obj)}`).join('，')}。看看每一個是什麼，放進對的籃子。`,
+    params: { bins, targets },
+  }
+}
+function binsByColor(i) {
+  const cs = sample(Object.keys(REF), 2)
+  const pool = (c) => COLOR_POOL.filter((id) => OBJ[id].color === c && !(OBJ[id].alsoColors ?? []).some((x) => cs.includes(x)))
+  const a = sample(pool(cs[0]), 2)
+  const b = sample(pool(cs[1]), 2)
+  if (a.length < 2 || b.length < 2) reject()
+  if (conflict([...a, ...b])) reject()
+  const bins = cs.map((c, k) => ({ id: `b${k + 1}`, label: colorWord(c), swatch: SWATCH[c] }))
+  const order = shuffle([...a, ...b])
+  const targets = order.map((id) => bins[cs.indexOf(OBJ[id].color)].id)
+  return {
+    type: 'bins',
+    interaction: 'dragSort',
+    prompt: variant(BIN_PROMPTS2, i)(bins[0].label + '的', bins[1].label + '的'),
+    items: order.map((obj) => ({ obj })),
+    choices: [],
+    answer: 'sorted',
+    hint: `${bins[0].label}，${REF[cs[0]]}。${bins[1].label}，${REF[cs[1]]}。看看每一個是什麼顏色，放進對的籃子。`,
+    params: { bins, targets },
+  }
+}
+
 const withPhrases = (list, phrases) => shuffle(list.flatMap((id) => Array.from({ length: phrases }, (_, p) => [id, p])))
 const orderedPairs = (list, ok) => shuffle(list.flatMap((a) => list.filter((b) => a !== b && ok(a, b)).map((b) => [a, b])))
 const GENTLE_OBJ = ['obj-banana', 'obj-apple', 'obj-fish', 'obj-chick'] // 最常見的四個
@@ -535,6 +607,7 @@ const classify1 = cell('classify', 1, [
   { count: 24, cands: orderedPairs(CLASSIFIABLE, (a, b) => catOf(a) === catOf(b)), build: (i, ctx, [ex, a]) => sameQ(i, ctx, ex, a) },
 ])
 const classify2 = cell('classify', 2, [
+  { count: 12, build: (i, ctx) => binsByCategory(i, ctx, 2, 4) },
   { count: 14, cands: withPhrases(COLOR_POOL.filter((id) => REF[OBJ[id].color]), 2), build: (i, ctx, [a, p]) => colorQ(i, ctx, a, p) },
   {
     count: 10,
@@ -543,7 +616,11 @@ const classify2 = cell('classify', 2, [
   },
   { count: 12, cands: withPhrases(CLASSIFIABLE, 3), build: (i, ctx, [a, p]) => kindQ(i, ctx, a, p) },
 ])
-const classify3 = cell('classify', 3, [{ count: 36, build: (i, ctx) => oddQ(i, ctx) }])
+const classify3 = cell('classify', 3, [
+  { count: 36, build: (i, ctx) => oddQ(i, ctx) },
+  { count: 8, build: (i, ctx) => binsByCategory(i, ctx, 3, 5 + (i % 2)) },
+  { count: 4, build: (i) => binsByColor(i) },
+])
 const classify4 = cell('classify', 4, [
   { count: 36, cands: withPhrases(CLASSIFIABLE.filter((id) => catOf(id) !== 'toy' && REF[OBJ[id].color]), 4), build: (i, ctx, [a, p]) => dualQ(i, ctx, a, p) },
 ])

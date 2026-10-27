@@ -1,4 +1,7 @@
+import { spawnSync } from 'node:child_process'
 import { describe, expect, it } from 'vitest'
+import { HUAGUOSHAN } from './chapter'
+import { isTutorialId, needsTutorial, TUTORIAL_INTERACTIONS, tutorialQuestion } from './tutorial'
 import { QUESTIONS, questionsFor } from './bank'
 import { allLines, gentleHintKey, questionKey, questionLines, pickLine, STATIC_LINES, wordKey } from './lines'
 import { learnerProfileOf } from './profile'
@@ -165,7 +168,7 @@ describe('給孩子看的題目（洗牌與幼幼模式）', () => {
     const q = pick('number', 2, 'count')
     expect(displayQuestion(q, 'x').choices.map((c) => Number(c.label))).toEqual(q.choices.map((c) => Number(c.label)))
     // 物件選項：答案位置平均
-    const odd = questionsFor('classify', 3)
+    const odd = questionsFor('classify', 3).filter((x) => x.type === 'odd')
     const pos = [0, 0, 0, 0]
     for (let i = 0; i < 400; i++) {
       const d = displayQuestion(odd[i % odd.length], `seed${i}`)
@@ -234,7 +237,8 @@ describe('句子集中管理（key 架構）', () => {
     expect(questionLines(QUESTIONS[0]).map((l) => l.key)).toContain('q.number-1-01.prompt')
   })
   it('固定台詞每句有 key，輪流取用；數字與總數都在清單裡', () => {
-    expect(pickLine('praise', 5)).toEqual({ key: 'praise.2', text: (STATIC_LINES.praise as string[])[1] })
+    expect(pickLine('praise', 5)).toEqual({ key: 'praise.6', text: (STATIC_LINES.praise as string[])[5] })
+    expect(pickLine('praise', 7)).toMatchObject({ key: 'praise.1' }) // 超過就從頭輪流
     expect(pickLine('hint.answer')).toEqual({ key: 'hint.answer', text: '答案在這裡，點點看。' })
     expect(all['num.7']).toBe('七')
     expect(all['count.total.5']).toBe('一共有五個')
@@ -247,5 +251,80 @@ describe('句子集中管理（key 架構）', () => {
     registerLineAudio({ x: 'a.mp3' }) // node 沒有 Audio：退回 speak，也是 false
     expect(say('x', '你好')).toBe(false)
     registerLineAudio({})
+  })
+})
+
+describe('站型模板（L-B）', () => {
+  const slotsOf = (stationIdx: number) => HUAGUOSHAN.stations[stationIdx].slots
+  const interactionOf = (p: PlannedQuestion) => p.question.interaction ?? 'pick'
+  it('章節 5 站都有站型：每站 5 個位置，第 1 站教學、第 5 站 Boss，每章最後一站是 Boss', () => {
+    expect(HUAGUOSHAN.stations).toHaveLength(5)
+    for (const st of HUAGUOSHAN.stations) expect(st.slots, st.name).toHaveLength(5)
+    expect(HUAGUOSHAN.stations.map((s) => s.kind)).toEqual(['tutorial', 'normal', 'minigame', 'normal', 'boss'])
+    expect(HUAGUOSHAN.stations[2].slots.filter((x) => x !== 'pick')).toHaveLength(2) // 小遊戲站兩題主互動
+  })
+  it('依站型排題：主互動位置抽指定互動、其他位置抽點選；三種技能維持 2/2/1；題目不重複', () => {
+    for (let st = 0; st < 5; st++) {
+      const plan = planStation({ stationIndex: st, states: states(), attempts: [], now: T0, rng: makeRng(st + 11), slots: slotsOf(st) })
+      expect(plan).toHaveLength(5)
+      expect(new Set(plan.map((p) => p.question.id)).size).toBe(5)
+      expect(SKILLS.map((s) => plan.filter((p) => p.question.skill === s).length).sort().join()).toBe('1,2,2')
+      // 難度 1 的數感有「拿給我」、分類難度 1 沒有拖曳歸類（退回點選）
+      slotsOf(st).forEach((want, i) => {
+        if (want === 'tapN') expect(interactionOf(plan[i])).toBe('tapN')
+        if (want === 'dragSort') expect(interactionOf(plan[i])).toBe('pick') // 難度 1 沒有歸類題
+        if (want === 'pick') expect(interactionOf(plan[i])).toBe('pick')
+      })
+    }
+  })
+  it('技能在難度 2 時：拖曳歸類位置出歸類題、拿給我位置出拿給我', () => {
+    const st = states({ number: { difficulty: 2 }, classify: { difficulty: 2 } })
+    const plan = planStation({ stationIndex: 2, states: st, attempts: [], now: T0, rng: makeRng(3), slots: slotsOf(2) })
+    expect(plan.map(interactionOf)).toEqual(['pick', 'tapN', 'pick', 'dragSort', 'pick'])
+    expect(plan[1].question).toMatchObject({ skill: 'number', difficulty: 2 })
+    expect(plan[3].question).toMatchObject({ skill: 'classify', difficulty: 2, type: 'bins' })
+  })
+  it('該技能目前難度沒有這種互動（數感難度 3 沒有拿給我）就退回點選，不會出錯', () => {
+    const st = states({ number: { difficulty: 3 } })
+    const plan = planStation({ stationIndex: 0, states: st, attempts: [], now: T0, rng: makeRng(2), slots: slotsOf(0) })
+    expect(plan.every((p) => interactionOf(p) === 'pick')).toBe(true)
+  })
+  it('沒給站型時照舊（不限互動）；站中換題保持同一種互動', () => {
+    const st = states({ number: { difficulty: 2 }, classify: { difficulty: 2 } })
+    const plan = planStation({ stationIndex: 2, states: st, attempts: [], now: T0, rng: makeRng(3), slots: slotsOf(2) })
+    const up = { ...st, number: { ...st.number, difficulty: 3 as Difficulty } }
+    const next = adaptPlan({ plan, from: 1, states: up, attempts: [], stationAttempts: [], rng: makeRng(5) })
+    // 數感升到 3：拿給我（難度 3 沒有）退回點選，其他仍保持
+    expect(next[1].question.skill).toBe('number')
+    expect(next[1].question.difficulty).toBe(3)
+    expect(next[3].question.type).toBe('bins') // 分類沒變
+  })
+  it('教學：只有拿給我與拖曳歸類需要；看過就不再教；練習題不在題庫、id 以 tutorial- 開頭', () => {
+    expect(needsTutorial('tapN', new Set())).toBe(true)
+    expect(needsTutorial('dragSort', new Set(['tapN']))).toBe(true)
+    expect(needsTutorial('tapN', new Set(['tapN']))).toBe(false)
+    expect(needsTutorial('pick', new Set())).toBe(false)
+    expect(needsTutorial(undefined, new Set())).toBe(false)
+    for (const it of TUTORIAL_INTERACTIONS) {
+      const q = tutorialQuestion(it)
+      expect(isTutorialId(q.id)).toBe(true)
+      expect(QUESTIONS.some((x) => x.id === q.id)).toBe(false)
+      expect(q.interaction).toBe(it)
+    }
+  })
+})
+
+describe('句子清單匯出腳本', () => {
+  it('node scripts/export-speech-lines.mjs 輸出 key → 文字 的 JSON，含題目、提示、固定台詞、數字', () => {
+    const r = spawnSync(process.execPath, ['scripts/export-speech-lines.mjs'], { encoding: 'utf8', cwd: process.cwd() })
+    expect(r.status, r.stderr).toBe(0)
+    const lines = JSON.parse(r.stdout) as Record<string, string>
+    expect(lines['q.number-1-01.prompt']).toBeTruthy()
+    expect(lines['q.classify-2-01.hint']).toBeTruthy()
+    expect(lines['praise.1']).toBe('答對了！')
+    expect(lines['num.3']).toBe('三')
+    expect(Object.keys(lines).length).toBeGreaterThan(1200)
+    // 每個 key 都是穩定的：和 allLines 一致
+    expect(lines).toEqual(allLines(QUESTIONS))
   })
 })

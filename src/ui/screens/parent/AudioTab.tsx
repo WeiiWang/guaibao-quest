@@ -1,6 +1,7 @@
 import { repo } from '../../../db/repo'
 import { playSfx } from '../../../learning/sfx'
-import { isSpeechSupported, speak } from '../../../learning/speech'
+import { isSpeechSupported, say } from '../../../learning/speech'
+import { pickLine } from '../../../learning/lines'
 import { useLearningSettings } from '../../learningHooks'
 import './learning.css'
 
@@ -32,7 +33,7 @@ export function AudioTab() {
         {!supported && <p className="form-msg warn">這個裝置的瀏覽器不支援語音，題目只會顯示字幕。</p>}
         <div className="row-actions" style={{ justifyContent: 'flex-start' }}>
           <button className="btn" onClick={() => playSfx('correct', true)}>試聽音效</button>
-          <button className="btn" disabled={!supported} onClick={() => speak('數一數，有幾根香蕉？', { enabled: true })}>試聽語音</button>
+          <button className="btn" disabled={!supported} onClick={() => say(pickLine('audio.test').key, pickLine('audio.test').text, { enabled: true })}>試聽語音</button>
         </div>
       </div>
     </section>
