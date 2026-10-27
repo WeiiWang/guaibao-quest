@@ -29,8 +29,10 @@ MANIFEST = os.path.join(OUT_DIR, 'manifest.json')
 
 SERENA_INSTRUCT = '用台灣國語口音，溫柔親切、慢慢地對四歲小朋友說話，不要捲舌、不要兒化音'
 VOICES = {
-    'mama': {'profile': '乖寶-媽媽聲', 'engine': None, 'instruct': None},
-    'serena': {'profile': '乖寶-Serena', 'engine': 'qwen_custom_voice', 'instruct': SERENA_INSTRUCT},
+    'mama': {'profile': '乖寶-媽媽聲', 'engine': None, 'instruct': None, 'lang': 'zh'},
+    'serena': {'profile': '乖寶-Serena', 'engine': 'qwen_custom_voice', 'instruct': SERENA_INSTRUCT, 'lang': 'zh'},
+    # 英文單字（en.<word>）：Kokoro 內建英文女聲；清單由 export-speech-lines.mjs --out 一併產生的 *.en.json
+    'english': {'profile': '乖寶-English', 'engine': 'kokoro', 'instruct': None, 'lang': 'en', 'preset': ('kokoro', 'af_heart')},
 }
 # 阿悟本人說的話：之後用寵物專屬聲音
 PET_KEYS = ('companion.', 'lock.sleepy')
@@ -38,10 +40,14 @@ PET_KEYS = ('companion.', 'lock.sleepy')
 PRIORITY = ('q.', 'num.', 'word.', 'count.', 'praise.', 'give.', 'gentle.', 'bins.', 'tutorial.', 'station.', 'ceremony.', 'chapter.', 'leave.', 'hint.', 'audio.')
 
 
-def find_profile(name):
+def find_profile(name, preset=None, lang='zh'):
     for p in call('GET', '/profiles'):
         if p.get('name') == name:
             return p['id']
+    if preset:  # 內建聲音：第一次自動建立設定
+        engine, voice_id = preset
+        p = call('POST', '/profiles', {'name': name, 'language': lang, 'voice_type': 'preset', 'preset_engine': engine, 'preset_voice_id': voice_id, 'default_engine': engine})
+        return p['id']
     raise SystemExit(f'Voicebox 裡找不到聲音設定「{name}」')
 
 
@@ -77,7 +83,7 @@ def main():
     tag = f"{voice}|{cfg['instruct'] or ''}"
     os.makedirs(OUT_DIR, exist_ok=True)
     manifest = json.load(open(MANIFEST, encoding='utf-8')) if os.path.exists(MANIFEST) else {}
-    profile = find_profile(cfg['profile'])
+    profile = find_profile(cfg['profile'], cfg.get('preset'), cfg['lang'])
 
     keys = sorted((k for k in lines if not k.startswith(PET_KEYS)), key=rank)
     # 先把已經有檔案的 key 直接寫進 manifest（共用相同文字的檔案）
@@ -101,7 +107,7 @@ def main():
         with tempfile.TemporaryDirectory() as tmp:
             wav = os.path.join(tmp, 'a.wav')
             try:
-                say(profile, wav, text, cfg['instruct'], 'zh', cfg['engine'])
+                say(profile, wav, text, cfg['instruct'], cfg['lang'], cfg['engine'])
                 to_m4a(wav, os.path.join(OUT_DIR, f))
             except Exception as e:  # 單句失敗不中斷整批，下次重跑會補
                 print(f'FAIL {key}: {e}', flush=True)
@@ -111,7 +117,8 @@ def main():
                 manifest[k] = {'file': f, 'text': text, 'voice': tag}
         save(manifest)
         print(f'[{i}/{len(todo_texts)}] {key} {text[:20]}', flush=True)
-    stale = [k for k in manifest if k not in lines or k.startswith(PET_KEYS)]
+    same_lang = (lambda k: k.startswith('en.')) if cfg['lang'] == 'en' else (lambda k: not k.startswith('en.'))
+    stale = [k for k in manifest if same_lang(k) and (k not in lines or k.startswith(PET_KEYS))]
     for k in stale:
         del manifest[k]
     save(manifest)
