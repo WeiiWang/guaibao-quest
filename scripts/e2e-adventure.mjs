@@ -77,16 +77,76 @@ const toHash = async (page, hash) => {
   await page.evaluate((h) => (location.hash = h), hash)
 }
 
+/** 按「下一題」，並等到換成下一題（或結算畫面）。換題前會先在背景調整剩下的題，所以不是立刻換 */
+async function nextQuestion(page, oldId) {
+  await page.getByTestId('next-question').click()
+  await page.waitForFunction(
+    (old) => {
+      const el = document.querySelector('[data-testid=question]')
+      return !el || el.dataset.questionId !== old
+    },
+    oldId,
+    { timeout: 10000 },
+  )
+}
+
+/** 點選項。難度 1 的數字選項要點兩次（第一次只唸出數字、打勾，第二次才作答） */
+async function clickChoice(page, id) {
+  const loc = page.locator(`[data-testid=choice][data-choice-id="${id}"]`)
+  await loc.click()
+  if ((await loc.getAttribute('data-confirm')) === 'true') {
+    await page.waitForTimeout(80)
+    if ((await loc.getAttribute('data-armed')) === 'true') await loc.click()
+  }
+}
+
+/** 拿給我 N 個：先拿 n（或 wrongTimes 次拿錯數量）個，按「好了」 */
+async function playGive(page, q, wrongTimes) {
+  const n = Number(q.answer)
+  const info = { qid: q.id, q, taps: 0, give: true }
+  for (let w = 0; w < wrongTimes; w++) {
+    const pool = await page.locator('[data-testid=give-obj]').count()
+    // 少拿一個（n 為 1 時多拿一個）
+    const want = n > 1 ? n - 1 : 2
+    const have = await page.locator('[data-testid=give-in]').count()
+    for (let k = have; k < want; k++) await page.locator('[data-testid=give-obj]').first().click()
+    void pool
+    await page.getByTestId('give-done').click()
+    await page.waitForTimeout(150)
+    info.taps++
+    if (w === 0) {
+      info.stageAfterFirstWrong = await page.locator('[data-testid=question]').getAttribute('data-hint-stage')
+      info.hintText = (await page.getByTestId('subtitle').innerText()).trim()
+      info.pose = await page.locator('.adv-say-pet').getAttribute('data-pose')
+      info.hintBubble = (await page.locator('.adv-bubble.hint').count()) === 1
+    }
+  }
+  if (wrongTimes >= 2) {
+    // 第二次錯：阿悟示範，籃子慢慢補到剛好 n 個
+    await page.waitForFunction((k) => document.querySelectorAll('[data-testid=give-in]').length === k, n, { timeout: 8000 })
+    info.answerGlow = true
+  }
+  const have = await page.locator('[data-testid=give-in]').count()
+  for (let k = have; k < n; k++) await page.locator('[data-testid=give-obj]').first().click()
+  while ((await page.locator('[data-testid=give-in]').count()) > n) await page.locator('[data-testid=give-in]').last().click()
+  await page.getByTestId('give-done').click()
+  await page.waitForSelector('[data-testid=give-basket].ok')
+  info.cheer = await page.locator('.adv-say-pet').getAttribute('data-pose')
+  await nextQuestion(page, q.id)
+  return info
+}
+
 /** 答一題：先點 N 個錯的（N 由 decide(q) 決定），再點正確答案，等它亮起，按「下一題」 */
 async function playQuestion(page, decide) {
   await page.waitForSelector('[data-testid=question]')
   const qid = await page.locator('[data-testid=question]').getAttribute('data-question-id')
   const q = BANK[qid]
+  if (q.type === 'give') return playGive(page, q, typeof decide === 'function' ? Math.min(decide(q), 2) : Math.min(decide, 2))
   const wrong = q.choices.filter((c) => c.id !== q.answer)
   const taps = Math.min(typeof decide === 'function' ? decide(q) : decide, wrong.length)
   const info = { qid, q, taps }
   for (let i = 0; i < taps; i++) {
-    await page.locator(`[data-testid=choice][data-choice-id="${wrong[i].id}"]`).click()
+    await clickChoice(page, wrong[i].id)
     await page.waitForTimeout(120)
     if (i === 0) {
       info.stageAfterFirstWrong = await page.locator('[data-testid=question]').getAttribute('data-hint-stage')
@@ -95,13 +155,13 @@ async function playQuestion(page, decide) {
       info.hintBubble = (await page.locator('.adv-bubble.hint').count()) === 1
     }
   }
-  if (taps >= 2 || wrong.length === 1) {
+  if (taps >= 2) {
     info.answerGlow = (await page.locator('[data-testid=choice][data-state=answer]').count()) === 1
   }
-  await page.locator(`[data-testid=choice][data-choice-id="${q.answer}"]`).click()
+  await clickChoice(page, q.answer)
   await page.waitForSelector(`[data-testid=choice][data-choice-id="${q.answer}"][data-state=right]`)
   info.cheer = await page.locator('.adv-say-pet').getAttribute('data-pose')
-  await page.getByTestId('next-question').click()
+  await nextQuestion(page, qid)
   return info
 }
 
@@ -175,9 +235,10 @@ try {
     await playStation(page, [0, 0, 0, 0, 0])
     if (s < 5) {
       await page.getByTestId('next-station').click()
-      await page.waitForSelector('[data-testid=stage]')
+      await page.waitForSelector('[data-testid=question]')
       // 「下一站」直接進下一站，這裡退回地圖點，確保地圖入口也通
       await page.getByRole('button', { name: '離開關卡' }).click()
+      await page.getByTestId('leave-go').click()
       await page.waitForSelector('[data-testid=map]')
     }
   }

@@ -3,6 +3,8 @@
  * 不支援時所有函式都安靜地什麼都不做，畫面仍有字幕。
  */
 
+import { chineseNumber } from './lines'
+
 function synth(): SpeechSynthesis | null {
   try {
     return typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined'
@@ -63,16 +65,54 @@ export function cancelSpeech(): void {
   } catch {
     /* ignore */
   }
+  stopLineAudio()
 }
 
-const NUM = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
-/** 1–20 轉中文數字（唸給孩子聽：一、二、三…） */
-export function chineseNumber(n: number): string {
-  if (n <= 10) return NUM[n] ?? String(n)
-  if (n < 20) return `十${NUM[n - 10]}`
-  if (n === 20) return '二十'
-  return String(n)
+// ---------- 預先錄好的音檔（key → 檔案網址）。這一輪還沒接，介面先備好 ----------
+let lineAudio: Record<string, string> = {}
+let playing: HTMLAudioElement | null = null
+
+/** 註冊預錄音檔：key（見 lines.ts）→ 音檔網址。沒註冊的 key 一律退回 Web Speech */
+export function registerLineAudio(map: Record<string, string>): void {
+  lineAudio = { ...map }
 }
+
+function stopLineAudio(): void {
+  try {
+    playing?.pause()
+  } catch {
+    /* ignore */
+  }
+  playing = null
+}
+
+/**
+ * 唸一句有 key 的台詞：有預錄音檔就播檔，沒有才用 Web Speech 唸 text。
+ * 所有會唸出來的句子都走這裡（key 見 lines.ts）。
+ */
+export function say(key: string, text: string, opts: SpeakOptions = {}): boolean {
+  if (opts.enabled === false) return false
+  const url = lineAudio[key]
+  if (url && typeof Audio !== 'undefined') {
+    try {
+      synth()?.cancel()
+      stopLineAudio()
+      const a = new Audio(url)
+      playing = a
+      if (opts.onEnd) {
+        a.onended = opts.onEnd
+        a.onerror = opts.onEnd
+      }
+      void a.play().catch(() => opts.onEnd?.())
+      return true
+    } catch {
+      /* 退回 Web Speech */
+    }
+  }
+  return speak(text, opts)
+}
+
+export { chineseNumber }
 
 /** 數數用的語音稿：「一、二、三」 */
 export function countAloud(n: number): string {

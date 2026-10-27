@@ -1,7 +1,7 @@
 import { QUESTIONS, questionsFor } from './bank'
 import { dueReviews } from './skills'
 import { STATION_SIZE } from './scoring'
-import { pickOne, type Rng } from './rng'
+import { makeRng, pickOne, shuffled, type Rng } from './rng'
 import type { Attempt, Difficulty, Question, SkillId, SkillState } from './types'
 import { SKILLS } from './types'
 
@@ -29,14 +29,17 @@ export interface PickOptions {
   /** 這一輪已經出過、不可再出的題 */
   exclude?: ReadonlySet<string>
   bank?: Question[]
+  /** 幼幼模式 */
+  gentle?: boolean
 }
 
 /**
  * 抽一題：排除 exclude；在剩下的題裡，優先「作答次數最少」的，
  * 同分時再優先「最久沒出現」的最舊一批，最後隨機。題庫用完一輪才會重複。
+ * 舊紀錄裡已經不存在的題目 id 只會被當成「沒有人用到」，不影響抽題。
  */
 export function pickQuestion(opts: PickOptions): Question | null {
-  const pool = questionsFor(opts.skill, opts.difficulty, opts.bank ?? QUESTIONS).filter((q) => !opts.exclude?.has(q.id))
+  const pool = questionsFor(opts.skill, opts.difficulty, opts.bank ?? QUESTIONS, opts.gentle).filter((q) => !opts.exclude?.has(q.id))
   if (pool.length === 0) return null
   const cnt = (q: Question) => opts.seen.count.get(q.id) ?? 0
   const fewest = Math.min(...pool.map(cnt))
@@ -63,6 +66,7 @@ export interface PlanOptions {
   rng: Rng
   size?: number
   bank?: Question[]
+  gentle?: boolean
 }
 
 /**
@@ -83,7 +87,7 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
   const due = dueReviews(opts.states, opts.now)
   let reviewSlot = -1
   for (const d of due) {
-    const q = pickQuestion({ skill: d.skill, difficulty: d.level, seen, rng: opts.rng, bank: opts.bank })
+    const q = pickQuestion({ skill: d.skill, difficulty: d.level, seen, rng: opts.rng, bank: opts.bank, gentle: opts.gentle })
     if (!q) continue
     const slot = order.lastIndexOf(d.skill)
     reviewSlot = slot >= 0 ? slot : size - 1
@@ -102,10 +106,95 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
       rng: opts.rng,
       exclude: used,
       bank: opts.bank,
+      gentle: opts.gentle,
     })
     if (!q) throw new Error(`題庫不足：${skill} 難度 ${opts.states[skill].difficulty}`)
     used.add(q.id)
     plan[i] = { question: q, review: false, followUp: false }
   }
   return plan
+}
+
+export interface AdaptOptions {
+  plan: PlannedQuestion[]
+  /** 從第幾題開始可以調整（前面的已經答過） */
+  from: number
+  states: Record<SkillId, SkillState>
+  /** 全部歷史作答（含這一站已答的） */
+  attempts: Attempt[]
+  /** 這一站已答的非複習題，依時間先後 */
+  stationAttempts: Pick<Attempt, 'skill' | 'firstTryCorrect'>[]
+  rng: Rng
+  bank?: Question[]
+  gentle?: boolean
+}
+
+/**
+ * 站中調整剩下的題（不改技能狀態）：
+ * - 剛升級（或降級）後，剩下的同技能題改用新難度重抽
+ * - 同技能連續 2 題第一次就答錯 → 該技能的下一題從低 1 級抽（救援）
+ * 複習題不動。回傳新的 plan（沒有變化就是同一個陣列內容）。
+ */
+export function adaptPlan(opts: AdaptOptions): PlannedQuestion[] {
+  const plan = [...opts.plan]
+  const seen = seenFromAttempts(opts.attempts)
+  const rescued = new Set<SkillId>()
+  for (const skill of SKILLS) {
+    const mine = opts.stationAttempts.filter((a) => a.skill === skill)
+    const lastTwo = mine.slice(-2)
+    if (lastTwo.length === 2 && lastTwo.every((a) => !a.firstTryCorrect)) rescued.add(skill)
+  }
+  const handled = new Set<SkillId>()
+  for (let i = opts.from; i < plan.length; i++) {
+    const p = plan[i]
+    if (p.review) continue
+    const skill = p.question.skill
+    let target = opts.states[skill].difficulty
+    // 救援只用在這個技能的「下一題」
+    if (rescued.has(skill) && !handled.has(skill)) target = Math.max(1, target - 1) as Difficulty
+    handled.add(skill)
+    if (p.question.difficulty === target) continue
+    const used = new Set(plan.map((x) => x.question.id))
+    used.delete(p.question.id)
+    const q = pickQuestion({ skill, difficulty: target as Difficulty, seen, rng: opts.rng, exclude: used, bank: opts.bank, gentle: opts.gentle })
+    if (q) plan[i] = { question: q, review: false, followUp: false }
+  }
+  return plan
+}
+
+/** 字串 → 亂數種子（同一個字串永遠得到同一個種子） */
+export function seedOf(text: string): number {
+  let h = 2166136261
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i)
+    h = Math.imul(h, 16777619)
+  }
+  return h >>> 0
+}
+
+const isNumericChoices = (q: Question) => q.choices.length > 0 && q.choices.every((c) => c.label !== undefined && /^\d+$/.test(c.label))
+
+/**
+ * 實際給孩子看的題目：
+ * - 幼幼模式：選項縮成 2 個（答案 + 一個干擾；數字題取最接近的）
+ * - 選項順序用 seed 洗牌（同一個 seed 永遠同一個順序，離開再回來不會變）；
+ *   數字選項維持由小到大（答案位置由題庫端保證平均）
+ */
+export function displayQuestion(q: Question, seed: string, gentle = false): Question {
+  if (q.interaction && q.interaction !== 'pick') return q
+  const rng = makeRng(seedOf(`${seed}:${q.id}`))
+  let choices = q.choices
+  if (gentle && choices.length > 2) {
+    const others = choices.filter((c) => c.id !== q.answer)
+    let keep = others[Math.floor(rng() * others.length)]
+    if (isNumericChoices(q)) {
+      const a = Number(q.answer)
+      keep = [...others].sort((x, y) => Math.abs(Number(x.label) - a) - Math.abs(Number(y.label) - a))[0]
+    }
+    choices = choices.filter((c) => c.id === q.answer || c.id === keep.id)
+  }
+  if (isNumericChoices(q)) {
+    return choices === q.choices ? q : { ...q, choices }
+  }
+  return { ...q, choices: shuffled(choices, rng) }
 }

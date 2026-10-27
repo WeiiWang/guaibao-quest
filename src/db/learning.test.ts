@@ -4,11 +4,13 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { GuaibaoDB } from './db'
 import { Repo } from './repo'
 import { localDateStr } from '../domain/date'
-import { getQuestion } from '../learning/bank'
+import { getQuestion, QUESTIONS } from '../learning/bank'
 import { HUAGUOSHAN } from '../learning/chapter'
 import { makeRng } from '../learning/rng'
 import { SHOP_CATALOG, DECOR_COSTS } from '../learning/materials'
 import type { PlannedQuestion } from '../learning/select'
+import { initialSkillState } from '../learning/skills'
+import { SKILLS } from '../learning/types'
 
 const T0 = new Date(2026, 5, 10, 9, 0, 0).getTime()
 const DAY = 24 * 60 * 60 * 1000
@@ -58,12 +60,14 @@ describe('作答紀錄', () => {
   })
   it('並行寫入同一技能：recent 不遺失', async () => {
     const ids = ['number-1-01', 'number-1-02', 'number-1-03', 'number-1-04']
-    await Promise.all(ids.map((id) => repo.recordAttempt({ sessionId: 's', questionId: id, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0)))
+    // 一對一錯，避開「前 3 題全對直接升級」會清空 recent
+    await Promise.all(ids.map((id, i) => repo.recordAttempt({ sessionId: 's', questionId: id, firstTryCorrect: i % 2 === 0, hintsUsed: i % 2 === 0 ? 0 : 1, durationMs: 1 }, T0)))
     expect((await repo.getSkillStates()).number.recent).toHaveLength(4)
   })
   it('累積 5 題無提示答對 → 該技能升到難度 2（持久化）', async () => {
     for (let i = 1; i <= 5; i++) await repo.recordAttempt({ sessionId: 's', questionId: `number-1-0${i}`, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0 + i)
     expect((await repo.getSkillStates()).number.difficulty).toBe(2)
+    expect((await repo.getSkillStates()).number.mastered[1]).toBeDefined() // 升級時舊難度記成已掌握
     expect((await repo.getSkillStates()).classify.difficulty).toBe(1)
   })
 })
@@ -125,6 +129,8 @@ describe('關卡 / 材料 / 寶箱', () => {
     expect(second.every((p) => !ids.has(p.question.id))).toBe(true)
   })
   it('連續 2 站穩定 → 掌握，隔天出現複習題並記為 review', async () => {
+    // 舊玩家的技能狀態（沒有 total 欄位）：不會觸發新技能的快速通道，純靠站末結算掌握
+    await repo.db.skillState.bulkPut(SKILLS.map((k) => ({ ...initialSkillState(k), total: undefined })))
     await playStation(1, 'a', [true, true, true, true, true])
     await repo.completeStation({ chapterId: 'huaguoshan', station: 1, sessionId: 'a' }, T0)
     await playStation(2, 'b', [true, true, true, true, true])
@@ -327,3 +333,96 @@ describe('Dexie v3 migration：舊玩家資料不遺失', () => {
     expect(await again.getLearningSettings()).toEqual({ dailyLimitMin: 45, soundOn: true, voiceOn: false })
   })
 })
+
+describe('v4：年齡、起始難度、離開關卡保留進度', () => {
+  it('getLearnerProfile：預設 4–5 歲；設定後讀得到；不支援的年齡被拒絕', async () => {
+    expect(await repo.getLearnerProfile()).toMatchObject({ ageBand: '4-5', configured: false, startDifficulty: 1, gentle: false })
+    expect((await repo.setAgeBand('6-7')).ok).toBe(true)
+    expect(await repo.getLearnerProfile()).toMatchObject({ ageBand: '6-7', configured: true, startDifficulty: 2 })
+    expect((await repo.setAgeBand('99' as never)).ok).toBe(false)
+  })
+  it('6–7 歲：還沒玩過的技能從難度 2 開始，抽到的題都是難度 2；已經有紀錄的技能不受影響', async () => {
+    await repo.setAgeBand('6-7')
+    const states = await repo.getSkillStates()
+    expect(SKILLS.every((k) => states[k].difficulty === 2)).toBe(true)
+    const plan = await repo.planStation(0, T0, makeRng(4))
+    expect(plan.every((p) => p.question.difficulty === 2)).toBe(true)
+    // 已經玩過 number（降回難度 1）後改年齡：number 不動
+    await repo.db.skillState.put({ ...initialSkillState('number', T0, 1), total: 9 })
+    await repo.setAgeBand('6-7')
+    expect((await repo.getSkillStates()).number.difficulty).toBe(1)
+  })
+  it('3 歲：只抽幼幼題庫；升級要連續 5 題獨立答對', async () => {
+    await repo.setAgeBand('3')
+    const plan = await repo.planStation(0, T0, makeRng(8))
+    expect(plan.every((p) => p.question.difficulty === 1)).toBe(true)
+    const num = plan.filter((p) => p.question.skill === 'number')
+    expect(num.every((p) => Number(p.question.answer) <= 3)).toBe(true)
+    for (let i = 1; i <= 4; i++) await repo.recordAttempt({ sessionId: 's', questionId: `number-1-g0${i}`, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0 + i)
+    expect((await repo.getSkillStates()).number.difficulty).toBe(1)
+    await repo.recordAttempt({ sessionId: 's', questionId: 'number-1-g05', firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0 + 9)
+    expect((await repo.getSkillStates()).number.difficulty).toBe(2)
+  })
+  it('作答紀錄帶互動方式（舊紀錄沒有，視為 pick）', async () => {
+    await repo.recordAttempt({ sessionId: 's', questionId: 'number-1-01', firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0)
+    const give = QUESTIONS_GIVE()
+    await repo.recordAttempt({ sessionId: 's', questionId: give, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0)
+    expect((await repo.db.attempts.get('s:number-1-01'))?.interaction).toBe('pick')
+    expect((await repo.db.attempts.get(`s:${give}`))?.interaction).toBe('tapN')
+  })
+  it('離開再回來：同一站接著上次的題目與順序，已答的不用重答；完成後進度清掉', async () => {
+    const first = await repo.openStation('huaguoshan', 1, T0, makeRng(1))
+    expect(first).toMatchObject({ idx: 0, resumed: false })
+    // 答了前 2 題就離開
+    for (const p of first.plan.slice(0, 2))
+      await repo.recordAttempt({ sessionId: first.sessionId, questionId: p.question.id, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0)
+    const again = await repo.openStation('huaguoshan', 1, T0 + 1000, makeRng(99))
+    expect(again.sessionId).toBe(first.sessionId)
+    expect(again.plan.map((p) => p.question.id)).toEqual(first.plan.map((p) => p.question.id))
+    expect(again).toMatchObject({ idx: 2, resumed: true })
+    // 補完，結算後進度清掉，再進同一站會是新的一站（這站已通關就不能玩，但草稿不留）
+    for (const p of first.plan.slice(2))
+      await repo.recordAttempt({ sessionId: first.sessionId, questionId: p.question.id, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0)
+    expect((await repo.completeStation({ chapterId: 'huaguoshan', station: 1, sessionId: first.sessionId }, T0)).ok).toBe(true)
+    expect((await repo.getSettings())?.stageDraft).toBeUndefined()
+  })
+  it('進度只對同一站有效；別的站或下一輪會是全新的一站', async () => {
+    const a = await repo.openStation('huaguoshan', 1, T0, makeRng(1))
+    const b = await repo.openStation('huaguoshan', 2, T0, makeRng(2))
+    expect(b.sessionId).not.toBe(a.sessionId)
+    expect(b.resumed).toBe(false)
+    const back = await repo.openStation('huaguoshan', 1, T0, makeRng(3))
+    expect(back.sessionId).not.toBe(a.sessionId) // 草稿只保留最近離開的那一站
+  })
+  it('草稿裡有已經不存在的題目（題庫改版）時，丟掉草稿重新規劃，不會報錯', async () => {
+    const a = await repo.openStation('huaguoshan', 1, T0, makeRng(1))
+    await repo.db.settings.update('main', { stageDraft: { ...(await repo.getSettings())!.stageDraft!, plan: [{ id: 'classify-3-14-old', review: false, followUp: false }] } })
+    const b = await repo.openStation('huaguoshan', 1, T0, makeRng(1))
+    expect(b.sessionId).not.toBe(a.sessionId)
+    expect(b.plan).toHaveLength(5)
+  })
+  it('adaptStation：升級後剩下的同技能題改用新難度，並存回進度', async () => {
+    const o = await repo.openStation('huaguoshan', 1, T0, makeRng(5))
+    // 把 number 狀態設成已經升到難度 2（模擬站中升級）
+    await repo.db.skillState.put({ ...initialSkillState('number', T0, 2), total: 9 })
+    const next = await repo.adaptStation({ chapterId: 'huaguoshan', station: 1, sessionId: o.sessionId, plan: o.plan, from: 1 }, makeRng(6))
+    for (const p of next.slice(1)) if (p.question.skill === 'number') expect(p.question.difficulty).toBe(2)
+    const draft = (await repo.getSettings())!.stageDraft!
+    expect(draft.plan.map((p) => p.id)).toEqual(next.map((p) => p.question.id))
+  })
+  it('舊玩家（v3 的 skillState 沒有 total、attempts 的題目 id 已不存在）升級後可以直接玩，不報錯', async () => {
+    await repo.db.skillState.put({ skill: 'classify', difficulty: 3, recent: [true, false, true], stationStreak: 1, mastered: { 1: { masteredAt: T0 - 9 * DAY, reviews: 1 }, 2: { masteredAt: T0 - 4 * DAY, reviews: 0 } }, updatedAt: T0 })
+    await repo.db.attempts.put({ id: 'old:classify-3-14', at: T0 - DAY, questionId: 'classify-3-14', skill: 'classify', difficulty: 3, firstTryCorrect: true, hintsUsed: 0, durationMs: 1, sessionId: 'old' })
+    const o = await repo.openStation('huaguoshan', 1, T0, makeRng(7))
+    expect(o.plan).toHaveLength(5)
+    for (const p of o.plan) await repo.recordAttempt({ sessionId: o.sessionId, questionId: p.question.id, firstTryCorrect: true, hintsUsed: 0, durationMs: 1, review: p.review }, T0)
+    expect((await repo.completeStation({ chapterId: 'huaguoshan', station: 1, sessionId: o.sessionId }, T0)).ok).toBe(true)
+    const st = (await repo.getSkillStates()).classify
+    expect(st.mastered[1]).toBeDefined()
+  })
+})
+
+function QUESTIONS_GIVE(): string {
+  const q = QUESTIONS.find((x) => x.type === 'give')
+  return q!.id
+}
