@@ -182,79 +182,110 @@
     "params": {"fact":"see:life-messy-toys"}
   },
   {
-    "id": "life-1-15", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
+    "id": "life-1-15", "skill": "life", "difficulty": 1, "type": "lifeSee", "version": 2,
+    "prompt": "阿悟在洗手，是哪一張呢？",
     "items": [],
     "choices": [
-      {"id":"life-brush-teeth","art":"life-brush-teeth"},
-      {"id":"life-cut-line","art":"life-cut-line"}
+      {"id":"life-wash-hands","art":"life-wash-hands"},
+      {"id":"life-queue","art":"life-queue"},
+      {"id":"life-eat-veg","art":"life-eat-veg"}
     ],
-    "answer": "life-brush-teeth",
-    "hint": "天天刷牙，牙齒才不會被蛀蟲咬壞，吃東西才不會痛痛。",
-    "params": {"fact":"right:life-brush-teeth"}
+    "answer": "life-wash-hands",
+    "hint": "看看每一張圖裡，阿悟正在做什麼？找出阿悟在洗手的那一張。",
+    "params": {"fact":"see:life-wash-hands"}
   },
   {
-    "id": "life-1-16", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好的做法呢？",
+    "id": "life-1-16", "skill": "life", "difficulty": 1, "type": "lifeSee", "version": 2,
+    "prompt": "哪一張是阿悟在把垃圾丟進垃圾桶呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-messy-toys","art":"life-messy-toys"},
+      {"id":"life-trash","art":"life-trash"},
+      {"id":"life-dirty-hands","art":"life-dirty-hands"}
+    ],
+    "answer": "life-trash",
+    "hint": "看看每一張圖裡，阿悟正在做什麼？找出阿悟在把垃圾丟進垃圾桶的那一張。",
+    "params": {"fact":"see:life-trash"}
+  },
+  {
+    "id": "life-1-17", "skill": "life", "difficulty": 1, "type": "lifeSee", "version": 2,
+    "prompt": "哪一張是阿悟在收玩具呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-tidy-toys","art":"life-tidy-toys"},
+      {"id":"life-wait-red","art":"life-wait-red"},
+      {"id":"life-thank-you","art":"life-thank-you"}
+    ],
+    "answer": "life-tidy-toys",
+    "hint": "看看每一張圖裡，阿悟正在做什麼？找出阿悟在收玩具的那一張。",
+    "params": {"fact":"see:life-tidy-toys"}
+  },
+  {
+    "id": "life-1-18", "skill": "life", "difficulty": 1, "type": "lifeSee", "version": 2,
+    "prompt": "阿悟用手臂遮住嘴巴咳嗽，是哪一張呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-thank-you","art":"life-thank-you"},
+      {"id":"life-dirty-hands","art":"life-dirty-hands"},
+      {"id":"life-cover-cough","art":"life-cover-cough"}
+    ],
+    "answer": "life-cover-cough",
+    "hint": "看看每一張圖裡，阿悟正在做什麼？找出阿悟用手臂遮住嘴巴咳嗽的那一張。",
+    "params": {"fact":"see:life-cover-cough"}
+  },
+  {
+    "id": "life-1-19", "skill": "life", "difficulty": 1, "type": "lifeSee", "version": 2,
+    "prompt": "阿悟手髒髒的，是哪一張呢？",
     "items": [],
     "choices": [
       {"id":"life-litter","art":"life-litter"},
-      {"id":"life-brush-teeth","art":"life-brush-teeth"}
-    ],
-    "answer": "life-brush-teeth",
-    "hint": "天天刷牙，牙齒才不會被蛀蟲咬壞，吃東西才不會痛痛。",
-    "params": {"fact":"right:life-brush-teeth"}
-  },
-  {
-    "id": "life-1-17", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好的做法呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-cross-green","art":"life-cross-green"},
+      {"id":"life-eat-veg","art":"life-eat-veg"},
       {"id":"life-dirty-hands","art":"life-dirty-hands"}
     ],
-    "answer": "life-cross-green",
-    "hint": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
-    "params": {"fact":"right:life-cross-green"}
+    "answer": "life-dirty-hands",
+    "hint": "看看每一張圖裡，阿悟正在做什麼？找出阿悟手髒髒的那一張。",
+    "params": {"fact":"see:life-dirty-hands"}
   },
   {
-    "id": "life-1-18", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好習慣呢？",
+    "id": "life-1-20", "skill": "life", "difficulty": 1, "type": "lifeSee", "version": 2,
+    "prompt": "找找看，哪一張是把香蕉皮丟在地上？",
     "items": [],
     "choices": [
-      {"id":"life-dirty-hands","art":"life-dirty-hands"},
-      {"id":"life-wait-red","art":"life-wait-red"}
+      {"id":"life-litter","art":"life-litter"},
+      {"id":"life-cover-cough","art":"life-cover-cough"},
+      {"id":"life-brush-teeth","art":"life-brush-teeth"}
     ],
-    "answer": "life-wait-red",
-    "hint": "紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。",
-    "params": {"fact":"right:life-wait-red"}
+    "answer": "life-litter",
+    "hint": "看看每一張圖裡，阿悟正在做什麼？找出阿悟把香蕉皮丟在地上的那一張。",
+    "params": {"fact":"see:life-litter"}
   },
   {
-    "id": "life-1-19", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好的做法呢？",
+    "id": "life-1-21", "skill": "life", "difficulty": 1, "type": "lifeSee", "version": 2,
+    "prompt": "找找看，哪一張是在收朋友送的禮物？",
     "items": [],
     "choices": [
-      {"id":"life-dirty-hands","art":"life-dirty-hands"},
-      {"id":"life-wait-red","art":"life-wait-red"}
+      {"id":"life-litter","art":"life-litter"},
+      {"id":"life-thank-you","art":"life-thank-you"},
+      {"id":"life-cross-green","art":"life-cross-green"}
     ],
-    "answer": "life-wait-red",
-    "hint": "紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。",
-    "params": {"fact":"right:life-wait-red"}
+    "answer": "life-thank-you",
+    "hint": "看看每一張圖裡，阿悟正在做什麼？找出阿悟在收朋友送的禮物的那一張。",
+    "params": {"fact":"see:life-thank-you"}
   },
   {
-    "id": "life-1-20", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "id": "life-1-22", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "吃完東西了，哪一個是對的做法呢？",
     "items": [],
     "choices": [
-      {"id":"life-trash","art":"life-trash"},
-      {"id":"life-litter","art":"life-litter"}
+      {"id":"life-litter","art":"life-litter"},
+      {"id":"life-trash","art":"life-trash"}
     ],
     "answer": "life-trash",
     "hint": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
     "params": {"fact":"right:life-trash"}
   },
   {
-    "id": "life-1-21", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "id": "life-1-23", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "哪一個是玩完玩具以後的好習慣呢？",
     "items": [],
     "choices": [
@@ -266,19 +297,19 @@
     "params": {"fact":"right:life-tidy-toys"}
   },
   {
-    "id": "life-1-22", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "id": "life-1-24", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "阿悟的手髒髒的，要怎麼做才好呢？",
     "items": [],
     "choices": [
-      {"id":"life-dirty-hands","art":"life-dirty-hands"},
-      {"id":"life-wash-hands","art":"life-wash-hands"}
+      {"id":"life-wash-hands","art":"life-wash-hands"},
+      {"id":"life-dirty-hands","art":"life-dirty-hands"}
     ],
     "answer": "life-wash-hands",
     "hint": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
     "params": {"fact":"right:life-wash-hands"}
   },
   {
-    "id": "life-1-23", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "id": "life-1-25", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "和朋友在一起，哪一個是有禮貌的做法呢？",
     "items": [],
     "choices": [
@@ -290,7 +321,7 @@
     "params": {"fact":"right:life-thank-you"}
   },
   {
-    "id": "life-1-24", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "id": "life-1-26", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "玩具玩好了，哪一個做法比較好呢？",
     "items": [],
     "choices": [
@@ -302,43 +333,7 @@
     "params": {"fact":"right:life-tidy-toys"}
   },
   {
-    "id": "life-1-25", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好習慣呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-cross-green","art":"life-cross-green"},
-      {"id":"life-grab","art":"life-grab"}
-    ],
-    "answer": "life-cross-green",
-    "hint": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
-    "params": {"fact":"right:life-cross-green"}
-  },
-  {
-    "id": "life-1-26", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-messy-toys","art":"life-messy-toys"},
-      {"id":"life-bedtime","art":"life-bedtime"}
-    ],
-    "answer": "life-bedtime",
-    "hint": "早早睡覺，睡飽了身體才會長高，明天才有精神玩。",
-    "params": {"fact":"right:life-bedtime"}
-  },
-  {
     "id": "life-1-27", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-cover-cough","art":"life-cover-cough"},
-      {"id":"life-dirty-hands","art":"life-dirty-hands"}
-    ],
-    "answer": "life-cover-cough",
-    "hint": "咳嗽時遮住嘴巴，細菌就不會飛到別人身上，大家都不會生病。",
-    "params": {"fact":"right:life-cover-cough"}
-  },
-  {
-    "id": "life-1-28", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "垃圾要怎麼處理才對呢？",
     "items": [],
     "choices": [
@@ -350,43 +345,7 @@
     "params": {"fact":"right:life-trash"}
   },
   {
-    "id": "life-1-29", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好的做法呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-eat-veg","art":"life-eat-veg"},
-      {"id":"life-litter","art":"life-litter"}
-    ],
-    "answer": "life-eat-veg",
-    "hint": "青菜裡有很多營養，吃了身體才會長得壯壯的喔。",
-    "params": {"fact":"right:life-eat-veg"}
-  },
-  {
-    "id": "life-1-30", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-litter","art":"life-litter"},
-      {"id":"life-cross-green","art":"life-cross-green"}
-    ],
-    "answer": "life-cross-green",
-    "hint": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
-    "params": {"fact":"right:life-cross-green"}
-  },
-  {
-    "id": "life-1-31", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-litter","art":"life-litter"},
-      {"id":"life-wait-red","art":"life-wait-red"}
-    ],
-    "answer": "life-wait-red",
-    "hint": "紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。",
-    "params": {"fact":"right:life-wait-red"}
-  },
-  {
-    "id": "life-1-32", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "id": "life-1-28", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "大家都想玩，哪一個是對的做法呢？",
     "items": [],
     "choices": [
@@ -398,7 +357,7 @@
     "params": {"fact":"right:life-queue"}
   },
   {
-    "id": "life-1-33", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "id": "life-1-29", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "哪一個會讓環境乾乾淨淨呢？",
     "items": [],
     "choices": [
@@ -410,19 +369,7 @@
     "params": {"fact":"right:life-trash"}
   },
   {
-    "id": "life-1-34", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-eat-veg","art":"life-eat-veg"},
-      {"id":"life-grab","art":"life-grab"}
-    ],
-    "answer": "life-eat-veg",
-    "hint": "青菜裡有很多營養，吃了身體才會長得壯壯的喔。",
-    "params": {"fact":"right:life-eat-veg"}
-  },
-  {
-    "id": "life-1-35", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "id": "life-1-30", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "和朋友相處，哪一個是好的做法呢？",
     "items": [],
     "choices": [
@@ -434,153 +381,70 @@
     "params": {"fact":"right:life-thank-you"}
   },
   {
-    "id": "life-1-36", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好的做法呢？",
+    "id": "life-1-31", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "prompt": "要吃東西了，手髒髒的，哪一個是對的做法呢？",
     "items": [],
     "choices": [
       {"id":"life-wash-hands","art":"life-wash-hands"},
-      {"id":"life-litter","art":"life-litter"}
+      {"id":"life-dirty-hands","art":"life-dirty-hands"}
     ],
     "answer": "life-wash-hands",
-    "hint": "手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。",
+    "hint": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
     "params": {"fact":"right:life-wash-hands"}
   },
   {
-    "id": "life-2-01", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好習慣呢？",
+    "id": "life-1-32", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "prompt": "哪一個做法會讓朋友開心呢？",
     "items": [],
     "choices": [
-      {"id":"life-eat-veg","art":"life-eat-veg"},
-      {"id":"life-dirty-hands","art":"life-dirty-hands"},
-      {"id":"life-cut-line","art":"life-cut-line"}
+      {"id":"life-grab","art":"life-grab"},
+      {"id":"life-thank-you","art":"life-thank-you"}
     ],
-    "answer": "life-eat-veg",
-    "hint": "青菜裡有很多營養，吃了身體才會長得壯壯的喔。",
-    "params": {"fact":"right:life-eat-veg"}
+    "answer": "life-thank-you",
+    "hint": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
+    "params": {"fact":"right:life-thank-you"}
   },
   {
-    "id": "life-2-02", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "id": "life-1-33", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "prompt": "玩完玩具了，哪一個是對的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-tidy-toys","art":"life-tidy-toys"},
+      {"id":"life-messy-toys","art":"life-messy-toys"}
+    ],
+    "answer": "life-tidy-toys",
+    "hint": "玩具丟在地上，別人會踩到，下次也找不到。玩完要收好喔。",
+    "params": {"fact":"right:life-tidy-toys"}
+  },
+  {
+    "id": "life-1-34", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "有很多小朋友在等，哪一個是好的做法呢？",
     "items": [],
     "choices": [
-      {"id":"life-cut-line","art":"life-cut-line"},
       {"id":"life-queue","art":"life-queue"},
-      {"id":"life-grab","art":"life-grab"}
+      {"id":"life-cut-line","art":"life-cut-line"}
     ],
     "answer": "life-queue",
     "hint": "插隊的話，後面的朋友會很難過。排在後面等一等，就會輪到你囉。",
     "params": {"fact":"right:life-queue"}
   },
   {
-    "id": "life-2-03", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好習慣呢？",
+    "id": "life-1-35", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
+    "prompt": "吃東西以前，哪一個是好習慣呢？",
     "items": [],
     "choices": [
       {"id":"life-dirty-hands","art":"life-dirty-hands"},
-      {"id":"life-cut-line","art":"life-cut-line"},
-      {"id":"life-brush-teeth","art":"life-brush-teeth"}
-    ],
-    "answer": "life-brush-teeth",
-    "hint": "天天刷牙，牙齒才不會被蛀蟲咬壞，吃東西才不會痛痛。",
-    "params": {"fact":"right:life-brush-teeth"}
-  },
-  {
-    "id": "life-2-04", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-messy-toys","art":"life-messy-toys"},
-      {"id":"life-cut-line","art":"life-cut-line"},
-      {"id":"life-cover-cough","art":"life-cover-cough"}
-    ],
-    "answer": "life-cover-cough",
-    "hint": "咳嗽時遮住嘴巴，細菌就不會飛到別人身上，大家都不會生病。",
-    "params": {"fact":"right:life-cover-cough"}
-  },
-  {
-    "id": "life-2-05", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-cut-line","art":"life-cut-line"},
-      {"id":"life-wash-hands","art":"life-wash-hands"},
-      {"id":"life-grab","art":"life-grab"}
+      {"id":"life-wash-hands","art":"life-wash-hands"}
     ],
     "answer": "life-wash-hands",
-    "hint": "手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。",
+    "hint": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
     "params": {"fact":"right:life-wash-hands"}
   },
   {
-    "id": "life-2-06", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好的做法呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-cross-green","art":"life-cross-green"},
-      {"id":"life-grab","art":"life-grab"},
-      {"id":"life-dirty-hands","art":"life-dirty-hands"}
-    ],
-    "answer": "life-cross-green",
-    "hint": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
-    "params": {"fact":"right:life-cross-green"}
-  },
-  {
-    "id": "life-2-07", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-dirty-hands","art":"life-dirty-hands"},
-      {"id":"life-litter","art":"life-litter"},
-      {"id":"life-tidy-toys","art":"life-tidy-toys"}
-    ],
-    "answer": "life-tidy-toys",
-    "hint": "玩具收好，下次才找得到，也不會被踩到喔。",
-    "params": {"fact":"right:life-tidy-toys"}
-  },
-  {
-    "id": "life-2-08", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-messy-toys","art":"life-messy-toys"},
-      {"id":"life-cross-green","art":"life-cross-green"},
-      {"id":"life-grab","art":"life-grab"}
-    ],
-    "answer": "life-cross-green",
-    "hint": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
-    "params": {"fact":"right:life-cross-green"}
-  },
-  {
-    "id": "life-2-09", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個是好習慣呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-thank-you","art":"life-thank-you"},
-      {"id":"life-dirty-hands","art":"life-dirty-hands"},
-      {"id":"life-litter","art":"life-litter"}
-    ],
-    "answer": "life-thank-you",
-    "hint": "別人送我們東西，要說謝謝，對方會很開心喔。",
-    "params": {"fact":"right:life-thank-you"}
-  },
-  {
-    "id": "life-2-10", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "吃完東西了，哪一個是對的做法呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-litter","art":"life-litter"},
-      {"id":"life-trash","art":"life-trash"},
-      {"id":"life-messy-toys","art":"life-messy-toys"}
-    ],
-    "answer": "life-trash",
-    "hint": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
-    "params": {"fact":"right:life-trash"}
-  },
-  {
-    "id": "life-2-11", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "id": "life-1-36", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2,
     "prompt": "要等一等的時候，哪一個做法比較好呢？",
     "items": [],
     "choices": [
-      {"id":"life-litter","art":"life-litter"},
       {"id":"life-cut-line","art":"life-cut-line"},
       {"id":"life-queue","art":"life-queue"}
     ],
@@ -589,17 +453,160 @@
     "params": {"fact":"right:life-queue"}
   },
   {
-    "id": "life-2-12", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
-    "prompt": "哪一個會讓環境乾乾淨淨呢？",
+    "id": "life-2-01", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "有很多小朋友在等，哪一個是好的做法呢？",
     "items": [],
     "choices": [
-      {"id":"life-trash","art":"life-trash"},
+      {"id":"life-dirty-hands","art":"life-dirty-hands"},
+      {"id":"life-cut-line","art":"life-cut-line"},
+      {"id":"life-queue","art":"life-queue"}
+    ],
+    "answer": "life-queue",
+    "hint": "插隊的話，後面的朋友會很難過。排在後面等一等，就會輪到你囉。",
+    "params": {"fact":"right:life-queue"}
+  },
+  {
+    "id": "life-2-02", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "吃東西以前，哪一個是好習慣呢？",
+    "items": [],
+    "choices": [
       {"id":"life-grab","art":"life-grab"},
-      {"id":"life-litter","art":"life-litter"}
+      {"id":"life-wash-hands","art":"life-wash-hands"},
+      {"id":"life-dirty-hands","art":"life-dirty-hands"}
+    ],
+    "answer": "life-wash-hands",
+    "hint": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
+    "params": {"fact":"right:life-wash-hands"}
+  },
+  {
+    "id": "life-2-03", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "玩具玩好了，哪一個做法比較好呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-tidy-toys","art":"life-tidy-toys"},
+      {"id":"life-grab","art":"life-grab"},
+      {"id":"life-messy-toys","art":"life-messy-toys"}
+    ],
+    "answer": "life-tidy-toys",
+    "hint": "玩具丟在地上，別人會踩到，下次也找不到。玩完要收好喔。",
+    "params": {"fact":"right:life-tidy-toys"}
+  },
+  {
+    "id": "life-2-04", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "和朋友相處，哪一個是好的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-thank-you","art":"life-thank-you"},
+      {"id":"life-cut-line","art":"life-cut-line"},
+      {"id":"life-grab","art":"life-grab"}
+    ],
+    "answer": "life-thank-you",
+    "hint": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
+    "params": {"fact":"right:life-thank-you"}
+  },
+  {
+    "id": "life-2-05", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "吃完東西了，哪一個是對的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-messy-toys","art":"life-messy-toys"},
+      {"id":"life-litter","art":"life-litter"},
+      {"id":"life-trash","art":"life-trash"}
     ],
     "answer": "life-trash",
     "hint": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
     "params": {"fact":"right:life-trash"}
+  },
+  {
+    "id": "life-2-06", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "要等一等的時候，哪一個做法比較好呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-grab","art":"life-grab"},
+      {"id":"life-queue","art":"life-queue"},
+      {"id":"life-cut-line","art":"life-cut-line"}
+    ],
+    "answer": "life-queue",
+    "hint": "插隊的話，後面的朋友會很難過。排在後面等一等，就會輪到你囉。",
+    "params": {"fact":"right:life-queue"}
+  },
+  {
+    "id": "life-2-07", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "哪一個會讓環境乾乾淨淨呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-litter","art":"life-litter"},
+      {"id":"life-grab","art":"life-grab"},
+      {"id":"life-trash","art":"life-trash"}
+    ],
+    "answer": "life-trash",
+    "hint": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
+    "params": {"fact":"right:life-trash"}
+  },
+  {
+    "id": "life-2-08", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "阿悟的手髒髒的，要怎麼做才好呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-dirty-hands","art":"life-dirty-hands"},
+      {"id":"life-wash-hands","art":"life-wash-hands"},
+      {"id":"life-grab","art":"life-grab"}
+    ],
+    "answer": "life-wash-hands",
+    "hint": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
+    "params": {"fact":"right:life-wash-hands"}
+  },
+  {
+    "id": "life-2-09", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "哪一個是玩完玩具以後的好習慣呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-tidy-toys","art":"life-tidy-toys"},
+      {"id":"life-grab","art":"life-grab"},
+      {"id":"life-messy-toys","art":"life-messy-toys"}
+    ],
+    "answer": "life-tidy-toys",
+    "hint": "玩具丟在地上，別人會踩到，下次也找不到。玩完要收好喔。",
+    "params": {"fact":"right:life-tidy-toys"}
+  },
+  {
+    "id": "life-2-10", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "大家都想玩，哪一個是對的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-dirty-hands","art":"life-dirty-hands"},
+      {"id":"life-cut-line","art":"life-cut-line"},
+      {"id":"life-queue","art":"life-queue"}
+    ],
+    "answer": "life-queue",
+    "hint": "插隊的話，後面的朋友會很難過。排在後面等一等，就會輪到你囉。",
+    "params": {"fact":"right:life-queue"}
+  },
+  {
+    "id": "life-2-11", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "和朋友在一起，哪一個是有禮貌的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-grab","art":"life-grab"},
+      {"id":"life-thank-you","art":"life-thank-you"},
+      {"id":"life-dirty-hands","art":"life-dirty-hands"}
+    ],
+    "answer": "life-thank-you",
+    "hint": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
+    "params": {"fact":"right:life-thank-you"}
+  },
+  {
+    "id": "life-2-12", "skill": "life", "difficulty": 2, "type": "lifeRight", "version": 2,
+    "prompt": "哪一個做法會讓朋友開心呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-thank-you","art":"life-thank-you"},
+      {"id":"life-litter","art":"life-litter"},
+      {"id":"life-grab","art":"life-grab"}
+    ],
+    "answer": "life-thank-you",
+    "hint": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
+    "params": {"fact":"right:life-thank-you"}
   },
   {
     "id": "life-2-13", "skill": "life", "difficulty": 2, "type": "lifeOk", "version": 2,
@@ -702,8 +709,8 @@
     "prompt": "小兔子送禮物給阿悟，阿悟開心地收下，還說謝謝。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"no","text":"不好","emoji":"👎"},
-      {"id":"yes","text":"好","emoji":"👍"}
+      {"id":"yes","text":"好","emoji":"👍"},
+      {"id":"no","text":"不好","emoji":"👎"}
     ],
     "answer": "yes",
     "hint": "別人送我們東西，要說謝謝，對方會很開心喔。",
@@ -714,8 +721,8 @@
     "prompt": "阿悟抱著球不肯給小雞玩，小雞哭了。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"yes","text":"好","emoji":"👍"},
-      {"id":"no","text":"不好","emoji":"👎"}
+      {"id":"no","text":"不好","emoji":"👎"},
+      {"id":"yes","text":"好","emoji":"👍"}
     ],
     "answer": "no",
     "hint": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
@@ -774,8 +781,8 @@
     "prompt": "阿悟吃完糖果，把包裝紙丟在公園的草地上。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"yes","text":"好","emoji":"👍"},
-      {"id":"no","text":"不好","emoji":"👎"}
+      {"id":"no","text":"不好","emoji":"👎"},
+      {"id":"yes","text":"好","emoji":"👍"}
     ],
     "answer": "no",
     "hint": "包裝紙留在草地上，公園會變髒。放進垃圾桶，公園才會漂亮。",
@@ -786,8 +793,8 @@
     "prompt": "阿悟吃飯的時候，把飯粒灑得桌上到處都是。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"no","text":"不好","emoji":"👎"},
-      {"id":"yes","text":"好","emoji":"👍"}
+      {"id":"yes","text":"好","emoji":"👍"},
+      {"id":"no","text":"不好","emoji":"👎"}
     ],
     "answer": "no",
     "hint": "飯粒灑出來桌子會髒髒的。慢慢吃，用湯匙好好吃，吃乾淨喔。",
@@ -822,8 +829,8 @@
     "prompt": "阿悟打噴嚏的時候，對著朋友的臉打。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"yes","text":"好","emoji":"👍"},
-      {"id":"no","text":"不好","emoji":"👎"}
+      {"id":"no","text":"不好","emoji":"👎"},
+      {"id":"yes","text":"好","emoji":"👍"}
     ],
     "answer": "no",
     "hint": "細菌會飛到朋友身上，朋友會生病。打噴嚏要遮住嘴巴和鼻子。",
@@ -834,56 +841,56 @@
     "prompt": "紅燈亮了，我們要停下來等，還是往前走呢？",
     "items": [],
     "choices": [
-      {"id":"go","text":"往前走","emoji":"🚶"},
-      {"id":"stop","text":"停下來等","emoji":"✋"}
+      {"id":"stop","text":"停下來等","emoji":"✋"},
+      {"id":"go","text":"往前走","emoji":"🚶"}
     ],
     "answer": "stop",
     "hint": "紅燈的意思是請停下來。車子正在走，等一等才安全喔。",
-    "params": {"stem":{"swatch":"#ef4b3f"},"words":["往前走","停下來等"],"fact":"light:red:stop"}
+    "params": {"stem":{"swatch":"#ef4b3f"},"words":["停下來等","往前走"],"fact":"light:red:stop"}
   },
   {
     "id": "life-2-33", "skill": "life", "difficulty": 2, "type": "lifeLight", "version": 2,
     "prompt": "馬路上的燈是紅色的，阿悟要怎麼做呢？",
     "items": [],
     "choices": [
-      {"id":"stop","text":"停下來等","emoji":"✋"},
-      {"id":"go","text":"跑過去","emoji":"🏃"}
+      {"id":"go","text":"跑過去","emoji":"🏃"},
+      {"id":"stop","text":"停下來等","emoji":"✋"}
     ],
     "answer": "stop",
     "hint": "看到紅燈，要停下來等。跑過去很危險喔。",
-    "params": {"stem":{"swatch":"#ef4b3f"},"words":["停下來等","跑過去"],"fact":"light:red:stop"}
+    "params": {"stem":{"swatch":"#ef4b3f"},"words":["跑過去","停下來等"],"fact":"light:red:stop"}
   },
   {
     "id": "life-2-34", "skill": "life", "difficulty": 2, "type": "lifeLight", "version": 2,
     "prompt": "綠燈亮了，可以走，還是要停呢？",
     "items": [],
     "choices": [
-      {"id":"stop","text":"要停","emoji":"✋"},
-      {"id":"go","text":"可以走","emoji":"🚶"}
+      {"id":"go","text":"可以走","emoji":"🚶"},
+      {"id":"stop","text":"要停","emoji":"✋"}
     ],
     "answer": "go",
     "hint": "綠燈亮了，才可以過馬路。走之前，還是要先看看左右喔。",
-    "params": {"stem":{"swatch":"#3fae5a"},"words":["要停","可以走"],"fact":"light:green:go"}
+    "params": {"stem":{"swatch":"#3fae5a"},"words":["可以走","要停"],"fact":"light:green:go"}
   },
   {
     "id": "life-2-35", "skill": "life", "difficulty": 2, "type": "lifeLight", "version": 2,
     "prompt": "馬路上的燈變成綠色了，阿悟可以怎麼做呢？",
     "items": [],
     "choices": [
-      {"id":"go","text":"慢慢走過去","emoji":"🚶"},
-      {"id":"stop","text":"一直站著不動","emoji":"🧍"}
+      {"id":"stop","text":"一直站著不動","emoji":"🧍"},
+      {"id":"go","text":"慢慢走過去","emoji":"🚶"}
     ],
     "answer": "go",
     "hint": "綠燈就是可以走了。看看左右沒有車，就慢慢走過去。",
-    "params": {"stem":{"swatch":"#3fae5a"},"words":["慢慢走過去","一直站著不動"],"fact":"light:green:go"}
+    "params": {"stem":{"swatch":"#3fae5a"},"words":["一直站著不動","慢慢走過去"],"fact":"light:green:go"}
   },
   {
     "id": "life-2-36", "skill": "life", "difficulty": 2, "type": "lifeLight", "version": 2,
     "prompt": "現在是紅燈，哪一個是對的做法呢？",
     "items": [],
     "choices": [
-      {"id":"life-cross-green","art":"life-cross-green"},
-      {"id":"life-wait-red","art":"life-wait-red"}
+      {"id":"life-wait-red","art":"life-wait-red"},
+      {"id":"life-cross-green","art":"life-cross-green"}
     ],
     "answer": "life-wait-red",
     "hint": "紅燈要停下來等，像阿悟這樣乖乖站好。",
@@ -918,26 +925,26 @@
     "prompt": "小兔子送了一個禮物給阿悟。這時候，阿悟要說什麼呢？",
     "items": [],
     "choices": [
-      {"id":"please","text":"請","emoji":"🤲"},
       {"id":"thanks","text":"謝謝","emoji":"🙏"},
-      {"id":"sorry","text":"對不起","emoji":"🙇"}
+      {"id":"please","text":"請","emoji":"🤲"},
+      {"id":"welcome","text":"不客氣","emoji":"😊"}
     ],
     "answer": "thanks",
     "hint": "別人送我們東西，要說「謝謝」，對方會很開心。",
-    "params": {"stem":{"art":"life-thank-you"},"words":["請","謝謝","對不起"],"fact":"say:thanks"}
+    "params": {"stem":{"art":"life-thank-you"},"words":["謝謝","請","不客氣"],"fact":"say:thanks"}
   },
   {
     "id": "life-2-40", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
     "prompt": "小兔子送了一個禮物給阿悟。阿悟要說什麼才有禮貌呢？",
     "items": [],
     "choices": [
-      {"id":"thanks","text":"謝謝","emoji":"🙏"},
       {"id":"please","text":"請","emoji":"🤲"},
-      {"id":"sorry","text":"對不起","emoji":"🙇"}
+      {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"welcome","text":"不客氣","emoji":"😊"}
     ],
     "answer": "thanks",
     "hint": "別人送我們東西，要說「謝謝」，對方會很開心。",
-    "params": {"stem":{"art":"life-thank-you"},"words":["謝謝","請","對不起"],"fact":"say:thanks"}
+    "params": {"stem":{"art":"life-thank-you"},"words":["請","謝謝","不客氣"],"fact":"say:thanks"}
   },
   {
     "id": "life-2-41", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
@@ -945,103 +952,103 @@
     "items": [],
     "choices": [
       {"id":"please","text":"請","emoji":"🤲"},
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
+      {"id":"welcome","text":"不客氣","emoji":"😊"},
       {"id":"thanks","text":"謝謝","emoji":"🙏"}
     ],
     "answer": "thanks",
     "hint": "別人送我們東西，要說「謝謝」，對方會很開心。",
-    "params": {"stem":{"art":"life-thank-you"},"words":["請","對不起","謝謝"],"fact":"say:thanks"}
+    "params": {"stem":{"art":"life-thank-you"},"words":["請","不客氣","謝謝"],"fact":"say:thanks"}
   },
   {
     "id": "life-2-42", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
     "prompt": "阿悟不小心把朋友的畫弄皺了。要說哪一句話才有禮貌呢？",
     "items": [],
     "choices": [
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"please","text":"請","emoji":"🤲"},
-      {"id":"welcome","text":"不客氣","emoji":"😊"}
+      {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"welcome","text":"不客氣","emoji":"😊"},
+      {"id":"sorry","text":"對不起","emoji":"🙇"}
     ],
     "answer": "sorry",
     "hint": "不小心弄壞朋友的東西，要說「對不起」。",
-    "params": {"stem":{"emoji":"🖼️"},"words":["對不起","請","不客氣"],"fact":"say:sorry"}
+    "params": {"stem":{"emoji":"🖼️"},"words":["謝謝","不客氣","對不起"],"fact":"say:sorry"}
   },
   {
     "id": "life-2-43", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
     "prompt": "小朋友對阿悟說「謝謝你扶我起來」。這時候，阿悟要說什麼呢？",
     "items": [],
     "choices": [
-      {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"sorry","text":"對不起","emoji":"🙇"},
       {"id":"welcome","text":"不客氣","emoji":"😊"},
       {"id":"please","text":"請","emoji":"🤲"}
     ],
     "answer": "welcome",
     "hint": "別人跟我們說謝謝，要說「不客氣」。",
-    "params": {"stem":{"emoji":"🤝"},"words":["謝謝","不客氣","請"],"fact":"say:welcome"}
+    "params": {"stem":{"emoji":"🤝"},"words":["對不起","不客氣","請"],"fact":"say:welcome"}
   },
   {
     "id": "life-2-44", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
     "prompt": "奶奶對阿悟說「謝謝你幫我拿東西」。要說哪一句話才有禮貌呢？",
     "items": [],
     "choices": [
+      {"id":"welcome","text":"不客氣","emoji":"😊"},
       {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"thanks","text":"謝謝","emoji":"🙏"},
-      {"id":"welcome","text":"不客氣","emoji":"😊"}
+      {"id":"please","text":"請","emoji":"🤲"}
     ],
     "answer": "welcome",
     "hint": "別人謝謝我們，可以說「不客氣」。",
-    "params": {"stem":{"emoji":"🛍️"},"words":["對不起","謝謝","不客氣"],"fact":"say:welcome"}
+    "params": {"stem":{"emoji":"🛍️"},"words":["不客氣","對不起","請"],"fact":"say:welcome"}
   },
   {
     "id": "life-2-45", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
     "prompt": "阿悟跑步的時候，不小心撞到了小兔子。阿悟要說什麼才有禮貌呢？",
     "items": [],
     "choices": [
+      {"id":"please","text":"請","emoji":"🤲"},
       {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"thanks","text":"謝謝","emoji":"🙏"},
-      {"id":"please","text":"請","emoji":"🤲"}
+      {"id":"welcome","text":"不客氣","emoji":"😊"}
     ],
     "answer": "sorry",
     "hint": "不小心撞到別人，要說「對不起」。",
-    "params": {"stem":{"emoji":"🏃"},"words":["對不起","謝謝","請"],"fact":"say:sorry"}
+    "params": {"stem":{"emoji":"🏃"},"words":["請","對不起","不客氣"],"fact":"say:sorry"}
   },
   {
     "id": "life-2-46", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
     "prompt": "媽媽幫阿悟倒了一杯水。這時候，阿悟要說什麼呢？",
     "items": [],
     "choices": [
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"thanks","text":"謝謝","emoji":"🙏"},
-      {"id":"welcome","text":"不客氣","emoji":"😊"}
+      {"id":"welcome","text":"不客氣","emoji":"😊"},
+      {"id":"please","text":"請","emoji":"🤲"},
+      {"id":"thanks","text":"謝謝","emoji":"🙏"}
     ],
     "answer": "thanks",
     "hint": "別人幫了我們，要說「謝謝」。",
-    "params": {"stem":{"emoji":"🥛"},"words":["對不起","謝謝","不客氣"],"fact":"say:thanks"}
+    "params": {"stem":{"emoji":"🥛"},"words":["不客氣","請","謝謝"],"fact":"say:thanks"}
   },
   {
     "id": "life-2-47", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
     "prompt": "阿悟想請媽媽幫忙拿高高的杯子。阿悟要說什麼才有禮貌呢？",
     "items": [],
     "choices": [
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"welcome","text":"不客氣","emoji":"😊"},
-      {"id":"please","text":"請","emoji":"🤲"}
+      {"id":"please","text":"請","emoji":"🤲"},
+      {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"welcome","text":"不客氣","emoji":"😊"}
     ],
     "answer": "please",
     "hint": "請別人幫忙的時候，要說「請」。",
-    "params": {"stem":{"emoji":"🥤"},"words":["對不起","不客氣","請"],"fact":"say:please"}
+    "params": {"stem":{"emoji":"🥤"},"words":["請","謝謝","不客氣"],"fact":"say:please"}
   },
   {
     "id": "life-2-48", "skill": "life", "difficulty": 2, "type": "lifeSay", "version": 2,
     "prompt": "阿悟不小心把朋友的畫弄皺了。阿悟要說什麼才有禮貌呢？",
     "items": [],
     "choices": [
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
       {"id":"welcome","text":"不客氣","emoji":"😊"},
-      {"id":"thanks","text":"謝謝","emoji":"🙏"}
+      {"id":"sorry","text":"對不起","emoji":"🙇"},
+      {"id":"please","text":"請","emoji":"🤲"}
     ],
     "answer": "sorry",
     "hint": "不小心弄壞朋友的東西，要說「對不起」。",
-    "params": {"stem":{"emoji":"🖼️"},"words":["對不起","不客氣","謝謝"],"fact":"say:sorry"}
+    "params": {"stem":{"emoji":"🖼️"},"words":["不客氣","對不起","請"],"fact":"say:sorry"}
   },
   {
     "id": "life-3-01", "skill": "life", "difficulty": 3, "type": "lifeSay", "version": 2,
@@ -1241,7 +1248,46 @@
   },
   {
     "id": "life-3-15", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "洗手要先做什麼呢？",
+    "prompt": "刷牙，第一步要做什麼呢？",
+    "items": [],
+    "choices": [
+      {"id":"gargle","text":"用水漱口","emoji":"💧"},
+      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"},
+      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁"}
+    ],
+    "answer": "paste",
+    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
+    "params": {"words":["用水漱口","擠一點點牙膏","把牙齒刷乾淨"],"fact":"step:teeth:first"}
+  },
+  {
+    "id": "life-3-16", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
+    "prompt": "睡覺前，第一步要做什麼呢？",
+    "items": [],
+    "choices": [
+      {"id":"sleep","text":"上床睡覺","emoji":"🛏️"},
+      {"id":"teeth","text":"刷牙","emoji":"🪥"},
+      {"id":"bath","text":"洗香香","emoji":"🛁"}
+    ],
+    "answer": "bath",
+    "hint": "睡覺前的順序是：洗香香，再刷牙，再換上睡衣，再上床睡覺。",
+    "params": {"words":["上床睡覺","刷牙","洗香香"],"fact":"step:bed:first"}
+  },
+  {
+    "id": "life-3-17", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
+    "prompt": "睡覺前，最先要做哪一件事呢？",
+    "items": [],
+    "choices": [
+      {"id":"bath","text":"洗香香","emoji":"🛁"},
+      {"id":"pajama","text":"換上睡衣","emoji":"👕"},
+      {"id":"teeth","text":"刷牙","emoji":"🪥"}
+    ],
+    "answer": "bath",
+    "hint": "睡覺前的順序是：洗香香，再刷牙，再換上睡衣，再上床睡覺。",
+    "params": {"words":["洗香香","換上睡衣","刷牙"],"fact":"step:bed:first"}
+  },
+  {
+    "id": "life-3-18", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
+    "prompt": "洗手，第一步要做什麼呢？",
     "items": [],
     "choices": [
       {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
@@ -1253,112 +1299,73 @@
     "params": {"words":["搓出泡泡","把手弄濕","用水沖乾淨"],"fact":"step:wash:first"}
   },
   {
-    "id": "life-3-16", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "過馬路，第一步要做什麼呢？",
-    "items": [],
-    "choices": [
-      {"id":"stop","text":"先停下來","emoji":"✋"},
-      {"id":"look","text":"看看左右","emoji":"👀"},
-      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶"}
-    ],
-    "answer": "stop",
-    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
-    "params": {"words":["先停下來","看看左右","牽好手慢慢走"],"fact":"step:street:first"}
-  },
-  {
-    "id": "life-3-17", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "洗手，最先要做哪一件事呢？",
-    "items": [],
-    "choices": [
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
-      {"id":"wet","text":"把手弄濕","emoji":"💦"}
-    ],
-    "answer": "wet",
-    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["擦上肥皂","用水沖乾淨","把手弄濕"],"fact":"step:wash:first"}
-  },
-  {
-    "id": "life-3-18", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "睡覺前，最先要做哪一件事呢？",
-    "items": [],
-    "choices": [
-      {"id":"pajama","text":"換上睡衣","emoji":"👕"},
-      {"id":"sleep","text":"上床睡覺","emoji":"🛏️"},
-      {"id":"bath","text":"洗香香","emoji":"🛁"}
-    ],
-    "answer": "bath",
-    "hint": "睡覺前的順序是：洗香香，再刷牙，再換上睡衣，再上床睡覺。",
-    "params": {"words":["換上睡衣","上床睡覺","洗香香"],"fact":"step:bed:first"}
-  },
-  {
     "id": "life-3-19", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "吃飯前要先做什麼呢？",
+    "prompt": "吃飯前，最先要做哪一件事呢？",
     "items": [],
     "choices": [
-      {"id":"wash","text":"先洗手","emoji":"🧼"},
-      {"id":"sit","text":"坐好","emoji":"🪑"},
-      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"}
+      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
+      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
+      {"id":"wash","text":"先洗手","emoji":"🧼"}
     ],
     "answer": "wash",
     "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
-    "params": {"words":["先洗手","坐好","說「我開動了」"],"fact":"step:meal:first"}
+    "params": {"words":["說「我開動了」","慢慢吃飯","先洗手"],"fact":"step:meal:first"}
   },
   {
     "id": "life-3-20", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "刷牙要先做什麼呢？",
+    "prompt": "過馬路，最先要做哪一件事呢？",
     "items": [],
     "choices": [
-      {"id":"gargle","text":"用水漱口","emoji":"💧"},
-      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"},
-      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"}
+      {"id":"stop","text":"先停下來","emoji":"✋"},
+      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
+      {"id":"look","text":"看看左右","emoji":"👀"}
     ],
-    "answer": "paste",
-    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
-    "params": {"words":["用水漱口","擠一點點牙膏","擦擦嘴巴"],"fact":"step:teeth:first"}
+    "answer": "stop",
+    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
+    "params": {"words":["先停下來","聽聽有沒有車","看看左右"],"fact":"step:street:first"}
   },
   {
     "id": "life-3-21", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
     "prompt": "洗手，最後要做哪一件事呢？",
     "items": [],
     "choices": [
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
       {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"}
+      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"}
     ],
     "answer": "dry",
     "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["搓出泡泡","把手弄濕","用毛巾擦乾"],"fact":"step:wash:last"}
+    "params": {"words":["把手弄濕","用毛巾擦乾","用水沖乾淨"],"fact":"step:wash:last"}
   },
   {
     "id": "life-3-22", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "過馬路最後要做什麼呢？",
+    "prompt": "刷牙的最後一步是什麼呢？",
     "items": [],
     "choices": [
-      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶"},
-      {"id":"stop","text":"先停下來","emoji":"✋"},
-      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"}
+      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁"},
+      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"},
+      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"}
     ],
-    "answer": "walk",
-    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
-    "params": {"words":["牽好手慢慢走","先停下來","聽聽有沒有車"],"fact":"step:street:last"}
+    "answer": "wipe",
+    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
+    "params": {"words":["把牙齒刷乾淨","擠一點點牙膏","擦擦嘴巴"],"fact":"step:teeth:last"}
   },
   {
     "id": "life-3-23", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "過馬路的最後一步是什麼呢？",
+    "prompt": "洗手最後要做什麼呢？",
     "items": [],
     "choices": [
-      {"id":"look","text":"看看左右","emoji":"👀"},
-      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶"},
-      {"id":"stop","text":"先停下來","emoji":"✋"}
+      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"}
     ],
-    "answer": "walk",
-    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
-    "params": {"words":["看看左右","牽好手慢慢走","先停下來"],"fact":"step:street:last"}
+    "answer": "dry",
+    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
+    "params": {"words":["用毛巾擦乾","擦上肥皂","把手弄濕"],"fact":"step:wash:last"}
   },
   {
     "id": "life-3-24", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "洗手最後要做什麼呢？",
+    "prompt": "洗手的最後一步是什麼呢？",
     "items": [],
     "choices": [
       {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
@@ -1371,123 +1378,45 @@
   },
   {
     "id": "life-3-25", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "洗手的最後一步是什麼呢？",
+    "prompt": "吃飯前，最後要做哪一件事呢？",
     "items": [],
     "choices": [
-      {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"}
+      {"id":"wash","text":"先洗手","emoji":"🧼"},
+      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
+      {"id":"sit","text":"坐好","emoji":"🪑"}
     ],
-    "answer": "dry",
-    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["把手弄濕","擦上肥皂","用毛巾擦乾"],"fact":"step:wash:last"}
+    "answer": "eat",
+    "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
+    "params": {"words":["先洗手","慢慢吃飯","坐好"],"fact":"step:meal:last"}
   },
   {
     "id": "life-3-26", "skill": "life", "difficulty": 3, "type": "lifeStep", "version": 2,
-    "prompt": "刷牙，最後要做哪一件事呢？",
-    "items": [],
-    "choices": [
-      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁"},
-      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
-      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"}
-    ],
-    "answer": "wipe",
-    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
-    "params": {"words":["把牙齒刷乾淨","擦擦嘴巴","擠一點點牙膏"],"fact":"step:teeth:last"}
-  },
-  {
-    "id": "life-3-27", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "請把過馬路的步驟，依順序排好。",
-    "items": [],
-    "choices": [
-      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶","art":"life-cross-green"},
-      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
-      {"id":"stop","text":"先停下來","emoji":"✋"}
-    ],
-    "answer": "sorted",
-    "hint": "過馬路的順序是：先停下來，再聽聽有沒有車，再牽好手慢慢走。",
-    "params": {"order":["stop","listen","walk"],"words":["先停下來","聽聽有沒有車","牽好手慢慢走"],"fact":"order:street:stop>listen>walk"}
-  },
-  {
-    "id": "life-3-28", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "把洗手的每一步，從第一步開始排好。",
-    "items": [],
-    "choices": [
-      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"}
-    ],
-    "answer": "sorted",
-    "hint": "洗手的順序是：搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"order":["rub","rinse","dry"],"words":["搓出泡泡","用水沖乾淨","用毛巾擦乾"],"fact":"order:wash:rub>rinse>dry"}
-  },
-  {
-    "id": "life-3-29", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "刷牙要怎麼做呢？請依順序排好。",
-    "items": [],
-    "choices": [
-      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁","art":"life-brush-teeth"},
-      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
-      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"}
-    ],
-    "answer": "sorted",
-    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再擦擦嘴巴。",
-    "params": {"order":["paste","brush","wipe"],"words":["擠一點點牙膏","把牙齒刷乾淨","擦擦嘴巴"],"fact":"order:teeth:paste>brush>wipe"}
-  },
-  {
-    "id": "life-3-30", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "睡覺前要怎麼做呢？請依順序排好。",
-    "items": [],
-    "choices": [
-      {"id":"pajama","text":"換上睡衣","emoji":"👕"},
-      {"id":"sleep","text":"上床睡覺","emoji":"🛏️","art":"life-bedtime"},
-      {"id":"bath","text":"洗香香","emoji":"🛁"}
-    ],
-    "answer": "sorted",
-    "hint": "睡覺前的順序是：洗香香，再換上睡衣，再上床睡覺。",
-    "params": {"order":["bath","pajama","sleep"],"words":["洗香香","換上睡衣","上床睡覺"],"fact":"order:bed:bath>pajama>sleep"}
-  },
-  {
-    "id": "life-3-31", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "把睡覺前的每一步，從第一步開始排好。",
+    "prompt": "睡覺前，最後要做哪一件事呢？",
     "items": [],
     "choices": [
       {"id":"teeth","text":"刷牙","emoji":"🪥"},
       {"id":"pajama","text":"換上睡衣","emoji":"👕"},
-      {"id":"bath","text":"洗香香","emoji":"🛁"}
+      {"id":"sleep","text":"上床睡覺","emoji":"🛏️"}
     ],
-    "answer": "sorted",
-    "hint": "睡覺前的順序是：洗香香，再刷牙，再換上睡衣。",
-    "params": {"order":["bath","teeth","pajama"],"words":["洗香香","刷牙","換上睡衣"],"fact":"order:bed:bath>teeth>pajama"}
+    "answer": "sleep",
+    "hint": "睡覺前的順序是：洗香香，再刷牙，再換上睡衣，再上床睡覺。",
+    "params": {"words":["刷牙","換上睡衣","上床睡覺"],"fact":"step:bed:last"}
   },
   {
-    "id": "life-3-32", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "請把刷牙的步驟，依順序排好。",
+    "id": "life-3-27", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "把過馬路的每一步，從第一步開始排好。",
     "items": [],
     "choices": [
-      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
-      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"},
-      {"id":"gargle","text":"用水漱口","emoji":"💧"}
+      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
+      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶","art":"life-cross-green"},
+      {"id":"look","text":"看看左右","emoji":"👀"}
     ],
     "answer": "sorted",
-    "hint": "刷牙的順序是：擠一點點牙膏，再用水漱口，再擦擦嘴巴。",
-    "params": {"order":["paste","gargle","wipe"],"words":["擠一點點牙膏","用水漱口","擦擦嘴巴"],"fact":"order:teeth:paste>gargle>wipe"}
+    "hint": "過馬路的順序是：看看左右，再聽聽有沒有車，再牽好手慢慢走。",
+    "params": {"order":["look","listen","walk"],"words":["看看左右","聽聽有沒有車","牽好手慢慢走"],"fact":"order:street:look>listen>walk"}
   },
   {
-    "id": "life-3-33", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "把洗手的每一步，從第一步開始排好。",
-    "items": [],
-    "choices": [
-      {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"}
-    ],
-    "answer": "sorted",
-    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再用水沖乾淨。",
-    "params": {"order":["wet","soap","rinse"],"words":["把手弄濕","擦上肥皂","用水沖乾淨"],"fact":"order:wash:wet>soap>rinse"}
-  },
-  {
-    "id": "life-3-34", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "id": "life-3-28", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
     "prompt": "請把吃飯前的步驟，依順序排好。",
     "items": [],
     "choices": [
@@ -1500,12 +1429,90 @@
     "params": {"order":["wash","sit","thanks"],"words":["先洗手","坐好","說「我開動了」"],"fact":"order:meal:wash>sit>thanks"}
   },
   {
+    "id": "life-3-29", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "把睡覺前的每一步，從第一步開始排好。",
+    "items": [],
+    "choices": [
+      {"id":"pajama","text":"換上睡衣","emoji":"👕"},
+      {"id":"sleep","text":"上床睡覺","emoji":"🛏️","art":"life-bedtime"},
+      {"id":"teeth","text":"刷牙","emoji":"🪥"}
+    ],
+    "answer": "sorted",
+    "hint": "睡覺前的順序是：刷牙，再換上睡衣，再上床睡覺。",
+    "params": {"order":["teeth","pajama","sleep"],"words":["刷牙","換上睡衣","上床睡覺"],"fact":"order:bed:teeth>pajama>sleep"}
+  },
+  {
+    "id": "life-3-30", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "把刷牙的每一步，從第一步開始排好。",
+    "items": [],
+    "choices": [
+      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
+      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁","art":"life-brush-teeth"},
+      {"id":"gargle","text":"用水漱口","emoji":"💧"}
+    ],
+    "answer": "sorted",
+    "hint": "刷牙的順序是：把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
+    "params": {"order":["brush","gargle","wipe"],"words":["把牙齒刷乾淨","用水漱口","擦擦嘴巴"],"fact":"order:teeth:brush>gargle>wipe"}
+  },
+  {
+    "id": "life-3-31", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "洗手要怎麼做呢？請依順序排好。",
+    "items": [],
+    "choices": [
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"},
+      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"}
+    ],
+    "answer": "sorted",
+    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再用毛巾擦乾。",
+    "params": {"order":["wet","soap","dry"],"words":["把手弄濕","擦上肥皂","用毛巾擦乾"],"fact":"order:wash:wet>soap>dry"}
+  },
+  {
+    "id": "life-3-32", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "把吃飯前的每一步，從第一步開始排好。",
+    "items": [],
+    "choices": [
+      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
+      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
+      {"id":"sit","text":"坐好","emoji":"🪑"}
+    ],
+    "answer": "sorted",
+    "hint": "吃飯前的順序是：坐好，再說「我開動了」，再慢慢吃飯。",
+    "params": {"order":["sit","thanks","eat"],"words":["坐好","說「我開動了」","慢慢吃飯"],"fact":"order:meal:sit>thanks>eat"}
+  },
+  {
+    "id": "life-3-33", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "把睡覺前的每一步，從第一步開始排好。",
+    "items": [],
+    "choices": [
+      {"id":"teeth","text":"刷牙","emoji":"🪥"},
+      {"id":"sleep","text":"上床睡覺","emoji":"🛏️","art":"life-bedtime"},
+      {"id":"pajama","text":"換上睡衣","emoji":"👕"}
+    ],
+    "answer": "sorted",
+    "hint": "睡覺前的順序是：刷牙，再換上睡衣，再上床睡覺。",
+    "params": {"order":["teeth","pajama","sleep"],"words":["刷牙","換上睡衣","上床睡覺"],"fact":"order:bed:teeth>pajama>sleep"}
+  },
+  {
+    "id": "life-3-34", "skill": "life", "difficulty": 3, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "洗手要怎麼做呢？請依順序排好。",
+    "items": [],
+    "choices": [
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"},
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"}
+    ],
+    "answer": "sorted",
+    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再用水沖乾淨。",
+    "params": {"order":["wet","soap","rinse"],"words":["把手弄濕","擦上肥皂","用水沖乾淨"],"fact":"order:wash:wet>soap>rinse"}
+  },
+  {
     "id": "life-3-35", "skill": "life", "difficulty": 3, "type": "lifeOk", "version": 2,
     "prompt": "阿悟在公車站，看到老奶奶就讓位子給她坐。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"yes","text":"好","emoji":"👍"},
-      {"id":"no","text":"不好","emoji":"👎"}
+      {"id":"no","text":"不好","emoji":"👎"},
+      {"id":"yes","text":"好","emoji":"👍"}
     ],
     "answer": "yes",
     "hint": "把座位讓給需要的人，是很溫暖的好事。",
@@ -1516,8 +1523,8 @@
     "prompt": "阿悟看到地上有別人丟的紙屑，把它撿起來丟進垃圾桶。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"no","text":"不好","emoji":"👎"},
-      {"id":"yes","text":"好","emoji":"👍"}
+      {"id":"yes","text":"好","emoji":"👍"},
+      {"id":"no","text":"不好","emoji":"👎"}
     ],
     "answer": "yes",
     "hint": "把垃圾撿起來丟進垃圾桶，地方就會變乾淨，大家都開心。",
@@ -1528,8 +1535,8 @@
     "prompt": "老師正在說話，阿悟沒聽完就大聲插嘴。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"yes","text":"好","emoji":"👍"},
-      {"id":"no","text":"不好","emoji":"👎"}
+      {"id":"no","text":"不好","emoji":"👎"},
+      {"id":"yes","text":"好","emoji":"👍"}
     ],
     "answer": "no",
     "hint": "別人說話的時候，先聽完再說，這樣才有禮貌喔。",
@@ -1540,8 +1547,8 @@
     "prompt": "爺爺走過來，阿悟開心地說「爺爺好」。阿悟這樣好不好呢？",
     "items": [],
     "choices": [
-      {"id":"no","text":"不好","emoji":"👎"},
-      {"id":"yes","text":"好","emoji":"👍"}
+      {"id":"yes","text":"好","emoji":"👍"},
+      {"id":"no","text":"不好","emoji":"👎"}
     ],
     "answer": "yes",
     "hint": "看到大家打招呼，有禮貌，大家都會很開心。",
@@ -1561,40 +1568,26 @@
   },
   {
     "id": "life-4-01", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "請把刷牙的步驟，依順序排好。",
-    "items": [],
-    "choices": [
-      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁","art":"life-brush-teeth"},
-      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
-      {"id":"gargle","text":"用水漱口","emoji":"💧"},
-      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"}
-    ],
-    "answer": "sorted",
-    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
-    "params": {"order":["paste","brush","gargle","wipe"],"words":["擠一點點牙膏","把牙齒刷乾淨","用水漱口","擦擦嘴巴"],"fact":"order:teeth:paste>brush>gargle>wipe"}
-  },
-  {
-    "id": "life-4-02", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
     "prompt": "請把過馬路的步驟，依順序排好。",
     "items": [],
     "choices": [
-      {"id":"stop","text":"先停下來","emoji":"✋"},
-      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
+      {"id":"look","text":"看看左右","emoji":"👀"},
       {"id":"walk","text":"牽好手慢慢走","emoji":"🚶","art":"life-cross-green"},
-      {"id":"look","text":"看看左右","emoji":"👀"}
+      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
+      {"id":"stop","text":"先停下來","emoji":"✋"}
     ],
     "answer": "sorted",
     "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
     "params": {"order":["stop","look","listen","walk"],"words":["先停下來","看看左右","聽聽有沒有車","牽好手慢慢走"],"fact":"order:street:stop>look>listen>walk"}
   },
   {
-    "id": "life-4-03", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "睡覺前要怎麼做呢？請依順序排好。",
+    "id": "life-4-02", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "請把睡覺前的步驟，依順序排好。",
     "items": [],
     "choices": [
+      {"id":"bath","text":"洗香香","emoji":"🛁"},
       {"id":"pajama","text":"換上睡衣","emoji":"👕"},
       {"id":"sleep","text":"上床睡覺","emoji":"🛏️","art":"life-bedtime"},
-      {"id":"bath","text":"洗香香","emoji":"🛁"},
       {"id":"teeth","text":"刷牙","emoji":"🪥"}
     ],
     "answer": "sorted",
@@ -1602,8 +1595,22 @@
     "params": {"order":["bath","teeth","pajama","sleep"],"words":["洗香香","刷牙","換上睡衣","上床睡覺"],"fact":"order:bed:bath>teeth>pajama>sleep"}
   },
   {
+    "id": "life-4-03", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "把過馬路的每一步，從第一步開始排好。",
+    "items": [],
+    "choices": [
+      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
+      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶","art":"life-cross-green"},
+      {"id":"stop","text":"先停下來","emoji":"✋"},
+      {"id":"look","text":"看看左右","emoji":"👀"}
+    ],
+    "answer": "sorted",
+    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
+    "params": {"order":["stop","look","listen","walk"],"words":["先停下來","看看左右","聽聽有沒有車","牽好手慢慢走"],"fact":"order:street:stop>look>listen>walk"}
+  },
+  {
     "id": "life-4-04", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "請把吃飯前的步驟，依順序排好。",
+    "prompt": "把吃飯前的每一步，從第一步開始排好。",
     "items": [],
     "choices": [
       {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
@@ -1617,13 +1624,13 @@
   },
   {
     "id": "life-4-05", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "把吃飯前的每一步，從第一步開始排好。",
+    "prompt": "吃飯前要怎麼做呢？請依順序排好。",
     "items": [],
     "choices": [
-      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
+      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
       {"id":"wash","text":"先洗手","emoji":"🧼","art":"life-wash-hands"},
       {"id":"sit","text":"坐好","emoji":"🪑"},
-      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"}
+      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"}
     ],
     "answer": "sorted",
     "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
@@ -1631,27 +1638,27 @@
   },
   {
     "id": "life-4-06", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "把洗手的每一步，從第一步開始排好。",
+    "prompt": "吃飯前要怎麼做呢？請依順序排好。",
     "items": [],
     "choices": [
-      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"}
+      {"id":"wash","text":"先洗手","emoji":"🧼","art":"life-wash-hands"},
+      {"id":"sit","text":"坐好","emoji":"🪑"},
+      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
+      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"}
     ],
     "answer": "sorted",
-    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"order":["wet","soap","rinse","dry"],"words":["把手弄濕","擦上肥皂","用水沖乾淨","用毛巾擦乾"],"fact":"order:wash:wet>soap>rinse>dry"}
+    "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
+    "params": {"order":["wash","sit","thanks","eat"],"words":["先洗手","坐好","說「我開動了」","慢慢吃飯"],"fact":"order:meal:wash>sit>thanks>eat"}
   },
   {
     "id": "life-4-07", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
     "prompt": "洗手要怎麼做呢？請依順序排好。",
     "items": [],
     "choices": [
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
       {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"}
+      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"}
     ],
     "answer": "sorted",
     "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨。",
@@ -1659,67 +1666,25 @@
   },
   {
     "id": "life-4-08", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "把吃飯前的每一步，從第一步開始排好。",
-    "items": [],
-    "choices": [
-      {"id":"wash","text":"先洗手","emoji":"🧼","art":"life-wash-hands"},
-      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
-      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
-      {"id":"sit","text":"坐好","emoji":"🪑"}
-    ],
-    "answer": "sorted",
-    "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
-    "params": {"order":["wash","sit","thanks","eat"],"words":["先洗手","坐好","說「我開動了」","慢慢吃飯"],"fact":"order:meal:wash>sit>thanks>eat"}
-  },
-  {
-    "id": "life-4-09", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
     "prompt": "過馬路要怎麼做呢？請依順序排好。",
     "items": [],
     "choices": [
-      {"id":"look","text":"看看左右","emoji":"👀"},
-      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
-      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶","art":"life-cross-green"},
-      {"id":"stop","text":"先停下來","emoji":"✋"}
-    ],
-    "answer": "sorted",
-    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
-    "params": {"order":["stop","look","listen","walk"],"words":["先停下來","看看左右","聽聽有沒有車","牽好手慢慢走"],"fact":"order:street:stop>look>listen>walk"}
-  },
-  {
-    "id": "life-4-10", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "把過馬路的每一步，從第一步開始排好。",
-    "items": [],
-    "choices": [
       {"id":"stop","text":"先停下來","emoji":"✋"},
-      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶","art":"life-cross-green"},
+      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
       {"id":"look","text":"看看左右","emoji":"👀"},
-      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"}
+      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶","art":"life-cross-green"}
     ],
     "answer": "sorted",
     "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
     "params": {"order":["stop","look","listen","walk"],"words":["先停下來","看看左右","聽聽有沒有車","牽好手慢慢走"],"fact":"order:street:stop>look>listen>walk"}
   },
   {
-    "id": "life-4-11", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "吃飯前要怎麼做呢？請依順序排好。",
-    "items": [],
-    "choices": [
-      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
-      {"id":"wash","text":"先洗手","emoji":"🧼","art":"life-wash-hands"},
-      {"id":"sit","text":"坐好","emoji":"🪑"},
-      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"}
-    ],
-    "answer": "sorted",
-    "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
-    "params": {"order":["wash","sit","thanks","eat"],"words":["先洗手","坐好","說「我開動了」","慢慢吃飯"],"fact":"order:meal:wash>sit>thanks>eat"}
-  },
-  {
-    "id": "life-4-12", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "id": "life-4-09", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
     "prompt": "睡覺前要怎麼做呢？請依順序排好。",
     "items": [],
     "choices": [
-      {"id":"sleep","text":"上床睡覺","emoji":"🛏️","art":"life-bedtime"},
       {"id":"bath","text":"洗香香","emoji":"🛁"},
+      {"id":"sleep","text":"上床睡覺","emoji":"🛏️","art":"life-bedtime"},
       {"id":"pajama","text":"換上睡衣","emoji":"👕"},
       {"id":"teeth","text":"刷牙","emoji":"🪥"}
     ],
@@ -1728,14 +1693,56 @@
     "params": {"order":["bath","teeth","pajama","sleep"],"words":["洗香香","刷牙","換上睡衣","上床睡覺"],"fact":"order:bed:bath>teeth>pajama>sleep"}
   },
   {
-    "id": "life-4-13", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "洗手要怎麼做呢？請依順序排好。",
+    "id": "life-4-10", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "請把睡覺前的步驟，依順序排好。",
     "items": [],
     "choices": [
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
+      {"id":"sleep","text":"上床睡覺","emoji":"🛏️","art":"life-bedtime"},
+      {"id":"teeth","text":"刷牙","emoji":"🪥"},
+      {"id":"bath","text":"洗香香","emoji":"🛁"},
+      {"id":"pajama","text":"換上睡衣","emoji":"👕"}
+    ],
+    "answer": "sorted",
+    "hint": "睡覺前的順序是：洗香香，再刷牙，再換上睡衣，再上床睡覺。",
+    "params": {"order":["bath","teeth","pajama","sleep"],"words":["洗香香","刷牙","換上睡衣","上床睡覺"],"fact":"order:bed:bath>teeth>pajama>sleep"}
+  },
+  {
+    "id": "life-4-11", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "請把吃飯前的步驟，依順序排好。",
+    "items": [],
+    "choices": [
+      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
+      {"id":"sit","text":"坐好","emoji":"🪑"},
+      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
+      {"id":"wash","text":"先洗手","emoji":"🧼","art":"life-wash-hands"}
+    ],
+    "answer": "sorted",
+    "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
+    "params": {"order":["wash","sit","thanks","eat"],"words":["先洗手","坐好","說「我開動了」","慢慢吃飯"],"fact":"order:meal:wash>sit>thanks>eat"}
+  },
+  {
+    "id": "life-4-12", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "把洗手的每一步，從第一步開始排好。",
+    "items": [],
+    "choices": [
       {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"}
+    ],
+    "answer": "sorted",
+    "hint": "洗手的順序是：擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
+    "params": {"order":["soap","rub","rinse","dry"],"words":["擦上肥皂","搓出泡泡","用水沖乾淨","用毛巾擦乾"],"fact":"order:wash:soap>rub>rinse>dry"}
+  },
+  {
+    "id": "life-4-13", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
+    "prompt": "把洗手的每一步，從第一步開始排好。",
+    "items": [],
+    "choices": [
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
+      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
       {"id":"wet","text":"把手弄濕","emoji":"💦"}
     ],
     "answer": "sorted",
@@ -1744,14 +1751,14 @@
   },
   {
     "id": "life-4-14", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "請把洗手的步驟，依順序排好。",
+    "prompt": "洗手要怎麼做呢？請依順序排好。",
     "items": [],
     "choices": [
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
       {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
+      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
       {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"}
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"}
     ],
     "answer": "sorted",
     "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
@@ -1759,14 +1766,14 @@
   },
   {
     "id": "life-4-15", "skill": "life", "difficulty": 4, "type": "lifeOrder", "version": 2, "interaction": "stepOrder",
-    "prompt": "把洗手的每一步，從第一步開始排好。",
+    "prompt": "請把洗手的步驟，依順序排好。",
     "items": [],
     "choices": [
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
-      {"id":"wet","text":"把手弄濕","emoji":"💦"},
       {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
       {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"}
+      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"}
     ],
     "answer": "sorted",
     "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
@@ -1777,11 +1784,11 @@
     "prompt": "洗手要怎麼做呢？請依順序排好。",
     "items": [],
     "choices": [
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
       {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
       {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"}
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"}
     ],
     "answer": "sorted",
     "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
@@ -1792,13 +1799,13 @@
     "prompt": "為什麼垃圾要丟進垃圾桶呢？",
     "items": [],
     "choices": [
-      {"id":"這樣垃圾會長大","text":"這樣垃圾會長大","emoji":"🌱"},
       {"id":"因為垃圾桶肚子餓了","text":"因為垃圾桶肚子餓了","emoji":"🍽️"},
-      {"id":"這樣地方才會乾乾淨淨","text":"這樣地方才會乾乾淨淨","emoji":"✨"}
+      {"id":"這樣地方才會乾乾淨淨","text":"這樣地方才會乾乾淨淨","emoji":"✨"},
+      {"id":"這樣垃圾會長大","text":"這樣垃圾會長大","emoji":"🌱"}
     ],
     "answer": "這樣地方才會乾乾淨淨",
     "hint": "垃圾放進垃圾桶，地方才不會髒髒臭臭，大家都舒服。",
-    "params": {"words":["這樣垃圾會長大","因為垃圾桶肚子餓了","這樣地方才會乾乾淨淨"],"fact":"why:trash"}
+    "params": {"words":["因為垃圾桶肚子餓了","這樣地方才會乾乾淨淨","這樣垃圾會長大"],"fact":"why:trash"}
   },
   {
     "id": "life-4-18", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
@@ -1818,26 +1825,26 @@
     "prompt": "別人幫了我們，為什麼要說謝謝呢？",
     "items": [],
     "choices": [
+      {"id":"這樣他就不會再幫我們了","text":"這樣他就不會再幫我們了","emoji":"🙅"},
       {"id":"因為謝謝是魔法，會變出糖果","text":"因為謝謝是魔法，會變出糖果","emoji":"🪄"},
-      {"id":"讓對方知道我們很開心、很感謝","text":"讓對方知道我們很開心、很感謝","emoji":"🥰"},
-      {"id":"這樣他就不會再幫我們了","text":"這樣他就不會再幫我們了","emoji":"🙅"}
+      {"id":"讓對方知道我們很開心、很感謝","text":"讓對方知道我們很開心、很感謝","emoji":"🥰"}
     ],
     "answer": "讓對方知道我們很開心、很感謝",
     "hint": "說謝謝，對方會知道我們很感謝他，大家心裡都暖暖的。",
-    "params": {"words":["因為謝謝是魔法，會變出糖果","讓對方知道我們很開心、很感謝","這樣他就不會再幫我們了"],"fact":"why:thanks"}
+    "params": {"words":["這樣他就不會再幫我們了","因為謝謝是魔法，會變出糖果","讓對方知道我們很開心、很感謝"],"fact":"why:thanks"}
   },
   {
     "id": "life-4-20", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
     "prompt": "為什麼要吃青菜呢？",
     "items": [],
     "choices": [
-      {"id":"這樣耳朵會變成綠色的","text":"這樣耳朵會變成綠色的","emoji":"🟢"},
+      {"id":"身體才會長得壯壯的","text":"身體才會長得壯壯的","emoji":"💪"},
       {"id":"吃了就可以馬上飛起來","text":"吃了就可以馬上飛起來","emoji":"🪽"},
-      {"id":"身體才會長得壯壯的","text":"身體才會長得壯壯的","emoji":"💪"}
+      {"id":"這樣耳朵會變成綠色的","text":"這樣耳朵會變成綠色的","emoji":"🟢"}
     ],
     "answer": "身體才會長得壯壯的",
     "hint": "青菜裡有很多營養，吃了身體才會健康、長得壯壯的。",
-    "params": {"words":["這樣耳朵會變成綠色的","吃了就可以馬上飛起來","身體才會長得壯壯的"],"fact":"why:veg"}
+    "params": {"words":["身體才會長得壯壯的","吃了就可以馬上飛起來","這樣耳朵會變成綠色的"],"fact":"why:veg"}
   },
   {
     "id": "life-4-21", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
@@ -1857,39 +1864,39 @@
     "prompt": "晚上為什麼要早早睡覺呢？",
     "items": [],
     "choices": [
-      {"id":"睡飽了身體才會長高，白天才有精神","text":"睡飽了身體才會長高，白天才有精神","emoji":"🌙"},
+      {"id":"這樣明天就不用起床了","text":"這樣明天就不用起床了","emoji":"🙈"},
       {"id":"因為星星會生氣","text":"因為星星會生氣","emoji":"⭐"},
-      {"id":"這樣明天就不用起床了","text":"這樣明天就不用起床了","emoji":"🙈"}
+      {"id":"睡飽了身體才會長高，白天才有精神","text":"睡飽了身體才會長高，白天才有精神","emoji":"🌙"}
     ],
     "answer": "睡飽了身體才會長高，白天才有精神",
     "hint": "睡覺的時候，身體在長大。睡飽飽，明天才有力氣玩。",
-    "params": {"words":["睡飽了身體才會長高，白天才有精神","因為星星會生氣","這樣明天就不用起床了"],"fact":"why:sleep"}
+    "params": {"words":["這樣明天就不用起床了","因為星星會生氣","睡飽了身體才會長高，白天才有精神"],"fact":"why:sleep"}
   },
   {
     "id": "life-4-23", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
     "prompt": "玩完玩具，為什麼要收好呢？",
     "items": [],
     "choices": [
-      {"id":"下次才找得到，也不會被踩到","text":"下次才找得到，也不會被踩到","emoji":"🧸"},
       {"id":"因為玩具想要睡覺了","text":"因為玩具想要睡覺了","emoji":"😴"},
-      {"id":"這樣玩具會長得很大","text":"這樣玩具會長得很大","emoji":"📏"}
+      {"id":"這樣玩具會長得很大","text":"這樣玩具會長得很大","emoji":"📏"},
+      {"id":"下次才找得到，也不會被踩到","text":"下次才找得到，也不會被踩到","emoji":"🧸"}
     ],
     "answer": "下次才找得到，也不會被踩到",
     "hint": "玩具收進箱子，房間乾乾淨淨，下次想玩馬上找得到。",
-    "params": {"words":["下次才找得到，也不會被踩到","因為玩具想要睡覺了","這樣玩具會長得很大"],"fact":"why:toys"}
+    "params": {"words":["因為玩具想要睡覺了","這樣玩具會長得很大","下次才找得到，也不會被踩到"],"fact":"why:toys"}
   },
   {
     "id": "life-4-24", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
     "prompt": "為什麼要排隊呢？",
     "items": [],
     "choices": [
+      {"id":"一個一個輪流，才不會擠來擠去","text":"一個一個輪流，才不會擠來擠去","emoji":"🧍"},
       {"id":"這樣可以變得比較高","text":"這樣可以變得比較高","emoji":"📏"},
-      {"id":"因為站在最前面最帥","text":"因為站在最前面最帥","emoji":"😎"},
-      {"id":"一個一個輪流，才不會擠來擠去","text":"一個一個輪流，才不會擠來擠去","emoji":"🧍"}
+      {"id":"因為站在最前面最帥","text":"因為站在最前面最帥","emoji":"😎"}
     ],
     "answer": "一個一個輪流，才不會擠來擠去",
     "hint": "排隊輪流，大家都輪得到，也不會推來推去受傷喔。",
-    "params": {"words":["這樣可以變得比較高","因為站在最前面最帥","一個一個輪流，才不會擠來擠去"],"fact":"why:queue"}
+    "params": {"words":["一個一個輪流，才不會擠來擠去","這樣可以變得比較高","因為站在最前面最帥"],"fact":"why:queue"}
   },
   {
     "id": "life-4-25", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
@@ -1922,39 +1929,39 @@
     "prompt": "為什麼吃東西以前要先洗手呢？",
     "items": [],
     "choices": [
-      {"id":"把細菌洗掉，肚子才不會痛","text":"把細菌洗掉，肚子才不會痛","emoji":"🧼"},
+      {"id":"這樣吃東西會變得比較大聲","text":"這樣吃東西會變得比較大聲","emoji":"📢"},
       {"id":"這樣手會變成藍色的","text":"這樣手會變成藍色的","emoji":"💙"},
-      {"id":"這樣吃東西會變得比較大聲","text":"這樣吃東西會變得比較大聲","emoji":"📢"}
+      {"id":"把細菌洗掉，肚子才不會痛","text":"把細菌洗掉，肚子才不會痛","emoji":"🧼"}
     ],
     "answer": "把細菌洗掉，肚子才不會痛",
     "hint": "手上有看不見的細菌，洗乾淨再吃東西，肚子才不會痛喔。",
-    "params": {"words":["把細菌洗掉，肚子才不會痛","這樣手會變成藍色的","這樣吃東西會變得比較大聲"],"fact":"why:wash"}
+    "params": {"words":["這樣吃東西會變得比較大聲","這樣手會變成藍色的","把細菌洗掉，肚子才不會痛"],"fact":"why:wash"}
   },
   {
     "id": "life-4-28", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
     "prompt": "咳嗽的時候，為什麼要遮住嘴巴呢？",
     "items": [],
     "choices": [
+      {"id":"不讓細菌飛到別人身上","text":"不讓細菌飛到別人身上","emoji":"🤧"},
       {"id":"這樣咳嗽的聲音會變很大","text":"這樣咳嗽的聲音會變很大","emoji":"📢"},
-      {"id":"因為手想要說話","text":"因為手想要說話","emoji":"🖐️"},
-      {"id":"不讓細菌飛到別人身上","text":"不讓細菌飛到別人身上","emoji":"🤧"}
+      {"id":"因為手想要說話","text":"因為手想要說話","emoji":"🖐️"}
     ],
     "answer": "不讓細菌飛到別人身上",
     "hint": "遮住嘴巴，細菌就不會跑到朋友身上，大家都不會生病。",
-    "params": {"words":["這樣咳嗽的聲音會變很大","因為手想要說話","不讓細菌飛到別人身上"],"fact":"why:cough"}
+    "params": {"words":["不讓細菌飛到別人身上","這樣咳嗽的聲音會變很大","因為手想要說話"],"fact":"why:cough"}
   },
   {
     "id": "life-4-29", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
     "prompt": "為什麼要天天刷牙呢？",
     "items": [],
     "choices": [
+      {"id":"這樣牙齒會長得很長","text":"這樣牙齒會長得很長","emoji":"📏"},
       {"id":"因為牙刷想要唱歌","text":"因為牙刷想要唱歌","emoji":"🎤"},
-      {"id":"牙齒才不會被蛀蟲咬壞","text":"牙齒才不會被蛀蟲咬壞","emoji":"🦷"},
-      {"id":"這樣牙齒會長得很長","text":"這樣牙齒會長得很長","emoji":"📏"}
+      {"id":"牙齒才不會被蛀蟲咬壞","text":"牙齒才不會被蛀蟲咬壞","emoji":"🦷"}
     ],
     "answer": "牙齒才不會被蛀蟲咬壞",
     "hint": "刷牙可以把食物渣渣刷掉，牙齒才不會痛痛。",
-    "params": {"words":["因為牙刷想要唱歌","牙齒才不會被蛀蟲咬壞","這樣牙齒會長得很長"],"fact":"why:teeth"}
+    "params": {"words":["這樣牙齒會長得很長","因為牙刷想要唱歌","牙齒才不會被蛀蟲咬壞"],"fact":"why:teeth"}
   },
   {
     "id": "life-4-30", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
@@ -1962,12 +1969,12 @@
     "items": [],
     "choices": [
       {"id":"這樣可以變得比較高","text":"這樣可以變得比較高","emoji":"📏"},
-      {"id":"這樣大家就可以一起睡覺","text":"這樣大家就可以一起睡覺","emoji":"😴"},
-      {"id":"一個一個輪流，才不會擠來擠去","text":"一個一個輪流，才不會擠來擠去","emoji":"🧍"}
+      {"id":"一個一個輪流，才不會擠來擠去","text":"一個一個輪流，才不會擠來擠去","emoji":"🧍"},
+      {"id":"這樣大家就可以一起睡覺","text":"這樣大家就可以一起睡覺","emoji":"😴"}
     ],
     "answer": "一個一個輪流，才不會擠來擠去",
     "hint": "排隊輪流，大家都輪得到，也不會推來推去受傷喔。",
-    "params": {"words":["這樣可以變得比較高","這樣大家就可以一起睡覺","一個一個輪流，才不會擠來擠去"],"fact":"why:queue"}
+    "params": {"words":["這樣可以變得比較高","一個一個輪流，才不會擠來擠去","這樣大家就可以一起睡覺"],"fact":"why:queue"}
   },
   {
     "id": "life-4-31", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
@@ -1975,249 +1982,249 @@
     "items": [],
     "choices": [
       {"id":"這樣地方才會乾乾淨淨","text":"這樣地方才會乾乾淨淨","emoji":"✨"},
-      {"id":"因為垃圾桶肚子餓了","text":"因為垃圾桶肚子餓了","emoji":"🍽️"},
-      {"id":"因為垃圾想要睡覺","text":"因為垃圾想要睡覺","emoji":"😴"}
+      {"id":"因為垃圾想要睡覺","text":"因為垃圾想要睡覺","emoji":"😴"},
+      {"id":"因為垃圾桶肚子餓了","text":"因為垃圾桶肚子餓了","emoji":"🍽️"}
     ],
     "answer": "這樣地方才會乾乾淨淨",
     "hint": "垃圾放進垃圾桶，地方才不會髒髒臭臭，大家都舒服。",
-    "params": {"words":["這樣地方才會乾乾淨淨","因為垃圾桶肚子餓了","因為垃圾想要睡覺"],"fact":"why:trash"}
+    "params": {"words":["這樣地方才會乾乾淨淨","因為垃圾想要睡覺","因為垃圾桶肚子餓了"],"fact":"why:trash"}
   },
   {
     "id": "life-4-32", "skill": "life", "difficulty": 4, "type": "lifeWhy", "version": 2,
     "prompt": "紅燈亮了，為什麼要停下來等呢？",
     "items": [],
     "choices": [
-      {"id":"因為紅燈會請我們吃糖","text":"因為紅燈會請我們吃糖","emoji":"🍬"},
+      {"id":"因為紅色是我的幸運色","text":"因為紅色是我的幸運色","emoji":"❤️"},
       {"id":"車子正在走，停下來才安全","text":"車子正在走，停下來才安全","emoji":"🚗"},
-      {"id":"因為紅色是我的幸運色","text":"因為紅色是我的幸運色","emoji":"❤️"}
+      {"id":"因為紅燈會請我們吃糖","text":"因為紅燈會請我們吃糖","emoji":"🍬"}
     ],
     "answer": "車子正在走，停下來才安全",
     "hint": "紅燈的時候車子在走，我們停下來等，就不會被撞到。",
-    "params": {"words":["因為紅燈會請我們吃糖","車子正在走，停下來才安全","因為紅色是我的幸運色"],"fact":"why:red"}
+    "params": {"words":["因為紅色是我的幸運色","車子正在走，停下來才安全","因為紅燈會請我們吃糖"],"fact":"why:red"}
   },
   {
     "id": "life-4-33", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "刷牙，最先要做哪一件事呢？",
-    "items": [],
-    "choices": [
-      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
-      {"id":"gargle","text":"用水漱口","emoji":"💧"},
-      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁"},
-      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"}
-    ],
-    "answer": "paste",
-    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
-    "params": {"words":["擦擦嘴巴","用水漱口","把牙齒刷乾淨","擠一點點牙膏"],"fact":"step:teeth:first"}
-  },
-  {
-    "id": "life-4-34", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "洗手，最先要做哪一件事呢？",
-    "items": [],
-    "choices": [
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
-      {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"}
-    ],
-    "answer": "wet",
-    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["擦上肥皂","用毛巾擦乾","把手弄濕","搓出泡泡"],"fact":"step:wash:first"}
-  },
-  {
-    "id": "life-4-35", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
     "prompt": "洗手，第一步要做什麼呢？",
     "items": [],
     "choices": [
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"wet","text":"把手弄濕","emoji":"💦"},
+      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
       {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"}
+    ],
+    "answer": "wet",
+    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
+    "params": {"words":["搓出泡泡","用水沖乾淨","用毛巾擦乾","把手弄濕"],"fact":"step:wash:first"}
+  },
+  {
+    "id": "life-4-34", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "過馬路要先做什麼呢？",
+    "items": [],
+    "choices": [
+      {"id":"stop","text":"先停下來","emoji":"✋"},
+      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
+      {"id":"look","text":"看看左右","emoji":"👀"},
+      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶"}
+    ],
+    "answer": "stop",
+    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
+    "params": {"words":["先停下來","聽聽有沒有車","看看左右","牽好手慢慢走"],"fact":"step:street:first"}
+  },
+  {
+    "id": "life-4-35", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "洗手要先做什麼呢？",
+    "items": [],
+    "choices": [
+      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"},
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
       {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"}
     ],
     "answer": "wet",
     "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["擦上肥皂","把手弄濕","用水沖乾淨","用毛巾擦乾"],"fact":"step:wash:first"}
+    "params": {"words":["搓出泡泡","把手弄濕","擦上肥皂","用毛巾擦乾"],"fact":"step:wash:first"}
   },
   {
     "id": "life-4-36", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "洗手要先做什麼呢？",
+    "prompt": "刷牙，最先要做哪一件事呢？",
+    "items": [],
+    "choices": [
+      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁"},
+      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
+      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"},
+      {"id":"gargle","text":"用水漱口","emoji":"💧"}
+    ],
+    "answer": "paste",
+    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
+    "params": {"words":["把牙齒刷乾淨","擦擦嘴巴","擠一點點牙膏","用水漱口"],"fact":"step:teeth:first"}
+  },
+  {
+    "id": "life-4-37", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "刷牙，第一步要做什麼呢？",
+    "items": [],
+    "choices": [
+      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
+      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"},
+      {"id":"gargle","text":"用水漱口","emoji":"💧"},
+      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁"}
+    ],
+    "answer": "paste",
+    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
+    "params": {"words":["擦擦嘴巴","擠一點點牙膏","用水漱口","把牙齒刷乾淨"],"fact":"step:teeth:first"}
+  },
+  {
+    "id": "life-4-38", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "洗手，最先要做哪一件事呢？",
     "items": [],
     "choices": [
       {"id":"wet","text":"把手弄濕","emoji":"💦"},
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
       {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
       {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"}
     ],
     "answer": "wet",
     "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["把手弄濕","用毛巾擦乾","搓出泡泡","用水沖乾淨"],"fact":"step:wash:first"}
-  },
-  {
-    "id": "life-4-37", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "過馬路要先做什麼呢？",
-    "items": [],
-    "choices": [
-      {"id":"look","text":"看看左右","emoji":"👀"},
-      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶"},
-      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"},
-      {"id":"stop","text":"先停下來","emoji":"✋"}
-    ],
-    "answer": "stop",
-    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
-    "params": {"words":["看看左右","牽好手慢慢走","聽聽有沒有車","先停下來"],"fact":"step:street:first"}
-  },
-  {
-    "id": "life-4-38", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "過馬路，最先要做哪一件事呢？",
-    "items": [],
-    "choices": [
-      {"id":"stop","text":"先停下來","emoji":"✋"},
-      {"id":"walk","text":"牽好手慢慢走","emoji":"🚶"},
-      {"id":"look","text":"看看左右","emoji":"👀"},
-      {"id":"listen","text":"聽聽有沒有車","emoji":"👂"}
-    ],
-    "answer": "stop",
-    "hint": "過馬路的順序是：先停下來，再看看左右，再聽聽有沒有車，再牽好手慢慢走。",
-    "params": {"words":["先停下來","牽好手慢慢走","看看左右","聽聽有沒有車"],"fact":"step:street:first"}
+    "params": {"words":["把手弄濕","擦上肥皂","用毛巾擦乾","用水沖乾淨"],"fact":"step:wash:first"}
   },
   {
     "id": "life-4-39", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "吃飯前，最後要做哪一件事呢？",
-    "items": [],
-    "choices": [
-      {"id":"wash","text":"先洗手","emoji":"🧼"},
-      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
-      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
-      {"id":"sit","text":"坐好","emoji":"🪑"}
-    ],
-    "answer": "eat",
-    "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
-    "params": {"words":["先洗手","說「我開動了」","慢慢吃飯","坐好"],"fact":"step:meal:last"}
-  },
-  {
-    "id": "life-4-40", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
     "prompt": "洗手最後要做什麼呢？",
     "items": [],
     "choices": [
-      {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
       {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"}
-    ],
-    "answer": "dry",
-    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["把手弄濕","用毛巾擦乾","擦上肥皂","搓出泡泡"],"fact":"step:wash:last"}
-  },
-  {
-    "id": "life-4-41", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "刷牙最後要做什麼呢？",
-    "items": [],
-    "choices": [
-      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"},
-      {"id":"gargle","text":"用水漱口","emoji":"💧"},
-      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
-      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁"}
-    ],
-    "answer": "wipe",
-    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
-    "params": {"words":["擠一點點牙膏","用水漱口","擦擦嘴巴","把牙齒刷乾淨"],"fact":"step:teeth:last"}
-  },
-  {
-    "id": "life-4-42", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "洗手，最後要做哪一件事呢？",
-    "items": [],
-    "choices": [
       {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
-      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
       {"id":"wet","text":"把手弄濕","emoji":"💦"},
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"}
-    ],
-    "answer": "dry",
-    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["用水沖乾淨","用毛巾擦乾","把手弄濕","搓出泡泡"],"fact":"step:wash:last"}
-  },
-  {
-    "id": "life-4-43", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "洗手的最後一步是什麼呢？",
-    "items": [],
-    "choices": [
-      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
-      {"id":"rub","text":"搓出泡泡","emoji":"🫧"},
-      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
       {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"}
     ],
     "answer": "dry",
     "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
-    "params": {"words":["擦上肥皂","搓出泡泡","用水沖乾淨","用毛巾擦乾"],"fact":"step:wash:last"}
+    "params": {"words":["擦上肥皂","用水沖乾淨","把手弄濕","用毛巾擦乾"],"fact":"step:wash:last"}
   },
   {
-    "id": "life-4-44", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
-    "prompt": "睡覺前的最後一步是什麼呢？",
+    "id": "life-4-40", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "睡覺前，最後要做哪一件事呢？",
     "items": [],
     "choices": [
-      {"id":"sleep","text":"上床睡覺","emoji":"🛏️"},
-      {"id":"teeth","text":"刷牙","emoji":"🪥"},
       {"id":"bath","text":"洗香香","emoji":"🛁"},
-      {"id":"pajama","text":"換上睡衣","emoji":"👕"}
+      {"id":"pajama","text":"換上睡衣","emoji":"👕"},
+      {"id":"sleep","text":"上床睡覺","emoji":"🛏️"},
+      {"id":"teeth","text":"刷牙","emoji":"🪥"}
     ],
     "answer": "sleep",
     "hint": "睡覺前的順序是：洗香香，再刷牙，再換上睡衣，再上床睡覺。",
-    "params": {"words":["上床睡覺","刷牙","洗香香","換上睡衣"],"fact":"step:bed:last"}
+    "params": {"words":["洗香香","換上睡衣","上床睡覺","刷牙"],"fact":"step:bed:last"}
+  },
+  {
+    "id": "life-4-41", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "洗手，最後要做哪一件事呢？",
+    "items": [],
+    "choices": [
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
+      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"},
+      {"id":"rub","text":"搓出泡泡","emoji":"🫧"}
+    ],
+    "answer": "dry",
+    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
+    "params": {"words":["擦上肥皂","用毛巾擦乾","把手弄濕","搓出泡泡"],"fact":"step:wash:last"}
+  },
+  {
+    "id": "life-4-42", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "洗手的最後一步是什麼呢？",
+    "items": [],
+    "choices": [
+      {"id":"soap","text":"擦上肥皂","emoji":"🧼"},
+      {"id":"rinse","text":"用水沖乾淨","emoji":"🚿"},
+      {"id":"wet","text":"把手弄濕","emoji":"💦"},
+      {"id":"dry","text":"用毛巾擦乾","emoji":"🧻"}
+    ],
+    "answer": "dry",
+    "hint": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
+    "params": {"words":["擦上肥皂","用水沖乾淨","把手弄濕","用毛巾擦乾"],"fact":"step:wash:last"}
+  },
+  {
+    "id": "life-4-43", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "吃飯前的最後一步是什麼呢？",
+    "items": [],
+    "choices": [
+      {"id":"eat","text":"慢慢吃飯","emoji":"🍚"},
+      {"id":"thanks","text":"說「我開動了」","emoji":"🙏"},
+      {"id":"wash","text":"先洗手","emoji":"🧼"},
+      {"id":"sit","text":"坐好","emoji":"🪑"}
+    ],
+    "answer": "eat",
+    "hint": "吃飯前的順序是：先洗手，再坐好，再說「我開動了」，再慢慢吃飯。",
+    "params": {"words":["慢慢吃飯","說「我開動了」","先洗手","坐好"],"fact":"step:meal:last"}
+  },
+  {
+    "id": "life-4-44", "skill": "life", "difficulty": 4, "type": "lifeStep", "version": 2,
+    "prompt": "刷牙的最後一步是什麼呢？",
+    "items": [],
+    "choices": [
+      {"id":"paste","text":"擠一點點牙膏","emoji":"🪥"},
+      {"id":"brush","text":"把牙齒刷乾淨","emoji":"😁"},
+      {"id":"wipe","text":"擦擦嘴巴","emoji":"🧻"},
+      {"id":"gargle","text":"用水漱口","emoji":"💧"}
+    ],
+    "answer": "wipe",
+    "hint": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
+    "params": {"words":["擠一點點牙膏","把牙齒刷乾淨","擦擦嘴巴","用水漱口"],"fact":"step:teeth:last"}
   },
   {
     "id": "life-4-45", "skill": "life", "difficulty": 4, "type": "lifeSay", "version": 2,
     "prompt": "阿悟不小心把朋友的畫弄皺了。要說哪一句話才有禮貌呢？",
     "items": [],
     "choices": [
+      {"id":"sorry","text":"對不起","emoji":"🙇"},
       {"id":"welcome","text":"不客氣","emoji":"😊"},
       {"id":"please","text":"請","emoji":"🤲"},
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
       {"id":"thanks","text":"謝謝","emoji":"🙏"}
     ],
     "answer": "sorry",
     "hint": "不小心弄壞朋友的東西，要說「對不起」。",
-    "params": {"stem":{"emoji":"🖼️"},"words":["不客氣","請","對不起","謝謝"],"fact":"say:sorry"}
+    "params": {"stem":{"emoji":"🖼️"},"words":["對不起","不客氣","請","謝謝"],"fact":"say:sorry"}
   },
   {
     "id": "life-4-46", "skill": "life", "difficulty": 4, "type": "lifeSay", "version": 2,
     "prompt": "小朋友對阿悟說「謝謝你扶我起來」。這時候，阿悟要說什麼呢？",
     "items": [],
     "choices": [
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"welcome","text":"不客氣","emoji":"😊"},
       {"id":"thanks","text":"謝謝","emoji":"🙏"},
-      {"id":"please","text":"請","emoji":"🤲"}
+      {"id":"sorry","text":"對不起","emoji":"🙇"},
+      {"id":"please","text":"請","emoji":"🤲"},
+      {"id":"welcome","text":"不客氣","emoji":"😊"}
     ],
     "answer": "welcome",
     "hint": "別人跟我們說謝謝，要說「不客氣」。",
-    "params": {"stem":{"emoji":"🤝"},"words":["對不起","不客氣","謝謝","請"],"fact":"say:welcome"}
+    "params": {"stem":{"emoji":"🤝"},"words":["謝謝","對不起","請","不客氣"],"fact":"say:welcome"}
   },
   {
     "id": "life-4-47", "skill": "life", "difficulty": 4, "type": "lifeSay", "version": 2,
     "prompt": "奶奶對阿悟說「謝謝你幫我拿東西」。要說哪一句話才有禮貌呢？",
     "items": [],
     "choices": [
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"thanks","text":"謝謝","emoji":"🙏"},
       {"id":"please","text":"請","emoji":"🤲"},
-      {"id":"welcome","text":"不客氣","emoji":"😊"}
+      {"id":"welcome","text":"不客氣","emoji":"😊"},
+      {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"sorry","text":"對不起","emoji":"🙇"}
     ],
     "answer": "welcome",
     "hint": "別人謝謝我們，可以說「不客氣」。",
-    "params": {"stem":{"emoji":"🛍️"},"words":["對不起","謝謝","請","不客氣"],"fact":"say:welcome"}
+    "params": {"stem":{"emoji":"🛍️"},"words":["請","不客氣","謝謝","對不起"],"fact":"say:welcome"}
   },
   {
     "id": "life-4-48", "skill": "life", "difficulty": 4, "type": "lifeSay", "version": 2,
     "prompt": "阿悟跑步的時候，不小心撞到了小兔子。阿悟要說什麼才有禮貌呢？",
     "items": [],
     "choices": [
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
       {"id":"welcome","text":"不客氣","emoji":"😊"},
       {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"sorry","text":"對不起","emoji":"🙇"},
       {"id":"please","text":"請","emoji":"🤲"}
     ],
     "answer": "sorry",
     "hint": "不小心撞到別人，要說「對不起」。",
-    "params": {"stem":{"emoji":"🏃"},"words":["對不起","不客氣","謝謝","請"],"fact":"say:sorry"}
+    "params": {"stem":{"emoji":"🏃"},"words":["不客氣","謝謝","對不起","請"],"fact":"say:sorry"}
   },
   {
     "id": "life-4-49", "skill": "life", "difficulty": 4, "type": "lifeSay", "version": 2,
@@ -2225,27 +2232,27 @@
     "items": [],
     "choices": [
       {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"welcome","text":"不客氣","emoji":"😊"},
       {"id":"please","text":"請","emoji":"🤲"},
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"welcome","text":"不客氣","emoji":"😊"}
+      {"id":"sorry","text":"對不起","emoji":"🙇"}
     ],
     "answer": "thanks",
     "hint": "別人幫了我們，要說「謝謝」。",
-    "params": {"stem":{"emoji":"🥛"},"words":["謝謝","請","對不起","不客氣"],"fact":"say:thanks"}
+    "params": {"stem":{"emoji":"🥛"},"words":["謝謝","不客氣","請","對不起"],"fact":"say:thanks"}
   },
   {
     "id": "life-4-50", "skill": "life", "difficulty": 4, "type": "lifeSay", "version": 2,
     "prompt": "阿悟想請媽媽幫忙拿高高的杯子。阿悟要說什麼才有禮貌呢？",
     "items": [],
     "choices": [
-      {"id":"thanks","text":"謝謝","emoji":"🙏"},
-      {"id":"please","text":"請","emoji":"🤲"},
       {"id":"welcome","text":"不客氣","emoji":"😊"},
-      {"id":"sorry","text":"對不起","emoji":"🙇"}
+      {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"sorry","text":"對不起","emoji":"🙇"},
+      {"id":"please","text":"請","emoji":"🤲"}
     ],
     "answer": "please",
     "hint": "請別人幫忙的時候，要說「請」。",
-    "params": {"stem":{"emoji":"🥤"},"words":["謝謝","請","不客氣","對不起"],"fact":"say:please"}
+    "params": {"stem":{"emoji":"🥤"},"words":["不客氣","謝謝","對不起","請"],"fact":"say:please"}
   },
   {
     "id": "life-1-g01", "skill": "life", "difficulty": 1, "type": "lifeSee", "version": 2, "gentle": true,
@@ -2393,78 +2400,18 @@
   },
   {
     "id": "life-1-g13", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-brush-teeth","art":"life-brush-teeth"},
-      {"id":"life-messy-toys","art":"life-messy-toys"}
-    ],
-    "answer": "life-brush-teeth",
-    "hint": "天天刷牙，牙齒才不會被蛀蟲咬壞，吃東西才不會痛痛。",
-    "params": {"fact":"right:life-brush-teeth"}
-  },
-  {
-    "id": "life-1-g14", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "哪一個是好的做法呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-litter","art":"life-litter"},
-      {"id":"life-brush-teeth","art":"life-brush-teeth"}
-    ],
-    "answer": "life-brush-teeth",
-    "hint": "天天刷牙，牙齒才不會被蛀蟲咬壞，吃東西才不會痛痛。",
-    "params": {"fact":"right:life-brush-teeth"}
-  },
-  {
-    "id": "life-1-g15", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "哪一個是好的做法呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-cross-green","art":"life-cross-green"},
-      {"id":"life-dirty-hands","art":"life-dirty-hands"}
-    ],
-    "answer": "life-cross-green",
-    "hint": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
-    "params": {"fact":"right:life-cross-green"}
-  },
-  {
-    "id": "life-1-g16", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "哪一個是好習慣呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-messy-toys","art":"life-messy-toys"},
-      {"id":"life-wait-red","art":"life-wait-red"}
-    ],
-    "answer": "life-wait-red",
-    "hint": "紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。",
-    "params": {"fact":"right:life-wait-red"}
-  },
-  {
-    "id": "life-1-g17", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "哪一個是好的做法呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-wait-red","art":"life-wait-red"},
-      {"id":"life-messy-toys","art":"life-messy-toys"}
-    ],
-    "answer": "life-wait-red",
-    "hint": "紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。",
-    "params": {"fact":"right:life-wait-red"}
-  },
-  {
-    "id": "life-1-g18", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
     "prompt": "吃完東西了，哪一個是對的做法呢？",
     "items": [],
     "choices": [
-      {"id":"life-litter","art":"life-litter"},
-      {"id":"life-trash","art":"life-trash"}
+      {"id":"life-trash","art":"life-trash"},
+      {"id":"life-litter","art":"life-litter"}
     ],
     "answer": "life-trash",
     "hint": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
     "params": {"fact":"right:life-trash"}
   },
   {
-    "id": "life-1-g19", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "id": "life-1-g14", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
     "prompt": "哪一個是玩完玩具以後的好習慣呢？",
     "items": [],
     "choices": [
@@ -2476,7 +2423,7 @@
     "params": {"fact":"right:life-tidy-toys"}
   },
   {
-    "id": "life-1-g20", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "id": "life-1-g15", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
     "prompt": "阿悟的手髒髒的，要怎麼做才好呢？",
     "items": [],
     "choices": [
@@ -2488,19 +2435,19 @@
     "params": {"fact":"right:life-wash-hands"}
   },
   {
-    "id": "life-1-g21", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "哪一個是好的做法呢？",
+    "id": "life-1-g16", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "和朋友在一起，哪一個是有禮貌的做法呢？",
     "items": [],
     "choices": [
-      {"id":"life-cut-line","art":"life-cut-line"},
+      {"id":"life-grab","art":"life-grab"},
       {"id":"life-thank-you","art":"life-thank-you"}
     ],
     "answer": "life-thank-you",
-    "hint": "別人送我們東西，要說謝謝，對方會很開心喔。",
+    "hint": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
     "params": {"fact":"right:life-thank-you"}
   },
   {
-    "id": "life-1-g22", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "id": "life-1-g17", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
     "prompt": "玩具玩好了，哪一個做法比較好呢？",
     "items": [],
     "choices": [
@@ -2512,43 +2459,7 @@
     "params": {"fact":"right:life-tidy-toys"}
   },
   {
-    "id": "life-1-g23", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "哪一個是好習慣呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-messy-toys","art":"life-messy-toys"},
-      {"id":"life-cross-green","art":"life-cross-green"}
-    ],
-    "answer": "life-cross-green",
-    "hint": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
-    "params": {"fact":"right:life-cross-green"}
-  },
-  {
-    "id": "life-1-g24", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-bedtime","art":"life-bedtime"},
-      {"id":"life-grab","art":"life-grab"}
-    ],
-    "answer": "life-bedtime",
-    "hint": "早早睡覺，睡飽了身體才會長高，明天才有精神玩。",
-    "params": {"fact":"right:life-bedtime"}
-  },
-  {
-    "id": "life-1-g25", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
-    "prompt": "阿悟想一想，哪一個做法比較好呢？",
-    "items": [],
-    "choices": [
-      {"id":"life-cover-cough","art":"life-cover-cough"},
-      {"id":"life-messy-toys","art":"life-messy-toys"}
-    ],
-    "answer": "life-cover-cough",
-    "hint": "咳嗽時遮住嘴巴，細菌就不會飛到別人身上，大家都不會生病。",
-    "params": {"fact":"right:life-cover-cough"}
-  },
-  {
-    "id": "life-1-g26", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "id": "life-1-g18", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
     "prompt": "垃圾要怎麼處理才對呢？",
     "items": [],
     "choices": [
@@ -2558,6 +2469,102 @@
     "answer": "life-trash",
     "hint": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
     "params": {"fact":"right:life-trash"}
+  },
+  {
+    "id": "life-1-g19", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "大家都想玩，哪一個是對的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-cut-line","art":"life-cut-line"},
+      {"id":"life-queue","art":"life-queue"}
+    ],
+    "answer": "life-queue",
+    "hint": "插隊的話，後面的朋友會很難過。排在後面等一等，就會輪到你囉。",
+    "params": {"fact":"right:life-queue"}
+  },
+  {
+    "id": "life-1-g20", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "哪一個會讓環境乾乾淨淨呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-trash","art":"life-trash"},
+      {"id":"life-litter","art":"life-litter"}
+    ],
+    "answer": "life-trash",
+    "hint": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
+    "params": {"fact":"right:life-trash"}
+  },
+  {
+    "id": "life-1-g21", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "和朋友相處，哪一個是好的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-thank-you","art":"life-thank-you"},
+      {"id":"life-grab","art":"life-grab"}
+    ],
+    "answer": "life-thank-you",
+    "hint": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
+    "params": {"fact":"right:life-thank-you"}
+  },
+  {
+    "id": "life-1-g22", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "要吃東西了，手髒髒的，哪一個是對的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-dirty-hands","art":"life-dirty-hands"},
+      {"id":"life-wash-hands","art":"life-wash-hands"}
+    ],
+    "answer": "life-wash-hands",
+    "hint": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
+    "params": {"fact":"right:life-wash-hands"}
+  },
+  {
+    "id": "life-1-g23", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "哪一個做法會讓朋友開心呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-thank-you","art":"life-thank-you"},
+      {"id":"life-grab","art":"life-grab"}
+    ],
+    "answer": "life-thank-you",
+    "hint": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
+    "params": {"fact":"right:life-thank-you"}
+  },
+  {
+    "id": "life-1-g24", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "玩完玩具了，哪一個是對的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-messy-toys","art":"life-messy-toys"},
+      {"id":"life-tidy-toys","art":"life-tidy-toys"}
+    ],
+    "answer": "life-tidy-toys",
+    "hint": "玩具丟在地上，別人會踩到，下次也找不到。玩完要收好喔。",
+    "params": {"fact":"right:life-tidy-toys"}
+  },
+  {
+    "id": "life-1-g25", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "有很多小朋友在等，哪一個是好的做法呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-cut-line","art":"life-cut-line"},
+      {"id":"life-queue","art":"life-queue"}
+    ],
+    "answer": "life-queue",
+    "hint": "插隊的話，後面的朋友會很難過。排在後面等一等，就會輪到你囉。",
+    "params": {"fact":"right:life-queue"}
+  },
+  {
+    "id": "life-1-g26", "skill": "life", "difficulty": 1, "type": "lifeRight", "version": 2, "gentle": true,
+    "prompt": "吃東西以前，哪一個是好習慣呢？",
+    "items": [],
+    "choices": [
+      {"id":"life-wash-hands","art":"life-wash-hands"},
+      {"id":"life-dirty-hands","art":"life-dirty-hands"}
+    ],
+    "answer": "life-wash-hands",
+    "hint": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
+    "params": {"fact":"right:life-wash-hands"}
   },
   {
     "id": "life-1-g27", "skill": "life", "difficulty": 1, "type": "lifeSay", "version": 2, "gentle": true,
@@ -2588,16 +2595,28 @@
     "prompt": "阿姨幫阿悟把門打開。阿悟要說什麼才有禮貌呢？",
     "items": [],
     "choices": [
-      {"id":"welcome","text":"不客氣","emoji":"😊"},
-      {"id":"thanks","text":"謝謝","emoji":"🙏"}
+      {"id":"thanks","text":"謝謝","emoji":"🙏"},
+      {"id":"please","text":"請","emoji":"🤲"}
     ],
     "answer": "thanks",
     "hint": "別人幫我們開門，要說「謝謝」。",
-    "params": {"stem":{"emoji":"🚪"},"words":["不客氣","謝謝"],"fact":"say:thanks"}
+    "params": {"stem":{"emoji":"🚪"},"words":["謝謝","請"],"fact":"say:thanks"}
   },
   {
     "id": "life-1-g30", "skill": "life", "difficulty": 1, "type": "lifeSay", "version": 2, "gentle": true,
     "prompt": "阿悟不小心踩到小雞的腳。要說哪一句話才有禮貌呢？",
+    "items": [],
+    "choices": [
+      {"id":"welcome","text":"不客氣","emoji":"😊"},
+      {"id":"sorry","text":"對不起","emoji":"🙇"}
+    ],
+    "answer": "sorry",
+    "hint": "不小心弄痛別人，要說「對不起」。",
+    "params": {"stem":{"emoji":"🐥"},"words":["不客氣","對不起"],"fact":"say:sorry"}
+  },
+  {
+    "id": "life-1-g31", "skill": "life", "difficulty": 1, "type": "lifeSay", "version": 2, "gentle": true,
+    "prompt": "阿悟不小心踩到小雞的腳。這時候，阿悟要說什麼呢？",
     "items": [],
     "choices": [
       {"id":"sorry","text":"對不起","emoji":"🙇"},
@@ -2608,28 +2627,16 @@
     "params": {"stem":{"emoji":"🐥"},"words":["對不起","請"],"fact":"say:sorry"}
   },
   {
-    "id": "life-1-g31", "skill": "life", "difficulty": 1, "type": "lifeSay", "version": 2, "gentle": true,
-    "prompt": "阿悟不小心踩到小雞的腳。這時候，阿悟要說什麼呢？",
-    "items": [],
-    "choices": [
-      {"id":"thanks","text":"謝謝","emoji":"🙏"},
-      {"id":"sorry","text":"對不起","emoji":"🙇"}
-    ],
-    "answer": "sorry",
-    "hint": "不小心弄痛別人，要說「對不起」。",
-    "params": {"stem":{"emoji":"🐥"},"words":["謝謝","對不起"],"fact":"say:sorry"}
-  },
-  {
     "id": "life-1-g32", "skill": "life", "difficulty": 1, "type": "lifeSay", "version": 2, "gentle": true,
     "prompt": "阿悟不小心把朋友的畫弄皺了。這時候，阿悟要說什麼呢？",
     "items": [],
     "choices": [
-      {"id":"sorry","text":"對不起","emoji":"🙇"},
-      {"id":"welcome","text":"不客氣","emoji":"😊"}
+      {"id":"welcome","text":"不客氣","emoji":"😊"},
+      {"id":"sorry","text":"對不起","emoji":"🙇"}
     ],
     "answer": "sorry",
     "hint": "不小心弄壞朋友的東西，要說「對不起」。",
-    "params": {"stem":{"emoji":"🖼️"},"words":["對不起","不客氣"],"fact":"say:sorry"}
+    "params": {"stem":{"emoji":"🖼️"},"words":["不客氣","對不起"],"fact":"say:sorry"}
   },
   {
     "id": "life-1-g33", "skill": "life", "difficulty": 1, "type": "lifeSay", "version": 2, "gentle": true,
@@ -2648,11 +2655,11 @@
     "prompt": "小兔子送了一個禮物給阿悟。這時候，阿悟要說什麼呢？",
     "items": [],
     "choices": [
-      {"id":"welcome","text":"不客氣","emoji":"😊"},
+      {"id":"sorry","text":"對不起","emoji":"🙇"},
       {"id":"thanks","text":"謝謝","emoji":"🙏"}
     ],
     "answer": "thanks",
     "hint": "別人送我們東西，要說「謝謝」，對方會很開心。",
-    "params": {"stem":{"art":"life-thank-you"},"words":["不客氣","謝謝"],"fact":"say:thanks"}
+    "params": {"stem":{"art":"life-thank-you"},"words":["對不起","謝謝"],"fact":"say:thanks"}
   }
 ]

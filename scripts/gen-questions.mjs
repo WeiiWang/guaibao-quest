@@ -950,12 +950,12 @@ function lifeSeeQ(i, ctx, target, k, phrase) {
 }
 function lifeRightQ(i, ctx, good, k, phrase) {
   const pr = pairOf(good.art)
-  // 排隊那張圖只畫了站在一起，一定要和插隊那張成對才看得出情境
-  if (good.art === 'life-queue' && !pr) reject()
-  const others = LP_BAD.filter((b) => !pr || b.art !== pr.bad)
-  // 有成對情境的好做法，大多和它成對的那張一起出現（問法比較具體）；排隊一定要成對
-  const withPair = pr && (good.art === 'life-queue' || rnd() < 0.65)
-  const bads = withPair ? [LP_BAD.find((b) => b.art === pr.bad), ...sample(others, k - 2)] : sample(others, k - 1)
+  // 「哪一個做法比較好」只用同一情境的正反對比（洗手 vs 髒手、排隊 vs 插隊…）：
+  // 拿兩個不同情境來比（遮嘴 vs 髒手）孩子雖然答得出來，但學不到「這個情境該怎麼做」。
+  // 沒有成對圖的好習慣由「這樣好不好？」等題型負責。
+  if (!pr) reject()
+  const others = LP_BAD.filter((b) => b.art !== pr.bad)
+  const bads = [LP_BAD.find((b) => b.art === pr.bad), ...sample(others, k - 2)]
   if (bads.length < k - 1 || bads.some((b) => !b)) reject()
   const matched = !!pr && bads.some((b) => b.art === pr.bad)
   const choices = arrange(good.art, bads.map((b) => b.art), ctx).map(artChoice)
@@ -1110,8 +1110,9 @@ const STEP_CANDS = (which) => shuffle(LN.ROUTINES.flatMap((r) => Array.from({ le
 const ORDER_CANDS = (n) => shuffle(LN.ROUTINES.flatMap((r) => Array.from({ length: 6 }, (_, p) => [r, n, p])))
 
 const life1 = cell('life', 1, [
-  { count: 14, cands: SEE_CANDS, build: (i, ctx, [p, ph]) => lifeSeeQ(i, ctx, p, 3, ph) },
-  { count: 22, cands: RIGHT2, build: (i, ctx, [g, ph]) => lifeRightQ(i, ctx, g, 2, ph) },
+  { count: 21, cands: SEE_CANDS, build: (i, ctx, [p, ph]) => lifeSeeQ(i, ctx, p, 3, ph) },
+  { count: 15, cands: RIGHT2, build: (i, ctx, [g, ph]) => lifeRightQ(i, ctx, g, 2, ph) },
+  // 同情境的正反對比只有 15 種（5 組 × 3 種問法）；不足的部分由「找出阿悟在做什麼」補上（難度 1 維持全是圖片選項）
 ])
 const life2 = cell('life', 2, [
   { count: 12, cands: RIGHT3, build: (i, ctx, [g, ph]) => lifeRightQ(i, ctx, g, 3, ph) },
