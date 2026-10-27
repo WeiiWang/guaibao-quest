@@ -56,7 +56,7 @@ def file_for(text, tag):
 
 
 def to_m4a(wav, m4a):
-    subprocess.run(['afconvert', '-f', 'm4af', '-d', 'aac', '-b', '48000', '-c', '1', wav, m4a], check=True)
+    subprocess.run(['afconvert', '-f', 'm4af', '-d', 'aac', '-b', '32000', '-c', '1', wav, m4a], check=True)
 
 
 def rank(key):
