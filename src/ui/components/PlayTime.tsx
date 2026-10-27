@@ -6,7 +6,8 @@ import { now as clockNow } from '../../domain/clock'
 import { PIN_LOCK_MS, PIN_MAX_FAILS } from '../../domain/constants'
 import { localDateStr } from '../../domain/date'
 import { EXTEND_MINUTES } from '../../learning/playtime'
-import { speak } from '../../learning/speech'
+import { say } from '../../learning/speech'
+import { pickLine } from '../../learning/lines'
 import { useNow } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
 import { Companion } from '../screens/adventure/Companion'
@@ -122,7 +123,7 @@ export function LockScreen({ go }: { go: (s: Screen['name'] | Screen) => void })
   useEffect(() => {
     if (said.current) return
     said.current = true
-    speak('我想睡覺了，明天再一起冒險吧', { enabled: voiceOn })
+    say(pickLine('lock.sleepy').key, pickLine('lock.sleepy').text, { enabled: voiceOn })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

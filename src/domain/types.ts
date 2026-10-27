@@ -157,4 +157,24 @@ export interface Settings {
   freeColoringGranted?: boolean
   /** v4：首次進首頁的引導（冒險地圖按鈕跳動 + 語音）是否已經顯示過 */
   homeGuideShown?: boolean
+  /** v4：孩子的年齡檔（家長設定）。未設定視為 4–5 歲。學習資料一律透過 getLearnerProfile() 讀，之後改成每個孩子各自一份 */
+  ageBand?: AgeBand
+  /** v4：中途離開關卡時保留的進度（題目清單與目前題號） */
+  stageDraft?: StageDraft
+  /** v4：已經看過教學示範的互動（tapN / dragSort）；每種互動第一次出現時阿悟先示範一次 */
+  seenIntros?: string[]
+}
+
+/** 年齡檔：3 歲 = 幼幼模式；4–5 歲從難度 1；6–7 歲從難度 2 */
+export type AgeBand = '3' | '4-5' | '6-7'
+
+/** 離開關卡時存下來的進度；回到同一站時接著玩 */
+export interface StageDraft {
+  chapterId: string
+  station: number
+  run: number
+  sessionId: string
+  /** 這一站的題目（題目 id；review/followUp 標記） */
+  plan: { id: string; review: boolean; followUp: boolean }[]
+  savedAt: number
 }

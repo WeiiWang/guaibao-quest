@@ -4,8 +4,9 @@ import { db } from '../../../db/db'
 import { Art } from '../../components/Art'
 import { useFirstArt } from '../../artProbe'
 import './adventure.css'
+import './adventure-v4.css'
 
-export type Pose = 'idle' | 'happy' | 'cheer' | 'think' | 'sleepy' | 'eating'
+export type Pose = 'idle' | 'happy' | 'cheer' | 'think' | 'sleepy' | 'eating' | 'sing' | 'dance' | 'laugh' | 'shy' | 'dizzy'
 
 /** 依寵物階段挑姿勢圖：蛋沒有姿勢，其餘為 pet-<stage>-<pose>；缺圖時退回 happy / idle */
 export function companionArt(stage: 'egg' | 'baby' | 'adult', pose: Pose, feedCount = 0): string[] {

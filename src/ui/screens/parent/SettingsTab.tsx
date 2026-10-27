@@ -8,6 +8,9 @@ import { PinPad } from '../../components/PinPad'
 import { useToast } from '../../hooks'
 import { usePoopSetting } from '../../pet/hooks'
 import { Switch } from './AudioTab'
+import { AGE_BANDS, AGE_LABEL } from '../../../learning/profile'
+import { useLearnerProfile } from '../../learningHooks'
+import './learning.css'
 
 export function SettingsTab({ onReset }: { onReset: () => void }) {
   const toast = useToast()
@@ -21,6 +24,7 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
   const [pinMsg, setPinMsg] = useState('')
   const [confirmReset, setConfirmReset] = useState(false)
   const poopOn = usePoopSetting()
+  const profile = useLearnerProfile()
 
   const changePin = async () => {
     if (!isValidPin(newPin)) return setPinMsg('新 PIN 需為 4 位數字')
@@ -36,6 +40,34 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
 
   return (
     <section className="settings">
+      <div className="card" data-testid="age-card">
+        <h2>孩子的年齡</h2>
+        <p className="lt-text">決定學習從哪裡開始。已經玩過的技能不會被改動，只影響還沒玩過的。</p>
+        <div className="lt-choices" role="radiogroup" aria-label="孩子的年齡">
+          {AGE_BANDS.map((b) => (
+            <button
+              key={b}
+              role="radio"
+              aria-checked={profile.configured && profile.ageBand === b}
+              className={`lt-choice ${profile.configured && profile.ageBand === b ? 'on' : ''}`}
+              data-testid={`age-${b}`}
+              onClick={async () => {
+                const r = await repo.setAgeBand(b)
+                toast(r.ok ? `已設定：${AGE_LABEL[b]}` : r.error, r.ok ? 'ok' : 'warn')
+              }}
+            >
+              {AGE_LABEL[b]}
+            </button>
+          ))}
+        </div>
+        <p className="lt-note">
+          {!profile.configured && '還沒設定：目前用 4–5 歲的內容（從最簡單開始）。'}
+          {profile.ageBand === '3' && profile.configured && '幼幼模式：只有 2 選 1、只出 1–3 個、最常見的物件、答錯馬上示範。'}
+          {profile.ageBand === '4-5' && profile.configured && '從最簡單的題目開始，慢慢加深。'}
+          {profile.ageBand === '6-7' && profile.configured && '從難度 2 開始，表現好會升到加法、雙屬性等新內容。'}
+        </p>
+      </div>
+
       <div className="card">
         <h2>寵物</h2>
         <Switch

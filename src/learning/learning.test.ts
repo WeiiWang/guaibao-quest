@@ -56,36 +56,39 @@ describe('計分', () => {
   })
 })
 
+/** 已經玩過一陣子的技能（total 夠大），不會觸發新技能的快速通道 */
+const seasoned = (skill: SkillId): SkillState => ({ ...initialSkillState(skill), total: 50 })
+
 describe('難度調整', () => {
   const feed = (state: SkillState, results: boolean[], difficulty: Difficulty = state.difficulty) =>
     results.reduce((s, ok) => applyAttempt(s, ok ? att(s.skill, { difficulty }) : wrongThenRight(s.skill, { difficulty })), state)
   it('最近 5 題無提示答對 >= 4 → 升一級；變更後清空 recent', () => {
-    const s = feed(initialSkillState('number'), [true, true, true, false, true])
+    const s = feed(seasoned('number'), [true, true, true, false, true])
     expect(s.difficulty).toBe(2)
     expect(s.recent).toEqual([])
   })
-  it('<= 1 → 降一級，最低 1、最高 3', () => {
-    expect(feed(initialSkillState('number'), [false, false, false, false, false]).difficulty).toBe(1)
-    const at2 = { ...initialSkillState('number'), difficulty: 2 as Difficulty }
+  it('<= 1 → 降一級，最低 1、最高 4', () => {
+    expect(feed(seasoned('number'), [false, false, false, false, false]).difficulty).toBe(1)
+    const at2 = { ...seasoned('number'), difficulty: 2 as Difficulty }
     expect(feed(at2, [false, true, false, false, false]).difficulty).toBe(1)
-    const at3 = { ...initialSkillState('number'), difficulty: 3 as Difficulty }
-    expect(feed(at3, [true, true, true, true, true]).difficulty).toBe(3)
+    const at4 = { ...seasoned('number'), difficulty: 4 as Difficulty }
+    expect(feed(at4, [true, true, true, true, true]).difficulty).toBe(4)
   })
   it('2–3 題答對維持原級；未滿 5 題不調整', () => {
-    expect(feed(initialSkillState('pattern'), [true, true, true, true]).difficulty).toBe(1)
-    expect(feed(initialSkillState('pattern'), [true, false, true, false, false]).difficulty).toBe(1)
+    expect(feed(seasoned('pattern'), [true, true, true, true]).difficulty).toBe(1)
+    expect(feed(seasoned('pattern'), [true, false, true, false, false]).difficulty).toBe(1)
   })
   it('提示後答對不算進升級條件', () => {
-    const s = [1, 2, 3, 4, 5].reduce((st) => applyAttempt(st, wrongThenRight('number')), initialSkillState('number'))
+    const s = [1, 2, 3, 4, 5].reduce((st) => applyAttempt(st, wrongThenRight('number')), seasoned('number'))
     expect(s.difficulty).toBe(1)
-    const up = feed(initialSkillState('number'), [true, true, true, true, true])
+    const up = feed(seasoned('number'), [true, true, true, true, true])
     expect(up.difficulty).toBe(2)
-    const stillOne = [true, true, true].reduce((st) => applyAttempt(st, att('number')), initialSkillState('number'))
+    const stillOne = [true, true, true].reduce((st) => applyAttempt(st, att('number')), seasoned('number'))
     const withHints = [1, 2].reduce((st) => applyAttempt(st, wrongThenRight('number')), stillOne)
     expect(withHints.difficulty).toBe(1)
   })
   it('其他難度的題與複習題不影響目前難度的判斷', () => {
-    const base = initialSkillState('number')
+    const base = seasoned('number')
     expect(applyAttempt(base, att('number', { difficulty: 3 })).recent).toEqual([])
     expect(applyAttempt(base, att('classify')).recent).toEqual([])
   })

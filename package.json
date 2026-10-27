@@ -16,7 +16,9 @@
     "shots:pet": "node scripts/shots-pet.mjs",
     "gen:questions": "node scripts/gen-questions.mjs",
     "e2e:content": "node scripts/e2e-content.mjs",
-    "e2e:ux": "node scripts/e2e-ux.mjs"
+    "e2e:ux": "node scripts/e2e-ux.mjs",
+    "e2e:learning": "node scripts/e2e-learning.mjs",
+    "e2e:interact": "node scripts/e2e-interact.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",

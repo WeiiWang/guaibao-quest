@@ -1,14 +1,14 @@
 import { localDateStr } from '../domain/date'
 import type { Attempt, Difficulty, SkillId, SkillState } from './types'
-import { isIndependent, SKILLS, SKILL_NAMES } from './types'
+import { isIndependent, MAX_DIFFICULTY, SKILLS, SKILL_NAMES } from './types'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
 /** 各技能各難度的白話描述（家長報告用） */
 export const LEVEL_LABEL: Record<SkillId, Record<Difficulty, string>> = {
-  number: { 1: '數 1–5 個', 2: '數 6–10 個和比較多寡', 3: '數 11–20 個和比多幾個' },
-  classify: { 1: '依種類分類', 2: '依顏色和種類分類', 3: '找出不同類的那一個' },
-  pattern: { 1: 'AB 規律', 2: 'AAB、ABB 規律', 3: 'ABC 規律和補中間缺的' },
+  number: { 1: '數 1–5 個、拿出幾個', 2: '數 6–10 個、比較多寡', 3: '數 11–20 個、比多幾個', 4: '10 以內加法和數序' },
+  classify: { 1: '依種類分類', 2: '依顏色和種類分類', 3: '找出不同類的那一個', 4: '雙屬性（黃色的水果）' },
+  pattern: { 1: 'AB 規律', 2: 'AAB、ABB 規律和補中間', 3: 'ABC 規律和補中間缺的', 4: '顏色、種類規律和成長規律' },
 }
 
 /** 少於這個題數，不下「穩/不穩」的結論 */
@@ -47,7 +47,7 @@ function skillText(name: string, label: string, rate: number | null, total: numb
   if (rate === null || total < MIN_ATTEMPTS_FOR_VERDICT) return `${name}：這週練習還不多，多玩幾站就能看出來。`
   const pct = Math.round(rate * 100)
   if (rate >= 0.8) {
-    return difficulty === 3
+    return difficulty === MAX_DIFFICULTY
       ? `${name}（${label}）已經很穩（${pct}%），可以請孩子自己說說想法。`
       : `${name}（${label}）已經很穩（${pct}%），可以多挑戰下一個難度。`
   }

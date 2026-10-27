@@ -4,7 +4,8 @@ import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
 import { HUAGUOSHAN } from '../../../learning/chapter'
 import { playSfx } from '../../../learning/sfx'
-import { speak } from '../../../learning/speech'
+import { say } from '../../../learning/speech'
+import { pickLine } from '../../../learning/lines'
 import { MATERIAL_IDS, MATERIAL_NAMES, type MaterialCost } from '../../../learning/types'
 import { MAT_EMOJI } from '../../../art/items'
 import { Icon } from '../../components/Icon'
@@ -43,7 +44,8 @@ export function Ceremony({ onMap, go }: { onMap: () => void; go: (s: Screen) => 
   useEffect(() => {
     if (!opened) return
     playSfx('reward', soundOn)
-    speak('今天的冒險完成了！', { enabled: voiceOn })
+    const l = pickLine('ceremony.done')
+    say(l.key, l.text, { enabled: voiceOn })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened])
 

@@ -20,6 +20,7 @@ import { balanceOf, checkPenalty, grantPoints } from '../domain/points'
 import { canBuy } from '../domain/shop'
 import { clampTaskPoints, instancesToCreate, transition } from '../domain/tasks'
 import type {
+  AgeBand,
   ColoringProgress,
   Pet,
   Poop,
@@ -27,6 +28,7 @@ import type {
   RoomThemeChoice,
   Settings,
   Stage,
+  StageDraft,
   TaskTemplate,
 } from '../domain/types'
 import { now as clockNow } from '../domain/clock'
@@ -41,11 +43,13 @@ import { addMaterial, emptyCost, stationRewardQty, STATION_SIZE } from '../learn
 import { SHOP_CATALOG, balanceOfMaterials, canCraft, type MaterialBalance } from '../learning/materials'
 import { DAILY_LIMIT_OPTIONS, EXTEND_MINUTES, learningSettingsOf, type LearningSettings } from '../learning/playtime'
 import { makeRng, type Rng } from '../learning/rng'
-import { planStation, type PlannedQuestion } from '../learning/select'
+import { adaptPlan, planStation, type PlannedQuestion } from '../learning/select'
+import { AGE_BANDS, learnerProfileOf, type LearnerProfile } from '../learning/profile'
 import { applyAttempt, applyStationResult, initialSkillState } from '../learning/skills'
 import { MATERIAL_IDS, MATERIAL_NAMES, SKILLS } from '../learning/types'
 import type {
   Attempt,
+  Interaction,
   MaterialCost,
   MaterialId,
   PlayTime,
@@ -568,10 +572,25 @@ export class Repo {
   }
 
   // ---------- 學習：作答 / 關卡 ----------
+  /**
+   * 這個孩子的學習檔案：年齡檔、起始難度、是否幼幼模式。
+   * 學習相關程式一律從這裡讀（目前存在 settings；之後改成每個孩子各自一份時只需要改這個函式）。
+   */
+  async getLearnerProfile(): Promise<LearnerProfile> {
+    return learnerProfileOf(await this.getSettings())
+  }
+
+  async setAgeBand(band: AgeBand): Promise<Result> {
+    if (!AGE_BANDS.includes(band)) return { ok: false, error: '不支援的年齡' }
+    await this.db.settings.update(SETTINGS_ID, { ageBand: band })
+    return { ok: true }
+  }
+
+  /** 還沒有紀錄的技能，從年齡對應的起始難度開始；已經有紀錄的不受年齡影響 */
   async getSkillStates(): Promise<Record<SkillId, SkillState>> {
-    const rows = await this.db.skillState.toArray()
+    const [rows, profile] = await Promise.all([this.db.skillState.toArray(), this.getLearnerProfile()])
     return Object.fromEntries(
-      SKILLS.map((k) => [k, rows.find((r) => r.skill === k) ?? initialSkillState(k)]),
+      SKILLS.map((k) => [k, rows.find((r) => r.skill === k) ?? initialSkillState(k, 0, profile.startDifficulty)]),
     ) as Record<SkillId, SkillState>
   }
 
@@ -590,9 +609,90 @@ export class Repo {
     stationIndex: number,
     now = this.clock(),
     rng: Rng = makeRng(Math.floor(Math.random() * 2 ** 31)),
+    chapterId?: string,
   ): Promise<PlannedQuestion[]> {
-    const [states, attempts] = await Promise.all([this.getSkillStates(), this.db.attempts.toArray()])
-    return planStation({ stationIndex, states, attempts, now, rng })
+    const [states, attempts, profile] = await Promise.all([this.getSkillStates(), this.db.attempts.toArray(), this.getLearnerProfile()])
+    const slots = chapterId ? getChapter(chapterId)?.stations[stationIndex]?.slots : undefined
+    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle, slots })
+  }
+
+  /**
+   * 進入一站：有上次中途離開留下的進度（同一章、同一站、同一輪）就接著玩，
+   * 否則規劃新的一站並存下進度。idx = 第一個還沒答的題號。
+   */
+  async openStation(
+    chapterId: string,
+    station: number,
+    now = this.clock(),
+    rng: Rng = makeRng(Math.floor(Math.random() * 2 ** 31)),
+  ): Promise<{ sessionId: string; plan: PlannedQuestion[]; idx: number; resumed: boolean }> {
+    const [settings, prog] = await Promise.all([this.getSettings(), this.getProgress(chapterId, now)])
+    const draft = settings?.stageDraft
+    if (draft && draft.chapterId === chapterId && draft.station === station && draft.run === prog.run && !prog.stations[station - 1]?.done) {
+      const plan: PlannedQuestion[] = []
+      for (const p of draft.plan) {
+        const q = getQuestion(p.id)
+        if (!q) break
+        plan.push({ question: q, review: p.review, followUp: p.followUp })
+      }
+      if (plan.length === draft.plan.length && plan.length > 0) {
+        const answered = new Set((await this.db.attempts.where('sessionId').equals(draft.sessionId).toArray()).map((a) => a.questionId))
+        const first = plan.findIndex((p) => !answered.has(p.question.id))
+        return { sessionId: draft.sessionId, plan, idx: first < 0 ? plan.length - 1 : first, resumed: answered.size > 0 }
+      }
+    }
+    const plan = await this.planStation(station - 1, now, rng, chapterId)
+    const sessionId = newId()
+    await this.saveStageDraft({ chapterId, station, run: prog.run, sessionId, plan, now })
+    return { sessionId, plan, idx: 0, resumed: false }
+  }
+
+  async saveStageDraft(input: { chapterId: string; station: number; run: number; sessionId: string; plan: PlannedQuestion[]; now?: number }): Promise<void> {
+    const draft: StageDraft = {
+      chapterId: input.chapterId,
+      station: input.station,
+      run: input.run,
+      sessionId: input.sessionId,
+      plan: input.plan.map((p) => ({ id: p.question.id, review: p.review, followUp: p.followUp })),
+      savedAt: input.now ?? this.clock(),
+    }
+    await this.db.settings.update(SETTINGS_ID, { stageDraft: draft })
+  }
+
+  /** 已經看過教學示範的互動 */
+  async getSeenIntros(): Promise<string[]> {
+    return (await this.getSettings())?.seenIntros ?? []
+  }
+
+  async markIntroSeen(interaction: string): Promise<void> {
+    await this.db.transaction('rw', this.db.settings, async () => {
+      const cur = (await this.db.settings.get(SETTINGS_ID))?.seenIntros ?? []
+      if (!cur.includes(interaction)) await this.db.settings.update(SETTINGS_ID, { seenIntros: [...cur, interaction] })
+    })
+  }
+
+  async clearStageDraft(): Promise<void> {
+    await this.db.settings.update(SETTINGS_ID, { stageDraft: undefined })
+  }
+
+  /**
+   * 站中調整剩下的題（不改技能狀態）：剛升級後改用新難度重抽；同技能連續 2 題第一次就答錯，下一題降 1 級。
+   * 會把調整後的題目存回進度。
+   */
+  async adaptStation(
+    input: { chapterId: string; station: number; sessionId: string; plan: PlannedQuestion[]; from: number },
+    rng: Rng = makeRng(Math.floor(Math.random() * 2 ** 31)),
+  ): Promise<PlannedQuestion[]> {
+    const [states, attempts, profile, prog] = await Promise.all([
+      this.getSkillStates(),
+      this.db.attempts.toArray(),
+      this.getLearnerProfile(),
+      this.getProgress(input.chapterId),
+    ])
+    const mine = attempts.filter((a) => a.sessionId === input.sessionId && !a.review).sort((a, b) => a.at - b.at)
+    const plan = adaptPlan({ plan: input.plan, from: input.from, states, attempts, stationAttempts: mine, rng, gentle: profile.gentle })
+    await this.saveStageDraft({ chapterId: input.chapterId, station: input.station, run: prog.run, sessionId: input.sessionId, plan })
+    return plan
   }
 
   /**
@@ -608,6 +708,7 @@ export class Repo {
       durationMs: number
       review?: boolean
       followUp?: boolean
+      interaction?: Interaction
     },
     now = this.clock(),
   ): Promise<Result<{ duplicate: boolean }>> {
@@ -616,7 +717,7 @@ export class Repo {
     if (!input.sessionId) return { ok: false, error: '缺少 sessionId' }
     const hintsUsed = input.firstTryCorrect ? 0 : Math.max(1, Math.min(2, Math.round(input.hintsUsed || 0)))
     const d = this.db
-    return d.transaction('rw', [d.attempts, d.skillState], async () => {
+    return d.transaction('rw', [d.attempts, d.skillState, d.settings], async () => {
       const id = `${input.sessionId}:${input.questionId}`
       if (await d.attempts.get(id)) return { ok: true, duplicate: true } as const
       const attempt: Attempt = {
@@ -631,10 +732,12 @@ export class Repo {
         sessionId: input.sessionId,
         ...(input.review ? { review: true } : {}),
         ...(input.followUp ? { followUp: true } : {}),
+        interaction: input.interaction ?? q.interaction ?? 'pick',
       }
       await d.attempts.add(attempt)
-      const state = (await d.skillState.get(q.skill)) ?? initialSkillState(q.skill, now)
-      await d.skillState.put(applyAttempt(state, attempt))
+      const profile = learnerProfileOf(await d.settings.get(SETTINGS_ID))
+      const state = (await d.skillState.get(q.skill)) ?? initialSkillState(q.skill, now, profile.startDifficulty)
+      await d.skillState.put(applyAttempt(state, attempt, { gentle: profile.gentle }))
       return { ok: true, duplicate: false } as const
     })
   }
@@ -660,7 +763,7 @@ export class Repo {
     const def = chapter?.stations[input.station - 1]
     if (!chapter || !def) return { ok: false, error: '找不到這一站' }
     const d = this.db
-    return d.transaction('rw', [d.attempts, d.skillState, d.progress, d.materialLedger], async () => {
+    return d.transaction('rw', [d.attempts, d.skillState, d.progress, d.materialLedger, d.settings], async () => {
       const attempts = await d.attempts.where('sessionId').equals(input.sessionId).toArray()
       if (attempts.length < STATION_SIZE) return { ok: false, error: '這一站的題目還沒答完' } as const
       if (await d.materialLedger.get(`station:${input.sessionId}`)) return { ok: false, error: '這一站的獎勵已經領過了' } as const
@@ -684,10 +787,12 @@ export class Repo {
         i === input.station - 1 ? { done: true, independent, total: attempts.length, completedAt: now } : s,
       )
       await d.progress.put({ ...prog, stations, updatedAt: now })
+      await d.settings.update(SETTINGS_ID, { stageDraft: undefined })
 
       const newlyMastered: SkillId[] = []
+      const startDifficulty = learnerProfileOf(await d.settings.get(SETTINGS_ID)).startDifficulty
       for (const skill of SKILLS) {
-        const cur = (await d.skillState.get(skill)) ?? initialSkillState(skill, now)
+        const cur = (await d.skillState.get(skill)) ?? initialSkillState(skill, now, startDifficulty)
         const next = applyStationResult(cur, attempts, now)
         if (Object.keys(next.mastered).length > Object.keys(cur.mastered).length) newlyMastered.push(skill)
         if (next !== cur) await d.skillState.put(next)

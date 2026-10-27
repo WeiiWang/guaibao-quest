@@ -1,697 +1,1976 @@
 [
   {
-    "id": "pattern-1-01", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "id": "pattern-1-01", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
+      {"obj":"obj-star"},
       {"obj":"obj-fish"},
-      {"obj":"obj-grape"},
+      {"obj":"obj-star"},
       {"obj":"obj-fish"},
-      {"obj":"obj-grape"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-star","obj":"obj-star"},
-      {"id":"obj-fish","obj":"obj-fish"}
-    ],
-    "answer": "obj-fish",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-1-02", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-shell"},
-      {"obj":"obj-star"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-star"},
-      {"obj":"obj-shell"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-star","obj":"obj-star"},
-      {"id":"obj-shell","obj":"obj-shell"}
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-piano","obj":"decor-piano"}
     ],
     "answer": "obj-star",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：星星、小魚，星星、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["星星","小魚","星星","小魚",""]}
   },
   {
-    "id": "pattern-1-03", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-1-02", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-shell"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "decor-dino",
+    "hint": "一個一個看：小雞、恐龍，小雞、恐龍。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["小雞","恐龍","小雞","恐龍","小雞",""]}
+  },
+  {
+    "id": "pattern-1-03", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"decor-car"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-car"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-rabbit","obj":"obj-rabbit"}
     ],
-    "answer": "obj-rabbit",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-grape",
+    "hint": "一個一個看：葡萄、汽車，葡萄、汽車。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["葡萄","汽車","葡萄","汽車","葡萄","汽車",""]}
   },
   {
-    "id": "pattern-1-04", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-1-04", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
       {"obj":"obj-flower"},
-      {"obj":"obj-grape"},
+      {"obj":"obj-shell"},
       {"obj":"obj-flower"},
-      {"obj":"obj-grape"},
+      {"obj":"obj-shell"},
       {"obj":null}
     ],
     "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"obj-shell","obj":"obj-shell"},
-      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-flower","obj":"obj-flower"}
     ],
     "answer": "obj-flower",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：花、貝殼，花、貝殼。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["花","貝殼","花","貝殼",""]}
   },
   {
-    "id": "pattern-1-05", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "id": "pattern-1-05", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-chick"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-chick"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-flower",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-1-06", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-chick"},
       {"obj":"obj-star"},
-      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
       {"obj":"obj-star"},
-      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
       {"obj":"obj-star"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-star","obj":"obj-star"}
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
-    "answer": "obj-chick",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-peach",
+    "hint": "一個一個看：星星、桃子，星星、桃子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["星星","桃子","星星","桃子","星星",""]}
   },
   {
-    "id": "pattern-1-07", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-1-06", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
-      {"obj":"obj-banana"},
       {"obj":"obj-rabbit"},
-      {"obj":"obj-banana"},
+      {"obj":"obj-flower"},
       {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "一個一個看：小兔子、花，小兔子、花。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["小兔子","花","小兔子","花","小兔子","花",""]}
+  },
+  {
+    "id": "pattern-1-07", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
       {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "decor-piano",
+    "hint": "一個一個看：鋼琴、蘋果，鋼琴、蘋果。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["鋼琴","蘋果","鋼琴","蘋果",""]}
+  },
+  {
+    "id": "pattern-1-08", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "decor-ball",
+    "hint": "一個一個看：葡萄、皮球，葡萄、皮球。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["葡萄","皮球","葡萄","皮球","葡萄",""]}
+  },
+  {
+    "id": "pattern-1-09", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-piano","obj":"decor-piano"}
+    ],
+    "answer": "decor-piano",
+    "hint": "一個一個看：鋼琴、葡萄，鋼琴、葡萄。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["鋼琴","葡萄","鋼琴","葡萄","鋼琴","葡萄",""]}
+  },
+  {
+    "id": "pattern-1-10", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "decor-piano",
+    "hint": "一個一個看：鋼琴、桃子，鋼琴、桃子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["鋼琴","桃子","鋼琴","桃子",""]}
+  },
+  {
+    "id": "pattern-1-11", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-rocket"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-piano","obj":"decor-piano"}
+    ],
+    "answer": "decor-piano",
+    "hint": "一個一個看：火箭、鋼琴，火箭、鋼琴。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["火箭","鋼琴","火箭","鋼琴","火箭",""]}
+  },
+  {
+    "id": "pattern-1-12", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "一個一個看：小兔子、汽車，小兔子、汽車。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["小兔子","汽車","小兔子","汽車","小兔子","汽車",""]}
+  },
+  {
+    "id": "pattern-1-13", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-peach","obj":"obj-peach"},
       {"id":"obj-banana","obj":"obj-banana"}
     ],
     "answer": "obj-banana",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：香蕉、恐龍，香蕉、恐龍。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["香蕉","恐龍","香蕉","恐龍",""]}
   },
   {
-    "id": "pattern-1-08", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-rabbit"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
-    ],
-    "answer": "obj-peach",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-1-09", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-flower"},
-      {"obj":"obj-apple"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-apple"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-apple"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-fish","obj":"obj-fish"}
-    ],
-    "answer": "obj-flower",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-1-10", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-peach"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-peach","obj":"obj-peach"}
-    ],
-    "answer": "obj-rabbit",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-1-11", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-flower"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-flower"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-grape","obj":"obj-grape"}
-    ],
-    "answer": "obj-peach",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-1-12", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-shell"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-star","obj":"obj-star"},
-      {"id":"obj-shell","obj":"obj-shell"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
-    ],
-    "answer": "obj-rabbit",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-1-13", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-1-14", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
       {"obj":"obj-apple"},
-      {"obj":"obj-grape"},
+      {"obj":"decor-dino"},
       {"obj":"obj-apple"},
-      {"obj":"obj-grape"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-apple"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-peach","obj":"obj-peach"}
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-flower","obj":"obj-flower"}
     ],
-    "answer": "obj-apple",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "decor-dino",
+    "hint": "一個一個看：蘋果、恐龍，蘋果、恐龍。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["蘋果","恐龍","蘋果","恐龍","蘋果",""]}
   },
   {
-    "id": "pattern-1-14", "skill": "pattern", "difficulty": 1, "type": "next", "version": 1,
+    "id": "pattern-1-15", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-star"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-star"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-ball"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-star","obj":"obj-star"},
       {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-ball","obj":"decor-ball"},
       {"id":"obj-shell","obj":"obj-shell"}
     ],
-    "answer": "obj-shell",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-chick",
+    "hint": "一個一個看：小雞、皮球，小雞、皮球。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["小雞","皮球","小雞","皮球","小雞","皮球",""]}
   },
   {
-    "id": "pattern-2-01", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-1-16", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "decor-dino",
+    "hint": "一個一個看：恐龍、花，恐龍、花。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["恐龍","花","恐龍","花",""]}
+  },
+  {
+    "id": "pattern-1-17", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-fish"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-car",
+    "hint": "一個一個看：花、汽車，花、汽車。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["花","汽車","花","汽車","花",""]}
+  },
+  {
+    "id": "pattern-1-18", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-car"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-car"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "一個一個看：火箭、汽車，火箭、汽車。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["火箭","汽車","火箭","汽車","火箭","汽車",""]}
+  },
+  {
+    "id": "pattern-1-19", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
       {"obj":"obj-chick"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-shell","obj":"obj-shell"},
-      {"id":"obj-chick","obj":"obj-chick"}
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
     ],
-    "answer": "obj-chick",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "decor-rocket",
+    "hint": "一個一個看：火箭、小雞，火箭、小雞。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["火箭","小雞","火箭","小雞",""]}
   },
   {
-    "id": "pattern-2-02", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-1-20", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
-      {"obj":"obj-peach"},
-      {"obj":"obj-grape"},
-      {"obj":"obj-grape"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-grape"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-rabbit"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
       {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "decor-piano",
+    "hint": "一個一個看：小兔子、鋼琴，小兔子、鋼琴。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["小兔子","鋼琴","小兔子","鋼琴","小兔子",""]}
+  },
+  {
+    "id": "pattern-1-21", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "decor-piano",
+    "hint": "一個一個看：鋼琴、桃子，鋼琴、桃子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["鋼琴","桃子","鋼琴","桃子","鋼琴","桃子",""]}
+  },
+  {
+    "id": "pattern-1-22", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"obj-grape","obj":"obj-grape"}
     ],
     "answer": "obj-grape",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：葡萄、火箭，葡萄、火箭。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["葡萄","火箭","葡萄","火箭",""]}
   },
   {
-    "id": "pattern-2-03", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-1-23", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "obj-fish",
+    "hint": "一個一個看：火箭、小魚，火箭、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["火箭","小魚","火箭","小魚","火箭",""]}
+  },
+  {
+    "id": "pattern-1-24", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
       {"obj":"obj-banana"},
+      {"obj":"decor-piano"},
       {"obj":"obj-banana"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "decor-piano",
+    "hint": "一個一個看：鋼琴、香蕉，鋼琴、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["鋼琴","香蕉","鋼琴","香蕉","鋼琴","香蕉",""]}
+  },
+  {
+    "id": "pattern-1-25", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-piano",
+    "hint": "一個一個看：鋼琴、香蕉，鋼琴、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["鋼琴","香蕉","鋼琴","香蕉",""]}
+  },
+  {
+    "id": "pattern-1-26", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "一個一個看：桃子、小魚，桃子、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["桃子","小魚","桃子","小魚","桃子",""]}
+  },
+  {
+    "id": "pattern-1-27", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-grape",
+    "hint": "一個一個看：葡萄、小雞，葡萄、小雞。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["葡萄","小雞","葡萄","小雞","葡萄","小雞",""]}
+  },
+  {
+    "id": "pattern-1-28", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-dino"},
       {"obj":"obj-apple"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
       {"obj":"obj-apple"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-banana","obj":"obj-banana"}
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"decor-dino","obj":"decor-dino"}
     ],
-    "answer": "obj-banana",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "decor-dino",
+    "hint": "一個一個看：恐龍、蘋果，恐龍、蘋果。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["恐龍","蘋果","恐龍","蘋果",""]}
   },
   {
-    "id": "pattern-2-04", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-1-29", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
       {"obj":"obj-shell"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-peach"},
+      {"obj":"obj-flower"},
       {"obj":"obj-shell"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-shell"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-flower",
+    "hint": "一個一個看：貝殼、花，貝殼、花。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["貝殼","花","貝殼","花","貝殼",""]}
+  },
+  {
+    "id": "pattern-1-30", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
       {"obj":"obj-peach"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-piano"},
       {"obj":"obj-peach"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-peach","obj":"obj-peach"}
     ],
-    "answer": "obj-shell",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "decor-piano",
+    "hint": "一個一個看：鋼琴、桃子，鋼琴、桃子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["鋼琴","桃子","鋼琴","桃子","鋼琴","桃子",""]}
   },
   {
-    "id": "pattern-2-05", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-1-31", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-peach"},
-      {"obj":"obj-peach"},
+      {"obj":"obj-chick"},
       {"obj":"obj-banana"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-peach"},
+      {"obj":"obj-chick"},
       {"obj":"obj-banana"},
-      {"obj":"obj-peach"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-shell","obj":"obj-shell"},
-      {"id":"obj-peach","obj":"obj-peach"}
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-chick","obj":"obj-chick"}
     ],
-    "answer": "obj-peach",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-chick",
+    "hint": "一個一個看：小雞、香蕉，小雞、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["小雞","香蕉","小雞","香蕉",""]}
   },
   {
-    "id": "pattern-2-06", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-1-32", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-flower",
+    "hint": "一個一個看：汽車、花，汽車、花。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["汽車","花","汽車","花","汽車",""]}
+  },
+  {
+    "id": "pattern-1-33", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-flower",
+    "hint": "一個一個看：花、葡萄，花、葡萄。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["花","葡萄","花","葡萄","花","葡萄",""]}
+  },
+  {
+    "id": "pattern-1-34", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "一個一個看：小兔子、花，小兔子、花。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["小兔子","花","小兔子","花",""]}
+  },
+  {
+    "id": "pattern-1-35", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
       {"obj":"obj-star"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-flower"},
+      {"obj":"obj-chick"},
       {"obj":"obj-star"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-flower"},
+      {"obj":"obj-chick"},
       {"obj":"obj-star"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
       {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "一個一個看：星星、小雞，星星、小雞。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["星星","小雞","星星","小雞","星星",""]}
+  },
+  {
+    "id": "pattern-1-36", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-dino",
+    "hint": "一個一個看：恐龍、葡萄，恐龍、葡萄。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":2,"words":["恐龍","葡萄","恐龍","葡萄","恐龍","葡萄",""]}
+  },
+  {
+    "id": "pattern-2-01", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-peach",
+    "hint": "一個一個看：星星、星星、桃子，星星、星星、桃子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["星星","星星","桃子","星星","星星",""]}
+  },
+  {
+    "id": "pattern-2-02", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-ball"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-ball","obj":"decor-ball"},
       {"id":"obj-flower","obj":"obj-flower"}
     ],
     "answer": "obj-flower",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：花、花、皮球，花、花、皮球。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["花","花","皮球","花","花","皮球",""]}
   },
   {
-    "id": "pattern-2-07", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-2-03", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-star"},
-      {"obj":"obj-star"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-star"},
-      {"obj":"obj-star"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-dino"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "decor-dino",
+    "hint": "一個一個看：恐龍、恐龍、火箭，恐龍、恐龍、火箭。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["恐龍","恐龍","火箭","恐龍","恐龍","火箭","恐龍",""]}
+  },
+  {
+    "id": "pattern-2-04", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-fish",
+    "hint": "一個一個看：小雞、小雞、小魚，小雞、小雞、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["小雞","小雞","小魚","小雞","小雞",""]}
+  },
+  {
+    "id": "pattern-2-05", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-flower","obj":"obj-flower"},
       {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-star","obj":"obj-star"}
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
-    "answer": "obj-flower",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-apple",
+    "hint": "一個一個看：蘋果、蘋果、小魚，蘋果、蘋果、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["蘋果","蘋果","小魚","蘋果","蘋果","小魚",""]}
   },
   {
-    "id": "pattern-2-08", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-2-06", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-ball","obj":"decor-ball"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "一個一個看：火箭、火箭、香蕉，火箭、火箭、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["火箭","火箭","香蕉","火箭","火箭","香蕉","火箭",""]}
+  },
+  {
+    "id": "pattern-2-07", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
       {"obj":"obj-star"},
-      {"obj":"obj-star"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-piano","obj":"decor-piano"},
       {"id":"obj-star","obj":"obj-star"}
     ],
     "answer": "obj-star",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：小雞、小雞、星星，小雞、小雞、星星。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["小雞","小雞","星星","小雞","小雞",""]}
   },
   {
-    "id": "pattern-2-09", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-banana"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-peach"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-banana",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-2-10", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-fish"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-flower"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-banana","obj":"obj-banana"}
-    ],
-    "answer": "obj-fish",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-2-11", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-2-08", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
       {"obj":"obj-chick"},
       {"obj":"obj-chick"},
-      {"obj":"obj-apple"},
+      {"obj":"obj-flower"},
       {"obj":"obj-chick"},
       {"obj":"obj-chick"},
-      {"obj":"obj-apple"},
-      {"obj":"obj-chick"},
+      {"obj":"obj-flower"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-flower","obj":"obj-flower"},
       {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-apple","obj":"obj-apple"}
+      {"id":"decor-car","obj":"decor-car"}
     ],
     "answer": "obj-chick",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：小雞、小雞、花，小雞、小雞、花。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["小雞","小雞","花","小雞","小雞","花",""]}
   },
   {
-    "id": "pattern-2-12", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-2-09", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-star"},
-      {"obj":"obj-star"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-star"},
-      {"obj":"obj-star"},
-      {"obj":"obj-rabbit"},
+      {"obj":"decor-ball"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-ball"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-ball"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-ball",
+    "hint": "一個一個看：皮球、皮球、小魚，皮球、皮球、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["皮球","皮球","小魚","皮球","皮球","小魚","皮球",""]}
+  },
+  {
+    "id": "pattern-2-10", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-star"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
       {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-apple","obj":"obj-apple"},
       {"id":"obj-rabbit","obj":"obj-rabbit"}
     ],
     "answer": "obj-star",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：蘋果、蘋果、星星，蘋果、蘋果、星星。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["蘋果","蘋果","星星","蘋果","蘋果",""]}
   },
   {
-    "id": "pattern-2-13", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
+    "id": "pattern-2-11", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"},
       {"obj":"obj-grape"},
-      {"obj":"obj-grape"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-grape"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"},
       {"obj":"obj-grape"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-shell","obj":"obj-shell"}
     ],
-    "answer": "obj-fish",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-shell",
+    "hint": "一個一個看：貝殼、貝殼、葡萄，貝殼、貝殼、葡萄。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["貝殼","貝殼","葡萄","貝殼","貝殼","葡萄",""]}
   },
   {
-    "id": "pattern-2-14", "skill": "pattern", "difficulty": 2, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-2-12", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
-      {"obj":"obj-grape"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-grape"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-flower"},
       {"obj":null}
     ],
     "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
       {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"obj-peach","obj":"obj-peach"}
     ],
-    "answer": "obj-fish",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-flower",
+    "hint": "一個一個看：花、花、桃子，花、花、桃子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["花","花","桃子","花","花","桃子","花",""]}
   },
   {
-    "id": "pattern-3-01", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "id": "pattern-2-13", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-chick"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-star"},
-      {"obj":"obj-chick"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-car"},
+      {"obj":"decor-car"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "decor-car",
+    "hint": "一個一個看：火箭、汽車、汽車，火箭、汽車、汽車。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["火箭","汽車","汽車","火箭","汽車",""]}
+  },
+  {
+    "id": "pattern-2-14", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-star","obj":"obj-star"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-peach","obj":"obj-peach"}
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
     ],
-    "answer": "obj-peach",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "decor-rocket",
+    "hint": "一個一個看：火箭、香蕉、香蕉，火箭、香蕉、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["火箭","香蕉","香蕉","火箭","香蕉","香蕉",""]}
   },
   {
-    "id": "pattern-3-02", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "id": "pattern-2-15", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-chick"},
-      {"obj":"obj-apple"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-shell",
+    "hint": "一個一個看：星星、貝殼、貝殼，星星、貝殼、貝殼。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["星星","貝殼","貝殼","星星","貝殼","貝殼","星星",""]}
+  },
+  {
+    "id": "pattern-2-16", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "一個一個看：火箭、香蕉、香蕉，火箭、香蕉、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["火箭","香蕉","香蕉","火箭","香蕉",""]}
+  },
+  {
+    "id": "pattern-2-17", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-banana",
+    "hint": "一個一個看：香蕉、葡萄、葡萄，香蕉、葡萄、葡萄。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["香蕉","葡萄","葡萄","香蕉","葡萄","葡萄",""]}
+  },
+  {
+    "id": "pattern-2-18", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-fish",
+    "hint": "一個一個看：火箭、小魚、小魚，火箭、小魚、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["火箭","小魚","小魚","火箭","小魚","小魚","火箭",""]}
+  },
+  {
+    "id": "pattern-2-19", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-piano","obj":"decor-piano"}
+    ],
+    "answer": "obj-banana",
+    "hint": "一個一個看：小魚、香蕉、香蕉，小魚、香蕉、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["小魚","香蕉","香蕉","小魚","香蕉",""]}
+  },
+  {
+    "id": "pattern-2-20", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "一個一個看：火箭、花、花，火箭、花、花。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["火箭","花","花","火箭","花","花",""]}
+  },
+  {
+    "id": "pattern-2-21", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "一個一個看：桃子、香蕉、香蕉，桃子、香蕉、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["桃子","香蕉","香蕉","桃子","香蕉","香蕉","桃子",""]}
+  },
+  {
+    "id": "pattern-2-22", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-ball"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-ball"},
+      {"obj":"decor-dino"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "decor-dino",
+    "hint": "一個一個看：皮球、恐龍、恐龍，皮球、恐龍、恐龍。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["皮球","恐龍","恐龍","皮球","恐龍",""]}
+  },
+  {
+    "id": "pattern-2-23", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
       {"obj":"obj-rabbit"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-rabbit"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-apple","obj":"obj-apple"}
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-banana","obj":"obj-banana"}
     ],
-    "answer": "obj-rabbit",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-peach",
+    "hint": "一個一個看：桃子、小兔子、小兔子，桃子、小兔子、小兔子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["桃子","小兔子","小兔子","桃子","小兔子","小兔子",""]}
   },
   {
-    "id": "pattern-3-03", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-2-24", "skill": "pattern", "difficulty": 2, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
-      {"obj":"obj-shell"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-shell"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"},
       {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "一個一個看：花、汽車、汽車，花、汽車、汽車。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["花","汽車","汽車","花","汽車","汽車","花",""]}
+  },
+  {
+    "id": "pattern-2-25", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":null},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "一個一個看：小魚、桃子，小魚、桃子。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["小魚","","小魚","桃子","小魚","桃子"]}
+  },
+  {
+    "id": "pattern-2-26", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":null},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-chick",
+    "hint": "一個一個看：小雞、蘋果，小雞、蘋果。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["小雞","蘋果","","蘋果","小雞","蘋果","小雞"]}
+  },
+  {
+    "id": "pattern-2-27", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"decor-ball"},
+      {"obj":"obj-shell"},
+      {"obj":"decor-ball"},
+      {"obj":null},
+      {"obj":"decor-ball"},
+      {"obj":"obj-shell"}
     ],
     "choices": [
       {"id":"obj-shell","obj":"obj-shell"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-banana","obj":"obj-banana"}
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-ball","obj":"decor-ball"}
     ],
-    "answer": "obj-chick",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-shell",
+    "hint": "一個一個看：皮球、貝殼，皮球、貝殼。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["皮球","貝殼","皮球","","皮球","貝殼"]}
   },
   {
-    "id": "pattern-3-04", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-2-28", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-star"},
+      {"obj":"decor-ball"},
+      {"obj":null},
+      {"obj":"decor-ball"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-ball","obj":"decor-ball"}
+    ],
+    "answer": "obj-star",
+    "hint": "一個一個看：星星、皮球，星星、皮球。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["星星","皮球","星星","皮球","","皮球","星星"]}
+  },
+  {
+    "id": "pattern-2-29", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":null},
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-grape",
+    "hint": "一個一個看：小魚、葡萄，小魚、葡萄。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["小魚","","小魚","葡萄","小魚","葡萄"]}
+  },
+  {
+    "id": "pattern-2-30", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":null},
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "一個一個看：花、汽車，花、汽車。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["花","汽車","","汽車","花","汽車","花"]}
+  },
+  {
+    "id": "pattern-2-31", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"decor-ball"},
+      {"obj":"decor-car"},
+      {"obj":null},
+      {"obj":"decor-car"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "decor-ball",
+    "hint": "一個一個看：汽車、皮球，汽車、皮球。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["汽車","皮球","汽車","","汽車","皮球"]}
+  },
+  {
+    "id": "pattern-2-32", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
     "items": [
       {"obj":"obj-apple"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-shell"},
+      {"obj":"decor-rocket"},
       {"obj":"obj-apple"},
+      {"obj":"decor-rocket"},
+      {"obj":null},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "一個一個看：蘋果、火箭，蘋果、火箭。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["蘋果","火箭","蘋果","火箭","","火箭","蘋果"]}
+  },
+  {
+    "id": "pattern-2-33", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":null},
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "一個一個看：葡萄、火箭，葡萄、火箭。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["葡萄","","葡萄","火箭","葡萄","火箭"]}
+  },
+  {
+    "id": "pattern-2-34", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
       {"obj":"obj-chick"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-apple"},
+      {"obj":"decor-piano"},
+      {"obj":null},
+      {"obj":"decor-piano"},
       {"obj":"obj-chick"},
-      {"obj":null}
+      {"obj":"decor-piano"},
+      {"obj":"obj-chick"}
     ],
     "choices": [
       {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-shell","obj":"obj-shell"}
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-piano","obj":"decor-piano"}
     ],
-    "answer": "obj-shell",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "answer": "obj-chick",
+    "hint": "一個一個看：小雞、鋼琴，小雞、鋼琴。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["小雞","鋼琴","","鋼琴","小雞","鋼琴","小雞"]}
   },
   {
-    "id": "pattern-3-05", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
+    "id": "pattern-2-35", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"decor-ball"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-ball"},
+      {"obj":null},
+      {"obj":"decor-ball"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "一個一個看：皮球、火箭，皮球、火箭。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["皮球","火箭","皮球","","皮球","火箭"]}
+  },
+  {
+    "id": "pattern-2-36", "skill": "pattern", "difficulty": 2, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-shell"},
+      {"obj":null},
+      {"obj":"obj-shell"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "一個一個看：小魚、貝殼，小魚、貝殼。一組一組重複出現，空格是誰呢？",
+    "params": {"core":2,"words":["小魚","貝殼","小魚","貝殼","","貝殼","小魚"]}
+  },
+  {
+    "id": "pattern-3-01", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
     "prompt": "接下來是哪一個？",
     "items": [
-      {"obj":"obj-grape"},
-      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-car"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "decor-dino",
+    "hint": "一個一個看：汽車、恐龍、蘋果，汽車、恐龍、蘋果。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["汽車","恐龍","蘋果","汽車","恐龍","蘋果","汽車",""]}
+  },
+  {
+    "id": "pattern-3-02", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-shell"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-star",
+    "hint": "一個一個看：火箭、貝殼、星星，火箭、貝殼、星星。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["火箭","貝殼","星星","火箭","貝殼","星星","火箭","貝殼",""]}
+  },
+  {
+    "id": "pattern-3-03", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-piano"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "一個一個看：鋼琴、星星、小雞，鋼琴、星星、小雞。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["鋼琴","星星","小雞","鋼琴","星星","小雞","鋼琴",""]}
+  },
+  {
+    "id": "pattern-3-04", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
       {"obj":"obj-flower"},
-      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "一個一個看：小兔子、花、火箭，小兔子、花、火箭。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["小兔子","花","火箭","小兔子","花","火箭","小兔子","花",""]}
+  },
+  {
+    "id": "pattern-3-05", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-shell"},
+      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-shell"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "一個一個看：貝殼、汽車、香蕉，貝殼、汽車、香蕉。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["貝殼","汽車","香蕉","貝殼","汽車","香蕉","貝殼",""]}
+  },
+  {
+    "id": "pattern-3-06", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "一個一個看：花、桃子、小兔子，花、桃子、小兔子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["花","桃子","小兔子","花","桃子","小兔子","花","桃子",""]}
+  },
+  {
+    "id": "pattern-3-07", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
       {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-flower","obj":"obj-flower"}
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "decor-dino",
+    "hint": "一個一個看：小雞、恐龍、小魚，小雞、恐龍、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["小雞","恐龍","小魚","小雞","恐龍","小魚","小雞",""]}
+  },
+  {
+    "id": "pattern-3-08", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "一個一個看：星星、汽車、小兔子，星星、汽車、小兔子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["星星","汽車","小兔子","星星","汽車","小兔子","星星","汽車",""]}
+  },
+  {
+    "id": "pattern-3-09", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-piano"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"decor-ball","obj":"decor-ball"}
+    ],
+    "answer": "decor-ball",
+    "hint": "一個一個看：鋼琴、皮球、小兔子，鋼琴、皮球、小兔子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["鋼琴","皮球","小兔子","鋼琴","皮球","小兔子","鋼琴",""]}
+  },
+  {
+    "id": "pattern-3-10", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-star",
+    "hint": "一個一個看：桃子、香蕉、星星，桃子、香蕉、星星。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["桃子","香蕉","星星","桃子","香蕉","星星","桃子","香蕉",""]}
+  },
+  {
+    "id": "pattern-3-11", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "一個一個看：桃子、小兔子、小魚，桃子、小兔子、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["桃子","小兔子","小魚","桃子","小兔子","小魚","桃子",""]}
+  },
+  {
+    "id": "pattern-3-12", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-piano"},
+      {"obj":"decor-rocket"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "一個一個看：鋼琴、火箭、小雞，鋼琴、火箭、小雞。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["鋼琴","火箭","小雞","鋼琴","火箭","小雞","鋼琴","火箭",""]}
+  },
+  {
+    "id": "pattern-3-13", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":"obj-star"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-car"},
+      {"obj":"obj-star"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "一個一個看：花、汽車、星星，花、汽車、星星。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["花","汽車","星星","花","汽車","星星","花",""]}
+  },
+  {
+    "id": "pattern-3-14", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-piano"},
+      {"obj":"obj-flower"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-piano","obj":"decor-piano"}
+    ],
+    "answer": "obj-apple",
+    "hint": "一個一個看：鋼琴、花、蘋果，鋼琴、花、蘋果。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["鋼琴","花","蘋果","鋼琴","花","蘋果","鋼琴","花",""]}
+  },
+  {
+    "id": "pattern-3-15", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "obj-fish",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
+    "hint": "一個一個看：桃子、小魚、蘋果，桃子、小魚、蘋果。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["桃子","小魚","蘋果","桃子","小魚","蘋果","桃子",""]}
   },
   {
-    "id": "pattern-3-06", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
+    "id": "pattern-3-16", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
     "items": [
-      {"obj":"obj-banana"},
-      {"obj":"obj-star"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-star"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-shell","obj":"obj-shell"},
-      {"id":"obj-star","obj":"obj-star"}
-    ],
-    "answer": "obj-shell",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-3-07", "skill": "pattern", "difficulty": 3, "type": "next", "version": 1,
-    "prompt": "接下來是哪一個？",
-    "items": [
-      {"obj":"obj-star"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-star"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-star"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-star","obj":"obj-star"}
-    ],
-    "answer": "obj-banana",
-    "hint": "從頭開始看，一個一個唸出來，找找看是哪幾個一直重複出現。"
-  },
-  {
-    "id": "pattern-3-08", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
-    "prompt": "問號的地方是哪一個？",
-    "items": [
+      {"obj":"decor-rocket"},
       {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-grape",
+    "hint": "一個一個看：火箭、小雞、葡萄，火箭、小雞、葡萄。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["火箭","小雞","葡萄","火箭","小雞","葡萄","火箭","小雞",""]}
+  },
+  {
+    "id": "pattern-3-17", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-dino"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "obj-chick",
+    "hint": "一個一個看：恐龍、小雞、小魚，恐龍、小雞、小魚。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["恐龍","小雞","小魚","恐龍","小雞","小魚","恐龍",""]}
+  },
+  {
+    "id": "pattern-3-18", "skill": "pattern", "difficulty": 3, "type": "next", "version": 2,
+    "prompt": "下一個是哪一個？",
+    "items": [
       {"obj":"obj-star"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-star"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "一個一個看：星星、桃子、小兔子，星星、桃子、小兔子。一組一組重複出現，下一個是誰呢？",
+    "params": {"core":3,"words":["星星","桃子","小兔子","星星","桃子","小兔子","星星","桃子",""]}
+  },
+  {
+    "id": "pattern-3-19", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
       {"obj":null},
-      {"obj":"obj-chick"},
-      {"obj":"obj-star"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-peach",
+    "hint": "一個一個看：小魚、桃子、葡萄，小魚、桃子、葡萄。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["小魚","桃子","葡萄","小魚","","葡萄","小魚"]}
+  },
+  {
+    "id": "pattern-3-20", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
       {"obj":"obj-shell"},
+      {"obj":"decor-car"},
       {"obj":"obj-chick"},
-      {"obj":"obj-star"}
+      {"obj":"obj-shell"},
+      {"obj":"decor-car"},
+      {"obj":null},
+      {"obj":"obj-shell"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "一個一個看：貝殼、汽車、小雞，貝殼、汽車、小雞。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["貝殼","汽車","小雞","貝殼","汽車","","貝殼","汽車"]}
+  },
+  {
+    "id": "pattern-3-21", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-ball"},
+      {"obj":null},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "obj-flower",
+    "hint": "一個一個看：火箭、皮球、花，火箭、皮球、花。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["火箭","皮球","","火箭","皮球","花","火箭"]}
+  },
+  {
+    "id": "pattern-3-22", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":null},
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-grape",
+    "hint": "一個一個看：葡萄、香蕉、恐龍，葡萄、香蕉、恐龍。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["葡萄","香蕉","恐龍","","香蕉","恐龍","葡萄","香蕉"]}
+  },
+  {
+    "id": "pattern-3-23", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":null},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"}
     ],
     "choices": [
       {"id":"obj-star","obj":"obj-star"},
@@ -699,129 +1978,1451 @@
       {"id":"obj-chick","obj":"obj-chick"}
     ],
     "answer": "obj-shell",
-    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+    "hint": "一個一個看：小雞、貝殼、星星，小雞、貝殼、星星。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["小雞","貝殼","星星","小雞","","星星","小雞"]}
   },
   {
-    "id": "pattern-3-09", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
-    "prompt": "問號的地方是哪一個？",
+    "id": "pattern-3-24", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
     "items": [
+      {"obj":"obj-flower"},
       {"obj":"obj-star"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-star"},
       {"obj":null},
-      {"obj":"obj-shell"},
-      {"obj":"obj-apple"},
+      {"obj":"obj-flower"},
       {"obj":"obj-star"}
     ],
     "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
       {"id":"obj-star","obj":"obj-star"},
-      {"id":"obj-shell","obj":"obj-shell"},
-      {"id":"obj-apple","obj":"obj-apple"}
+      {"id":"obj-flower","obj":"obj-flower"}
     ],
-    "answer": "obj-star",
-    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+    "answer": "obj-banana",
+    "hint": "一個一個看：花、星星、香蕉，花、星星、香蕉。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["花","星星","香蕉","花","星星","","花","星星"]}
   },
   {
-    "id": "pattern-3-10", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
-    "prompt": "問號的地方是哪一個？",
+    "id": "pattern-3-25", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
     "items": [
       {"obj":"obj-grape"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-grape"},
+      {"obj":"decor-ball"},
       {"obj":null},
-      {"obj":"obj-chick"},
       {"obj":"obj-grape"},
-      {"obj":"obj-flower"}
-    ],
-    "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-grape","obj":"obj-grape"}
-    ],
-    "answer": "obj-flower",
-    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
-  },
-  {
-    "id": "pattern-3-11", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
-    "prompt": "問號的地方是哪一個？",
-    "items": [
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-flower"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-chick"},
-      {"obj":null},
-      {"obj":"obj-rabbit"}
-    ],
-    "choices": [
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
-    ],
-    "answer": "obj-flower",
-    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
-  },
-  {
-    "id": "pattern-3-12", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
-    "prompt": "問號的地方是哪一個？",
-    "items": [
-      {"obj":"obj-flower"},
-      {"obj":"obj-grape"},
-      {"obj":null},
-      {"obj":"obj-flower"},
-      {"obj":"obj-grape"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-flower"},
+      {"obj":"decor-ball"},
+      {"obj":"decor-piano"},
       {"obj":"obj-grape"}
     ],
     "choices": [
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-piano","obj":"decor-piano"},
+      {"id":"decor-ball","obj":"decor-ball"}
     ],
-    "answer": "obj-rabbit",
-    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+    "answer": "decor-piano",
+    "hint": "一個一個看：葡萄、皮球、鋼琴，葡萄、皮球、鋼琴。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["葡萄","皮球","","葡萄","皮球","鋼琴","葡萄"]}
   },
   {
-    "id": "pattern-3-13", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
-    "prompt": "問號的地方是哪一個？",
+    "id": "pattern-3-26", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
     "items": [
-      {"obj":"obj-apple"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-shell"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"},
       {"obj":null},
-      {"obj":"obj-fish"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-apple"}
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-star"}
     ],
     "choices": [
-      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "decor-ball",
+    "hint": "一個一個看：皮球、星星、香蕉，皮球、星星、香蕉。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["皮球","星星","香蕉","","星星","香蕉","皮球","星星"]}
+  },
+  {
+    "id": "pattern-3-27", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":null},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "一個一個看：葡萄、火箭、小雞，葡萄、火箭、小雞。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["葡萄","火箭","小雞","葡萄","","小雞","葡萄"]}
+  },
+  {
+    "id": "pattern-3-28", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"decor-car"},
+      {"obj":"obj-star"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-car"},
+      {"obj":null},
+      {"obj":"decor-dino"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-star",
+    "hint": "一個一個看：恐龍、汽車、星星，恐龍、汽車、星星。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["恐龍","汽車","星星","恐龍","汽車","","恐龍","汽車"]}
+  },
+  {
+    "id": "pattern-3-29", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"decor-ball"},
+      {"obj":"obj-rabbit"},
+      {"obj":null},
+      {"obj":"decor-ball"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":"decor-ball"}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-ball","obj":"decor-ball"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "一個一個看：皮球、小兔子、汽車，皮球、小兔子、汽車。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["皮球","小兔子","","皮球","小兔子","汽車","皮球"]}
+  },
+  {
+    "id": "pattern-3-30", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"},
+      {"obj":null},
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-star"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-star",
+    "hint": "一個一個看：星星、汽車、蘋果，星星、汽車、蘋果。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["星星","汽車","蘋果","","汽車","蘋果","星星","汽車"]}
+  },
+  {
+    "id": "pattern-3-31", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"decor-piano"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-piano"},
+      {"obj":null},
+      {"obj":"obj-banana"},
+      {"obj":"decor-piano"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-piano","obj":"decor-piano"}
+    ],
+    "answer": "obj-peach",
+    "hint": "一個一個看：鋼琴、桃子、香蕉，鋼琴、桃子、香蕉。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["鋼琴","桃子","香蕉","鋼琴","","香蕉","鋼琴"]}
+  },
+  {
+    "id": "pattern-3-32", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-dino"},
+      {"obj":null},
+      {"obj":"obj-fish"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"decor-ball","obj":"decor-ball"}
+    ],
+    "answer": "decor-ball",
+    "hint": "一個一個看：小魚、恐龍、皮球，小魚、恐龍、皮球。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["小魚","恐龍","皮球","小魚","恐龍","","小魚","恐龍"]}
+  },
+  {
+    "id": "pattern-3-33", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":null},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-chick",
+    "hint": "一個一個看：桃子、小兔子、小雞，桃子、小兔子、小雞。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["桃子","小兔子","","桃子","小兔子","小雞","桃子"]}
+  },
+  {
+    "id": "pattern-3-34", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-star"},
+      {"obj":null},
+      {"obj":"obj-fish"},
+      {"obj":"obj-star"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-flower",
+    "hint": "一個一個看：花、小魚、星星，花、小魚、星星。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["花","小魚","星星","","小魚","星星","花","小魚"]}
+  },
+  {
+    "id": "pattern-3-35", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-rabbit"},
+      {"obj":null},
+      {"obj":"decor-ball"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-ball","obj":"decor-ball"}
+    ],
+    "answer": "obj-apple",
+    "hint": "一個一個看：小兔子、蘋果、皮球，小兔子、蘋果、皮球。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["小兔子","蘋果","皮球","小兔子","","皮球","小兔子"]}
+  },
+  {
+    "id": "pattern-3-36", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 2,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-ball"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":null},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-ball","obj":"decor-ball"}
+    ],
+    "answer": "decor-ball",
+    "hint": "一個一個看：小雞、小魚、皮球，小雞、小魚、皮球。一組一組重複出現，空格是誰呢？",
+    "params": {"core":3,"words":["小雞","小魚","皮球","小雞","小魚","","小雞","小魚"]}
+  },
+  {
+    "id": "pattern-4-01", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-grape",
+    "hint": "看顏色：紫色、藍色，紫色、藍色，輪流出現。下一個要紫色的。",
+    "params": {"core":2,"words":["紫色","藍色","紫色","藍色",""],"groupName":"顏色","colorWord":"紫色"}
+  },
+  {
+    "id": "pattern-4-02", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "decor-car",
+    "hint": "看顏色：藍色、綠色，藍色、綠色，輪流出現。下一個要綠色的。",
+    "params": {"core":2,"words":["藍色","綠色","藍色","綠色","藍色",""],"groupName":"顏色","colorWord":"綠色"}
+  },
+  {
+    "id": "pattern-4-03", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-chick",
+    "hint": "看顏色：黃色、藍色，黃色、藍色，輪流出現。下一個要黃色的。",
+    "params": {"core":2,"words":["黃色","藍色","黃色","藍色",""],"groupName":"顏色","colorWord":"黃色"}
+  },
+  {
+    "id": "pattern-4-04", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看顏色：粉紅色、藍色，粉紅色、藍色，輪流出現。下一個要藍色的。",
+    "params": {"core":2,"words":["粉紅色","藍色","粉紅色","藍色","粉紅色",""],"groupName":"顏色","colorWord":"藍色"}
+  },
+  {
+    "id": "pattern-4-05", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看顏色：藍色、紫色，藍色、紫色，輪流出現。下一個要藍色的。",
+    "params": {"core":2,"words":["藍色","紫色","藍色","紫色",""],"groupName":"顏色","colorWord":"藍色"}
+  },
+  {
+    "id": "pattern-4-06", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看顏色：綠色、藍色，綠色、藍色，輪流出現。下一個要藍色的。",
+    "params": {"core":2,"words":["綠色","藍色","綠色","藍色","綠色",""],"groupName":"顏色","colorWord":"藍色"}
+  },
+  {
+    "id": "pattern-4-07", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看顏色：藍色、綠色，藍色、綠色，輪流出現。下一個要藍色的。",
+    "params": {"core":2,"words":["藍色","綠色","藍色","綠色",""],"groupName":"顏色","colorWord":"藍色"}
+  },
+  {
+    "id": "pattern-4-08", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-banana",
+    "hint": "看顏色：藍色、黃色，藍色、黃色，輪流出現。下一個要黃色的。",
+    "params": {"core":2,"words":["藍色","黃色","藍色","黃色","藍色",""],"groupName":"顏色","colorWord":"黃色"}
+  },
+  {
+    "id": "pattern-4-09", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "decor-car",
+    "hint": "看顏色：綠色、藍色，綠色、藍色，輪流出現。下一個要綠色的。",
+    "params": {"core":2,"words":["綠色","藍色","綠色","藍色",""],"groupName":"顏色","colorWord":"綠色"}
+  },
+  {
+    "id": "pattern-4-10", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "decor-car",
+    "hint": "看顏色：黃色、綠色，黃色、綠色，輪流出現。下一個要綠色的。",
+    "params": {"core":2,"words":["黃色","綠色","黃色","綠色","黃色",""],"groupName":"顏色","colorWord":"綠色"}
+  },
+  {
+    "id": "pattern-4-11", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-flower",
+    "hint": "看顏色：粉紅色、藍色，粉紅色、藍色，輪流出現。下一個要粉紅色的。",
+    "params": {"core":2,"words":["粉紅色","藍色","粉紅色","藍色",""],"groupName":"顏色","colorWord":"粉紅色"}
+  },
+  {
+    "id": "pattern-4-12", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看顏色，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
       {"id":"obj-fish","obj":"obj-fish"},
       {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "obj-apple",
-    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+    "hint": "看顏色：綠色、紅色，綠色、紅色，輪流出現。下一個要紅色的。",
+    "params": {"core":2,"words":["綠色","紅色","綠色","紅色","綠色",""],"groupName":"顏色","colorWord":"紅色"}
   },
   {
-    "id": "pattern-3-14", "skill": "pattern", "difficulty": 3, "type": "missing", "version": 1,
-    "prompt": "問號的地方是哪一個？",
+    "id": "pattern-4-13", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
     "items": [
-      {"obj":"obj-banana"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-shell"},
-      {"obj":"obj-banana"},
-      {"obj":null},
-      {"obj":"obj-shell"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-fish"}
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
     ],
     "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "obj-peach",
+    "hint": "看種類：水果、動物，水果、動物，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["水果","動物","水果","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-14", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-rocket"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-fish","obj":"obj-fish"}
     ],
     "answer": "obj-fish",
-    "hint": "看看前後的順序，有一組一直重複出現，問號就是缺的那一個。"
+    "hint": "看種類：交通工具、動物，交通工具、動物，輪流出現。下一個要動物的。",
+    "params": {"core":2,"words":["交通工具","動物","交通工具","動物","交通工具",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-15", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-apple",
+    "hint": "看種類：水果、動物，水果、動物，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["水果","動物","水果","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-16", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-apple",
+    "hint": "看種類：動物、水果，動物、水果，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["動物","水果","動物","水果","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-17", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-grape"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "看種類：動物、水果，動物、水果，輪流出現。下一個要動物的。",
+    "params": {"core":2,"words":["動物","水果","動物","水果",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-18", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-grape",
+    "hint": "看種類：交通工具、水果，交通工具、水果，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["交通工具","水果","交通工具","水果","交通工具",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-19", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-grape",
+    "hint": "看種類：水果、動物，水果、動物，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["水果","動物","水果","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-20", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "decor-car",
+    "hint": "看種類：動物、交通工具，動物、交通工具，輪流出現。下一個要交通工具的。",
+    "params": {"core":2,"words":["動物","交通工具","動物","交通工具","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-21", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "看種類：交通工具、動物，交通工具、動物，輪流出現。下一個要交通工具的。",
+    "params": {"core":2,"words":["交通工具","動物","交通工具","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-22", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-rocket"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看種類：交通工具、動物，交通工具、動物，輪流出現。下一個要動物的。",
+    "params": {"core":2,"words":["交通工具","動物","交通工具","動物","交通工具",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-23", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "看種類：交通工具、動物，交通工具、動物，輪流出現。下一個要交通工具的。",
+    "params": {"core":2,"words":["交通工具","動物","交通工具","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-24", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "看種類：動物、交通工具，動物、交通工具，輪流出現。下一個要交通工具的。",
+    "params": {"core":2,"words":["動物","交通工具","動物","交通工具","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-25", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "下一格要放幾個？",
+    "items": [
+      {"obj":"decor-car","count":1},
+      {"obj":"decor-car","count":2},
+      {"obj":"decor-car","count":3},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"2","label":"2"},
+      {"id":"3","label":"3"},
+      {"id":"4","label":"4"}
+    ],
+    "answer": "4",
+    "hint": "一輛、兩輛、三輛，每一格都多一輛。下一格要放幾輛呢？",
+    "params": {"words":["一輛","兩輛","三輛",""]}
+  },
+  {
+    "id": "pattern-4-26", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "接下來是幾個？",
+    "items": [
+      {"obj":"obj-shell","count":2},
+      {"obj":"obj-shell","count":3},
+      {"obj":"obj-shell","count":4},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"},
+      {"id":"7","label":"7"}
+    ],
+    "answer": "5",
+    "hint": "兩個、三個、四個，每一格都多一個。下一格要放幾個呢？",
+    "params": {"words":["兩個","三個","四個",""]}
+  },
+  {
+    "id": "pattern-4-27", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "下一格要放幾個？",
+    "items": [
+      {"obj":"obj-fish","count":3},
+      {"obj":"obj-fish","count":4},
+      {"obj":"obj-fish","count":5},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"},
+      {"id":"9","label":"9"}
+    ],
+    "answer": "6",
+    "hint": "三條、四條、五條，每一格都多一條。下一格要放幾條呢？",
+    "params": {"words":["三條","四條","五條",""]}
+  },
+  {
+    "id": "pattern-4-28", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "接下來是幾個？",
+    "items": [
+      {"obj":"obj-flower","count":4},
+      {"obj":"obj-flower","count":5},
+      {"obj":"obj-flower","count":6},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"},
+      {"id":"7","label":"7"}
+    ],
+    "answer": "7",
+    "hint": "四朵、五朵、六朵，每一格都多一朵。下一格要放幾朵呢？",
+    "params": {"words":["四朵","五朵","六朵",""]}
+  },
+  {
+    "id": "pattern-4-29", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "下一格要放幾個？",
+    "items": [
+      {"obj":"obj-peach","count":5},
+      {"obj":"obj-peach","count":6},
+      {"obj":"obj-peach","count":7},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"8","label":"8"},
+      {"id":"9","label":"9"}
+    ],
+    "answer": "8",
+    "hint": "五顆、六顆、七顆，每一格都多一顆。下一格要放幾顆呢？",
+    "params": {"words":["五顆","六顆","七顆",""]}
+  },
+  {
+    "id": "pattern-4-30", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "接下來是幾個？",
+    "items": [
+      {"obj":"decor-ball","count":6},
+      {"obj":"decor-ball","count":7},
+      {"obj":"decor-ball","count":8},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"6","label":"6"},
+      {"id":"8","label":"8"},
+      {"id":"9","label":"9"}
+    ],
+    "answer": "9",
+    "hint": "六顆、七顆、八顆，每一格都多一顆。下一格要放幾顆呢？",
+    "params": {"words":["六顆","七顆","八顆",""]}
+  },
+  {
+    "id": "pattern-4-31", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "下一格要放幾個？",
+    "items": [
+      {"obj":"obj-rabbit","count":1},
+      {"obj":"obj-rabbit","count":2},
+      {"obj":"obj-rabbit","count":3},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"4","label":"4"},
+      {"id":"5","label":"5"},
+      {"id":"7","label":"7"}
+    ],
+    "answer": "4",
+    "hint": "一隻、兩隻、三隻，每一格都多一隻。下一格要放幾隻呢？",
+    "params": {"words":["一隻","兩隻","三隻",""]}
+  },
+  {
+    "id": "pattern-4-32", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "接下來是幾個？",
+    "items": [
+      {"obj":"obj-grape","count":2},
+      {"obj":"obj-grape","count":3},
+      {"obj":"obj-grape","count":4},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"6","label":"6"},
+      {"id":"7","label":"7"}
+    ],
+    "answer": "5",
+    "hint": "兩串、三串、四串，每一格都多一串。下一格要放幾串呢？",
+    "params": {"words":["兩串","三串","四串",""]}
+  },
+  {
+    "id": "pattern-4-33", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "下一格要放幾個？",
+    "items": [
+      {"obj":"obj-apple","count":3},
+      {"obj":"obj-apple","count":4},
+      {"obj":"obj-apple","count":5},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"4","label":"4"},
+      {"id":"6","label":"6"},
+      {"id":"7","label":"7"}
+    ],
+    "answer": "6",
+    "hint": "三顆、四顆、五顆，每一格都多一顆。下一格要放幾顆呢？",
+    "params": {"words":["三顆","四顆","五顆",""]}
+  },
+  {
+    "id": "pattern-4-34", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "接下來是幾個？",
+    "items": [
+      {"obj":"obj-star","count":4},
+      {"obj":"obj-star","count":5},
+      {"obj":"obj-star","count":6},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"7","label":"7"},
+      {"id":"8","label":"8"},
+      {"id":"9","label":"9"}
+    ],
+    "answer": "7",
+    "hint": "四顆、五顆、六顆，每一格都多一顆。下一格要放幾顆呢？",
+    "params": {"words":["四顆","五顆","六顆",""]}
+  },
+  {
+    "id": "pattern-4-35", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "下一格要放幾個？",
+    "items": [
+      {"obj":"obj-banana","count":5},
+      {"obj":"obj-banana","count":6},
+      {"obj":"obj-banana","count":7},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"5","label":"5"},
+      {"id":"7","label":"7"},
+      {"id":"8","label":"8"}
+    ],
+    "answer": "8",
+    "hint": "五根、六根、七根，每一格都多一根。下一格要放幾根呢？",
+    "params": {"words":["五根","六根","七根",""]}
+  },
+  {
+    "id": "pattern-4-36", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
+    "prompt": "接下來是幾個？",
+    "items": [
+      {"obj":"decor-dino","count":6},
+      {"obj":"decor-dino","count":7},
+      {"obj":"decor-dino","count":8},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"6","label":"6"},
+      {"id":"8","label":"8"},
+      {"id":"9","label":"9"}
+    ],
+    "answer": "9",
+    "hint": "六隻、七隻、八隻，每一格都多一隻。下一格要放幾隻呢？",
+    "params": {"words":["六隻","七隻","八隻",""]}
+  },
+  {
+    "id": "pattern-1-g01", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-banana",
+    "hint": "你看，香蕉、小雞，香蕉、小雞，香蕉、小雞。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["香蕉","小雞","香蕉","小雞","香蕉","小雞",""]}
+  },
+  {
+    "id": "pattern-1-g02", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，小魚、小兔子，小魚、小兔子，小魚、小兔子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小魚","小兔子","小魚","小兔子","小魚","小兔子",""]}
+  },
+  {
+    "id": "pattern-1-g03", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "你看，香蕉、小兔子，香蕉、小兔子，香蕉、小兔子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["香蕉","小兔子","香蕉","小兔子","香蕉","小兔子",""]}
+  },
+  {
+    "id": "pattern-1-g04", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，蘋果、小兔子，蘋果、小兔子，蘋果、小兔子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["蘋果","小兔子","蘋果","小兔子","蘋果","小兔子",""]}
+  },
+  {
+    "id": "pattern-1-g05", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，蘋果、香蕉，蘋果、香蕉，蘋果、香蕉。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["蘋果","香蕉","蘋果","香蕉","蘋果","香蕉",""]}
+  },
+  {
+    "id": "pattern-1-g06", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、桃子，小兔子、桃子，小兔子、桃子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小兔子","桃子","小兔子","桃子","小兔子","桃子",""]}
+  },
+  {
+    "id": "pattern-1-g07", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，小魚、蘋果，小魚、蘋果，小魚、蘋果。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小魚","蘋果","小魚","蘋果","小魚","蘋果",""]}
+  },
+  {
+    "id": "pattern-1-g08", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "你看，桃子、小魚，桃子、小魚，桃子、小魚。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["桃子","小魚","桃子","小魚","桃子","小魚",""]}
+  },
+  {
+    "id": "pattern-1-g09", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-banana",
+    "hint": "你看，香蕉、蘋果，香蕉、蘋果，香蕉、蘋果。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["香蕉","蘋果","香蕉","蘋果","香蕉","蘋果",""]}
+  },
+  {
+    "id": "pattern-1-g10", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、蘋果，小兔子、蘋果，小兔子、蘋果。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小兔子","蘋果","小兔子","蘋果","小兔子","蘋果",""]}
+  },
+  {
+    "id": "pattern-1-g11", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，小魚、桃子，小魚、桃子，小魚、桃子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小魚","桃子","小魚","桃子","小魚","桃子",""]}
+  },
+  {
+    "id": "pattern-1-g12", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，蘋果、小魚，蘋果、小魚，蘋果、小魚。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["蘋果","小魚","蘋果","小魚","蘋果","小魚",""]}
+  },
+  {
+    "id": "pattern-1-g13", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，蘋果、桃子，蘋果、桃子，蘋果、桃子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["蘋果","桃子","蘋果","桃子","蘋果","桃子",""]}
+  },
+  {
+    "id": "pattern-1-g14", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、香蕉，小兔子、香蕉，小兔子、香蕉。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小兔子","香蕉","小兔子","香蕉","小兔子","香蕉",""]}
+  },
+  {
+    "id": "pattern-1-g15", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-chick",
+    "hint": "你看，小雞、小魚，小雞、小魚，小雞、小魚。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小雞","小魚","小雞","小魚","小雞","小魚",""]}
+  },
+  {
+    "id": "pattern-1-g16", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-peach",
+    "hint": "你看，桃子、香蕉，桃子、香蕉，桃子、香蕉。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["桃子","香蕉","桃子","香蕉","桃子","香蕉",""]}
+  },
+  {
+    "id": "pattern-1-g17", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "你看，小雞、桃子，小雞、桃子，小雞、桃子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小雞","桃子","小雞","桃子","小雞","桃子",""]}
+  },
+  {
+    "id": "pattern-1-g18", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、小雞，小兔子、小雞，小兔子、小雞。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小兔子","小雞","小兔子","小雞","小兔子","小雞",""]}
+  },
+  {
+    "id": "pattern-1-g19", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，蘋果、小雞，蘋果、小雞，蘋果、小雞。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["蘋果","小雞","蘋果","小雞","蘋果","小雞",""]}
+  },
+  {
+    "id": "pattern-1-g20", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "你看，香蕉、小魚，香蕉、小魚，香蕉、小魚。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["香蕉","小魚","香蕉","小魚","香蕉","小魚",""]}
+  },
+  {
+    "id": "pattern-1-g21", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "你看，桃子、小兔子，桃子、小兔子，桃子、小兔子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["桃子","小兔子","桃子","小兔子","桃子","小兔子",""]}
+  },
+  {
+    "id": "pattern-1-g22", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "你看，小雞、小兔子，小雞、小兔子，小雞、小兔子。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小雞","小兔子","小雞","小兔子","小雞","小兔子",""]}
+  },
+  {
+    "id": "pattern-1-g23", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "你看，小雞、香蕉，小雞、香蕉，小雞、香蕉。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["小雞","香蕉","小雞","香蕉","小雞","香蕉",""]}
+  },
+  {
+    "id": "pattern-1-g24", "skill": "pattern", "difficulty": 1, "type": "next", "version": 2, "gentle": true,
+    "prompt": "下一個是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-peach",
+    "hint": "你看，桃子、蘋果，桃子、蘋果，桃子、蘋果。一個接一個，下一個是誰呢？",
+    "params": {"core":2,"words":["桃子","蘋果","桃子","蘋果","桃子","蘋果",""]}
   }
 ]

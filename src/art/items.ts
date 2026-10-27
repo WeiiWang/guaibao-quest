@@ -121,4 +121,9 @@ export const OBJ_EMOJI: Record<string, string> = {
   'obj-flower': '🌸',
   'obj-shell': '🐚',
   'obj-star': '⭐',
+  'decor-car': '🚗',
+  'decor-rocket': '🚀',
+  'decor-ball': '⚽',
+  'decor-dino': '🦖',
+  'decor-piano': '🎹',
 }
