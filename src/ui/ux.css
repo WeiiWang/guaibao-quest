@@ -1,5 +1,6 @@
 /* ============ v4 線 U：操作與回饋（UX）============
-   styles.css 的既有規則不動；這裡放新元件與覆寫。 */
+   styles.css 的既有規則不動；這裡放新元件與覆寫。
+   注意：這個檔會比 styles.css 先載入（App 先於 styles.css 被 import），覆寫既有規則要把選擇器寫得更具體。 */
 
 /* ---------- 統一成功回饋（feedback.ts）---------- */
 .fb-burst { position: fixed; inset: 0; z-index: 96; pointer-events: none; overflow: hidden; }
@@ -34,3 +35,38 @@
 @media (prefers-reduced-motion: reduce) {
   .room-frame .room-arrow span, .dock-item.nope { animation: none; }
 }
+
+/* ---------- 商店（第 3 項）---------- */
+.shop-head-right { display: flex; align-items: center; gap: 6px; }
+.bag-target { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; box-shadow: 0 4px 0 rgba(74, 59, 53, 0.14), inset 0 2px 0 #fff; }
+.buy-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.undo-pill {
+  position: fixed; z-index: 80; right: max(14px, env(safe-area-inset-right)); top: calc(max(16px, env(safe-area-inset-top)) + 78px);
+  display: inline-flex; align-items: center; gap: 8px; min-height: 56px; padding: 0 20px 0 14px; border: 0; border-radius: 999px; overflow: hidden;
+  background: #fff; color: var(--ink); font-weight: 900; font-size: 1.1rem;
+  box-shadow: 0 5px 0 var(--bubblegum-deep), 0 12px 22px rgba(74, 59, 53, 0.25);
+  animation: ux-pill-in 0.3s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.undo-pill:active { transform: translateY(3px) scale(0.97); }
+.undo-arrow { font-size: 1.5rem; line-height: 1; color: var(--bubblegum-deep); }
+.undo-bar { position: absolute; left: 0; bottom: 0; height: 5px; width: 100%; background: var(--bubblegum); transform-origin: left; animation: ux-countdown var(--undo-ms, 5s) linear forwards; }
+@keyframes ux-pill-in { from { opacity: 0; transform: translateY(-10px) scale(0.9); } }
+@keyframes ux-countdown { to { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .undo-pill { animation: none; } }
+
+/* ---------- 著色本（第 5 項）：鎖頭可以點、有說明、有「去商店」大按鈕 ---------- */
+.locked-btn { border: 0; width: 100%; cursor: pointer; transition: transform 0.12s; }
+.locked-btn:active { transform: scale(0.95); }
+li.locked { opacity: 1; filter: none; }
+li.locked .thumb-locked { filter: grayscale(0.5); opacity: 0.85; }
+.ux-shake { animation: ux-shake 0.5s ease-in-out; }
+@keyframes ux-shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-9px) rotate(-2deg); } 45% { transform: translateX(9px) rotate(2deg); } 70% { transform: translateX(-5px); } }
+.guide-card { display: grid; justify-items: center; gap: 8px; text-align: center; }
+.guide-card .btn { width: 100%; }
+.guide-thumb { position: relative; width: 170px; }
+.guide-thumb .shop-thumb { width: 100%; filter: grayscale(0.6); opacity: 0.6; }
+.guide-lock { position: absolute; right: -10px; bottom: -10px; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #fff; box-shadow: 0 4px 0 rgba(74, 59, 53, 0.18); }
+.guide-price { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 2.2rem; font-weight: 900; }
+.guide-card .lead { margin: 0 0 6px; }
+.guide-card .guide-go { min-height: 80px; font-size: 1.6rem; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 40px; }
+@media (prefers-reduced-motion: reduce) { .ux-shake { animation: none; } }

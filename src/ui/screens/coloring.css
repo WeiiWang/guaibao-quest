@@ -68,14 +68,48 @@
 .pt-palette { display: grid; gap: 10px; }
 .pt-recent { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .pt-recent-label { font-weight: 900; font-size: 0.9rem; color: var(--ink-soft); margin-right: 2px; }
-.pt-panel .pt-recent .swatch { width: 40px; height: 40px; min-height: 40px; }
-.pt-panel .pt-swatches { grid-template-columns: repeat(8, 1fr); gap: 8px; }
-.pt-panel .pt-swatches .swatch { min-height: 0; aspect-ratio: 1; width: 100%; }
-@media (max-width: 560px) { .pt-panel .pt-swatches { grid-template-columns: repeat(6, 1fr); } }
-.pt-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.pt-body { display: grid; gap: 12px; align-content: start; }
+/* 色票至少 48px（4–7 歲的手指；ux-review #7 原本只有 37px）：每格最小 48，一排放得下幾個就放幾個 */
+.pt-panel .pt-recent .swatch { width: 48px; height: 48px; min-height: 48px; }
+.pt-panel .pt-swatches { grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 8px; }
+.pt-panel .pt-swatches .swatch { min-height: 0; aspect-ratio: 1; width: 100%; min-width: 48px; }
+.pt-actions { display: flex; gap: 10px; flex-wrap: nowrap; }
 .pt-actions .btn { flex: 1 1 0; min-width: 0; white-space: nowrap; padding: 0 10px; font-size: 1rem; }
 .pt-finish { flex: 1.4 1 0; }
-@media (max-width: 560px) { .pt-actions .pt-finish { flex: 1 1 100%; order: -1; } }
+
+/* ---------- 橫向（1024×768 這類）：右側面板高度由畫板決定，內容在面板裡捲動，「完成」永遠釘在面板底部、位置不動 ---------- */
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .pt-layout { align-items: stretch; }
+  .pt-panel { contain: size; display: flex; flex-direction: column; min-height: 0; gap: 10px; padding: 12px; }
+  .pt-panel .pt-tools, .pt-panel .pt-actions { flex: none; }
+  .pt-panel .pt-body { flex: 1; min-height: 0; overflow-y: auto; align-content: start; padding: 8px 8px 8px; margin: 0 -8px; overscroll-behavior: contain; }
+  .pt-panel .pt-stickers-tray { max-height: none; overflow: visible; }
+}
+
+/* ---------- 直向與手機：畫布限制在可視高度內，工具列固定在畫布下方（不用再捲動），色票是一條可橫滑的色條 ---------- */
+@media not all and (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .screen.paint { height: 100dvh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+  .paint .screen-header { flex: none; margin-bottom: 8px; }
+  .paint .pt-layout { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+  .paint .pt-stage { flex: 1; min-height: 0; padding: 6px; container-type: size; }
+  .paint .pt-board { width: min(100cqw, 100cqh); }
+  .paint .pt-panel { flex: none; gap: 8px; padding: 10px; border-radius: 24px; }
+  .paint .pt-tool { min-height: 60px; padding: 4px 2px; border-radius: 18px; }
+  .paint .pt-tool-ico { font-size: 1.4rem; }
+  /* 中間這塊高度固定：換工具（填色 / 筆刷 / 貼紙 / 橡皮擦）、出現「最近用過」都不會把下面的按鈕推走 */
+  .paint .pt-body { height: 132px; gap: 8px; align-content: start; overflow: hidden; }
+  .paint .pt-opts, .paint .pt-stickers-tray { display: flex; flex-wrap: nowrap; height: 56px; align-items: center; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 4px 6px; margin: 0 -6px; }
+  .paint .pt-opts::-webkit-scrollbar, .paint .pt-stickers-tray::-webkit-scrollbar, .paint .pt-palette::-webkit-scrollbar { display: none; }
+  .paint .pt-chip { flex: none; }
+  .paint .pt-stickers-tray .pt-sticker-btn { flex: none; width: 52px; height: 52px; aspect-ratio: auto; }
+  .paint .pt-hint { height: 56px; display: flex; align-items: center; font-size: 0.95rem; line-height: 1.3; }
+  .paint .pt-palette { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; height: 64px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 6px; margin: 0 -6px; }
+  .paint .pt-recent, .paint .pt-swatches { display: contents; }
+  .paint .pt-recent-label { display: none; }
+  .paint .pt-panel .swatch, .paint .pt-panel .pt-recent .swatch, .paint .pt-panel .pt-swatches .swatch { flex: none; width: 52px; height: 52px; min-width: 52px; min-height: 52px; aspect-ratio: auto; }
+  .paint .pt-actions .btn { min-height: 56px; }
+  .paint .pt-actions .pt-finish { flex: 1.3 1 0; }
+}
 
 /* ---------- 完成慶祝 ---------- */
 .fc-back { position: fixed; inset: 0; z-index: 80; background: rgba(74, 59, 53, 0.55); display: grid; place-items: center; padding: 14px; overflow-y: auto; animation: fade-in 0.25s; }

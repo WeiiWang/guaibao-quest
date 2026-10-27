@@ -24,7 +24,7 @@ import './ux.css'
 export type Screen =
   | { name: 'home'; edit?: boolean }
   | { name: 'tasks' }
-  | { name: 'shop' }
+  | { name: 'shop'; tab?: 'food' | 'coloring' }
   | { name: 'bag' }
   | { name: 'coloring' }
   | { name: 'paint'; pageId: string }
@@ -87,7 +87,8 @@ function Main({ childName }: { childName: string }) {
   const today = localDateStr(now)
 
   useEffect(() => {
-    void repo.seedShop()
+    // 商品資料就緒後，送新使用者免費著色頁（只送一次）
+    void repo.seedShop().then(() => repo.grantFreeColoring())
   }, [])
 
   // 當天（本地日期）第一次開啟 / 跨日時產生每日任務（idempotent）
@@ -119,13 +120,13 @@ function Main({ childName }: { childName: string }) {
         body = <TasksScreen onBack={home} now={now} />
         break
       case 'shop':
-        body = <ShopScreen onBack={home} />
+        body = <ShopScreen onBack={home} initialTab={screen.tab} />
         break
       case 'bag':
         body = <BagScreen onBack={home} go={go} />
         break
       case 'coloring':
-        body = <ColoringListScreen onBack={home} onOpen={(pageId) => go({ name: 'paint', pageId })} onGallery={() => go('gallery')} />
+        body = <ColoringListScreen onBack={home} onOpen={(pageId) => go({ name: 'paint', pageId })} onGallery={() => go('gallery')} onShop={() => go({ name: 'shop', tab: 'coloring' })} />
         break
       case 'paint':
         body = <ColoringPlayScreen pageId={screen.pageId} onBack={() => go('coloring')} go={go} />

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { repo } from '../../db/repo'
@@ -6,13 +6,21 @@ import { COLORING_PAGE_IDS, foodHearts, FOOD_EFFECTS } from '../../domain/consta
 import { isFavoriteFood } from '../../domain/favorite'
 import { localDateStr } from '../../domain/date'
 import { canBuy } from '../../domain/shop'
+import { PURCHASE_UNDO_MS } from '../../domain/constants'
 import { artName, FOOD_EMOJI } from '../../art/items'
-import type { ShopKind } from '../../domain/types'
+import type { ShopItem, ShopKind } from '../../domain/types'
 import { ColoringSvg } from '../components/ColoringThumb'
 import { Icon } from '../components/Icon'
-import { ScreenHeader } from '../components/Header'
+import { PointsChip, ScreenHeader } from '../components/Header'
+import { UndoPill } from '../components/UndoPill'
+import { useCelebrateSmall } from '../feedback'
+import { flyOne, iconNode } from '../fly'
 import { useBalance, useNow, useToast } from '../hooks'
+import type { Screen } from '../App'
 import './shop.css'
+
+/** 同一顆按鈕在這段時間內只算一次（4–7 歲的孩子會連點） */
+export const BUY_LOCK_MS = 600
 
 /** 家具改由工坊用材料製作，商店只賣飼料與著色頁 */
 const TABS: { kind: ShopKind; label: string }[] = [
@@ -31,9 +39,24 @@ function Hearts({ n, hunger }: { n: number; hunger?: number }) {
   )
 }
 
-export function ShopScreen({ onBack }: { onBack: () => void }) {
+/** 買到的東西用什麼小圖飛、退回鈕上放什麼：食物用食物圖，著色頁用調色盤 */
+const iconOf = (item: ShopItem) => (item.kind === 'coloring' ? { name: 'ui-coloring', emoji: '🎨' } : { name: artName(item), emoji: FOOD_EMOJI[item.asset] ?? '🎁' })
+
+interface Undo {
+  ledgerId: string
+  item: ShopItem
+  key: number
+}
+
+export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void; initialTab?: Extract<Screen, { name: 'shop' }>['tab'] }) {
   const toast = useToast()
-  const [tab, setTab] = useState<ShopKind>('food')
+  const small = useCelebrateSmall()
+  const [tab, setTab] = useState<ShopKind>(initialTab ?? 'food')
+  const [undo, setUndo] = useState<Undo | null>(null)
+  const undoTimer = useRef<number | undefined>(undefined)
+  const locks = useRef(new Map<string, number>())
+  const busy = useRef(false)
+  useEffect(() => () => window.clearTimeout(undoTimer.current), [])
   const balance = useBalance()
   const today = localDateStr(useNow())
   const items = useLiveQuery(async () => {
@@ -43,15 +66,60 @@ export function ShopScreen({ onBack }: { onBack: () => void }) {
   }, [tab], [])
   const inventory = useLiveQuery(() => db.inventory.toArray(), [], [])
 
-  const buy = async (id: string, name: string) => {
-    const r = await repo.buyItem(id)
-    if (r.ok) toast(`買到${name}了！`, 'ok')
-    else toast(r.error, 'warn')
+  const buy = async (item: ShopItem, btn: HTMLElement) => {
+    // 防雙擊：同一顆按鈕 600ms 內只算一次；上一筆還在處理中也不再送
+    const t = Date.now()
+    if (busy.current || t - (locks.current.get(item.id) ?? 0) < BUY_LOCK_MS) return
+    locks.current.set(item.id, t)
+    busy.current = true
+    try {
+      const r = await repo.buyItem(item.id)
+      if (!r.ok) return toast(r.error, 'warn')
+      const card = btn.closest('.shop-item')
+      const art = card?.querySelector('.shop-art') ?? btn
+      small('buy', { at: art, phrase: `買到${item.name.replace('著色頁：', '')}囉！` })
+      // 買到的東西飛進右上角的背包
+      const rect = art.getBoundingClientRect()
+      const px = Math.min(72, rect.height)
+      void flyOne(
+        { rect: { left: rect.left + rect.width / 2 - px / 2, top: rect.top + rect.height / 2 - px / 2, width: px, height: px }, node: iconNode(iconOf(item).name, iconOf(item).emoji, px) },
+        document.querySelector('[data-bag-target]'),
+        { duration: 800 },
+      )
+      // 5 秒內可以退回剛買的
+      window.clearTimeout(undoTimer.current)
+      setUndo({ ledgerId: r.ledgerId, item, key: t })
+      undoTimer.current = window.setTimeout(() => setUndo(null), PURCHASE_UNDO_MS)
+    } finally {
+      busy.current = false
+    }
+  }
+  const doUndo = async () => {
+    if (!undo) return
+    const u = undo
+    window.clearTimeout(undoTimer.current)
+    setUndo(null)
+    const r = await repo.undoPurchase(u.ledgerId)
+    if (r.ok) {
+      small('undo', { phrase: `${u.item.name.replace('著色頁：', '')}退回囉` })
+      toast(`退回了，還你 ${r.refunded} 顆星星`, 'info')
+    } else toast(r.error, 'warn')
   }
 
   return (
     <main className="screen theme-peach">
-      <ScreenHeader title="商店" onBack={onBack} />
+      <ScreenHeader
+        title="商店"
+        onBack={onBack}
+        right={
+          <div className="shop-head-right">
+            <PointsChip />
+            <span className="bag-target" data-bag-target data-testid="bag-target" aria-hidden>
+              <Icon name="ui-bag" emoji="🎒" size={36} />
+            </span>
+          </div>
+        }
+      />
       <div className="tabs" role="tablist">
         {TABS.map((t) => (
           <button key={t.kind} role="tab" aria-selected={tab === t.kind} className={`tab ${tab === t.kind ? 'on' : ''}`} onClick={() => setTab(t.kind)}>
@@ -80,13 +148,26 @@ export function ShopScreen({ onBack }: { onBack: () => void }) {
                 <Icon name="ui-star" emoji="⭐" size={20} /> {item.price}
                 {item.kind === 'food' && owned > 0 ? <small>背包 {owned}</small> : null}
               </div>
-              <button className="btn primary" disabled={!check.ok} onClick={() => buy(item.id, item.name)}>
-                {check.ok ? '買' : check.reason === 'owned' ? '已擁有' : `還差 ${check.shortBy} 點`}
+              <button className="btn primary buy-btn" disabled={!check.ok} onClick={(e) => buy(item, e.currentTarget)} data-testid="buy-btn">
+                {check.ok ? (
+                  <>
+                    <Icon name="ui-shop" emoji="🛒" size={26} /> 買
+                  </>
+                ) : check.reason === 'owned' ? (
+                  '已擁有'
+                ) : (
+                  `還差 ${check.shortBy} 點`
+                )}
               </button>
             </li>
           )
         })}
       </ul>
+      {undo && (
+        <UndoPill key={undo.key} ms={PURCHASE_UNDO_MS} label={`退回${undo.item.name.replace('著色頁：', '')}`} onUndo={doUndo} testId="undo-buy">
+          <Icon name={iconOf(undo.item).name} emoji={iconOf(undo.item).emoji} size={34} />
+        </UndoPill>
+      )}
     </main>
   )
 }

@@ -26,6 +26,9 @@ import { ScreenHeader } from '../components/Header'
 import { Modal } from '../components/Modal'
 import { Icon } from '../components/Icon'
 import { useToast } from '../hooks'
+import { useLearningSettings } from '../learningHooks'
+import { speak } from '../../learning/speech'
+import { SHOP_ITEMS } from '../../domain/constants'
 import { playChime, playPop } from '../sounds'
 import { PaintBoard, type PaintTool } from './coloring/PaintBoard'
 import { STICKERS, stickerEmoji } from './coloring/stickers'
@@ -54,13 +57,27 @@ const saveRecent = (r: string[]) => {
 
 const useSoundOn = () => useLiveQuery(async () => (await db.settings.get('main'))?.soundOn !== false, [], true)
 
-export function ColoringListScreen({ onBack, onOpen, onGallery }: { onBack: () => void; onOpen: (pageId: string) => void; onGallery?: () => void }) {
+export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBack: () => void; onOpen: (pageId: string) => void; onGallery?: () => void; onShop?: () => void }) {
   const inventory = useLiveQuery(() => db.inventory.toArray(), [], [])
   const progress = useLiveQuery(() => db.coloring.toArray(), [], [])
+  const { voiceOn } = useLearningSettings()
+  const [guide, setGuide] = useState<{ id: string; name: string; price: number } | null>(null)
+  const [shaking, setShaking] = useState<string | null>(null)
   const galleryCount = progress.filter((p) => p.pageId.startsWith('g:')).length
   const unlocked = new Set(inventory.filter((v) => v.qty > 0).map((v) => v.itemId))
+  // 已擁有的（含新手送的 2 張）排最前面，上鎖的接在後面
   const open = COLORING_PAGES.filter((p) => unlocked.has(`coloring-${p.id}`))
   const locked = COLORING_PAGES.filter((p) => !unlocked.has(`coloring-${p.id}`))
+  const priceOf = (id: string) => SHOP_ITEMS.find((i) => i.id === `coloring-${id}`)?.price ?? 30
+
+  // 點鎖頭：卡片晃一下 + 語音說明 + 大大的「去商店」按鈕（不識字的小孩不會卡在死路）
+  const tapLocked = (id: string, name: string) => {
+    const price = priceOf(id)
+    setShaking(id)
+    window.setTimeout(() => setShaking((v) => (v === id ? null : v)), 520)
+    setGuide({ id, name, price })
+    speak(`這張要用${price}顆星星，在商店換喔`, { enabled: voiceOn })
+  }
 
   return (
     <main className="screen theme-lavender">
@@ -94,13 +111,32 @@ export function ColoringListScreen({ onBack, onOpen, onGallery }: { onBack: () =
           )
         })}
         {locked.map((p) => (
-          <li key={p.id} className="card shop-item art-card locked">
-            <div className="thumb-locked" aria-hidden><Icon name="ui-lock" emoji="🔒" size={56} /></div>
+          <li key={p.id} className={`card shop-item art-card locked ${shaking === p.id ? 'ux-shake' : ''}`} data-testid={`locked-${p.id}`}>
+            <button className="thumb-locked locked-btn" onClick={() => tapLocked(p.id, p.name)} aria-label={`${p.name}還沒有，要用${priceOf(p.id)}顆星星換`}>
+              <Icon name="ui-lock" emoji="🔒" size={56} />
+            </button>
             <div className="shop-name">{p.name}</div>
-            <div className="shop-price">商店可購買</div>
+            <div className="shop-price"><Icon name="ui-star" emoji="⭐" size={22} /> {priceOf(p.id)}</div>
           </li>
         ))}
       </ul>
+      {guide && (
+        <div className="modal-back" role="presentation" onClick={() => setGuide(null)}>
+          <div className="modal guide-card" role="dialog" aria-modal="true" aria-label="去商店換著色頁" data-testid="locked-guide" onClick={(e) => e.stopPropagation()}>
+            <div className="guide-thumb" aria-hidden>
+              <ColoringSvg pageId={guide.id} className="shop-thumb" />
+              <span className="guide-lock"><Icon name="ui-lock" emoji="🔒" size={44} /></span>
+            </div>
+            <h2>{guide.name}</h2>
+            <p className="guide-price"><Icon name="ui-star" emoji="⭐" size={40} /> <b>{guide.price}</b></p>
+            <p className="lead">用星星在商店換，就能畫囉！</p>
+            <button className="btn primary guide-go" onClick={() => (onShop ?? onBack)()} data-testid="guide-go-shop">
+              <Icon name="ui-shop" emoji="🛒" size={44} /> 去商店
+            </button>
+            <button className="btn" onClick={() => setGuide(null)} data-testid="guide-close">再看看</button>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
@@ -304,6 +340,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
             ))}
           </div>
 
+          <div className="pt-body" data-testid="pt-body">
           {tool === 'fill' && (
             <div className="pt-opts" data-testid="opts-fill">
               <button className={`pt-chip ${special === null ? 'on' : ''}`} onClick={() => setSpecial(null)} data-testid="special-none">純色</button>
@@ -357,6 +394,8 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
               </div>
             </div>
           )}
+
+          </div>
 
           <div className="pt-actions">
             <button className="btn" onClick={undo} disabled={past.length === 0} data-testid="undo-btn" aria-label={`復原，還能復原 ${past.length} 步`}>

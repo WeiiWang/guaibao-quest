@@ -52,10 +52,16 @@ const patchSettings = (page, patch) =>
     patch,
   )
 
-/** 記錄語音：window.__spoken = 唸過的句子；WebAudio 發聲次數在 window.__audio.osc（e2e-lib 已掛） */
-const spySpeech = (ctx) =>
+/**
+ * 掛在 context 上（之後每次載入頁面都生效）：
+ * window.__spoken = 唸過的句子、window.__fb = 共用成功回饋觸發過的事件（kind/sound/voice/particles）；
+ * WebAudio 發聲次數在 window.__audio.osc（e2e-lib 已掛）。
+ */
+const spyAll = (ctx) =>
   ctx.addInitScript(() => {
     window.__spoken = []
+    window.__fb = []
+    window.addEventListener('gq-feedback', (e) => window.__fb.push(e.detail))
     try {
       const orig = window.speechSynthesis.speak.bind(window.speechSynthesis)
       window.speechSynthesis.speak = (u) => {
@@ -228,12 +234,200 @@ async function dockTouch(browser) {
   }
 }
 
-const SECTIONS = { lockScreen, feedingGuard, dockTouch }
+
+// ---------- 第 3 項：商店防雙擊 + 退回；第 7 項：購買的成功回饋 ----------
+async function shopBuy(browser) {
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp, { bananas: 0 })
+    await spyAll(ctx)
+    await giveStars(page, 160)
+    await page.reload()
+    await page.waitForSelector('[data-testid=room]')
+    await page.locator('.candy.peach').click()
+    await page.waitForSelector('[data-testid=shop-banana]')
+    const buy = page.locator('[data-testid=shop-banana] [data-testid=buy-btn]')
+    const osc0 = await page.evaluate(() => window.__audio.osc)
+    await buy.dblclick({ delay: 0 }) // 兩下之間只隔幾十毫秒
+    await page.waitForTimeout(300)
+    check(`[${size}] 雙擊「買」：只買一份（香蕉 1 個）`, (await qtyOf(page, 'banana')) === 1, String(await qtyOf(page, 'banana')))
+    check(`[${size}] 雙擊「買」：只扣一次星星（160→150）`, (await balance(page)) === 150, String(await balance(page)))
+    const fb = await page.evaluate(() => window.__fb)
+    check(`[${size}] 購買觸發共用成功回饋（kind=buy、有音效、有粒子）`, fb.length === 1 && fb[0].kind === 'buy' && fb[0].sound === true && fb[0].particles > 0, JSON.stringify(fb))
+    check(`[${size}] 購買：真的有發出音效（WebAudio）`, (await page.evaluate(() => window.__audio.osc)) > osc0)
+    check(`[${size}] 購買：語音「買到香蕉囉！」`, (await page.evaluate(() => window.__spoken)).includes('買到香蕉囉！'))
+    check(`[${size}] 購買：畫面上有星星粒子`, (await page.locator('[data-testid=fb-particle]').count()) > 0)
+    check(`[${size}] 出現「退回」小按鈕`, (await page.getByTestId('undo-buy').count()) === 1)
+    const pill = await page.getByTestId('undo-buy').boundingBox()
+    const lastBuyBtns = await page.locator('[data-testid=buy-btn]').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()))
+    const overlap = lastBuyBtns.some((r) => r.left < pill.x + pill.width && r.right > pill.x && r.top < pill.y + pill.height && r.bottom > pill.y)
+    check(`[${size}] 退回按鈕不蓋住任何「買」按鈕`, !overlap)
+    await shot(page, 'shop-bought', size)
+    await page.getByTestId('undo-buy').click()
+    await page.waitForTimeout(400)
+    check(`[${size}] 按「退回」：庫存回 0、星星回 160`, (await qtyOf(page, 'banana')) === 0 && (await balance(page)) === 160, `${await qtyOf(page, 'banana')}/${await balance(page)}`)
+    check(`[${size}] 退回後按鈕消失`, (await page.getByTestId('undo-buy').count()) === 0)
+    // 退回後再買得到（沒有留下半套狀態），而且 5 秒後退回鈕自己消失
+    await buy.click()
+    await page.waitForTimeout(300)
+    check(`[${size}] 退回後再買：庫存 1、星星 150`, (await qtyOf(page, 'banana')) === 1 && (await balance(page)) === 150)
+    await page.waitForTimeout(5300)
+    check(`[${size}] 5 秒後「退回」鈕自己消失`, (await page.getByTestId('undo-buy').count()) === 0)
+    check(`[${size}] 商店無 console 錯誤`, errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+  // 慢慢點兩下（隔 >600ms）是兩次獨立的購買
+  {
+    const { ctx, page } = await freshApp(browser, SIZES.land, { bananas: 0 })
+    await giveStars(page, 160)
+    await page.reload()
+    await page.locator('.candy.peach').click()
+    const buy = page.locator('[data-testid=shop-banana] [data-testid=buy-btn]')
+    await buy.click()
+    await page.waitForTimeout(800)
+    await buy.click()
+    await page.waitForTimeout(300)
+    check('隔 0.8 秒再按：是第二次購買（香蕉 2 個、星星 140）', (await qtyOf(page, 'banana')) === 2 && (await balance(page)) === 140)
+    await ctx.close()
+  }
+  // 家長關掉音效與語音：成功回饋只剩畫面粒子
+  {
+    const { ctx, page } = await freshApp(browser, SIZES.land, { bananas: 0 })
+    await spyAll(ctx)
+    await patchSettings(page, { soundOn: false, voiceOn: false })
+    await giveStars(page, 160)
+    await page.reload()
+    await page.locator('.candy.peach').click()
+    const osc0 = await page.evaluate(() => window.__audio.osc)
+    await page.locator('[data-testid=shop-banana] [data-testid=buy-btn]').click()
+    await page.waitForTimeout(300)
+    const fb = await page.evaluate(() => window.__fb)
+    check('家長關音效：購買沒有發聲', (await page.evaluate(() => window.__audio.osc)) === osc0 && fb[0]?.sound === false)
+    check('家長關語音：購買不唸（speak 收到 enabled=false，沒有真的開始唸）', fb[0]?.voice === false)
+    check('音效語音都關：粒子還是會出現', (await page.locator('[data-testid=fb-particle]').count()) > 0)
+    await ctx.close()
+  }
+  // 減少動態效果：粒子改成原地淡入淡出（沒有位移）
+  {
+    const { ctx, page } = await freshApp(browser, SIZES.land, { bananas: 0, ctxOpts: { reducedMotion: 'reduce' } })
+    await giveStars(page, 160)
+    await page.reload()
+    await page.locator('.candy.peach').click()
+    await page.locator('[data-testid=shop-banana] [data-testid=buy-btn]').click()
+    await page.waitForTimeout(450)
+    const moved = await page.evaluate(() => [...document.querySelectorAll('[data-testid=fb-particle]')].map((e) => getComputedStyle(e).transform))
+    check('prefers-reduced-motion：粒子沒有位移（transform 為 none）', moved.length > 0 && moved.every((t) => t === 'none'), moved[0])
+    await ctx.close()
+  }
+}
+
+// ---------- 第 5 項：著色本新手空狀態 ----------
+async function coloringList(browser) {
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp)
+    await spyAll(ctx)
+    await page.reload()
+    await page.waitForSelector('[data-testid=room]')
+    await page.locator('.candy.lavender').click()
+    await page.waitForSelector('[data-testid=page-monkey]')
+    const owned = await page.locator('[data-testid^=page-]').evaluateAll((els) => els.map((e) => e.dataset.testid))
+    check(`[${size}] 新使用者的著色本有 2 張免費頁（小猴子、香蕉樹）`, owned.length === 2 && owned.includes('page-monkey') && owned.includes('page-banana-tree'), owned.join(','))
+    const order = await page.locator('ul.shop-grid > li').evaluateAll((els) => els.map((e) => (e.classList.contains('locked') ? 'L' : 'O')).join(''))
+    check(`[${size}] 已擁有的排在最前面，上鎖的在後面`, /^O+L+$/.test(order), order)
+    const monkeyBtn = await page.locator('[data-testid=page-monkey] .thumb-btn').boundingBox()
+    check(`[${size}] 免費頁的縮圖可以點、夠大（≥100px）`, monkeyBtn.width >= 100 && monkeyBtn.height >= 100)
+    // 點鎖頭：晃一下、語音、大按鈕「去商店」
+    await page.getByTestId('locked-clouds').locator('.locked-btn').click()
+    await page.waitForSelector('[data-testid=locked-guide]')
+    check(`[${size}] 點鎖頭：卡片晃一下`, (await page.locator('[data-testid=locked-clouds].ux-shake').count()) === 1)
+    check(`[${size}] 點鎖頭：語音「這張要用 30 顆星星，在商店換喔」`, (await page.evaluate(() => window.__spoken)).includes('這張要用30顆星星，在商店換喔'))
+    await page.waitForTimeout(500) // 等彈出動畫跑完再量尺寸
+    const go = await page.getByTestId('guide-go-shop').boundingBox()
+    check(`[${size}] 「去商店」是大按鈕（高 ≥72）`, go.height >= 72, `${Math.round(go.width)}x${Math.round(go.height)}`)
+    await shot(page, 'coloring-locked', size)
+    await page.getByTestId('guide-go-shop').click()
+    await page.waitForSelector('[data-testid=shop-grid-coloring]')
+    check(`[${size}] 按「去商店」：直接到商店的著色頁分頁`, (await page.getByRole('tab', { name: '著色頁' }).getAttribute('aria-selected')) === 'true')
+    const monkeyShop = await page.locator('[data-testid=shop-coloring-monkey] [data-testid=buy-btn]').innerText()
+    check(`[${size}] 商店裡免費頁顯示「已擁有」`, monkeyShop.includes('已擁有'))
+    check(`[${size}] 著色本無 console 錯誤`, errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+  // 免費頁只送一次：退掉之後重開 App 不會再補
+  {
+    const { ctx, page } = await freshApp(browser, SIZES.land)
+    await idb(page, (db) => new Promise((res) => { const tx = db.transaction('inventory', 'readwrite'); tx.objectStore('inventory').put({ id: 'coloring-monkey', itemId: 'coloring-monkey', qty: 0 }); tx.oncomplete = () => res(1) }))
+    await page.reload()
+    await page.waitForSelector('[data-testid=room]')
+    await page.waitForTimeout(500)
+    check('免費頁只送一次（庫存被改成 0 後，重開不會再補）', (await qtyOf(page, 'coloring-monkey')) === 0)
+    await ctx.close()
+  }
+}
+
+// ---------- 第 9 項：著色頁直向 / 手機版面 ----------
+const boxOf = async (page, sel) => {
+  const b = await page.locator(sel).first().boundingBox()
+  return b && { x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.width), h: Math.round(b.height) }
+}
+const sameBox = (a, b) => a && b && a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h
+
+async function coloringLayout(browser) {
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp)
+    await page.locator('.candy.lavender').click()
+    await page.getByTestId('page-monkey').locator('.thumb-btn').click()
+    await page.waitForSelector('[data-testid=paint-screen]')
+    await page.waitForTimeout(500)
+    const inView = (b) => b.y >= 0 && b.y + b.h <= vp.height + 1 && b.x >= 0 && b.x + b.w <= vp.width + 1
+    const finish0 = await boxOf(page, '[data-testid=finish-btn]')
+    const panel0 = await boxOf(page, '.pt-panel')
+    const board = await boxOf(page, '.pt-board')
+    check(`[${size}] 著色頁：畫布完整在畫面內（不用捲動）`, inView(board), JSON.stringify(board))
+    check(`[${size}] 著色頁：「完成」「復原」「工具」不用捲動就看得到`, inView(finish0) && inView(await boxOf(page, '[data-testid=undo-btn]')) && inView(await boxOf(page, '[data-testid=tool-fill]')), JSON.stringify(finish0))
+    check(`[${size}] 著色頁：整頁沒有垂直捲動（直向 / 手機工具列固定在畫布下方）`, size === 'land' || (await page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight + 1)))
+    check(`[${size}] 著色頁：沒有水平溢出`, await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
+    if (size !== 'land') {
+      const toolsY = (await boxOf(page, '.pt-tools')).y
+      check(`[${size}] 工具列在畫布下方`, toolsY >= board.y + board.h - 1, `${toolsY} vs ${board.y + board.h}`)
+    }
+    // 色票 ≥48px
+    const sw = await page.locator('[data-testid=palette] .swatch').evaluateAll((els) => els.map((e) => [Math.round(e.getBoundingClientRect().width), Math.round(e.getBoundingClientRect().height)]))
+    check(`[${size}] 24 個色票每個 ≥48×48`, sw.length === 24 && sw.every(([w, h]) => w >= 48 && h >= 48), `最小 ${Math.min(...sw.map((x) => x[0]))}x${Math.min(...sw.map((x) => x[1]))}`)
+    const firstVisible = await page.locator('[data-testid=palette] .swatch').first().boundingBox()
+    check(`[${size}] 進頁面第一個色票就在畫面內（換色不用捲）`, firstVisible.y >= 0 && firstVisible.y + firstVisible.height <= vp.height)
+    await shot(page, 'paint', size)
+    // 「完成」位置穩定：點色 → 出現「最近用過」→ 換各種工具，位置都不動
+    const states = []
+    await page.locator('[data-testid=palette] .swatch').nth(3).click()
+    await page.locator('[data-testid=palette] .swatch').nth(3).scrollIntoViewIfNeeded()
+    // 填一個區塊讓「最近用過」出現
+    const svgBox = await boxOf(page, '.pt-svg')
+    await page.mouse.click(svgBox.x + svgBox.w * 0.5, svgBox.y + svgBox.h * 0.5)
+    await page.waitForTimeout(250)
+    states.push(['填色後（出現最近用過）', await boxOf(page, '[data-testid=finish-btn]')])
+    for (const t of ['brush', 'sticker', 'eraser', 'fill']) {
+      await page.getByTestId(`tool-${t}`).click()
+      await page.waitForTimeout(120)
+      states.push([`切到${t}`, await boxOf(page, '[data-testid=finish-btn]')])
+      if (t === 'sticker') await shot(page, 'paint-sticker', size)
+    }
+    await page.getByTestId('special-rainbow').click()
+    states.push(['彩虹填色', await boxOf(page, '[data-testid=finish-btn]')])
+    const moved = states.filter(([, b]) => !sameBox(b, finish0))
+    check(`[${size}] 「完成」按鈕位置固定（填色、最近用過、4 種工具、彩虹都不跳位）`, moved.length === 0, moved.map(([n, b]) => `${n}:${JSON.stringify(b)}`).join(' ') + ' 原本 ' + JSON.stringify(finish0))
+    check(`[${size}] 工具列整體高度固定`, sameBox(await boxOf(page, '.pt-panel'), panel0))
+    const recent = await page.locator('[data-testid=recent-colors] .swatch').count()
+    check(`[${size}] 點色之後「最近用過」有出現（功能沒被拿掉）`, recent >= 1, String(recent))
+    check(`[${size}] 著色頁無 console 錯誤`, errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+}
+
+const SECTIONS = { lockScreen, feedingGuard, dockTouch, shopBuy, coloringList, coloringLayout }
 void SECTIONS
 void balance
 void qtyOf
 void giveStars
-void spySpeech
 
 const only = process.argv[2]
 const browser = await launch()
