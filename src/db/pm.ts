@@ -6,8 +6,9 @@ import { rollDailyGift } from '../domain/gifts'
 import { HAT_IDS } from '../domain/hats'
 import { TRICK_IDS } from '../domain/tricks'
 import type { Stage } from '../domain/types'
+import { CHAPTERS } from '../learning/chapter'
 import { MATERIAL_IDS } from '../learning/types'
-import { db } from './db'
+import { db, type GuaibaoDB } from './db'
 import { queueGifts } from './meta'
 import { rebuildAlbum } from './album'
 import { newId } from './repo'
@@ -95,4 +96,17 @@ export async function pmOwnAllHats(): Promise<number> {
 /** 清掉成長相簿，依現況整個重新補建（舊里程碑；不標「新」）。回傳補了幾張 */
 export async function pmRebuildAlbum(): Promise<number> {
   return rebuildAlbum(db, Date.now())
+}
+
+/** 直接解鎖有前置章節的章節（水簾洞…），不用先通關前一章。回傳這次新解鎖幾章 */
+export async function pmUnlockChapters(d: Pick<GuaibaoDB, 'settings'> = db): Promise<number> {
+  const cur = (await d.settings.get('main'))?.unlockedChapters ?? []
+  const add = CHAPTERS.filter((c) => c.unlockAfter && !cur.includes(c.id)).map((c) => c.id)
+  if (add.length) await d.settings.update('main', { unlockedChapters: [...cur, ...add] })
+  return add.length
+}
+
+/** 把 PM 解鎖的章節鎖回去（要通關前一章才開）。 */
+export async function pmLockChapters(d: Pick<GuaibaoDB, 'settings'> = db): Promise<void> {
+  await d.settings.update('main', { unlockedChapters: [] })
 }

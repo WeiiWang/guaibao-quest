@@ -18,7 +18,7 @@ import { allLines } from '../src/learning/lines.ts'
 import { englishLines, EN_LANG } from '../src/learning/english.ts'
 
 const CONTENT = join(dirname(fileURLToPath(import.meta.url)), '../src/learning/content')
-const bank = ['number', 'classify', 'pattern', 'english', 'life', 'nature'].flatMap((f) => JSON.parse(readFileSync(join(CONTENT, `${f}.json`), 'utf8')))
+const bank = ['number', 'classify', 'pattern', 'measure', 'space', 'observe', 'english', 'life', 'nature'].flatMap((f) => JSON.parse(readFileSync(join(CONTENT, `${f}.json`), 'utf8')))
 const zh = allLines(bank)
 const en = englishLines()
 const fmt = (o) => `${JSON.stringify(o, null, 2)}\n`

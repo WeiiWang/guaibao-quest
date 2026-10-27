@@ -329,7 +329,7 @@ try {
   await solveCurrent(page, qSeasonName)
   await next(page)
   // 3. 植物生長（排序）：用點的
-  check('「植物生長」排序：3 張卡片（種子、發芽、開花，有圖）、3 個格子', (await page.getByTestId('order-slot').count()) === 3 && (await page.getByTestId('order-card').count()) === 3 && (await page.locator('.ord-card .ord-text').allInnerTexts()).sort().join() === ['發芽', '種子', '開花'].sort().join())
+  check('「植物生長」排序：3 張卡片（種子、發芽、開花，有圖）、3 個格子', (await page.getByTestId('order-slot').count()) === 3 && (await page.getByTestId('order-card').count()) === 3 && (await page.locator('.sto-card .sto-text').allInnerTexts()).sort().join() === ['發芽', '種子', '開花'].sort().join())
   await shot(page, 'plant-order', 'land')
   const wrongCard = qPlant.params.order[2]
   await card(page, wrongCard).click()
@@ -337,7 +337,7 @@ try {
   check('點「開花」放進第 1 格：不對，彈回去、提示', (await hintStage(page)) === '1' && (await page.getByTestId('order-placed').count()) === 0)
   await card(page, wrongCard).click()
   await page.waitForTimeout(150)
-  check('再放錯一次：下一張該放的卡片和第 1 格發光（第二次提示）', (await hintStage(page)) === '2' && (await page.locator('.ord-card.demo').count()) === 1 && (await page.locator('.ord-slot.demo').count()) === 1)
+  check('再放錯一次：下一張該放的卡片和第 1 格發光（第二次提示）', (await hintStage(page)) === '2' && (await page.locator('.sto-card.demo').count()) === 1 && (await page.locator('.sto-slot.demo').count()) === 1)
   for (const id of qPlant.params.order) {
     await card(page, id).click()
     await page.waitForTimeout(120)

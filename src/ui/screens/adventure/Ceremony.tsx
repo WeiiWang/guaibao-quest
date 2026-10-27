@@ -4,13 +4,15 @@ import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
 import { getChapter, HUAGUOSHAN } from '../../../learning/chapter'
 import { playSfx } from '../../../learning/sfx'
-import { say } from '../../../learning/speech'
+import { sayChain } from '../../../learning/speech'
+import { nextChapterOf, subjectOfChapter } from '../../../learning/subject'
 import { pickLine } from '../../../learning/lines'
 import { MATERIAL_IDS, MATERIAL_NAMES, type MaterialCost } from '../../../learning/types'
 import { MAT_EMOJI } from '../../../art/items'
 import { Icon } from '../../components/Icon'
 import { MaterialsChip } from '../../components/MaterialsChip'
 import { useLearningSettings } from '../../learningHooks'
+import { writeChapter } from './subjectPref'
 import type { Screen } from '../../App'
 import { Companion } from './Companion'
 import './adventure.css'
@@ -18,6 +20,8 @@ import './adventure.css'
 /** 章末儀式：打開寶箱 → 阿悟歡呼 → 額外材料 → 「今天的冒險完成了！」（chapterId 是哪一章的寶箱，沒給就是花果山） */
 export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: () => void; go: (s: Screen) => void }) {
   const ch = (chapterId && getChapter(chapterId)) || HUAGUOSHAN
+  // 通關後會開放的下一章（花果山 → 水簾洞）
+  const next = nextChapterOf(ch.id)
   const { soundOn, voiceOn } = useLearningSettings()
   const prog = useLiveQuery(() => db.progress.get(ch.id), [])
   const [rewards, setRewards] = useState<MaterialCost | null>(null)
@@ -44,7 +48,8 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
     if (!opened) return
     playSfx('reward', soundOn)
     const l = pickLine('ceremony.done')
-    say(l.key, l.text, { enabled: voiceOn })
+    const open = pickLine('ui.chapter', 1)
+    sayChain([{ key: l.key, text: l.text }, ...(next ? [{ key: open.key, text: open.text }] : [])], { enabled: voiceOn })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened])
 
@@ -87,8 +92,26 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
           )}
           {alreadyOpened && <p className="adv-sub">這一輪的寶箱已經打開囉。</p>}
           <MaterialsChip />
+          {next && (
+            <p className="adv-sub" data-testid="next-chapter-open">
+              {next.name}開門囉！
+            </p>
+          )}
           <div className="adv-actions">
-            <button className="adv-btn primary" onClick={() => go({ name: 'workshop' })} data-testid="to-workshop">去工坊做家具</button>
+            {next && (
+              <button
+                className="adv-btn primary"
+                onClick={() => {
+                  const subject = subjectOfChapter(ch.id)
+                  if (subject) writeChapter(subject.id, next.id)
+                  onMap()
+                }}
+                data-testid="to-next-chapter"
+              >
+                去{next.name}
+              </button>
+            )}
+            <button className={`adv-btn ${next ? '' : 'primary'}`} onClick={() => go({ name: 'workshop' })} data-testid="to-workshop">去工坊做家具</button>
             <button className="adv-btn" onClick={onMap} data-testid="back-to-map">回地圖</button>
           </div>
         </>

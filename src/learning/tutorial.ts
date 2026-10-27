@@ -1,7 +1,7 @@
 import type { Interaction, Question } from './types'
 
 /** 需要教學示範的互動（每種互動第一次出現時，阿悟先示範一次；不計分、不寫作答紀錄） */
-export const TUTORIAL_INTERACTIONS: Interaction[] = ['tapN', 'dragSort']
+export const TUTORIAL_INTERACTIONS: Interaction[] = ['tapN', 'dragSort', 'dragOrder', 'place', 'flip']
 export const needsTutorial = (it: Interaction | undefined, seen: ReadonlySet<string>): it is Interaction =>
   !!it && TUTORIAL_INTERACTIONS.includes(it) && !seen.has(it)
 
@@ -20,6 +20,69 @@ export function tutorialQuestion(it: Interaction): Question {
       answer: '1',
       hint: '點一下香蕉，放進籃子，再按「好了」。',
       params: { n: 1, pool: 3, obj: 'obj-banana' },
+      version: 1,
+    }
+  }
+  if (it === 'dragOrder') {
+    // 三顆蘋果，大小不同：由小排到大。items 洗過牌，order = 每格該放第幾個
+    return {
+      id: 'tutorial-dragOrder',
+      skill: 'measure',
+      difficulty: 1,
+      type: 'order',
+      interaction: 'dragOrder',
+      prompt: '由小排到大。',
+      items: [
+        { obj: 'obj-apple', scale: 1 },
+        { obj: 'obj-apple', scale: 0.5 },
+        { obj: 'obj-apple', scale: 0.75 },
+      ],
+      choices: [],
+      answer: 'sorted',
+      hint: '最小的放第一格。',
+      params: { dim: 'size', dir: 'asc', itemOrder: [1, 2, 0] },
+      version: 1,
+    }
+  }
+  if (it === 'place') {
+    return {
+      id: 'tutorial-place',
+      skill: 'space',
+      difficulty: 1,
+      type: 'place',
+      interaction: 'place',
+      prompt: '把小雞放到箱子的上面。',
+      items: [],
+      choices: [],
+      answer: 'sorted',
+      hint: '上面，就是在箱子的頭頂上。',
+      params: {
+        anchors: ['decor-crate'],
+        subject: 'obj-chick',
+        zones: [
+          { id: 'z1', rel: 'above', of: 0 },
+          { id: 'z2', rel: 'below', of: 0 },
+        ],
+        target: 'z1',
+        rel: 'above',
+        of: 0,
+      },
+      version: 1,
+    }
+  }
+  if (it === 'flip') {
+    return {
+      id: 'tutorial-flip',
+      skill: 'observe',
+      difficulty: 1,
+      type: 'flip',
+      interaction: 'flip',
+      prompt: '翻開牌，找出一樣的兩張。',
+      items: [{ obj: 'obj-apple' }, { obj: 'obj-fish' }, { obj: 'obj-fish' }, { obj: 'obj-apple' }],
+      choices: [],
+      answer: 'matched',
+      hint: '先翻開一張，再翻開另一張，一樣的就會留下來。',
+      params: { cols: 2, rows: 2 },
       version: 1,
     }
   }

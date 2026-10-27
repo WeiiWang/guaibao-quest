@@ -590,7 +590,10 @@ export function usePetLife(p: PetLifeParams) {
         case 'trick:rhythm':
         case 'trick:hello':
         case 'trick:flip':
-        case 'trick:bow': {
+        case 'trick:bow':
+        case 'trick:height':
+        case 'trick:hide':
+        case 'trick:memory': {
           if (q.stage === 'egg') return
           if (asleepRef.current) wakeUp()
           startBehavior(TRICK_BEHAVIOR[cmd.slice(6) as TrickId])

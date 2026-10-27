@@ -190,6 +190,8 @@ export interface Settings {
   collectionRewarded?: number
   /** v5：待慶祝的新招（依序跳全螢幕慶祝，關掉後移除） */
   pendingTricks?: string[]
+  /** v6：家長（PM 預覽）直接解鎖的章節 id（正常是通關前一章才解鎖） */
+  unlockedChapters?: string[]
   /** v6：成長相簿的回憶卡（依時間排序顯示；不升 Dexie 版本） */
   album?: AlbumCard[]
   /** v6：相簿已經依現況補建過舊里程碑（只補一次；之後新里程碑才會有「新卡」提示） */

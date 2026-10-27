@@ -1,6 +1,6 @@
 import { makeRng, type Rng } from './rng'
 import { planStation, seedOf, type PlannedQuestion } from './select'
-import { mustSubject } from './subject'
+import { mustSubject, subjectSkills } from './subject'
 import type { Attempt, DailyBadge, DailyState, Question, SkillId, SkillState, SubjectId } from './types'
 
 /**
@@ -63,7 +63,8 @@ export function planDaily(o: PlanDailyOptions): PlannedQuestion[] {
     rng: o.rng ?? makeRng(seedOf(`daily:${o.subject}:${o.date}:${o.play}`)),
     gentle: o.gentle,
     bank: o.bank,
-    skills: subject.skills,
+    // 數學的每日冒險六個技能一起輪替（每天缺一個，每天不同）
+    skills: subjectSkills(subject),
     slots: subject.dailySlots,
     exclude: o.avoid,
     maxReviews: DAILY_MAX_REVIEWS,

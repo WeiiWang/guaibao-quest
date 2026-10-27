@@ -77,14 +77,22 @@ export interface PlanOptions {
   slots?: Interaction[]
   /** 這一站會出哪些技能（科目決定）。沒給 = 數學的三個技能；英文科目是 ['english'] */
   skills?: readonly SkillId[]
+  /** 最後一題從這些技能輪流抽（新章節裡保留少量舊章節技能的複習）；沒給 = 全部照 skills 輪替 */
+  tail?: readonly SkillId[]
   /** 盡量避開的題（例如每日冒險避開昨天的題面）。沒得換時才會重複 */
   exclude?: ReadonlySet<string>
   /** 最多幾題複習題（預設 1；每日冒險 2） */
   maxReviews?: number
 }
 
-/** 各互動出在哪個技能：拿給我 N 個是數感、拖曳歸類是分類 */
-export const SKILL_OF_INTERACTION: Partial<Record<Interaction, SkillId>> = { tapN: 'number', dragSort: 'classify' }
+/** 各互動出在哪個技能：拿給我 N 個是數感、拖曳歸類是分類、排序是比較與排序、放到位置是空間方位、翻牌是觀察與記憶 */
+export const SKILL_OF_INTERACTION: Partial<Record<Interaction, SkillId>> = {
+  tapN: 'number',
+  dragSort: 'classify',
+  dragOrder: 'measure',
+  place: 'space',
+  flip: 'observe',
+}
 
 /**
  * 這種互動的題屬於哪個技能：數學的拿給我 N 個是數感、拖曳歸類是分類；
@@ -113,7 +121,10 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
   /** 先避開 avoid 抽；整個難度的題都被避開了才放寬 */
   const pickAvoiding = (o: Omit<PickOptions, 'exclude'>): Question | null =>
     (avoid.size ? pickQuestion({ ...o, exclude: new Set([...used, ...avoid]) }) : null) ?? pickQuestion({ ...o, exclude: used })
-  const rotation: SkillId[] = Array.from({ length: size }, (_, i) => skills[(opts.stationIndex + i) % skills.length])
+  const tail = opts.tail && opts.tail.length ? opts.tail : undefined
+  const rotation: SkillId[] = Array.from({ length: size }, (_, i) =>
+    tail && i === size - 1 ? tail[opts.stationIndex % tail.length] : skills[(opts.stationIndex + i) % skills.length],
+  )
   const order = [...rotation]
   // 站型：主互動的位置指定技能（技能數量仍維持 2/2/1），該技能目前難度沒有這種題就退回點選
   const wantInteraction: (Interaction | undefined)[] = Array(size).fill(undefined)
@@ -138,7 +149,7 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
   }
 
   // 先決定複習：換掉該技能最後一個位置，若該技能這站沒出題就換最後一個還沒被換的位置
-  const due = dueReviews(opts.states, opts.now, skills)
+  const due = dueReviews(opts.states, opts.now, tail ? [...skills, ...tail] : skills)
   const reviewSlots = new Set<number>()
   for (const d of due) {
     if (reviewSlots.size >= (opts.maxReviews ?? 1)) break
@@ -226,6 +237,9 @@ export function seedOf(text: string): number {
   return h >>> 0
 }
 
+/** 選項一個都不能少的題型：找不一樣（只剩兩張就分不出誰不一樣）。其他選擇題可以縮成 2 選 1 */
+const KEEP_CHOICES = new Set(['spot'])
+
 const isNumericChoices = (q: Question) => q.choices.length > 0 && q.choices.every((c) => c.label !== undefined && /^\d+$/.test(c.label))
 
 /**
@@ -238,7 +252,7 @@ export function displayQuestion(q: Question, seed: string, gentle = false): Ques
   if (q.interaction && q.interaction !== 'pick') return q
   const rng = makeRng(seedOf(`${seed}:${q.id}`))
   let choices = q.choices
-  if (gentle && choices.length > 2) {
+  if (gentle && choices.length > 2 && !KEEP_CHOICES.has(q.type)) {
     const others = choices.filter((c) => c.id !== q.answer)
     let keep = others[Math.floor(rng() * others.length)]
     if (isNumericChoices(q)) {

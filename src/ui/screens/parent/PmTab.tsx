@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
-import { pmAddFood, pmAddMaterials, pmAddStars, pmClearPoops, pmGrantGift, pmOwnAllDecor, pmOwnAllHats, pmRebuildAlbum, pmQueueTrickCelebrations, pmSetHunger, pmSetStage, pmUnlockAllTricks } from '../../../db/pm'
+import { pmAddFood, pmAddMaterials, pmAddStars, pmClearPoops, pmGrantGift, pmLockChapters, pmOwnAllDecor, pmOwnAllHats, pmRebuildAlbum, pmQueueTrickCelebrations, pmSetHunger, pmSetStage, pmUnlockAllTricks, pmUnlockChapters } from '../../../db/pm'
+import { repo } from '../../../db/repo'
 import { TRICKS } from '../../../domain/tricks'
 import { getFastSchedule, sendPetCommand, setFastSchedule, setTodMode, type PetCommand } from '../../../pet/bus'
 import type { TodMode } from '../../../pet/daynight'
@@ -46,6 +47,7 @@ export function PmTab({ onExit }: { onExit: () => void }) {
   const [fast, setFast] = useState(getFastSchedule)
   const celebrate = useCelebrate()
   const pet = useLiveQuery(() => db.pets.get('pet'), [])
+  const unlocks = useLiveQuery(() => repo.getChapterUnlocks(), [])
   const run = async (fn: () => Promise<unknown>, msg: string) => {
     await fn()
     toast(msg, 'ok')
@@ -164,6 +166,17 @@ export function PmTab({ onExit }: { onExit: () => void }) {
               {t.emoji} {t.name}
             </button>
           ))}
+        </div>
+      </div>
+
+      <div className="card" data-testid="pm-chapters">
+        <h2>章節</h2>
+        <p className="lt-note">
+          水簾洞（數學第 2 章）：{unlocks?.shuiliandong ? '已開放' : '還沒開放，要先通關花果山'}。直接解鎖後，地圖上的章節選擇就能切到水簾洞。
+        </p>
+        <div className="row-actions" style={{ justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+          <button className="btn primary" data-pm="unlock-chapters" onClick={() => run(async () => toast(`已解鎖 ${await pmUnlockChapters()} 章`, 'ok'), '')}>解鎖水簾洞</button>
+          <button className="btn" data-pm="lock-chapters" onClick={() => run(() => pmLockChapters(), '已把 PM 解鎖的章節鎖回去')}>鎖回去</button>
         </div>
       </div>
 

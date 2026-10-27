@@ -328,7 +328,7 @@ try {
   check('家長報告：英文單字有自己的一列（題數、無提示答對率、難度說明）', (await page.locator('[data-skill=english]').count()) === 1 && (await page.getByTestId('count-english').innerText()).includes('題') && (await page.locator('[data-skill=english] .lt-level').innerText()).includes('目前難度'))
   const engAttempts = (await dump(page, 'attempts')).filter((a) => a.skill === 'english')
   check('報告的英文題數 = 資料庫英文作答筆數', Number((await page.getByTestId('count-english').innerText()).match(/^(\d+) 題/)[1]) === engAttempts.length, `${engAttempts.length}`)
-  check('報告依科目分組（數學、英文）', (await page.getByTestId('report-subject-math').locator('[data-skill]').count()) === 3 && (await page.getByTestId('report-subject-english').locator('[data-skill]').count()) === 1)
+  check('報告依科目分組（數學、英文）', (await page.getByTestId('report-subject-math').locator('[data-skill]').count()) === 6 && (await page.getByTestId('report-subject-english').locator('[data-skill]').count()) === 1)
   check('報告：今日徽章 2 個', (await page.getByTestId('report-badges').innerText()) === '2')
   await shot(page, 'report', 'land')
 

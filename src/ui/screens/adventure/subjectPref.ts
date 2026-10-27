@@ -25,3 +25,26 @@ export function writeSubject(id: SubjectId): void {
     /* ignore */
   }
 }
+
+const CHAPTER_KEY = 'gq-chapter-'
+const chapterNow = new Map<string, string>()
+
+/** 這個科目最後選的章節（從關卡回到地圖時還是同一章）。讀不到就是 null（用第 1 章） */
+export function readChapter(subject: SubjectId): string | null {
+  const m = chapterNow.get(subject)
+  if (m) return m
+  try {
+    return localStorage.getItem(CHAPTER_KEY + subject)
+  } catch {
+    return null
+  }
+}
+
+export function writeChapter(subject: SubjectId, chapterId: string): void {
+  chapterNow.set(subject, chapterId)
+  try {
+    localStorage.setItem(CHAPTER_KEY + subject, chapterId)
+  } catch {
+    /* ignore */
+  }
+}

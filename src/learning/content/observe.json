@@ -1,0 +1,2875 @@
+[
+  {
+    "id": "observe-1-01", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-02", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-03", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-04", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"decor-car"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-05", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-06", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-07", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-08", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-09", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-10", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-11", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-12", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-13", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "剛剛出現的是哪一個？",
+    "items": [
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-grape",
+    "hint": "再看一次，剛剛出現的有葡萄。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-14", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "剛剛有哪一個出現過？",
+    "items": [
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-chick",
+    "hint": "再看一次，剛剛出現的有小雞。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-15", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "請你想一想，剛剛看到的是哪一個？",
+    "items": [
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-flower",
+    "hint": "再看一次，剛剛出現的有花。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-16", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "剛剛出現的是哪一個？",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-star",
+    "hint": "再看一次，剛剛出現的有星星。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-17", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "剛剛有哪一個出現過？",
+    "items": [
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-peach",
+    "hint": "再看一次，剛剛出現的有桃子。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-18", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "請你想一想，剛剛看到的是哪一個？",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "再看一次，剛剛出現的有星星。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-19", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "剛剛出現的是哪一個？",
+    "items": [
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-apple",
+    "hint": "再看一次，剛剛出現的有蘋果。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-20", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "剛剛有哪一個出現過？",
+    "items": [
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "obj-banana",
+    "hint": "再看一次，剛剛出現的有香蕉。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-21", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "請你想一想，剛剛看到的是哪一個？",
+    "items": [
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "再看一次，剛剛出現的有花。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-22", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "剛剛出現的是哪一個？",
+    "items": [
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "decor-car",
+    "hint": "再看一次，剛剛出現的有汽車。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-23", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "剛剛有哪一個出現過？",
+    "items": [
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-shell","obj":"obj-shell"}
+    ],
+    "answer": "obj-chick",
+    "hint": "再看一次，剛剛出現的有小雞。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-24", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2,
+    "prompt": "請你想一想，剛剛看到的是哪一個？",
+    "items": [
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "再看一次，剛剛出現的有小魚。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":2400}
+  },
+  {
+    "id": "observe-1-25", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish"},
+      {"id":"c2","obj":"obj-fish","variant":{"hue":200}},
+      {"id":"c3","obj":"obj-fish"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是小魚，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-26", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個是灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach"},
+      {"id":"c2","obj":"obj-peach"},
+      {"id":"c3","obj":"obj-peach","variant":{"gray":true}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是桃子，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-27", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","variant":{"hue":200}},
+      {"id":"c2","obj":"obj-peach"},
+      {"id":"c3","obj":"obj-peach"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是桃子，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-28", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "哪一個變成灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish"},
+      {"id":"c2","obj":"obj-fish","variant":{"gray":true}},
+      {"id":"c3","obj":"obj-fish"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是小魚，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-29", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個是灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","variant":{"gray":true}},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-30", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit"},
+      {"id":"c2","obj":"obj-rabbit"},
+      {"id":"c3","obj":"obj-rabbit","variant":{"hue":150}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是小兔子，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-31", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","variant":{"hue":200}},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-32", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "哪一個變成灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket"},
+      {"id":"c2","obj":"decor-rocket","variant":{"gray":true}},
+      {"id":"c3","obj":"decor-rocket"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是火箭，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-33", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape"},
+      {"id":"c3","obj":"obj-grape","variant":{"hue":150}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是葡萄，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-34", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","variant":{"hue":150}},
+      {"id":"c2","obj":"obj-peach"},
+      {"id":"c3","obj":"obj-peach"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是桃子，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-35", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "哪一個變成灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape","variant":{"gray":true}},
+      {"id":"c3","obj":"obj-grape"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是葡萄，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-36", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple"},
+      {"id":"c2","obj":"obj-apple"},
+      {"id":"c3","obj":"obj-apple","variant":{"hue":150}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-37", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個是灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape","variant":{"gray":true}},
+      {"id":"c3","obj":"obj-grape"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是葡萄，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-38", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","variant":{"hue":200}},
+      {"id":"c2","obj":"obj-fish"},
+      {"id":"c3","obj":"obj-fish"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小魚，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-01", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-star"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-02", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-03", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-04", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-05", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-06", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-07", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-08", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-09", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-10", "skill": "observe", "difficulty": 2, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":3,"rows":2}
+  },
+  {
+    "id": "observe-2-11", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "想一想，剛剛看到了哪一個？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "再看一次，剛剛出現的有火箭、桃子。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-12", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "剛剛出現過的東西，是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "再看一次，剛剛出現的有小雞、火箭。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-13", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "剛剛有出現過的，是哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-shell",
+    "hint": "再看一次，剛剛出現的有貝殼、葡萄。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-14", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "想一想，剛剛看到了哪一個？",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-grape",
+    "hint": "再看一次，剛剛出現的有葡萄、小魚。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-15", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "剛剛出現過的東西，是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "再看一次，剛剛出現的有小雞、香蕉。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-16", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "剛剛有出現過的，是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-chick",
+    "hint": "再看一次，剛剛出現的有小雞、小魚。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-17", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "想一想，剛剛看到了哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "再看一次，剛剛出現的有小雞、火箭。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-18", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "剛剛出現過的東西，是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "decor-car",
+    "hint": "再看一次，剛剛出現的有汽車、蘋果。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-19", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "剛剛有出現過的，是哪一個？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "再看一次，剛剛出現的有花、小兔子。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-20", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "想一想，剛剛看到了哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "再看一次，剛剛出現的有小兔子、汽車。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-21", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "剛剛出現過的東西，是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-grape",
+    "hint": "再看一次，剛剛出現的有汽車、葡萄。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-22", "skill": "observe", "difficulty": 2, "type": "recall", "version": 2,
+    "prompt": "剛剛有出現過的，是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-flower",
+    "hint": "再看一次，剛剛出現的有小魚、花。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-2-23", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "哪一個是倒過來的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino","variant":{"rot":180}},
+      {"id":"c2","obj":"decor-dino"},
+      {"id":"c3","obj":"decor-dino"},
+      {"id":"c4","obj":"decor-dino"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是恐龍，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-24", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "哪一個是倒過來的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish"},
+      {"id":"c2","obj":"obj-fish","variant":{"rot":180}},
+      {"id":"c3","obj":"obj-fish"},
+      {"id":"c4","obj":"obj-fish"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是小魚，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-25", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個頭朝下？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit"},
+      {"id":"c2","obj":"obj-rabbit"},
+      {"id":"c3","obj":"obj-rabbit","variant":{"rot":180}},
+      {"id":"c4","obj":"obj-rabbit"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是小兔子，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-26", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "哪一個是倒過來的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit"},
+      {"id":"c2","obj":"obj-rabbit"},
+      {"id":"c3","obj":"obj-rabbit"},
+      {"id":"c4","obj":"obj-rabbit","variant":{"rot":180}}
+    ],
+    "answer": "c4",
+    "hint": "大家都是小兔子，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-27", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "哪一個是倒過來的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car"},
+      {"id":"c2","obj":"decor-car"},
+      {"id":"c3","obj":"decor-car","variant":{"rot":180}},
+      {"id":"c4","obj":"decor-car"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是汽車，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-28", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個頭朝下？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino"},
+      {"id":"c2","obj":"decor-dino"},
+      {"id":"c3","obj":"decor-dino"},
+      {"id":"c4","obj":"decor-dino","variant":{"rot":180}}
+    ],
+    "answer": "c4",
+    "hint": "大家都是恐龍，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-29", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "哪一個是倒過來的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach"},
+      {"id":"c2","obj":"obj-peach","variant":{"rot":180}},
+      {"id":"c3","obj":"obj-peach"},
+      {"id":"c4","obj":"obj-peach"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是桃子，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-30", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "哪一個是倒過來的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","variant":{"rot":180}},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick"},
+      {"id":"c4","obj":"obj-chick"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小雞，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-31", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個頭朝下？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple","variant":{"rot":180}},
+      {"id":"c2","obj":"obj-apple"},
+      {"id":"c3","obj":"obj-apple"},
+      {"id":"c4","obj":"obj-apple"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是蘋果，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-32", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個頭朝下？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick"},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick"},
+      {"id":"c4","obj":"obj-chick","variant":{"rot":180}}
+    ],
+    "answer": "c4",
+    "hint": "大家都是小雞，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-33", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個頭朝下？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish"},
+      {"id":"c2","obj":"obj-fish"},
+      {"id":"c3","obj":"obj-fish","variant":{"rot":180}},
+      {"id":"c4","obj":"obj-fish"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是小魚，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-34", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "哪一個是倒過來的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape","variant":{"rot":180}},
+      {"id":"c3","obj":"obj-grape"},
+      {"id":"c4","obj":"obj-grape"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是葡萄，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-35", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個頭朝下？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","variant":{"rot":180}},
+      {"id":"c2","obj":"obj-grape"},
+      {"id":"c3","obj":"obj-grape"},
+      {"id":"c4","obj":"obj-grape"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是葡萄，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-2-36", "skill": "observe", "difficulty": 2, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個頭朝下？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket"},
+      {"id":"c2","obj":"decor-rocket"},
+      {"id":"c3","obj":"decor-rocket","variant":{"rot":180}},
+      {"id":"c4","obj":"decor-rocket"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是火箭，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-01", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-02", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-03", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-car"},
+      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-04", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-star"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-star"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-05", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-06", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-07", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-08", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-09", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-10", "skill": "observe", "difficulty": 3, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":2}
+  },
+  {
+    "id": "observe-3-11", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-chick",
+    "hint": "剛剛有小魚、小雞、恐龍。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":1}
+  },
+  {
+    "id": "observe-3-12", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"decor-car"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-grape",
+    "hint": "剛剛有蘋果、汽車、葡萄。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":2}
+  },
+  {
+    "id": "observe-3-13", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "剛剛什麼不見了？",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-star",
+    "hint": "剛剛有星星、小魚、貝殼。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":0}
+  },
+  {
+    "id": "observe-3-14", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "剛剛有汽車、小兔子、桃子。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":1}
+  },
+  {
+    "id": "observe-3-15", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-dino",
+    "hint": "剛剛有蘋果、恐龍、小魚。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":1}
+  },
+  {
+    "id": "observe-3-16", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "剛剛什麼不見了？",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-flower",
+    "hint": "剛剛有花、恐龍、貝殼。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":0}
+  },
+  {
+    "id": "observe-3-17", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "剛剛有火箭、葡萄、花。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":0}
+  },
+  {
+    "id": "observe-3-18", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "剛剛有貝殼、蘋果、小兔子。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":2}
+  },
+  {
+    "id": "observe-3-19", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "剛剛什麼不見了？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "decor-car",
+    "hint": "剛剛有小兔子、葡萄、汽車。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":2}
+  },
+  {
+    "id": "observe-3-20", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "剛剛有香蕉、小兔子、貝殼。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":1}
+  },
+  {
+    "id": "observe-3-21", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-banana",
+    "hint": "剛剛有香蕉、葡萄、蘋果。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":0}
+  },
+  {
+    "id": "observe-3-22", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "剛剛什麼不見了？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-peach",
+    "hint": "剛剛有小雞、桃子、火箭。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":1}
+  },
+  {
+    "id": "observe-3-23", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "剛剛有香蕉、蘋果、花。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":2}
+  },
+  {
+    "id": "observe-3-24", "skill": "observe", "difficulty": 3, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "decor-dino",
+    "hint": "剛剛有桃子、恐龍、香蕉。現在少了哪一個呢？",
+    "params": {"flash":3500,"goneAt":1}
+  },
+  {
+    "id": "observe-3-25", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish"},
+      {"id":"c2","obj":"obj-fish","variant":{"hue":60}},
+      {"id":"c3","obj":"obj-fish"},
+      {"id":"c4","obj":"obj-fish"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是小魚，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-26", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "哪一個轉了方向、躺下來了？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana"},
+      {"id":"c2","obj":"obj-banana"},
+      {"id":"c3","obj":"obj-banana"},
+      {"id":"c4","obj":"obj-banana","variant":{"rot":90}},
+      {"id":"c5","obj":"obj-banana"}
+    ],
+    "answer": "c4",
+    "hint": "大家都是香蕉，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-27", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple"},
+      {"id":"c2","obj":"obj-apple"},
+      {"id":"c3","obj":"obj-apple"},
+      {"id":"c4","obj":"obj-apple","variant":{"hue":60}}
+    ],
+    "answer": "c4",
+    "hint": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-28", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個轉了方向？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick"},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick"},
+      {"id":"c4","obj":"obj-chick"},
+      {"id":"c5","obj":"obj-chick","variant":{"rot":-90}}
+    ],
+    "answer": "c5",
+    "hint": "大家都是小雞，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-29", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick"},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick","variant":{"hue":60}},
+      {"id":"c4","obj":"obj-chick"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-30", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana"},
+      {"id":"c2","obj":"obj-banana","variant":{"hue":60}},
+      {"id":"c3","obj":"obj-banana"},
+      {"id":"c4","obj":"obj-banana"},
+      {"id":"c5","obj":"obj-banana"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是香蕉，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-31", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "哪一個轉了方向、躺下來了？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape","variant":{"rot":90}},
+      {"id":"c2","obj":"obj-grape"},
+      {"id":"c3","obj":"obj-grape"},
+      {"id":"c4","obj":"obj-grape"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是葡萄，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-32", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "哪一個轉了方向、躺下來了？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape"},
+      {"id":"c3","obj":"obj-grape","variant":{"rot":-90}},
+      {"id":"c4","obj":"obj-grape"},
+      {"id":"c5","obj":"obj-grape"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是葡萄，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-33", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "哪一個轉了方向、躺下來了？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket"},
+      {"id":"c2","obj":"decor-rocket"},
+      {"id":"c3","obj":"decor-rocket","variant":{"rot":-90}},
+      {"id":"c4","obj":"decor-rocket"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是火箭，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-34", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach","variant":{"hue":60}},
+      {"id":"c2","obj":"obj-peach"},
+      {"id":"c3","obj":"obj-peach"},
+      {"id":"c4","obj":"obj-peach"},
+      {"id":"c5","obj":"obj-peach"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是桃子，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-35", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","variant":{"hue":60}},
+      {"id":"c2","obj":"obj-fish"},
+      {"id":"c3","obj":"obj-fish"},
+      {"id":"c4","obj":"obj-fish"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小魚，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-3-36", "skill": "observe", "difficulty": 3, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple"},
+      {"id":"c2","obj":"obj-apple"},
+      {"id":"c3","obj":"obj-apple","variant":{"hue":60}},
+      {"id":"c4","obj":"obj-apple"},
+      {"id":"c5","obj":"obj-apple"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-01", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-shell"},
+      {"obj":"decor-car"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-02", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-03", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-04", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-flower"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-05", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-06", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-07", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-shell"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-car"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-08", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-star"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-09", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-car"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-10", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-shell"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-car"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-11", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-12", "skill": "observe", "difficulty": 4, "type": "flip", "version": 2, "interaction": "flip",
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":4,"rows":3}
+  },
+  {
+    "id": "observe-4-13", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "剛剛什麼不見了？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "obj-fish",
+    "hint": "剛剛有小魚、桃子、葡萄、星星。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":0}
+  },
+  {
+    "id": "observe-4-14", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-star"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-star",
+    "hint": "剛剛有桃子、貝殼、星星、蘋果。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":2}
+  },
+  {
+    "id": "observe-4-15", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "obj-shell",
+    "hint": "剛剛有小兔子、汽車、恐龍、貝殼。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":3}
+  },
+  {
+    "id": "observe-4-16", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "剛剛什麼不見了？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "剛剛有小兔子、火箭、小雞、小魚。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":2}
+  },
+  {
+    "id": "observe-4-17", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "obj-fish",
+    "hint": "剛剛有小兔子、小魚、花、貝殼。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":1}
+  },
+  {
+    "id": "observe-4-18", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-star"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-dino"}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "decor-dino",
+    "hint": "剛剛有桃子、星星、小魚、恐龍。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":3}
+  },
+  {
+    "id": "observe-4-19", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "剛剛什麼不見了？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-shell",
+    "hint": "剛剛有香蕉、恐龍、火箭、貝殼。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":3}
+  },
+  {
+    "id": "observe-4-20", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-shell"},
+      {"obj":"decor-dino"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-shell",
+    "hint": "剛剛有桃子、貝殼、恐龍、火箭。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":1}
+  },
+  {
+    "id": "observe-4-21", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-flower"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "obj-peach",
+    "hint": "剛剛有桃子、花、恐龍、小兔子。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":0}
+  },
+  {
+    "id": "observe-4-22", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "剛剛什麼不見了？",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "剛剛有貝殼、花、香蕉、星星。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":3}
+  },
+  {
+    "id": "observe-4-23", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "哪一個不見了？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-banana",
+    "hint": "剛剛有香蕉、火箭、花、星星。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":0}
+  },
+  {
+    "id": "observe-4-24", "skill": "observe", "difficulty": 4, "type": "gone", "version": 2,
+    "prompt": "少了哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-star"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-fish",
+    "hint": "剛剛有小魚、星星、恐龍、小兔子。現在少了哪一個呢？",
+    "params": {"flash":4000,"goneAt":0}
+  },
+  {
+    "id": "observe-4-25", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "哪一個歪歪的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket"},
+      {"id":"c2","obj":"decor-rocket","variant":{"rot":-35}},
+      {"id":"c3","obj":"decor-rocket"},
+      {"id":"c4","obj":"decor-rocket"},
+      {"id":"c5","obj":"decor-rocket"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是火箭，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-26", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple","variant":{"hue":35}},
+      {"id":"c2","obj":"obj-apple"},
+      {"id":"c3","obj":"obj-apple"},
+      {"id":"c4","obj":"obj-apple"},
+      {"id":"c5","obj":"obj-apple"},
+      {"id":"c6","obj":"obj-apple"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-27", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple"},
+      {"id":"c2","obj":"obj-apple"},
+      {"id":"c3","obj":"obj-apple"},
+      {"id":"c4","obj":"obj-apple"},
+      {"id":"c5","obj":"obj-apple","variant":{"hue":35}}
+    ],
+    "answer": "c5",
+    "hint": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-28", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit"},
+      {"id":"c2","obj":"obj-rabbit","variant":{"hue":-35}},
+      {"id":"c3","obj":"obj-rabbit"},
+      {"id":"c4","obj":"obj-rabbit"},
+      {"id":"c5","obj":"obj-rabbit"},
+      {"id":"c6","obj":"obj-rabbit"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是小兔子，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-29", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個歪了一點點？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car"},
+      {"id":"c2","obj":"decor-car"},
+      {"id":"c3","obj":"decor-car","variant":{"rot":-35}},
+      {"id":"c4","obj":"decor-car"},
+      {"id":"c5","obj":"decor-car"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是汽車，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-30", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape"},
+      {"id":"c3","obj":"obj-grape"},
+      {"id":"c4","obj":"obj-grape"},
+      {"id":"c5","obj":"obj-grape"},
+      {"id":"c6","obj":"obj-grape","variant":{"hue":-35}}
+    ],
+    "answer": "c6",
+    "hint": "大家都是葡萄，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-31", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","variant":{"hue":35}},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick"},
+      {"id":"c4","obj":"obj-chick"},
+      {"id":"c5","obj":"obj-chick"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-32", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish"},
+      {"id":"c2","obj":"obj-fish"},
+      {"id":"c3","obj":"obj-fish"},
+      {"id":"c4","obj":"obj-fish","variant":{"hue":35}},
+      {"id":"c5","obj":"obj-fish"},
+      {"id":"c6","obj":"obj-fish"}
+    ],
+    "answer": "c4",
+    "hint": "大家都是小魚，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-33", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-banana"},
+      {"id":"c2","obj":"obj-banana"},
+      {"id":"c3","obj":"obj-banana"},
+      {"id":"c4","obj":"obj-banana","variant":{"hue":-35}},
+      {"id":"c5","obj":"obj-banana"}
+    ],
+    "answer": "c4",
+    "hint": "大家都是香蕉，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-34", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個歪了一點點？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-peach"},
+      {"id":"c2","obj":"obj-peach"},
+      {"id":"c3","obj":"obj-peach","variant":{"rot":35}},
+      {"id":"c4","obj":"obj-peach"},
+      {"id":"c5","obj":"obj-peach"},
+      {"id":"c6","obj":"obj-peach"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是桃子，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-35", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "哪一個歪歪的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish"},
+      {"id":"c2","obj":"obj-fish","variant":{"rot":-35}},
+      {"id":"c3","obj":"obj-fish"},
+      {"id":"c4","obj":"obj-fish"},
+      {"id":"c5","obj":"obj-fish"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是小魚，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-36", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "哪一個歪歪的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino"},
+      {"id":"c2","obj":"decor-dino"},
+      {"id":"c3","obj":"decor-dino"},
+      {"id":"c4","obj":"decor-dino"},
+      {"id":"c5","obj":"decor-dino","variant":{"rot":-35}},
+      {"id":"c6","obj":"decor-dino"}
+    ],
+    "answer": "c5",
+    "hint": "大家都是恐龍，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-37", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個歪了一點點？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino"},
+      {"id":"c2","obj":"decor-dino"},
+      {"id":"c3","obj":"decor-dino","variant":{"rot":-35}},
+      {"id":"c4","obj":"decor-dino"},
+      {"id":"c5","obj":"decor-dino"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是恐龍，一個一個比一比，找出方向不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-4-38", "skill": "observe", "difficulty": 4, "type": "spot", "version": 2,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick"},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick","variant":{"hue":-35}},
+      {"id":"c4","obj":"obj-chick"},
+      {"id":"c5","obj":"obj-chick"},
+      {"id":"c6","obj":"obj-chick"}
+    ],
+    "answer": "c3",
+    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g01", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g02", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g03", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-shell"},
+      {"obj":"obj-shell"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g04", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-star"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g05", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g06", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g07", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g08", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-star"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-star"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g09", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-grape"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-grape"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g10", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g11", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"decor-rocket"},
+      {"obj":"decor-car"},
+      {"obj":"decor-rocket"},
+      {"obj":"decor-car"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g12", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "記住牌的樣子，把一樣的兩張找出來。",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g13", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "翻開牌，找出一樣的兩張。",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-flower"},
+      {"obj":"obj-flower"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g14", "skill": "observe", "difficulty": 1, "type": "flip", "version": 2, "interaction": "flip", "gentle": true,
+    "prompt": "玩玩記憶翻牌，把一樣的找出來。",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [],
+    "answer": "matched",
+    "hint": "先翻開一張，再翻開另一張，記住它們在哪裡。一樣的兩張，就會留下來。",
+    "params": {"cols":2,"rows":2}
+  },
+  {
+    "id": "observe-1-g15", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "請你想一想，剛剛看到的是哪一個？",
+    "items": [
+      {"obj":"decor-dino"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-dino","obj":"decor-dino"}
+    ],
+    "answer": "decor-dino",
+    "hint": "再看一次，剛剛出現的有恐龍。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g16", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "剛剛出現的是哪一個？",
+    "items": [
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-shell",
+    "hint": "再看一次，剛剛出現的有貝殼。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g17", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "剛剛有哪一個出現過？",
+    "items": [
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "再看一次，剛剛出現的有小魚。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g18", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "請你想一想，剛剛看到的是哪一個？",
+    "items": [
+      {"obj":"obj-shell"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-shell",
+    "hint": "再看一次，剛剛出現的有貝殼。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g19", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "剛剛出現的是哪一個？",
+    "items": [
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "再看一次，剛剛出現的有汽車。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g20", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "剛剛有哪一個出現過？",
+    "items": [
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-banana",
+    "hint": "再看一次，剛剛出現的有香蕉。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g21", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "請你想一想，剛剛看到的是哪一個？",
+    "items": [
+      {"obj":"decor-dino"}
+    ],
+    "choices": [
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "decor-dino",
+    "hint": "再看一次，剛剛出現的有恐龍。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g22", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "剛剛出現的是哪一個？",
+    "items": [
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"obj-shell","obj":"obj-shell"},
+      {"id":"decor-rocket","obj":"decor-rocket"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "再看一次，剛剛出現的有火箭。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g23", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "剛剛有哪一個出現過？",
+    "items": [
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-fish",
+    "hint": "再看一次，剛剛出現的有小魚。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g24", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "請你想一想，剛剛看到的是哪一個？",
+    "items": [
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-flower","obj":"obj-flower"}
+    ],
+    "answer": "obj-flower",
+    "hint": "再看一次，剛剛出現的有花。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g25", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "剛剛出現的是哪一個？",
+    "items": [
+      {"obj":"decor-car"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "decor-car",
+    "hint": "再看一次，剛剛出現的有汽車。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g26", "skill": "observe", "difficulty": 1, "type": "recall", "version": 2, "gentle": true,
+    "prompt": "剛剛有哪一個出現過？",
+    "items": [
+      {"obj":"decor-rocket"}
+    ],
+    "choices": [
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-grape","obj":"obj-grape"}
+    ],
+    "answer": "decor-rocket",
+    "hint": "再看一次，剛剛出現的有火箭。找找看，哪一個是剛剛出現過的？",
+    "params": {"flash":3000}
+  },
+  {
+    "id": "observe-1-g27", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","variant":{"hue":200}},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g28", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個是灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape"},
+      {"id":"c3","obj":"obj-grape","variant":{"gray":true}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是葡萄，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g29", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-apple"},
+      {"id":"c2","obj":"obj-apple","variant":{"hue":150}},
+      {"id":"c3","obj":"obj-apple"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g30", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape","variant":{"hue":150}},
+      {"id":"c3","obj":"obj-grape"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是葡萄，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g31", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "哪一個變成灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-dino","variant":{"gray":true}},
+      {"id":"c2","obj":"decor-dino"},
+      {"id":"c3","obj":"decor-dino"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是恐龍，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g32", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個是灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick"},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick","variant":{"gray":true}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g33", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-rocket"},
+      {"id":"c2","obj":"decor-rocket","variant":{"hue":200}},
+      {"id":"c3","obj":"decor-rocket"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是火箭，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g34", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-chick","variant":{"hue":150}},
+      {"id":"c2","obj":"obj-chick"},
+      {"id":"c3","obj":"obj-chick"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g35", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "哪一個顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-grape"},
+      {"id":"c2","obj":"obj-grape"},
+      {"id":"c3","obj":"obj-grape","variant":{"hue":200}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是葡萄，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g36", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "哪一個變成灰色的？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car"},
+      {"id":"c2","obj":"decor-car"},
+      {"id":"c3","obj":"decor-car","variant":{"gray":true}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是汽車，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  }
+]

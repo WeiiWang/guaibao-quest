@@ -56,6 +56,9 @@ const DEFS: Record<BehaviorId, Def> = {
   trickHello: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('hello') },
   trickFlip: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('flip') },
   trickBow: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('bow') },
+  trickHeight: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('height') },
+  trickHide: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('hide') },
+  trickMemory: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('memory') },
   eggWobble: { weight: 3, stages: ['egg'], hungry: true, night: true },
   eggSparkle: { weight: 2, stages: ['egg'], hungry: true, night: false },
 }

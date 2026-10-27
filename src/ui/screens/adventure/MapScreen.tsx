@@ -5,7 +5,8 @@ import { repo } from '../../../db/repo'
 import { localDateStr } from '../../../domain/date'
 import { now as clockNow } from '../../../domain/clock'
 import type { ChapterDef } from '../../../learning/chapter'
-import { dailyChapterId, DAILY_NAME, mustSubject, SUBJECTS } from '../../../learning/subject'
+import { getChapter } from '../../../learning/chapter'
+import { chaptersOf, dailyChapterId, DAILY_NAME, mustSubject, SUBJECTS } from '../../../learning/subject'
 import type { Progress, SubjectId } from '../../../learning/types'
 import { Icon } from '../../components/Icon'
 import { ScreenHeader } from '../../components/Header'
@@ -18,7 +19,8 @@ import type { Screen } from '../../App'
 import { Companion } from './Companion'
 import './adventure.css'
 import './adventure-v5.css'
-import { readSubject, writeSubject } from './subjectPref'
+import './adventure-v6.css'
+import { readChapter, readSubject, writeChapter, writeSubject } from './subjectPref'
 
 function emptyProgress(ch: ChapterDef): Progress {
   return {
@@ -63,7 +65,13 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const toast = useToast()
   const [subjectId, setSubjectId] = useState<SubjectId>(readSubject)
   const subject = mustSubject(subjectId)
-  const ch = subject.chapter
+  const chapters = chaptersOf(subject)
+  const [chapterPick, setChapterPick] = useState<string | null>(() => readChapter(readSubject()))
+  // 章節有沒有開放（第 2 章以後要先通關前一章，這是唯一的鎖）與各章進度
+  const unlocks = useLiveQuery(() => repo.getChapterUnlocks(), [])
+  const allProg = useLiveQuery(() => db.progress.toArray(), [])
+  const chosen = chapters.find((c) => c.id === chapterPick) ?? chapters[0]
+  const ch = unlocks && unlocks[chosen.id] === false ? chapters[0] : chosen
   const today = localDateStr(useNow())
   // 換科目時 useLiveQuery 會先留著上一個科目的結果，所以結果上標記它屬於哪個科目，對不上就當作還在載入
   const progRaw = useLiveQuery(async () => (await db.progress.get(ch.id)) ?? emptyProgress(ch), [ch.id])
@@ -73,10 +81,21 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const pickSubject = (id: SubjectId) => {
     writeSubject(id)
     setSubjectId(id)
+    setChapterPick(readChapter(id))
+  }
+  const pickChapter = (id: string) => {
+    writeChapter(subjectId, id)
+    setChapterPick(id)
   }
   const scrollRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<HTMLElement>(null)
-  const hasScene = useArtStatus('scene-map-huaguoshan') === 'ok'
+  // 地圖背景：章節有自己的圖就用；沒有（還在生成）就用花果山的地圖換色調
+  const baseArt = useArtStatus('scene-map-huaguoshan') === 'ok'
+  const ownArt = useArtStatus(ch.scene ?? 'scene-map-huaguoshan') === 'ok' && !!ch.scene
+  const hasScene = ownArt || baseArt
+  const tinted = !!ch.scene && !ownArt
+  // 站點位置：章節有自己的背景圖才用自己的位置，否則是花果山地圖的位置
+  const points: Pt[] = ownArt && ch.points ? ch.points : POINTS
   const [canScroll, setCanScroll] = useState(false)
   const { voiceOn } = useLearningSettings()
   // 點到鎖住 / 已通關的站：那顆圓鈕晃一下 + 一句語音（SPEC-v4 U10；只加回饋，不動關卡流程）
@@ -101,19 +120,19 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
     const fit = () => setCanScroll(scene.scrollWidth > sc.clientWidth + 4)
     fit()
     const idx = doneN === undefined ? 0 : doneN >= ch.stations.length ? ch.stations.length : doneN
-    const x = (POINTS[idx][0] / 100) * scene.scrollWidth
+    const x = (points[idx][0] / 100) * scene.scrollWidth
     sc.scrollLeft = Math.max(0, Math.min(scene.scrollWidth - sc.clientWidth, x - sc.clientWidth / 2))
     const ro = new ResizeObserver(fit)
     ro.observe(sc)
     return () => ro.disconnect()
-  }, [ready, run, doneN, ch.id, ch.stations.length])
+  }, [ready, run, doneN, ch.id, ch.stations.length, points])
 
   if (!prog) return <div className="splash">載入中…</div>
 
   const doneCount = prog.stations.filter((s) => s.done).length
   const allDone = doneCount === ch.stations.length
   const currentIdx = allDone ? -1 : doneCount // 0 起算
-  const bg = `${import.meta.env.BASE_URL}art/scene-map-huaguoshan.png`
+  const bg = `${import.meta.env.BASE_URL}art/${ownArt ? ch.scene : 'scene-map-huaguoshan'}.png`
 
   const nextRun = async () => {
     const r = await repo.startNextRun(ch.id)
@@ -121,10 +140,10 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
     else toast('新的一輪冒險開始了！題目會換新的喔', 'ok')
   }
 
-  const pos = (k: number) => ({ ['--x' as string]: `${POINTS[k][0]}%`, ['--y' as string]: `${POINTS[k][1]}%` })
+  const pos = (k: number) => ({ ['--x' as string]: `${points[k][0]}%`, ['--y' as string]: `${points[k][1]}%` })
 
   return (
-    <main className={`screen adv adv-map theme-${subject.theme} subject-${subject.id}`} data-testid="map" data-subject={subject.id}>
+    <main className={`screen adv adv-map theme-${subject.theme} subject-${subject.id} chapter-${ch.id}`} data-testid="map" data-subject={subject.id} data-chapter={ch.id}>
       <ScreenHeader title="冒險地圖" onBack={onBack} right={<MaterialsChip />} />
 
       <nav className="adv-subjects" role="tablist" aria-label="科目">
@@ -144,8 +163,37 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
         ))}
       </nav>
 
+      {chapters.length > 1 && (
+        <nav className="adv-chapters" role="tablist" aria-label="章節">
+          {chapters.map((c, i) => {
+            const open = unlocks ? unlocks[c.id] !== false : !c.unlockAfter
+            const p = allProg?.find((x) => x.chapterId === c.id)
+            const done = p?.stations.filter((x) => x.done).length ?? 0
+            const fresh = !p || (done === 0 && !p.chestClaimed && p.completedRuns === 0)
+            const need = c.unlockAfter ? getChapter(c.unlockAfter)?.name : undefined
+            return (
+              <button
+                key={c.id}
+                type="button"
+                role="tab"
+                aria-selected={c.id === ch.id}
+                aria-disabled={!open}
+                className={`adv-chap ${open && c.id !== ch.id && fresh && c.unlockAfter ? 'new' : ''} ${wobble === `c-${c.id}` ? 'ux-wobble' : ''}`}
+                data-testid={`chapter-${c.id}`}
+                data-open={open ? 'true' : 'false'}
+                onClick={() => (open ? pickChapter(c.id) : nudge(`c-${c.id}`, `${c.name}還沒開，先通關${need ?? '前一章'}喔`))}
+              >
+                <span className="adv-chap-num" aria-hidden>{open ? i + 1 : <Icon name="ui-lock" emoji="🔒" size={22} />}</span>
+                <span>{c.name}</span>
+                <small>{open ? `${done}/${c.stations.length}` : '還沒開'}</small>
+              </button>
+            )
+          })}
+        </nav>
+      )}
+
       <div className="adv-scroll" ref={scrollRef}>
-        <section ref={sceneRef} className={`adv-scene ${hasScene ? 'has-art' : ''} scene-${subject.id}`} style={hasScene ? { ['--map-bg' as string]: `url("${bg}")` } : undefined}>
+        <section ref={sceneRef} className={`adv-scene ${hasScene ? 'has-art' : ''} scene-${subject.id} ${tinted ? 'scene-tinted' : ''}`} style={hasScene ? { ['--map-bg' as string]: `url("${bg}")` } : undefined}>
           {/* 沒有場景圖時才用 CSS 畫山丘與虛線山路；有場景圖就用圖裡本來的山路 */}
           {!hasScene && (
             <>

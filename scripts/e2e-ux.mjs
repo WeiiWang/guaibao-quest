@@ -114,8 +114,19 @@ async function feedingGuard(browser) {
   for (const [size, vp] of Object.entries(SIZES)) {
     const { ctx, page, errors } = await freshApp(browser, vp, { bananas: 5 })
     await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now() })
+    // 阿悟頭上的泡泡改用預錄的阿悟聲（只播預錄、沒有就安靜）：開啟語音包測試模式，記下播了哪個音檔
+    await ctx.addInitScript(() => {
+      localStorage.setItem('gq-voice-pack-test', '1')
+      window.__played = []
+      const play = HTMLMediaElement.prototype.play
+      HTMLMediaElement.prototype.play = function (...a) {
+        if (/\.m4a/.test(this.src)) window.__played.push(this.src)
+        return play.apply(this, a)
+      }
+    })
     await page.reload()
     await page.waitForSelector('[data-testid=pet]')
+    await page.waitForTimeout(600)
     await page.evaluate(() => {
       window.__spoken = []
       const orig = window.speechSynthesis.speak.bind(window.speechSynthesis)
@@ -129,7 +140,8 @@ async function feedingGuard(browser) {
     const bubble = await page.getByTestId('pet-bubble').innerText().catch(() => '')
     check(`[${size}] 阿悟說「我吃飽了～」`, bubble.includes('我吃飽了'), bubble)
     check(`[${size}] 阿悟搖頭（headshake 動畫）`, (await page.getByTestId('pet').getAttribute('data-anim')) === 'headshake')
-    check(`[${size}] 語音唸「我吃飽了」`, (await page.evaluate(() => window.__spoken)).some((t) => t.includes('我吃飽了')))
+    const fullFile = await page.evaluate(async () => Object.values(await (await fetch('/voice/manifest.json')).json()).find((v) => v.text === '我吃飽了～')?.file)
+    check(`[${size}] 語音唸「我吃飽了」（阿悟聲預錄音檔）`, !!fullFile && (await page.evaluate(() => window.__played)).some((u) => u.includes(fullFile)), String(fullFile))
     check(`[${size}] 被拒絕的食物圖示抖一下（nope）`, (await page.locator('[data-dock-item=banana].nope').count()) === 1)
     await shot(page, 'feed-full', size)
     // 拖給阿悟也一樣
@@ -146,8 +158,19 @@ async function feedingGuard(browser) {
     const { ctx, page } = await freshApp(browser, SIZES.land, { bananas: 5 })
     await patchSettings(page, { voiceOn: false })
     await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now() })
+    // 阿悟頭上的泡泡改用預錄的阿悟聲（只播預錄、沒有就安靜）：開啟語音包測試模式，記下播了哪個音檔
+    await ctx.addInitScript(() => {
+      localStorage.setItem('gq-voice-pack-test', '1')
+      window.__played = []
+      const play = HTMLMediaElement.prototype.play
+      HTMLMediaElement.prototype.play = function (...a) {
+        if (/\.m4a/.test(this.src)) window.__played.push(this.src)
+        return play.apply(this, a)
+      }
+    })
     await page.reload()
     await page.waitForSelector('[data-testid=pet]')
+    await page.waitForTimeout(600)
     await page.evaluate(() => {
       window.__spoken = []
       const orig = window.speechSynthesis.speak.bind(window.speechSynthesis)

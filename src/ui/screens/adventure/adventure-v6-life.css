@@ -1,4 +1,4 @@
-/* v6 線 B：生活與禮儀、自然常識兩個科目。既有規則在 adventure*.css，這裡只新增（class 一律用 lw-、ord- 開頭，避免撞名） */
+/* v6 線 B：生活與禮儀、自然常識兩個科目。既有規則在 adventure*.css，這裡只新增（class 一律用 lw-、sto- 開頭，避免撞名） */
 
 /* ---------- 科目分頁的色系 ---------- */
 .adv-subject.tone-life { --tab-tone: var(--peach-deep); --tab-soft: var(--peach-soft); }
@@ -59,41 +59,41 @@
 .qv-lifeWhy .lw-icon, .qv-lifeStep .lw-icon { font-size: clamp(2rem, 6dvh, 3rem); }
 
 /* ---------- 步驟排序 ---------- */
-.ord { flex: 1; display: grid; grid-template-rows: auto 1fr; gap: 14px; align-content: center; min-height: 0; }
-.ord-slots { list-style: none; margin: 0; padding: 12px; display: flex; flex-wrap: nowrap; gap: 8px; justify-content: center; border-radius: 32px; background: rgba(255, 255, 255, 0.85); box-shadow: inset 0 3px 0 #fff, 0 5px 0 rgba(74, 59, 53, 0.06); }
-.ord-slot { position: relative; flex: 1 1 0; min-width: 0; max-width: 170px; min-height: clamp(96px, 19dvh, 160px); border-radius: 24px; border: 4px dashed var(--ink-soft); background: var(--butter-soft); display: grid; place-items: center; transition: background 0.15s, border-color 0.15s, transform 0.15s; }
-.ord-slot.filled { border-style: solid; border-color: var(--mint-deep); background: var(--mint-soft); }
-.ord-slot.over { border-color: var(--mint-deep); background: var(--mint-soft); transform: scale(1.04); }
-.ord-slot.demo { animation: adv-glow 0.9s ease-in-out infinite; border-color: var(--butter-deep); }
-.ord-no { position: absolute; top: -12px; left: -6px; z-index: 1; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 900; font-size: 1.2rem; display: grid; place-items: center; box-shadow: 0 0 0 3px #fff; }
-.ord-placed { display: grid; place-items: center; gap: 2px; width: 100%; padding: 4px; animation: adv-pop 0.35s cubic-bezier(0.3, 1.6, 0.6, 1) both; }
-.ord-tray { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-content: center; padding: 12px; min-height: clamp(120px, 24dvh, 200px); }
-.ord-card, .ord-gap { width: clamp(96px, 18vw, 150px); min-height: clamp(104px, 20dvh, 170px); border-radius: 26px; }
-.ord-card { border: 4px solid transparent; background: #fff; display: grid; place-items: center; align-content: center; gap: 4px; padding: 6px; color: var(--ink); box-shadow: 0 6px 0 rgba(74, 59, 53, 0.14), inset 0 3px 0 #fff; cursor: grab; transition: transform 0.12s; }
-.ord-card:active:not(:disabled) { transform: translateY(4px) scale(0.97); }
-.ord-card.dragging { opacity: 0.35; }
-.ord-card.bounce { animation: adv-shake 0.5s; border-color: var(--peach-deep); }
-.ord-card.demo { animation: adv-glow 0.9s ease-in-out infinite; border-color: var(--butter-deep); }
-.ord-gap { background: rgba(74, 59, 53, 0.06); }
-.ord-art { display: block; width: clamp(52px, 11dvh, 92px); aspect-ratio: 1; filter: drop-shadow(0 4px 3px rgba(90, 50, 20, 0.16)); }
-.ord-art.big { width: clamp(64px, 14dvh, 110px); }
-.ord-art .art, .ord-art .art-emoji { width: 100%; height: 100%; }
-.ord-slot .ord-art { width: clamp(44px, 8dvh, 72px); }
-.ord-emoji { font-size: clamp(2rem, 6dvh, 3rem); line-height: 1; }
-.ord-emoji.big { font-size: clamp(2.6rem, 8dvh, 4.2rem); }
-.ord-text { font-size: clamp(1rem, 2.6dvh, 1.3rem); font-weight: 900; line-height: 1.25; text-align: center; word-break: keep-all; overflow-wrap: anywhere; }
-.ord-slot .ord-text { font-size: clamp(0.9rem, 2.2dvh, 1.15rem); }
+.sto { flex: 1; display: grid; grid-template-rows: auto 1fr; gap: 14px; align-content: center; min-height: 0; }
+.sto-slots { list-style: none; margin: 0; padding: 12px; display: flex; flex-wrap: nowrap; gap: 8px; justify-content: center; border-radius: 32px; background: rgba(255, 255, 255, 0.85); box-shadow: inset 0 3px 0 #fff, 0 5px 0 rgba(74, 59, 53, 0.06); }
+.sto-slot { position: relative; flex: 1 1 0; min-width: 0; max-width: 170px; min-height: clamp(96px, 19dvh, 160px); border-radius: 24px; border: 4px dashed var(--ink-soft); background: var(--butter-soft); display: grid; place-items: center; transition: background 0.15s, border-color 0.15s, transform 0.15s; }
+.sto-slot.filled { border-style: solid; border-color: var(--mint-deep); background: var(--mint-soft); }
+.sto-slot.over { border-color: var(--mint-deep); background: var(--mint-soft); transform: scale(1.04); }
+.sto-slot.demo { animation: adv-glow 0.9s ease-in-out infinite; border-color: var(--butter-deep); }
+.sto-no { position: absolute; top: -12px; left: -6px; z-index: 1; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 900; font-size: 1.2rem; display: grid; place-items: center; box-shadow: 0 0 0 3px #fff; }
+.sto-placed { display: grid; place-items: center; gap: 2px; width: 100%; padding: 4px; animation: adv-pop 0.35s cubic-bezier(0.3, 1.6, 0.6, 1) both; }
+.sto-tray { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-content: center; padding: 12px; min-height: clamp(120px, 24dvh, 200px); }
+.sto-card, .sto-gap { width: clamp(96px, 18vw, 150px); min-height: clamp(104px, 20dvh, 170px); border-radius: 26px; }
+.sto-card { border: 4px solid transparent; background: #fff; display: grid; place-items: center; align-content: center; gap: 4px; padding: 6px; color: var(--ink); box-shadow: 0 6px 0 rgba(74, 59, 53, 0.14), inset 0 3px 0 #fff; cursor: grab; transition: transform 0.12s; }
+.sto-card:active:not(:disabled) { transform: translateY(4px) scale(0.97); }
+.sto-card.dragging { opacity: 0.35; }
+.sto-card.bounce { animation: adv-shake 0.5s; border-color: var(--peach-deep); }
+.sto-card.demo { animation: adv-glow 0.9s ease-in-out infinite; border-color: var(--butter-deep); }
+.sto-gap { background: rgba(74, 59, 53, 0.06); }
+.sto-art { display: block; width: clamp(52px, 11dvh, 92px); aspect-ratio: 1; filter: drop-shadow(0 4px 3px rgba(90, 50, 20, 0.16)); }
+.sto-art.big { width: clamp(64px, 14dvh, 110px); }
+.sto-art .art, .sto-art .art-emoji { width: 100%; height: 100%; }
+.sto-slot .sto-art { width: clamp(44px, 8dvh, 72px); }
+.sto-emoji { font-size: clamp(2rem, 6dvh, 3rem); line-height: 1; }
+.sto-emoji.big { font-size: clamp(2.6rem, 8dvh, 4.2rem); }
+.sto-text { font-size: clamp(1rem, 2.6dvh, 1.3rem); font-weight: 900; line-height: 1.25; text-align: center; word-break: keep-all; overflow-wrap: anywhere; }
+.sto-slot .sto-text { font-size: clamp(0.9rem, 2.2dvh, 1.15rem); }
 
 /* 直向（iPad 直放）：沒有題幹的圖片選項長高一點，把空白用掉 */
 @media (max-aspect-ratio: 1 / 1) and (min-width: 481px) {
   .qv-lw.no-stem .qv-choices.lw-pics { grid-auto-rows: clamp(240px, 42dvh, 440px); }
 }
 @media (max-width: 480px) {
-  .ord-slots { gap: 5px; padding: 10px 8px; }
-  .ord-slot { min-height: 92px; border-width: 3px; border-radius: 18px; }
-  .ord-no { width: 28px; height: 28px; font-size: 1rem; top: -10px; left: -4px; }
-  .ord-tray { gap: 8px; padding: 8px 4px; }
-  .ord-text, .ord-slot .ord-text { font-size: 0.95rem; }
+  .sto-slots { gap: 5px; padding: 10px 8px; }
+  .sto-slot { min-height: 92px; border-width: 3px; border-radius: 18px; }
+  .sto-no { width: 28px; height: 28px; font-size: 1rem; top: -10px; left: -4px; }
+  .sto-tray { gap: 8px; padding: 8px 4px; }
+  .sto-text, .sto-slot .sto-text { font-size: 0.95rem; }
   .lw-caption { font-size: 1.05rem; }
   .lw-text { font-size: clamp(1.3rem, 3.6dvh, 1.8rem); }
   .sort-bin-head.scene { flex-direction: column; gap: 2px; }
@@ -105,12 +105,12 @@
   .qv-lw.has-stem .qv-choices.lw-pics { grid-auto-rows: clamp(110px, 20dvh, 170px); }
   .qv-lw.has-stem .lw-choice .lw-art { width: min(86cqw, 130px); }
   /* 排序卡片：一排三張、小一點，五張也只佔兩排 */
-  .ord-card, .ord-gap { width: calc((100% - 16px) / 3); min-height: 84px; }
-  .ord-card .ord-art.big { width: 52px; }
-  .ord-card .ord-emoji.big { font-size: 2.2rem; }
+  .sto-card, .sto-gap { width: calc((100% - 16px) / 3); min-height: 84px; }
+  .sto-card .sto-art.big { width: 52px; }
+  .sto-card .sto-emoji.big { font-size: 2.2rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lw-pic, .ord-placed, .ord-card.demo, .ord-slot.demo, .ord-card.bounce { animation: none !important; }
+  .lw-pic, .sto-placed, .sto-card.demo, .sto-slot.demo, .sto-card.bounce { animation: none !important; }
 }
 
 /* 動物的家：籃子上的場景圖比一般籃子的小圖大一點 */
