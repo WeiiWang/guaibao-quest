@@ -1,8 +1,11 @@
 /** 學習系統的型別（題目、作答、進度） */
 
-export type SkillId = 'number' | 'classify' | 'pattern'
+export type SkillId = 'number' | 'classify' | 'pattern' | 'english'
 export type Difficulty = 1 | 2 | 3 | 4
-export const SKILLS: SkillId[] = ['number', 'classify', 'pattern']
+/** 全部技能（家長報告、作答統計、技能狀態都看這份） */
+export const SKILLS: SkillId[] = ['number', 'classify', 'pattern', 'english']
+/** 數學科目的三個技能：一站混合這三種（英文科目只有 english 一種，見 subject.ts） */
+export const MATH_SKILLS: SkillId[] = ['number', 'classify', 'pattern']
 export const DIFFICULTIES: Difficulty[] = [1, 2, 3, 4]
 export const MAX_DIFFICULTY: Difficulty = 4
 
@@ -10,6 +13,7 @@ export const SKILL_NAMES: Record<SkillId, string> = {
   number: '數感',
   classify: '分類',
   pattern: '規律',
+  english: '英文單字',
 }
 
 /**
@@ -30,6 +34,10 @@ export const SKILL_NAMES: Record<SkillId, string> = {
  * - seqnum：數序缺數
  * - give：拿給我 N 個（點選或拖曳放進籃子）
  * - bins：拖曳歸類（物件放進對的籃子）
+ * - hear：聽英文單字，選出對應的圖（物件圖、色塊或數字卡）
+ * - pic2en：看圖（物件、色塊或數字），選出英文單字
+ * - zh2en：聽中文，選出英文單字
+ * - spell：看圖補上缺的那個字母
  */
 export type QuestionType =
   | 'count'
@@ -48,6 +56,10 @@ export type QuestionType =
   | 'seqnum'
   | 'give'
   | 'bins'
+  | 'hear'
+  | 'pic2en'
+  | 'zh2en'
+  | 'spell'
 
 /**
  * 互動方式。每種互動自己判斷對錯，再對應成 firstTryCorrect / hintsUsed，
@@ -77,6 +89,10 @@ export interface Choice {
   label?: string
   /** 比多少：用顏色區分兩堆 */
   tone?: 'blue' | 'orange'
+  /** 英文科目：選項是圖（public/art 的檔名）、色塊（CSS 顏色）或英文單字／字母（text） */
+  art?: string
+  swatch?: string
+  text?: string
 }
 
 /** 拖曳歸類的籃子 */
@@ -112,6 +128,18 @@ export interface QuestionParams {
   /** bins：籃子與每個物件該放哪個籃子（依 items 順序） */
   bins?: Bin[]
   targets?: string[]
+  /**
+   * 英文科目：要唸的英文單字（語音 key 是 en.<word>）。hear 題在中文題目唸完後唸它；
+   * spell 題是完整的單字；pic2en / zh2en 只在提示時唸。
+   */
+  word?: string
+  /** 英文單字的中文意思（zh2en 的題目與提示用） */
+  zh?: string
+  /** 英文科目題幹上的圖（物件圖檔名、色塊或數字），沒有就是不顯示圖 */
+  stem?: { art?: string; swatch?: string; digit?: string }
+  /** spell：缺一個字母的樣子，例如 c_t；缺的位置 */
+  pattern?: string
+  blankAt?: number
 }
 
 export interface Question {
@@ -199,6 +227,33 @@ export interface SkillState {
   total?: number
 }
 
+/** 科目 id。之後加科目（生活、注音、自然…）就在 subject.ts 的清單加一筆 */
+export type SubjectId = 'math' | 'english'
+
+/** 每日冒險的一天 */
+export interface DailyDay {
+  /** 今天開了幾次（含中途離開又回來的同一次）；也是 stageDraft.run */
+  plays: number
+  /** 今天完成了幾次 */
+  done: number
+  /** 今天排進去的題目 id（隔天會避開） */
+  ids: string[]
+}
+
+/** 今日徽章：每科目每天第一次完成才有 */
+export interface DailyBadge {
+  date: string
+  subject: SubjectId
+  at: number
+}
+
+/** 每日冒險的進度（存在 progress 表，chapterId = daily:<subject>）：不升 Dexie 版本 */
+export interface DailyState {
+  /** 只留最近幾天，key 是 YYYY-MM-DD */
+  days: Record<string, DailyDay>
+  badges: DailyBadge[]
+}
+
 export interface StationState {
   done: boolean
   independent: number
@@ -216,6 +271,8 @@ export interface Progress {
   /** 歷史累計完成過幾輪 */
   completedRuns: number
   updatedAt: number
+  /** 每日冒險專用（chapterId = daily:<subject> 的那一列才有） */
+  daily?: DailyState
 }
 
 export interface PlayTime {

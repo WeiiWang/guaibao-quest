@@ -46,6 +46,8 @@ import { SHOP_CATALOG, balanceOfMaterials, canCraft, type MaterialBalance } from
 import { DAILY_LIMIT_OPTIONS, EXTEND_MINUTES, learningSettingsOf, type LearningSettings } from '../learning/playtime'
 import { makeRng, type Rng } from '../learning/rng'
 import { adaptPlan, planStation, type PlannedQuestion } from '../learning/select'
+import { avoidIdsFor, dailyInfo, emptyDaily, finishPlay, planDaily, startPlay, type DailyInfo } from '../learning/daily'
+import { dailyChapterId, dailyMaterial, mustSubject, parseDailyId, subjectOfChapter } from '../learning/subject'
 import { AGE_BANDS, learnerProfileOf, type LearnerProfile } from '../learning/profile'
 import { applyAttempt, applyStationResult, initialSkillState } from '../learning/skills'
 import { MATERIAL_IDS, MATERIAL_NAMES, SKILLS } from '../learning/types'
@@ -55,10 +57,13 @@ import type {
   MaterialCost,
   MaterialId,
   PlayTime,
+  DailyBadge,
+  DailyState,
   Progress,
   SkillId,
   SkillState,
   StationState,
+  SubjectId,
 } from '../learning/types'
 
 let idSeq = 0
@@ -626,7 +631,9 @@ export class Repo {
   ): Promise<PlannedQuestion[]> {
     const [states, attempts, profile] = await Promise.all([this.getSkillStates(), this.db.attempts.toArray(), this.getLearnerProfile()])
     const slots = chapterId ? getChapter(chapterId)?.stations[stationIndex]?.slots : undefined
-    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle, slots })
+    // 英文章節只出英文技能；沒給章節（或數學）就是數學的三個技能
+    const skills = chapterId ? subjectOfChapter(chapterId)?.skills : undefined
+    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle, slots, skills })
   }
 
   /**
@@ -639,6 +646,8 @@ export class Repo {
     now = this.clock(),
     rng: Rng = makeRng(Math.floor(Math.random() * 2 ** 31)),
   ): Promise<{ sessionId: string; plan: PlannedQuestion[]; idx: number; resumed: boolean }> {
+    const dailySubject = parseDailyId(chapterId)
+    if (dailySubject) return this.openDaily(dailySubject, now, rng)
     const [settings, prog] = await Promise.all([this.getSettings(), this.getProgress(chapterId, now)])
     const draft = settings?.stageDraft
     if (draft && draft.chapterId === chapterId && draft.station === station && draft.run === prog.run && !prog.stations[station - 1]?.done) {
@@ -704,7 +713,9 @@ export class Repo {
     ])
     const mine = attempts.filter((a) => a.sessionId === input.sessionId && !a.review).sort((a, b) => a.at - b.at)
     const plan = adaptPlan({ plan: input.plan, from: input.from, states, attempts, stationAttempts: mine, rng, gentle: profile.gentle })
-    await this.saveStageDraft({ chapterId: input.chapterId, station: input.station, run: prog.run, sessionId: input.sessionId, plan })
+    // 每日冒險的 run 是「今天第幾次」
+    const run = parseDailyId(input.chapterId) ? (await this.getDailyState(input.chapterId)).days[localDateStr(this.clock())]?.plays ?? prog.run : prog.run
+    await this.saveStageDraft({ chapterId: input.chapterId, station: input.station, run, sessionId: input.sessionId, plan })
     return plan
   }
 
@@ -882,6 +893,124 @@ export class Repo {
       if (!prog?.chestClaimed) return { ok: false, error: '這一輪還沒結束' } as const
       await this.db.progress.put(this.freshProgress(chapterId, prog.run + 1, prog.completedRuns, now))
       return { ok: true } as const
+    })
+  }
+
+  // ---------- 學習：每日冒險 ----------
+  // 每天每個科目一份 5 題的新冒險（見 learning/daily.ts）。進度存在 progress 表（chapterId = daily:<科目>），不升 Dexie 版本。
+  /** 每日冒險的進度（chapterId = daily:<科目>） */
+  async getDailyState(chapterId: string): Promise<DailyState> {
+    return (await this.db.progress.get(chapterId))?.daily ?? emptyDaily()
+  }
+
+  async getDailyInfo(subject: SubjectId, now = this.clock()): Promise<DailyInfo> {
+    return dailyInfo(await this.getDailyState(dailyChapterId(subject)), localDateStr(now))
+  }
+
+  /** 所有拿過的今日徽章（新的在後；之後圖鑑會用） */
+  async listDailyBadges(): Promise<DailyBadge[]> {
+    const rows = await this.db.progress.where('chapterId').startsWith('daily:').toArray()
+    return rows.flatMap((r) => r.daily?.badges ?? []).sort((a, b) => a.at - b.at)
+  }
+
+  private async putDailyState(chapterId: string, daily: DailyState, now: number): Promise<void> {
+    const cur = await this.db.progress.get(chapterId)
+    await this.db.progress.put({ chapterId, run: 1, stations: [], chestClaimed: false, completedRuns: 0, ...cur, daily, updatedAt: now })
+  }
+
+  /**
+   * 開始（或接著玩）今天的每日冒險。中途離開再回來會接著玩同一份；玩完再開就是新的一次（題面換新）。
+   * 整段在一個交易裡做，避免同時開兩次（React StrictMode）把次數算兩遍。
+   */
+  async openDaily(
+    subject: SubjectId,
+    now = this.clock(),
+    rng?: Rng,
+  ): Promise<{ sessionId: string; plan: PlannedQuestion[]; idx: number; resumed: boolean }> {
+    const d = this.db
+    const cid = dailyChapterId(subject)
+    const date = localDateStr(now)
+    return d.transaction('rw', [d.progress, d.settings, d.attempts, d.skillState], async () => {
+      const daily = await this.getDailyState(cid)
+      const day = daily.days[date]
+      const draft = (await d.settings.get(SETTINGS_ID))?.stageDraft
+      if (draft && draft.chapterId === cid && day && draft.run === day.plays && day.done < day.plays) {
+        const plan: PlannedQuestion[] = []
+        for (const p of draft.plan) {
+          const q = getQuestion(p.id)
+          if (!q) break
+          plan.push({ question: q, review: p.review, followUp: p.followUp })
+        }
+        if (plan.length === draft.plan.length && plan.length > 0) {
+          const answered = new Set((await d.attempts.where('sessionId').equals(draft.sessionId).toArray()).map((a) => a.questionId))
+          const first = plan.findIndex((p) => !answered.has(p.question.id))
+          return { sessionId: draft.sessionId, plan, idx: first < 0 ? plan.length - 1 : first, resumed: answered.size > 0 }
+        }
+      }
+      const [states, attempts, profile] = await Promise.all([this.getSkillStates(), d.attempts.toArray(), this.getLearnerProfile()])
+      const play = (day?.plays ?? 0) + 1
+      const plan = planDaily({ subject, date, play, states, attempts, now, avoid: avoidIdsFor(daily, date), gentle: profile.gentle, rng })
+      const started = startPlay(daily, date, plan.map((p) => p.question.id))
+      await this.putDailyState(cid, started.state, now)
+      const sessionId = newId()
+      await this.saveStageDraft({ chapterId: cid, station: 1, run: started.play, sessionId, plan, now })
+      return { sessionId, plan, idx: 0, resumed: false }
+    })
+  }
+
+  /**
+   * 完成一次每日冒險：發材料（和一般站一樣，材料種類每天輪流）、更新技能掌握；
+   * 這個科目今天第一次完成才有「今日徽章」。同一個 session 只能領一次；同一天可以重玩，只是不再有徽章。
+   */
+  async completeDaily(
+    input: { chapterId: string; sessionId: string },
+    now = this.clock(),
+  ): Promise<
+    Result<{
+      independent: number
+      total: number
+      material: MaterialId
+      qty: number
+      chapterDone: boolean
+      newlyMastered: SkillId[]
+      badge: boolean
+    }>
+  > {
+    const subject = parseDailyId(input.chapterId)
+    if (!subject) return { ok: false, error: '找不到今日冒險' }
+    const date = localDateStr(now)
+    const d = this.db
+    return d.transaction('rw', [d.attempts, d.skillState, d.progress, d.materialLedger, d.settings, d.inventory], async () => {
+      const attempts = await d.attempts.where('sessionId').equals(input.sessionId).toArray()
+      if (attempts.length < STATION_SIZE) return { ok: false, error: '今天的題目還沒答完' } as const
+      if (await d.materialLedger.get(`daily:${input.sessionId}`)) return { ok: false, error: '這次的獎勵已經領過了' } as const
+
+      const independent = attempts.filter((a) => a.firstTryCorrect && a.hintsUsed === 0).length
+      const qty = stationRewardQty(independent)
+      const material = dailyMaterial(date)
+      await d.materialLedger.add({
+        id: `daily:${input.sessionId}`,
+        at: now,
+        material,
+        delta: qty,
+        kind: 'station',
+        reason: `今日冒險・${mustSubject(subject).name}`,
+        refId: input.sessionId,
+      })
+      await meta.grantStationDrop(d, this.rng, now) // 每日冒險過關也掉落 1 個食物（答題 → 餵食）
+      const fin = finishPlay(await this.getDailyState(input.chapterId), date, subject, attempts.map((a) => a.questionId), now)
+      await this.putDailyState(input.chapterId, fin.state, now)
+      await d.settings.update(SETTINGS_ID, { stageDraft: undefined })
+
+      const newlyMastered: SkillId[] = []
+      const startDifficulty = learnerProfileOf(await d.settings.get(SETTINGS_ID)).startDifficulty
+      for (const skill of SKILLS) {
+        const cur = (await d.skillState.get(skill)) ?? initialSkillState(skill, now, startDifficulty)
+        const next = applyStationResult(cur, attempts, now)
+        if (Object.keys(next.mastered).length > Object.keys(cur.mastered).length) newlyMastered.push(skill)
+        if (next !== cur) await d.skillState.put(next)
+      }
+      return { ok: true, independent, total: attempts.length, material, qty, chapterDone: false, newlyMastered, badge: !!fin.badge } as const
     })
   }
 

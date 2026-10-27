@@ -3,6 +3,7 @@ import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
 import { localDateStr } from '../../../domain/date'
 import { buildReport } from '../../../learning/report'
+import { SUBJECTS } from '../../../learning/subject'
 import { MATERIAL_IDS, MATERIAL_NAMES } from '../../../learning/types'
 import { useNow } from '../../hooks'
 import './learning.css'
@@ -13,8 +14,8 @@ const WEEKDAY = ['日', '一', '二', '三', '四', '五', '六']
 export function LearningTab() {
   const now = useNow()
   const data = useLiveQuery(async () => {
-    const [attempts, states, mats] = await Promise.all([db.attempts.toArray(), repo.getSkillStates(), db.materialLedger.toArray()])
-    return { attempts, states, mats }
+    const [attempts, states, mats, badges] = await Promise.all([db.attempts.toArray(), repo.getSkillStates(), db.materialLedger.toArray(), repo.listDailyBadges()])
+    return { attempts, states, mats, badges }
   }, [])
   if (!data) return <p className="empty">載入中…</p>
 
@@ -28,6 +29,7 @@ export function LearningTab() {
     else if (e.kind === 'craft') crafted.add(e.refId ?? e.id)
   }
   const maxDay = Math.max(1, ...report.daily.map((d) => d.count))
+  const weekBadges = data.badges.filter((b) => week.has(b.date))
   const weakest = report.skills.find((s) => s.skill === report.weakest)
 
   return (
@@ -50,26 +52,42 @@ export function LearningTab() {
 
       <div className="card">
         <h2>各項技能</h2>
-        <ul className="lt-skills">
-          {report.skills.map((s) => (
-            <li key={s.skill} className={s.skill === report.weakest ? 'weak' : ''} data-skill={s.skill}>
-              <div className="lt-skill-head">
-                <b>{s.name}</b>
-                <span className="lt-level">目前難度 {s.difficulty}：{s.levelLabel}</span>
-                {s.skill === report.weakest && <span className="lt-flag">需要加強</span>}
-              </div>
-              <div className="lt-bar" role="img" aria-label={s.rate === null ? '尚無作答' : `無提示答對率 ${Math.round(s.rate * 100)}%`}>
-                <i style={{ width: `${s.rate === null ? 0 : Math.round(s.rate * 100)}%` }} />
-              </div>
-              <div className="lt-skill-nums">
-                <span data-testid={`rate-${s.skill}`}>{s.rate === null ? '尚無作答' : `無提示答對率 ${Math.round(s.rate * 100)}%`}</span>
-                <span data-testid={`count-${s.skill}`}>{s.total} 題（{s.independent} 題無提示答對）</span>
-              </div>
-              <p className="lt-text">{s.text}</p>
-            </li>
-          ))}
-        </ul>
+        {SUBJECTS.map((subject) => {
+          const rows = report.skills.filter((s) => subject.skills.includes(s.skill))
+          return (
+            <div key={subject.id} className="lt-subject" data-testid={`report-subject-${subject.id}`}>
+              <h3 className="lt-h3">{subject.name}</h3>
+              <ul className="lt-skills">
+                {rows.map((s) => (
+                  <li key={s.skill} className={s.skill === report.weakest ? 'weak' : ''} data-skill={s.skill}>
+                    <div className="lt-skill-head">
+                      <b>{s.name}</b>
+                      <span className="lt-level">目前難度 {s.difficulty}：{s.levelLabel}</span>
+                      {s.skill === report.weakest && <span className="lt-flag">需要加強</span>}
+                    </div>
+                    <div className="lt-bar" role="img" aria-label={s.rate === null ? '尚無作答' : `無提示答對率 ${Math.round(s.rate * 100)}%`}>
+                      <i style={{ width: `${s.rate === null ? 0 : Math.round(s.rate * 100)}%` }} />
+                    </div>
+                    <div className="lt-skill-nums">
+                      <span data-testid={`rate-${s.skill}`}>{s.rate === null ? '尚無作答' : `無提示答對率 ${Math.round(s.rate * 100)}%`}</span>
+                      <span data-testid={`count-${s.skill}`}>{s.total} 題（{s.independent} 題無提示答對）</span>
+                    </div>
+                    <p className="lt-text">{s.text}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        })}
         {weakest && <p className="lt-advice">建議：這幾天多陪孩子玩「{weakest.name}」，{weakest.levelLabel}的題目可以拿家裡的東西一起練。</p>}
+      </div>
+
+      <div className="card" data-testid="report-daily">
+        <h2>今日冒險</h2>
+        <p className="lt-text">
+          最近 7 天拿到 <b data-testid="report-badges">{weekBadges.length}</b> 個今日徽章（{SUBJECTS.map((s) => `${s.name} ${weekBadges.filter((b) => b.subject === s.id).length}`).join('、')}）；累計 {data.badges.length} 個。
+        </p>
+        <p className="lt-note">每個科目每天第一次完成「今日冒險」就有一個徽章；沒有連續天數的要求，漏掉幾天也不會有任何損失。</p>
       </div>
 
       <div className="card">

@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { repo } from '../../db/repo'
 import { FRIENDS, type Friend } from '../../domain/friends'
 import { COLLECTION_STEP } from '../../domain/gifts'
-import { sayText } from '../../learning/speech'
+import { sayEnglish, sayText } from '../../learning/speech'
 import { useLearningSettings } from '../learningHooks'
 import { Icon } from '../components/Icon'
 import { ScreenHeader } from '../components/Header'
@@ -77,7 +77,11 @@ export function FriendsScreen({ onBack }: { onBack: () => void }) {
               <Icon name={view.id} emoji={FRIEND_EMOJI[view.id] ?? '❔'} alt={view.name} className="friend-big" />
             </button>
             <div className="friend-bigname">{view.name}</div>
-            {view.en && <div className="friend-en">{view.en}</div>}
+            {view.en && (
+              <button className="friend-en" style={{ background: 'none', border: 0, padding: 0, font: 'inherit', color: 'inherit' }} onClick={() => sayEnglish(view.en!, { enabled: voiceOn })} aria-label={`聽英文：${view.en}`}>
+                🔊 {view.en}
+              </button>
+            )}
           </div>
           <button className="btn primary" onClick={() => setView(null)}>好</button>
         </Modal>

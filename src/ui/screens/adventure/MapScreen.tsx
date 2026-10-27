@@ -2,22 +2,25 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
-import { HUAGUOSHAN, UPCOMING_CHAPTERS } from '../../../learning/chapter'
-import type { Progress } from '../../../learning/types'
+import { localDateStr } from '../../../domain/date'
+import { now as clockNow } from '../../../domain/clock'
+import type { ChapterDef } from '../../../learning/chapter'
+import { dailyChapterId, DAILY_NAME, mustSubject, SUBJECTS } from '../../../learning/subject'
+import type { Progress, SubjectId } from '../../../learning/types'
 import { Icon } from '../../components/Icon'
 import { ScreenHeader } from '../../components/Header'
 import { MaterialsChip } from '../../components/MaterialsChip'
 import { useArtStatus } from '../../artProbe'
-import { useToast } from '../../hooks'
+import { useNow, useToast } from '../../hooks'
 import { useLearningSettings } from '../../learningHooks'
 import { sayText } from '../../../learning/speech'
 import type { Screen } from '../../App'
 import { Companion } from './Companion'
 import './adventure.css'
+import './adventure-v5.css'
+import { readSubject, writeSubject } from './subjectPref'
 
-const ch = HUAGUOSHAN
-
-function emptyProgress(): Progress {
+function emptyProgress(ch: ChapterDef): Progress {
   return {
     chapterId: ch.id,
     run: 1,
@@ -51,10 +54,26 @@ function smoothPath(pts: Pt[]): string {
 }
 const ROAD_PATH = smoothPath(POINTS)
 
-/** 冒險地圖：花果山，5 站由山腳往山頂，章末寶箱。場景固定 16:9；窄螢幕時可左右捲動，並自動捲到目前這一站。 */
+/**
+ * 冒險地圖：上方是科目分頁（數學、英文…），每個科目有自己的章節與進度（花果山、英文小島）；
+ * 5 站由山腳往山頂，章末寶箱。底下是「今日冒險」大卡片（每天 5 題新題目）。
+ * 場景固定 16:9；窄螢幕時可左右捲動，並自動捲到目前這一站。
+ */
 export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) => void }) {
   const toast = useToast()
-  const prog = useLiveQuery(async () => (await db.progress.get(ch.id)) ?? emptyProgress(), [])
+  const [subjectId, setSubjectId] = useState<SubjectId>(readSubject)
+  const subject = mustSubject(subjectId)
+  const ch = subject.chapter
+  const today = localDateStr(useNow())
+  // 換科目時 useLiveQuery 會先留著上一個科目的結果，所以結果上標記它屬於哪個科目，對不上就當作還在載入
+  const progRaw = useLiveQuery(async () => (await db.progress.get(ch.id)) ?? emptyProgress(ch), [ch.id])
+  const prog = progRaw?.chapterId === ch.id ? progRaw : undefined
+  const dailyRaw = useLiveQuery(async () => ({ subject: subjectId, today, info: await repo.getDailyInfo(subjectId, clockNow()) }), [subjectId, today])
+  const daily = dailyRaw?.subject === subjectId && dailyRaw.today === today ? dailyRaw.info : undefined
+  const pickSubject = (id: SubjectId) => {
+    writeSubject(id)
+    setSubjectId(id)
+  }
   const scrollRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<HTMLElement>(null)
   const hasScene = useArtStatus('scene-map-huaguoshan') === 'ok'
@@ -87,7 +106,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
     const ro = new ResizeObserver(fit)
     ro.observe(sc)
     return () => ro.disconnect()
-  }, [ready, run, doneN])
+  }, [ready, run, doneN, ch.id, ch.stations.length])
 
   if (!prog) return <div className="splash">載入中…</div>
 
@@ -105,11 +124,28 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const pos = (k: number) => ({ ['--x' as string]: `${POINTS[k][0]}%`, ['--y' as string]: `${POINTS[k][1]}%` })
 
   return (
-    <main className="screen adv adv-map theme-mint" data-testid="map">
+    <main className={`screen adv adv-map ${subject.id === 'english' ? 'theme-sky' : 'theme-mint'} subject-${subject.id}`} data-testid="map" data-subject={subject.id}>
       <ScreenHeader title="冒險地圖" onBack={onBack} right={<MaterialsChip />} />
 
+      <nav className="adv-subjects" role="tablist" aria-label="科目">
+        {SUBJECTS.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            role="tab"
+            aria-selected={s.id === subjectId}
+            className={`adv-subject tone-${s.id}`}
+            onClick={() => pickSubject(s.id)}
+            data-testid={`subject-${s.id}`}
+          >
+            <span className="adv-subject-glyph" aria-hidden>{s.glyph}</span>
+            <span className="adv-subject-name">{s.name}</span>
+          </button>
+        ))}
+      </nav>
+
       <div className="adv-scroll" ref={scrollRef}>
-        <section ref={sceneRef} className={`adv-scene ${hasScene ? 'has-art' : ''}`} style={hasScene ? { ['--map-bg' as string]: `url("${bg}")` } : undefined}>
+        <section ref={sceneRef} className={`adv-scene ${hasScene ? 'has-art' : ''} scene-${subject.id}`} style={hasScene ? { ['--map-bg' as string]: `url("${bg}")` } : undefined}>
           {/* 沒有場景圖時才用 CSS 畫山丘與虛線山路；有場景圖就用圖裡本來的山路 */}
           {!hasScene && (
             <>
@@ -202,13 +238,44 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
         </section>
       )}
 
+      {daily && (
+        <section
+          className={`adv-daily ${allDone || daily.done === 0 ? 'featured' : ''}`}
+          data-testid="daily-card"
+          data-done={daily.done}
+          data-badge={daily.badgeToday ? 'true' : 'false'}
+          aria-label={DAILY_NAME}
+        >
+          <span className="adv-daily-icon" aria-hidden><Icon name="ui-map" emoji="🗺️" size={72} /></span>
+          <div className="adv-daily-text">
+            <b>{DAILY_NAME}</b>
+            <span data-testid="daily-text">
+              {daily.done === 0
+                ? '5 題新題目，每天都不一樣'
+                : daily.badgeToday
+                  ? '今天的徽章收好了！想再玩一次嗎？'
+                  : '今天完成了！想再玩一次嗎？'}
+            </span>
+          </div>
+          {daily.badgeToday && <span className="daily-medal" data-testid="daily-medal" role="img" aria-label="今日徽章">★</span>}
+          <button
+            type="button"
+            className="adv-btn primary big"
+            onClick={() => go({ name: 'stage', chapterId: dailyChapterId(subject.id), station: 1 })}
+            data-testid="daily-go"
+          >
+            {daily.done ? '再玩一次' : '出發'}
+          </button>
+        </section>
+      )}
+
       <section className="adv-foot-row" aria-label="章節進度">
         <p className="adv-map-hero">
           <b>{ch.subtitle}・{ch.name}</b>
           <span>已通關 {doneCount} / {ch.stations.length} 站{prog.run > 1 ? `（第 ${prog.run} 輪）` : ''}</span>
         </p>
         <div className="adv-upcoming">
-          {UPCOMING_CHAPTERS.map((c) => (
+          {subject.upcoming.map((c) => (
             <div key={c.id} className="adv-soon" aria-disabled="true">
               <Icon name="ui-lock" emoji="🔒" size={30} />
               <b>{c.name}</b>

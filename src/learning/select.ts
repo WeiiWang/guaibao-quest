@@ -3,7 +3,7 @@ import { dueReviews } from './skills'
 import { STATION_SIZE } from './scoring'
 import { makeRng, pickOne, shuffled, type Rng } from './rng'
 import type { Attempt, Difficulty, Interaction, Question, SkillId, SkillState } from './types'
-import { SKILLS } from './types'
+import { MATH_SKILLS } from './types'
 
 /** 每題被作答過幾次、最近一次的時間（用來讓重玩時優先抽沒看過的題面） */
 export interface SeenInfo {
@@ -75,6 +75,12 @@ export interface PlanOptions {
   gentle?: boolean
   /** 站型的 5 個互動位置（見 chapter.ts）。沒給就照舊：三種技能輪替、互動隨機 */
   slots?: Interaction[]
+  /** 這一站會出哪些技能（科目決定）。沒給 = 數學的三個技能；英文科目是 ['english'] */
+  skills?: readonly SkillId[]
+  /** 盡量避開的題（例如每日冒險避開昨天的題面）。沒得換時才會重複 */
+  exclude?: ReadonlySet<string>
+  /** 最多幾題複習題（預設 1；每日冒險 2） */
+  maxReviews?: number
 }
 
 /** 各互動出在哪個技能：拿給我 N 個是數感、拖曳歸類是分類 */
@@ -89,10 +95,15 @@ export const SKILL_OF_INTERACTION: Partial<Record<Interaction, SkillId>> = { tap
  */
 export function planStation(opts: PlanOptions): PlannedQuestion[] {
   const size = opts.size ?? STATION_SIZE
+  const skills = opts.skills ?? MATH_SKILLS
   const seen = seenFromAttempts(opts.attempts)
   const used = new Set<string>()
+  const avoid = opts.exclude ?? new Set<string>()
   const plan: PlannedQuestion[] = []
-  const rotation: SkillId[] = Array.from({ length: size }, (_, i) => SKILLS[(opts.stationIndex + i) % SKILLS.length])
+  /** 先避開 avoid 抽；整個難度的題都被避開了才放寬 */
+  const pickAvoiding = (o: Omit<PickOptions, 'exclude'>): Question | null =>
+    (avoid.size ? pickQuestion({ ...o, exclude: new Set([...used, ...avoid]) }) : null) ?? pickQuestion({ ...o, exclude: used })
+  const rotation: SkillId[] = Array.from({ length: size }, (_, i) => skills[(opts.stationIndex + i) % skills.length])
   const order = [...rotation]
   // 站型：主互動的位置指定技能（技能數量仍維持 2/2/1），該技能目前難度沒有這種題就退回點選
   const wantInteraction: (Interaction | undefined)[] = Array(size).fill(undefined)
@@ -116,34 +127,30 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
     for (let i = 0; i < size; i++) if (!fixed.has(i)) order[i] = spare[k++]
   }
 
-  // 先決定複習：換掉該技能最後一個位置，若該技能這站沒出題就換最後一題
-  const due = dueReviews(opts.states, opts.now)
-  let reviewSlot = -1
+  // 先決定複習：換掉該技能最後一個位置，若該技能這站沒出題就換最後一個還沒被換的位置
+  const due = dueReviews(opts.states, opts.now, skills)
+  const reviewSlots = new Set<number>()
   for (const d of due) {
-    const q = pickQuestion({ skill: d.skill, difficulty: d.level, seen, rng: opts.rng, bank: opts.bank, gentle: opts.gentle })
+    if (reviewSlots.size >= (opts.maxReviews ?? 1)) break
+    const q = pickAvoiding({ skill: d.skill, difficulty: d.level, seen, rng: opts.rng, bank: opts.bank, gentle: opts.gentle })
     if (!q) continue
-    const slot = order.lastIndexOf(d.skill)
-    reviewSlot = slot >= 0 ? slot : size - 1
+    let slot = -1
+    for (let k = size - 1; k >= 0 && slot < 0; k--) if (order[k] === d.skill && !reviewSlots.has(k)) slot = k
+    for (let k = size - 1; k >= 0 && slot < 0; k--) if (!reviewSlots.has(k)) slot = k
+    if (slot < 0) break
+    reviewSlots.add(slot)
     used.add(q.id)
-    plan[reviewSlot] = { question: q, review: true, followUp: d.followUp }
-    break
+    plan[slot] = { question: q, review: true, followUp: d.followUp }
   }
 
   for (let i = 0; i < size; i++) {
-    if (i === reviewSlot) continue
+    if (reviewSlots.has(i)) continue
     const skill = order[i]
-    const q = pickQuestion({
-      skill,
-      difficulty: opts.states[skill].difficulty,
-      seen,
-      rng: opts.rng,
-      exclude: used,
-      bank: opts.bank,
-      gentle: opts.gentle,
-      // 有站型時，主互動位置抽指定互動；其他位置抽點選題（沒有就不限）
-      interaction: opts.slots ? (wantInteraction[i] ?? 'pick') : undefined,
-    }) ?? (opts.slots ? pickQuestion({ skill, difficulty: opts.states[skill].difficulty, seen, rng: opts.rng, exclude: used, bank: opts.bank, gentle: opts.gentle }) : null)
-    if (!q) throw new Error(`題庫不足：${skill} 難度 ${opts.states[skill].difficulty}`)
+    const diff = opts.states[skill].difficulty
+    // 有站型時，主互動位置抽指定互動；其他位置抽點選題（沒有就不限）
+    const base = { skill, difficulty: diff, seen, rng: opts.rng, bank: opts.bank, gentle: opts.gentle }
+    const q = pickAvoiding({ ...base, interaction: opts.slots ? (wantInteraction[i] ?? 'pick') : undefined }) ?? (opts.slots ? pickAvoiding(base) : null)
+    if (!q) throw new Error(`題庫不足：${skill} 難度 ${diff}`)
     used.add(q.id)
     plan[i] = { question: q, review: false, followUp: false }
   }
@@ -174,7 +181,7 @@ export function adaptPlan(opts: AdaptOptions): PlannedQuestion[] {
   const plan = [...opts.plan]
   const seen = seenFromAttempts(opts.attempts)
   const rescued = new Set<SkillId>()
-  for (const skill of SKILLS) {
+  for (const skill of new Set(plan.map((p) => p.question.skill))) {
     const mine = opts.stationAttempts.filter((a) => a.skill === skill)
     const lastTwo = mine.slice(-2)
     if (lastTwo.length === 2 && lastTwo.every((a) => !a.firstTryCorrect)) rescued.add(skill)

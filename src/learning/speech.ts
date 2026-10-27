@@ -1,8 +1,9 @@
 /**
- * 語音唸題（Web Speech API，zh-TW）。
+ * 語音唸題（Web Speech API；預設 zh-TW，英文單字用 en-US）。
  * 不支援時所有函式都安靜地什麼都不做，畫面仍有字幕。
  */
 
+import { EN_LANG, enKey } from './english'
 import { chineseNumber } from './lines'
 
 function synth(): SpeechSynthesis | null {
@@ -17,6 +18,17 @@ function synth(): SpeechSynthesis | null {
 
 export function isSpeechSupported(): boolean {
   return synth() !== null
+}
+
+/** 挑一個英語語音（優先 en-US）；沒有就回傳 undefined（交給瀏覽器用 lang 決定） */
+export function pickEnglishVoice(voices: Pick<SpeechSynthesisVoice, 'lang' | 'name'>[]): Pick<SpeechSynthesisVoice, 'lang' | 'name'> | undefined {
+  const norm = (l: string) => l.replace('_', '-').toLowerCase()
+  return voices.find((v) => norm(v.lang) === 'en-us') ?? voices.find((v) => norm(v.lang).startsWith('en'))
+}
+
+/** 依語言挑語音：en 開頭用英語語音，其他一律繁中 */
+export function pickVoiceFor(voices: Pick<SpeechSynthesisVoice, 'lang' | 'name'>[], lang: string): Pick<SpeechSynthesisVoice, 'lang' | 'name'> | undefined {
+  return lang.toLowerCase().startsWith('en') ? pickEnglishVoice(voices) : pickZhTwVoice(voices)
 }
 
 /** 挑一個繁中語音；沒有就回傳 undefined（交給瀏覽器用 lang 決定） */
@@ -34,20 +46,35 @@ export interface SpeakOptions {
   enabled?: boolean
   rate?: number
   onEnd?: () => void
+  /** 語言（BCP 47）。預設 zh-TW；英文單字用 en-US（見 english.ts 的 EN_LANG） */
+  lang?: string
 }
+
+/**
+ * 連續唸幾句（sayChain）的世代：任何一次直接呼叫 say / speak / cancelSpeech 都會讓進行中的連續唸作廢，
+ * 這樣「被別句打斷」的那一句結束時，不會又把後面的英文單字唸出來蓋掉新的那句。
+ */
+let chainGen = 0
 
 /** 唸出文字（會先取消前一句）。回傳是否真的開始唸。 */
 export function speak(text: string, opts: SpeakOptions = {}): boolean {
+  chainGen++
+  return speakCore(text, opts)
+}
+
+function speakCore(text: string, opts: SpeakOptions): boolean {
   const s = synth()
   if (!s || opts.enabled === false || !text) return false
   try {
     s.cancel()
     stopLineAudio()
     const u = new SpeechSynthesisUtterance(text)
-    u.lang = 'zh-TW'
-    u.rate = opts.rate ?? 0.9
-    u.pitch = 1.15
-    const v = pickZhTwVoice(s.getVoices())
+    const lang = opts.lang ?? 'zh-TW'
+    const en = lang.toLowerCase().startsWith('en')
+    u.lang = lang
+    u.rate = opts.rate ?? (en ? 0.8 : 0.9)
+    u.pitch = en ? 1.1 : 1.15
+    const v = pickVoiceFor(s.getVoices(), lang)
     if (v) u.voice = v as SpeechSynthesisVoice
     if (opts.onEnd) {
       u.onend = opts.onEnd
@@ -61,6 +88,7 @@ export function speak(text: string, opts: SpeakOptions = {}): boolean {
 }
 
 export function cancelSpeech(): void {
+  chainGen++
   try {
     synth()?.cancel()
   } catch {
@@ -130,6 +158,11 @@ function stopLineAudio(): void {
  * 所有會唸出來的句子都走這裡（key 見 lines.ts）。
  */
 export function say(key: string, text: string, opts: SpeakOptions = {}): boolean {
+  chainGen++
+  return sayCore(key, text, opts)
+}
+
+function sayCore(key: string, text: string, opts: SpeakOptions): boolean {
   if (opts.enabled === false) return false
   const line = lineAudio[key]
   const a = line && (!line.text || !text || line.text === text) ? getPlayer() : null
@@ -141,7 +174,7 @@ export function say(key: string, text: string, opts: SpeakOptions = {}): boolean
       const fallback = () => {
         if (fellBack) return
         fellBack = true
-        if (!speak(text, opts)) opts.onEnd?.()
+        if (!speakCore(text, opts)) opts.onEnd?.()
       }
       a.onended = opts.onEnd ? () => opts.onEnd?.() : null
       a.onerror = fallback
@@ -152,7 +185,49 @@ export function say(key: string, text: string, opts: SpeakOptions = {}): boolean
       /* 退回 Web Speech */
     }
   }
-  return speak(text, opts)
+  return speakCore(text, opts)
+}
+
+/** 唸一個英文單字：有預錄音檔（key = en.<word>）就播檔，沒有就用 Web Speech en-US */
+export function sayEnglish(word: string, opts: SpeakOptions = {}): boolean {
+  return say(enKey(word), word, { ...opts, lang: EN_LANG })
+}
+
+/** 連續唸的一句 */
+export interface SayPart {
+  key: string
+  text: string
+  lang?: string
+}
+
+/** 連續唸一句的最長等待：播放器沒有回報結束（iOS 偶爾會這樣）也要接著唸下一句 */
+const CHAIN_STEP_TIMEOUT_MS = 12_000
+
+/**
+ * 依序唸幾句（例如中文題目 → 英文單字）。上一句唸完（或逾時）才唸下一句；
+ * 中途有別的 say / speak / cancelSpeech，或再呼叫一次 sayChain，剩下的就不唸。
+ * 回傳第一句是否真的開始唸。
+ */
+export function sayChain(parts: SayPart[], opts: Pick<SpeakOptions, 'enabled' | 'rate'> = {}): boolean {
+  const gen = ++chainGen
+  let first = false
+  const run = (i: number): void => {
+    if (gen !== chainGen || i >= parts.length) return
+    const p = parts[i]
+    let moved = false
+    const timer = setTimeout(() => step(), CHAIN_STEP_TIMEOUT_MS)
+    const step = () => {
+      if (moved) return
+      moved = true
+      clearTimeout(timer)
+      run(i + 1)
+    }
+    const ok = sayCore(p.key, p.text, { ...opts, lang: p.lang, onEnd: step })
+    if (i === 0) first = ok
+    if (!ok) step()
+  }
+  run(0)
+  return first
 }
 
 export { chineseNumber }

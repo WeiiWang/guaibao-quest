@@ -1,6 +1,6 @@
 // 題庫產生器（固定 seed，輸出可重現）。
 // 用法：node scripts/gen-questions.mjs
-// 輸出：src/learning/content/{number,classify,pattern}.json
+// 輸出：src/learning/content/{number,classify,pattern,english}.json
 // 產出的 JSON 會進版控，供人工審閱；執行期不跑這支程式。
 // 物件屬性（種類、顏色）直接讀 src/learning/objects.ts（Node 24 可直接載入 .ts），不另外抄一份。
 // 題目是否合理由 src/learning/bank.test.ts 用獨立的解題邏輯驗證（含多屬性檢查）。
@@ -8,6 +8,7 @@ import { writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { OBJECTS, CATEGORY_NAMES, CATEGORIES, colorWord } from '../src/learning/objects.ts'
+import { EN_WORDS, EN_GENTLE_WORDS } from '../src/learning/english.ts'
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '../src/learning/content')
 
@@ -53,7 +54,7 @@ const reject = () => {
 
 /** 題幹 + 答案 去重。找不同（odd）的題幹就是那四個物件，所以選項也算進去 */
 function dedupKey(q) {
-  return JSON.stringify([q.type, q.prompt, q.items, q.answer, q.type === 'odd' ? q.choices.map((c) => c.id).sort() : null, q.params?.n ?? null])
+  return JSON.stringify([q.type, q.prompt, q.items, q.answer, q.type === 'odd' ? q.choices.map((c) => c.id).sort() : null, q.params?.n ?? null, q.params?.word ?? null, q.params?.pattern ?? null])
 }
 
 /**
@@ -776,6 +777,130 @@ const pattern4 = cell('pattern', 4, [
   { count: 12, cands: countCands([1, 2, 3, 4, 5, 6]), build: (i, ctx, [s, o]) => growQ(i, ctx, s, o) },
 ])
 
+// ---------- 英文單字 ----------
+// 單字與圖檔對應見 src/learning/english.ts。選項一律同一類（物件／顏色／數字），不會拿顏色字當物件圖的干擾項。
+// 中文旁白在 prompt（用中文語音唸），英文單字在 params.word（執行期用 en.<word> 的語音，沒有音檔就 Web Speech en-US）。
+const EW = Object.fromEntries(EN_WORDS.map((w) => [w.word, w]))
+const ofKind = (k) => EN_WORDS.filter((w) => w.kind === k).map((w) => w.word)
+const EN_THINGS = ofKind('thing')
+const EN_COLORS = ofKind('color')
+const EN_NUMS = ofKind('number')
+const NUM_WORD = Object.fromEntries(EN_NUMS.map((w) => [Number(EW[w].digit), w]))
+const poolOf = (word) => ofKind(EW[word].kind)
+const picChoice = (w) => {
+  const e = EW[w]
+  return e.kind === 'thing' ? { id: w, art: e.art } : e.kind === 'color' ? { id: w, swatch: e.swatch } : { id: w, label: e.digit }
+}
+const textChoice = (w) => ({ id: w, text: w })
+const stemOf = (w) => {
+  const e = EW[w]
+  return e.kind === 'thing' ? { art: e.art } : e.kind === 'color' ? { swatch: e.swatch } : { digit: e.digit }
+}
+/** 同一類的 k-1 個干擾單字，答案放第 pos 個 */
+function wordChoices(answer, pool, k, ctx, mk) {
+  const others = sample(pool.filter((x) => x !== answer), k - 1)
+  if (others.length < k - 1) reject()
+  const pos = ctx.pos(k)
+  const arr = shuffle(others)
+  arr.splice(pos, 0, answer)
+  ctx.mark(k, pos)
+  return arr.map(mk)
+}
+const findIt = (e) => (e.kind === 'color' ? `${e.zh}的色塊` : e.zh)
+
+const HEAR_PROMPTS = ['仔細聽，哪一個是你聽到的英文？', '聽聽看，這個英文字是哪一個？', '阿悟說英文，你來找找看！']
+function hearQ(i, ctx, word, phrase, pool = poolOf(word), k = 3) {
+  const e = EW[word]
+  let choices
+  if (e.kind === 'number') {
+    const n = Number(e.digit)
+    const pos = ctx.pos(k, numPositions(n, 1, 10, k))
+    choices = numChoices(n, 1, 10, pos, ctx, k).map((c) => ({ id: NUM_WORD[Number(c.id)], label: c.id }))
+  } else choices = wordChoices(word, pool, k, ctx, picChoice)
+  return {
+    type: 'hear',
+    prompt: variant(HEAR_PROMPTS, phrase),
+    items: [],
+    choices,
+    answer: word,
+    hint: `${e.zh}的英文就是剛剛聽到的字。找找看，哪一個是${findIt(e)}？`,
+    params: { word, zh: e.zh },
+  }
+}
+const PIC_PROMPTS = ['這個用英文怎麼說？', '看看圖，英文是哪一個字？', '找出這個的英文。']
+function pic2enQ(i, ctx, word, phrase) {
+  const e = EW[word]
+  return {
+    type: 'pic2en',
+    prompt: variant(PIC_PROMPTS, phrase),
+    items: [],
+    choices: wordChoices(word, poolOf(word), 3, ctx, textChoice),
+    answer: word,
+    hint: `這個是${e.zh}。聽聽看${e.zh}的英文怎麼說，再找找看是哪一個字。`,
+    params: { word, zh: e.zh, stem: stemOf(word) },
+  }
+}
+const ZH_PROMPTS = [(z) => `${z}，用英文怎麼說？`, (z) => `哪一個是${z}的英文？`, (z) => `找出${z}的英文字。`]
+function zh2enQ(i, ctx, word, phrase) {
+  const e = EW[word]
+  return {
+    type: 'zh2en',
+    prompt: variant(ZH_PROMPTS, phrase)(e.zh),
+    items: [],
+    choices: wordChoices(word, poolOf(word), 3, ctx, textChoice),
+    answer: word,
+    hint: `${e.zh}是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。`,
+    params: { word, zh: e.zh, stem: stemOf(word) },
+  }
+}
+const SPELL_PROMPTS = ['點一個字母，把這個字拼完整。', '少了一個字母，幫忙補上去。', '聽聽看，缺的是哪一個字母？']
+const VOWELS = [...'aeiou']
+const CONSONANTS = [...'bcdfghjklmnprstwy']
+function spellQ(i, ctx, word, blankAt, phrase) {
+  const e = EW[word]
+  const letter = word[blankAt]
+  const pool = VOWELS.includes(letter) ? VOWELS : CONSONANTS
+  const others = sample(pool.filter((l) => l !== letter), 2)
+  if (others.length < 2) reject()
+  const pos = ctx.pos(3)
+  const arr = shuffle(others)
+  arr.splice(pos, 0, letter)
+  ctx.mark(3, pos)
+  return {
+    type: 'spell',
+    prompt: variant(SPELL_PROMPTS, phrase),
+    items: [],
+    choices: arr.map((l) => ({ id: l, text: l })),
+    answer: letter,
+    hint: `這個是${e.zh}。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？`,
+    params: { word, zh: e.zh, stem: stemOf(word), pattern: word.slice(0, blankAt) + '_' + word.slice(blankAt + 1), blankAt },
+  }
+}
+const wordPhrases = (list, phrases) => shuffle(list.flatMap((w) => Array.from({ length: phrases }, (_, p) => [w, p])))
+const SPELLABLE = [...EN_THINGS.filter((w) => w.length <= 5), ...['red', 'blue', 'pink', 'green'], ...EN_NUMS.filter((w) => w.length <= 5)]
+const spellCands = shuffle(SPELLABLE.flatMap((w) => [...w].map((_, at) => [w, at]))).map(([w, at], k) => [w, at, k % 3])
+
+const english1 = cell('english', 1, [{ count: 40, cands: wordPhrases(EN_THINGS, 3), build: (i, ctx, [w, p]) => hearQ(i, ctx, w, p) }])
+const english2 = cell('english', 2, [
+  { count: 14, cands: wordPhrases(EN_COLORS, 3), build: (i, ctx, [w, p]) => hearQ(i, ctx, w, p) },
+  { count: 14, cands: wordPhrases(EN_NUMS, 3), build: (i, ctx, [w, p]) => hearQ(i, ctx, w, p) },
+  { count: 16, cands: wordPhrases(EN_THINGS, 3), build: (i, ctx, [w, p]) => pic2enQ(i, ctx, w, p) },
+])
+const english3 = cell('english', 3, [
+  { count: 18, cands: wordPhrases(EN_THINGS, 3), build: (i, ctx, [w, p]) => zh2enQ(i, ctx, w, p) },
+  { count: 8, cands: wordPhrases(EN_COLORS, 3), build: (i, ctx, [w, p]) => zh2enQ(i, ctx, w, p) },
+  { count: 10, cands: wordPhrases(EN_NUMS, 3), build: (i, ctx, [w, p]) => zh2enQ(i, ctx, w, p) },
+  { count: 6, cands: wordPhrases([...EN_COLORS, ...EN_NUMS], 2), build: (i, ctx, [w, p]) => pic2enQ(i, ctx, w, p) },
+])
+const english4 = cell('english', 4, [{ count: 40, cands: spellCands, build: (i, ctx, [w, at, p]) => spellQ(i, ctx, w, at, p) }])
+// 幼幼模式：只出最常見的 10 個字，2 選 1
+const english1g = cell(
+  'english',
+  1,
+  [{ count: 30, cands: wordPhrases(EN_GENTLE_WORDS, 3), build: (i, ctx, [w, p]) => hearQ(i, ctx, w, p, EN_GENTLE_WORDS, 2) }],
+  { gentle: true },
+)
+
 // ---------- 輸出 ----------
 /** 每題一個區塊、items/choices 每個元素一行，方便人工審閱與 diff */
 function toReadableJson(questions) {
@@ -807,3 +932,4 @@ const dump = (name, cells) => {
 dump('number', [number1, number2, number3, number4, number1g])
 dump('classify', [classify1, classify2, classify3, classify4, classify1g])
 dump('pattern', [pattern1, pattern2, pattern3, pattern4, pattern1g])
+dump('english', [english1, english2, english3, english4, english1g])

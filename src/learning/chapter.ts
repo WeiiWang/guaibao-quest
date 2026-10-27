@@ -43,9 +43,24 @@ export const HUAGUOSHAN: ChapterDef = {
   chest: { wood: 2, stone: 2, flower: 2 },
 }
 
-export const CHAPTERS: ChapterDef[] = [HUAGUOSHAN]
+/** 英文科目的第一章：5 站每站 5 題（都是英文單字），章末寶箱。難度跟著孩子的英文程度走 */
+export const ENGLISH_ISLAND: ChapterDef = {
+  id: 'english-island',
+  name: '英文小島',
+  subtitle: '第一章',
+  stations: [
+    { index: 1, name: '白沙灘', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
+    { index: 2, name: '椰子樹下', material: 'flower', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
+    { index: 3, name: '珊瑚礁', material: 'stone', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
+    { index: 4, name: '海風燈塔', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
+    { index: 5, name: '寶藏洞', material: 'stone', kind: 'boss', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
+  ],
+  chest: { wood: 2, stone: 2, flower: 2 },
+}
 
-/** 還沒開放的章節（地圖上顯示「即將開放」） */
+export const CHAPTERS: ChapterDef[] = [HUAGUOSHAN, ENGLISH_ISLAND]
+
+/** 還沒開放的章節（數學科目的地圖上顯示「即將開放」；其他科目見 subject.ts） */
 export const UPCOMING_CHAPTERS = [
   { id: 'shuilian', name: '水簾洞' },
   { id: 'longgong', name: '龍宮' },

@@ -121,10 +121,13 @@ export interface DueReview {
   overdueDays: number
 }
 
-/** 現在該複習的（技能, 難度）。每個掌握紀錄最多 3 次複習；同一天不重複複習。 */
-export function dueReviews(states: Record<SkillId, SkillState>, now: number): DueReview[] {
+/**
+ * 現在該複習的（技能, 難度）。每個掌握紀錄最多 3 次複習；同一天不重複複習。
+ * skills：只看這些技能（數學站只複習數學、英文站只複習英文）；沒給就是全部。
+ */
+export function dueReviews(states: Record<SkillId, SkillState>, now: number, skills: readonly SkillId[] = SKILLS): DueReview[] {
   const out: DueReview[] = []
-  for (const skill of SKILLS) {
+  for (const skill of skills) {
     for (const level of DIFFICULTIES) {
       const rec = states[skill].mastered[level]
       if (!rec || rec.reviews >= REVIEW_OFFSET_DAYS.length) continue
