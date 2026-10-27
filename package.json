@@ -18,7 +18,8 @@
     "e2e:content": "node scripts/e2e-content.mjs",
     "e2e:ux": "node scripts/e2e-ux.mjs",
     "e2e:learning": "node scripts/e2e-learning.mjs",
-    "e2e:interact": "node scripts/e2e-interact.mjs"
+    "e2e:interact": "node scripts/e2e-interact.mjs",
+    "e2e:meta": "node scripts/e2e-meta.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",

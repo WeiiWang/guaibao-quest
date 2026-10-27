@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
-import { pmAddFood, pmAddMaterials, pmAddStars, pmClearPoops, pmOwnAllDecor, pmSetHunger, pmSetStage } from '../../../db/pm'
+import { pmAddFood, pmAddMaterials, pmAddStars, pmClearPoops, pmGrantGift, pmOwnAllDecor, pmQueueTrickCelebrations, pmSetHunger, pmSetStage, pmUnlockAllTricks } from '../../../db/pm'
+import { TRICKS } from '../../../domain/tricks'
 import { getFastSchedule, sendPetCommand, setFastSchedule, setTodMode, type PetCommand } from '../../../pet/bus'
 import type { TodMode } from '../../../pet/daynight'
 import { useTodMode } from '../../pet/hooks'
@@ -128,6 +129,41 @@ export function PmTab({ onExit }: { onExit: () => void }) {
           >
             加速排程：{fast ? '開' : '關'}
           </button>
+        </div>
+      </div>
+
+      <div className="card" data-testid="pm-tricks">
+        <h2>新招與禮物</h2>
+        <p className="lt-note">已學會：{pet.tricks?.length ? TRICKS.filter((t) => pet.tricks?.includes(t.id)).map((t) => t.name).join('、') : '還沒有'}。表演要回首頁、非佈置模式才會演（蛋不會表演）。</p>
+        <div className="row-actions" style={{ justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+          <button className="btn" data-pm="unlock-tricks" onClick={() => run(async () => toast(`已解鎖全部 ${await pmUnlockAllTricks()} 招`, 'ok'), '')}>解鎖全部新招</button>
+          <button className="btn" data-pm="celebrate-tricks" onClick={async () => { await pmQueueTrickCelebrations(); onExit() }}>重播新招慶祝（回首頁）</button>
+          <button
+            className="btn primary"
+            data-cmd="trick:all"
+            onClick={() => {
+              sendPetCommand('trick:all')
+              onExit()
+            }}
+          >
+            表演每一招
+          </button>
+          <button className="btn" data-pm="gift" onClick={async () => { await pmGrantGift(); onExit() }}>送一份小禮物（回首頁）</button>
+        </div>
+        <div className="row-actions" style={{ justifyContent: 'flex-start', flexWrap: 'wrap', marginTop: 8 }}>
+          {TRICKS.map((t) => (
+            <button
+              key={t.id}
+              className="btn"
+              data-cmd={`trick:${t.id}`}
+              onClick={() => {
+                sendPetCommand(`trick:${t.id}` as PetCommand)
+                onExit()
+              }}
+            >
+              {t.emoji} {t.name}
+            </button>
+          ))}
         </div>
       </div>
 

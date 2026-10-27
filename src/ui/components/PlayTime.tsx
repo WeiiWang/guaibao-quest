@@ -6,7 +6,9 @@ import { now as clockNow } from '../../domain/clock'
 import { PIN_LOCK_MS, PIN_MAX_FAILS } from '../../domain/constants'
 import { localDateStr } from '../../domain/date'
 import { EXTEND_MINUTES } from '../../learning/playtime'
-import { say } from '../../learning/speech'
+import { say, sayText } from '../../learning/speech'
+import { playPetSound } from '../../pet/sounds'
+import { TIME_WARN_LINE } from '../../domain/giftLines'
 import { pickLine } from '../../learning/lines'
 import { useNow } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
@@ -16,6 +18,7 @@ import { Modal } from './Modal'
 import { PinPad } from './PinPad'
 import type { Screen } from '../App'
 import './lock.css'
+import '../meta.css'
 
 const TICK_MS = 1000
 const FLUSH_EVERY_S = 5
@@ -26,8 +29,23 @@ const FLUSH_EVERY_S = 5
  * - 每 5 秒寫入一次 playTime；離開/切到背景時補寫
  * - 到上限（含家長延長）時通知 onLocked(true)；家長延長或調高上限後自動解除
  */
+/** 剩下這麼多秒時，阿悟打哈欠提醒「再玩一下下就要睡覺囉」（每天只提醒一次） */
+export const TIME_WARN_SECONDS = 120
+const warnKey = (date: string) => `gq-timewarn:${date}`
+
 export function PlayTimeWatcher({ counting, onLocked }: { counting: boolean; onLocked: (locked: boolean) => void }) {
-  const { dailyLimitMin } = useLearningSettings()
+  const { dailyLimitMin, soundOn, voiceOn } = useLearningSettings()
+  const [warn, setWarn] = useState<'in' | 'out' | null>(null)
+  const warnedFor = useRef<string | null>(null)
+  const prefs = useRef({ soundOn, voiceOn })
+  useEffect(() => {
+    prefs.current = { soundOn, voiceOn }
+  }, [soundOn, voiceOn])
+  const warnTimers = useRef<number[]>([])
+  useEffect(() => {
+    const timers = warnTimers.current
+    return () => timers.forEach((id) => window.clearTimeout(id))
+  }, [])
   const date = localDateStr(useNow())
   const row = useLiveQuery(() => db.playTime.get(date).then((r) => r ?? null), [date])
   const bonus = row?.bonusSeconds ?? 0
@@ -51,6 +69,25 @@ export function PlayTimeWatcher({ counting, onLocked }: { counting: boolean; onL
       lockedRef.current = locked
       onLocked(locked)
     }
+  }
+
+  /** 剩 2 分鐘：阿悟打哈欠提醒一次（每天一次，存在 localStorage，重新整理也不會再提醒） */
+  const maybeWarn = () => {
+    const { limit, bonus: b } = limitRef.current
+    if (limit <= 0 || lockedRef.current || warnedFor.current === dateRef.current) return
+    const left = limit * 60 + b - used.current
+    if (left > TIME_WARN_SECONDS || left <= 0) return
+    warnedFor.current = dateRef.current
+    try {
+      if (localStorage.getItem(warnKey(dateRef.current))) return
+      localStorage.setItem(warnKey(dateRef.current), '1')
+    } catch {
+      /* 沒有 localStorage：只靠這次執行期間的記號 */
+    }
+    setWarn('in')
+    warnTimers.current.push(window.setTimeout(() => setWarn('out'), 5500), window.setTimeout(() => setWarn(null), 6100))
+    playPetSound('yawn', prefs.current.soundOn)
+    sayText(TIME_WARN_LINE, { enabled: prefs.current.voiceOn })
   }
 
   // 資料庫的值只用來初始化（換日或第一次載入）；之後以本地累計為準
@@ -90,6 +127,7 @@ export function PlayTimeWatcher({ counting, onLocked }: { counting: boolean; onL
         pending.current += dt
         if (pending.current >= FLUSH_EVERY_S) flush()
         evaluate()
+        maybeWarn()
       }
     }, TICK_MS)
     const onHide = () => {
@@ -107,7 +145,13 @@ export function PlayTimeWatcher({ counting, onLocked }: { counting: boolean; onL
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return null
+  if (!warn) return null
+  return (
+    <div className={`time-warn ${warn === 'out' ? 'out' : ''}`} data-testid="time-warn" role="status">
+      <Companion pose="sleepy" size={104} />
+      <div className="time-warn-bubble">{TIME_WARN_LINE}</div>
+    </div>
+  )
 }
 
 // 鎖定畫面上輸入錯誤 PIN 的次數（模組層，離開再進來不歸零）

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { repo } from '../../db/repo'
 import { learningSettingsOf } from '../../learning/playtime'
 import { sayText } from '../../learning/speech'
@@ -14,6 +14,9 @@ import { visibleToday } from '../../domain/tasks'
 import { Art } from '../components/Art'
 import { Icon } from '../components/Icon'
 import { RoomView } from '../components/RoomView'
+import { TrickCelebrate } from '../components/TrickCelebrate'
+import { isTrickId, type TrickId } from '../../domain/tricks'
+import '../meta.css'
 import { usePetFace } from '../components/PetSprite'
 import { useBalance } from '../hooks'
 import type { Screen } from '../App'
@@ -95,6 +98,36 @@ export function Home({ childName, now, go, initialEdit }: Props) {
     return () => window.clearTimeout(id)
   }, [bal])
 
+  // v5：每次進首頁（跨日也算）：今日小禮物 → 圖鑑滿 6 個的獎勵 → 阿悟學會新招。三件事都只是「發放並排進待展示佇列」，
+  // 展示由 RoomView（禮物）與下面的新招慶祝負責，依序出現不會同時跳出
+  const today = localDateStr(now)
+  useEffect(() => {
+    void (async () => {
+      await repo.grantDailyGift(now)
+      await repo.syncCollection(now)
+      await repo.syncTricks()
+    })()
+    // now 每 15 秒變一次；只在日期變動時重新檢查
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [today])
+
+  // 表演請求：「表演」按鈕與新招慶祝時的示範都走這裡（RoomView 看到 seq 變了就請阿悟演）
+  const [perform, setPerform] = useState<{ seq: number; trick: TrickId | 'random' }>({ seq: 0, trick: 'random' })
+  const askPerform = (trick: TrickId | 'random') => setPerform((p) => ({ seq: p.seq + 1, trick }))
+  // 新招慶祝：禮物都收下之後才跳；佈置模式（從背包直接進來）不打斷
+  const pendingGifts = settings?.pendingGifts ?? []
+  const celebrating = settings?.pendingTricks?.[0]
+  const showTrick = !!celebrating && isTrickId(celebrating) && !initialEdit && !!pet && pendingGifts.length === 0
+  const demoed = useRef<string | null>(null)
+  useEffect(() => {
+    if (!showTrick || !celebrating || !isTrickId(celebrating) || demoed.current === celebrating) return
+    const t = window.setTimeout(() => {
+      demoed.current = celebrating
+      askPerform(celebrating)
+    }, 1400)
+    return () => window.clearTimeout(t)
+  }, [showTrick, celebrating])
+
   // 首次進首頁的引導：冒險地圖按鈕亮起、手指指著它，語音「我們去冒險吧」（只出現一次）
   const showGuide = !!settings && !settings.homeGuideShown && !initialEdit
   const guideVoiceOn = learningSettingsOf(settings).voiceOn
@@ -122,6 +155,7 @@ export function Home({ childName, now, go, initialEdit }: Props) {
   foods.sort((a, b) => Number(b.qty > 0) - Number(a.qty > 0) || order(a.item.id) - order(b.item.id))
 
   const edit = !!initialEdit
+  const canPerform = pet.stage !== 'egg' && (pet.tricks?.length ?? 0) > 0
 
   return (
     <main className="home theme-cream">
@@ -139,13 +173,23 @@ export function Home({ childName, now, go, initialEdit }: Props) {
       </header>
 
       <div className="side-tools">
-        <button className="mini-candy butter" onClick={() => go('workshop')}>
+        {canPerform && (
+          <button className="mini-candy mint" onClick={() => askPerform('random')} data-testid="perform-btn" aria-label={`表演：叫${pet.name}表演一招`}>
+            <span className="mini-emoji" aria-hidden>🎪</span>
+            <span>表演</span>
+          </button>
+        )}
+        <button className="mini-candy butter" onClick={() => go('workshop')} data-gift-target="material">
           <Icon name="ui-workshop" emoji="🔨" size={34} />
           <span>工坊</span>
         </button>
-        <button className="mini-candy bubblegum" onClick={() => go('bag')}>
+        <button className="mini-candy bubblegum" onClick={() => go('bag')} data-gift-target="bag">
           <Icon name="ui-bag" emoji="🎒" size={34} />
           <span>背包</span>
+        </button>
+        <button className="mini-candy lavender" onClick={() => go('friends')} data-testid="friends-btn">
+          <span className="mini-emoji" aria-hidden>📖</span>
+          <span>朋友</span>
         </button>
       </div>
 
@@ -160,7 +204,22 @@ export function Home({ childName, now, go, initialEdit }: Props) {
         childName={childName}
         favoriteFoodId={favoriteFoodOf(localDateStr(now))}
         goShop={() => go('shop')}
+        gifts={pendingGifts}
+        perform={perform}
       />
+      {showTrick && celebrating && (
+        <TrickCelebrate
+          trickId={celebrating}
+          petName={pet.name}
+          voiceOn={guideVoiceOn}
+          soundOn={learningSettingsOf(settings).soundOn}
+          onReplay={() => askPerform(celebrating as TrickId)}
+          onClose={() => {
+            demoed.current = null
+            void repo.popPendingTrick()
+          }}
+        />
+      )}
 
       <nav className="main-nav" aria-label="主選單">
         <button className={`candy mint ${showGuide ? 'guide' : ''}`} onClick={() => nav('map')} data-testid="candy-map">

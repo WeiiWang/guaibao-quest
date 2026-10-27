@@ -16,8 +16,15 @@ export type PetCommand =
   | 'poop'
   | 'sleep'
   | 'wake'
+  // v5：新招（PM 預覽用；trickAll = 依序表演每一招）
+  | 'trick:count'
+  | 'trick:tidy'
+  | 'trick:rhythm'
+  | 'trick:hello'
+  | 'trick:flip'
+  | 'trick:all'
 
-export const PET_COMMANDS: readonly PetCommand[] = ['sing', 'dance', 'walk', 'sneeze', 'yawn', 'gaze', 'wave', 'rubTummy', 'pinchNose', 'poop', 'sleep', 'wake']
+export const PET_COMMANDS: readonly PetCommand[] = ['sing', 'dance', 'walk', 'sneeze', 'yawn', 'gaze', 'wave', 'rubTummy', 'pinchNose', 'poop', 'sleep', 'wake', 'trick:count', 'trick:tidy', 'trick:rhythm', 'trick:hello', 'trick:flip', 'trick:all']
 
 const CMD_KEY = 'gq-pet-cmds'
 const TOD_KEY = 'gq-pet-tod'

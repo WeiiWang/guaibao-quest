@@ -19,6 +19,7 @@ import { WorkshopScreen } from './screens/Workshop'
 import { LockScreen, PlayTimeWatcher } from './components/PlayTime'
 import { BackdropPreview, parseBackdropHash } from './screens/BackdropPreview'
 import { GalleryScreen } from './screens/Gallery'
+import { FriendsScreen } from './screens/Friends'
 import './ux.css'
 
 export type Screen =
@@ -35,6 +36,7 @@ export type Screen =
   | { name: 'stage'; chapterId: string; station: number; ceremony?: boolean }
   | { name: 'workshop' }
   | { name: 'gallery' }
+  | { name: 'friends' }
   | { name: 'backdrop'; hash: string }
 
 /** 兒童端畫面中，時間到會被鎖住的（學習與餵食）；任務、著色、家長區不鎖 */
@@ -46,6 +48,7 @@ function screenFromHash(): Screen {
   if (h === 'map') return { name: 'map' }
   if (h === 'workshop') return { name: 'workshop' }
   if (h === 'gallery') return { name: 'gallery' }
+  if (h === 'friends') return { name: 'friends' }
   if (h.startsWith('backdrop')) return { name: 'backdrop', hash: h }
   return { name: 'home' }
 }
@@ -156,6 +159,9 @@ function Main({ childName }: { childName: string }) {
         break
       case 'gallery':
         body = <GalleryScreen onBack={() => go('coloring')} go={go} />
+        break
+      case 'friends':
+        body = <FriendsScreen onBack={home} />
         break
       case 'backdrop': {
         const p = parseBackdropHash(screen.hash)

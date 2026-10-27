@@ -1,0 +1,41 @@
+/* ============ v5：禮物展示 ============ */
+.gift-item {
+  position: absolute; left: 50%; bottom: 8%; width: max(96px, 78%); aspect-ratio: 1; padding: 0; border: 0; background: none;
+  pointer-events: auto; cursor: pointer; z-index: 5; display: grid; place-items: center; -webkit-tap-highlight-color: transparent;
+  transform: translate(-50%, 0); animation: gift-pop 0.8s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+.gift-item.taking { visibility: hidden; }
+.gift-glow {
+  position: absolute; inset: -12%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 247, 200, 0.95) 0 34%, rgba(255, 220, 120, 0.5) 58%, rgba(255, 220, 120, 0) 72%);
+  animation: gift-pulse 1.4s ease-in-out 0.7s infinite;
+}
+.gift-bob { position: relative; display: grid; place-items: center; width: 74%; height: 74%; animation: gift-bob 1.5s ease-in-out 0.8s infinite; filter: drop-shadow(0 8px 6px rgba(120, 70, 30, 0.3)); }
+.gift-img { width: 100%; height: 100%; object-fit: contain; }
+.gift-bob .art-emoji { width: 100%; height: 100%; }
+.gift-star {
+  position: absolute; font-style: normal; font-size: clamp(1.2rem, 3.4vmin, 1.9rem); color: #ffc93c; pointer-events: none;
+  text-shadow: 0 2px 0 #fff; opacity: 0; animation: gift-twinkle 1.6s ease-in-out infinite; animation-delay: calc(var(--i) * 0.3s + 0.5s);
+}
+.gift-item::after {
+  content: '點一下收下'; position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); white-space: nowrap; pointer-events: none;
+  padding: 3px 12px; border-radius: 14px; background: #fff; color: #4a3b35; font-weight: 900; font-size: 0.85rem;
+  box-shadow: 0 3px 0 rgba(224, 165, 44, 0.35); opacity: 0; animation: pf-fade-in 0.4s 1.3s both;
+}
+/* 從阿悟身後（z-index 在阿悟下面）彈出來、越過去，再停在身前 */
+@keyframes gift-pop {
+  0% { z-index: -1; opacity: 0; transform: translate(-50%, 36%) scale(0.2); }
+  35% { z-index: -1; opacity: 1; transform: translate(-50%, -34%) scale(0.9); }
+  36% { z-index: 5; }
+  70% { z-index: 5; opacity: 1; transform: translate(-50%, -12%) scale(1.22); }
+  100% { z-index: 5; opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+@keyframes gift-bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-7%) rotate(3deg); } }
+@keyframes gift-pulse { 0%, 100% { transform: scale(0.92); opacity: 0.85; } 50% { transform: scale(1.08); opacity: 1; } }
+@keyframes gift-twinkle { 0%, 100% { opacity: 0; scale: 0.3; } 50% { opacity: 1; scale: 1.15; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-item { animation: pf-fade-in 0.4s both !important; transform: translate(-50%, 0); z-index: 5; }
+  .gift-glow, .gift-bob, .gift-star { animation: none !important; }
+  .gift-star { opacity: 0.8; }
+}

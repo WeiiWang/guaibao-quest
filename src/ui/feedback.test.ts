@@ -2,7 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const speak = vi.fn(() => true)
 const playSfx = vi.fn()
-vi.mock('../learning/speech', () => ({ speak: (...a: unknown[]) => speak(...(a as [])) }))
+// feedback.ts 唸話走 sayText（先找預錄音檔、沒有才退回 speak）；測試只關心「唸了哪句、開關有沒有傳對」
+vi.mock('../learning/speech', () => ({ speak: (...a: unknown[]) => speak(...(a as [])), sayText: (...a: unknown[]) => speak(...(a as [])) }))
 vi.mock('../learning/sfx', () => ({ playSfx: (...a: unknown[]) => playSfx(...a) }))
 
 const { celebrateSmall, FEEDBACK } = await import('./feedback')

@@ -19,13 +19,19 @@ import {
   spritePx,
   type Rect,
 } from '../../domain/room'
-import type { Pet, Placement, ShopItem } from '../../domain/types'
+import type { Gift, Pet, Placement, ShopItem } from '../../domain/types'
 import { Art } from './Art'
 import { Icon } from './Icon'
 import { PetSprite } from './PetSprite'
 import { useCelebrate, useToast } from '../hooks'
 import { useCelebrateSmall } from '../feedback'
 import { speak } from '../../learning/speech'
+import { playSfx } from '../../learning/sfx'
+import { flyOne, iconNode } from '../fly'
+import { giftLine } from '../../domain/giftLines'
+import { giftRef } from '../../domain/gifts'
+import type { TrickId } from '../../domain/tricks'
+import { GiftItem, giftArt } from '../pet/GiftItem'
 import { TAP_FEED_GAP_MS } from '../../domain/constants'
 import { useLearningSettings } from '../learningHooks'
 import { playPetSound } from '../../pet/sounds'
@@ -51,6 +57,10 @@ interface Props {
   childName?: string
   /** 今天阿悟最喜歡的食物 id（SPEC B2）；吃到時愛心加倍、說「最喜歡了！」。沒有就不演 */
   favoriteFoodId?: string | null
+  /** v5：待展示的禮物（依序展示；沒給就不展示） */
+  gifts?: Gift[]
+  /** v5：要阿悟表演新招的請求（seq 變了就表演一次；'random' = 從已學會的挑一招） */
+  perform?: { seq: number; trick: TrickId | 'random' }
 }
 
 type DragKind = 'food' | 'new' | 'move'
@@ -87,7 +97,7 @@ const toRect = (r: DOMRect): Rect => ({ left: r.left, top: r.top, right: r.right
 /** 由 id 算一個固定的小數，讓每坨便便的位置、蒼蠅有點不同 */
 const hashOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
 
-export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, childName = '', favoriteFoodId = null }: Props) {
+export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, childName = '', favoriteFoodId = null, gifts, perform }: Props) {
   const toast = useToast()
   const celebrate = useCelebrate()
   const { soundOn, voiceOn } = useLearningSettings()
@@ -317,6 +327,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     edit,
     dragging: !!drag,
     soundOn,
+    voiceOn,
     wishIcons: foods.map((f) => artName(f.item)),
     slotRef,
     geo,
@@ -329,6 +340,48 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     if (dragging || edit) life.cancelIdle()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragging, edit])
+  // ---------- v5：禮物展示（阿悟走到中間、拿出禮物，孩子點一下收下；多份依序）----------
+  const gift = gifts?.[0]
+  const giftKey = gift ? `${gifts?.length}:${gift.at}:${giftRef(gift)}:${gift.from}` : null
+  const [giftUi, setGiftUi] = useState<{ key: string; phase: 'walk' | 'pop' | 'taking' } | null>(null)
+  const [giftRetry, setGiftRetry] = useState(0)
+  const canGift = roomW > 0 && !edit && !life.asleep && !dragging && !pv.food && !giftUi
+  useEffect(() => {
+    if (!gift || !giftKey || !canGift) return
+    const t = window.setTimeout(() => {
+      const popAt = life.startGift(giftLine(gift))
+      if (popAt === null) {
+        // 阿悟正忙（吃東西、大便）：等一下再試
+        life.later(() => setGiftRetry((n) => n + 1), 1500)
+        return
+      }
+      setGiftUi({ key: giftKey, phase: 'walk' })
+      life.later(() => setGiftUi((g) => (g && g.key === giftKey ? { ...g, phase: 'pop' } : g)), popAt)
+    }, 700)
+    return () => window.clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [giftKey, canGift, giftRetry])
+  const takeGift = async (el: HTMLElement) => {
+    if (!gift || giftUi?.phase !== 'pop') return
+    setGiftUi({ ...giftUi, phase: 'taking' })
+    playSfx('reward', soundOn)
+    const art = giftArt(gift)
+    const target = document.querySelector(gift.foodId ? `[data-dock-item="${gift.foodId}"]` : gift.materialId ? '[data-gift-target=material]' : '[data-gift-target=bag]')
+    await flyOne({ rect: el.getBoundingClientRect(), node: iconNode(art.name, art.emoji, 72), hide: el }, target, { duration: 800 })
+    await repo.collectGift()
+    setGiftUi(null)
+    life.reactGifted()
+  }
+
+  // v5：表演新招（首頁「表演」按鈕、新招慶祝時的示範）
+  const performSeq = perform?.seq ?? 0
+  useEffect(() => {
+    if (!perform || performSeq === 0 || edit || roomW <= 0) return
+    life.performTrick(perform.trick)
+    // 只在請求編號變動時表演一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [performSeq])
+
   const petBottom = life.onBed && bed ? Math.min(0.97, bed.y + bed.h * 0.2) : PET_BOTTOM
   const poops = useMemo(() => pet.poops ?? [], [pet.poops])
   // 被清掉的便便不用再記著「正在消失」
@@ -638,7 +691,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
             onPointerUp={onScrollerUp}
             onPointerCancel={onScrollerUp}
           >
-            <div className={`room ${edit ? 'edit' : ''}`} ref={roomRef} aria-label="寵物房間" data-testid="room" style={{ width: roomW || undefined }}>
+            <div className={`room ${edit ? 'edit' : ''} ${pv.roomFlash ? 'pf-tidy' : ''}`} ref={roomRef} aria-label="寵物房間" data-testid="room" style={{ width: roomW || undefined }}>
               {/* 背景自成一層（z-index: 0）：窗簾等內部圖層不會蓋到阿悟的對話泡泡與家具 */}
               <div className="pf-backdrop-layer" aria-hidden>
                 <RoomBackdrop timeOfDay={life.tod} theme={roomTheme} glows={glows} />
@@ -693,6 +746,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                           <span key={id} className="heart-pop" aria-hidden>💗</span>
                         ))}
                         <PetFx view={pv} asleep={life.asleep} lying={pet.stage !== 'egg'} />
+                        {gift && giftUi && giftUi.phase !== 'walk' && (
+                          <GiftItem gift={gift} taking={giftUi.phase === 'taking'} onTake={takeGift} />
+                        )}
                       </div>
                     )
                   }

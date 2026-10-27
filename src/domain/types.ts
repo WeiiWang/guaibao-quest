@@ -1,4 +1,4 @@
-import type { MaterialCost } from '../learning/types'
+import type { MaterialCost, MaterialId } from '../learning/types'
 
 export type TaskStatus = 'todo' | 'pending' | 'approved' | 'rejected'
 export type LedgerKind = 'task' | 'bonus' | 'penalty' | 'purchase'
@@ -61,6 +61,21 @@ export interface Pet {
   poopDue?: number[]
   /** v3：連續餵食計數 */
   feedStreak?: FeedStreak
+  /** v5：阿悟學會的新招（id 見 domain/tricks.ts）。舊資料沒有這欄 = 還沒學會任何一招（不升 Dexie 版本） */
+  tricks?: string[]
+}
+
+/** v5：阿悟拿給孩子的禮物（食物、材料或貼紙）。東西在發放當下就已經寫進背包，這裡只是「待展示」的佇列 */
+export interface Gift {
+  /** 食物 id */
+  foodId?: string
+  /** 材料（今日小禮物才有） */
+  materialId?: MaterialId
+  qty?: number
+  /** 貼紙（public/art 素材名；只記錄） */
+  stickerId?: string
+  at: number
+  from: 'station' | 'daily' | 'collection'
 }
 export type DecorSlot = 'wall' | 'floor'
 export type ThemeSlot = 'wall' | 'floor'
@@ -163,6 +178,16 @@ export interface Settings {
   stageDraft?: StageDraft
   /** v4：已經看過教學示範的互動（tapN / dragSort）；每種互動第一次出現時阿悟先示範一次 */
   seenIntros?: string[]
+  /** v5：待展示的禮物（依序展示，收下後移除） */
+  pendingGifts?: Gift[]
+  /** v5：上一次送今日小禮物的日期（YYYY-MM-DD） */
+  lastGiftDate?: string
+  /** v5：收到的貼紙（public/art 素材名，不重複） */
+  stickers?: string[]
+  /** v5：圖鑑已經送過幾份「滿 6 個」的禮物 */
+  collectionRewarded?: number
+  /** v5：待慶祝的新招（依序跳全螢幕慶祝，關掉後移除） */
+  pendingTricks?: string[]
 }
 
 /** 年齡檔：3 歲 = 幼幼模式；4–5 歲從難度 1；6–7 歲從難度 2 */

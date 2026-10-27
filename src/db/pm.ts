@@ -1,9 +1,13 @@
 // PM 預覽工具：讓產品端不用實際遊玩就能切換寵物階段、補資源，檢視各種狀態。
 // 只從家長區（PIN 後）的「PM 預覽」分頁呼叫；會繞過每日星星上限，正式給測試家庭前要關掉（PM_TOOLS_ENABLED）。
 import { ADULT_AT_FEED_COUNT, BABY_AT_FEED_COUNT } from '../domain/constants'
+import { localDateStr } from '../domain/date'
+import { rollDailyGift } from '../domain/gifts'
+import { TRICK_IDS } from '../domain/tricks'
 import type { Stage } from '../domain/types'
 import { MATERIAL_IDS } from '../learning/types'
 import { db } from './db'
+import { queueGifts } from './meta'
 import { newId } from './repo'
 
 export const PM_TOOLS_ENABLED = true
@@ -56,4 +60,24 @@ export async function pmOwnAllDecor(): Promise<number> {
 /** 清空房間裡所有便便與排定的大便 */
 export async function pmClearPoops(): Promise<void> {
   await db.pets.update(PET_ID, { poops: [], poopDue: [] })
+}
+
+/** 解鎖全部新招（不經過慶祝；要看慶祝請用「重播新招慶祝」） */
+export async function pmUnlockAllTricks(): Promise<number> {
+  await db.pets.update(PET_ID, { tricks: [...TRICK_IDS] })
+  return TRICK_IDS.length
+}
+
+/** 把全部新招排進慶祝佇列（回首頁會依序跳全螢幕慶祝並示範） */
+export async function pmQueueTrickCelebrations(): Promise<void> {
+  await db.pets.update(PET_ID, { tricks: [...TRICK_IDS] })
+  await db.settings.update('main', { pendingTricks: [...TRICK_IDS] })
+}
+
+/** 送一份今日小禮物（不看今天領過沒有），回首頁會展示 */
+export async function pmGrantGift(): Promise<void> {
+  const at = Date.now()
+  await db.transaction('rw', [db.settings, db.inventory, db.materialLedger], async () => {
+    await queueGifts(db, [rollDailyGift(Math.random, localDateStr(at), at)])
+  })
 }

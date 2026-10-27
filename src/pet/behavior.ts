@@ -18,6 +18,8 @@ export interface PickContext {
   tod: TimeOfDay
   /** 房間裡有玩具球且在可視範圍 */
   hasBall: boolean
+  /** v5：阿悟已經學會的新招（domain/tricks.ts 的 id） */
+  tricks?: readonly string[]
 }
 
 interface Def {
@@ -47,6 +49,12 @@ const DEFS: Record<BehaviorId, Def> = {
   // 房間有便便才會捏鼻子
   pinchNose: { weight: 3, stages: BABY_ADULT, hungry: true, night: false, when: (c) => c.poopCount > 0 },
   ballPlay: { weight: 3, stages: BABY_ADULT, hungry: false, night: false, when: (c) => c.hasBall },
+  // v5：新招只有學會了才會自己表演；偶爾（權重低）
+  trickCount: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('count') },
+  trickTidy: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('tidy') },
+  trickRhythm: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('rhythm') },
+  trickHello: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('hello') },
+  trickFlip: { weight: 1.2, stages: BABY_ADULT, hungry: false, night: false, when: (c) => !!c.tricks?.includes('flip') },
   eggWobble: { weight: 3, stages: ['egg'], hungry: true, night: true },
   eggSparkle: { weight: 2, stages: ['egg'], hungry: true, night: false },
 }

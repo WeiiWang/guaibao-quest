@@ -32,7 +32,7 @@ export function PetFx({ view, asleep, lying }: Props) {
   return (
     <>
       {bubble && (
-        <div key={bubble.id} className={`pf-bubble ${bubble.icon ? 'has-icon' : ''}`} role="status" data-testid="pet-bubble">
+        <div key={bubble.id} className={`pf-bubble ${bubble.icon ? 'has-icon' : ''} ${bubble.text && bubble.text.length > 9 ? 'long' : ''} ${bubble.text && /^\d$/.test(bubble.text) ? 'num' : ''}`} role="status" data-testid="pet-bubble">
           {bubble.icon ? <Icon name={bubble.icon} emoji={bubbleEmoji(bubble.icon)} alt="" size="2.2rem" className="pf-bubble-icon" /> : bubble.text}
         </div>
       )}

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { makeRng } from '../learning/rng'
 import { MASTER_GAIN, PENTATONIC, renderVoices, singMelody, soundDuration, soundVoices, type AudioLike, type PetSound } from './sounds'
 
-const KINDS: PetSound[] = ['ah', 'chew', 'gulp', 'burp', 'poop', 'pop', 'sing', 'sneeze', 'giggle', 'boing', 'yawn', 'rumble', 'sparkle']
+const KINDS: PetSound[] = ['ah', 'chew', 'gulp', 'burp', 'poop', 'pop', 'sing', 'sneeze', 'giggle', 'boing', 'yawn', 'rumble', 'sparkle', 'beat']
 
 describe('音效配方', () => {
   it('每種音效都有聲音、時間與頻率合理、音量柔和', () => {

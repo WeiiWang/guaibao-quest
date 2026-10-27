@@ -1,10 +1,11 @@
 // 寵物動作腳本（SPEC-v3 A1/A2/A3/A4）：每個行為是一份「時間軸資料」（Scene），
 // 純函式產生、不碰 DOM / 計時器；UI 的執行器照時間表逐步套用。這樣行為內容可以單元測試。
+import type { TrickId } from '../domain/tricks'
 import type { Stage } from '../domain/types'
 import type { PetSound } from './sounds'
 import type { WalkPlan } from './walk'
 
-export type PoseId = 'idle' | 'happy' | 'eating' | 'sing' | 'dance' | 'laugh' | 'dizzy' | 'sleep' | 'sleepy' | 'shy'
+export type PoseId = 'idle' | 'cheer' | 'happy' | 'eating' | 'sing' | 'dance' | 'laugh' | 'dizzy' | 'sleep' | 'sleepy' | 'shy'
 export type AnimId =
   | 'sway'
   | 'dance'
@@ -26,6 +27,10 @@ export type AnimId =
   | 'wobble'
   /** 搖頭說「不要」（吃飽了） */
   | 'headshake'
+  /** v5：翻筋斗（360 度翻轉） */
+  | 'flip'
+  /** v5：跟著節拍原地小跳 */
+  | 'hop'
 export type FxId = 'notes' | 'sparkles' | 'cloud' | 'hearts' | 'bigHearts' | 'orbit' | 'glow'
 export type SceneKind = 'eat' | 'poop' | 'behavior' | 'reaction'
 
@@ -42,6 +47,10 @@ export type Action =
   | { do: 'poop' }
   | { do: 'food'; phase: 'fly' | 'bite' | 'gulp' | 'absorb'; n?: number }
   | { do: 'ball'; on: boolean }
+  /** v5：唸一句話（sayText，遵守語音開關） */
+  | { do: 'voice'; text: string }
+  /** v5：房間裡的家具閃一下（整理房間） */
+  | { do: 'flash'; on: boolean }
 
 export interface Step {
   at: number
@@ -68,8 +77,21 @@ export type BehaviorId =
   | 'ballPlay'
   | 'eggWobble'
   | 'eggSparkle'
+  // v5：阿悟學會的新招（見 domain/tricks.ts）
+  | 'trickCount'
+  | 'trickTidy'
+  | 'trickRhythm'
+  | 'trickHello'
+  | 'trickFlip'
 
-export const BEHAVIOR_IDS: readonly BehaviorId[] = ['sing', 'dance', 'walk', 'yawn', 'sneeze', 'gaze', 'wave', 'rubTummy', 'pinchNose', 'ballPlay', 'eggWobble', 'eggSparkle']
+export const TRICK_BEHAVIORS = ['trickCount', 'trickTidy', 'trickRhythm', 'trickHello', 'trickFlip'] as const satisfies readonly BehaviorId[]
+/** 新招 id（domain/tricks.ts）→ 行為 id */
+export const TRICK_BEHAVIOR: Record<TrickId, BehaviorId> = { count: 'trickCount', tidy: 'trickTidy', rhythm: 'trickRhythm', hello: 'trickHello', flip: 'trickFlip' }
+
+export const BEHAVIOR_IDS: readonly BehaviorId[] = [
+  'sing', 'dance', 'walk', 'yawn', 'sneeze', 'gaze', 'wave', 'rubTummy', 'pinchNose', 'ballPlay', 'eggWobble', 'eggSparkle',
+  ...TRICK_BEHAVIORS,
+]
 
 export interface TimedWalk extends WalkPlan {
   ms: number
@@ -87,6 +109,8 @@ export interface PlanEnv {
   ballWalk: TimedWalk | null
   /** 想吃的食物圖名（餓肚子泡泡用） */
   wishIcons: readonly string[]
+  /** v5：整理房間依序走的路徑（左 → 右 → 回中間）；沒有就原地表演 */
+  tidyPath?: readonly TimedWalk[]
 }
 
 const step = (at: number, act: Action): Step => ({ at, act })
@@ -238,6 +262,94 @@ export function planBehavior(id: BehaviorId, env: PlanEnv): Scene {
         ],
       }
     }
+    case 'trickCount': {
+      // 數香蕉：一根一根數，頭上冒出 1、2、3，每數一個蹦一下
+      const nums: [number, string][] = [[450, '1'], [1150, '2'], [1850, '3']]
+      return {
+        id,
+        kind: 'behavior',
+        ms: 3500,
+        steps: [
+          step(0, { do: 'pose', pose: 'happy' }),
+          step(0, { do: 'anim', anim: 'bounce' }),
+          ...nums.flatMap(([at, n], i): Step[] => [
+            step(at, { do: 'say', text: n, ms: 620 }),
+            step(at, { do: 'sound', sound: 'pop' }),
+            step(at, { do: 'voice', text: ['一', '二', '三'][i] }),
+          ]),
+          step(2550, { do: 'say', icon: 'obj-banana', ms: 850 }),
+          step(2550, { do: 'fx', fx: 'sparkles', ms: 850 }),
+          step(2550, { do: 'sound', sound: 'sparkle' }),
+          step(3400, { do: 'anim', anim: null }),
+        ],
+      }
+    }
+    case 'trickTidy': {
+      // 整理房間：繞房間走一圈（左 → 右 → 回中間），最後家具一件一件閃一下
+      const path = env.tidyPath ?? []
+      const steps: Step[] = [step(0, { do: 'pose', pose: 'idle' })]
+      let t = 0
+      for (const w of path) {
+        steps.push(...walkSteps(w, t))
+        t += w.ms + 150
+      }
+      steps.push(
+        step(t, { do: 'flip', on: false }),
+        step(t, { do: 'pose', pose: 'happy' }),
+        step(t, { do: 'anim', anim: 'bounce' }),
+        step(t, { do: 'flash', on: true }),
+        step(t, { do: 'say', text: '整理好囉！', ms: 1700 }),
+        step(t, { do: 'sound', sound: 'sparkle' }),
+        step(t + 1700, { do: 'flash', on: false }),
+        step(t + 1700, { do: 'anim', anim: null }),
+      )
+      return { id, kind: 'behavior', ms: t + 1900, steps }
+    }
+    case 'trickRhythm': {
+      // 節奏舞：左右左右跳，配節拍音效（每拍 420ms，共 8 拍）
+      const beat = 420
+      const steps: Step[] = [step(0, { do: 'pose', pose: 'dance' }), step(0, { do: 'anim', anim: 'hop' }), step(0, { do: 'fx', fx: 'notes', ms: beat * 8 })]
+      for (let i = 0; i < 8; i++) {
+        steps.push(step(i * beat, { do: 'flip', on: i % 2 === 1 }), step(i * beat, { do: 'sound', sound: i % 4 === 0 ? 'boing' : 'beat' }))
+      }
+      steps.push(step(beat * 8, { do: 'flip', on: false }), step(beat * 8, { do: 'anim', anim: null }))
+      return { id, kind: 'behavior', ms: beat * 8 + 300, steps }
+    }
+    case 'trickHello':
+      // 說 Hello：揮手，泡泡寫出 Hello（英文科目的新招）
+      return {
+        id,
+        kind: 'behavior',
+        ms: 2900,
+        steps: [
+          step(0, { do: 'flip', on: false }),
+          step(0, { do: 'pose', pose: 'happy' }),
+          step(0, { do: 'anim', anim: 'wave' }),
+          step(300, { do: 'say', text: 'Hello!', ms: 2200 }),
+          step(300, { do: 'sound', sound: 'giggle' }),
+          step(300, { do: 'fx', fx: 'sparkles', ms: 2000 }),
+        ],
+      }
+    case 'trickFlip':
+      // 翻筋斗：跳起來轉 360 度，連翻兩次
+      return {
+        id,
+        kind: 'behavior',
+        ms: 3200,
+        steps: [
+          step(0, { do: 'flip', on: false }),
+          step(0, { do: 'pose', pose: 'cheer' }),
+          step(0, { do: 'anim', anim: 'flip' }),
+          step(150, { do: 'sound', sound: 'boing' }),
+          step(1500, { do: 'anim', anim: null }),
+          step(1530, { do: 'anim', anim: 'flip' }),
+          step(1650, { do: 'sound', sound: 'boing' }),
+          step(2300, { do: 'fx', fx: 'sparkles', ms: 800 }),
+          step(2300, { do: 'sound', sound: 'sparkle' }),
+          step(2300, { do: 'say', text: '耶！', ms: 800 }),
+          step(2900, { do: 'anim', anim: null }),
+        ],
+      }
     case 'eggWobble':
       return { id, kind: 'behavior', ms: 1800, steps: [step(0, { do: 'anim', anim: 'wiggle' })] }
     case 'eggSparkle':
@@ -252,7 +364,7 @@ export function planBehavior(id: BehaviorId, env: PlanEnv): Scene {
 
 // ---------- 互動反應（SPEC-v3 A4） ----------
 
-export type ReactionId = 'tickle' | 'dizzy' | 'pat' | 'thanks' | 'wake' | 'full'
+export type ReactionId = 'tickle' | 'dizzy' | 'pat' | 'thanks' | 'wake' | 'full' | 'gifted'
 
 export function planReaction(id: ReactionId): Scene {
   switch (id) {
@@ -323,6 +435,18 @@ export function planReaction(id: ReactionId): Scene {
           step(0, { do: 'sound', sound: 'gulp' }),
         ],
       }
+    case 'gifted': // 孩子收下禮物：阿悟開心跳一下
+      return {
+        id,
+        kind: 'reaction',
+        ms: 1800,
+        steps: [
+          step(0, { do: 'pose', pose: 'laugh' }),
+          step(0, { do: 'anim', anim: 'bounce' }),
+          step(0, { do: 'fx', fx: 'hearts', ms: 1400 }),
+          step(0, { do: 'sound', sound: 'giggle' }),
+        ],
+      }
     case 'wake': // 點睡著的阿悟
       return {
         id,
@@ -335,6 +459,41 @@ export function planReaction(id: ReactionId): Scene {
           step(0, { do: 'sound', sound: 'yawn' }),
         ],
       }
+  }
+}
+
+// ---------- 禮物（SPEC-v5 經濟） ----------
+
+export interface GiftPlan {
+  scene: Scene
+  /** 禮物從身後彈出來的時間點（ms，阿悟走到中間之後） */
+  popAt: number
+}
+
+/** 阿悟走到畫面中間，開心地拿出禮物並說一句話（禮物圖本身由 UI 在 popAt 時彈出） */
+export function planGift(env: PlanEnv, text: string): GiftPlan {
+  const w = env.centerWalk
+  const t0 = w ? w.ms + 200 : 0
+  const egg = env.stage === 'egg'
+  return {
+    popAt: t0 + 250,
+    scene: {
+      id: 'gift',
+      kind: 'reaction',
+      ms: t0 + 3400,
+      steps: [
+        ...(w ? [step(0, { do: 'pose', pose: 'idle' } as Action), ...walkSteps(w)] : []),
+        step(t0, { do: 'flip', on: false }),
+        step(t0, { do: 'pose', pose: 'cheer' }),
+        step(t0, { do: 'anim', anim: egg ? 'wiggle' : 'bounce' }),
+        step(t0 + 250, { do: 'say', text, ms: 3000 }),
+        step(t0 + 250, { do: 'voice', text }),
+        step(t0 + 250, { do: 'fx', fx: 'sparkles', ms: 1800 }),
+        step(t0 + 250, { do: 'sound', sound: 'sparkle' }),
+        step(t0 + 1500, { do: 'anim', anim: null }),
+        step(t0 + 1500, { do: 'pose', pose: 'happy' }),
+      ],
+    },
   }
 }
 

@@ -38,6 +38,7 @@ import { checkApplyTheme, resolveTheme } from '../domain/theme'
 import { docOf, type PaintDoc } from '../domain/coloring'
 import { artworkSpot, clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
+import * as meta from './meta'
 import { getChapter } from '../learning/chapter'
 import { addMaterial, emptyCost, stationRewardQty, STATION_SIZE } from '../learning/scoring'
 import { SHOP_CATALOG, balanceOfMaterials, canCraft, type MaterialBalance } from '../learning/materials'
@@ -763,7 +764,7 @@ export class Repo {
     const def = chapter?.stations[input.station - 1]
     if (!chapter || !def) return { ok: false, error: '找不到這一站' }
     const d = this.db
-    return d.transaction('rw', [d.attempts, d.skillState, d.progress, d.materialLedger, d.settings], async () => {
+    return d.transaction('rw', [d.attempts, d.skillState, d.progress, d.materialLedger, d.settings, d.inventory], async () => {
       const attempts = await d.attempts.where('sessionId').equals(input.sessionId).toArray()
       if (attempts.length < STATION_SIZE) return { ok: false, error: '這一站的題目還沒答完' } as const
       if (await d.materialLedger.get(`station:${input.sessionId}`)) return { ok: false, error: '這一站的獎勵已經領過了' } as const
@@ -788,6 +789,7 @@ export class Repo {
       )
       await d.progress.put({ ...prog, stations, updatedAt: now })
       await d.settings.update(SETTINGS_ID, { stageDraft: undefined })
+      await meta.grantStationDrop(d, this.rng, now) // v5：每站過關掉落 1 個食物，待首頁展示
 
       const newlyMastered: SkillId[] = []
       const startDifficulty = learnerProfileOf(await d.settings.get(SETTINGS_ID)).startDifficulty
@@ -807,6 +809,29 @@ export class Repo {
         newlyMastered,
       } as const
     })
+  }
+
+  // ---------- v5：禮物 / 圖鑑 / 新招（實作在 db/meta.ts） ----------
+  grantDailyGift(now = this.clock()) {
+    return meta.grantDailyGift(this.db, this.rng, now)
+  }
+  getPendingGifts() {
+    return meta.getPendingGifts(this.db)
+  }
+  collectGift() {
+    return meta.collectGift(this.db)
+  }
+  knownFriends() {
+    return meta.knownFriends(this.db)
+  }
+  syncCollection(now = this.clock()) {
+    return meta.syncCollection(this.db, this.rng, now)
+  }
+  syncTricks() {
+    return meta.syncTricks(this.db)
+  }
+  popPendingTrick() {
+    return meta.popPendingTrick(this.db)
   }
 
   /** 章末寶箱：5 站都通關後才能開，每輪一次 */

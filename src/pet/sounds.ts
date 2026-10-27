@@ -16,6 +16,7 @@ export type PetSound =
   | 'yawn'
   | 'rumble'
   | 'sparkle'
+  | 'beat'
 
 export type VoiceType = 'sine' | 'triangle' | 'square' | 'sawtooth' | 'noise'
 
@@ -124,6 +125,11 @@ export function soundVoices(kind: PetSound, rng: () => number = Math.random): Vo
         { t: 0, d: 0.12, type: 'sine', f0: 1320, gain: 0.5 },
         { t: 0.08, d: 0.12, type: 'sine', f0: 1760, gain: 0.45 },
         { t: 0.16, d: 0.2, type: 'sine', f0: 2093, gain: 0.4 },
+      ]
+    case 'beat': // 節拍：木魚般的「噠」（節奏舞）
+      return [
+        { t: 0, d: 0.07, type: 'triangle', f0: 880, f1: 620, gain: 0.8, lp: 2400 },
+        { t: 0, d: 0.05, type: 'noise', f0: 2200, gain: 0.25, lp: 3000 },
       ]
   }
 }

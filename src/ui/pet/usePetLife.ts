@@ -2,6 +2,8 @@
 // 這裡只負責「執行」：照時間軸腳本逐步套用姿勢/動畫/泡泡/特效/音效，並管理計時器的清理。
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import { repo } from '../../db/repo'
+import { sayText } from '../../learning/speech'
+import { pickTrick, type TrickId } from '../../domain/tricks'
 import { now as clockNow } from '../../domain/clock'
 import { PET_X } from '../../domain/room'
 import type { Pet, Poop, Stage } from '../../domain/types'
@@ -11,8 +13,10 @@ import { getTimeOfDay, isSleepTime, type TimeOfDay, type TodMode } from '../../p
 import {
   planBehavior,
   planEat,
+  planGift,
   planPoop,
   planReaction,
+  TRICK_BEHAVIOR,
   type Action,
   type AnimId,
   type BehaviorId,
@@ -27,6 +31,7 @@ import { pickPoopX, type PoopSpread } from '../../pet/poop'
 import { playPetSound } from '../../pet/sounds'
 import { initialTapState, registerTap, type TapState } from '../../pet/taps'
 import { pickWalk, walkDurationMs, walkTo, type Obstacle } from '../../pet/walk'
+import { TRICK_IDS } from '../../domain/tricks'
 
 export interface Bubble {
   id: number
@@ -54,8 +59,10 @@ export interface PetView {
   bubble: Bubble | null
   food: FoodFx | null
   ballBounce: boolean
+  /** v5：整理房間時，家具閃一下 */
+  roomFlash: boolean
 }
-export const EMPTY_VIEW: PetView = { pose: null, anim: null, flip: false, fx: [], bubble: null, food: null, ballBounce: false }
+export const EMPTY_VIEW: PetView = { pose: null, anim: null, flip: false, fx: [], bubble: null, food: null, ballBounce: false, roomFlash: false }
 
 export interface FoodMeta {
   art: string
@@ -90,6 +97,8 @@ export interface PetLifeParams {
   edit: boolean
   dragging: boolean
   soundOn: boolean
+  /** 語音開關（禮物、數數會唸出來）；未給視為開 */
+  voiceOn?: boolean
   wishIcons: readonly string[]
   slotRef: RefObject<HTMLDivElement | null>
   geo: () => Geometry
@@ -135,6 +144,8 @@ export function usePetLife(p: PetLifeParams) {
   const tapRef = useRef<TapState>(initialTapState)
   const awakeTimer = useRef<number | undefined>(undefined)
   const takingDue = useRef(false)
+  const chainRef = useRef(0)
+  const lastTrick = useRef<TrickId | null>(null)
 
   // ---------- 睡覺 / 日夜 ----------
   const tod: TimeOfDay = getTimeOfDay(p.now, p.todMode)
@@ -259,6 +270,12 @@ export function usePetLife(p: PetLifeParams) {
         case 'ball':
           setView((v) => ({ ...v, ballBounce: a.on }))
           break
+        case 'voice':
+          sayText(a.text, { enabled: P.current.voiceOn !== false })
+          break
+        case 'flash':
+          setView((v) => ({ ...v, roomFlash: a.on }))
+          break
       }
     },
     [later, movePet, showBubble],
@@ -304,6 +321,7 @@ export function usePetLife(p: PetLifeParams) {
 
   /** 開始拖曳 / 進入佈置時：只中斷行為與反應，餵食與大便不受影響 */
   const cancelIdle = useCallback(() => {
+    chainRef.current++ // 連續表演（PM 的「表演每一招」）也一併停掉
     const k = sceneRef.current?.scene.kind
     if (k === 'behavior' || k === 'reaction') cancelScene()
   }, [cancelScene])
@@ -330,7 +348,16 @@ export function usePetLife(p: PetLifeParams) {
       const target = g.ball.x + side * (halfW * 1.05 + g.ball.halfW)
       ballWalk = timed(walkTo(from, target, halfW, obstacles.filter((o) => o.id !== 'decor-ball'), minX, maxX))
     }
-    return { rng, childName: q.childName, stage: q.stage, walk, centerWalk, ballWalk, wishIcons: q.wishIcons }
+    // 整理房間：左 → 右 → 回中間，每一段都從上一段的終點出發
+    const tidyPath: TimedWalk[] = []
+    let cur = from
+    for (const target of [minX, maxX, (visL + visR) / 2]) {
+      const w = walkTo(cur, target, halfW, obstacles, minX, maxX)
+      if (!w) continue
+      tidyPath.push({ ...w, ms: walkDurationMs(w.toX - cur, petWFrac) })
+      cur = w.toX
+    }
+    return { rng, childName: q.childName, stage: q.stage, walk, centerWalk, ballWalk, wishIcons: q.wishIcons, tidyPath }
   }, [])
 
   const startBehavior = useCallback(
@@ -384,10 +411,11 @@ export function usePetLife(p: PetLifeParams) {
         busy: sceneRef.current !== null,
         hidden: document.hidden,
         asleep: asleepRef.current,
-        overlay: !!document.querySelector('.celebrate'),
+        // 全螢幕慶祝、新招慶祝、禮物展示中都暫停自主行為
+        overlay: !!document.querySelector('.celebrate, .trick-celebrate, .gift-live'),
       }
       const g = q.geo()
-      const ctx: PickContext = { stage: q.stage, hunger: q.hunger, poopCount: q.pet.poops?.length ?? 0, tod: getTimeOfDay(q.now, q.todMode), hasBall: !!g.ball }
+      const ctx: PickContext = { stage: q.stage, hunger: q.hunger, poopCount: q.pet.poops?.length ?? 0, tod: getTimeOfDay(q.now, q.todMode), hasBall: !!g.ball, tricks: q.pet.tricks }
       const next = s.tick(Date.now(), gate, ctx)
       if (next) startBehavior(next)
     }
@@ -489,6 +517,50 @@ export function usePetLife(p: PetLifeParams) {
     startScene(planReaction('thanks'))
   }, [startScene])
 
+  /** v5：表演新招。id = 'random' 時從已學會的挑一招（盡量不連續同一招）。回傳有沒有開始 */
+  const performTrick = useCallback(
+    (id: TrickId | 'random'): boolean => {
+      const q = P.current
+      if (q.stage === 'egg') return false
+      const t = id === 'random' ? pickTrick(q.pet.tricks ?? [], Math.random, lastTrick.current) : id
+      if (!t) return false
+      if (asleepRef.current) wakeUp()
+      lastTrick.current = t
+      return startBehavior(TRICK_BEHAVIOR[t])
+    },
+    [startBehavior, wakeUp],
+  )
+
+  /** 依序表演一串招（每一招演完停 0.5 秒）；PM 的「表演每一招」用 */
+  const performChain = useCallback(
+    (ids: readonly TrickId[]): void => {
+      const token = ++chainRef.current
+      const run = (i: number) => {
+        if (chainRef.current !== token || i >= ids.length) return
+        const scene = planBehavior(TRICK_BEHAVIOR[ids[i]], buildEnv())
+        startScene(scene)
+        later(() => run(i + 1), scene.ms + 500)
+      }
+      run(0)
+    },
+    [buildEnv, later, startScene],
+  )
+
+  /** v5：阿悟走到中間、拿出禮物並說話。回傳禮物該在幾 ms 後彈出來；現在不能演（正在吃東西等）回傳 null */
+  const startGift = useCallback(
+    (text: string): number | null => {
+      const { scene, popAt } = planGift(buildEnv(), text)
+      return startScene(scene) ? popAt : null
+    },
+    [buildEnv, startScene],
+  )
+
+  /** 孩子收下禮物：阿悟開心跳一下 */
+  const reactGifted = useCallback((): void => {
+    if (asleepRef.current) return
+    startScene(planReaction('gifted'))
+  }, [startScene])
+
   const runCommand = useCallback(
     (cmd: PetCommand): void => {
       const q = P.current
@@ -505,6 +577,22 @@ export function usePetLife(p: PetLifeParams) {
           wakeUp()
           startScene(planReaction('wake'))
           return
+        case 'trick:all': {
+          if (q.stage === 'egg') return
+          if (asleepRef.current) wakeUp()
+          performChain(TRICK_IDS)
+          return
+        }
+        case 'trick:count':
+        case 'trick:tidy':
+        case 'trick:rhythm':
+        case 'trick:hello':
+        case 'trick:flip': {
+          if (q.stage === 'egg') return
+          if (asleepRef.current) wakeUp()
+          startBehavior(TRICK_BEHAVIOR[cmd.slice(6) as TrickId])
+          return
+        }
         default: {
           if (asleepRef.current) wakeUp()
           // 蛋只有蛋的行為
@@ -513,7 +601,7 @@ export function usePetLife(p: PetLifeParams) {
         }
       }
     },
-    [cancelScene, poopSpread, startBehavior, startScene, wakeUp],
+    [cancelScene, performChain, poopSpread, startBehavior, startScene, wakeUp],
   )
 
   /** 球被丟到阿悟附近：追球 */
@@ -554,6 +642,9 @@ export function usePetLife(p: PetLifeParams) {
     playBall,
     cancelIdle,
     runCommand,
+    performTrick,
+    startGift,
+    reactGifted,
     later,
   }
 }
