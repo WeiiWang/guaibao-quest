@@ -2,7 +2,7 @@
 // 這裡只負責「執行」：照時間軸腳本逐步套用姿勢/動畫/泡泡/特效/音效，並管理計時器的清理。
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import { repo } from '../../db/repo'
-import { sayText } from '../../learning/speech'
+import { sayRecorded, sayText } from '../../learning/speech'
 import { pickTrick, type TrickId } from '../../domain/tricks'
 import { now as clockNow } from '../../domain/clock'
 import { PET_X } from '../../domain/room'
@@ -237,6 +237,7 @@ export function usePetLife(p: PetLifeParams) {
           break
         case 'say':
           showBubble({ text: a.text, icon: a.icon }, a.ms, running)
+          if (a.text) sayRecorded('pet.', a.text, { enabled: P.current.voiceOn !== false })
           break
         case 'fx': {
           setView((v) => (v.fx.includes(a.fx) ? v : { ...v, fx: [...v.fx, a.fx] }))
@@ -497,6 +498,7 @@ export function usePetLife(p: PetLifeParams) {
       cancelIdle()
       playPetSound('giggle', P.current.soundOn)
       showBubble({ text: '嘻嘻' }, 900, null)
+      sayRecorded('pet.', '嘻嘻', { enabled: P.current.voiceOn !== false })
       schedRef.current?.reset(Date.now())
     }
   }, [cancelIdle, showBubble, startScene, wakeUp])

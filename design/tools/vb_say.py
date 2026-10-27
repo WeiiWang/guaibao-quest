@@ -20,8 +20,10 @@ def call(method, path, body=None, timeout=60):
     return json.loads(raw) if 'json' in ctype else raw
 
 
-def say(profile_id, out, text, instruct=None, language='zh', engine=None):
+def say(profile_id, out, text, instruct=None, language='zh', engine=None, seed=None):
     body = {'profile_id': profile_id, 'text': text, 'language': language}
+    if seed is not None:
+        body['seed'] = seed
     if instruct:
         body['instruct'] = instruct
     if engine:

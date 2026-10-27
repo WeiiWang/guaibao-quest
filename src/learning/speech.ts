@@ -117,6 +117,16 @@ export function registerLineAudio(map: Record<string, string | LineAudio>): void
   for (const [k, v] of Object.entries(lineAudio)) if (v.text && !(v.text in textIndex)) textIndex[v.text] = k
 }
 
+/**
+ * 只播預錄音檔、不退回 Web Speech：阿悟頭上的泡泡用（例如「嘻嘻」「臭臭～」）。
+ * prefix 指定要哪一組聲音（例：'pet.' = 阿悟聲），找不到就安靜，回傳 false。
+ */
+export function sayRecorded(prefix: string, text: string, opts: SpeakOptions = {}): boolean {
+  if (opts.enabled === false || !text) return false
+  const key = Object.keys(lineAudio).find((k) => k.startsWith(prefix) && lineAudio[k].text === text)
+  return key ? say(key, text, opts) : false
+}
+
 /** 沒有 key 的句子：用原文找預錄音檔，找不到就用 Web Speech */
 export function sayText(text: string, opts: SpeakOptions = {}): boolean {
   const key = textIndex[text]

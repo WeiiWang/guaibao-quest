@@ -25,7 +25,6 @@ import { Icon } from './Icon'
 import { PetSprite } from './PetSprite'
 import { useCelebrate, useToast } from '../hooks'
 import { useCelebrateSmall } from '../feedback'
-import { speak } from '../../learning/speech'
 import { playSfx } from '../../learning/sfx'
 import { flyOne, iconNode } from '../fly'
 import { giftLine } from '../../domain/giftLines'
@@ -216,7 +215,6 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
       if (r.reason === 'full') {
         // 吃飽了：食物沒有被扣；阿悟搖頭說「我吃飽了～」，食物彈回（拖的飛回去、點的抖一下）
         life.refuse()
-        speak('我吃飽了', { enabled: voiceOn })
         setNopeId(foodId)
         life.later(() => setNopeId((v) => (v === foodId ? null : v)), 700)
         if (from) flyBack(foodId, 'food', from.x, from.y)
