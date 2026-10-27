@@ -111,8 +111,8 @@ async function lockScreen(browser) {
 // ---------- 第 2 項：餵食防呆 ----------
 async function feedingGuard(browser) {
   // 吃飽了（≥95）：點、拖都不扣食物，阿悟搖頭說「我吃飽了～」
-  {
-    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { bananas: 5 })
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp, { bananas: 5 })
     await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now() })
     await page.reload()
     await page.waitForSelector('[data-testid=pet]')
@@ -124,21 +124,21 @@ async function feedingGuard(browser) {
     const before = await getPet(page)
     await page.locator('[data-dock-item=banana]').click()
     await page.waitForTimeout(250)
-    check('飽足 100：輕點食物，食物不扣（x5）', (await qtyOf(page, 'banana')) === 5)
-    check('飽足 100：feedCount 不增加', (await getPet(page)).feedCount === before.feedCount)
+    check(`[${size}] 飽足 100：輕點食物，食物不扣（x5）`, (await qtyOf(page, 'banana')) === 5)
+    check(`[${size}] 飽足 100：feedCount 不增加`, (await getPet(page)).feedCount === before.feedCount)
     const bubble = await page.getByTestId('pet-bubble').innerText().catch(() => '')
-    check('阿悟說「我吃飽了～」', bubble.includes('我吃飽了'), bubble)
-    check('阿悟搖頭（headshake 動畫）', (await page.getByTestId('pet').getAttribute('data-anim')) === 'headshake')
-    check('語音唸「我吃飽了」', (await page.evaluate(() => window.__spoken)).some((t) => t.includes('我吃飽了')))
-    check('被拒絕的食物圖示抖一下（nope）', (await page.locator('[data-dock-item=banana].nope').count()) === 1)
-    await shot(page, 'feed-full', 'land')
+    check(`[${size}] 阿悟說「我吃飽了～」`, bubble.includes('我吃飽了'), bubble)
+    check(`[${size}] 阿悟搖頭（headshake 動畫）`, (await page.getByTestId('pet').getAttribute('data-anim')) === 'headshake')
+    check(`[${size}] 語音唸「我吃飽了」`, (await page.evaluate(() => window.__spoken)).some((t) => t.includes('我吃飽了')))
+    check(`[${size}] 被拒絕的食物圖示抖一下（nope）`, (await page.locator('[data-dock-item=banana].nope').count()) === 1)
+    await shot(page, 'feed-full', size)
     // 拖給阿悟也一樣
     await page.waitForTimeout(2300)
     const from = await center(page, '[data-dock-item=banana]')
     const to = await center(page, '[data-testid=pet]')
     await drag(page, from, to, { settle: 600 })
-    check('飽足 100：拖給阿悟吃，食物也不扣', (await qtyOf(page, 'banana')) === 5 && (await getPet(page)).feedCount === before.feedCount)
-    check('無 console 錯誤', errors.length === 0, errors.join('|'))
+    check(`[${size}] 飽足 100：拖給阿悟吃，食物也不扣`, (await qtyOf(page, 'banana')) === 5 && (await getPet(page)).feedCount === before.feedCount)
+    check(`[${size}] 無 console 錯誤`, errors.length === 0, errors.join('|'))
     await ctx.close()
   }
   // 家長關語音：不唸
@@ -335,6 +335,7 @@ async function coloringList(browser) {
     check(`[${size}] 已擁有的排在最前面，上鎖的在後面`, /^O+L+$/.test(order), order)
     const monkeyBtn = await page.locator('[data-testid=page-monkey] .thumb-btn').boundingBox()
     check(`[${size}] 免費頁的縮圖可以點、夠大（≥100px）`, monkeyBtn.width >= 100 && monkeyBtn.height >= 100)
+    await shot(page, 'coloring-list', size)
     // 點鎖頭：晃一下、語音、大按鈕「去商店」
     await page.getByTestId('locked-clouds').locator('.locked-btn').click()
     await page.waitForSelector('[data-testid=locked-guide]')
@@ -627,6 +628,7 @@ async function misc(browser) {
     check('地圖：點已通關的站 → 晃一下 + 語音「這一站過關囉」，不會進關卡', (await page.locator('[data-testid=station-1].ux-wobble').count()) === 1 && (await page.evaluate(() => window.__spoken)).some((t) => t.startsWith('這一站過關囉')) && (await page.getByTestId('map').count()) === 1)
     await page.getByTestId('chest-node').click({ force: true })
     check('地圖：點鎖著的寶箱 → 語音說明', (await page.evaluate(() => window.__spoken)).some((t) => t.includes('寶箱還鎖著')))
+    await shot(page, 'map-locked', 'land')
     check('地圖：目前這一站照常可以進入（第 2 站）', (await page.getByTestId('station-2').getAttribute('aria-disabled')) === 'false')
     check('地圖無 console 錯誤', errors.length === 0, errors.join('|'))
     await ctx.close()
