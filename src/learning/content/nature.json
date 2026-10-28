@@ -416,6 +416,357 @@
     "params": {"fact":"name:obj-octopus"}
   },
   {
+    "id": "nature-1-33", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "章魚的家在哪裡呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-farm","art":"nat-farm","text":"農場"},
+      {"id":"nat-forest","art":"nat-forest","text":"森林"},
+      {"id":"nat-sea","art":"nat-sea","text":"大海"}
+    ],
+    "answer": "nat-sea",
+    "hint": "章魚住在海裡，有八隻腳。",
+    "params": {"stem":{"art":"obj-octopus"},"fact":"home:obj-octopus"}
+  },
+  {
+    "id": "nature-1-34", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "找找看，小魚住在哪一個地方？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sea","art":"nat-sea","text":"大海"},
+      {"id":"nat-forest","art":"nat-forest","text":"森林"},
+      {"id":"nat-farm","art":"nat-farm","text":"農場"}
+    ],
+    "answer": "nat-sea",
+    "hint": "小魚住在水裡，大海是牠的家。",
+    "params": {"stem":{"art":"obj-fish"},"fact":"home:obj-fish"}
+  },
+  {
+    "id": "nature-1-35", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "牛住在哪裡呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-forest","art":"nat-forest","text":"森林"},
+      {"id":"nat-farm","art":"nat-farm","text":"農場"},
+      {"id":"nat-sea","art":"nat-sea","text":"大海"}
+    ],
+    "answer": "nat-farm",
+    "hint": "牛住在農場，吃青草，還會給我們牛奶。",
+    "params": {"stem":{"art":"obj-cow"},"fact":"home:obj-cow"}
+  },
+  {
+    "id": "nature-1-36", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "找找看，熊住在哪一個地方？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sea","art":"nat-sea","text":"大海"},
+      {"id":"nat-farm","art":"nat-farm","text":"農場"},
+      {"id":"nat-forest","art":"nat-forest","text":"森林"}
+    ],
+    "answer": "nat-forest",
+    "hint": "熊住在森林裡，那裡有很多大樹。",
+    "params": {"stem":{"art":"obj-bear"},"fact":"home:obj-bear"}
+  },
+  {
+    "id": "nature-1-37", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "章魚住在哪裡呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sea","art":"nat-sea","text":"大海"},
+      {"id":"nat-forest","art":"nat-forest","text":"森林"},
+      {"id":"nat-farm","art":"nat-farm","text":"農場"}
+    ],
+    "answer": "nat-sea",
+    "hint": "章魚住在海裡，有八隻腳。",
+    "params": {"stem":{"art":"obj-octopus"},"fact":"home:obj-octopus"}
+  },
+  {
+    "id": "nature-1-38", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "熊的家在哪裡呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sea","art":"nat-sea","text":"大海"},
+      {"id":"nat-forest","art":"nat-forest","text":"森林"},
+      {"id":"nat-farm","art":"nat-farm","text":"農場"}
+    ],
+    "answer": "nat-forest",
+    "hint": "熊住在森林裡，那裡有很多大樹。",
+    "params": {"stem":{"art":"obj-bear"},"fact":"home:obj-bear"}
+  },
+  {
+    "id": "nature-1-39", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "熊住在哪裡呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sea","art":"nat-sea","text":"大海"},
+      {"id":"nat-farm","art":"nat-farm","text":"農場"},
+      {"id":"nat-forest","art":"nat-forest","text":"森林"}
+    ],
+    "answer": "nat-forest",
+    "hint": "熊住在森林裡，那裡有很多大樹。",
+    "params": {"stem":{"art":"obj-bear"},"fact":"home:obj-bear"}
+  },
+  {
+    "id": "nature-1-40", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "找找看，章魚住在哪一個地方？",
+    "items": [],
+    "choices": [
+      {"id":"nat-farm","art":"nat-farm","text":"農場"},
+      {"id":"nat-sea","art":"nat-sea","text":"大海"},
+      {"id":"nat-forest","art":"nat-forest","text":"森林"}
+    ],
+    "answer": "nat-sea",
+    "hint": "章魚住在海裡，有八隻腳。",
+    "params": {"stem":{"art":"obj-octopus"},"fact":"home:obj-octopus"}
+  },
+  {
+    "id": "nature-1-41", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "小魚的家在哪裡呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sea","art":"nat-sea","text":"大海"},
+      {"id":"nat-forest","art":"nat-forest","text":"森林"},
+      {"id":"nat-farm","art":"nat-farm","text":"農場"}
+    ],
+    "answer": "nat-sea",
+    "hint": "小魚住在水裡，大海是牠的家。",
+    "params": {"stem":{"art":"obj-fish"},"fact":"home:obj-fish"}
+  },
+  {
+    "id": "nature-1-42", "skill": "nature", "difficulty": 1, "type": "natHome", "version": 2,
+    "prompt": "小魚住在哪裡呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-forest","art":"nat-forest","text":"森林"},
+      {"id":"nat-farm","art":"nat-farm","text":"農場"},
+      {"id":"nat-sea","art":"nat-sea","text":"大海"}
+    ],
+    "answer": "nat-sea",
+    "hint": "小魚住在水裡，大海是牠的家。",
+    "params": {"stem":{"art":"obj-fish"},"fact":"home:obj-fish"}
+  },
+  {
+    "id": "nature-1-43", "skill": "nature", "difficulty": 1, "type": "natSeason", "version": 2,
+    "prompt": "阿悟看到這樣的風景，是哪一個季節呢？",
+    "items": [],
+    "choices": [
+      {"id":"spring","text":"春天","emoji":"🌸"},
+      {"id":"autumn","text":"秋天","emoji":"🍂"},
+      {"id":"winter","text":"冬天","emoji":"⛄"}
+    ],
+    "answer": "spring",
+    "hint": "樹上開滿了粉紅色的花，天氣暖暖的，是春天喔。",
+    "params": {"stem":{"art":"nat-spring"},"words":["春天","秋天","冬天"],"fact":"seasonPic:spring"}
+  },
+  {
+    "id": "nature-1-44", "skill": "nature", "difficulty": 1, "type": "natSeason", "version": 2,
+    "prompt": "這是哪一個季節呢？",
+    "items": [],
+    "choices": [
+      {"id":"spring","text":"春天","emoji":"🌸"},
+      {"id":"autumn","text":"秋天","emoji":"🍂"},
+      {"id":"winter","text":"冬天","emoji":"⛄"}
+    ],
+    "answer": "autumn",
+    "hint": "樹葉變成黃色和橘色，快要掉下來了，是秋天喔。",
+    "params": {"stem":{"art":"nat-autumn"},"words":["春天","秋天","冬天"],"fact":"seasonPic:autumn"}
+  },
+  {
+    "id": "nature-1-45", "skill": "nature", "difficulty": 1, "type": "natSeason", "version": 2,
+    "prompt": "這是哪一個季節呢？",
+    "items": [],
+    "choices": [
+      {"id":"winter","text":"冬天","emoji":"⛄"},
+      {"id":"summer","text":"夏天","emoji":"☀️"},
+      {"id":"spring","text":"春天","emoji":"🌸"}
+    ],
+    "answer": "spring",
+    "hint": "樹上開滿了粉紅色的花，天氣暖暖的，是春天喔。",
+    "params": {"stem":{"art":"nat-spring"},"words":["冬天","夏天","春天"],"fact":"seasonPic:spring"}
+  },
+  {
+    "id": "nature-1-46", "skill": "nature", "difficulty": 1, "type": "natSeason", "version": 2,
+    "prompt": "這是哪一個季節呢？",
+    "items": [],
+    "choices": [
+      {"id":"summer","text":"夏天","emoji":"☀️"},
+      {"id":"winter","text":"冬天","emoji":"⛄"},
+      {"id":"autumn","text":"秋天","emoji":"🍂"}
+    ],
+    "answer": "winter",
+    "hint": "樹葉都掉光了，樹枝上積著白白的雪，天氣好冷，是冬天喔。",
+    "params": {"stem":{"art":"nat-winter"},"words":["夏天","冬天","秋天"],"fact":"seasonPic:winter"}
+  },
+  {
+    "id": "nature-1-47", "skill": "nature", "difficulty": 1, "type": "natSeason", "version": 2,
+    "prompt": "看看圖，這是什麼季節呢？",
+    "items": [],
+    "choices": [
+      {"id":"winter","text":"冬天","emoji":"⛄"},
+      {"id":"summer","text":"夏天","emoji":"☀️"},
+      {"id":"autumn","text":"秋天","emoji":"🍂"}
+    ],
+    "answer": "winter",
+    "hint": "樹葉都掉光了，樹枝上積著白白的雪，天氣好冷，是冬天喔。",
+    "params": {"stem":{"art":"nat-winter"},"words":["冬天","夏天","秋天"],"fact":"seasonPic:winter"}
+  },
+  {
+    "id": "nature-1-48", "skill": "nature", "difficulty": 1, "type": "natSeason", "version": 2,
+    "prompt": "阿悟看到這樣的風景，是哪一個季節呢？",
+    "items": [],
+    "choices": [
+      {"id":"winter","text":"冬天","emoji":"⛄"},
+      {"id":"spring","text":"春天","emoji":"🌸"},
+      {"id":"summer","text":"夏天","emoji":"☀️"}
+    ],
+    "answer": "summer",
+    "hint": "樹上的葉子綠油油的，長得好茂盛，天氣很熱，是夏天喔。",
+    "params": {"stem":{"art":"nat-summer"},"words":["冬天","春天","夏天"],"fact":"seasonPic:summer"}
+  },
+  {
+    "id": "nature-1-49", "skill": "nature", "difficulty": 1, "type": "natSeason", "version": 2,
+    "prompt": "阿悟看到這樣的風景，是哪一個季節呢？",
+    "items": [],
+    "choices": [
+      {"id":"summer","text":"夏天","emoji":"☀️"},
+      {"id":"spring","text":"春天","emoji":"🌸"},
+      {"id":"autumn","text":"秋天","emoji":"🍂"}
+    ],
+    "answer": "autumn",
+    "hint": "樹葉變成黃色和橘色，快要掉下來了，是秋天喔。",
+    "params": {"stem":{"art":"nat-autumn"},"words":["夏天","春天","秋天"],"fact":"seasonPic:autumn"}
+  },
+  {
+    "id": "nature-1-50", "skill": "nature", "difficulty": 1, "type": "natSeason", "version": 2,
+    "prompt": "這是哪一個季節呢？",
+    "items": [],
+    "choices": [
+      {"id":"winter","text":"冬天","emoji":"⛄"},
+      {"id":"summer","text":"夏天","emoji":"☀️"},
+      {"id":"spring","text":"春天","emoji":"🌸"}
+    ],
+    "answer": "summer",
+    "hint": "樹上的葉子綠油油的，長得好茂盛，天氣很熱，是夏天喔。",
+    "params": {"stem":{"art":"nat-summer"},"words":["冬天","夏天","春天"],"fact":"seasonPic:summer"}
+  },
+  {
+    "id": "nature-1-51", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "找找看，哪一張是種子？",
+    "items": [],
+    "choices": [
+      {"id":"nat-seed","art":"nat-seed"},
+      {"id":"nat-bloom","art":"nat-bloom"},
+      {"id":"nat-sprout","art":"nat-sprout"}
+    ],
+    "answer": "nat-seed",
+    "hint": "種子是植物最開始的樣子，小小的、圓圓的。",
+    "params": {"fact":"plant:seed"}
+  },
+  {
+    "id": "nature-1-52", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "哪一張是種子發芽了呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-seed","art":"nat-seed"},
+      {"id":"nat-sprout","art":"nat-sprout"},
+      {"id":"nat-bloom","art":"nat-bloom"}
+    ],
+    "answer": "nat-sprout",
+    "hint": "種子喝了水，就會冒出綠綠的小芽。",
+    "params": {"fact":"plant:sprout"}
+  },
+  {
+    "id": "nature-1-53", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "哪一張是開花了呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sprout","art":"nat-sprout"},
+      {"id":"nat-seed","art":"nat-seed"},
+      {"id":"nat-bloom","art":"nat-bloom"}
+    ],
+    "answer": "nat-bloom",
+    "hint": "小芽慢慢長大，就會開出漂亮的花。",
+    "params": {"fact":"plant:bloom"}
+  },
+  {
+    "id": "nature-1-54", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "找找看，哪一張是開花？",
+    "items": [],
+    "choices": [
+      {"id":"nat-bloom","art":"nat-bloom"},
+      {"id":"nat-seed","art":"nat-seed"},
+      {"id":"nat-sprout","art":"nat-sprout"}
+    ],
+    "answer": "nat-bloom",
+    "hint": "小芽慢慢長大，就會開出漂亮的花。",
+    "params": {"fact":"plant:bloom"}
+  },
+  {
+    "id": "nature-1-55", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "哪一張是小種子呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-bloom","art":"nat-bloom"},
+      {"id":"nat-sprout","art":"nat-sprout"},
+      {"id":"nat-seed","art":"nat-seed"}
+    ],
+    "answer": "nat-seed",
+    "hint": "種子是植物最開始的樣子，小小的、圓圓的。",
+    "params": {"fact":"plant:seed"}
+  },
+  {
+    "id": "nature-1-56", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "漂亮的花開了，是哪一張呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sprout","art":"nat-sprout"},
+      {"id":"nat-bloom","art":"nat-bloom"},
+      {"id":"nat-seed","art":"nat-seed"}
+    ],
+    "answer": "nat-bloom",
+    "hint": "小芽慢慢長大，就會開出漂亮的花。",
+    "params": {"fact":"plant:bloom"}
+  },
+  {
+    "id": "nature-1-57", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "植物最開始是一顆小小的，是哪一張呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-seed","art":"nat-seed"},
+      {"id":"nat-bloom","art":"nat-bloom"},
+      {"id":"nat-sprout","art":"nat-sprout"}
+    ],
+    "answer": "nat-seed",
+    "hint": "種子是植物最開始的樣子，小小的、圓圓的。",
+    "params": {"fact":"plant:seed"}
+  },
+  {
+    "id": "nature-1-58", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "小綠芽冒出來了，是哪一張呢？",
+    "items": [],
+    "choices": [
+      {"id":"nat-sprout","art":"nat-sprout"},
+      {"id":"nat-seed","art":"nat-seed"},
+      {"id":"nat-bloom","art":"nat-bloom"}
+    ],
+    "answer": "nat-sprout",
+    "hint": "種子喝了水，就會冒出綠綠的小芽。",
+    "params": {"fact":"plant:sprout"}
+  },
+  {
+    "id": "nature-1-59", "skill": "nature", "difficulty": 1, "type": "natPlant", "version": 2,
+    "prompt": "找找看，哪一張是發芽？",
+    "items": [],
+    "choices": [
+      {"id":"nat-seed","art":"nat-seed"},
+      {"id":"nat-bloom","art":"nat-bloom"},
+      {"id":"nat-sprout","art":"nat-sprout"}
+    ],
+    "answer": "nat-sprout",
+    "hint": "種子喝了水，就會冒出綠綠的小芽。",
+    "params": {"fact":"plant:sprout"}
+  },
+  {
     "id": "nature-2-01", "skill": "nature", "difficulty": 2, "type": "natBring", "version": 2,
     "prompt": "外面冷颼颼的，阿悟要穿什麼才暖和呢？",
     "items": [],

@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
+import { SHOP_ITEMS } from '../../../domain/constants'
+import { giftFoodLine } from '../../../domain/giftLines'
 import { localDateStr } from '../../../domain/date'
 import { now as clockNow } from '../../../domain/clock'
-import { resolveStage } from '../../../learning/subject'
+import { parseChallengeId, resolveStage } from '../../../learning/subject'
 import { englishAnswerParts, englishHintParts, englishPromptParts } from '../../../learning/englishSpeech'
 import { STATION_SIZE } from '../../../learning/scoring'
 import { hintDriven } from '../../../learning/hint'
@@ -14,12 +18,12 @@ import { cancelSpeech, say, sayChain } from '../../../learning/speech'
 import { playSfx } from '../../../learning/sfx'
 import { MATERIAL_NAMES, type Interaction, type MaterialId, type SkillId } from '../../../learning/types'
 import type { PlannedQuestion } from '../../../learning/select'
-import { MAT_EMOJI } from '../../../art/items'
+import { FOOD_EMOJI, MAT_EMOJI } from '../../../art/items'
 import { Icon } from '../../components/Icon'
 import { MaterialsChip } from '../../components/MaterialsChip'
-import { flyOne } from '../../fly'
 import { useLearningSettings } from '../../learningHooks'
 import { Companion, type Pose } from './Companion'
+import { flySparks, sparkCount } from './sparkle'
 import { EnglishView } from './EnglishView'
 import { FlipView } from './FlipView'
 import { GiveView } from './GiveView'
@@ -33,8 +37,11 @@ import { SortView } from './SortView'
 import './adventure.css'
 import './adventure-v4.css'
 import './adventure-v5.css'
+import './adventure-v7.css'
 
 const AUTO_NEXT_MS = 1600
+/** 食物 id 對應 lines.ts 的 ui.gift.food 句子順序（和 domain/giftLines.ts 的 GIFT_FOOD_PHRASE 同順序） */
+const FOOD_LINE_ORDER = ['carrot', 'cookie', 'banana', 'apple', 'grape', 'milk', 'peach', 'riceball', 'watermelon']
 
 /** 各互動教學時阿悟說的話（lines.ts 的 companion.tutorial.*） */
 const TUTORIAL_LINE: Partial<Record<Interaction, string>> = {
@@ -54,9 +61,16 @@ interface StationResult {
   qty: number
   chapterDone: boolean
   newlyMastered: SkillId[]
-  /** 每日冒險：今天第一次完成，拿到今日徽章 */
+  /** 每日冒險：今天第一次完成，拿到今日徽章；挑戰站：第一次拿到章節徽章 */
   badge?: boolean
+  /** v7：這一站掉落的食物（已經直接進背包） */
+  foods: string[]
+  /** v7 挑戰站：這次最高連對、歷來最高 */
+  combo?: number
+  best?: number
 }
+
+const foodName = (id: string): string => SHOP_ITEMS.find((i) => i.id === id)?.name ?? id
 
 interface Props {
   chapterId: string
@@ -72,7 +86,12 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   const info = useMemo(() => resolveStage(chapterId, station, localDateStr(clockNow())), [chapterId, station])
   const def = info?.def
   const daily = !!info?.daily
+  /** v7 挑戰站：連續答對有 combo 計數、不給提示、沒有時間壓力 */
+  const challenge = !!info?.challenge
   const { soundOn, voiceOn } = useLearningSettings()
+  // 寵物還是蛋時，生活題裡的主角不說成「阿悟」（G8）
+  const petStage = useLiveQuery(() => db.pets.get('pet').then((p) => p?.stage), [])
+  const kid = petStage === 'egg'
   const sessionId = useRef('')
   const [plan, setPlan] = useState<PlannedQuestion[] | null>(null)
   const [profile, setProfile] = useState<LearnerProfile>(learnerProfileOf(undefined))
@@ -85,6 +104,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   /** 連續獨立答對幾題（站內；只算獨立答對，中斷就歸零，不顯示任何東西） */
   const streak = useRef(0)
   const [combo, setCombo] = useState(0)
+  /** v7 挑戰站：目前連對幾題（答錯歸零；畫面上一直顯示） */
+  const [chain, setChain] = useState(0)
   /** 站開始時阿悟說的一句話 */
   const [opener, setOpener] = useState<{ key: string; text: string } | null>(null)
   const openerRef = useRef(false)
@@ -116,8 +137,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
         setPlan(o.plan)
         setIdx(o.idx)
         if (o.idx === 0 && !o.resumed) {
-          const boss = resolveStage(chapterId, station, localDateStr(clockNow()))?.def.kind === 'boss'
-          setOpener(pickLine(boss ? 'companion.boss.open' : 'companion.open', station))
+          const st = resolveStage(chapterId, station, localDateStr(clockNow()))
+          setOpener(st?.challenge ? pickLine('challenge.open') : pickLine(st?.def.kind === 'boss' ? 'companion.boss.open' : 'companion.open', station))
           openerRef.current = true
         }
       })
@@ -135,28 +156,13 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     [],
   )
 
-  // 結算：材料彈出後，一個一個飛進右上角的材料膠囊
-  useEffect(() => {
-    if (!result) return
-    const timers: number[] = []
-    const id = window.setTimeout(() => {
-      const target = document.querySelector(`[data-materials-chip] [data-material="${result.material}"]`)
-      cardRef.current?.querySelectorAll<HTMLElement>('[data-reward]').forEach((el, i) => {
-        const r = el.getBoundingClientRect()
-        const clone = el.cloneNode(true) as HTMLElement
-        clone.style.cssText = 'display:grid;width:100%;height:100%;animation:none;visibility:visible'
-        void flyOne({ rect: r, node: clone, hide: el }, target, { delay: i * 160, duration: 900 })
-      })
-    }, 1500)
-    timers.push(id)
-    return () => timers.forEach((t) => window.clearTimeout(t))
-  }, [result])
+  // 結算：先演阿悟撿到食物（食物圖示留在畫面上，旁邊有一句阿悟說的話），再依序出現材料；圖示動畫結束後都停在原位，不飛走、不消失（見 adventure-v7.css）
 
   const current = plan?.[idx]
   // 實際給孩子看的題目：選項順序用 session + 題目 id 當種子洗牌（離開再回來順序不變）；幼幼模式縮成 2 選 1
   const q = useMemo(
-    () => (current ? displayQuestion(current.question, sessionId.current, profile.gentle) : undefined),
-    [current, profile.gentle],
+    () => (current ? displayQuestion(current.question, sessionId.current, profile.gentle, kid) : undefined),
+    [current, profile.gentle, kid],
   )
 
   // 第一次遇到新互動：阿悟先示範（不計分、不寫作答紀錄）。這是從題目直接算出來的，不會閃一下真的題目
@@ -190,7 +196,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     openerRef.current = false
     // 英文題：中文題目唸完接著唸英文單字（見 englishSpeech.ts）
     const id = window.setTimeout(
-      () => (q.skill === 'english' ? sayChain(englishPromptParts(q), { enabled: voiceOn }) : say(questionKey(q.id, 'prompt'), q.prompt, { enabled: voiceOn })),
+      () => (q.skill === 'english' ? sayChain(englishPromptParts(q), { enabled: voiceOn }) : say(questionKey(q.id, 'prompt', q.kid), q.prompt, { enabled: voiceOn })),
       delay,
     )
     return () => window.clearTimeout(id)
@@ -198,22 +204,39 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q?.id, intro])
 
+  // v7 B1：答對時 3–5 顆小星光從答對的卡片飛向頂端進度點，進度點彈一下
+  useEffect(() => {
+    if (!solved) return
+    const from = document.querySelector('.adv-qv [data-state="right"]') ?? document.querySelector('.adv-qv')
+    const dots = document.querySelectorAll('.adv-dots .adv-dot')
+    const target = dots[idx] ?? document.querySelector('.boss-bar')
+    flySparks(from, target, { count: sparkCount(streak.current) })
+    // 只在答對的那一刻放一次
+  }, [solved, idx])
+
   const finish = useCallback(async () => {
     if (finishing.current) return
     finishing.current = true
     await Promise.all(writes.current)
-    const r = daily
-      ? await repo.completeDaily({ chapterId, sessionId: sessionId.current })
-      : await repo.completeStation({ chapterId, station, sessionId: sessionId.current })
+    const r = challenge
+      ? await repo.completeChallenge({ chapterId: parseChallengeId(chapterId)?.id ?? chapterId, sessionId: sessionId.current })
+      : daily
+        ? await repo.completeDaily({ chapterId, sessionId: sessionId.current })
+        : await repo.completeStation({ chapterId, station, sessionId: sessionId.current })
     if (!r.ok) {
       setError(r.error)
       return
     }
     playSfx('reward', soundOn)
-    const l = pickLine(daily ? (r as { badge?: boolean }).badge ? 'daily.badge' : 'daily.done' : r.chapterDone ? 'chapter.done' : 'station.done')
-    say(l.key, l.text, { enabled: voiceOn })
+    const l = pickLine(challenge ? ((r as { badge?: boolean }).badge ? 'challenge.badge' : 'challenge.done') : daily ? ((r as { badge?: boolean }).badge ? 'daily.badge' : 'daily.done') : r.chapterDone ? 'chapter.done' : 'station.done')
+    // 先唸過關，接著阿悟說撿到的食物（跟畫面上食物彈出的順序一樣）
+    const foodLines = r.foods.map((f, i) => {
+      const idx = FOOD_LINE_ORDER.indexOf(f)
+      return idx >= 0 ? pickLine('ui.gift.food', idx) : { key: `food.${i}`, text: giftFoodLine(f) }
+    })
+    sayChain([{ key: l.key, text: l.text }, ...foodLines.slice(0, 1)], { enabled: voiceOn })
     setResult(r)
-  }, [chapterId, station, daily, soundOn, voiceOn])
+  }, [chapterId, station, daily, challenge, soundOn, voiceOn])
 
   const advance = useCallback(async () => {
     window.clearTimeout(nextTimer.current)
@@ -250,6 +273,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     const independent = wrongs.current === 0
     streak.current = independent ? streak.current + 1 : 0
     setCombo(independent ? streak.current : 0)
+    setChain(streak.current)
     const rnd = Math.floor(Math.random() * 7)
     const l =
       independent && streak.current === 5
@@ -283,6 +307,12 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     if (!q || solvedRef.current) return
     wrongs.current += 1
     playSfx('wrong', soundOn)
+    if (challenge) {
+      // 挑戰站：不給提示。連對歸零，沒有任何責備；錯的卡片變灰，再點別的就好
+      streak.current = 0
+      setChain(0)
+      return
+    }
     const stage: HintStage = profile.gentle || wrongs.current >= 2 ? 2 : 1
     setHintStage(stage)
     if (q.skill === 'english') {
@@ -292,9 +322,9 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
       if (hintDriven(q)) {
         const l = pickLine('gentle.wrong', Math.floor(Math.random() * 3))
         say(l.key, l.text, { enabled: voiceOn })
-      } else say(gentleHintKey(q.id), gentleHintText(q.hint), { enabled: voiceOn })
+      } else say(q.kid ? `${gentleHintKey(q.id)}.kid` : gentleHintKey(q.id), gentleHintText(q.hint), { enabled: voiceOn })
     } else if (stage === 1) {
-      if (!hintDriven(q)) say(questionKey(q.id, 'hint'), q.hint, { enabled: voiceOn })
+      if (!hintDriven(q)) say(questionKey(q.id, 'hint', q.kid), q.hint, { enabled: voiceOn })
     } else {
       const l = pickLine('hint.answer')
       say(l.key, l.text, { enabled: voiceOn })
@@ -338,8 +368,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   const replay = () => {
     if (!q) return
     if (q.skill === 'english') sayChain(hintStage > 0 && !solved ? englishHintParts(q, false) : englishPromptParts(q), { enabled: true })
-    else if (hintStage > 0 && !solved) say(questionKey(q.id, 'hint'), q.hint, { enabled: true })
-    else say(questionKey(q.id, 'prompt'), q.prompt, { enabled: true })
+    else if (hintStage > 0 && !solved) say(questionKey(q.id, 'hint', q.kid), q.hint, { enabled: true })
+    else say(questionKey(q.id, 'prompt', q.kid), q.prompt, { enabled: true })
   }
 
   const subtitle = useMemo(() => {
@@ -350,10 +380,11 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
       return pickLine('tutorial.done').text
     }
     if (solved) return praise
+    if (challenge) return q.prompt
     if (hintStage === 1) return q.hint
     if (hintStage === 2) return profile.gentle ? `${q.hint}答案在這裡，點點看。` : '答案在這裡，點點看。'
     return q.prompt
-  }, [q, solved, hintStage, praise, profile.gentle, intro, introPhase])
+  }, [q, solved, hintStage, praise, profile.gentle, intro, introPhase, challenge])
 
   // 離開關卡：先確認；已答的題都已經記下來，回到同一站會接著玩
   const askLeave = () => {
@@ -378,13 +409,17 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
 
   if (result) {
     const together = result.total - result.independent
+    // 食物（可能 2 個，可能同一種）：依序彈出；材料接在食物後面
+    const foodDelay = 0.25
+    const matDelay = foodDelay + result.foods.length * 0.45 + 0.35
+    const foodSummary = result.foods.map(foodName).join('、')
     return (
       <main className="adv adv-stage adv-result" data-testid="station-result">
         <header className="adv-top">
           <span />
           <MaterialsChip />
         </header>
-        <div className="adv-result-card" ref={cardRef}>
+        <div className="adv-result-card q7-result" ref={cardRef}>
           {def.kind === 'boss' && (
             <div className="adv-confetti" aria-hidden>
               {Array.from({ length: 16 }, (_, i) => (
@@ -392,42 +427,63 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
               ))}
             </div>
           )}
-          <Companion pose={pose} size="clamp(110px, 20dvh, 170px)" className="adv-result-pet" />
-          <h1>{daily ? '今日冒險完成了！' : `第 ${station} 站過關了！`}</h1>
-          <p className="adv-sub">{daily ? `${info.chapterName}・5 題新題目` : `${info.chapterName}・${def.name}`}</p>
+          <Companion pose={pose} size="clamp(92px, 15dvh, 140px)" className="adv-result-pet" />
+          <h1>{challenge ? '挑戰完成了！' : daily ? '今日冒險完成了！' : `第 ${station} 站過關了！`}</h1>
+          <p className="adv-sub">{challenge ? `${info.chapterName}・挑戰站` : daily ? `${info.chapterName}・5 題新題目` : `${info.chapterName}・${def.name}`}</p>
           <p className="adv-sub adv-wrapup" data-testid="wrapup">{pickLine(def.kind === 'boss' ? 'companion.boss.done' : 'companion.wrapup', station).text}</p>
-          <div className="adv-reward" aria-label={`獲得${MATERIAL_NAMES[result.material]} ${result.qty} 個`}>
-            {Array.from({ length: result.qty }, (_, i) => (
-              <span key={i} className="reward-fly" data-reward style={{ animationDelay: `${i * 0.18}s` }}>
-                <Icon name={`mat-${result.material}`} emoji={MAT_EMOJI[result.material]} alt={MATERIAL_NAMES[result.material]} size={72} />
-              </span>
-            ))}
+          <div className="q7-loot">
+            <section className="q7-loot-col" aria-label={`阿悟撿到${foodSummary}`} data-testid="result-food">
+              <div className="q7-loot-icons q7-food-icons">
+                {result.foods.map((f, i) => (
+                  <span key={i} className="q7-food" data-testid="result-food-item" data-food={f} style={{ animationDelay: `${foodDelay + i * 0.45}s` }}>
+                    <Icon name={`food-${f}`} emoji={FOOD_EMOJI[f]} alt={foodName(f)} size={84} />
+                  </span>
+                ))}
+              </div>
+              <p className="q7-loot-text" data-testid="food-text">
+                阿悟撿到 {foodSummary}
+              </p>
+            </section>
+            <section className="q7-loot-col" aria-label={`獲得${MATERIAL_NAMES[result.material]} ${result.qty} 個`} data-testid="result-materials">
+              <div className="q7-loot-icons adv-reward">
+                {Array.from({ length: result.qty }, (_, i) => (
+                  <span key={i} className="q7-mat" data-reward style={{ animationDelay: `${matDelay + i * 0.18}s` }}>
+                    <Icon name={`mat-${result.material}`} emoji={MAT_EMOJI[result.material]} alt={MATERIAL_NAMES[result.material]} size={result.qty > 3 ? 60 : 72} />
+                  </span>
+                ))}
+              </div>
+              <p className="q7-loot-text adv-reward-text" data-testid="reward-text">
+                獲得{MATERIAL_NAMES[result.material]} × {result.qty}
+              </p>
+            </section>
           </div>
-          <p className="adv-reward-text" data-testid="reward-text">
-            獲得{MATERIAL_NAMES[result.material]} × {result.qty}
+          <p className="q7-food-line" data-testid="food-line" role="status" style={{ animationDelay: `${foodDelay + 0.2}s` }}>
+            {result.foods[0] ? giftFoodLine(result.foods[0]) : ''}
           </p>
           <p className="adv-sub adv-credit" data-testid="result-credit">
-            {result.independent >= result.total
-              ? `${result.total} 題都是自己想出來的，好厲害！`
-              : result.independent === 0
-                ? `跟阿悟一起想出 ${result.total} 題，好棒！`
-                : `自己想出 ${result.independent} 題，跟阿悟一起想出 ${together} 題！`}
+            {challenge
+              ? `最高連對 ${result.combo ?? 0} 題${result.best && result.best > (result.combo ?? 0) ? `，歷來最高 ${result.best} 題` : ''}`
+              : result.independent >= result.total
+                ? `${result.total} 題都是自己想出來的，好厲害！`
+                : result.independent === 0
+                  ? `跟阿悟一起想出 ${result.total} 題，好棒！`
+                  : `自己想出 ${result.independent} 題，跟阿悟一起想出 ${together} 題！`}
           </p>
           {result.badge && (
-            <div className="daily-got" data-testid="daily-badge">
-              <span className="daily-medal big" aria-hidden>★</span>
-              <b>拿到今日徽章了！</b>
+            <div className="daily-got" data-testid={challenge ? 'challenge-badge' : 'daily-badge'}>
+              <span className="daily-medal big" aria-hidden>{challenge ? '🏅' : '★'}</span>
+              <b>{challenge ? '拿到章節徽章了！' : '拿到今日徽章了！'}</b>
             </div>
           )}
           <div className="adv-actions">
-            {daily ? (
+            {daily || challenge ? (
               <button className="adv-btn primary" onClick={onExit} data-testid="back-to-map">回地圖</button>
             ) : result.chapterDone ? (
               <button className="adv-btn primary" onClick={onCeremony} data-testid="open-chest">去開寶箱</button>
             ) : (
               <button className="adv-btn primary" onClick={() => onNextStation(station + 1)} data-testid="next-station">下一站</button>
             )}
-            {!daily && <button className="adv-btn" onClick={onExit} data-testid="back-to-map">回地圖</button>}
+            {!daily && !challenge && <button className="adv-btn" onClick={onExit} data-testid="back-to-map">回地圖</button>}
           </div>
         </div>
       </main>
@@ -435,7 +491,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   }
 
   return (
-    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`} data-testid="stage" data-kind={def.kind} data-station={station} data-daily={daily ? 'true' : undefined} data-subject={info.subject} data-gentle={profile.gentle ? 'true' : undefined}>
+    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`} data-testid="stage" data-kind={def.kind} data-station={station} data-daily={daily ? 'true' : undefined} data-challenge={challenge ? 'true' : undefined} data-subject={info.subject} data-gentle={profile.gentle ? 'true' : undefined}>
       <header className="adv-top">
         <button className="adv-btn small" onClick={askLeave} aria-label="離開關卡" data-testid="leave">←<span className="adv-leave-label"> 離開</span></button>
         {def.kind === 'boss' ? (
@@ -449,7 +505,14 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
           ))}
         </div>
         )}
-        <MaterialsChip />
+        {challenge ? (
+          <span className="q7-chain" data-testid="chain" data-chain={chain} role="status" aria-label={`連續答對 ${chain} 題`}>
+            <b>連對</b>
+            <i key={chain} className={chain > 0 ? 'q7-pop' : ''}>{chain}</i>
+          </span>
+        ) : (
+          <MaterialsChip />
+        )}
       </header>
 
       {error && (

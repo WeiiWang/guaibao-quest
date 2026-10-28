@@ -1,3 +1,4 @@
+import type { AgeBand } from '../domain/types'
 import type { Interaction, MaterialCost, MaterialId, Progress, SkillId } from './types'
 import { MATH2_SKILLS, MATH_SKILLS } from './types'
 
@@ -59,6 +60,9 @@ export const ENGLISH_ISLAND: ChapterDef = {
   id: 'english-island',
   name: '英文小島',
   subtitle: '第一章',
+  // 對應 scene-map-english.png：沙灘小路上 5 塊圓形空地，由左下往右上，寶箱放在燈塔旁
+  scene: 'scene-map-english',
+  points: [[15, 76], [32, 63], [52, 49], [73, 38], [88, 25], [94, 11]],
   stations: [
     { index: 1, name: '白沙灘', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
     { index: 2, name: '椰子樹下', material: 'flower', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
@@ -74,6 +78,9 @@ export const LIFE_TOWN: ChapterDef = {
   id: 'life-town',
   name: '生活小鎮',
   subtitle: '第一章',
+  // 對應 scene-map-life.png：小鎮石板路上 5 塊圓形空地，寶箱放在鐘樓前
+  scene: 'scene-map-life',
+  points: [[15, 80], [33, 61], [49, 43], [68, 35], [87, 21], [94, 9]],
   stations: [
     { index: 1, name: '小鎮廣場', material: 'flower', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
     { index: 2, name: '洗手台', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'stepOrder', 'pick', 'pick'] },
@@ -89,6 +96,9 @@ export const NATURE_FOREST: ChapterDef = {
   id: 'nature-forest',
   name: '自然森林',
   subtitle: '第一章',
+  // 對應 scene-map-nature.png：四季森林小徑上 5 塊圓形空地，寶箱放在雪樹下
+  scene: 'scene-map-nature',
+  points: [[11, 79], [33, 64], [52, 51], [70, 40], [86, 27], [93, 11]],
   stations: [
     { index: 1, name: '森林入口', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
     { index: 2, name: '小花園', material: 'flower', kind: 'normal', slots: ['pick', 'pick', 'stepOrder', 'pick', 'pick'] },
@@ -142,11 +152,34 @@ export function chapterCleared(prog: Pick<Progress, 'stations' | 'completedRuns'
  * 這一章開放了嗎。沒有前置章節就是開放；有的話要先通關前一章，或家長（PM 預覽）直接解鎖。
  * progs：各章節進度（章節 id → 進度）；pmUnlocked：直接解鎖的章節 id。
  */
-export function chapterUnlocked(ch: ChapterDef, progs: Readonly<Record<string, Pick<Progress, 'stations' | 'completedRuns'> | undefined>>, pmUnlocked: readonly string[] = []): boolean {
+export function chapterUnlocked(
+  ch: ChapterDef,
+  progs: Readonly<Record<string, Pick<Progress, 'stations' | 'completedRuns'> | undefined>>,
+  pmUnlocked: readonly string[] = [],
+  ageBand?: AgeBand,
+): boolean {
   if (!ch.unlockAfter) return true
+  // v7：6–7 歲不必先打完花果山，可以直接選水簾洞
+  if (ageBand === '6-7' && ch.id === SHUILIANDONG.id) return true
   return pmUnlocked.includes(ch.id) || chapterCleared(progs[ch.unlockAfter])
+}
+
+/** 挑戰站（v7）：6–7 歲一開始就看得到；其他年齡要先通關這一章 */
+export function challengeVisible(prog: Pick<Progress, 'stations' | 'completedRuns'> | undefined, ageBand?: AgeBand): boolean {
+  return ageBand === '6-7' || chapterCleared(prog)
 }
 
 export function getChapter(id: string): ChapterDef | undefined {
   return CHAPTERS.find((c) => c.id === id)
+}
+
+/** 節點外框（圓盤與名牌）左右各留這麼多（佔場景圖寬度的 %） */
+export const NODE_MARGIN = 9
+/**
+ * 直向／手機：依所有節點的外框決定顯示範圍（佔場景圖寬度的 %，不超出圖）。
+ * 地圖把這一段放大到剛好填滿畫面寬度，所以所有節點都看得到、不用橫向捲動。
+ */
+export function nodeWindow(pts: readonly (readonly [number, number])[]): { x0: number; x1: number } {
+  const xs = pts.map((p) => p[0])
+  return { x0: Math.max(0, Math.min(...xs) - NODE_MARGIN), x1: Math.min(100, Math.max(...xs) + NODE_MARGIN) }
 }

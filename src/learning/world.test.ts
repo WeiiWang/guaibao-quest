@@ -275,7 +275,7 @@ describe('生活與自然題庫完整性', () => {
     expect(types('life', 2)).toEqual(new Set(['lifeRight', 'lifeOk', 'lifeLight', 'lifeSay']))
     expect(types('life', 3)).toEqual(new Set(['lifeSay', 'lifeStep', 'lifeOrder', 'lifeOk']))
     expect(types('life', 4)).toEqual(new Set(['lifeOrder', 'lifeWhy', 'lifeStep', 'lifeSay']))
-    expect(types('nature', 1)).toEqual(new Set(['natWeather', 'natAnimal']))
+    expect(types('nature', 1)).toEqual(new Set(['natWeather', 'natAnimal', 'natHome', 'natSeason', 'natPlant'])) // v7：第 1 章也有季節、動物的家、植物生長
     expect(types('nature', 2)).toEqual(new Set(['natBring', 'natHome', 'natSeason', 'natPlant', 'natWeather']))
     expect(types('nature', 3)).toEqual(new Set(['bins', 'natSeason', 'natOrder', 'natAnimal']))
     expect(types('nature', 4)).toEqual(new Set(['bins', 'natOrder', 'natSeason', 'natPlant', 'natAnimal']))

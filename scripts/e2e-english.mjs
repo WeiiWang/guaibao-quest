@@ -120,6 +120,18 @@ try {
 
   // ---------- 玩一站英文（第 1 站，難度 1：聽英文選圖） ----------
   await clearSpoken(page)
+  // v7：英文難度 1 一站會混入看圖選字與中翻英（題型隨機），這一段要測「聽英文選圖」，所以先存一份 5 題都是 hear 的進度（和離開關卡後接著玩是同一個機制）
+  await idb(
+    page,
+    (db, ids) =>
+      new Promise((res) => {
+        const tx = db.transaction('settings', 'readwrite')
+        tx.objectStore('settings').get('main').onsuccess = (e) =>
+          tx.objectStore('settings').put({ ...e.target.result, stageDraft: { chapterId: 'english-island', station: 1, run: 1, sessionId: 'e2e-hear', plan: ids.map((id) => ({ id, review: false, followUp: false })), savedAt: Date.now() } })
+        tx.oncomplete = () => res(1)
+      }),
+    Object.values(BANK).filter((x) => x.skill === 'english' && x.difficulty === 1 && x.type === 'hear' && !x.gentle).slice(0, 5).map((x) => x.id),
+  )
   await page.getByTestId('station-1').click()
   await page.waitForSelector('[data-testid=question]')
   check('英文站：用英文畫面（題幹有喇叭與單字），章節是英文小島', (await page.getByTestId('stage').getAttribute('data-subject')) === 'english' && (await page.getByTestId('en-speak').count()) === 1)

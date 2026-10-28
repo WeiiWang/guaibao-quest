@@ -305,6 +305,8 @@ export interface Question {
   params?: QuestionParams
   /** 只給幼幼模式（3 歲）用的題：2 選 1、物件限定常見的那幾個；一般模式抽題時排除 */
   gentle?: boolean
+  /** v7：只在顯示時設定（不存進題庫）：寵物還是蛋，題目文字裡的「阿悟」已經換成「小朋友」，語音 key 加 .kid */
+  kid?: boolean
   version: number
 }
 
@@ -370,6 +372,8 @@ export interface SkillState {
   updatedAt: number
   /** 目前為止算進難度判斷的題數；用來做「前 3 題全部獨立答對就升級」。舊資料沒有這個欄位 = 不是新技能 */
   total?: number
+  /** v7：目前難度連續第一次就答錯幾題（連錯 3 題自動降一級）。舊資料沒有這欄 = 0 */
+  wrongRun?: number
 }
 
 /** 科目 id。之後加科目（生活、注音、自然…）就在 subject.ts 的清單加一筆 */
@@ -418,7 +422,21 @@ export interface Progress {
   updatedAt: number
   /** 每日冒險專用（chapterId = daily:<subject> 的那一列才有） */
   daily?: DailyState
+  /** v7：這一章的挑戰站紀錄（舊資料沒有這欄；不升 Dexie 版本） */
+  challenge?: ChallengeState
 }
+
+/** v7：挑戰站。連續答對有 combo 計數、不給提示、沒有時間壓力；連對 CHALLENGE_BADGE_COMBO 題以上拿章節徽章 */
+export interface ChallengeState {
+  /** 玩過幾次 */
+  plays: number
+  /** 歷來最高連對 */
+  best: number
+  /** 章節徽章（拿到的時間；沒拿到 = 沒有這欄） */
+  badgeAt?: number
+}
+export const CHALLENGE_SIZE = 8
+export const CHALLENGE_BADGE_COMBO = 5
 
 export interface PlayTime {
   /** YYYY-MM-DD */

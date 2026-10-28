@@ -8,6 +8,7 @@ import type { HintStage } from './QuestionView'
 import './adventure.css'
 import './adventure-v4.css'
 import './adventure-v5.css'
+import './adventure-v7.css'
 
 interface Props {
   q: Question
@@ -34,13 +35,13 @@ function StemPic({ stem, label }: { stem: NonNullable<Question['params']>['stem'
   return <span className="en-pic digit" data-testid="en-pic" role="img" aria-label={label}><b>{stem.digit}</b></span>
 }
 
-function EnChoice({ c, state, onPick }: { c: Choice; state: CardState; onPick: () => void }) {
+function EnChoice({ c, state, onPick, onSpeak }: { c: Choice; state: CardState; onPick: () => void; onSpeak?: () => void }) {
   const disabled = state === 'wrong' || state === 'disabled' || state === 'right'
   const zh = EN_BY_WORD[c.id]?.zh ?? c.id
-  return (
+  const btn = (
     <button
       type="button"
-      className={`choice choice-${state} en-choice ${c.text ? 'en-text' : ''}`}
+      className={`choice choice-${state} en-choice ${c.text ? 'en-text' : ''} ${onSpeak ? 'q7-lite' : ''}`}
       disabled={disabled}
       onClick={onPick}
       data-testid="choice"
@@ -57,9 +58,18 @@ function EnChoice({ c, state, onPick }: { c: Choice; state: CardState; onPick: (
       ) : c.label !== undefined ? (
         <span className="choice-num">{c.label}</span>
       ) : (
-        <span className="choice-word">{c.text}</span>
+        <span className="choice-word q7-enword">{c.text}</span>
       )}
     </button>
+  )
+  if (!onSpeak) return btn
+  return (
+    <div className="q7-cardwrap">
+      {btn}
+      <button type="button" className="q7-speak" onClick={onSpeak} aria-label={`聽英文：${c.text ?? c.id}`} data-testid="en-card-speak" data-choice-id={c.id}>
+        <span aria-hidden>🔊</span>
+      </button>
+    </div>
   )
 }
 
@@ -90,6 +100,8 @@ export function EnglishView({ q, hintStage, tapped, solved, onPick }: Props) {
   )
 
   const textChoices = q.choices.every((c) => c.text !== undefined)
+  // v7：難度 1 的看圖選字、中翻英：字卡是大字加喇叭，點喇叭先聽、點卡片作答；中翻英的題幹一開始就看得到圖
+  const lite = q.difficulty === 1 && (q.type === 'pic2en' || q.type === 'zh2en')
   const letters = q.type === 'spell' && q.params?.pattern ? [...q.params.pattern] : []
 
   return (
@@ -105,7 +117,7 @@ export function EnglishView({ q, hintStage, tapped, solved, onPick }: Props) {
         {q.type === 'zh2en' && (
           <>
             <b className="en-zh" data-testid="en-zh">{zh}</b>
-            {hinting && <StemPic stem={stem} label={zh} />}
+            {(hinting || lite) && <StemPic stem={stem} label={zh} />}
             {hinting && speaker()}
           </>
         )}
@@ -125,7 +137,7 @@ export function EnglishView({ q, hintStage, tapped, solved, onPick }: Props) {
       </div>
       <div className={`qv-choices n${q.choices.length} ${textChoices ? 'en-text-choices' : ''}`}>
         {q.choices.map((c) => (
-          <EnChoice key={c.id} c={c} state={stateOf(c)} onPick={() => onPick(c.id)} />
+          <EnChoice key={c.id} c={c} state={stateOf(c)} onPick={() => onPick(c.id)} onSpeak={lite ? () => sayEnglish(c.id, { enabled: true }) : undefined} />
         ))}
       </div>
     </div>

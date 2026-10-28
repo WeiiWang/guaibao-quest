@@ -297,7 +297,7 @@ try {
   await page.waitForSelector('[data-testid=ceremony]')
   await page.getByTestId('claim-chest').click()
   await page.waitForSelector('[data-testid=ceremony-title]')
-  check('章末儀式：「今天的冒險完成了！」', (await page.getByTestId('ceremony-title').innerText()).includes('今天的冒險完成了'))
+  check('章末儀式：標題是「<章名>通關！」', (await page.getByTestId('ceremony-title').innerText()).includes('花果山通關'))
   check('章末儀式：寶箱額外材料 3 種', (await page.locator('[data-testid=chest-rewards] .reward-pop').count()) === 3)
 
   const ledger2 = await dump(page, 'materialLedger')

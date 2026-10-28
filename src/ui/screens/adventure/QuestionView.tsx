@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { hintDriven, highlightsSame } from '../../../learning/hint'
 import { numberKey, totalKey, totalText, wordKey } from '../../../learning/lines'
 import { mustObject } from '../../../learning/objects'
@@ -171,29 +171,26 @@ function ChoiceCard({
   state,
   onPick,
   hintSame,
-  armed,
-  confirm,
+  onSpeak,
 }: {
   c: Choice
   q: Question
   state: CardState
   onPick: () => void
   hintSame?: 'same' | 'other'
-  armed?: boolean
-  confirm?: boolean
+  /** v7：難度 1 的數字卡右上角的小喇叭（點喇叭唸數字，點卡片直接作答） */
+  onSpeak?: () => void
 }) {
   const disabled = state === 'wrong' || state === 'disabled' || state === 'right'
-  return (
+  const btn = (
     <button
       type="button"
-      className={`choice choice-${state} ${c.count ? 'choice-pile' : ''} ${c.tone ? `tone-${c.tone}` : ''} ${hintSame ? `hint-${hintSame}` : ''} ${armed ? 'armed' : ''}`}
+      className={`choice choice-${state} ${c.count ? 'choice-pile' : ''} ${c.tone ? `tone-${c.tone}` : ''} ${hintSame ? `hint-${hintSame}` : ''}`}
       disabled={disabled}
       onClick={onPick}
       data-testid="choice"
       data-choice-id={c.id}
       data-state={state}
-      data-confirm={confirm ? 'true' : undefined}
-      data-armed={armed ? 'true' : undefined}
       aria-label={c.label ?? (c.count ? `${c.count} 個${objName(c.obj as string)}` : objName(c.obj as string))}
     >
       {c.label !== undefined ? (
@@ -208,12 +205,16 @@ function ChoiceCard({
           {q.type !== 'color' && <span className="choice-name">{objName(c.obj as string)}</span>}
         </>
       )}
-      {armed && (
-        <span className="choice-armed" aria-hidden>
-          ✓
-        </span>
-      )}
     </button>
+  )
+  if (!onSpeak) return btn
+  return (
+    <div className="q7-cardwrap">
+      {btn}
+      <button type="button" className="q7-speak" onClick={onSpeak} aria-label={`聽數字 ${c.label}`} data-testid="num-speak" data-choice-id={c.id}>
+        <span aria-hidden>🔊</span>
+      </button>
+    </div>
   )
 }
 
@@ -247,19 +248,11 @@ export function QuestionView({ q, hintStage, tapped, solved, onPick, voiceOn = t
   // 序列類的提示：逐個唸出來、亮起
   const seqLit = useSequenceRead(hinting && isSeq, q.params?.words ?? [], voiceOn, startDelay)
 
-  // 數字選項在難度 1：第一次點只唸出數字，第二次點才作答（小小孩常常認不得數字）
-  const confirmNumbers = q.difficulty === 1 && q.choices.every((c) => c.label !== undefined)
-  const [armed, setArmed] = useState<string | null>(null)
-  const armedRef = useRef<string | null>(null)
-  const pick = (c: Choice) => {
-    if (confirmNumbers && armedRef.current !== c.id) {
-      armedRef.current = c.id
-      setArmed(c.id)
-      const n = Number(c.label)
-      say(numberKey(n), chineseNumber(n), { enabled: voiceOn })
-      return
-    }
-    onPick(c.id)
+  // 數字選項在難度 1：卡片右上角有小喇叭，點喇叭唸數字，點卡片就直接作答（不再是兩段式，試玩審查 G6）
+  const numberCards = q.difficulty === 1 && q.choices.every((c) => c.label !== undefined)
+  const speakNum = (c: Choice) => {
+    const n = Number(c.label)
+    say(numberKey(n), chineseNumber(n), { enabled: true })
   }
 
   const stateOf = (c: Choice): CardState => {
@@ -370,10 +363,9 @@ export function QuestionView({ q, hintStage, tapped, solved, onPick, voiceOn = t
             c={c}
             q={q}
             state={stateOf(c)}
-            onPick={() => pick(c)}
+            onPick={() => onPick(c.id)}
             hintSame={sameHint(c)}
-            armed={armed === c.id && !solved && !tapped.has(c.id)}
-            confirm={confirmNumbers}
+            onSpeak={numberCards ? () => speakNum(c) : undefined}
           />
         ))}
       </div>

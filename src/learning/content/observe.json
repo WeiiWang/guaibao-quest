@@ -2744,50 +2744,50 @@
   },
   {
     "id": "observe-1-g27", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "哪一個顏色不一樣？",
+    "prompt": "找找看，哪一個的顏色不一樣？",
     "items": [],
     "choices": [
-      {"id":"c1","obj":"obj-chick","variant":{"hue":200}},
-      {"id":"c2","obj":"obj-chick"},
-      {"id":"c3","obj":"obj-chick"}
+      {"id":"c1","obj":"decor-dino","variant":{"hue":200}},
+      {"id":"c2","obj":"decor-dino"},
+      {"id":"c3","obj":"decor-dino"}
     ],
     "answer": "c1",
-    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
+    "hint": "大家都是恐龍，一個一個比一比，找出顏色不一樣的那一個。",
     "params": {}
   },
   {
     "id": "observe-1-g28", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "找找看，哪一個是灰色的？",
+    "prompt": "找找看，哪一個的顏色不一樣？",
     "items": [],
     "choices": [
-      {"id":"c1","obj":"obj-grape"},
-      {"id":"c2","obj":"obj-grape"},
-      {"id":"c3","obj":"obj-grape","variant":{"gray":true}}
+      {"id":"c1","obj":"decor-rocket"},
+      {"id":"c2","obj":"decor-rocket"},
+      {"id":"c3","obj":"decor-rocket","variant":{"hue":200}}
     ],
     "answer": "c3",
-    "hint": "大家都是葡萄，一個一個比一比，找出顏色不一樣的那一個。",
+    "hint": "大家都是火箭，一個一個比一比，找出顏色不一樣的那一個。",
     "params": {}
   },
   {
     "id": "observe-1-g29", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "找找看，哪一個的顏色不一樣？",
+    "prompt": "找找看，哪一個是灰色的？",
     "items": [],
     "choices": [
-      {"id":"c1","obj":"obj-apple"},
-      {"id":"c2","obj":"obj-apple","variant":{"hue":150}},
-      {"id":"c3","obj":"obj-apple"}
+      {"id":"c1","obj":"decor-rocket"},
+      {"id":"c2","obj":"decor-rocket","variant":{"gray":true}},
+      {"id":"c3","obj":"decor-rocket"}
     ],
     "answer": "c2",
-    "hint": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
+    "hint": "大家都是火箭，一個一個比一比，找出顏色不一樣的那一個。",
     "params": {}
   },
   {
     "id": "observe-1-g30", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "找找看，哪一個的顏色不一樣？",
+    "prompt": "找找看，哪一個是灰色的？",
     "items": [],
     "choices": [
       {"id":"c1","obj":"obj-grape"},
-      {"id":"c2","obj":"obj-grape","variant":{"hue":150}},
+      {"id":"c2","obj":"obj-grape","variant":{"gray":true}},
       {"id":"c3","obj":"obj-grape"}
     ],
     "answer": "c2",
@@ -2799,46 +2799,7 @@
     "prompt": "哪一個變成灰色的？",
     "items": [],
     "choices": [
-      {"id":"c1","obj":"decor-dino","variant":{"gray":true}},
-      {"id":"c2","obj":"decor-dino"},
-      {"id":"c3","obj":"decor-dino"}
-    ],
-    "answer": "c1",
-    "hint": "大家都是恐龍，一個一個比一比，找出顏色不一樣的那一個。",
-    "params": {}
-  },
-  {
-    "id": "observe-1-g32", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "找找看，哪一個是灰色的？",
-    "items": [],
-    "choices": [
-      {"id":"c1","obj":"obj-chick"},
-      {"id":"c2","obj":"obj-chick"},
-      {"id":"c3","obj":"obj-chick","variant":{"gray":true}}
-    ],
-    "answer": "c3",
-    "hint": "大家都是小雞，一個一個比一比，找出顏色不一樣的那一個。",
-    "params": {}
-  },
-  {
-    "id": "observe-1-g33", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "哪一個顏色不一樣？",
-    "items": [],
-    "choices": [
-      {"id":"c1","obj":"decor-rocket"},
-      {"id":"c2","obj":"decor-rocket","variant":{"hue":200}},
-      {"id":"c3","obj":"decor-rocket"}
-    ],
-    "answer": "c2",
-    "hint": "大家都是火箭，一個一個比一比，找出顏色不一樣的那一個。",
-    "params": {}
-  },
-  {
-    "id": "observe-1-g34", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "找找看，哪一個的顏色不一樣？",
-    "items": [],
-    "choices": [
-      {"id":"c1","obj":"obj-chick","variant":{"hue":150}},
+      {"id":"c1","obj":"obj-chick","variant":{"gray":true}},
       {"id":"c2","obj":"obj-chick"},
       {"id":"c3","obj":"obj-chick"}
     ],
@@ -2847,8 +2808,47 @@
     "params": {}
   },
   {
+    "id": "observe-1-g32", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"decor-car"},
+      {"id":"c2","obj":"decor-car"},
+      {"id":"c3","obj":"decor-car","variant":{"hue":150}}
+    ],
+    "answer": "c3",
+    "hint": "大家都是汽車，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g33", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-rabbit"},
+      {"id":"c2","obj":"obj-rabbit","variant":{"hue":150}},
+      {"id":"c3","obj":"obj-rabbit"}
+    ],
+    "answer": "c2",
+    "hint": "大家都是小兔子，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
+    "id": "observe-1-g34", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一個的顏色不一樣？",
+    "items": [],
+    "choices": [
+      {"id":"c1","obj":"obj-fish","variant":{"hue":200}},
+      {"id":"c2","obj":"obj-fish"},
+      {"id":"c3","obj":"obj-fish"}
+    ],
+    "answer": "c1",
+    "hint": "大家都是小魚，一個一個比一比，找出顏色不一樣的那一個。",
+    "params": {}
+  },
+  {
     "id": "observe-1-g35", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "哪一個顏色不一樣？",
+    "prompt": "找找看，哪一個的顏色不一樣？",
     "items": [],
     "choices": [
       {"id":"c1","obj":"obj-grape"},
@@ -2861,12 +2861,12 @@
   },
   {
     "id": "observe-1-g36", "skill": "observe", "difficulty": 1, "type": "spot", "version": 2, "gentle": true,
-    "prompt": "哪一個變成灰色的？",
+    "prompt": "找找看，哪一個的顏色不一樣？",
     "items": [],
     "choices": [
       {"id":"c1","obj":"decor-car"},
       {"id":"c2","obj":"decor-car"},
-      {"id":"c3","obj":"decor-car","variant":{"gray":true}}
+      {"id":"c3","obj":"decor-car","variant":{"hue":200}}
     ],
     "answer": "c3",
     "hint": "大家都是汽車，一個一個比一比，找出顏色不一樣的那一個。",

@@ -6,7 +6,8 @@ import { localDateStr } from '../../../domain/date'
 import { now as clockNow } from '../../../domain/clock'
 import type { ChapterDef } from '../../../learning/chapter'
 import { getChapter } from '../../../learning/chapter'
-import { chaptersOf, dailyChapterId, DAILY_NAME, mustSubject, SUBJECTS } from '../../../learning/subject'
+import { challengeVisible, nodeWindow } from '../../../learning/chapter'
+import { challengeChapterId, chaptersOf, dailyChapterId, DAILY_NAME, mustSubject, SUBJECTS } from '../../../learning/subject'
 import type { Progress, SubjectId } from '../../../learning/types'
 import { Icon } from '../../components/Icon'
 import { ScreenHeader } from '../../components/Header'
@@ -20,6 +21,8 @@ import { Companion } from './Companion'
 import './adventure.css'
 import './adventure-v5.css'
 import './adventure-v6.css'
+import './adventure-v7.css'
+import { Placement } from './Placement'
 import { readChapter, readSubject, writeChapter, writeSubject } from './subjectPref'
 
 function emptyProgress(ch: ChapterDef): Progress {
@@ -34,6 +37,20 @@ function emptyProgress(ch: ChapterDef): Progress {
 }
 
 type Pt = [number, number]
+
+/** 直向（寬 <= 高）：地圖縮到「所有節點都看得到」，不用橫向捲動（試玩審查 V7） */
+function usePortrait(): boolean {
+  const [p, setP] = useState(() => typeof matchMedia !== 'undefined' && matchMedia('(max-aspect-ratio: 1/1)').matches)
+  useEffect(() => {
+    const mq = matchMedia('(max-aspect-ratio: 1/1)')
+    const on = () => setP(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  return p
+}
+
 /**
  * 站點位置（佔場景寬高的 %），對應 scene-map-huaguoshan.png（1280×720）裡本來就有的那條山路：
  * 由左下角出發，過兩座小橋，爬上右上角的寶箱。前 5 個是站點，最後一個是寶箱。
@@ -78,6 +95,9 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const prog = progRaw?.chapterId === ch.id ? progRaw : undefined
   const dailyRaw = useLiveQuery(async () => ({ subject: subjectId, today, info: await repo.getDailyInfo(subjectId, clockNow()) }), [subjectId, today])
   const daily = dailyRaw?.subject === subjectId && dailyRaw.today === today ? dailyRaw.info : undefined
+  const [placementDone, setPlacementDone] = useState(false)
+  /** 已經開始做快速分級：做完時資料庫就不再「需要分級」，但結束畫面還要顯示完 */
+  const [placementStarted, setPlacementStarted] = useState(false)
   const pickSubject = (id: SubjectId) => {
     writeSubject(id)
     setSubjectId(id)
@@ -96,7 +116,15 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const tinted = !!ch.scene && !ownArt
   // 站點位置：章節有自己的背景圖才用自己的位置，否則是花果山地圖的位置
   const points: Pt[] = ownArt && ch.points ? ch.points : POINTS
+  const portrait = usePortrait()
+  // 直向：只顯示節點外框那一段場景圖，寬度剛好填滿畫面；橫向維持整張圖
+  const win = portrait ? nodeWindow(points) : { x0: 0, x1: 100 }
+  const span = win.x1 - win.x0
   const [canScroll, setCanScroll] = useState(false)
+  // 6–7 歲的快速分級、挑戰站要看年齡與進度
+  const profile = useLiveQuery(() => repo.getLearnerProfile(), [])
+  const placementDue = useLiveQuery(async () => ({ subject: subjectId, due: await repo.placementDue() }), [subjectId, placementDone])
+  const challenge = useLiveQuery(async () => ({ chapter: ch.id, c: await repo.getChallenge(ch.id) }), [ch.id])
   const { voiceOn } = useLearningSettings()
   // 點到鎖住 / 已通關的站：那顆圓鈕晃一下 + 一句語音（SPEC-v4 U10；只加回饋，不動關卡流程）
   const [wobble, setWobble] = useState<string | null>(null)
@@ -140,7 +168,18 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
     else toast('新的一輪冒險開始了！題目會換新的喔', 'ok')
   }
 
-  const pos = (k: number) => ({ ['--x' as string]: `${points[k][0]}%`, ['--y' as string]: `${points[k][1]}%` })
+  const pos = (k: number) => ({ ['--x' as string]: `${((points[k][0] - win.x0) / span) * 100}%`, ['--y' as string]: `${points[k][1]}%` })
+  // 直向：場景寬度 = 畫面寬度，比例跟著顯示範圍；背景圖放大到只露出這一段
+  const sceneStyle = {
+    ...(hasScene ? { ['--map-bg' as string]: `url("${bg}")` } : {}),
+    ...(portrait
+      ? {
+          width: '100%',
+          aspectRatio: `${(span * 16) / (100 * 9)}`,
+          ...(hasScene ? { backgroundSize: `${10000 / span}% auto`, backgroundPosition: `${span >= 100 ? 0 : (win.x0 / (100 - span)) * 100}% 0` } : {}),
+        }
+      : {}),
+  }
 
   return (
     <main className={`screen adv adv-map theme-${subject.theme} subject-${subject.id} chapter-${ch.id}`} data-testid="map" data-subject={subject.id} data-chapter={ch.id}>
@@ -193,7 +232,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
       )}
 
       <div className="adv-scroll" ref={scrollRef}>
-        <section ref={sceneRef} className={`adv-scene ${hasScene ? 'has-art' : ''} scene-${subject.id} ${tinted ? 'scene-tinted' : ''}`} style={hasScene ? { ['--map-bg' as string]: `url("${bg}")` } : undefined}>
+        <section ref={sceneRef} className={`adv-scene ${hasScene ? 'has-art' : ''} scene-${subject.id} ${tinted ? 'scene-tinted' : ''} ${ownArt ? 'scene-own' : ''}`} style={sceneStyle} data-portrait={portrait ? 'true' : undefined}>
           {/* 沒有場景圖時才用 CSS 畫山丘與虛線山路；有場景圖就用圖裡本來的山路 */}
           {!hasScene && (
             <>
@@ -317,6 +356,8 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
         </section>
       )}
 
+      {!placementDone && (placementStarted || (subjectId === 'math' && placementDue?.subject === subjectId && placementDue.due)) && <Placement onStart={() => setPlacementStarted(true)} onDone={() => setPlacementDone(true)} />}
+
       <section className="adv-foot-row" aria-label="章節進度">
         <p className="adv-map-hero">
           <b>{ch.subtitle}・{ch.name}</b>
@@ -331,6 +372,21 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
             </div>
           ))}
         </div>
+        {challenge?.chapter === ch.id && challengeVisible(prog, profile?.ageBand) && (
+          <button
+            type="button"
+            className="q7-challenge"
+            data-testid="challenge-go"
+            data-badge={challenge.c.badgeAt !== undefined ? 'true' : 'false'}
+            onClick={() => go({ name: 'stage', chapterId: challengeChapterId(ch.id), station: 1 })}
+          >
+            <span className="q7-challenge-icon" aria-hidden>{challenge.c.badgeAt !== undefined ? '🏅' : '⚡'}</span>
+            <span className="q7-challenge-text">
+              <span>挑戰站</span>
+              <small data-testid="challenge-best">{challenge.c.plays > 0 ? `最高連對 ${challenge.c.best} 題` : '連續答對，不給提示'}</small>
+            </span>
+          </button>
+        )}
         {canScroll && <p className="adv-swipe-hint">左右滑動看整張地圖 ↔</p>}
       </section>
     </main>

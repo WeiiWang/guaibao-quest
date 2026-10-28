@@ -203,6 +203,8 @@ export interface Settings {
   pendingTricks?: string[]
   /** v6：家長（PM 預覽）直接解鎖的章節 id（正常是通關前一章才解鎖） */
   unlockedChapters?: string[]
+  /** v7：6–7 歲的快速分級做過了（做完或略過都算；只問一次）。level = 分級結果的起跳難度 */
+  placement?: { at: number; level?: 1 | 2 | 3 | 4; skipped?: boolean }
   /** v6：成長相簿的回憶卡（依時間排序顯示；不升 Dexie 版本） */
   album?: AlbumCard[]
   /** v6：相簿已經依現況補建過舊里程碑（只補一次；之後新里程碑才會有「新卡」提示） */

@@ -2,11 +2,12 @@
 // 全部是「給 db 的函式」，由 repo.ts 的薄薄一層方法呼叫；這樣 repo.ts 只多幾行，其他線合併時好處理。
 import { localDateStr } from '../domain/date'
 import { collectionRewardsDue, rollDailyGift, rollStationDrop } from '../domain/gifts'
-import { knownFriendIds } from '../domain/friends'
+import { collectionStep, friendStats, type FriendStat } from '../domain/friends'
 import { newTricks, type TrickId } from '../domain/tricks'
 import type { Gift } from '../domain/types'
 import { getQuestion } from '../learning/bank'
 import { learnerProfileOf } from '../learning/profile'
+import { stationFoodQty } from '../learning/scoring'
 import type { Question, SkillState } from '../learning/types'
 import type { GuaibaoDB } from './db'
 
@@ -36,11 +37,18 @@ export async function queueGifts(d: GuaibaoDB, gifts: Gift[]): Promise<void> {
   await d.settings.update(SETTINGS_ID, { pendingGifts: [...(s.pendingGifts ?? []), ...gifts], stickers })
 }
 
-/** 一站過關掉落 1 個食物（在 completeStation 的交易裡呼叫；今天最愛的食物機率較高，不掉蛋糕） */
-export async function grantStationDrop(d: GuaibaoDB, rng: () => number, now: number): Promise<Gift> {
-  const g: Gift = { foodId: rollStationDrop(rng, localDateStr(now)), at: now, from: 'station' }
-  await queueGifts(d, [g])
-  return g
+/**
+ * 一站過關掉落的食物（在 completeStation 的交易裡呼叫）。v7：直接進背包，不再排進 pendingGifts，
+ * 結算畫面當場顯示得到什麼。個數固定（見 stationFoodQty），種類隨機（今天最愛的食物機率較高，不掉蛋糕）。
+ * 回傳掉落的食物 id（依序）。呼叫端的交易要包含 inventory。
+ */
+export async function grantStationFoods(d: GuaibaoDB, rng: () => number, now: number, independent: number): Promise<string[]> {
+  const foods = Array.from({ length: stationFoodQty(independent) }, () => rollStationDrop(rng, localDateStr(now)))
+  for (const foodId of foods) {
+    const inv = await d.inventory.get(foodId)
+    await d.inventory.put({ id: foodId, itemId: foodId, qty: (inv?.qty ?? 0) + 1 })
+  }
+  return foods
 }
 
 /**
@@ -77,24 +85,20 @@ export async function collectGift(d: GuaibaoDB): Promise<Gift | null> {
 
 // ---------- 圖鑑 ----------
 
-/** 孩子答題時遇過的物件（從作答紀錄的題目回推；題庫改版後找不到的題目略過） */
-export async function knownFriends(d: GuaibaoDB, lookup: (id: string) => Question | undefined = getQuestion): Promise<Set<string>> {
-  const attempts = await d.attempts.toArray()
-  const qs: Question[] = []
-  const seen = new Set<string>()
-  for (const a of attempts) {
-    if (seen.has(a.questionId)) continue
-    seen.add(a.questionId)
-    const q = lookup(a.questionId)
-    if (q) qs.push(q)
-  }
-  return knownFriendIds(qs)
+/** 每個朋友遇過、答對幾次（從作答紀錄的題目回推，舊存檔也有；題庫改版後找不到的題目略過） */
+export async function friendStatsOf(d: GuaibaoDB, lookup: (id: string) => Question | undefined = getQuestion): Promise<Record<string, FriendStat>> {
+  return friendStats(await d.attempts.toArray(), lookup)
 }
 
-/** 圖鑑每收集滿 6 個送 1 份禮物（補發還沒送的）。回傳這次新送出幾份 */
+/** 孩子答題時遇過的朋友 id（物件、動物、英文單字、生活與自然的圖） */
+export async function knownFriends(d: GuaibaoDB, lookup: (id: string) => Question | undefined = getQuestion): Promise<Set<string>> {
+  return new Set(Object.keys(await friendStatsOf(d, lookup)))
+}
+
+/** 圖鑑每收集滿 N 個送 1 份禮物（N 依總數調整，見 collectionStep；補發還沒送的）。回傳這次新送出幾份 */
 export async function syncCollection(d: GuaibaoDB, rng: () => number, now: number): Promise<number> {
   const known = (await knownFriends(d)).size
-  const due = collectionRewardsDue(known)
+  const due = collectionRewardsDue(known, collectionStep())
   return d.transaction('rw', [d.settings, d.inventory, d.materialLedger], async () => {
     const s = await d.settings.get(SETTINGS_ID)
     if (!s) return 0

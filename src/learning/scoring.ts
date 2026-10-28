@@ -11,6 +11,14 @@ export function stationRewardQty(independent: number): number {
   return 2
 }
 
+/**
+ * v7：一站過關掉落的食物個數。固定數量，不用機率決定多寡（食物的種類才隨機）：
+ * 無提示答對 >= 4 題得 2 個，其他得 1 個。每日冒險、挑戰站也一樣。
+ */
+export function stationFoodQty(independent: number): number {
+  return independent >= 4 ? 2 : 1
+}
+
 export interface SkillTally {
   total: number
   independent: number
