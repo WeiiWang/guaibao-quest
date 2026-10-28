@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { repo, newId } from '../../db/repo'
+import regionCounts from '../../art/coloring/region-counts.json'
 import { COLORING_PAGES, FREE_PAGE_IDS, getColoringPage, isFreePage, pageName, type ColoringPageDef } from '../../art/coloring/pages'
 import { renderArtworkPng } from '../../art/coloring/export'
 import { BRUSH_KINDS, DEFAULT_STAMP, STAMPS } from '../../art/coloring/brushes'
@@ -12,6 +13,7 @@ import {
   BG_SCENES,
   BRUSH_WIDTHS,
   completionPercent,
+  difficultyStars,
   ERASER_WIDTHS,
   RECENT_MAX,
   docIsEmpty,
@@ -74,12 +76,21 @@ const saveRecent = (r: string[]) => {
 
 const useSoundOn = () => useLiveQuery(async () => (await db.settings.get('main'))?.soundOn !== false, [], true)
 
-/** 難度標示：簡單 / 挑戰（向量頁與點陣簡單版都是「簡單」） */
-function TierChip({ tier }: { tier?: 'easy' | 'hard' }) {
-  const hard = tier === 'hard'
+/** 難度標示：簡單 / 挑戰 + 1–3 顆星與大約幾塊（點陣頁的區塊數由 scripts/gen-region-counts.mjs 預先算好） */
+function TierChip({ page }: { page: ColoringPageDef }) {
+  const hard = page.tier === 'hard'
+  const n = page.kind === 'raster' ? (regionCounts as Record<string, number>)[page.id] : page.regions.length
+  const stars = n ? difficultyStars(n) : hard ? 3 : 1
   return (
-    <span className={`pb-tier ${hard ? 'hard' : 'easy'}`} data-testid="tier-chip" data-tier={hard ? 'hard' : 'easy'}>
-      {hard ? '挑戰' : '簡單'}
+    <span
+      className={`pb-tier ${hard ? 'hard' : 'easy'}`}
+      data-testid="tier-chip"
+      data-tier={hard ? 'hard' : 'easy'}
+      data-stars={stars}
+      aria-label={`${hard ? '挑戰' : '簡單'}，難度 ${stars} 顆星${n ? `，大約 ${n} 塊` : ''}`}
+    >
+      {hard ? '挑戰' : '簡單'} <span className="pb-tier-stars" aria-hidden>{'★'.repeat(stars)}<i>{'★'.repeat(3 - stars)}</i></span>
+      {n ? <small className="pb-tier-n">約 {n} 塊</small> : null}
     </span>
   )
 }
@@ -95,7 +106,7 @@ function PageCard({ page, pr, onOpen }: { page: ColoringPageDef; pr?: ColoringPr
         <PageThumb pageId={page.id} fills={pr?.fills} className="shop-thumb" />
       </button>
       <div className="shop-name">{page.name}</div>
-      <TierChip tier={page.tier} />
+      <TierChip page={page} />
       <div className="page-progress" role="img" aria-label={`完成度 ${pct}%`} data-pct={pct}>
         <i style={{ width: `${pct}%` }} />
         <span>{pct === 0 ? '還沒開始' : pct === 100 ? '全部填好了' : `${pct}%`}</span>
@@ -142,7 +153,7 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
             <span className="pb-lock-badge" aria-hidden><Icon name="ui-lock" emoji="🔒" size={34} /></span>
           </button>
           <div className="shop-name">{p.name}</div>
-          <TierChip tier={p.tier} />
+          <TierChip page={p} />
           <div className="shop-price"><Icon name="ui-star" emoji="⭐" size={22} /> {priceOf(p.id)}</div>
         </li>
       ))}

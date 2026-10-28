@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  difficultyStars,
   clampScale,
   completionPercent,
   completionRatio,
@@ -119,5 +120,16 @@ describe('作品資料', () => {
     expect(clampScale(0.1)).toBe(0.4)
     expect(clampScale(9)).toBe(3)
     expect(clampScale(1.5)).toBe(1.5)
+  })
+})
+
+describe('difficultyStars（v7.2 難度星等）', () => {
+  it('依區塊數分三級：≤20、21–60、>60', () => {
+    expect(difficultyStars(14)).toBe(1)
+    expect(difficultyStars(20)).toBe(1)
+    expect(difficultyStars(21)).toBe(2)
+    expect(difficultyStars(60)).toBe(2)
+    expect(difficultyStars(61)).toBe(3)
+    expect(difficultyStars(103)).toBe(3)
   })
 })

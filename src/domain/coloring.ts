@@ -169,3 +169,8 @@ export function freeStickerSpot(existing: readonly { x: number; y: number }[], g
   return cands.reduce((best, c) => (far(c) > far(best) ? c : best), cands[0])
 }
 
+
+/** 著色頁難度星等（v7.2）：依可填色的區塊數，≤20 一顆、21–60 兩顆、>60 三顆 */
+export function difficultyStars(regions: number): 1 | 2 | 3 {
+  return regions <= 20 ? 1 : regions <= 60 ? 2 : 3
+}

@@ -87,6 +87,9 @@
 .pb-tier { display: inline-block; padding: 1px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 900; }
 .pb-tier.easy { background: #dff5e1; color: #2f7a43; }
 .pb-tier.hard { background: #ffe1d0; color: #b2531f; }
+.pb-tier-stars { letter-spacing: 1px; color: #f2a516; }
+.pb-tier-stars i { font-style: normal; color: rgba(74, 59, 53, 0.18); }
+.pb-tier-n { margin-left: 4px; font-size: 0.72rem; font-weight: 800; opacity: 0.8; }
 .pb-locked-thumb { position: relative; width: 100%; border: 0; background: transparent; padding: 0; display: grid; place-items: center; }
 .pb-locked-thumb .shop-thumb { filter: grayscale(1) contrast(0.9); opacity: 0.55; }
 .pb-lock-badge { position: absolute; right: 8px; bottom: 6px; width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, 0.92); display: grid; place-items: center; box-shadow: 0 3px 8px rgba(74, 59, 53, 0.3); }
