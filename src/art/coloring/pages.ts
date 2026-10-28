@@ -449,6 +449,17 @@ export const COLORING_PAGES: ColoringPageDef[] = [
   ...rasterPages,
 ]
 
+
+/**
+ * 著色本列表的排序（v7.3 F5）：最漂亮的點陣頁（阿悟抱香蕉）排第一個，向量頁（幾何形狀、風格較粗糙）排在同組點陣頁的後面。
+ * 順序：已擁有的點陣頁 → 已擁有的向量頁 → 上鎖的點陣頁 → 上鎖的向量頁（「已擁有的在前、上鎖的在後」這條原則不變，
+ * 孩子打開著色本，前面的都是能直接畫的）。Array.prototype.sort 是穩定排序，同一組內維持 COLORING_PAGES 原本的順序。
+ */
+export function orderForList(pages: readonly ColoringPageDef[], unlocked: ReadonlySet<string>): ColoringPageDef[] {
+  const rank = (p: ColoringPageDef) => (unlocked.has(`coloring-${p.id}`) ? 0 : 2) + (p.kind === 'raster' ? 0 : 1)
+  return [...pages].sort((a, b) => rank(a) - rank(b))
+}
+
 /**
  * v7.2 連連看：`dots:<圖名>:<關卡>` 連完之後「拿去塗色」，剪影是一個可填色的區塊（向量頁的機制原樣使用）。
  * 這種頁面不放進 COLORING_PAGES（不在商店、不在著色本的一般列表），由 id 即時產生。

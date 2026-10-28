@@ -189,6 +189,10 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'ui.dots.price': '這張要用20顆星星換喔',
   'ui.dots.opened': '換到囉，開始連吧！',
   'pet.dots.done': ['哇，是星星！你連出來了！', '哇，是小魚！你連出來了！', '哇，是香蕉！你連出來了！', '哇，是蘋果！你連出來了！', '哇，是小兔子！你連出來了！', '哇，是小雞！你連出來了！', '哇，是小熊！你連出來了！', '哇，是章魚！你連出來了！', '哇，是西瓜！你連出來了！', '哇，是花！你連出來了！', '哇，是蛋糕！你連出來了！', '哇，是阿悟！你連出來了！'],
+  // v7.3 繪圖板：還沒塗的地方、全部塗滿、完成獎勵（句子來源在 src/domain/paintReward.ts 的 PAINT_LINES，兩邊要一字不差，paintReward.test.ts 會檢查；阿悟說的話 key 以 pet. 開頭）
+  'pet.paint.more': '還有這些地方喔',
+  'pet.paint.full': '全部塗滿了！',
+  'pet.paint.stars': '得到五顆星星囉！',
   // v6 成長相簿：回憶卡上的一句話（句型見 src/domain/album.ts；學會新招那張和 ui.trick.learn 同一句，不重複列）
   'ui.album.card': [
     '阿悟孵出來了！',

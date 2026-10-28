@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { BrushKind, ColoringSticker, ColoringStroke } from '../../../domain/types'
 import { clampScale, clampStickerPos, mirrorStroke, STICKER_BASE, strokeNear, type PaintDoc } from '../../../domain/coloring'
 import { clientToUnit, clampView, panBy, pinchView, stepZoom, VIEW_HOME, zoomAt, type View } from '../../../domain/viewport'
@@ -50,6 +51,10 @@ interface Props {
   dropApi?: React.MutableRefObject<DropApi | null>
   /** 托盤正在拖貼紙：畫板不接受別的手勢（不會誤畫、也不會被第二根手指縮放） */
   dragging?: boolean
+  /** v7.3 F2：縮放鈕不壓在畫布上，改放進這個外面的節點（標題列右側）。沒給（undefined）= 畫在畫布角落（舊行為）；null = 節點還沒準備好，先不畫 */
+  zoomHost?: HTMLElement | null
+  /** v7.3 F3：這些區塊（regionId）閃動提示「還沒塗」；空陣列 / 沒給 = 不閃 */
+  flashIds?: readonly string[]
 }
 
 /** 筆刷畫布的解析度倍率：放大時畫細一點，但畫布邊長不超過 2048（iPad 的記憶體） */
@@ -529,6 +534,13 @@ export function PaintBoard(props: Props) {
   }
 
   const v = clampView(view)
+  const zoomUi = (
+    <div className={`pb-zoom ${props.zoomHost ? 'f73-zoom-out' : ''}`} data-pb-ui data-testid="pb-zoom" role="group" aria-label="畫面拉近拉遠">
+      <button className="pb-zbtn" onClick={() => zoomBy(-1)} disabled={v.z <= 1.001} aria-label="畫面拉遠" data-testid="zoom-out">－</button>
+      <span className="pb-zlabel" data-testid="zoom-label" aria-live="polite">{zoomLabel}</span>
+      <button className="pb-zbtn" onClick={() => zoomBy(1)} disabled={v.z >= 2.999} aria-label="畫面拉近" data-testid="zoom-in">＋</button>
+    </div>
+  )
   const tx = -v.ox * v.z * px
   const ty = -v.oy * v.z * px
   const brushOn = tool === 'brush' || tool === 'eraser'
@@ -547,8 +559,8 @@ export function PaintBoard(props: Props) {
     >
       <div className="pb-world" ref={worldRef} style={{ transform: `translate(${tx}px, ${ty}px) scale(${v.z})` }}>
         {free && <canvas ref={bgRef} className="pb-bg" data-testid="free-bg" data-bg={doc.bg ?? 'white'} />}
-        {!free && page?.kind === 'raster' && art && <RasterLayer art={art} fills={doc.fills} ripple={popped} />}
-        {!free && page?.kind !== 'raster' && <ColoringSvg pageId={pageId} fills={doc.fills} regionClass={tool === 'fill'} popped={popped} className="pt-svg" />}
+        {!free && page?.kind === 'raster' && art && <RasterLayer art={art} fills={doc.fills} ripple={popped} flashIds={props.flashIds} />}
+        {!free && page?.kind !== 'raster' && <ColoringSvg pageId={pageId} fills={doc.fills} regionClass={tool === 'fill'} popped={popped} flashIds={props.flashIds} reference className="pt-svg" />}
         <canvas
           ref={canvasRef}
           className="pt-canvas"
@@ -597,11 +609,7 @@ export function PaintBoard(props: Props) {
         </div>
       </div>
 
-      <div className="pb-zoom" data-pb-ui data-testid="pb-zoom" role="group" aria-label="畫面拉近拉遠">
-        <button className="pb-zbtn" onClick={() => zoomBy(-1)} disabled={v.z <= 1.001} aria-label="畫面拉遠" data-testid="zoom-out">－</button>
-        <span className="pb-zlabel" data-testid="zoom-label" aria-live="polite">{zoomLabel}</span>
-        <button className="pb-zbtn" onClick={() => zoomBy(1)} disabled={v.z >= 2.999} aria-label="畫面拉近" data-testid="zoom-in">＋</button>
-      </div>
+      {props.zoomHost === undefined ? zoomUi : props.zoomHost ? createPortal(zoomUi, props.zoomHost) : null}
       {v.z > 1.01 && <Minimap pageId={pageId} doc={doc} view={v} onView={setView} />}
     </div>
   )

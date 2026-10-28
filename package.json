@@ -30,6 +30,7 @@
     "e2e:quest7": "node scripts/e2e-quest7.mjs",
     "e2e:home7": "node scripts/e2e-home7.mjs",
     "e2e:dots": "node scripts/e2e-dots.mjs",
+    "e2e:paint73": "node scripts/e2e-paint73.mjs",
     "shots:home7": "node scripts/shots-home7.mjs"
   },
   "dependencies": {

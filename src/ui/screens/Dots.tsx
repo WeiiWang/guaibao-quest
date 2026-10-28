@@ -14,6 +14,7 @@ import {
   dotsPageName,
   dotsPoints,
   hitDot,
+  leaderFor,
   parseDotsId,
   placeLabels,
   silhouettePath,
@@ -64,7 +65,7 @@ export function DotsPlayScreen({ pageId, onBack, go }: { pageId: string; onBack:
   const [ptr, setPtr] = useState<Pt | null>(null)
   const [boardPx, setBoardPx] = useState(560)
   const [busy, setBusy] = useState(false)
-  const [done, setDone] = useState<{ galleryId: string; png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean } | null>(null)
+  const [done, setDone] = useState<{ galleryId: string; png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean; stars: number } | null>(null)
   const atRef = useRef(0)
   const dragging = useRef(false)
   const celebrate = useRef(false)
@@ -161,13 +162,11 @@ export function DotsPlayScreen({ pageId, onBack, go }: { pageId: string; onBack:
     [dots, parsed?.level, font, dotR],
   )
 
-  /** 標籤離自己的點比較遠時（擠的地方），拉一條細線連回去，孩子才不會認錯 */
-  const leader = (p: Pt, c: Pt) => {
-    const d = Math.hypot(c[0] - p[0], c[1] - p[1])
-    if (d <= dotR + font * 1.15) return null
-    const k = (d - font * 0.5) / d
-    return { x1: p[0], y1: p[1], x2: p[0] + (c[0] - p[0]) * k, y2: p[1] + (c[1] - p[1]) * k }
-  }
+  /** 標籤離自己的點比較遠時（擠的地方），從點的邊緣拉一條線到標籤外框，孩子才不會認錯（見 dots.leaderFor） */
+  const leaders = useMemo(
+    () => dots.map((p, i) => leaderFor(p, labels[i], dotLabel(parsed?.level ?? 'e', i), Math.round(font * 2) / 2, Math.round(dotR * 2) / 2)),
+    [dots, labels, parsed?.level, font, dotR],
+  )
 
   const unitOf = useCallback((e: { clientX: number; clientY: number }): Pt => {
     const r = boardRef.current!.getBoundingClientRect()
@@ -243,7 +242,7 @@ export function DotsPlayScreen({ pageId, onBack, go }: { pageId: string; onBack:
       const r = await repo.completeColoring(pageId, doc, png, undefined, { counts: true })
       if (!r.ok) throw new Error(r.error)
       playChime(soundOn, r.newFrames.length ? [523, 659, 784, 1047, 1319] : [523, 659, 784, 1047])
-      setDone({ galleryId: r.galleryId, png, hung: false, frame: r.frame, newFrames: r.newFrames, framesDone: r.framesDone, counted: r.counted })
+      setDone({ galleryId: r.galleryId, png, hung: false, frame: r.frame, newFrames: r.newFrames, framesDone: r.framesDone, counted: r.counted, stars: r.stars })
     } catch {
       toast('這張畫存不起來，再按一次試試看', 'warn')
     } finally {
@@ -302,7 +301,7 @@ export function DotsPlayScreen({ pageId, onBack, go }: { pageId: string; onBack:
                     <g key={wob?.i === i ? `${i}-${wob.n}` : i} className={`dt-dot ${state} ${wob?.i === i ? 'dt-wobble' : ''}`} data-dot={i} data-state={state} data-x={p[0]} data-y={p[1]} style={{ transformOrigin: `${p[0]}px ${p[1]}px` }}>
                       {state === 'next' && <circle className="dt-glow" cx={p[0]} cy={p[1]} r={dotR * 2.1} />}
                       <circle className="dt-dot-c" cx={p[0]} cy={p[1]} r={state === 'next' ? dotR * 1.25 : dotR} />
-                      {leader(p, labels[i]) && <line className="dt-leader" {...leader(p, labels[i])!} />}
+                      {leaders[i] && <line className="dt-leader" data-testid="dots-leader" {...leaders[i]!} />}
                       <text className="dt-num" x={labels[i][0]} y={labels[i][1]} fontSize={font} textAnchor="middle" dominantBaseline="central" aria-hidden>
                         {dotLabel(parsed.level, i)}
                       </text>
@@ -366,6 +365,7 @@ export function DotsPlayScreen({ pageId, onBack, go }: { pageId: string; onBack:
           newFrames={done.newFrames}
           framesDone={done.framesDone}
           counted={done.counted}
+          stars={done.stars}
           voiceOn={voiceOn}
           stage={pet?.stage ?? 'baby'}
           free={false}

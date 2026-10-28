@@ -71,7 +71,9 @@
 @keyframes dt-wob { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); } 45% { transform: translateX(4px); } 70% { transform: translateX(-2.5px); } }
 
 .dt-num { fill: var(--ink); font-weight: 900; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; font-family: inherit; pointer-events: none; }
-.dt-leader { stroke: #b9a6f5; stroke-width: 2px; stroke-linecap: round; pointer-events: none; }
+.dt-leader { stroke: #8a73db; stroke-width: 2px; stroke-linecap: round; pointer-events: none; }
+.dt-dot.on .dt-leader { stroke: #6a56b5; }
+.dt-dot.next .dt-leader { stroke: #b2531f; }
 .dt-dot.next .dt-num { fill: #b2531f; }
 .dt-dot.on .dt-num { fill: #6a56b5; }
 

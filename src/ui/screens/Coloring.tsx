@@ -1,10 +1,10 @@
 import { coloringPriceLine } from '../../learning/feedbackLines'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { repo, newId } from '../../db/repo'
 import regionCounts from '../../art/coloring/region-counts.json'
-import { COLORING_PAGES, FREE_PAGE_IDS, getColoringPage, isFreePage, pageName, type ColoringPageDef } from '../../art/coloring/pages'
+import { COLORING_PAGES, FREE_PAGE_IDS, getColoringPage, isFreePage, orderForList, pageName, type ColoringPageDef } from '../../art/coloring/pages'
 import { renderArtworkPng } from '../../art/coloring/export'
 import { BRUSH_KINDS, DEFAULT_STAMP, STAMPS } from '../../art/coloring/brushes'
 import { useRegionIds } from '../../art/coloring/rasterArt'
@@ -37,7 +37,8 @@ import { Modal } from '../components/Modal'
 import { Icon } from '../components/Icon'
 import { useToast } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
-import { sayText } from '../../learning/speech'
+import { say, sayChain, sayText } from '../../learning/speech'
+import { isFullyPainted, PAINT_FULL_LINE, PAINT_MORE_LINE, PAINT_STARS, PAINT_STARS_LINE } from '../../domain/paintReward'
 import { SHOP_ITEMS } from '../../domain/constants'
 import { playChime, playPop } from '../sounds'
 import { BrushPreview, StampShape } from './coloring/BrushIcons'
@@ -53,12 +54,16 @@ import { DotsShelf } from './dots/DotsShelf'
 import type { Screen } from '../App'
 import './coloring.css'
 import './paintboard.css'
+import './f73.css'
 
 /** 舊名稱：12 色（v2）。新版色盤見 domain/coloring.ts 的 PALETTE_24 */
 export const COLORING_PALETTE = PALETTE_24.slice(0, 12)
 
 /** 完成度低於這個百分比就先問「再畫一點好嗎？」 */
 export const ASK_BELOW_PCT = COUNT_MIN_PCT
+
+/** v7.3 F3：完成度不夠時，沒塗的區塊閃動多久（毫秒） */
+export const FLASH_MS = 2000
 
 const RECENT_KEY = 'gq-recent-colors'
 const loadRecent = (): string[] => {
@@ -127,11 +132,8 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
   const galleryCount = progress.filter((p) => p.pageId.startsWith('g:')).length
   const unlocked = new Set(inventory.filter((v) => v.qty > 0).map((v) => v.itemId))
   const priceOf = (id: string) => SHOP_ITEMS.find((i) => i.id === `coloring-${id}`)?.price ?? 30
-  // 簡單 / 挑戰兩區：向量頁與點陣簡單版歸「簡單」，點陣豐富版歸「挑戰」；每區已擁有的排最前面，上鎖的接在後面
-  const section = (tier: 'easy' | 'hard') => {
-    const pages = COLORING_PAGES.filter((p) => (p.tier ?? 'easy') === tier)
-    return { open: pages.filter((p) => unlocked.has(`coloring-${p.id}`)), locked: pages.filter((p) => !unlocked.has(`coloring-${p.id}`)) }
-  }
+  // 簡單 / 挑戰兩區：已擁有的在前、上鎖的在後；每一組裡點陣頁排前面（最漂亮的「阿悟抱香蕉」第一個，v7.3 F5），向量頁接在後面
+  const section = (tier: 'easy' | 'hard') => orderForList(COLORING_PAGES.filter((p) => (p.tier ?? 'easy') === tier), unlocked)
   const easy = section('easy')
   const hard = section('hard')
 
@@ -144,12 +146,12 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
     sayText(coloringPriceLine(price), { enabled: voiceOn })
   }
 
-  const grid = (sec: { open: ColoringPageDef[]; locked: ColoringPageDef[] }, tier: 'easy' | 'hard') => (
+  const grid = (sec: ColoringPageDef[], tier: 'easy' | 'hard') => (
     <ul className="shop-grid" data-testid={`grid-${tier}`}>
-      {sec.open.map((p) => (
-        <PageCard key={p.id} page={p} pr={progress.find((x) => x.pageId === p.id)} onOpen={onOpen} />
-      ))}
-      {sec.locked.map((p) => (
+      {sec.map((p) =>
+        unlocked.has(`coloring-${p.id}`) ? (
+          <PageCard key={p.id} page={p} pr={progress.find((x) => x.pageId === p.id)} onOpen={onOpen} />
+        ) : (
         <li key={p.id} className={`card shop-item art-card locked ${shaking === p.id ? 'ux-shake' : ''}`} data-testid={`locked-${p.id}`}>
           <button className="thumb-btn locked-btn pb-locked-thumb" onClick={() => tapLocked(p.id, p.name)} aria-label={`${p.name}還沒有，要用${priceOf(p.id)}顆星星換`}>
             <PageThumb pageId={p.id} className="shop-thumb" />
@@ -159,7 +161,8 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
           <TierChip page={p} />
           <div className="shop-price"><Icon name="ui-star" emoji="⭐" size={22} /> {priceOf(p.id)}</div>
         </li>
-      ))}
+        ),
+      )}
     </ul>
   )
 
@@ -194,7 +197,7 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
       <DotsShelf onOpen={onOpen} />
       <h2 className="pb-tier-title" data-testid="tier-easy">簡單</h2>
       {grid(easy, 'easy')}
-      {hard.open.length + hard.locked.length > 0 && (
+      {hard.length > 0 && (
         <>
           <h2 className="pb-tier-title" data-testid="tier-hard">挑戰</h2>
           {grid(hard, 'hard')}
@@ -218,6 +221,35 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
         </div>
       )}
     </main>
+  )
+}
+
+/**
+ * 色盤外框（v7.3 F1）：直向 / 手機是 2 排可橫滑的色條，還有東西沒看到時右緣出現漸層提示；橫向是固定在面板底部的 6×4 格。
+ * 24 色一律在 DOM 裡（測試與螢幕報讀都看得到）。
+ */
+function PalWrap({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [more, setMore] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const upd = () => setMore(el.scrollWidth - el.clientWidth - el.scrollLeft > 6)
+    upd()
+    el.addEventListener('scroll', upd, { passive: true })
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(upd)
+    ro?.observe(el)
+    return () => {
+      el.removeEventListener('scroll', upd)
+      ro?.disconnect()
+    }
+  }, [])
+  return (
+    <div className="f73-pal-wrap" data-more={more ? '1' : '0'} data-testid="palette-wrap">
+      <div className="pt-palette" ref={ref} data-testid="palette-scroll">
+        {children}
+      </div>
+    </div>
   )
 }
 
@@ -262,7 +294,10 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
   const [confirmClear, setConfirmClear] = useState(false)
   const [busy, setBusy] = useState(false)
   const [ask, setAsk] = useState(false)
-  const [done, setDone] = useState<{ galleryId: string; png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean } | null>(null)
+  const [flashIds, setFlashIds] = useState<string[]>([])
+  const [zoomHost, setZoomHost] = useState<HTMLElement | null>(null)
+  const flashTimer = useRef(0)
+  const [done, setDone] = useState<{ galleryId: string; png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean; stars: number; full: boolean } | null>(null)
   const [dragging, setDragging] = useState(false)
   const dropApi = useRef<DropApi | null>(null)
   const docRef = useRef<PaintDoc>(emptyDoc())
@@ -281,6 +316,8 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
       alive = false
     }
   }, [pageId])
+
+  useEffect(() => () => window.clearTimeout(flashTimer.current), [])
 
   /** 正式變更：舊畫面進復原堆疊、存檔 */
   const commit = useCallback(
@@ -372,7 +409,11 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
     if (docIsEmpty(d)) return toast(free ? '先畫一點東西再按完成吧！' : '先畫一點顏色再按完成吧！', 'info')
     if (!loose && pct < ASK_BELOW_PCT) {
       setAsk(true)
-      sayText('再畫一點好嗎？', { enabled: voiceOn })
+      // v7.3 F3：除了對話框，沒塗的區塊輕輕閃動 2 秒，阿悟說「還有這些地方喔」
+      window.clearTimeout(flashTimer.current)
+      setFlashIds(ids.filter((id) => !(id in d.fills)))
+      flashTimer.current = window.setTimeout(() => setFlashIds([]), FLASH_MS)
+      say('pet.paint.more', PAINT_MORE_LINE, { enabled: voiceOn })
       return
     }
     void doFinish()
@@ -385,7 +426,8 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
       const r = await repo.completeColoring(pageId, d, png, undefined, { counts: countsAsFinished(loose, pct) })
       if (!r.ok) throw new Error(r.error)
       playChime(soundOn, r.newFrames.length ? [523, 659, 784, 1047, 1319] : [523, 659, 784, 1047])
-      setDone({ galleryId: r.galleryId, png, hung: false, frame: r.frame, newFrames: r.newFrames, framesDone: r.framesDone, counted: r.counted })
+      setFlashIds([])
+      setDone({ galleryId: r.galleryId, png, hung: false, frame: r.frame, newFrames: r.newFrames, framesDone: r.framesDone, counted: r.counted, stars: r.stars, full: isFullyPainted(pct, loose) })
     } catch {
       toast('這張畫存不起來，再按一次試試看', 'warn')
     } finally {
@@ -438,7 +480,12 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
 
   return (
     <main className="screen paint theme-lavender" data-testid="paint-screen" data-page={pageId}>
-      <ScreenHeader title={title} onBack={onBack} backLabel="← 著色本" right={<span className="autosave">自動儲存{free ? '' : ` · ${pct}%`}</span>} />
+      <ScreenHeader title={title} onBack={onBack} backLabel="← 著色本" right={
+          <>
+            <span className="f73-zoomhost" ref={setZoomHost} data-testid="zoom-host" />
+            <span className="autosave"><span className="f73-auto-txt">自動儲存</span>{free ? '' : <span className="f73-auto-pct"><span className="f73-auto-txt"> · </span>{pct}%</span>}</span>
+          </>
+        } />
       <div className="pt-layout">
         <div className="pt-stage card">
           <PaintBoard
@@ -463,6 +510,8 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
             onStickersLive={(stickers) => live({ ...docRef.current, stickers })}
             dropApi={dropApi}
             dragging={dragging}
+            zoomHost={zoomHost}
+            flashIds={flashIds}
             onGestureStart={() => {
               gestureBefore.current = docRef.current
             }}
@@ -598,7 +647,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
           )}
 
           {tool !== 'sticker' && (
-            <div className="pt-palette">
+            <PalWrap>
               {/* 「最近用過」永遠佔一列（空的時候是 6 個空圈），第一次用色不會把下面的色票往下推 */}
               <div className="pt-recent" data-testid="recent-colors">
                 <span className="pt-recent-label">最近用過</span>
@@ -610,7 +659,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
               <div className="swatches pt-swatches" data-testid="palette">
                 {PALETTE_24.map((c) => swatch(c, c))}
               </div>
-            </div>
+            </PalWrap>
           )}
 
           </div>
@@ -628,13 +677,16 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
       </div>
 
       {ask && (
-        <Modal title="再畫一點好嗎？" onClose={() => setAsk(false)}>
-          <p className="lead">還有很多地方沒有塗到喔。</p>
-          <div className="row-actions pb-ask">
-            <button className="btn primary pb-ask-btn" onClick={() => setAsk(false)} data-testid="finish-more">再畫一下</button>
-            <button className="btn pb-ask-btn" onClick={() => void doFinish()} data-testid="finish-anyway">就這樣完成</button>
+        <div className="f73-ask-back" role="presentation" onClick={() => setAsk(false)}>
+          <div className="modal f73-ask" role="dialog" aria-modal="true" aria-label="再畫一點好嗎？" data-testid="finish-ask" onClick={(e) => e.stopPropagation()}>
+            <h2>再畫一點好嗎？</h2>
+            <p className="lead">還有很多地方沒有塗到喔。</p>
+            <div className="row-actions pb-ask">
+              <button className="btn primary pb-ask-btn" onClick={() => setAsk(false)} data-testid="finish-more">再畫一下</button>
+              <button className="btn pb-ask-btn" onClick={() => void doFinish()} data-testid="finish-anyway">就這樣完成</button>
+            </div>
           </div>
-        </Modal>
+        </div>
       )}
 
       {confirmClear && (
@@ -664,6 +716,8 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
           newFrames={done.newFrames}
           framesDone={done.framesDone}
           counted={done.counted}
+          stars={done.stars}
+          full={done.full}
           voiceOn={voiceOn}
           stage={pet?.stage ?? 'baby'}
           free={free}
@@ -678,34 +732,43 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
   )
 }
 
-/** 完成慶祝：阿悟拿著畫說「好漂亮！」。累計到門檻會多一塊「解鎖新畫框！」 */
-export function FinishCelebration({ png, hung, frame, newFrames, framesDone, counted, voiceOn, stage, free, onHang, onGallery, onKeep, onRestart, onBack }: { png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean; voiceOn: boolean; stage: string; free: boolean; onHang: () => void; onGallery: () => void; onKeep: () => void; onRestart: () => void; onBack: () => void }) {
+/**
+ * 完成慶祝：阿悟拿著畫說「好漂亮！」。累計到門檻會多一塊「解鎖新畫框！」。
+ * v7.3 F3：完成度 100% 有專屬慶祝（「全部塗滿了！」+ 加強版彩帶）；第一次算數的完成顯示得到的星星；
+ * 主按鈕精簡成三個（掛到房間、再畫一張 / 繼續畫、回著色本），畫廊入口放次要。
+ */
+export function FinishCelebration({ png, hung, frame, newFrames, framesDone, counted, stars = 0, full = false, voiceOn, stage, free, onHang, onGallery, onKeep, onRestart, onBack }: { png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean; stars?: number; full?: boolean; voiceOn: boolean; stage: string; free: boolean; onHang: () => void; onGallery: () => void; onKeep: () => void; onRestart: () => void; onBack: () => void }) {
   const art = stage === 'egg' ? 'pet-egg' : `pet-${stage}-cheer`
+  const pieces = full ? 64 : 28
   const confetti = useMemo(
-    () => Array.from({ length: 28 }, (_, i) => ({ left: (i * 37) % 100, delay: (i % 7) * 0.18, dur: 2.6 + (i % 5) * 0.4, hue: (i * 47) % 360 })),
-    [],
+    () => Array.from({ length: pieces }, (_, i) => ({ left: (i * 37) % 100, delay: (i % 7) * (full ? 0.12 : 0.18), dur: (full ? 2.2 : 2.6) + (i % 5) * 0.4, hue: (i * 47) % 360 })),
+    [pieces, full],
   )
   const unlocked = frameDef(newFrames.at(-1))
   const next = counted ? nextFrame(framesDone) : undefined
   useEffect(() => {
-    if (unlocked) sayText(FRAME_UNLOCK_LINE, { enabled: voiceOn })
-    // 只在剛完成時唸一次
+    // 只在剛完成時唸一次：全部塗滿 → 解鎖新畫框 → 得到星星（依序唸完）
+    const parts: { key: string; text: string }[] = []
+    if (full) parts.push({ key: 'pet.paint.full', text: PAINT_FULL_LINE })
+    if (unlocked) parts.push({ key: 'ui.frame.unlock', text: FRAME_UNLOCK_LINE })
+    if (stars === PAINT_STARS) parts.push({ key: 'pet.paint.stars', text: PAINT_STARS_LINE })
+    if (parts.length) sayChain(parts, { enabled: voiceOn })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
-    <div className="fc-back" role="dialog" aria-modal="true" aria-label="完成了" data-testid="finish-celebration">
-      <div className="fc-confetti" aria-hidden>
+    <div className={`fc-back ${full ? 'f73-full' : ''}`} role="dialog" aria-modal="true" aria-label="完成了" data-testid="finish-celebration" data-full={full ? '1' : '0'} data-stars={stars}>
+      <div className="fc-confetti" aria-hidden data-testid="fc-confetti" data-n={pieces}>
         {confetti.map((c, i) => (
           <i key={i} style={{ left: `${c.left}%`, animationDelay: `${c.delay}s`, animationDuration: `${c.dur}s`, background: `hsl(${c.hue} 85% 65%)` }} />
         ))}
       </div>
       <div className="fc-card">
-        <h2 className="fc-title">完成了！</h2>
+        <h2 className="fc-title">{full ? '全部塗滿了！' : '完成了！'}</h2>
         <div className="fc-scene">
           <div className="fc-pet">
             <Icon name={art} emoji="🐵" alt="阿悟" size="100%" />
           </div>
-          <div className="fc-bubble">好漂亮！</div>
+          <div className="fc-bubble">{full ? '全部塗滿了！' : '好漂亮！'}</div>
           {frame ? (
             <div className="fc-art fc-art-framed" data-testid="fc-art-framed" data-frame={frame}>
               <GalleryFrameView png={png} frame={frame} />
@@ -714,6 +777,13 @@ export function FinishCelebration({ png, hung, frame, newFrames, framesDone, cou
             <img className="fc-art" src={png} alt="完成的畫" />
           )}
         </div>
+        {stars > 0 && (
+          <div className="f73-stars" data-testid="fc-stars" role="status">
+            <Icon name="ui-star" emoji="⭐" size={40} />
+            <b>+{stars}</b>
+            <span>完成作品</span>
+          </div>
+        )}
         {unlocked && (
           <div className="fr-unlock" data-testid="frame-unlock" data-frame={unlocked.id} role="status">
             <div className="fr-unlock-art">
@@ -730,16 +800,22 @@ export function FinishCelebration({ png, hung, frame, newFrames, framesDone, cou
             再畫 {framesToGo(next.id, framesDone)} 幅，就能得到{next.name}
           </p>
         )}
-        <div className="fc-actions">
+        <div className="fc-actions" data-testid="fc-actions">
           {hung ? (
             <span className="fc-hung" data-testid="hung-ok">已掛到房間 ✓</span>
           ) : (
             <button className="btn primary" onClick={onHang} data-testid="hang-btn">掛到房間</button>
           )}
-          <button className="btn" onClick={onGallery} data-testid="to-gallery">看我的畫廊</button>
-          <button className="btn" onClick={onKeep}>繼續畫</button>
-          {free && <button className="btn" onClick={onRestart} data-testid="free-restart">再畫一張新的</button>}
-          <button className="btn" onClick={onBack}>回著色本</button>
+          {free ? (
+            <button className="btn" onClick={onRestart} data-testid="free-restart">再畫一張新的</button>
+          ) : (
+            <button className="btn" onClick={onKeep} data-testid="fc-keep">繼續畫</button>
+          )}
+          <button className="btn" onClick={onBack} data-testid="fc-back">回著色本</button>
+        </div>
+        <div className="f73-fc-more" data-testid="fc-more">
+          {free && <button className="btn f73-link" onClick={onKeep} data-testid="fc-keep-free">繼續畫</button>}
+          <button className="btn f73-link" onClick={onGallery} data-testid="to-gallery">看我的畫廊</button>
         </div>
       </div>
     </div>

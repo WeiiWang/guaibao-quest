@@ -417,9 +417,9 @@ async function coloringLayout(browser) {
       const toolsY = (await boxOf(page, '.pt-tools')).y
       check(`[${size}] 工具列在畫布下方`, toolsY >= board.y + board.h - 1, `${toolsY} vs ${board.y + board.h}`)
     }
-    // 色票 ≥48px
+    // 色票 ≥44px（v7.3 F1：橫向矮螢幕為了讓 24 色一次看完，縮到 44px；直向與手機維持 48px）
     const sw = await page.locator('[data-testid=palette] .swatch').evaluateAll((els) => els.map((e) => [Math.round(e.getBoundingClientRect().width), Math.round(e.getBoundingClientRect().height)]))
-    check(`[${size}] 24 個色票每個 ≥48×48`, sw.length === 24 && sw.every(([w, h]) => w >= 48 && h >= 48), `最小 ${Math.min(...sw.map((x) => x[0]))}x${Math.min(...sw.map((x) => x[1]))}`)
+    check(`[${size}] 24 個色票每個 ≥44×44（直向與手機 ≥48）`, sw.length === 24 && sw.every(([w, h]) => w >= (size === 'land' ? 44 : 48) && h >= (size === 'land' ? 44 : 48)), `最小 ${Math.min(...sw.map((x) => x[0]))}x${Math.min(...sw.map((x) => x[1]))}`)
     const firstVisible = await page.locator('[data-testid=palette] .swatch').first().boundingBox()
     check(`[${size}] 進頁面第一個色票就在畫面內（換色不用捲）`, firstVisible.y >= 0 && firstVisible.y + firstVisible.height <= vp.height)
     await shot(page, 'paint', size)
