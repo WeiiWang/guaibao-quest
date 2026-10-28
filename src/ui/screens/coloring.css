@@ -147,3 +147,17 @@
   .fc-confetti { display: none; }
   .page-progress i { transition: none; }
 }
+
+/* ---------- v7.1 D1：貼紙拖進畫布（class 一律 sd- 開頭） ---------- */
+/* 托盤自己往哪個方向捲，就把那個方向留給瀏覽器；另一個方向的移動才是「拖」。直向 / 手機：托盤橫向捲，往上拖 */
+.sd-btn { touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: grab; }
+.sd-btn .art, .sd-btn .art-emoji { pointer-events: none; -webkit-user-drag: none; }
+.pt-stickers-tray { grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); }
+@media not all and (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .sd-btn { touch-action: pan-x; }
+  .paint .pt-stickers-tray { height: 64px; }
+  .paint .pt-stickers-tray .pt-sticker-btn { width: 56px; height: 56px; }
+}
+.sd-ghost { position: fixed; left: 0; top: 0; z-index: 200; pointer-events: none; opacity: 0.5; filter: drop-shadow(0 6px 8px rgba(74, 59, 53, 0.35)); will-change: transform; }
+.sd-ghost[data-over='1'] { opacity: 0.78; }
+.sd-ghost .art, .sd-ghost .art-emoji { width: 100%; height: 100%; }

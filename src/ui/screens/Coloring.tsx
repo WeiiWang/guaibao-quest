@@ -41,7 +41,10 @@ import { BrushPreview, StampShape } from './coloring/BrushIcons'
 import { FreeThumb } from './coloring/FreeThumb'
 import { PaintBoard, type PaintTool } from './coloring/PaintBoard'
 import type { Ripple } from './coloring/RasterLayer'
-import { STICKERS, stickerEmoji } from './coloring/stickers'
+import { StickerTray, type DropApi } from './coloring/StickerTray'
+import { stickerEmoji } from './coloring/stickers'
+import { COUNT_MIN_PCT, FRAME_UNLOCK_LINE, countsAsFinished, frameDef, framesToGo, nextFrame, type FrameId } from '../../domain/frames'
+import { GalleryFrameView } from '../components/GalleryFrame'
 import type { Screen } from '../App'
 import './coloring.css'
 import './paintboard.css'
@@ -50,7 +53,7 @@ import './paintboard.css'
 export const COLORING_PALETTE = PALETTE_24.slice(0, 12)
 
 /** 完成度低於這個百分比就先問「再畫一點好嗎？」 */
-export const ASK_BELOW_PCT = 60
+export const ASK_BELOW_PCT = COUNT_MIN_PCT
 
 const RECENT_KEY = 'gq-recent-colors'
 const loadRecent = (): string[] => {
@@ -242,7 +245,9 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
   const [confirmClear, setConfirmClear] = useState(false)
   const [busy, setBusy] = useState(false)
   const [ask, setAsk] = useState(false)
-  const [done, setDone] = useState<{ galleryId: string; png: string; hung: boolean } | null>(null)
+  const [done, setDone] = useState<{ galleryId: string; png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean } | null>(null)
+  const [dragging, setDragging] = useState(false)
+  const dropApi = useRef<DropApi | null>(null)
   const docRef = useRef<PaintDoc>(emptyDoc())
   const gestureBefore = useRef<PaintDoc | null>(null)
   const popN = useRef(0)
@@ -316,8 +321,9 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
     if (ss[0]?.kind !== 'rainbow') rememberColor(ss[0].color)
   }
 
-  const addSticker = (art: string) => {
-    const spot = freeStickerSpot(d.stickers)
+  /** 點一下托盤：自動偏移避開既有貼紙；拖進畫布放開：貼在放開的位置（at） */
+  const addSticker = (art: string, at?: [number, number]) => {
+    const spot = at ?? freeStickerSpot(d.stickers)
     const st: ColoringSticker = { id: newId(), art, x: spot[0], y: spot[1], scale: 1.2, rot: 0 }
     commit({ ...d, stickers: [...d.stickers, st] })
     setSelected(st.id)
@@ -359,10 +365,10 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
     setBusy(true)
     try {
       const png = await renderArtworkPng({ pageId, bg: d.bg, fills: d.fills, strokes: d.strokes, stickers: d.stickers }, stickerEmoji)
-      const r = await repo.completeColoring(pageId, d, png)
+      const r = await repo.completeColoring(pageId, d, png, undefined, { counts: countsAsFinished(free, pct) })
       if (!r.ok) throw new Error(r.error)
-      playChime(soundOn, [523, 659, 784, 1047])
-      setDone({ galleryId: r.galleryId, png, hung: false })
+      playChime(soundOn, r.newFrames.length ? [523, 659, 784, 1047, 1319] : [523, 659, 784, 1047])
+      setDone({ galleryId: r.galleryId, png, hung: false, frame: r.frame, newFrames: r.newFrames, framesDone: r.framesDone, counted: r.counted })
     } catch {
       toast('這張畫存不起來，再按一次試試看', 'warn')
     } finally {
@@ -438,6 +444,8 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
             onStrokes={onStrokes}
             onSelect={setSelected}
             onStickersLive={(stickers) => live({ ...docRef.current, stickers })}
+            dropApi={dropApi}
+            dragging={dragging}
             onGestureStart={() => {
               gestureBefore.current = docRef.current
             }}
@@ -560,13 +568,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
             </div>
           )}
           {tool === 'sticker' && (
-            <div className="pt-stickers-tray" data-testid="sticker-tray">
-              {STICKERS.map((s) => (
-                <button key={s.art} className="pt-sticker-btn" onClick={() => addSticker(s.art)} aria-label={`貼上${s.label}`} data-testid={`add-sticker-${s.art}`}>
-                  <Icon name={s.art} emoji={s.emoji} alt={s.label} size="100%" />
-                </button>
-              ))}
-            </div>
+            <StickerTray dropApi={dropApi} onTap={(art) => addSticker(art)} onDrop={(art, at) => addSticker(art, at)} onDragChange={setDragging} />
           )}
           {tool === 'sticker' && (
             <div className="pt-opts sticker-ctl" data-testid="sticker-controls">
@@ -641,6 +643,11 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
         <FinishCelebration
           png={done.png}
           hung={done.hung}
+          frame={done.frame}
+          newFrames={done.newFrames}
+          framesDone={done.framesDone}
+          counted={done.counted}
+          voiceOn={voiceOn}
           stage={pet?.stage ?? 'baby'}
           free={free}
           onHang={hang}
@@ -654,13 +661,20 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
   )
 }
 
-/** 完成慶祝：阿悟拿著畫說「好漂亮！」 */
-function FinishCelebration({ png, hung, stage, free, onHang, onGallery, onKeep, onRestart, onBack }: { png: string; hung: boolean; stage: string; free: boolean; onHang: () => void; onGallery: () => void; onKeep: () => void; onRestart: () => void; onBack: () => void }) {
+/** 完成慶祝：阿悟拿著畫說「好漂亮！」。累計到門檻會多一塊「解鎖新畫框！」 */
+function FinishCelebration({ png, hung, frame, newFrames, framesDone, counted, voiceOn, stage, free, onHang, onGallery, onKeep, onRestart, onBack }: { png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean; voiceOn: boolean; stage: string; free: boolean; onHang: () => void; onGallery: () => void; onKeep: () => void; onRestart: () => void; onBack: () => void }) {
   const art = stage === 'egg' ? 'pet-egg' : `pet-${stage}-cheer`
   const confetti = useMemo(
     () => Array.from({ length: 28 }, (_, i) => ({ left: (i * 37) % 100, delay: (i % 7) * 0.18, dur: 2.6 + (i % 5) * 0.4, hue: (i * 47) % 360 })),
     [],
   )
+  const unlocked = frameDef(newFrames.at(-1))
+  const next = counted ? nextFrame(framesDone) : undefined
+  useEffect(() => {
+    if (unlocked) sayText(FRAME_UNLOCK_LINE, { enabled: voiceOn })
+    // 只在剛完成時唸一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <div className="fc-back" role="dialog" aria-modal="true" aria-label="完成了" data-testid="finish-celebration">
       <div className="fc-confetti" aria-hidden>
@@ -675,8 +689,30 @@ function FinishCelebration({ png, hung, stage, free, onHang, onGallery, onKeep, 
             <Icon name={art} emoji="🐵" alt="阿悟" size="100%" />
           </div>
           <div className="fc-bubble">好漂亮！</div>
-          <img className="fc-art" src={png} alt="完成的畫" />
+          {frame ? (
+            <div className="fc-art fc-art-framed" data-testid="fc-art-framed" data-frame={frame}>
+              <GalleryFrameView png={png} frame={frame} />
+            </div>
+          ) : (
+            <img className="fc-art" src={png} alt="完成的畫" />
+          )}
         </div>
+        {unlocked && (
+          <div className="fr-unlock" data-testid="frame-unlock" data-frame={unlocked.id} role="status">
+            <div className="fr-unlock-art">
+              <GalleryFrameView png={png} frame={unlocked.id} />
+            </div>
+            <div className="fr-unlock-text">
+              <h3 className="fr-unlock-title">解鎖新畫框！</h3>
+              <span className="fr-unlock-name">{unlocked.name}</span>
+            </div>
+          </div>
+        )}
+        {!unlocked && next && (
+          <p className="fr-next" data-testid="frame-next">
+            再畫 {framesToGo(next.id, framesDone)} 幅，就能得到{next.name}
+          </p>
+        )}
         <div className="fc-actions">
           {hung ? (
             <span className="fc-hung" data-testid="hung-ok">已掛到房間 ✓</span>
@@ -692,4 +728,3 @@ function FinishCelebration({ png, hung, stage, free, onHang, onGallery, onKeep, 
     </div>
   )
 }
-

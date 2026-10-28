@@ -163,9 +163,98 @@ export function pickWallSpot(art: { w: number; h: number }, walls: readonly Box[
   return best ? { x: best.x, y: best.y } : { x: 0.45, y: 0.3 }
 }
 
+// ---------- 手機掛畫（v7.1 D3） ----------
+/** 視窗寬度 ≤ 這個值就算手機：掛畫一定要放在第一屏看得到的牆面 */
+export const NARROW_MAX_W = 560
+export const isNarrowView = (innerW: number): boolean => innerW <= NARROW_MAX_W
+/** 掛畫可以縮到原來的幾倍（手機牆面擠，沒有空位時縮小畫框；不縮到看不清楚） */
+export const ART_SCALES = [1, 0.8, 0.65, 0.55, 0.45] as const
+export const MIN_ART_SCALE = ART_SCALES[ART_SCALES.length - 1]
+export const clampArtScale = (s: number | undefined): number => (Number.isFinite(s) ? Math.min(1, Math.max(MIN_ART_SCALE, s as number)) : 1)
+/** 第一屏左右各留的邊（房間寬的比例；手機約 12px），畫不貼著畫面邊緣 */
+const EDGE = 0.012
+
+/**
+ * 手機的狀態卡與按鈕（固定像素大小）：左上的頭像 + 阿悟狀態卡（蛋 / 幼體還有成長提示，到 y≈176、x≈190），
+ * 右邊的鎖頭、工坊 / 背包 / 更多一整排（距右緣 84px 內、到 y≈310）。房間寬 = 2.5 個視窗寬。
+ */
+export function hudBoxesPhone(viewW: number, roomH: number, adult = false): Box[] {
+  const roomW = 2.5 * viewW
+  const rw = (px: number) => px / roomW
+  const rh = (px: number) => px / roomH
+  return [
+    { x: VIEW_L + rw(192) / 2, y: rh(adult ? 132 : 178) / 2, w: rw(192), h: rh(adult ? 132 : 178) },
+    { x: VIEW_R - rw(84) / 2, y: rh(310) / 2, w: rw(84), h: rh(310) },
+  ]
+}
+
+/**
+ * 手機專用：在「剛進房間的第一屏」裡挑牆面空位，不用捲動就看得到。
+ * 先試原大小，擠不下就依序縮小（ART_SCALES）；每一種大小都要同時避開窗戶、狀態卡 / 按鈕、牆上已有的東西，也不能貼著畫面邊緣。
+ * 全部縮到最小還是沒空位（牆上已經掛滿）：改成跟已有的畫「錯開疊放」（每幅往下錯一點），但仍不蓋窗戶、不出第一屏。
+ * 回傳中心點與縮放倍率（1 = 原大小）。
+ */
+export function pickWallSpotFit(
+  art0: { w: number; h: number },
+  wallsIn: readonly Box[],
+  viewAspect: number,
+  /** 視窗寬與房間高（像素，推估）：有給就用像素算「狀態卡與按鈕」佔的位置（它們的大小是固定像素，不跟房間縮放） */
+  px?: { viewW: number; roomH: number; adult?: boolean },
+): { x: number; y: number; scale: number } {
+  // 畫面寬高比是推估的（不同手機的按鈕列高度略有不同，誤差約 ±7%）：窗戶與畫的寬度都往「寬高比較小」的一邊估，寧可多留空
+  const SAFE = 0.92
+  const art = { w: art0.w / SAFE, h: art0.h }
+  const walls = wallsIn.map((k) => ({ ...k, w: k.w / SAFE }))
+  const wins = windowBoxes(viewAspect * SAFE)
+  const huds = px ? hudBoxesPhone(px.viewW, px.roomH, px.adult) : hudBoxes()
+  const L = VIEW_L + EDGE
+  const R = VIEW_R - EDGE
+  const FLOOR = 0.62
+  type Cand = { x: number; y: number; scale: number; score: number }
+  const scan = (scale: number, strict: boolean): Cand | null => {
+    const w = art.w * scale
+    const h = art.h * scale
+    const yMin = h / 2 + 0.03
+    const yMax = FLOOR - 0.04 - h / 2
+    let best: Cand | null = null
+    for (let x = L + w / 2; x <= R - w / 2 + 1e-9; x += 0.004) {
+      for (let y = yMin; y <= yMax + 1e-9; y += 0.015) {
+        const box: Box = { x, y, w, h }
+        if (wins.some((k) => overlap(box, k))) continue // 窗戶：絕對不蓋
+        if (huds.some((k) => overlap(box, k))) continue // 狀態卡與按鈕：第一屏的畫要看得到，不被蓋住
+        let hits = 0
+        let cover = 0
+        for (const k of walls) {
+          if (!overlap(box, k, 0.006)) continue
+          hits++
+          cover += Math.max(0, Math.min(box.x + w / 2, k.x + k.w / 2) - Math.max(box.x - w / 2, k.x - k.w / 2)) * Math.max(0, Math.min(box.y + h / 2, k.y + k.h / 2) - Math.max(box.y - h / 2, k.y - k.h / 2))
+        }
+        if (strict && hits > 0) continue
+        // 乾淨的位置：靠上靠左排整齊；擠滿了：蓋住最少的，其次往下錯開
+        const score = strict ? (x - L) * 0.4 + y * 0.15 : cover * 2000 + hits + y * 0.15 + (x - L) * 0.05
+        if (!best || score < best.score) best = { x, y, scale, score }
+      }
+    }
+    return best
+  }
+  for (const sc of ART_SCALES) {
+    const c = scan(sc, true)
+    if (c) return { x: c.x, y: c.y, scale: c.scale }
+  }
+  const c = scan(MIN_ART_SCALE, false)
+  if (c) return { x: c.x, y: c.y, scale: c.scale }
+  return { x: VIEW_L + EDGE + (art.w * MIN_ART_SCALE) / 2, y: 0.3, scale: MIN_ART_SCALE }
+}
+
 /** 估計首頁房間的可視寬高比（掛畫時人不在首頁，從視窗大小推估；偏保守：寬高比取小一點，窗戶就估得寬一點） */
 export function estimateViewAspect(innerW: number, innerH: number): number {
   return Math.max(0.6, (innerW / Math.max(300, innerH - 300)) * 0.95)
+}
+
+/** 手機（直向）的畫面寬高比：房間高 ≈ 視窗高 − 255（下方是食物列與四顆大按鈕；實測 640–932 高的手機差在 ±20 以內） */
+export const phoneRoomH = (innerH: number): number => Math.max(300, innerH - 255)
+export function estimatePhoneAspect(innerW: number, innerH: number): number {
+  return Math.max(0.5, innerW / phoneRoomH(innerH))
 }
 
 // ---------- 蛋的進度環（C3） ----------

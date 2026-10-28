@@ -110,6 +110,8 @@ export interface Placement {
   placedAt: number
   /** v7：家具換色（1–4 = 四種色調；沒有 / 0 = 原色），用 CSS filter 呈現。舊資料沒有這欄 */
   tint?: number
+  /** v7.1：掛畫的縮放（手機牆面擠時自動縮小，0.45–1；沒有 = 原大小）。只有畫廊作品用 */
+  scale?: number
 }
 export interface Inventory {
   id: string
@@ -137,6 +139,8 @@ export interface ColoringProgress {
   /** 完成圖（PNG data URL） */
   png?: string
   createdAt?: number
+  /** v7.1：作品選用的畫框（見 domain/frames.ts 的 FrameId）；沒有 = 預設的簡單畫框（舊作品都是這樣） */
+  frame?: string
 }
 /** 筆刷種類（v7）。舊資料沒有 kind，視為 'pen' */
 /** 'erase' = 局部橡皮擦：在筆刷層用 destination-out 畫，只擦掉筆刷（不動線稿與填色）；資料仍是一條向量筆畫，可復原 */
@@ -207,6 +211,8 @@ export interface Settings {
   unlockedChapters?: string[]
   /** v7：6–7 歲的快速分級做過了（做完或略過都算；只問一次）。level = 分級結果的起跳難度 */
   placement?: { at: number; level?: 1 | 2 | 3 | 4; skipped?: boolean }
+  /** v7.1：累計「完成一幅」的幅數（畫框收藏的解鎖門檻 1、3、6、10、15；沒有 = 0） */
+  framesDone?: number
   /** v7：已經送過歡迎禮物（20 顆星星 + 1 個食物，只送一次；舊孩子沒有這欄也不補送） */
   welcomeGranted?: boolean
   /** v7：已經送過的成長里程碑（幼體 → 成體路上，每餵 20 次一份；存門檻 40、60） */

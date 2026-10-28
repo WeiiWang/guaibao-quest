@@ -4,9 +4,14 @@ import { db } from '../../db/db'
 import { repo } from '../../db/repo'
 import { getColoringPage } from '../../art/coloring/pages'
 import type { ColoringProgress } from '../../domain/types'
+import { FRAMES, FRAME_LOCKED_LINE, FRAME_PICK_LINE, framesToGo, isFrameId, isFrameUnlocked, nextFrame, type FrameId } from '../../domain/frames'
 import { ScreenHeader } from '../components/Header'
+import { GalleryFrameView } from '../components/GalleryFrame'
 import { Modal } from '../components/Modal'
 import { useToast } from '../hooks'
+import { useLearningSettings } from '../learningHooks'
+import { sayText } from '../../learning/speech'
+import { playPop } from '../sounds'
 import type { Screen } from '../App'
 import './coloring.css'
 
@@ -19,10 +24,17 @@ const dateText = (ms?: number) => {
 /** 我的畫廊：完成的著色作品。可以放大看、掛到房間、取下、刪除。 */
 export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Screen["name"] | Screen) => void }) {
   const toast = useToast()
+  const { voiceOn } = useLearningSettings()
+  const soundOn = useLiveQuery(async () => (await db.settings.get('main'))?.soundOn !== false, [], true)
+  const framesDone = useLiveQuery(() => repo.framesDone(), [], 0)
   const works = useLiveQuery(() => repo.listGallery(), [], [] as ColoringProgress[])
   const placements = useLiveQuery(() => db.placements.toArray(), [], [])
   const [view, setView] = useState<ColoringProgress | null>(null)
   const [confirmDel, setConfirmDel] = useState<ColoringProgress | null>(null)
+
+  // 彈窗裡的作品要跟著資料更新（換畫框後馬上看到），所以每次都從最新的清單找
+  const cur = view ? (works.find((w) => w.pageId === view.pageId) ?? view) : null
+  const [shaking, setShaking] = useState<string | null>(null)
 
   const gid = (w: ColoringProgress) => w.pageId.slice(2)
   const hung = (w: ColoringProgress) => placements.some((p) => p.itemId === `art-${gid(w)}`)
@@ -38,6 +50,19 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
     toast('已經從房間取下，到佈置模式可以再掛', 'info')
   }
 
+  const pickFrame = async (w: ColoringProgress, id: FrameId | undefined) => {
+    if (id && !isFrameUnlocked(id, framesDone)) {
+      setShaking(id)
+      window.setTimeout(() => setShaking((v) => (v === id ? null : v)), 520)
+      sayText(FRAME_LOCKED_LINE, { enabled: voiceOn })
+      return
+    }
+    const r = await repo.setArtworkFrame(gid(w), id)
+    if (!r.ok) return toast(r.error, 'warn')
+    playPop(soundOn)
+  }
+  const next = nextFrame(framesDone)
+
   return (
     <main className="screen gallery theme-lavender" data-testid="gallery">
       <ScreenHeader title="我的畫廊" onBack={onBack} backLabel="← 著色本" />
@@ -45,8 +70,8 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
       <ul className="gallery-grid">
         {works.map((w) => (
           <li key={w.pageId} className="card gallery-item" data-testid="gallery-item">
-            <button className="gallery-thumb" onClick={() => setView(w)} aria-label={`看大圖：${nameOf(w)}`}>
-              {w.png ? <img src={w.png} alt={nameOf(w)} /> : <span>🖼️</span>}
+            <button className={`gallery-thumb ${isFrameId(w.frame) ? 'fr-framed' : ''}`} onClick={() => setView(w)} aria-label={`看大圖：${nameOf(w)}`}>
+              {isFrameId(w.frame) ? <GalleryFrameView png={w.png} frame={w.frame} className="fr-thumb" /> : w.png ? <img src={w.png} alt={nameOf(w)} /> : <span>🖼️</span>}
               {hung(w) && <b className="gallery-badge">掛在房間</b>}
             </button>
             <div className="gallery-name">
@@ -55,17 +80,48 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
           </li>
         ))}
       </ul>
-      {view && (
-        <Modal title={nameOf(view)} onClose={() => setView(null)}>
-          <div className="gallery-view">{view.png && <img src={view.png} alt={nameOf(view)} />}</div>
+      {view && cur && (
+        <Modal title={nameOf(cur)} onClose={() => setView(null)}>
+          <div className="fr-big" data-testid="gallery-view">
+            <GalleryFrameView png={cur.png} frame={cur.frame} className="fr-big-frame" />
+          </div>
+          <div className="fr-picker" data-testid="frame-picker" aria-label="畫框">
+            <h3 className="fr-picker-title" onClick={() => sayText(FRAME_PICK_LINE, { enabled: voiceOn })}>畫框</h3>
+            <div className="fr-row" role="group" aria-label="選畫框">
+              <button className={`fr-opt ${!isFrameId(cur.frame) ? 'on' : ''}`} onClick={() => void pickFrame(cur, undefined)} aria-pressed={!isFrameId(cur.frame)} data-testid="frame-opt-plain">
+                <span className="fr-opt-art"><GalleryFrameView png={cur.png} /></span>
+                <span>簡單</span>
+              </button>
+              {FRAMES.map((f) => {
+                const open = isFrameUnlocked(f.id, framesDone)
+                return (
+                  <button
+                    key={f.id}
+                    className={`fr-opt ${cur.frame === f.id ? 'on' : ''} ${open ? '' : 'locked'} ${shaking === f.id ? 'ux-shake' : ''}`}
+                    onClick={() => void pickFrame(cur, f.id)}
+                    aria-pressed={cur.frame === f.id}
+                    aria-label={open ? f.name : `${f.name}，還沒解鎖，再畫完 ${framesToGo(f.id, framesDone)} 幅`}
+                    data-testid={`frame-opt-${f.id}`}
+                    data-locked={open ? '0' : '1'}
+                  >
+                    <span className="fr-opt-art"><GalleryFrameView png={cur.png} frame={f.id} /></span>
+                    <span>{f.name}</span>
+                    {!open && <span className="fr-opt-lock" aria-hidden>🔒</span>}
+                    {!open && <span className="fr-opt-need">再 {framesToGo(f.id, framesDone)} 幅</span>}
+                  </button>
+                )
+              })}
+            </div>
+            <p className="fr-progress" data-testid="frame-progress">{next ? `畫完 ${framesDone} 幅了，再畫 ${next.need - framesDone} 幅就能得到${next.name}` : `畫完 ${framesDone} 幅了，畫框都收集好了！`}</p>
+          </div>
           <div className="row-actions">
-            {hung(view) ? (
-              <button className="btn" onClick={() => unhang(view)}>從房間取下</button>
+            {hung(cur) ? (
+              <button className="btn" onClick={() => unhang(cur)}>從房間取下</button>
             ) : (
-              <button className="btn primary" onClick={() => hang(view)} data-testid="hang-btn">掛到房間</button>
+              <button className="btn primary" onClick={() => hang(cur)} data-testid="hang-btn">掛到房間</button>
             )}
             <button className="btn" onClick={() => go({ name: 'home', edit: true })}>去佈置</button>
-            <button className="btn danger" onClick={() => { setConfirmDel(view); setView(null) }}>刪除</button>
+            <button className="btn danger" onClick={() => { setConfirmDel(cur); setView(null) }}>刪除</button>
           </div>
         </Modal>
       )}

@@ -1,6 +1,7 @@
 // v7 線 A：繪圖板 2.0 E2E（Playwright）。涵蓋：
 //   點陣線稿頁（區塊、填色、點在線上、完成度）、筆刷盒（蠟筆 / 彩虹 / 鏡像）、放大（按鈕、小地圖、座標換算、雙指縮放）、
 //   空白畫紙（換背景、完成、存進畫廊、掛到房間、再畫一張）、音效開關、減少動態，並截圖到 design/reviews/v7-paint-shots/。
+// v7.1：貼紙拖進畫布（D1）、完成解鎖畫框與畫廊選畫框（D2），截圖到 design/reviews/v71-shots/。
 // 用法：先啟動 dev server（pnpm dev --port 5190 --strictPort），再
 //   BASE_URL=http://localhost:5190 node scripts/e2e-paint.mjs      （或 pnpm e2e:paint）
 // 需要 Chromium：預設找 ~/Library/Caches/ms-playwright 內已安裝的，或用 CHROME_PATH 指定。
@@ -8,10 +9,14 @@
 import { mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { freshApp, idb, launch, makeChecker } from './e2e-lib.mjs'
+import { BASE, freshApp, idb, launch, makeChecker } from './e2e-lib.mjs'
+
+const BASE_URL_OF = () => BASE
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '../design/reviews/v7-paint-shots')
+const OUT71 = join(dirname(fileURLToPath(import.meta.url)), '../design/reviews/v71-shots')
 mkdirSync(OUT, { recursive: true })
+mkdirSync(OUT71, { recursive: true })
 const { state, check } = makeChecker()
 const VP = { width: 1180, height: 820 }
 const PAGE = 'line-awu-banana' // 免費送的第一張點陣頁
@@ -22,6 +27,10 @@ const docOf = async (page, id) => (await dump(page, 'coloring')).find((c) => c.p
 const shot = async (page, name) => {
   await page.waitForTimeout(350)
   await page.screenshot({ path: join(OUT, `${name}.png`) })
+}
+const shot71 = async (page, name) => {
+  await page.waitForTimeout(350)
+  await page.screenshot({ path: join(OUT71, `${name}.png`) })
 }
 const patchSettings = (page, patch) =>
   idb(
@@ -674,6 +683,278 @@ try {
     const undone = (await docOf(page, PAGE)).stickers[0]
     check('貼紙：雙指縮放旋轉是一個復原步驟', Math.abs(undone.scale - before.scale) < 0.001 && undone.rot === before.rot)
     check('試玩審查項目：JS 沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // ================= 8) v7.1 D1：貼紙從托盤拖進畫布 =================
+  {
+    const { ctx, page, errors } = await freshApp(browser, VP)
+    await openList(page)
+    await page.getByTestId('free-1').click()
+    await page.waitForSelector('[data-testid=free-bg]')
+    await page.getByTestId('tool-sticker').click()
+    const stickers = async () => (await docOf(page, 'free-1'))?.stickers ?? []
+    const btnCenter = async (art) => {
+      const b = await page.getByTestId(`add-sticker-${art}`).boundingBox()
+      return { x: b.x + b.width / 2, y: b.y + b.height / 2 }
+    }
+    const viewOf = async () => {
+      const [ox, oy] = (await page.getByTestId('paint-board').getAttribute('data-view')).split(',').map(Number)
+      return { ox, oy, z: Number(await page.getByTestId('paint-board').getAttribute('data-zoom')) }
+    }
+    /** 螢幕上的點 → 座標空間（0–400），和程式一樣的公式 */
+    const expectAt = async (fx, fy) => {
+      const v = await viewOf()
+      return [(v.ox + fx / v.z) * 416 - 8, (v.oy + fy / v.z) * 416 - 8]
+    }
+    const dragTo = async (art, fx, fy, { hold = false } = {}) => {
+      const bb = await board(page)
+      const from = await btnCenter(art)
+      const to = { x: bb.x + bb.width * fx, y: bb.y + bb.height * fy }
+      await page.mouse.move(from.x, from.y)
+      await page.mouse.down()
+      await page.mouse.move(from.x - 16, from.y - 8, { steps: 3 })
+      await page.mouse.move(to.x, to.y, { steps: 12 })
+      if (hold) return to
+      await page.mouse.up()
+      await page.waitForTimeout(200)
+      return to
+    }
+
+    // 拖到畫布 (0.25, 0.75)：貼在放開的位置
+    const held = await dragTo('obj-star', 0.25, 0.75, { hold: true })
+    check('拖曳中：手指下有半透明的貼紙預覽', (await page.getByTestId('sticker-ghost').count()) === 1 && (await page.getByTestId('sticker-ghost').getAttribute('data-art')) === 'obj-star')
+    check('拖曳中：預覽在畫布上時比較實（data-over=1）', (await page.getByTestId('sticker-ghost').getAttribute('data-over')) === '1')
+    const gb = await page.getByTestId('sticker-ghost').boundingBox()
+    check('拖曳中：預覽跟著手指（中心離手指 < 3px）', Math.abs(gb.x + gb.width / 2 - held.x) < 3 && Math.abs(gb.y + gb.height / 2 - held.y) < 3)
+    check('拖曳中：還沒放開，畫上沒有貼紙', (await stickers()).length === 0)
+    await shot71(page, 'd1-drag-land')
+    await page.mouse.up()
+    await page.waitForTimeout(250)
+    let st = await stickers()
+    const [ex, ey] = await expectAt(0.25, 0.75)
+    check('放開：貼紙貼在放開的位置（誤差 < 3 單位）', st.length === 1 && Math.abs(st[0].x - ex) < 3 && Math.abs(st[0].y - ey) < 3, JSON.stringify(st[0]) + ` 預期 ${ex.toFixed(1)},${ey.toFixed(1)}`)
+    check('放開：預覽消失、只貼一張（不會再補一個 click 的貼紙）', (await page.getByTestId('sticker-ghost').count()) === 0 && st.length === 1 && (await page.locator('[data-testid=sticker]').count()) === 1)
+    check('放開：貼上的貼紙被選取（出現放大手柄）', (await page.getByTestId('sticker-handle').count()) === 1)
+    check('拖曳：沒有誤畫筆畫', ((await docOf(page, 'free-1'))?.strokes ?? []).length === 0)
+    await shot71(page, 'd1-dropped-land')
+
+    // 放在畫布外：取消
+    await dragTo('obj-banana', 0.5, 0.5, { hold: true })
+    const bb0 = await board(page)
+    await page.mouse.move(bb0.x + bb0.width + 60, bb0.y + bb0.height / 2, { steps: 6 }) // 畫布右邊（工具面板上）
+    check('拖到畫布外：預覽變淡（data-over=0）', (await page.getByTestId('sticker-ghost').getAttribute('data-over')) === '0')
+    await shot71(page, 'd1-cancel-land')
+    await page.mouse.up()
+    await page.waitForTimeout(200)
+    check('放在畫布外：取消，沒有新貼紙', (await stickers()).length === 1 && (await page.getByTestId('sticker-ghost').count()) === 0)
+
+    // 只點一下：照舊（自動偏移，不疊在一起）
+    await page.getByTestId('add-sticker-obj-peach').click()
+    await page.getByTestId('add-sticker-obj-apple').click()
+    st = await stickers()
+    check('只點一下：維持現行行為（貼在畫面中央附近，兩張不疊在一起）', st.length === 3 && Math.hypot(st[1].x - st[2].x, st[1].y - st[2].y) >= 60 && Math.abs(st[1].x - 200) < 1 && Math.abs(st[1].y - 200) < 1, JSON.stringify(st.slice(1)))
+
+    // 復原：一次拖放 = 一步
+    await dragTo('obj-grape', 0.7, 0.3)
+    check('拖放後：貼紙 4 張', (await stickers()).length === 4)
+    await page.getByTestId('undo-btn').click()
+    await page.waitForTimeout(200)
+    check('復原一步：拖進去的那張不見', (await stickers()).length === 3)
+
+    // 放大 2× 之後拖進去：座標要經過放大換算
+    await page.getByTestId('zoom-in').click()
+    await page.waitForTimeout(150)
+    await page.getByTestId('tool-sticker').click()
+    await dragTo('obj-fish', 0.7, 0.4)
+    st = await stickers()
+    const [zx, zy] = await expectAt(0.7, 0.4)
+    const v2 = await viewOf()
+    check('放大 2×：貼在手指下方（視窗 0.25,0.25 起算）', v2.z === 2 && st.length === 4 && Math.abs(st[3].x - zx) < 3 && Math.abs(st[3].y - zy) < 3, `${JSON.stringify(st[3])} 預期 ${zx.toFixed(1)},${zy.toFixed(1)}`)
+    check('放大 2×：座標落在 (200+0.4*208) 附近而不是畫面 0.7 比例（確實換算過）', Math.abs(st[3].x - (200 - 104 + 0.7 * 208)) < 3)
+    // 拖在放大鈕上 = 取消
+    const zb = await page.getByTestId('pb-zoom').boundingBox()
+    const fb = await btnCenter('obj-shell')
+    await page.mouse.move(fb.x, fb.y)
+    await page.mouse.down()
+    await page.mouse.move(fb.x - 20, fb.y, { steps: 3 })
+    await page.mouse.move(zb.x + 8, zb.y + zb.height / 2, { steps: 10 })
+    await page.mouse.up()
+    await page.waitForTimeout(150)
+    check('放在放大鈕上：取消（那不是畫布）', (await stickers()).length === 4)
+    check('貼紙拖曳：JS 沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // ================= 8b) D1：手機觸控拖曳（真正的觸控事件，托盤橫向捲動） =================
+  {
+    const { ctx, page, errors } = await freshApp(browser, { width: 390, height: 844 }, { ctxOpts: { hasTouch: true, isMobile: true } })
+    await page.getByRole('button', { name: /著色本/ }).first().tap()
+    await page.waitForSelector('[data-testid=free-1]')
+    await page.getByTestId('free-1').tap()
+    await page.waitForSelector('[data-testid=free-bg]')
+    await page.getByTestId('tool-sticker').tap()
+    const cdp = await ctx.newCDPSession(page)
+    const touch = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y], i) => ({ x, y, id: i + 1 })) })
+    const sz = await page.getByTestId('add-sticker-pet-adult-happy').boundingBox()
+    check('手機：貼紙按鈕 ≥ 56px', sz.width >= 55.5 && sz.height >= 55.5, `${sz.width}x${sz.height}`)
+    const bb = await board(page)
+    const from = [sz.x + sz.width / 2, sz.y + sz.height / 2]
+    const to = [bb.x + bb.width * 0.3, bb.y + bb.height * 0.4]
+    const scroll0 = await page.getByTestId('sticker-tray').evaluate((e) => e.scrollLeft)
+    await touch('touchStart', [from])
+    for (let i = 1; i <= 10; i++) await touch('touchMove', [[from[0] + ((to[0] - from[0]) * i) / 10, from[1] + ((to[1] - from[1]) * i) / 10]])
+    await page.waitForTimeout(120)
+    check('手機觸控拖曳中：預覽出現', (await page.getByTestId('sticker-ghost').count()) === 1)
+    await shot71(page, 'd1-drag-phone')
+    await touch('touchEnd', [])
+    await page.waitForTimeout(250)
+    const stk = (await docOf(page, 'free-1'))?.stickers ?? []
+    const [ex, ey] = [(0.3 * 416) - 8, (0.4 * 416) - 8]
+    check('手機觸控：貼在放開的位置', stk.length === 1 && Math.abs(stk[0].x - ex) < 4 && Math.abs(stk[0].y - ey) < 4, JSON.stringify(stk[0]) + ` 預期 ${ex.toFixed(1)},${ey.toFixed(1)}`)
+    check('手機觸控：托盤沒有被捲動（往上拖不會變成橫向捲）', (await page.getByTestId('sticker-tray').evaluate((e) => e.scrollLeft)) === scroll0)
+    check('手機觸控：沒有誤畫筆畫、沒有縮放', ((await docOf(page, 'free-1'))?.strokes ?? []).length === 0 && Number(await page.getByTestId('paint-board').getAttribute('data-zoom')) === 1)
+    await shot71(page, 'd1-dropped-phone')
+    // 在托盤上橫向滑（捲托盤）：不會拖出貼紙
+    const y0 = sz.y + sz.height / 2
+    await touch('touchStart', [[300, y0]])
+    for (let i = 1; i <= 8; i++) await touch('touchMove', [[300 - i * 25, y0]])
+    await touch('touchEnd', [])
+    await page.waitForTimeout(250)
+    check('手機：在托盤上橫滑只是捲動托盤，不會貼出貼紙', ((await docOf(page, 'free-1'))?.stickers ?? []).length === 1 && (await page.getByTestId('sticker-tray').evaluate((e) => e.scrollLeft)) > scroll0, String(await page.getByTestId('sticker-tray').evaluate((e) => e.scrollLeft)))
+    check('手機貼紙拖曳：JS 沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // ================= 9) v7.1 D2：完成解鎖畫框、畫廊選畫框、房間掛畫套畫框 =================
+  {
+    const { ctx, page, errors } = await freshApp(browser, VP)
+    const works = async () => (await dump(page, 'coloring')).filter((c) => c.pageId.startsWith('g:')).sort((a, b) => (a.createdAt ?? 0) - (b.createdAt ?? 0))
+    const framesDone = async () => ((await dump(page, 'settings'))[0]?.framesDone ?? 0)
+    const scribble = async (y) => {
+      const bb = await board(page)
+      await page.getByTestId('tool-brush').click()
+      await stroke(page, { x: bb.x + 100, y: bb.y + y }, { x: bb.x + 380, y: bb.y + y + 40 }, 10)
+    }
+    await openList(page)
+    await page.getByTestId('free-1').click()
+    await page.waitForSelector('[data-testid=free-bg]')
+    await scribble(200)
+    await page.getByTestId('finish-btn').click()
+    await page.waitForSelector('[data-testid=finish-celebration]')
+    check('完成第 1 幅：慶祝畫面出現「解鎖新畫框！」與木框預覽', (await page.getByTestId('frame-unlock').count()) === 1 && (await page.getByTestId('frame-unlock').getAttribute('data-frame')) === 'wood' && /解鎖新畫框！/.test(await page.getByTestId('frame-unlock').innerText()) && /木框/.test(await page.getByTestId('frame-unlock').innerText()))
+    check('完成第 1 幅：慶祝畫面裡的畫已經戴上木框', (await page.getByTestId('fc-art-framed').getAttribute('data-frame')) === 'wood')
+    check('完成第 1 幅：累計 1 幅、畫廊作品帶 frame = wood', (await framesDone()) === 1 && (await works())[0]?.frame === 'wood')
+    await page.waitForTimeout(600) // 等彈出動畫跑完（動畫中的尺寸會縮小）
+    check('慶祝畫面的按鈕都 ≥ 56px 高', (await page.locator('.fc-actions .btn').evaluateAll((els) => els.every((e) => e.getBoundingClientRect().height >= 55.5))))
+    await shot71(page, 'd2-unlock-land')
+
+    // 沒再畫就重複按完成：不重複累計
+    await page.getByRole('button', { name: '繼續畫' }).click()
+    await page.getByTestId('finish-btn').click()
+    await page.waitForSelector('[data-testid=finish-celebration]')
+    check('沒再畫就重複按完成：不重複累計（仍是 1 幅）、沒有再解鎖', (await framesDone()) === 1 && (await page.getByTestId('frame-unlock').count()) === 0)
+    // 再畫一筆再完成：第 2 幅，沒有新畫框，顯示下一個目標
+    await page.getByRole('button', { name: '繼續畫' }).click()
+    await scribble(320)
+    await page.getByTestId('finish-btn').click()
+    await page.waitForSelector('[data-testid=finish-celebration]')
+    check('第 2 幅：累計 2，沒有解鎖，顯示「再畫 1 幅，就能得到銀框」', (await framesDone()) === 2 && (await page.getByTestId('frame-unlock').count()) === 0 && /再畫 1 幅，就能得到銀框/.test(await page.getByTestId('frame-next').innerText()))
+    await page.getByRole('button', { name: '回著色本' }).click()
+
+    // 畫得太少（著色頁完成度 < 60%）→ 「就這樣完成」不算
+    await page.getByTestId('page-monkey').getByRole('button').click()
+    await page.waitForSelector('[data-testid=paint-board]')
+    await page.waitForTimeout(250)
+    const mb = await board(page)
+    await page.mouse.click(mb.x + mb.width * 0.5, mb.y + mb.height * 0.236) // 頭的上緣（臉在中間，不會點到臉）
+    await page.waitForTimeout(200)
+    await page.getByTestId('finish-btn').click()
+    await page.getByTestId('finish-anyway').click()
+    await page.waitForSelector('[data-testid=finish-celebration]')
+    check('完成度不到 60%、選「就這樣完成」：不累計、不解鎖、畫維持預設畫框', (await framesDone()) === 2 && (await page.getByTestId('frame-unlock').count()) === 0 && (await page.getByTestId('fc-art-framed').count()) === 0 && (await works()).at(-1)?.frame === undefined)
+    await page.getByRole('button', { name: '回著色本' }).click()
+
+    // 畫廊：選畫框
+    await page.getByTestId('open-gallery').click()
+    await page.waitForSelector('[data-testid=gallery-item]')
+    check('畫廊：已經戴上框的作品，縮圖也有畫框', (await page.locator('.gallery-thumb .gallery-frame[data-frame=wood]').count()) >= 1)
+    const firstWork = (await works())[0]
+    await page.locator('.gallery-thumb').last().click() // 最舊的（第 1 幅，戴木框）排在最後
+    await page.waitForSelector('[data-testid=frame-picker]')
+    await page.waitForTimeout(500)
+    check('畫廊選畫框：有「簡單」+ 5 種畫框', (await page.locator('[data-testid^=frame-opt-]').count()) === 6)
+    check('畫廊選畫框：累計 2 幅時，木框可選、銀框 / 金框 / 彩虹框 / 星星框鎖住', (await page.getByTestId('frame-opt-wood').getAttribute('data-locked')) === '0' && (await page.getByTestId('frame-opt-silver').getAttribute('data-locked')) === '1' && (await page.getByTestId('frame-opt-star').getAttribute('data-locked')) === '1')
+    check('畫廊選畫框：選項按鈕 ≥ 56px', await page.locator('[data-testid^=frame-opt-]').evaluateAll((els) => els.every((e) => e.getBoundingClientRect().width >= 55.5 && e.getBoundingClientRect().height >= 55.5)))
+    check('畫廊選畫框：顯示目標「再畫 1 幅就能得到銀框」', /再畫 1 幅就能得到銀框/.test(await page.getByTestId('frame-progress').innerText()))
+    await page.getByTestId('frame-opt-silver').click()
+    await page.waitForTimeout(200)
+    check('點到還沒解鎖的畫框：不會套用', (await works())[0].frame === firstWork.frame)
+    await page.getByTestId('frame-opt-plain').click()
+    await page.waitForTimeout(250)
+    check('選「簡單」：作品的 frame 欄位移除', (await works())[0].frame === undefined)
+    await page.getByTestId('frame-opt-wood').click()
+    await page.waitForTimeout(250)
+    check('選木框：存進作品；大圖預覽立刻套上', (await works())[0].frame === 'wood' && (await page.locator('[data-testid=gallery-view] .gallery-frame').getAttribute('data-frame')) === 'wood')
+    await shot71(page, 'd2-gallery-picker-land')
+
+    // 掛到房間 → 房間裡的畫套用畫框
+    await page.getByTestId('hang-btn').click()
+    await page.waitForTimeout(250)
+    await page.goto(BASE_URL_OF(page))
+    await page.waitForSelector('[data-testid=room]')
+    await page.waitForTimeout(800)
+    check('房間：掛畫套用作品選的畫框（木框）', (await page.locator('[data-placed^=art-] .gf-board.fr-wood').count()) === 1)
+    await shot71(page, 'd2-room-wood-land')
+
+    // 全部解鎖：五種畫框都能選、都畫得出來
+    await patchSettings(page, { framesDone: 15 })
+    await page.goto(BASE_URL_OF(page) + '#gallery')
+    await page.reload()
+    await page.waitForSelector('[data-testid=gallery-item]')
+    await page.locator('.gallery-thumb').last().click()
+    await page.waitForSelector('[data-testid=frame-picker]')
+    check('累計 15 幅：五種畫框都解鎖了，顯示全部收集好了', (await page.locator('[data-testid^=frame-opt-][data-locked="1"]').count()) === 0 && /畫框都收集好了/.test(await page.getByTestId('frame-progress').innerText()))
+    for (const f of ['silver', 'gold', 'rainbow', 'star']) {
+      await page.getByTestId(`frame-opt-${f}`).click()
+      await page.waitForTimeout(200)
+      const bgc = await page.locator('[data-testid=gallery-view] .gf-board').evaluate((e) => getComputedStyle(e).backgroundImage)
+      check(`畫框 ${f}：大圖預覽用了畫框樣式（有漸層邊框）`, (await works())[0].frame === f && /gradient/.test(bgc), bgc.slice(0, 60))
+    }
+    check('星星框：四個角有星星', (await page.locator('[data-testid=gallery-view] i.fr-spark').count()) === 4)
+    await shot71(page, 'd2-gallery-star-land')
+    await page.getByTestId('hang-btn').click().catch(() => {})
+    await page.waitForTimeout(200)
+    check('畫框：JS 沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // ================= 9b) D2：手機（390×844）解鎖畫面與選畫框不破版 =================
+  {
+    const { ctx, page, errors } = await freshApp(browser, { width: 390, height: 844 }, { ctxOpts: { hasTouch: true, isMobile: true } })
+    await page.getByRole('button', { name: /著色本/ }).first().tap()
+    await page.waitForSelector('[data-testid=free-1]')
+    await page.getByTestId('free-1').tap()
+    await page.waitForSelector('[data-testid=free-bg]')
+    const bb = await board(page)
+    await page.getByTestId('tool-brush').tap()
+    await stroke(page, { x: bb.x + 60, y: bb.y + 120 }, { x: bb.x + 300, y: bb.y + 200 }, 10)
+    await page.getByTestId('finish-btn').tap()
+    await page.waitForSelector('[data-testid=finish-celebration]')
+    await page.waitForTimeout(600)
+    const card = await page.locator('.fc-card').boundingBox()
+    const acts = await page.locator('.fc-actions .btn').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()))
+    check('手機：慶祝畫面沒有橫向溢出，解鎖畫框的區塊看得到', card.x >= 0 && card.x + card.width <= 390 && (await page.getByTestId('frame-unlock').isVisible()))
+    check('手機：慶祝畫面按鈕 ≥ 56px 高、都在畫面寬度內', acts.every((a) => a.height >= 55.5 && a.x >= 0 && a.x + a.width <= 390.5))
+    await shot71(page, 'd2-unlock-phone')
+    await page.getByTestId('to-gallery').tap()
+    await page.waitForSelector('[data-testid=gallery-item]')
+    await page.locator('.gallery-thumb').first().tap()
+    await page.waitForSelector('[data-testid=frame-picker]')
+    const modal = await page.locator('.modal').boundingBox()
+    check('手機：畫廊選畫框的視窗在畫面內', modal.x >= 0 && modal.x + modal.width <= 390.5)
+    await shot71(page, 'd2-gallery-picker-phone')
+    check('手機畫框：JS 沒有錯誤', errors.length === 0, errors.join(' | '))
     await ctx.close()
   }
 
