@@ -68,29 +68,29 @@ describe('禮物袋：一次全部收下', () => {
 })
 
 describe('成長里程碑（幼體到成體每餵 20 次）', () => {
-  it('餵到 40 次：送小擺飾 + 一張標「新」的回憶卡；只送一次', async () => {
+  it('餵到 26 次：送小擺飾 + 一張標「新」的回憶卡；只送一次', async () => {
     await give('banana', 5)
-    await setFeed(39)
+    await setFeed(25)
     const r = await repo.feedPet('banana', T0)
     expect(r.ok).toBe(true)
     expect((await repo.db.inventory.get('decor-ball'))?.qty).toBe(1)
     const s = (await repo.getSettings())!
-    expect(s.milestonesGiven).toEqual([40])
-    const card = s.album?.find((c) => c.id === 'milestone:40')
+    expect(s.milestonesGiven).toEqual([26])
+    const card = s.album?.find((c) => c.id === 'milestone:26')
     expect(card).toMatchObject({ kind: 'milestone', reward: 'decor-ball', fresh: true })
     expect(card?.caption).toContain('長大一點')
     await repo.feedPet('banana', T0 + 1)
     expect((await repo.db.inventory.get('decor-ball'))?.qty).toBe(1)
     expect((await repo.getSettings())!.album?.filter((c) => c.kind === 'milestone')).toHaveLength(1)
   })
-  it('餵到 60 次：送壁紙；蛋與成體不送', async () => {
+  it('餵到 46 次：送壁紙；蛋與成體不送', async () => {
     await give('banana', 5)
-    await setFeed(59)
+    await setFeed(45)
     await repo.feedPet('banana', T0)
     expect((await repo.db.inventory.get('wall-mint'))?.qty).toBe(1)
     await setFeed(10, 'egg')
     await repo.feedPet('banana', T0 + 5)
-    expect((await repo.getSettings())!.milestonesGiven).toEqual([60])
+    expect((await repo.getSettings())!.milestonesGiven).toEqual([46])
   })
 })
 

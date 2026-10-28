@@ -419,6 +419,15 @@ describe('各難度符合規格範圍', () => {
     }
     expect(new Set(of('pattern', 4).map((q) => q.type))).toEqual(new Set(['attr', 'grow']))
   })
+  it('v7.3：「看看顏色 / 種類」的題目真的要靠顏色或種類才能解（不是單看形狀就成立的 小魚、汽車、小魚、汽車 交替）', () => {
+    const attrs = of('pattern', 4).filter((q) => q.type === 'attr')
+    expect(attrs.length).toBeGreaterThanOrEqual(24)
+    for (const q of attrs) {
+      const shown = q.items.map((i) => i.obj).filter((o): o is string => !!o)
+      const shapeAlternates = shown.every((o, k) => k < 2 || o === shown[k - 2])
+      expect(shapeAlternates && shown[shown.length - 2] === q.answer, `${q.id} 形狀交替就能答對`).toBe(false)
+    }
+  })
   it('核心與提示用字：每個題幹格都有對應的字（空格是空字串）', () => {
     for (const q of QUESTIONS.filter((x) => x.params?.words)) expect(q.params!.words, q.id).toHaveLength(q.items.length)
   })

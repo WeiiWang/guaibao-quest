@@ -9,6 +9,8 @@ import {
   DECOR_TINTS,
   eggArtChain,
   eggLook,
+  BABY_FROM,
+  ADULT_AT,
   estimateViewAspect,
   growProgress,
   homeLineMap,
@@ -52,28 +54,34 @@ describe('蛋的外觀分段（0–33 / 33–66 / 66–90 / 90+）', () => {
     expect(eggArtChain(0)).toEqual(['pet-egg'])
   })
   it('進度環：蛋看孵化、幼體看長大、成體滿', () => {
-    expect(growProgress({ stage: 'egg', feedCount: 10 })).toBe(0.5)
-    expect(growProgress({ stage: 'baby', feedCount: 50 })).toBe(0.5)
+    expect(growProgress({ stage: 'egg', feedCount: 3 })).toBe(0.5)
+    expect(growProgress({ stage: 'baby', feedCount: 36 })).toBe(0.5)
     expect(growProgress({ stage: 'adult', feedCount: 80 })).toBe(1)
+  })
+  it('v7.3：這裡的門檻和 constants 的孵化 / 長大門檻一致；蛋的 6 次各是什麼外觀', async () => {
+    const c = await import('./constants')
+    expect(BABY_FROM).toBe(c.BABY_AT_FEED_COUNT)
+    expect(ADULT_AT).toBe(c.ADULT_AT_FEED_COUNT)
+    expect([0, 1, 2, 3, 4, 5].map((n) => eggLook(n / BABY_FROM))).toEqual(['pet-egg', 'pet-egg', 'pet-egg-s1', 'pet-egg-s1', 'pet-egg-s2', 'pet-egg-s2'])
   })
 })
 
 describe('成長里程碑（幼體到成體每餵 20 次）', () => {
-  it('跨過 40、60 才算；蛋與 80 不算', () => {
-    expect(milestonesCrossed(39, 40)).toEqual([40])
-    expect(milestonesCrossed(38, 41)).toEqual([40])
-    expect(milestonesCrossed(40, 41)).toEqual([])
-    expect(milestonesCrossed(59, 62)).toEqual([60])
-    expect(milestonesCrossed(0, 20)).toEqual([])
-    expect(milestonesCrossed(78, 80)).toEqual([])
-    expect(milestonesCrossed(30, 70)).toEqual([40, 60])
+  it('跨過 26、46 才算；蛋與 66（長大）不算', () => {
+    expect(milestonesCrossed(25, 26)).toEqual([26])
+    expect(milestonesCrossed(24, 27)).toEqual([26])
+    expect(milestonesCrossed(26, 27)).toEqual([])
+    expect(milestonesCrossed(45, 48)).toEqual([46])
+    expect(milestonesCrossed(0, 6)).toEqual([])
+    expect(milestonesCrossed(64, 66)).toEqual([])
+    expect(milestonesCrossed(20, 60)).toEqual([26, 46])
   })
   it('挑第一個還沒有的小禮物；都有了改送蛋糕', () => {
-    expect(pickMilestoneReward(40, new Set()).itemId).toBe('decor-ball')
-    expect(pickMilestoneReward(40, new Set(['decor-ball'])).itemId).toBe('decor-plant')
-    expect(pickMilestoneReward(60, new Set()).itemId).toBe('wall-mint')
+    expect(pickMilestoneReward(26, new Set()).itemId).toBe('decor-ball')
+    expect(pickMilestoneReward(26, new Set(['decor-ball'])).itemId).toBe('decor-plant')
+    expect(pickMilestoneReward(46, new Set()).itemId).toBe('wall-mint')
     const all = new Set(['decor-ball', 'decor-plant', 'decor-clock', 'decor-bunting', 'decor-crate'])
-    expect(pickMilestoneReward(40, all)).toEqual({ itemId: 'cake', kind: 'food' })
+    expect(pickMilestoneReward(26, all)).toEqual({ itemId: 'cake', kind: 'food' })
   })
 })
 

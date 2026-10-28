@@ -28,6 +28,8 @@ import { FriendsScreen } from './screens/Friends'
 import { AlbumScreen } from './screens/Album'
 import { HatPreview } from './screens/HatPreview'
 import './ux.css'
+// v7.3 線 G：遊戲性與版面覆蓋規則，要在所有 adventure*.css 之後載入
+import './screens/adventure/adventure-v73.css'
 
 export type Screen =
   | { name: 'home'; edit?: boolean }

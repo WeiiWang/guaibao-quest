@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { DECOR_EMOJI, FOOD_EMOJI, OBJ_EMOJI } from '../../../art/items'
 import { EN_BY_WORD } from '../../../learning/english'
 import { sayEnglish } from '../../../learning/speech'
@@ -35,6 +35,21 @@ function StemPic({ stem, label }: { stem: NonNullable<Question['params']>['stem'
   return <span className="en-pic digit" data-testid="en-pic" role="img" aria-label={label}><b>{stem.digit}</b></span>
 }
 
+/** 28px 粗體英文單字大約要這麼寬（每個字母約 0.6em）加上卡片的框與內距 */
+const MIN_WORD_PX = 28
+export const cardNeedPx = (len: number): number => Math.ceil(len * 0.6 * MIN_WORD_PX + 34)
+/**
+ * v7.3（試玩審查 2-4）：選項字級依字長縮放、下限 28px、不在單字中間斷行，所以先看卡片放不放得下：
+ * 能並排的最大欄數（2 個選項：2→1 欄；3 個：3→1 欄；4 個：4→2→1 欄）；寬度未知（0）回傳預設欄數。
+ */
+export function fitCols(width: number, n: number, maxLen: number, gap = 16): number {
+  const options = n >= 4 ? [4, 2, 1] : n === 3 ? [3, 1] : n === 2 ? [2, 1] : [1]
+  if (width <= 0) return options[0]
+  const need = cardNeedPx(maxLen)
+  for (const cols of options) if (cols === 1 || (width - gap * (cols - 1)) / cols >= need) return cols
+  return 1
+}
+
 function EnChoice({ c, state, onPick, onSpeak }: { c: Choice; state: CardState; onPick: () => void; onSpeak?: () => void }) {
   const disabled = state === 'wrong' || state === 'disabled' || state === 'right'
   const zh = EN_BY_WORD[c.id]?.zh ?? c.id
@@ -58,7 +73,7 @@ function EnChoice({ c, state, onPick, onSpeak }: { c: Choice; state: CardState; 
       ) : c.label !== undefined ? (
         <span className="choice-num">{c.label}</span>
       ) : (
-        <span className="choice-word q7-enword">{c.text}</span>
+        <span className="choice-word q7-enword g73-enword" style={{ ['--g73-len' as string]: c.text?.length ?? 5 } as CSSProperties}>{c.text}</span>
       )}
     </button>
   )
@@ -66,7 +81,7 @@ function EnChoice({ c, state, onPick, onSpeak }: { c: Choice; state: CardState; 
   return (
     <div className="q7-cardwrap">
       {btn}
-      <button type="button" className="q7-speak" onClick={onSpeak} aria-label={`聽英文：${c.text ?? c.id}`} data-testid="en-card-speak" data-choice-id={c.id}>
+      <button type="button" className="q7-speak g73-speak-en" onClick={onSpeak} aria-label={`聽英文：${c.text ?? c.id}`} data-testid="en-card-speak" data-choice-id={c.id}>
         <span aria-hidden>🔊</span>
       </button>
     </div>
@@ -100,6 +115,20 @@ export function EnglishView({ q, hintStage, tapped, solved, onPick }: Props) {
   )
 
   const textChoices = q.choices.every((c) => c.text !== undefined)
+  // 文字選項依最長的單字與容器寬度決定欄數（放不下就單欄）
+  const choicesRef = useRef<HTMLDivElement>(null)
+  const [boxW, setBoxW] = useState(0)
+  useLayoutEffect(() => {
+    const el = choicesRef.current
+    if (!el) return
+    const measure = () => setBoxW(el.clientWidth)
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  const maxLen = Math.max(0, ...q.choices.map((c) => c.text?.length ?? 0))
+  const cols = textChoices ? fitCols(boxW, q.choices.length, maxLen) : 0
   // v7：難度 1 的看圖選字、中翻英：字卡是大字加喇叭，點喇叭先聽、點卡片作答；中翻英的題幹一開始就看得到圖
   const lite = q.difficulty === 1 && (q.type === 'pic2en' || q.type === 'zh2en')
   const letters = q.type === 'spell' && q.params?.pattern ? [...q.params.pattern] : []
@@ -135,7 +164,7 @@ export function EnglishView({ q, hintStage, tapped, solved, onPick }: Props) {
           </>
         )}
       </div>
-      <div className={`qv-choices n${q.choices.length} ${textChoices ? 'en-text-choices' : ''}`}>
+      <div ref={choicesRef} className={`qv-choices n${q.choices.length} ${textChoices ? 'en-text-choices' : ''} ${cols ? `g73-cols-${cols}` : ''}`} data-cols={cols || undefined}>
         {q.choices.map((c) => (
           <EnChoice key={c.id} c={c} state={stateOf(c)} onPick={() => onPick(c.id)} onSpeak={lite ? () => sayEnglish(c.id, { enabled: true }) : undefined} />
         ))}

@@ -149,6 +149,28 @@ describe('吃飽了（SPEC-v4 U2）', () => {
   })
 })
 
+describe('v7.3 吃飽仍可餵、今天長滿了', () => {
+  it('吃飽了還吃：照常咀嚼、冒愛心，開心跳一下並說「好飽喔，但是好開心！」（比最喜歡 / 打嗝優先）', () => {
+    const s = planEat({ stage: 'adult', burp: true, favorite: true, full: true })
+    expect(s.kind).toBe('eat')
+    expect(s.steps.some((x) => x.act.do === 'food' && x.act.phase === 'gulp')).toBe(true)
+    expect(s.steps.some((x) => x.act.do === 'fx' && (x.act.fx === 'hearts' || x.act.fx === 'bigHearts'))).toBe(true)
+    expect(say(s).map((x) => x.text)).toEqual(['好飽喔，但是好開心！'])
+    expect(s.steps.some((x) => x.act.do === 'anim' && x.act.anim === 'bounce')).toBe(true)
+  })
+  it('蛋吃飽了也會說（蛋階段）', () => {
+    expect(say(planEat({ stage: 'egg', burp: false, full: true })).map((x) => x.text)).toEqual(['好飽喔，但是好開心！'])
+    expect(say(planEat({ stage: 'egg', burp: false }))).toEqual([])
+  })
+  it('今天長滿了：搖頭、說「肚子撐撐的，明天再吃好不好？」，是反應（優先權低於吃東西）', () => {
+    const s = planReaction('capped')
+    expect(s.kind).toBe('reaction')
+    expect(s.steps.some((x) => x.act.do === 'anim' && x.act.anim === 'headshake')).toBe(true)
+    expect(say(s)[0].text).toBe('肚子撐撐的，明天再吃好不好？')
+    expect(s.ms).toBeGreaterThanOrEqual(3000)
+  })
+})
+
 describe('大便', () => {
   it('先 shy 蹲下，再「噗」，然後便便才出現', () => {
     const s = planPoop()

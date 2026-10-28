@@ -10,8 +10,12 @@ export const HUNGER_DECAY_PER_HOUR = 4
 export const START_HUNGER = 80
 export const HAPPY_MIN_HUNGER = 60
 export const NORMAL_MIN_HUNGER = 30
-export const BABY_AT_FEED_COUNT = 20
-export const ADULT_AT_FEED_COUNT = 80
+/** v7.3：第一次孵化門檻從 20 降到 6，讓第一場遊玩就看得到蛋裂開 */
+export const BABY_AT_FEED_COUNT = 6
+/** v7.3：幼體到成體維持原本的 60 次間隔 = 孵化門檻 + 60（舊存檔 feedCount 落在 66–79 的幼體，進首頁時會長大） */
+export const ADULT_AT_FEED_COUNT = BABY_AT_FEED_COUNT + 60
+/** v7.3：每天靠餵食得到的成長上限（固定值，不用機率；跨日歸零） */
+export const DAILY_GROWTH_CAP = 12
 export const TASK_POINTS_MIN = 10
 export const TASK_POINTS_MAX = 30
 export const PARENT_IDLE_MS = 5 * 60 * 1000
@@ -19,7 +23,7 @@ export const PIN_MAX_FAILS = 5
 export const PIN_LOCK_MS = 30 * 1000
 export const DEFAULT_PET_NAME = '阿悟'
 export const EATING_ANIM_MS = 1600
-/** 飽足 ≥ 這個值就吃不下了：餵食不扣食物，阿悟搖頭說「我吃飽了～」 */
+/** 飽足 ≥ 這個值就算吃飽了：v7.3 起仍然可以餵（食物照扣、成長 +1、飽足維持在上限），阿悟說「好飽喔，但是好開心！」；只有每日成長上限（DAILY_GROWTH_CAP）到了才拒絕 */
 export const FULL_HUNGER = 95
 /** 輕點餵食的最短間隔（ms）：小孩狂點只算一次 */
 export const TAP_FEED_GAP_MS = 800

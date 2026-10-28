@@ -468,7 +468,7 @@ export function planBehavior(id: BehaviorId, env: PlanEnv): Scene {
 
 // ---------- 互動反應（SPEC-v3 A4） ----------
 
-export type ReactionId = 'tickle' | 'dizzy' | 'pat' | 'thanks' | 'wake' | 'full' | 'gifted'
+export type ReactionId = 'tickle' | 'dizzy' | 'pat' | 'thanks' | 'wake' | 'full' | 'capped' | 'gifted'
 
 export function planReaction(id: ReactionId): Scene {
   switch (id) {
@@ -536,6 +536,18 @@ export function planReaction(id: ReactionId): Scene {
           step(0, { do: 'pose', pose: 'shy' }),
           step(0, { do: 'anim', anim: 'headshake' }),
           step(0, { do: 'say', text: '我吃飽了～', ms: 1900 }),
+          step(0, { do: 'sound', sound: 'gulp' }),
+        ],
+      }
+    case 'capped': // v7.3：今天的成長到上限了，食物沒被扣：摸摸肚子、搖頭「肚子撐撐的，明天再吃好不好？」
+      return {
+        id,
+        kind: 'reaction',
+        ms: 3200,
+        steps: [
+          step(0, { do: 'pose', pose: 'shy' }),
+          step(0, { do: 'anim', anim: 'headshake' }),
+          step(0, { do: 'say', text: '肚子撐撐的，明天再吃好不好？', ms: 2900 }),
           step(0, { do: 'sound', sound: 'gulp' }),
         ],
       }
@@ -630,7 +642,12 @@ export interface EatOpts {
   celebrate?: boolean
   /** 今天最喜歡的食物（SPEC B2）：愛心加倍、說「最喜歡了！」 */
   favorite?: boolean
+  /** v7.3：已經吃飽了還是吃下去（成長 +1）：開心跳一下、冒愛心、說「好飽喔，但是好開心！」（優先於最喜歡 / 打嗝） */
+  full?: boolean
 }
+
+/** 吃飽了還吃的那句（= domain/pet.ts 的 FEED_FULL_LINE；plan.ts 不 import 它，pet.test.ts 檢查一致） */
+const FULL_EAT_LINE = '好飽喔，但是好開心！'
 
 /** 咀嚼的間隔 */
 export const BITE_MS = 330
@@ -654,7 +671,9 @@ export function planEat(o: EatOpts): Scene {
         step(EAT_FLY_MS, { do: 'fx', fx: 'glow', ms: 1200 }),
         step(EAT_FLY_MS, { do: 'sound', sound: 'gulp' }),
         step(EAT_FLY_MS + 350, { do: 'fx', fx: 'hearts', ms: 900 }),
+        ...(o.full ? [step(EAT_FLY_MS + 500, { do: 'say', text: FULL_EAT_LINE, ms: 1600 } as Action)] : []),
       ],
+      ...(o.full ? { ms: 2300 } : {}),
     }
   }
   const b0 = EAT_FLY_MS + 130
@@ -670,7 +689,11 @@ export function planEat(o: EatOpts): Scene {
   const tg = b0 + 3 * BITE_MS + 40
   steps.push(step(tg, { do: 'food', phase: 'gulp' }), step(tg, { do: 'anim', anim: 'gulp' }), step(tg, { do: 'sound', sound: 'gulp' }), step(tg + 120, { do: 'fx', fx: o.favorite ? 'bigHearts' : 'hearts', ms: o.favorite ? 900 : 700 }))
   let end = tg + 420
-  if (o.favorite) {
+  if (o.full) {
+    // 吃飽了還是吃：愛心 + 開心跳一下 + 「好飽喔，但是好開心！」（飽足已在上限，這一口只加成長）
+    steps.push(step(tg + 100, { do: 'pose', pose: 'laugh' }), step(tg + 100, { do: 'anim', anim: 'bounce' }), step(tg + 100, { do: 'say', text: FULL_EAT_LINE, ms: 1700 }), step(tg + 100, { do: 'sound', sound: 'giggle' }))
+    end = tg + 1500
+  } else if (o.favorite) {
     // 最喜歡的食物：開心大笑、愛心加倍，不打嗝（維持在 2.5 秒內）
     steps.push(step(tg + 100, { do: 'pose', pose: 'laugh' }), step(tg + 100, { do: 'anim', anim: 'bounce' }), step(tg + 100, { do: 'say', text: '最喜歡了！', ms: 900 }), step(tg + 100, { do: 'sound', sound: 'giggle' }))
     end = tg + 1000

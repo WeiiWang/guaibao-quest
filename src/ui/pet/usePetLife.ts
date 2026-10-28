@@ -72,6 +72,8 @@ export interface FoodMeta {
   celebrate?: boolean
   /** 今天最喜歡的食物 */
   favorite?: boolean
+  /** v7.3：餵之前就吃飽了（仍然吃下去，說「好飽喔，但是好開心！」） */
+  full?: boolean
 }
 
 export interface Geometry {
@@ -476,7 +478,7 @@ export function usePetLife(p: PetLifeParams) {
         dy = from.y - (r.top + r.height * 0.52)
       }
       foodRef.current = { ...food, dx, dy }
-      startScene(planEat({ stage, burp: stage !== 'egg' && Math.random() < 0.25, celebrate: food.celebrate, favorite: food.favorite }))
+      startScene(planEat({ stage, burp: stage !== 'egg' && Math.random() < 0.25, celebrate: food.celebrate, favorite: food.favorite, full: food.full }))
     },
     [cancelScene, startScene],
   )
@@ -512,6 +514,12 @@ export function usePetLife(p: PetLifeParams) {
   const refuse = useCallback((): void => {
     if (asleepRef.current) return
     startScene(planReaction('full'))
+  }, [startScene])
+
+  /** v7.3：今天的成長到上限了還被餵：搖頭「肚子撐撐的，明天再吃好不好？」（食物沒有被扣） */
+  const refuseCapped = useCallback((): void => {
+    if (asleepRef.current) return
+    startScene(planReaction('capped'))
   }, [startScene])
 
   const thanks = useCallback((): void => {
@@ -644,6 +652,7 @@ export function usePetLife(p: PetLifeParams) {
     tap,
     pat,
     refuse,
+    refuseCapped,
     thanks,
     playBall,
     cancelIdle,

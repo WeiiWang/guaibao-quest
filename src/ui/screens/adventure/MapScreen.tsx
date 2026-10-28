@@ -175,6 +175,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
     ...(portrait
       ? {
           width: '100%',
+          ['--g73-span' as string]: span,
           aspectRatio: `${(span * 16) / (100 * 9)}`,
           ...(hasScene ? { backgroundSize: `${10000 / span}% auto`, backgroundPosition: `${span >= 100 ? 0 : (win.x0 / (100 - span)) * 100}% 0` } : {}),
         }
