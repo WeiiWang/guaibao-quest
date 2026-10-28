@@ -5,7 +5,12 @@
       （{ key: { file, text, voice } }）。相同文字只生成一次，多個 key 共用同一個檔案。
       文字與聲音沒變的句子會跳過，所以可以反覆執行、中斷後續跑。
 
-usage: python3 -I design/tools/gen_voice.py <lines.json> [--voice mama|serena] [--limit N]
+usage: uv run --with opencc-python-reimplemented --with pypinyin python -I design/tools/gen_voice.py <lines.json> [--voice mama|awu|english] [--limit N] [--redo texts.txt]
+
+v7.2 起：
+- 送去 TTS 的文字先轉簡體（畫面文字不變）：模型主要用簡體訓練，繁體罕用字會唸錯（實測「乾淨」唸成「前進」、「水簾洞」的簾、「鯨魚」唸成「鯊魚」）。
+- 有開 whisper-server（見 verify_voice.py）就邊生成邊驗證：辨識結果和原文的拼音錯誤率太高就換種子重生成，最多 3 次、留最好的。
+- --redo：檔案裡列的句子（一行一句）重新生成，並換新檔名（記在 voice-v2.txt），避免 iPad 快取繼續播舊的錯音。
 
 聲音（2026-10-27 使用者選定）：
 - mama：遊戲內容旁白，使用者太太的克隆聲音（Voicebox 設定「乖寶-媽媽聲」）
@@ -20,6 +25,11 @@ import re
 import subprocess
 import sys
 import tempfile
+import urllib.request
+import uuid
+
+import opencc
+from pypinyin import lazy_pinyin
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from vb_say import call, say  # noqa: E402
@@ -55,13 +65,55 @@ def find_profile(name, preset=None, lang='zh'):
     raise SystemExit(f'Voicebox 裡找不到聲音設定「{name}」')
 
 
+V2_LIST = os.path.join(ROOT, 'design', 'tools', 'voice-v2.txt')
+V2 = set(open(V2_LIST, encoding='utf-8').read().splitlines()) if os.path.exists(V2_LIST) else set()
+T2S = opencc.OpenCC('t2s')
+WHISPER = 'http://127.0.0.1:18080/inference'
+
+
 def file_for(text, tag):
+    # 重新生成過的句子（voice-v2.txt）換新檔名，瀏覽器快取的舊錯音不會再被播到
+    if text in V2:
+        tag = f'{tag}|v2'
     return hashlib.sha1(f'{tag}\n{text}'.encode()).hexdigest()[:16] + '.m4a'
 
 
 def tts_text(text):
     """送去 TTS 的文字：「～」「…」會讓模型停不下來（實測生成到 5 分鐘），換成一般標點；畫面文字不變"""
-    return text.replace('～', '').replace('~', '').replace('…', '。').strip() or text
+    t = text.replace('～', '').replace('~', '').replace('…', '。').strip() or text
+    return T2S.convert(t)
+
+
+def pinyin_err(ref, hyp):
+    """拼音（不含聲調）編輯距離 / 原文長度：同音字不算錯"""
+    clean = lambda s: lazy_pinyin(re.sub(r'[^\w]', '', T2S.convert(s)).lower())
+    r, h = clean(ref), clean(hyp)
+    if not r:
+        return 0.0
+    prev = list(range(len(h) + 1))
+    for i, rc in enumerate(r, 1):
+        cur = [i] + [0] * len(h)
+        for j, hc in enumerate(h, 1):
+            cur[j] = min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (rc != hc))
+        prev = cur
+    return prev[-1] / len(r)
+
+
+def whisper_text(wav, lang):
+    """whisper-server 辨識；沒開就回 None（不驗證）"""
+    with tempfile.TemporaryDirectory() as tmp:
+        w16 = os.path.join(tmp, 'w.wav')
+        subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', wav, '-ar', '16000', '-ac', '1', w16], check=True)
+        data = open(w16, 'rb').read()
+    b = uuid.uuid4().hex
+    body = b''.join([f'--{b}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode() for k, v in (('language', lang), ('response_format', 'json'), ('temperature', '0'))])
+    body += f'--{b}\r\nContent-Disposition: form-data; name="file"; filename="a.wav"\r\nContent-Type: audio/wav\r\n\r\n'.encode() + data + f'\r\n--{b}--\r\n'.encode()
+    try:
+        req = urllib.request.Request(WHISPER, data=body, headers={'Content-Type': f'multipart/form-data; boundary={b}'})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return json.load(r)['text'].strip()
+    except OSError:
+        return None
 
 
 def pitch_shift(wav, out, pitch, tempo):
@@ -80,11 +132,36 @@ def max_len(text):
     return max(3.0, len(text) * 0.45 + 1.5)
 
 
+# 驗證門檻：拼音錯誤率超過就重生成。只有 1–2 個字的詞辨識本身就不準（缺上下文），不驗證
+VERIFY_MAX = 0.34
+VERIFY_MIN_LEN = 3
+
+
 def generate(profile, wav, text, cfg):
-    """生成並防失控：太長就換種子重試，最多 3 次；仍太長就截斷加淡出"""
+    """生成並防失控：太長或唸錯（whisper 驗證）就換種子重試，最多 3 次、留最好的；仍太長就截斷加淡出"""
     limit = max_len(text)
+    check = cfg['lang'] == 'zh' and not cfg.get('pitch') and len(re.sub(r'[^\w]', '', text)) >= VERIFY_MIN_LEN
+    best = None  # (錯誤率, 暫存檔)
     for attempt in range(3):
         say(profile, wav, tts_text(text), cfg['instruct'], cfg['lang'], cfg['engine'], seed=None if attempt == 0 else 1000 + attempt)
+        if duration(wav) > limit:
+            continue
+        if not check:
+            return
+        hyp = whisper_text(wav, 'zh')
+        if hyp is None:  # 沒開 whisper-server：不驗證
+            return
+        err = pinyin_err(text, hyp)
+        if err <= VERIFY_MAX:
+            return
+        print(f'RETRY-ASR {text[:20]} → {hyp[:20]} ({err:.2f})', flush=True)
+        if best is None or err < best[0]:
+            keep = f'{wav}.best{attempt}.wav'
+            subprocess.run(['cp', wav, keep], check=True)
+            best = (err, keep)
+    if best is not None:
+        os.replace(best[1], wav)
+        print(f'ASR-BEST {text[:20]} ({best[0]:.2f})', flush=True)
         if duration(wav) <= limit:
             return
     trimmed = wav + '.trim.wav'
@@ -117,6 +194,11 @@ def main():
     lines = json.load(open(args[0], encoding='utf-8'))
     voice = args[args.index('--voice') + 1] if '--voice' in args else 'mama'
     limit = int(args[args.index('--limit') + 1]) if '--limit' in args else None
+    if '--redo' in args:  # 這些句子重新生成、換新檔名
+        redo = {t for t in open(args[args.index('--redo') + 1], encoding='utf-8').read().splitlines() if t}
+        V2.update(redo)
+        with open(V2_LIST, 'w', encoding='utf-8') as fp:
+            fp.write('\n'.join(sorted(V2)) + '\n')
     cfg = VOICES[voice]
     tag = f"{voice}|{cfg['instruct'] or ''}"
     os.makedirs(OUT_DIR, exist_ok=True)

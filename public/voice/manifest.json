@@ -125,7 +125,7 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "companion.open.2": {
-  "file": "c3e59149d96dfc34.m4a",
+  "file": "a515e1d32ca83aba.m4a",
   "text": "出發囉！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -160,7 +160,7 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "companion.tutorial.flip.2": {
-  "file": "ef9eebeca7f6bd56.m4a",
+  "file": "7aa4da71993b50f6.m4a",
   "text": "你也來翻翻看。",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -645,7 +645,7 @@
   "voice": "english|"
  },
  "fb.buy.apple": {
-  "file": "36d50cdb06bc64bc.m4a",
+  "file": "ee5570aa5bd8759a.m4a",
   "text": "買到蘋果囉！",
   "voice": "mama|"
  },
@@ -660,12 +660,12 @@
   "voice": "mama|"
  },
  "fb.buy.carrot": {
-  "file": "f74b70224769370b.m4a",
+  "file": "d6fce38c89171b16.m4a",
   "text": "買到胡蘿蔔囉！",
   "voice": "mama|"
  },
  "fb.buy.coloring-banana-tree": {
-  "file": "b044a4bfb5c9d87c.m4a",
+  "file": "171f172141719ca7.m4a",
   "text": "買到香蕉樹囉！",
   "voice": "mama|"
  },
@@ -675,7 +675,7 @@
   "voice": "mama|"
  },
  "fb.buy.coloring-chick": {
-  "file": "fa10767bd3370754.m4a",
+  "file": "ea57df495763629c.m4a",
   "text": "買到小雞囉！",
   "voice": "mama|"
  },
@@ -700,7 +700,7 @@
   "voice": "mama|"
  },
  "fb.buy.coloring-flower": {
-  "file": "a103a05d488e1891.m4a",
+  "file": "2fe8e418db00f50c.m4a",
   "text": "買到花朵囉！",
   "voice": "mama|"
  },
@@ -785,7 +785,7 @@
   "voice": "mama|"
  },
  "fb.buy.coloring-line-whale": {
-  "file": "4f06f85be5475e5d.m4a",
+  "file": "8e7aac24e0a11471.m4a",
   "text": "買到小鯨魚囉！",
   "voice": "mama|"
  },
@@ -825,7 +825,7 @@
   "voice": "mama|"
  },
  "fb.buy.coloring-water-curtain": {
-  "file": "da6ddd86e58e30e2.m4a",
+  "file": "77f395d201896653.m4a",
   "text": "買到水簾洞囉！",
   "voice": "mama|"
  },
@@ -835,7 +835,7 @@
   "voice": "mama|"
  },
  "fb.buy.cookie": {
-  "file": "a4e81d4f3f3e3f54.m4a",
+  "file": "e9b8c3fe9afbb383.m4a",
   "text": "買到餅乾囉！",
   "voice": "mama|"
  },
@@ -845,7 +845,7 @@
   "voice": "mama|"
  },
  "fb.buy.decor-beanbag": {
-  "file": "b29fb957339fd43a.m4a",
+  "file": "6130a26a00eacca5.m4a",
   "text": "買到懶骨頭囉！",
   "voice": "mama|"
  },
@@ -870,7 +870,7 @@
   "voice": "mama|"
  },
  "fb.buy.decor-cloudlamp": {
-  "file": "261b48ee7d239084.m4a",
+  "file": "2e2f1376f7a0b06a.m4a",
   "text": "買到雲朵夜燈囉！",
   "voice": "mama|"
  },
@@ -880,7 +880,7 @@
   "voice": "mama|"
  },
  "fb.buy.decor-curtain": {
-  "file": "2ff7c17e7521637d.m4a",
+  "file": "ecf10a8642b2cdb9.m4a",
   "text": "買到小窗簾囉！",
   "voice": "mama|"
  },
@@ -900,7 +900,7 @@
   "voice": "mama|"
  },
  "fb.buy.decor-lamp": {
-  "file": "4f6824a34971a3aa.m4a",
+  "file": "d4e3954e5d64acfc.m4a",
   "text": "買到落地燈囉！",
   "voice": "mama|"
  },
@@ -950,7 +950,7 @@
   "voice": "mama|"
  },
  "fb.buy.decor-tent": {
-  "file": "27c8d21ec8096bc8.m4a",
+  "file": "701d34c89539b62c.m4a",
   "text": "買到帳篷囉！",
   "voice": "mama|"
  },
@@ -1020,7 +1020,7 @@
   "voice": "mama|"
  },
  "fb.buy.riceball": {
-  "file": "ee37e2539d1328b7.m4a",
+  "file": "e55677ddb61bee4b.m4a",
   "text": "買到飯糰囉！",
   "voice": "mama|"
  },
@@ -1075,7 +1075,7 @@
   "voice": "mama|"
  },
  "fb.craft.decor-beanbag": {
-  "file": "a2b8b3922212c210.m4a",
+  "file": "2b94e8834acbbfa6.m4a",
   "text": "懶骨頭做好了！",
   "voice": "mama|"
  },
@@ -1100,7 +1100,7 @@
   "voice": "mama|"
  },
  "fb.craft.decor-cloudlamp": {
-  "file": "81dba8f4c6e77071.m4a",
+  "file": "a6d56fbf21649370.m4a",
   "text": "雲朵夜燈做好了！",
   "voice": "mama|"
  },
@@ -1110,7 +1110,7 @@
   "voice": "mama|"
  },
  "fb.craft.decor-curtain": {
-  "file": "36f60d5b7ad50ead.m4a",
+  "file": "8aa918f208ae5eb3.m4a",
   "text": "小窗簾做好了！",
   "voice": "mama|"
  },
@@ -1130,7 +1130,7 @@
   "voice": "mama|"
  },
  "fb.craft.decor-lamp": {
-  "file": "f4564601f142f71b.m4a",
+  "file": "70e176c4f6b010f7.m4a",
   "text": "落地燈做好了！",
   "voice": "mama|"
  },
@@ -1245,7 +1245,7 @@
   "voice": "mama|"
  },
  "fb.refund.apple": {
-  "file": "e251e70caf650081.m4a",
+  "file": "07cc9a40e468d931.m4a",
   "text": "蘋果退回囉",
   "voice": "mama|"
  },
@@ -1260,7 +1260,7 @@
   "voice": "mama|"
  },
  "fb.refund.carrot": {
-  "file": "6c760903601167b5.m4a",
+  "file": "6704d72d45241b13.m4a",
   "text": "胡蘿蔔退回囉",
   "voice": "mama|"
  },
@@ -1385,7 +1385,7 @@
   "voice": "mama|"
  },
  "fb.refund.coloring-line-whale": {
-  "file": "a1a29dcf48236deb.m4a",
+  "file": "3b96c7c24589ca67.m4a",
   "text": "小鯨魚退回囉",
   "voice": "mama|"
  },
@@ -1425,7 +1425,7 @@
   "voice": "mama|"
  },
  "fb.refund.coloring-water-curtain": {
-  "file": "ae5518c957170a0d.m4a",
+  "file": "40151a5eef482f43.m4a",
   "text": "水簾洞退回囉",
   "voice": "mama|"
  },
@@ -1435,7 +1435,7 @@
   "voice": "mama|"
  },
  "fb.refund.cookie": {
-  "file": "4ce8b39afe1c33a1.m4a",
+  "file": "55035c6fc9493fd7.m4a",
   "text": "餅乾退回囉",
   "voice": "mama|"
  },
@@ -1445,7 +1445,7 @@
   "voice": "mama|"
  },
  "fb.refund.decor-beanbag": {
-  "file": "730d1494cc2574a2.m4a",
+  "file": "f9ea20175edb7b20.m4a",
   "text": "懶骨頭退回囉",
   "voice": "mama|"
  },
@@ -1470,7 +1470,7 @@
   "voice": "mama|"
  },
  "fb.refund.decor-cloudlamp": {
-  "file": "349339c358b3dd94.m4a",
+  "file": "578e18ba9635b8da.m4a",
   "text": "雲朵夜燈退回囉",
   "voice": "mama|"
  },
@@ -1480,7 +1480,7 @@
   "voice": "mama|"
  },
  "fb.refund.decor-curtain": {
-  "file": "7daa8785cbc2df7f.m4a",
+  "file": "81f29c87953a3fab.m4a",
   "text": "小窗簾退回囉",
   "voice": "mama|"
  },
@@ -1500,7 +1500,7 @@
   "voice": "mama|"
  },
  "fb.refund.decor-lamp": {
-  "file": "690742096d4803ac.m4a",
+  "file": "16e2c916b1a0f0d3.m4a",
   "text": "落地燈退回囉",
   "voice": "mama|"
  },
@@ -1530,7 +1530,7 @@
   "voice": "mama|"
  },
  "fb.refund.decor-rocket": {
-  "file": "36c3119fed5726bf.m4a",
+  "file": "3da0efb17fbfffd0.m4a",
   "text": "火箭退回囉",
   "voice": "mama|"
  },
@@ -1545,7 +1545,7 @@
   "voice": "mama|"
  },
  "fb.refund.decor-table": {
-  "file": "fbd25dd405bb8c48.m4a",
+  "file": "722f19e73bb907d9.m4a",
   "text": "桌椅退回囉",
   "voice": "mama|"
  },
@@ -1560,7 +1560,7 @@
   "voice": "mama|"
  },
  "fb.refund.floor-checker": {
-  "file": "a6865e93051d540e.m4a",
+  "file": "9ae94eee8dffc4b8.m4a",
   "text": "粉彩格子地墊退回囉",
   "voice": "mama|"
  },
@@ -1620,7 +1620,7 @@
   "voice": "mama|"
  },
  "fb.refund.riceball": {
-  "file": "42926f05bcf8af99.m4a",
+  "file": "2662c3704198eb80.m4a",
   "text": "飯糰退回囉",
   "voice": "mama|"
  },
@@ -1655,7 +1655,7 @@
   "voice": "mama|"
  },
  "fb.task.undo": {
-  "file": "85be390b2db5a6b4.m4a",
+  "file": "ae6fee23a98feea2.m4a",
   "text": "收回囉",
   "voice": "mama|"
  },
@@ -1880,7 +1880,7 @@
   "voice": "mama|"
  },
  "num.5": {
-  "file": "fed22a95c31a76e5.m4a",
+  "file": "14db7bcd2fe4337d.m4a",
   "text": "五",
   "voice": "mama|"
  },
@@ -1920,7 +1920,7 @@
   "voice": "mama|"
  },
  "pet.bubble.1": {
-  "file": "e409e3a3aeffae76.m4a",
+  "file": "4366fd5c3611800f.m4a",
   "text": "嘻嘻",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -1930,12 +1930,12 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.bubble.11": {
-  "file": "1853cc971afdd847.m4a",
+  "file": "037fa30718d38f46.m4a",
   "text": "耶！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.bubble.12": {
-  "file": "609a8a136c0fc27b.m4a",
+  "file": "68db10dfcd3eb5a6.m4a",
   "text": "臭臭～",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -1950,17 +1950,17 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.bubble.15": {
-  "file": "71b63c7ecae1fe8a.m4a",
+  "file": "29c37f074abc2c0b.m4a",
   "text": "Hello!",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.bubble.2": {
-  "file": "03ba34af388e4ec4.m4a",
+  "file": "7b9f0437a88fec66.m4a",
   "text": "哈哈哈！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.bubble.3": {
-  "file": "b67ca3b2bf3f674a.m4a",
+  "file": "6bbd6ae7c04f4363.m4a",
   "text": "哈啾！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -1970,12 +1970,12 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.bubble.5": {
-  "file": "f7ef2d151edc5951.m4a",
+  "file": "05975db5fdb581bc.m4a",
   "text": "嗝～",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.bubble.6": {
-  "file": "154a0d3fe7206ed4.m4a",
+  "file": "2cb77856093e8ce3.m4a",
   "text": "好睏喔…",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -2025,7 +2025,7 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.dots.done.4": {
-  "file": "d2a9bb01ed2d3973.m4a",
+  "file": "951220d4b2a29394.m4a",
   "text": "哇，是蘋果！你連出來了！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -2160,12 +2160,12 @@
   "voice": "mama|"
  },
  "q.classify-1-02.hint": {
-  "file": "ba26c17be9a75ed6.m4a",
+  "file": "10ecf2327b2eb31a.m4a",
   "text": "水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
   "voice": "mama|"
  },
  "q.classify-1-02.hint.gentle": {
-  "file": "61f0228f547d0fe8.m4a",
+  "file": "87401fe303976887.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -2185,7 +2185,7 @@
   "voice": "mama|"
  },
  "q.classify-1-03.prompt": {
-  "file": "87f57d493e18263a.m4a",
+  "file": "c7f4203a2489f0b6.m4a",
   "text": "請你指出玩具。",
   "voice": "mama|"
  },
@@ -2275,7 +2275,7 @@
   "voice": "mama|"
  },
  "q.classify-1-09.prompt": {
-  "file": "51b8be5a46094083.m4a",
+  "file": "a1a5f021028052c7.m4a",
   "text": "請你指出水果。",
   "voice": "mama|"
  },
@@ -2305,7 +2305,7 @@
   "voice": "mama|"
  },
  "q.classify-1-11.prompt": {
-  "file": "51b8be5a46094083.m4a",
+  "file": "a1a5f021028052c7.m4a",
   "text": "請你指出水果。",
   "voice": "mama|"
  },
@@ -2320,7 +2320,7 @@
   "voice": "mama|"
  },
  "q.classify-1-12.prompt": {
-  "file": "7218fd130b98531c.m4a",
+  "file": "a653e9ee0b8a435b.m4a",
   "text": "請你指出交通工具。",
   "voice": "mama|"
  },
@@ -2685,17 +2685,17 @@
   "voice": "mama|"
  },
  "q.classify-1-g01.hint": {
-  "file": "dc1e4a5f52e2d197.m4a",
+  "file": "1abf1ac6107a1fd7.m4a",
   "text": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
   "voice": "mama|"
  },
  "q.classify-1-g01.hint.gentle": {
-  "file": "cb1446985eda91ba.m4a",
+  "file": "c82a85258ec22762.m4a",
   "text": "沒關係喔，有阿悟陪你。水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.classify-1-g01.prompt": {
-  "file": "51b8be5a46094083.m4a",
+  "file": "a1a5f021028052c7.m4a",
   "text": "請你指出水果。",
   "voice": "mama|"
  },
@@ -2710,7 +2710,7 @@
   "voice": "mama|"
  },
  "q.classify-1-g02.prompt": {
-  "file": "cf9b6a452f4b0bf4.m4a",
+  "file": "0d439fe6c133ba9a.m4a",
   "text": "請你指出動物。",
   "voice": "mama|"
  },
@@ -2745,12 +2745,12 @@
   "voice": "mama|"
  },
  "q.classify-1-g05.hint": {
-  "file": "dc1e4a5f52e2d197.m4a",
+  "file": "1abf1ac6107a1fd7.m4a",
   "text": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
   "voice": "mama|"
  },
  "q.classify-1-g05.hint.gentle": {
-  "file": "cb1446985eda91ba.m4a",
+  "file": "c82a85258ec22762.m4a",
   "text": "沒關係喔，有阿悟陪你。水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -2770,17 +2770,17 @@
   "voice": "mama|"
  },
  "q.classify-1-g06.prompt": {
-  "file": "51b8be5a46094083.m4a",
+  "file": "a1a5f021028052c7.m4a",
   "text": "請你指出水果。",
   "voice": "mama|"
  },
  "q.classify-1-g07.hint": {
-  "file": "dc1e4a5f52e2d197.m4a",
+  "file": "1abf1ac6107a1fd7.m4a",
   "text": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
   "voice": "mama|"
  },
  "q.classify-1-g07.hint.gentle": {
-  "file": "cb1446985eda91ba.m4a",
+  "file": "c82a85258ec22762.m4a",
   "text": "沒關係喔，有阿悟陪你。水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -2820,12 +2820,12 @@
   "voice": "mama|"
  },
  "q.classify-1-g10.hint": {
-  "file": "dc1e4a5f52e2d197.m4a",
+  "file": "1abf1ac6107a1fd7.m4a",
   "text": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
   "voice": "mama|"
  },
  "q.classify-1-g10.hint.gentle": {
-  "file": "cb1446985eda91ba.m4a",
+  "file": "c82a85258ec22762.m4a",
   "text": "沒關係喔，有阿悟陪你。水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -2925,12 +2925,12 @@
   "voice": "mama|"
  },
  "q.classify-1-g17.hint": {
-  "file": "dc1e4a5f52e2d197.m4a",
+  "file": "1abf1ac6107a1fd7.m4a",
   "text": "水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。",
   "voice": "mama|"
  },
  "q.classify-1-g17.hint.gentle": {
-  "file": "cb1446985eda91ba.m4a",
+  "file": "c82a85258ec22762.m4a",
   "text": "沒關係喔，有阿悟陪你。水果，長在樹上或藤上，甜甜的，可以吃。你看，這個是蘋果，它是水果喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -2950,7 +2950,7 @@
   "voice": "mama|"
  },
  "q.classify-1-g18.prompt": {
-  "file": "cf9b6a452f4b0bf4.m4a",
+  "file": "0d439fe6c133ba9a.m4a",
   "text": "請你指出動物。",
   "voice": "mama|"
  },
@@ -3045,12 +3045,12 @@
   "voice": "mama|"
  },
  "q.classify-2-01.hint": {
-  "file": "c7cf949b330bc485.m4a",
+  "file": "31f87c808e1eb901.m4a",
   "text": "水果像蘋果，動物像小雞。看看每一個是什麼，放進對的籃子。",
   "voice": "mama|"
  },
  "q.classify-2-01.hint.gentle": {
-  "file": "f382a02399b2b7fd.m4a",
+  "file": "0095499666cb8b84.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像蘋果，動物像小雞。看看每一個是什麼，放進對的籃子。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3060,12 +3060,12 @@
   "voice": "mama|"
  },
  "q.classify-2-02.hint": {
-  "file": "65226e1f435aef11.m4a",
+  "file": "4b57daf5a14dfff3.m4a",
   "text": "交通工具像汽車，水果像蘋果。看看每一個是什麼，放進對的籃子。",
   "voice": "mama|"
  },
  "q.classify-2-02.hint.gentle": {
-  "file": "90bd1bd394ceb1cb.m4a",
+  "file": "37da23b8627578fd.m4a",
   "text": "沒關係喔，有阿悟陪你。交通工具像汽車，水果像蘋果。看看每一個是什麼，放進對的籃子。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3105,12 +3105,12 @@
   "voice": "mama|"
  },
  "q.classify-2-05.hint": {
-  "file": "ae275477970f541b.m4a",
+  "file": "cd8027ba5caf70ca.m4a",
   "text": "水果像蘋果，玩具像恐龍。看看每一個是什麼，放進對的籃子。",
   "voice": "mama|"
  },
  "q.classify-2-05.hint.gentle": {
-  "file": "042c8a919cd21dfb.m4a",
+  "file": "12d2629dbe12b994.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像蘋果，玩具像恐龍。看看每一個是什麼，放進對的籃子。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3120,12 +3120,12 @@
   "voice": "mama|"
  },
  "q.classify-2-06.hint": {
-  "file": "5a33e076e489b2d0.m4a",
+  "file": "a9a9ef62c586cd29.m4a",
   "text": "水果像蘋果，交通工具像汽車。看看每一個是什麼，放進對的籃子。",
   "voice": "mama|"
  },
  "q.classify-2-06.hint.gentle": {
-  "file": "fa1f5b44281b3946.m4a",
+  "file": "111279e93b5e1d00.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像蘋果，交通工具像汽車。看看每一個是什麼，放進對的籃子。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3610,17 +3610,17 @@
   "voice": "mama|"
  },
  "q.classify-2-38.prompt": {
-  "file": "51b8be5a46094083.m4a",
+  "file": "a1a5f021028052c7.m4a",
   "text": "請你指出水果。",
   "voice": "mama|"
  },
  "q.classify-2-39.hint": {
-  "file": "ba26c17be9a75ed6.m4a",
+  "file": "10ecf2327b2eb31a.m4a",
   "text": "水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
   "voice": "mama|"
  },
  "q.classify-2-39.hint.gentle": {
-  "file": "61f0228f547d0fe8.m4a",
+  "file": "87401fe303976887.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3630,12 +3630,12 @@
   "voice": "mama|"
  },
  "q.classify-2-40.hint": {
-  "file": "8c6f23720be3910d.m4a",
+  "file": "7faba75b95ff2975.m4a",
   "text": "水果像桃子、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
   "voice": "mama|"
  },
  "q.classify-2-40.hint.gentle": {
-  "file": "08ad148cee4270a8.m4a",
+  "file": "b022ec5f584b5371.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像桃子、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3670,7 +3670,7 @@
   "voice": "mama|"
  },
  "q.classify-2-42.prompt": {
-  "file": "cf9b6a452f4b0bf4.m4a",
+  "file": "0d439fe6c133ba9a.m4a",
   "text": "請你指出動物。",
   "voice": "mama|"
  },
@@ -3700,7 +3700,7 @@
   "voice": "mama|"
  },
  "q.classify-2-44.prompt": {
-  "file": "87f57d493e18263a.m4a",
+  "file": "c7f4203a2489f0b6.m4a",
   "text": "請你指出玩具。",
   "voice": "mama|"
  },
@@ -3720,27 +3720,27 @@
   "voice": "mama|"
  },
  "q.classify-2-46.hint": {
-  "file": "ba26c17be9a75ed6.m4a",
+  "file": "10ecf2327b2eb31a.m4a",
   "text": "水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
   "voice": "mama|"
  },
  "q.classify-2-46.hint.gentle": {
-  "file": "61f0228f547d0fe8.m4a",
+  "file": "87401fe303976887.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.classify-2-46.prompt": {
-  "file": "51b8be5a46094083.m4a",
+  "file": "a1a5f021028052c7.m4a",
   "text": "請你指出水果。",
   "voice": "mama|"
  },
  "q.classify-2-47.hint": {
-  "file": "ba26c17be9a75ed6.m4a",
+  "file": "10ecf2327b2eb31a.m4a",
   "text": "水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？",
   "voice": "mama|"
  },
  "q.classify-2-47.hint.gentle": {
-  "file": "61f0228f547d0fe8.m4a",
+  "file": "87401fe303976887.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像香蕉、蘋果，長在樹上或藤上，甜甜的，可以吃。找找看，哪一個也是水果？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3780,12 +3780,12 @@
   "voice": "mama|"
  },
  "q.classify-3-02.hint": {
-  "file": "aaee74e724bd1d65.m4a",
+  "file": "42612a53d15b385a.m4a",
   "text": "香蕉、桃子、蘋果，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-02.hint.gentle": {
-  "file": "7914339e136981dd.m4a",
+  "file": "cc19751253a58d72.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉、桃子、蘋果，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3825,12 +3825,12 @@
   "voice": "mama|"
  },
  "q.classify-3-05.hint": {
-  "file": "c0c6cb09822e12ec.m4a",
+  "file": "ea887d6a31e5d521.m4a",
   "text": "桃子、蘋果、香蕉，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-05.hint.gentle": {
-  "file": "4a2cc55155a6fffa.m4a",
+  "file": "2e31652e4d89ea55.m4a",
   "text": "沒關係喔，有阿悟陪你。桃子、蘋果、香蕉，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3945,12 +3945,12 @@
   "voice": "mama|"
  },
  "q.classify-3-13.hint": {
-  "file": "9f11248c27b3ba1f.m4a",
+  "file": "080eb61ac27bf884.m4a",
   "text": "蘋果、桃子、香蕉，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-13.hint.gentle": {
-  "file": "c1514b193fd2bdc8.m4a",
+  "file": "9ade70341b01165a.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果、桃子、香蕉，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3975,12 +3975,12 @@
   "voice": "mama|"
  },
  "q.classify-3-15.hint": {
-  "file": "74e6ca495ae3b858.m4a",
+  "file": "09eab9b50fb093d0.m4a",
   "text": "葡萄、香蕉、蘋果，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-15.hint.gentle": {
-  "file": "c68eae64c5a6177b.m4a",
+  "file": "7019c3d1ff13c556.m4a",
   "text": "沒關係喔，有阿悟陪你。葡萄、香蕉、蘋果，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -3990,12 +3990,12 @@
   "voice": "mama|"
  },
  "q.classify-3-16.hint": {
-  "file": "5c78e62d402f5fdd.m4a",
+  "file": "0acacd7ef6264acf.m4a",
   "text": "桃子、葡萄、蘋果，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-16.hint.gentle": {
-  "file": "172f1924c7278801.m4a",
+  "file": "86b7484f77ea67e2.m4a",
   "text": "沒關係喔，有阿悟陪你。桃子、葡萄、蘋果，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4065,12 +4065,12 @@
   "voice": "mama|"
  },
  "q.classify-3-21.hint": {
-  "file": "d40e168c56301094.m4a",
+  "file": "661e451d7bb88cb7.m4a",
   "text": "蘋果、香蕉、桃子，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-21.hint.gentle": {
-  "file": "58678d424c6a8e74.m4a",
+  "file": "5b47d9ebfd3fff22.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果、香蕉、桃子，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4110,12 +4110,12 @@
   "voice": "mama|"
  },
  "q.classify-3-24.hint": {
-  "file": "6e9af12924265128.m4a",
+  "file": "588a51e559d5e949.m4a",
   "text": "蘋果、香蕉、葡萄，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-24.hint.gentle": {
-  "file": "d7b30a8b2e923eb2.m4a",
+  "file": "42e932e063932a50.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果、香蕉、葡萄，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4125,12 +4125,12 @@
   "voice": "mama|"
  },
  "q.classify-3-25.hint": {
-  "file": "5c78e62d402f5fdd.m4a",
+  "file": "0acacd7ef6264acf.m4a",
   "text": "桃子、葡萄、蘋果，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-25.hint.gentle": {
-  "file": "172f1924c7278801.m4a",
+  "file": "86b7484f77ea67e2.m4a",
   "text": "沒關係喔，有阿悟陪你。桃子、葡萄、蘋果，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4155,12 +4155,12 @@
   "voice": "mama|"
  },
  "q.classify-3-27.hint": {
-  "file": "b2a8b2c85ddb998f.m4a",
+  "file": "aaa3650ccd2c01f7.m4a",
   "text": "蘋果、葡萄、桃子，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-27.hint.gentle": {
-  "file": "7fc9cb2d254441bf.m4a",
+  "file": "b147e6cbcd8aa9af.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果、葡萄、桃子，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4170,12 +4170,12 @@
   "voice": "mama|"
  },
  "q.classify-3-28.hint": {
-  "file": "9ebe6847631e1bca.m4a",
+  "file": "3b672dd428c51cfc.m4a",
   "text": "葡萄、蘋果、桃子，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-28.hint.gentle": {
-  "file": "20f9fdda1cc7fa6b.m4a",
+  "file": "178b56beedcd3e9c.m4a",
   "text": "沒關係喔，有阿悟陪你。葡萄、蘋果、桃子，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4260,12 +4260,12 @@
   "voice": "mama|"
  },
  "q.classify-3-34.hint": {
-  "file": "87f045b49aad2b0a.m4a",
+  "file": "59beec16a8d775a2.m4a",
   "text": "蘋果、葡萄、香蕉，都是水果。哪一個不是水果呢？",
   "voice": "mama|"
  },
  "q.classify-3-34.hint.gentle": {
-  "file": "0e8356cda93352b8.m4a",
+  "file": "219e3bbf9ca6dd1f.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果、葡萄、香蕉，都是水果。哪一個不是水果呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4350,12 +4350,12 @@
   "voice": "mama|"
  },
  "q.classify-3-40.hint": {
-  "file": "ffb8bb5b754888d6.m4a",
+  "file": "62165111e68ac52b.m4a",
   "text": "水果像蘋果，動物像小雞，玩具像皮球。看看每一個是什麼，放進對的籃子。",
   "voice": "mama|"
  },
  "q.classify-3-40.hint.gentle": {
-  "file": "7e9cbbd3b5e3873d.m4a",
+  "file": "290bd636d4453cc2.m4a",
   "text": "沒關係喔，有阿悟陪你。水果像蘋果，動物像小雞，玩具像皮球。看看每一個是什麼，放進對的籃子。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4395,12 +4395,12 @@
   "voice": "mama|"
  },
  "q.classify-3-43.hint": {
-  "file": "3eda3d0d6a192610.m4a",
+  "file": "f98f1793ee9f3559.m4a",
   "text": "交通工具像火箭，玩具像恐龍，水果像蘋果。看看每一個是什麼，放進對的籃子。",
   "voice": "mama|"
  },
  "q.classify-3-43.hint.gentle": {
-  "file": "2f2341cb7364f98b.m4a",
+  "file": "b1ba0a94b37e2cb9.m4a",
   "text": "沒關係喔，有阿悟陪你。交通工具像火箭，玩具像恐龍，水果像蘋果。看看每一個是什麼，放進對的籃子。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -4555,7 +4555,7 @@
   "voice": "mama|"
  },
  "q.classify-4-05.prompt": {
-  "file": "45171f9a5642484b.m4a",
+  "file": "879182dc3c338ce7.m4a",
   "text": "請選出紅色的交通工具。",
   "voice": "mama|"
  },
@@ -4600,7 +4600,7 @@
   "voice": "mama|"
  },
  "q.classify-4-08.prompt": {
-  "file": "f254e9d4aacc26dd.m4a",
+  "file": "fc8de7e8466def21.m4a",
   "text": "請選出粉紅色的水果。",
   "voice": "mama|"
  },
@@ -4615,7 +4615,7 @@
   "voice": "mama|"
  },
  "q.classify-4-09.prompt": {
-  "file": "c84e5271ed9a675f.m4a",
+  "file": "15a3bc834d8b0961.m4a",
   "text": "請選出黃色的水果。",
   "voice": "mama|"
  },
@@ -4645,7 +4645,7 @@
   "voice": "mama|"
  },
  "q.classify-4-11.prompt": {
-  "file": "170d9136e7390210.m4a",
+  "file": "1ffe857b75f878f6.m4a",
   "text": "請選出藍色的動物。",
   "voice": "mama|"
  },
@@ -4705,7 +4705,7 @@
   "voice": "mama|"
  },
  "q.classify-4-15.prompt": {
-  "file": "a3c059e1bb8e5b66.m4a",
+  "file": "0efcbc896fd4e9a7.m4a",
   "text": "請選出紅色的水果。",
   "voice": "mama|"
  },
@@ -4720,7 +4720,7 @@
   "voice": "mama|"
  },
  "q.classify-4-16.prompt": {
-  "file": "629301e839c94ef6.m4a",
+  "file": "92c91bc2977ebbe5.m4a",
   "text": "請選出黃色的動物。",
   "voice": "mama|"
  },
@@ -4795,7 +4795,7 @@
   "voice": "mama|"
  },
  "q.classify-4-21.prompt": {
-  "file": "b0177072e720ff34.m4a",
+  "file": "5bf1e03e0e4500cd.m4a",
   "text": "請選出綠色的交通工具。",
   "voice": "mama|"
  },
@@ -4870,7 +4870,7 @@
   "voice": "mama|"
  },
  "q.classify-4-26.prompt": {
-  "file": "b1454adbe8e26707.m4a",
+  "file": "39e0162d5ec0c9dd.m4a",
   "text": "請選出紫色的水果。",
   "voice": "mama|"
  },
@@ -5005,7 +5005,7 @@
   "voice": "mama|"
  },
  "q.classify-4-35.prompt": {
-  "file": "aede3d606d33590a.m4a",
+  "file": "112bb90a328e4fd9.m4a",
   "text": "請選出白色的動物。",
   "voice": "mama|"
  },
@@ -5115,12 +5115,12 @@
   "voice": "mama|"
  },
  "q.english-1-07.hint": {
-  "file": "74f4e187a7e475f4.m4a",
+  "file": "beac0c6ae0301e5b.m4a",
   "text": "紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？",
   "voice": "mama|"
  },
  "q.english-1-07.hint.gentle": {
-  "file": "7beedf654a6a9b4b.m4a",
+  "file": "66ce5d120ca84950.m4a",
   "text": "沒關係喔，有阿悟陪你。紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5280,12 +5280,12 @@
   "voice": "mama|"
  },
  "q.english-1-18.hint": {
-  "file": "74f4e187a7e475f4.m4a",
+  "file": "beac0c6ae0301e5b.m4a",
   "text": "紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？",
   "voice": "mama|"
  },
  "q.english-1-18.hint.gentle": {
-  "file": "7beedf654a6a9b4b.m4a",
+  "file": "66ce5d120ca84950.m4a",
   "text": "沒關係喔，有阿悟陪你。紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5295,12 +5295,12 @@
   "voice": "mama|"
  },
  "q.english-1-19.hint": {
-  "file": "13ff47fe5808605a.m4a",
+  "file": "dc16ffa194c18ca6.m4a",
   "text": "餅乾的英文就是剛剛聽到的字。找找看，哪一個是餅乾？",
   "voice": "mama|"
  },
  "q.english-1-19.hint.gentle": {
-  "file": "cbf88ac820bc277e.m4a",
+  "file": "a94534268a28e973.m4a",
   "text": "沒關係喔，有阿悟陪你。餅乾的英文就是剛剛聽到的字。找找看，哪一個是餅乾？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5400,12 +5400,12 @@
   "voice": "mama|"
  },
  "q.english-1-26.hint": {
-  "file": "6c0348fceaa32146.m4a",
+  "file": "3459ef2b0ca3b858.m4a",
   "text": "蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？",
   "voice": "mama|"
  },
  "q.english-1-26.hint.gentle": {
-  "file": "91a33d322d437f87.m4a",
+  "file": "185797bcde96f692.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5415,12 +5415,12 @@
   "voice": "mama|"
  },
  "q.english-1-27.hint": {
-  "file": "f01684c2bccd4594.m4a",
+  "file": "50961244c2871890.m4a",
   "text": "燈的英文就是剛剛聽到的字。找找看，哪一個是燈？",
   "voice": "mama|"
  },
  "q.english-1-27.hint.gentle": {
-  "file": "28f1c1e0fd7add13.m4a",
+  "file": "5cb1793d9b8402c7.m4a",
   "text": "沒關係喔，有阿悟陪你。燈的英文就是剛剛聽到的字。找找看，哪一個是燈？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5460,12 +5460,12 @@
   "voice": "mama|"
  },
  "q.english-1-30.hint": {
-  "file": "f01684c2bccd4594.m4a",
+  "file": "50961244c2871890.m4a",
   "text": "燈的英文就是剛剛聽到的字。找找看，哪一個是燈？",
   "voice": "mama|"
  },
  "q.english-1-30.hint.gentle": {
-  "file": "28f1c1e0fd7add13.m4a",
+  "file": "5cb1793d9b8402c7.m4a",
   "text": "沒關係喔，有阿悟陪你。燈的英文就是剛剛聽到的字。找找看，哪一個是燈？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5505,12 +5505,12 @@
   "voice": "mama|"
  },
  "q.english-1-33.hint": {
-  "file": "74f4e187a7e475f4.m4a",
+  "file": "beac0c6ae0301e5b.m4a",
   "text": "紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？",
   "voice": "mama|"
  },
  "q.english-1-33.hint.gentle": {
-  "file": "7beedf654a6a9b4b.m4a",
+  "file": "66ce5d120ca84950.m4a",
   "text": "沒關係喔，有阿悟陪你。紅蘿蔔的英文就是剛剛聽到的字。找找看，哪一個是紅蘿蔔？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5610,12 +5610,12 @@
   "voice": "mama|"
  },
  "q.english-1-40.hint": {
-  "file": "13ff47fe5808605a.m4a",
+  "file": "dc16ffa194c18ca6.m4a",
   "text": "餅乾的英文就是剛剛聽到的字。找找看，哪一個是餅乾？",
   "voice": "mama|"
  },
  "q.english-1-40.hint.gentle": {
-  "file": "cbf88ac820bc277e.m4a",
+  "file": "a94534268a28e973.m4a",
   "text": "沒關係喔，有阿悟陪你。餅乾的英文就是剛剛聽到的字。找找看，哪一個是餅乾？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5640,12 +5640,12 @@
   "voice": "mama|"
  },
  "q.english-1-42.hint": {
-  "file": "d20c4ab053cd4a10.m4a",
+  "file": "368cdb0f806c6ddf.m4a",
   "text": "這個是餅乾。聽聽看餅乾的英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-1-42.hint.gentle": {
-  "file": "2ed1d95039520e66.m4a",
+  "file": "e89e3100d3002663.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是餅乾。聽聽看餅乾的英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -5685,12 +5685,12 @@
   "voice": "mama|"
  },
  "q.english-1-45.hint": {
-  "file": "d20c4ab053cd4a10.m4a",
+  "file": "368cdb0f806c6ddf.m4a",
   "text": "這個是餅乾。聽聽看餅乾的英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-1-45.hint.gentle": {
-  "file": "2ed1d95039520e66.m4a",
+  "file": "e89e3100d3002663.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是餅乾。聽聽看餅乾的英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -6030,17 +6030,17 @@
   "voice": "mama|"
  },
  "q.english-1-68.hint": {
-  "file": "de73a46cafd0700f.m4a",
+  "file": "690444ad851b5dcf.m4a",
   "text": "燈是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-1-68.hint.gentle": {
-  "file": "f21a6d8e310b7762.m4a",
+  "file": "d447aa62fe134355.m4a",
   "text": "沒關係喔，有阿悟陪你。燈是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-1-68.prompt": {
-  "file": "c209e21776b77fe5.m4a",
+  "file": "5e737e1642cf4a1c.m4a",
   "text": "找出燈的英文字。",
   "voice": "mama|"
  },
@@ -6105,17 +6105,17 @@
   "voice": "mama|"
  },
  "q.english-1-73.hint": {
-  "file": "eaa0184a26306136.m4a",
+  "file": "436fcd19f79f4af2.m4a",
   "text": "蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-1-73.hint.gentle": {
-  "file": "6c51e968b025c2a1.m4a",
+  "file": "d96024e2173779cc.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-1-73.prompt": {
-  "file": "10f5606c1debf81d.m4a",
+  "file": "6e649142c1d5ef63.m4a",
   "text": "蘋果，用英文怎麼說？",
   "voice": "mama|"
  },
@@ -6180,32 +6180,32 @@
   "voice": "mama|"
  },
  "q.english-1-78.hint": {
-  "file": "5d8ffc81d3212680.m4a",
+  "file": "c8f0afd56f9a8b2f.m4a",
   "text": "餅乾是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-1-78.hint.gentle": {
-  "file": "0a65b4cb9e133ab2.m4a",
+  "file": "5aa15640e5705605.m4a",
   "text": "沒關係喔，有阿悟陪你。餅乾是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-1-78.prompt": {
-  "file": "171408245023a836.m4a",
+  "file": "364e642278fcb763.m4a",
   "text": "餅乾，用英文怎麼說？",
   "voice": "mama|"
  },
  "q.english-1-79.hint": {
-  "file": "eaa0184a26306136.m4a",
+  "file": "436fcd19f79f4af2.m4a",
   "text": "蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-1-79.hint.gentle": {
-  "file": "6c51e968b025c2a1.m4a",
+  "file": "d96024e2173779cc.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-1-79.prompt": {
-  "file": "d6ad7e115c8e573b.m4a",
+  "file": "c7426deccee7031e.m4a",
   "text": "哪一個是蘋果的英文？",
   "voice": "mama|"
  },
@@ -6285,12 +6285,12 @@
   "voice": "mama|"
  },
  "q.english-1-g05.hint": {
-  "file": "6c0348fceaa32146.m4a",
+  "file": "3459ef2b0ca3b858.m4a",
   "text": "蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？",
   "voice": "mama|"
  },
  "q.english-1-g05.hint.gentle": {
-  "file": "91a33d322d437f87.m4a",
+  "file": "185797bcde96f692.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -6525,12 +6525,12 @@
   "voice": "mama|"
  },
  "q.english-1-g21.hint": {
-  "file": "6c0348fceaa32146.m4a",
+  "file": "3459ef2b0ca3b858.m4a",
   "text": "蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？",
   "voice": "mama|"
  },
  "q.english-1-g21.hint.gentle": {
-  "file": "91a33d322d437f87.m4a",
+  "file": "185797bcde96f692.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -6630,12 +6630,12 @@
   "voice": "mama|"
  },
  "q.english-1-g28.hint": {
-  "file": "6c0348fceaa32146.m4a",
+  "file": "3459ef2b0ca3b858.m4a",
   "text": "蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？",
   "voice": "mama|"
  },
  "q.english-1-g28.hint.gentle": {
-  "file": "91a33d322d437f87.m4a",
+  "file": "185797bcde96f692.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果的英文就是剛剛聽到的字。找找看，哪一個是蘋果？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -7125,12 +7125,12 @@
   "voice": "mama|"
  },
  "q.english-2-31.hint": {
-  "file": "acdb59b1181c0dc0.m4a",
+  "file": "2801a41858953842.m4a",
   "text": "這個是蘋果。聽聽看蘋果的英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-2-31.hint.gentle": {
-  "file": "85dc341a1448823f.m4a",
+  "file": "04b1b335b5af6716.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是蘋果。聽聽看蘋果的英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -7200,12 +7200,12 @@
   "voice": "mama|"
  },
  "q.english-2-36.hint": {
-  "file": "96f9d70b10598e36.m4a",
+  "file": "9c08d1e920d3e79c.m4a",
   "text": "這個是燈。聽聽看燈的英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-2-36.hint.gentle": {
-  "file": "11db865d9f25c540.m4a",
+  "file": "b7c18bb0f05ee13c.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是燈。聽聽看燈的英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -7335,17 +7335,17 @@
   "voice": "mama|"
  },
  "q.english-3-01.hint": {
-  "file": "bd804374bc9221bd.m4a",
+  "file": "056f7538d9f14fb6.m4a",
   "text": "紅蘿蔔是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-3-01.hint.gentle": {
-  "file": "d87ca28e96de5f40.m4a",
+  "file": "fa1777b08ec1be77.m4a",
   "text": "沒關係喔，有阿悟陪你。紅蘿蔔是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-3-01.prompt": {
-  "file": "a397e99a126effeb.m4a",
+  "file": "5fa7bbb633e3836f.m4a",
   "text": "哪一個是紅蘿蔔的英文？",
   "voice": "mama|"
  },
@@ -7365,47 +7365,47 @@
   "voice": "mama|"
  },
  "q.english-3-03.hint": {
-  "file": "5d8ffc81d3212680.m4a",
+  "file": "c8f0afd56f9a8b2f.m4a",
   "text": "餅乾是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-3-03.hint.gentle": {
-  "file": "0a65b4cb9e133ab2.m4a",
+  "file": "5aa15640e5705605.m4a",
   "text": "沒關係喔，有阿悟陪你。餅乾是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-3-03.prompt": {
-  "file": "bf7558fb6f714cef.m4a",
+  "file": "0f5471faecc09bf0.m4a",
   "text": "哪一個是餅乾的英文？",
   "voice": "mama|"
  },
  "q.english-3-04.hint": {
-  "file": "de73a46cafd0700f.m4a",
+  "file": "690444ad851b5dcf.m4a",
   "text": "燈是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-3-04.hint.gentle": {
-  "file": "f21a6d8e310b7762.m4a",
+  "file": "d447aa62fe134355.m4a",
   "text": "沒關係喔，有阿悟陪你。燈是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-3-04.prompt": {
-  "file": "c209e21776b77fe5.m4a",
+  "file": "5e737e1642cf4a1c.m4a",
   "text": "找出燈的英文字。",
   "voice": "mama|"
  },
  "q.english-3-05.hint": {
-  "file": "5d8ffc81d3212680.m4a",
+  "file": "c8f0afd56f9a8b2f.m4a",
   "text": "餅乾是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-3-05.hint.gentle": {
-  "file": "0a65b4cb9e133ab2.m4a",
+  "file": "5aa15640e5705605.m4a",
   "text": "沒關係喔，有阿悟陪你。餅乾是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-3-05.prompt": {
-  "file": "171408245023a836.m4a",
+  "file": "364e642278fcb763.m4a",
   "text": "餅乾，用英文怎麼說？",
   "voice": "mama|"
  },
@@ -7530,17 +7530,17 @@
   "voice": "mama|"
  },
  "q.english-3-14.hint": {
-  "file": "eaa0184a26306136.m4a",
+  "file": "436fcd19f79f4af2.m4a",
   "text": "蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-3-14.hint.gentle": {
-  "file": "6c51e968b025c2a1.m4a",
+  "file": "d96024e2173779cc.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-3-14.prompt": {
-  "file": "9573e073e51ab557.m4a",
+  "file": "c2b74d48b7d1a3b2.m4a",
   "text": "找出蘋果的英文字。",
   "voice": "mama|"
  },
@@ -7590,17 +7590,17 @@
   "voice": "mama|"
  },
  "q.english-3-18.hint": {
-  "file": "eaa0184a26306136.m4a",
+  "file": "436fcd19f79f4af2.m4a",
   "text": "蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。",
   "voice": "mama|"
  },
  "q.english-3-18.hint.gentle": {
-  "file": "6c51e968b025c2a1.m4a",
+  "file": "d96024e2173779cc.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果是這個樣子。聽聽看英文怎麼說，再找找看是哪一個字。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.english-3-18.prompt": {
-  "file": "10f5606c1debf81d.m4a",
+  "file": "6e649142c1d5ef63.m4a",
   "text": "蘋果，用英文怎麼說？",
   "voice": "mama|"
  },
@@ -8010,12 +8010,12 @@
   "voice": "mama|"
  },
  "q.english-4-04.hint": {
-  "file": "468ef68cd49b3910.m4a",
+  "file": "8396af17f8c075ff.m4a",
   "text": "這個是蘋果。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
   "voice": "mama|"
  },
  "q.english-4-04.hint.gentle": {
-  "file": "f02e278aa35aa78d.m4a",
+  "file": "4adebc41107de09f.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是蘋果。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -8025,12 +8025,12 @@
   "voice": "mama|"
  },
  "q.english-4-05.hint": {
-  "file": "ddd6635a8242a01b.m4a",
+  "file": "7ab1b39aea247f06.m4a",
   "text": "這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
   "voice": "mama|"
  },
  "q.english-4-05.hint.gentle": {
-  "file": "4cb34521c90db22c.m4a",
+  "file": "08c673f146e43c15.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -8070,12 +8070,12 @@
   "voice": "mama|"
  },
  "q.english-4-08.hint": {
-  "file": "ddd6635a8242a01b.m4a",
+  "file": "7ab1b39aea247f06.m4a",
   "text": "這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
   "voice": "mama|"
  },
  "q.english-4-08.hint.gentle": {
-  "file": "4cb34521c90db22c.m4a",
+  "file": "08c673f146e43c15.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -8235,12 +8235,12 @@
   "voice": "mama|"
  },
  "q.english-4-19.hint": {
-  "file": "ddd6635a8242a01b.m4a",
+  "file": "7ab1b39aea247f06.m4a",
   "text": "這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
   "voice": "mama|"
  },
  "q.english-4-19.hint.gentle": {
-  "file": "4cb34521c90db22c.m4a",
+  "file": "08c673f146e43c15.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是燈。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -8280,12 +8280,12 @@
   "voice": "mama|"
  },
  "q.english-4-22.hint": {
-  "file": "468ef68cd49b3910.m4a",
+  "file": "8396af17f8c075ff.m4a",
   "text": "這個是蘋果。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？",
   "voice": "mama|"
  },
  "q.english-4-22.hint.gentle": {
-  "file": "f02e278aa35aa78d.m4a",
+  "file": "4adebc41107de09f.m4a",
   "text": "沒關係喔，有阿悟陪你。這個是蘋果。聽聽看怎麼唸，一個字母一個字母慢慢看，缺的是哪一個？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -8655,32 +8655,32 @@
   "voice": "mama|"
  },
  "q.life-1-04.hint": {
-  "file": "30ccd9c9c20a2119.m4a",
+  "file": "b740951ad2355214.m4a",
   "text": "看看每一張圖裡，阿悟正在做什麼？找出阿悟在等紅燈的那一張。",
   "voice": "mama|"
  },
  "q.life-1-04.hint.gentle": {
-  "file": "1ec263026f494d90.m4a",
+  "file": "90069688ca648b4e.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，阿悟正在做什麼？找出阿悟在等紅燈的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-04.hint.gentle.kid": {
-  "file": "72c9bce51e048ff2.m4a",
+  "file": "c8d625f87440f06c.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，小朋友正在做什麼？找出小朋友在等紅燈的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-04.hint.kid": {
-  "file": "24e7d9cb1d033f76.m4a",
+  "file": "49d116edc55b43eb.m4a",
   "text": "看看每一張圖裡，小朋友正在做什麼？找出小朋友在等紅燈的那一張。",
   "voice": "mama|"
  },
  "q.life-1-04.prompt": {
-  "file": "6c0f49de84b2dea2.m4a",
+  "file": "6ffb0c7c43b73fc4.m4a",
   "text": "哪一張是阿悟在等紅燈呢？",
   "voice": "mama|"
  },
  "q.life-1-04.prompt.kid": {
-  "file": "6b1b845bf76ee20a.m4a",
+  "file": "2d9ad524e0e7496b.m4a",
   "text": "哪一張是小朋友在等紅燈呢？",
   "voice": "mama|"
  },
@@ -8805,32 +8805,32 @@
   "voice": "mama|"
  },
  "q.life-1-09.hint": {
-  "file": "30ccd9c9c20a2119.m4a",
+  "file": "b740951ad2355214.m4a",
   "text": "看看每一張圖裡，阿悟正在做什麼？找出阿悟在等紅燈的那一張。",
   "voice": "mama|"
  },
  "q.life-1-09.hint.gentle": {
-  "file": "1ec263026f494d90.m4a",
+  "file": "90069688ca648b4e.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，阿悟正在做什麼？找出阿悟在等紅燈的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-09.hint.gentle.kid": {
-  "file": "72c9bce51e048ff2.m4a",
+  "file": "c8d625f87440f06c.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，小朋友正在做什麼？找出小朋友在等紅燈的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-09.hint.kid": {
-  "file": "24e7d9cb1d033f76.m4a",
+  "file": "49d116edc55b43eb.m4a",
   "text": "看看每一張圖裡，小朋友正在做什麼？找出小朋友在等紅燈的那一張。",
   "voice": "mama|"
  },
  "q.life-1-09.prompt": {
-  "file": "46364c90eccf9941.m4a",
+  "file": "958984e9d64ae1f6.m4a",
   "text": "阿悟在等紅燈，是哪一張呢？",
   "voice": "mama|"
  },
  "q.life-1-09.prompt.kid": {
-  "file": "1cf1a184540ca085.m4a",
+  "file": "8b3ac3faebf39d5f.m4a",
   "text": "小朋友在等紅燈，是哪一張呢？",
   "voice": "mama|"
  },
@@ -9105,32 +9105,32 @@
   "voice": "mama|"
  },
  "q.life-1-19.hint": {
-  "file": "17cb449242c870ec.m4a",
+  "file": "1154bdd5eb7c809e.m4a",
   "text": "看看每一張圖裡，阿悟正在做什麼？找出阿悟手髒髒的那一張。",
   "voice": "mama|"
  },
  "q.life-1-19.hint.gentle": {
-  "file": "9f0a26610fc632ca.m4a",
+  "file": "6c3db744f0a798ef.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，阿悟正在做什麼？找出阿悟手髒髒的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-19.hint.gentle.kid": {
-  "file": "9c20503130dec43e.m4a",
+  "file": "95f0224f3e2d2a20.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，小朋友正在做什麼？找出小朋友手髒髒的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-19.hint.kid": {
-  "file": "d97dc9f816db7196.m4a",
+  "file": "777ea3056717bef0.m4a",
   "text": "看看每一張圖裡，小朋友正在做什麼？找出小朋友手髒髒的那一張。",
   "voice": "mama|"
  },
  "q.life-1-19.prompt": {
-  "file": "c922a6d7058b7115.m4a",
+  "file": "a3271838cac0940d.m4a",
   "text": "阿悟手髒髒的，是哪一張呢？",
   "voice": "mama|"
  },
  "q.life-1-19.prompt.kid": {
-  "file": "aee1203e230696e3.m4a",
+  "file": "5b0b4ce8841beff6.m4a",
   "text": "小朋友手髒髒的，是哪一張呢？",
   "voice": "mama|"
  },
@@ -9195,12 +9195,12 @@
   "voice": "mama|"
  },
  "q.life-1-22.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-1-22.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9225,42 +9225,42 @@
   "voice": "mama|"
  },
  "q.life-1-24.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-1-24.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-24.hint.gentle.kid": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-24.hint.kid": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-1-24.prompt": {
-  "file": "27af84fc1ed4d6a1.m4a",
+  "file": "c7a512067748d04a.m4a",
   "text": "阿悟的手髒髒的，要怎麼做才好呢？",
   "voice": "mama|"
  },
  "q.life-1-24.prompt.kid": {
-  "file": "e4d5c62c1866839a.m4a",
+  "file": "eeac42d92cb6b70e.m4a",
   "text": "小朋友的手髒髒的，要怎麼做才好呢？",
   "voice": "mama|"
  },
  "q.life-1-25.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-1-25.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9285,12 +9285,12 @@
   "voice": "mama|"
  },
  "q.life-1-27.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-1-27.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9315,27 +9315,27 @@
   "voice": "mama|"
  },
  "q.life-1-29.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-1-29.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-29.prompt": {
-  "file": "76f8a4a05e33001e.m4a",
+  "file": "0eb53bda4219b0c2.m4a",
   "text": "哪一個會讓環境乾乾淨淨呢？",
   "voice": "mama|"
  },
  "q.life-1-30.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-1-30.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9345,27 +9345,27 @@
   "voice": "mama|"
  },
  "q.life-1-31.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-1-31.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-31.prompt": {
-  "file": "0b21000056dce371.m4a",
+  "file": "a017d9b1f60cc5f6.m4a",
   "text": "要吃東西了，手髒髒的，哪一個是對的做法呢？",
   "voice": "mama|"
  },
  "q.life-1-32.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-1-32.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9405,12 +9405,12 @@
   "voice": "mama|"
  },
  "q.life-1-35.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-1-35.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9525,32 +9525,32 @@
   "voice": "mama|"
  },
  "q.life-1-g04.hint": {
-  "file": "30ccd9c9c20a2119.m4a",
+  "file": "b740951ad2355214.m4a",
   "text": "看看每一張圖裡，阿悟正在做什麼？找出阿悟在等紅燈的那一張。",
   "voice": "mama|"
  },
  "q.life-1-g04.hint.gentle": {
-  "file": "1ec263026f494d90.m4a",
+  "file": "90069688ca648b4e.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，阿悟正在做什麼？找出阿悟在等紅燈的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-g04.hint.gentle.kid": {
-  "file": "72c9bce51e048ff2.m4a",
+  "file": "c8d625f87440f06c.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，小朋友正在做什麼？找出小朋友在等紅燈的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-g04.hint.kid": {
-  "file": "24e7d9cb1d033f76.m4a",
+  "file": "49d116edc55b43eb.m4a",
   "text": "看看每一張圖裡，小朋友正在做什麼？找出小朋友在等紅燈的那一張。",
   "voice": "mama|"
  },
  "q.life-1-g04.prompt": {
-  "file": "6c0f49de84b2dea2.m4a",
+  "file": "6ffb0c7c43b73fc4.m4a",
   "text": "哪一張是阿悟在等紅燈呢？",
   "voice": "mama|"
  },
  "q.life-1-g04.prompt.kid": {
-  "file": "6b1b845bf76ee20a.m4a",
+  "file": "2d9ad524e0e7496b.m4a",
   "text": "哪一張是小朋友在等紅燈呢？",
   "voice": "mama|"
  },
@@ -9675,32 +9675,32 @@
   "voice": "mama|"
  },
  "q.life-1-g09.hint": {
-  "file": "30ccd9c9c20a2119.m4a",
+  "file": "b740951ad2355214.m4a",
   "text": "看看每一張圖裡，阿悟正在做什麼？找出阿悟在等紅燈的那一張。",
   "voice": "mama|"
  },
  "q.life-1-g09.hint.gentle": {
-  "file": "1ec263026f494d90.m4a",
+  "file": "90069688ca648b4e.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，阿悟正在做什麼？找出阿悟在等紅燈的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-g09.hint.gentle.kid": {
-  "file": "72c9bce51e048ff2.m4a",
+  "file": "c8d625f87440f06c.m4a",
   "text": "沒關係喔，有阿悟陪你。看看每一張圖裡，小朋友正在做什麼？找出小朋友在等紅燈的那一張。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-g09.hint.kid": {
-  "file": "24e7d9cb1d033f76.m4a",
+  "file": "49d116edc55b43eb.m4a",
   "text": "看看每一張圖裡，小朋友正在做什麼？找出小朋友在等紅燈的那一張。",
   "voice": "mama|"
  },
  "q.life-1-g09.prompt": {
-  "file": "46364c90eccf9941.m4a",
+  "file": "958984e9d64ae1f6.m4a",
   "text": "阿悟在等紅燈，是哪一張呢？",
   "voice": "mama|"
  },
  "q.life-1-g09.prompt.kid": {
-  "file": "1cf1a184540ca085.m4a",
+  "file": "8b3ac3faebf39d5f.m4a",
   "text": "小朋友在等紅燈，是哪一張呢？",
   "voice": "mama|"
  },
@@ -9795,12 +9795,12 @@
   "voice": "mama|"
  },
  "q.life-1-g13.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-1-g13.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9825,42 +9825,42 @@
   "voice": "mama|"
  },
  "q.life-1-g15.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-1-g15.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-g15.hint.gentle.kid": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-g15.hint.kid": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-1-g15.prompt": {
-  "file": "27af84fc1ed4d6a1.m4a",
+  "file": "c7a512067748d04a.m4a",
   "text": "阿悟的手髒髒的，要怎麼做才好呢？",
   "voice": "mama|"
  },
  "q.life-1-g15.prompt.kid": {
-  "file": "e4d5c62c1866839a.m4a",
+  "file": "eeac42d92cb6b70e.m4a",
   "text": "小朋友的手髒髒的，要怎麼做才好呢？",
   "voice": "mama|"
  },
  "q.life-1-g16.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-1-g16.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9885,12 +9885,12 @@
   "voice": "mama|"
  },
  "q.life-1-g18.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-1-g18.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9915,27 +9915,27 @@
   "voice": "mama|"
  },
  "q.life-1-g20.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-1-g20.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-g20.prompt": {
-  "file": "76f8a4a05e33001e.m4a",
+  "file": "0eb53bda4219b0c2.m4a",
   "text": "哪一個會讓環境乾乾淨淨呢？",
   "voice": "mama|"
  },
  "q.life-1-g21.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-1-g21.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -9945,27 +9945,27 @@
   "voice": "mama|"
  },
  "q.life-1-g22.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-1-g22.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-1-g22.prompt": {
-  "file": "0b21000056dce371.m4a",
+  "file": "a017d9b1f60cc5f6.m4a",
   "text": "要吃東西了，手髒髒的，哪一個是對的做法呢？",
   "voice": "mama|"
  },
  "q.life-1-g23.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-1-g23.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -10005,12 +10005,12 @@
   "voice": "mama|"
  },
  "q.life-1-g26.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-1-g26.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -10275,12 +10275,12 @@
   "voice": "mama|"
  },
  "q.life-2-02.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-2-02.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -10305,12 +10305,12 @@
   "voice": "mama|"
  },
  "q.life-2-04.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-2-04.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -10320,12 +10320,12 @@
   "voice": "mama|"
  },
  "q.life-2-05.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-2-05.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -10350,47 +10350,47 @@
   "voice": "mama|"
  },
  "q.life-2-07.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-2-07.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-07.prompt": {
-  "file": "76f8a4a05e33001e.m4a",
+  "file": "0eb53bda4219b0c2.m4a",
   "text": "哪一個會讓環境乾乾淨淨呢？",
   "voice": "mama|"
  },
  "q.life-2-08.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-2-08.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-08.hint.gentle.kid": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-08.hint.kid": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-2-08.prompt": {
-  "file": "27af84fc1ed4d6a1.m4a",
+  "file": "c7a512067748d04a.m4a",
   "text": "阿悟的手髒髒的，要怎麼做才好呢？",
   "voice": "mama|"
  },
  "q.life-2-08.prompt.kid": {
-  "file": "e4d5c62c1866839a.m4a",
+  "file": "eeac42d92cb6b70e.m4a",
   "text": "小朋友的手髒髒的，要怎麼做才好呢？",
   "voice": "mama|"
  },
@@ -10425,12 +10425,12 @@
   "voice": "mama|"
  },
  "q.life-2-11.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-2-11.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -10440,12 +10440,12 @@
   "voice": "mama|"
  },
  "q.life-2-12.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-2-12.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -10455,52 +10455,52 @@
   "voice": "mama|"
  },
  "q.life-2-13.hint": {
-  "file": "2e03adf9893083f9.m4a",
+  "file": "5d16e537307dddfc.m4a",
   "text": "紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。",
   "voice": "mama|"
  },
  "q.life-2-13.hint.gentle": {
-  "file": "a768da4525eeb87a.m4a",
+  "file": "c187c8683191f2e0.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-13.hint.gentle.kid": {
-  "file": "a768da4525eeb87a.m4a",
+  "file": "c187c8683191f2e0.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-13.hint.kid": {
-  "file": "2e03adf9893083f9.m4a",
+  "file": "5d16e537307dddfc.m4a",
   "text": "紅燈亮了，車子正在走，要停下來等，等到綠燈才安全喔。",
   "voice": "mama|"
  },
  "q.life-2-13.prompt": {
-  "file": "5284b598811f2c71.m4a",
+  "file": "947f2448d42c50a4.m4a",
   "text": "紅燈亮了，阿悟站在旁邊乖乖等。阿悟這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-13.prompt.kid": {
-  "file": "6bb8d1975750843c.m4a",
+  "file": "217004d445f70efc.m4a",
   "text": "紅燈亮了，小朋友站在旁邊乖乖等。小朋友這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-14.hint": {
-  "file": "93fbbf0b1f5b3469.m4a",
+  "file": "41607fcbcde0ba11.m4a",
   "text": "手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。",
   "voice": "mama|"
  },
  "q.life-2-14.hint.gentle": {
-  "file": "8f4d3933292966b7.m4a",
+  "file": "3f2147d0a36b2137.m4a",
   "text": "沒關係喔，有阿悟陪你。手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-14.hint.gentle.kid": {
-  "file": "8f4d3933292966b7.m4a",
+  "file": "3f2147d0a36b2137.m4a",
   "text": "沒關係喔，有阿悟陪你。手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-14.hint.kid": {
-  "file": "93fbbf0b1f5b3469.m4a",
+  "file": "41607fcbcde0ba11.m4a",
   "text": "手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。",
   "voice": "mama|"
  },
@@ -10565,12 +10565,12 @@
   "voice": "mama|"
  },
  "q.life-2-16.prompt": {
-  "file": "fda438bbfad333ac.m4a",
+  "file": "d49cf4c5d2e8e449.m4a",
   "text": "阿悟把盤子裡的青菜吃得乾乾淨淨。阿悟這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-16.prompt.kid": {
-  "file": "bac056595d370400.m4a",
+  "file": "009dc9e017b10ba2.m4a",
   "text": "小朋友把盤子裡的青菜吃得乾乾淨淨。小朋友這樣好不好呢？",
   "voice": "mama|"
  },
@@ -10595,12 +10595,12 @@
   "voice": "mama|"
  },
  "q.life-2-17.prompt": {
-  "file": "cd3ff2774c1728a4.m4a",
+  "file": "65ee32a7ac3be222.m4a",
   "text": "阿悟拿著牙刷，把牙齒刷得乾乾淨淨。阿悟這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-17.prompt.kid": {
-  "file": "9bf4619a6147ac4a.m4a",
+  "file": "c8ac9fb703e9c9ed.m4a",
   "text": "小朋友拿著牙刷，把牙齒刷得乾乾淨淨。小朋友這樣好不好呢？",
   "voice": "mama|"
  },
@@ -10635,62 +10635,62 @@
   "voice": "mama|"
  },
  "q.life-2-19.hint": {
-  "file": "93fbbf0b1f5b3469.m4a",
+  "file": "41607fcbcde0ba11.m4a",
   "text": "手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。",
   "voice": "mama|"
  },
  "q.life-2-19.hint.gentle": {
-  "file": "8f4d3933292966b7.m4a",
+  "file": "3f2147d0a36b2137.m4a",
   "text": "沒關係喔，有阿悟陪你。手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-19.hint.gentle.kid": {
-  "file": "8f4d3933292966b7.m4a",
+  "file": "3f2147d0a36b2137.m4a",
   "text": "沒關係喔，有阿悟陪你。手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-19.hint.kid": {
-  "file": "93fbbf0b1f5b3469.m4a",
+  "file": "41607fcbcde0ba11.m4a",
   "text": "手上有看不見的細菌，用肥皂洗乾淨再吃東西，肚子才不會痛喔。",
   "voice": "mama|"
  },
  "q.life-2-19.prompt": {
-  "file": "28400b59d4a7c116.m4a",
+  "file": "264c35f0d17ebd12.m4a",
   "text": "阿悟用肥皂把手洗得乾乾淨淨。阿悟這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-19.prompt.kid": {
-  "file": "84a94a4a098eeea3.m4a",
+  "file": "f7734d35f8c30227.m4a",
   "text": "小朋友用肥皂把手洗得乾乾淨淨。小朋友這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-20.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-2-20.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-20.hint.gentle.kid": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-20.hint.kid": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-2-20.prompt": {
-  "file": "f1a34eb11810ba3e.m4a",
+  "file": "ca294e79ddc9f95b.m4a",
   "text": "阿悟的手髒髒的，就要拿餅乾來吃。阿悟這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-20.prompt.kid": {
-  "file": "eafb286e666daf61.m4a",
+  "file": "ba4101add2a48531.m4a",
   "text": "小朋友的手髒髒的，就要拿餅乾來吃。小朋友這樣好不好呢？",
   "voice": "mama|"
  },
@@ -10725,22 +10725,22 @@
   "voice": "mama|"
  },
  "q.life-2-22.hint": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
  "q.life-2-22.hint.gentle": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-22.hint.gentle.kid": {
-  "file": "acfdca7dede14446.m4a",
+  "file": "228364183b01f9de.m4a",
   "text": "沒關係喔，有阿悟陪你。搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-22.hint.kid": {
-  "file": "cc7bdf75b5b55f08.m4a",
+  "file": "82b23b0d24eb757d.m4a",
   "text": "搶別人的東西，朋友會很難過。想玩的話，要先說「請借我」。",
   "voice": "mama|"
  },
@@ -10755,22 +10755,22 @@
   "voice": "mama|"
  },
  "q.life-2-23.hint": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
  "q.life-2-23.hint.gentle": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-23.hint.gentle.kid": {
-  "file": "dc8f5de8705035cb.m4a",
+  "file": "18e8d77c7e2abf40.m4a",
   "text": "沒關係喔，有阿悟陪你。香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-23.hint.kid": {
-  "file": "9d79b4b8d1887426.m4a",
+  "file": "bb0a8e0a25ba9578.m4a",
   "text": "香蕉皮丟在地上，別人會滑倒，地方也會髒髒的。要丟進垃圾桶喔。",
   "voice": "mama|"
  },
@@ -10785,52 +10785,52 @@
   "voice": "mama|"
  },
  "q.life-2-24.hint": {
-  "file": "833550435ba52d23.m4a",
+  "file": "9681f805c9a1680a.m4a",
   "text": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
   "voice": "mama|"
  },
  "q.life-2-24.hint.gentle": {
-  "file": "a271c55f968701e6.m4a",
+  "file": "a59de2af0fa707b4.m4a",
   "text": "沒關係喔，有阿悟陪你。綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-24.hint.gentle.kid": {
-  "file": "a271c55f968701e6.m4a",
+  "file": "a59de2af0fa707b4.m4a",
   "text": "沒關係喔，有阿悟陪你。綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-24.hint.kid": {
-  "file": "833550435ba52d23.m4a",
+  "file": "9681f805c9a1680a.m4a",
   "text": "綠燈亮了才可以過馬路，牽著大人的手慢慢走，比較安全喔。",
   "voice": "mama|"
  },
  "q.life-2-24.prompt": {
-  "file": "b1f55618a97a6416.m4a",
+  "file": "b73c0b8ccead6bc2.m4a",
   "text": "要過馬路了，阿悟等到綠燈，牽好媽媽的手慢慢走。阿悟這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-24.prompt.kid": {
-  "file": "5843bb5f68475b4b.m4a",
+  "file": "8156b95d54299d40.m4a",
   "text": "要過馬路了，小朋友等到綠燈，牽好媽媽的手慢慢走。小朋友這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-25.hint": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
  "q.life-2-25.hint.gentle": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-25.hint.gentle.kid": {
-  "file": "30d4429f47ba3659.m4a",
+  "file": "dc480ddc16dcc329.m4a",
   "text": "沒關係喔，有阿悟陪你。手髒髒會有細菌跑進肚子，先洗手再吃喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-25.hint.kid": {
-  "file": "d3a2cb2490e703e3.m4a",
+  "file": "ab7021a98180bf02.m4a",
   "text": "手髒髒會有細菌跑進肚子，先洗手再吃喔。",
   "voice": "mama|"
  },
@@ -10875,22 +10875,22 @@
   "voice": "mama|"
  },
  "q.life-2-27.hint": {
-  "file": "c0a54518c8076418.m4a",
+  "file": "e95b22bcac89074f.m4a",
   "text": "包裝紙留在草地上，公園會變髒。放進垃圾桶，公園才會漂亮。",
   "voice": "mama|"
  },
  "q.life-2-27.hint.gentle": {
-  "file": "c605c6c19efbd2aa.m4a",
+  "file": "89887a7cd620635f.m4a",
   "text": "沒關係喔，有阿悟陪你。包裝紙留在草地上，公園會變髒。放進垃圾桶，公園才會漂亮。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-27.hint.gentle.kid": {
-  "file": "c605c6c19efbd2aa.m4a",
+  "file": "89887a7cd620635f.m4a",
   "text": "沒關係喔，有阿悟陪你。包裝紙留在草地上，公園會變髒。放進垃圾桶，公園才會漂亮。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-27.hint.kid": {
-  "file": "c0a54518c8076418.m4a",
+  "file": "e95b22bcac89074f.m4a",
   "text": "包裝紙留在草地上，公園會變髒。放進垃圾桶，公園才會漂亮。",
   "voice": "mama|"
  },
@@ -10905,22 +10905,22 @@
   "voice": "mama|"
  },
  "q.life-2-28.hint": {
-  "file": "2db8ef5ac85d7e61.m4a",
+  "file": "b8cd3ba337fe0ee7.m4a",
   "text": "飯粒灑出來桌子會髒髒的。慢慢吃，用湯匙好好吃，吃乾淨喔。",
   "voice": "mama|"
  },
  "q.life-2-28.hint.gentle": {
-  "file": "23bfcd8539efc435.m4a",
+  "file": "500412b7b1e7838d.m4a",
   "text": "沒關係喔，有阿悟陪你。飯粒灑出來桌子會髒髒的。慢慢吃，用湯匙好好吃，吃乾淨喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-28.hint.gentle.kid": {
-  "file": "23bfcd8539efc435.m4a",
+  "file": "500412b7b1e7838d.m4a",
   "text": "沒關係喔，有阿悟陪你。飯粒灑出來桌子會髒髒的。慢慢吃，用湯匙好好吃，吃乾淨喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-28.hint.kid": {
-  "file": "2db8ef5ac85d7e61.m4a",
+  "file": "b8cd3ba337fe0ee7.m4a",
   "text": "飯粒灑出來桌子會髒髒的。慢慢吃，用湯匙好好吃，吃乾淨喔。",
   "voice": "mama|"
  },
@@ -10965,32 +10965,32 @@
   "voice": "mama|"
  },
  "q.life-2-30.hint": {
-  "file": "5243e2c9fb31e3ef.m4a",
+  "file": "72e502cb3ec4e9ea.m4a",
   "text": "想要別人的東西，先有禮貌地說「請」，朋友就會很樂意借你。",
   "voice": "mama|"
  },
  "q.life-2-30.hint.gentle": {
-  "file": "08d2e9e18fd522d7.m4a",
+  "file": "039b616e967c6971.m4a",
   "text": "沒關係喔，有阿悟陪你。想要別人的東西，先有禮貌地說「請」，朋友就會很樂意借你。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-30.hint.gentle.kid": {
-  "file": "08d2e9e18fd522d7.m4a",
+  "file": "039b616e967c6971.m4a",
   "text": "沒關係喔，有阿悟陪你。想要別人的東西，先有禮貌地說「請」，朋友就會很樂意借你。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-30.hint.kid": {
-  "file": "5243e2c9fb31e3ef.m4a",
+  "file": "72e502cb3ec4e9ea.m4a",
   "text": "想要別人的東西，先有禮貌地說「請」，朋友就會很樂意借你。",
   "voice": "mama|"
  },
  "q.life-2-30.prompt": {
-  "file": "465fcce21c2ef344.m4a",
+  "file": "3a6dffe5c0d8f6a0.m4a",
   "text": "阿悟想玩朋友的球，先說了「請借我玩一下」。阿悟這樣好不好呢？",
   "voice": "mama|"
  },
  "q.life-2-30.prompt.kid": {
-  "file": "ca3ae5957f6a5c36.m4a",
+  "file": "73cc2902baa03337.m4a",
   "text": "小朋友想玩朋友的球，先說了「請借我玩一下」。小朋友這樣好不好呢？",
   "voice": "mama|"
  },
@@ -11025,167 +11025,167 @@
   "voice": "mama|"
  },
  "q.life-2-32.hint": {
-  "file": "032bca0cfb0768d9.m4a",
+  "file": "01c7241efa39e5a1.m4a",
   "text": "紅燈的意思是請停下來。車子正在走，等一等才安全喔。",
   "voice": "mama|"
  },
  "q.life-2-32.hint.gentle": {
-  "file": "0b6a5ffef434254f.m4a",
+  "file": "c1ffbba3b92f7847.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈的意思是請停下來。車子正在走，等一等才安全喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-32.prompt": {
-  "file": "d122a1d908c97944.m4a",
+  "file": "1861844a68c97fc9.m4a",
   "text": "紅燈亮了，我們要停下來等，還是往前走呢？",
   "voice": "mama|"
  },
  "q.life-2-33.hint": {
-  "file": "3689ab2dd5f18138.m4a",
+  "file": "7a7dcd851e4bc128.m4a",
   "text": "看到紅燈，要停下來等。跑過去很危險喔。",
   "voice": "mama|"
  },
  "q.life-2-33.hint.gentle": {
-  "file": "69cf0c2b1fbf65fd.m4a",
+  "file": "b3c48693243d9b35.m4a",
   "text": "沒關係喔，有阿悟陪你。看到紅燈，要停下來等。跑過去很危險喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-33.hint.gentle.kid": {
-  "file": "69cf0c2b1fbf65fd.m4a",
+  "file": "b3c48693243d9b35.m4a",
   "text": "沒關係喔，有阿悟陪你。看到紅燈，要停下來等。跑過去很危險喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-33.hint.kid": {
-  "file": "3689ab2dd5f18138.m4a",
+  "file": "7a7dcd851e4bc128.m4a",
   "text": "看到紅燈，要停下來等。跑過去很危險喔。",
   "voice": "mama|"
  },
  "q.life-2-33.prompt": {
-  "file": "01d0dfa37e8e3660.m4a",
+  "file": "17a2ed3db3113357.m4a",
   "text": "馬路上的燈是紅色的，阿悟要怎麼做呢？",
   "voice": "mama|"
  },
  "q.life-2-33.prompt.kid": {
-  "file": "189a4c80b0f60839.m4a",
+  "file": "042f117e71157163.m4a",
   "text": "馬路上的燈是紅色的，小朋友要怎麼做呢？",
   "voice": "mama|"
  },
  "q.life-2-34.hint": {
-  "file": "41d345134483baaf.m4a",
+  "file": "945b876d7878bac2.m4a",
   "text": "綠燈亮了，才可以過馬路。走之前，還是要先看看左右喔。",
   "voice": "mama|"
  },
  "q.life-2-34.hint.gentle": {
-  "file": "14e5abdf54d7daa9.m4a",
+  "file": "65c0885fa51f662e.m4a",
   "text": "沒關係喔，有阿悟陪你。綠燈亮了，才可以過馬路。走之前，還是要先看看左右喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-34.prompt": {
-  "file": "4abae57d0d2b99f6.m4a",
+  "file": "b1b9e363856ff4d6.m4a",
   "text": "綠燈亮了，可以走，還是要停呢？",
   "voice": "mama|"
  },
  "q.life-2-35.hint": {
-  "file": "ef2cd895e523f9ea.m4a",
+  "file": "ed34aecdc89a3b15.m4a",
   "text": "綠燈就是可以走了。看看左右沒有車，就慢慢走過去。",
   "voice": "mama|"
  },
  "q.life-2-35.hint.gentle": {
-  "file": "6be15eeafbcaf7b9.m4a",
+  "file": "ad006956aa49e157.m4a",
   "text": "沒關係喔，有阿悟陪你。綠燈就是可以走了。看看左右沒有車，就慢慢走過去。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-35.hint.gentle.kid": {
-  "file": "6be15eeafbcaf7b9.m4a",
+  "file": "ad006956aa49e157.m4a",
   "text": "沒關係喔，有阿悟陪你。綠燈就是可以走了。看看左右沒有車，就慢慢走過去。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-35.hint.kid": {
-  "file": "ef2cd895e523f9ea.m4a",
+  "file": "ed34aecdc89a3b15.m4a",
   "text": "綠燈就是可以走了。看看左右沒有車，就慢慢走過去。",
   "voice": "mama|"
  },
  "q.life-2-35.prompt": {
-  "file": "08daf0b4a14ad6aa.m4a",
+  "file": "88691c17740aaee9.m4a",
   "text": "馬路上的燈變成綠色了，阿悟可以怎麼做呢？",
   "voice": "mama|"
  },
  "q.life-2-35.prompt.kid": {
-  "file": "3dc191005a850d69.m4a",
+  "file": "1f0ae9b921d38a7b.m4a",
   "text": "馬路上的燈變成綠色了，小朋友可以怎麼做呢？",
   "voice": "mama|"
  },
  "q.life-2-36.hint": {
-  "file": "fb1f5d7f93f09242.m4a",
+  "file": "21d23bbe576cc148.m4a",
   "text": "紅燈要停下來等，像阿悟這樣乖乖站好。",
   "voice": "mama|"
  },
  "q.life-2-36.hint.gentle": {
-  "file": "1cbf077edfe2b32a.m4a",
+  "file": "4e142ec0974be90f.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈要停下來等，像阿悟這樣乖乖站好。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-36.hint.gentle.kid": {
-  "file": "f512504ab96deff2.m4a",
+  "file": "10a86e8458ecbc0e.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈要停下來等，像小朋友這樣乖乖站好。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-36.hint.kid": {
-  "file": "40601eafe0c7c75c.m4a",
+  "file": "0ac35b8ac6160e00.m4a",
   "text": "紅燈要停下來等，像小朋友這樣乖乖站好。",
   "voice": "mama|"
  },
  "q.life-2-36.prompt": {
-  "file": "a8bac2f7d0b19e3f.m4a",
+  "file": "d8085a4bcbf63944.m4a",
   "text": "現在是紅燈，哪一個是對的做法呢？",
   "voice": "mama|"
  },
  "q.life-2-36.prompt.kid": {
-  "file": "a8bac2f7d0b19e3f.m4a",
+  "file": "d8085a4bcbf63944.m4a",
   "text": "現在是紅燈，哪一個是對的做法呢？",
   "voice": "mama|"
  },
  "q.life-2-37.hint": {
-  "file": "c8fd04574ab7e411.m4a",
+  "file": "62bb5228549857d0.m4a",
   "text": "紅燈亮著不能走，要停下來等一等。",
   "voice": "mama|"
  },
  "q.life-2-37.hint.gentle": {
-  "file": "0f818c058e1e1b08.m4a",
+  "file": "e84941f19e7fce36.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈亮著不能走，要停下來等一等。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-37.hint.gentle.kid": {
-  "file": "0f818c058e1e1b08.m4a",
+  "file": "e84941f19e7fce36.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈亮著不能走，要停下來等一等。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-37.hint.kid": {
-  "file": "c8fd04574ab7e411.m4a",
+  "file": "62bb5228549857d0.m4a",
   "text": "紅燈亮著不能走，要停下來等一等。",
   "voice": "mama|"
  },
  "q.life-2-37.prompt": {
-  "file": "8ee1e99aa8418be2.m4a",
+  "file": "23e2df7c2bc0f67d.m4a",
   "text": "紅燈亮著，阿悟要怎麼做才對呢？",
   "voice": "mama|"
  },
  "q.life-2-37.prompt.kid": {
-  "file": "25bbe8236f6d2c25.m4a",
+  "file": "fc7ba0542bd6e18d.m4a",
   "text": "紅燈亮著，小朋友要怎麼做才對呢？",
   "voice": "mama|"
  },
  "q.life-2-38.hint": {
-  "file": "13fbd7b9eeed8e5d.m4a",
+  "file": "6c0975387535f6dd.m4a",
   "text": "綠燈亮了就可以走，牽好大人的手，慢慢走過去。",
   "voice": "mama|"
  },
  "q.life-2-38.hint.gentle": {
-  "file": "45cd66ee99ebc841.m4a",
+  "file": "67d3b11db28b149d.m4a",
   "text": "沒關係喔，有阿悟陪你。綠燈亮了就可以走，牽好大人的手，慢慢走過去。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-38.prompt": {
-  "file": "97ff4d6d3f6c3afe.m4a",
+  "file": "9ba7f5c7173f7823.m4a",
   "text": "綠燈亮了，哪一個是對的做法呢？",
   "voice": "mama|"
  },
@@ -11430,32 +11430,32 @@
   "voice": "mama|"
  },
  "q.life-2-47.hint": {
-  "file": "70756fd9021b2e46.m4a",
+  "file": "9e8994c3ee4b8727.m4a",
   "text": "請別人幫忙的時候，要說「請」。",
   "voice": "mama|"
  },
  "q.life-2-47.hint.gentle": {
-  "file": "0313e5e2c6da43b1.m4a",
+  "file": "d008e2f8df4cee35.m4a",
   "text": "沒關係喔，有阿悟陪你。請別人幫忙的時候，要說「請」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-47.hint.gentle.kid": {
-  "file": "0313e5e2c6da43b1.m4a",
+  "file": "d008e2f8df4cee35.m4a",
   "text": "沒關係喔，有阿悟陪你。請別人幫忙的時候，要說「請」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-2-47.hint.kid": {
-  "file": "70756fd9021b2e46.m4a",
+  "file": "9e8994c3ee4b8727.m4a",
   "text": "請別人幫忙的時候，要說「請」。",
   "voice": "mama|"
  },
  "q.life-2-47.prompt": {
-  "file": "941efa9bbcb9557b.m4a",
+  "file": "2037ea755feb5c80.m4a",
   "text": "阿悟想請媽媽幫忙拿高高的杯子。阿悟要說什麼才有禮貌呢？",
   "voice": "mama|"
  },
  "q.life-2-47.prompt.kid": {
-  "file": "7cb66dab57ebaee2.m4a",
+  "file": "7c875862637b70fc.m4a",
   "text": "小朋友想請媽媽幫忙拿高高的杯子。小朋友要說什麼才有禮貌呢？",
   "voice": "mama|"
  },
@@ -11640,32 +11640,32 @@
   "voice": "mama|"
  },
  "q.life-3-06.hint": {
-  "file": "70756fd9021b2e46.m4a",
+  "file": "9e8994c3ee4b8727.m4a",
   "text": "請別人幫忙的時候，要說「請」。",
   "voice": "mama|"
  },
  "q.life-3-06.hint.gentle": {
-  "file": "0313e5e2c6da43b1.m4a",
+  "file": "d008e2f8df4cee35.m4a",
   "text": "沒關係喔，有阿悟陪你。請別人幫忙的時候，要說「請」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-3-06.hint.gentle.kid": {
-  "file": "0313e5e2c6da43b1.m4a",
+  "file": "d008e2f8df4cee35.m4a",
   "text": "沒關係喔，有阿悟陪你。請別人幫忙的時候，要說「請」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-3-06.hint.kid": {
-  "file": "70756fd9021b2e46.m4a",
+  "file": "9e8994c3ee4b8727.m4a",
   "text": "請別人幫忙的時候，要說「請」。",
   "voice": "mama|"
  },
  "q.life-3-06.prompt": {
-  "file": "941efa9bbcb9557b.m4a",
+  "file": "2037ea755feb5c80.m4a",
   "text": "阿悟想請媽媽幫忙拿高高的杯子。阿悟要說什麼才有禮貌呢？",
   "voice": "mama|"
  },
  "q.life-3-06.prompt.kid": {
-  "file": "7cb66dab57ebaee2.m4a",
+  "file": "7c875862637b70fc.m4a",
   "text": "小朋友想請媽媽幫忙拿高高的杯子。小朋友要說什麼才有禮貌呢？",
   "voice": "mama|"
  },
@@ -11760,22 +11760,22 @@
   "voice": "mama|"
  },
  "q.life-3-10.hint": {
-  "file": "0fed1c3f0f55237e.m4a",
+  "file": "7e2665bd6ac6a61a.m4a",
   "text": "想要別人的東西，要先說「請」，像是「請借我玩」。",
   "voice": "mama|"
  },
  "q.life-3-10.hint.gentle": {
-  "file": "b814721851e7b2f1.m4a",
+  "file": "a51ac6a4a88a86b5.m4a",
   "text": "沒關係喔，有阿悟陪你。想要別人的東西，要先說「請」，像是「請借我玩」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-3-10.hint.gentle.kid": {
-  "file": "b814721851e7b2f1.m4a",
+  "file": "a51ac6a4a88a86b5.m4a",
   "text": "沒關係喔，有阿悟陪你。想要別人的東西，要先說「請」，像是「請借我玩」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-3-10.hint.kid": {
-  "file": "0fed1c3f0f55237e.m4a",
+  "file": "7e2665bd6ac6a61a.m4a",
   "text": "想要別人的東西，要先說「請」，像是「請借我玩」。",
   "voice": "mama|"
  },
@@ -11910,12 +11910,12 @@
   "voice": "mama|"
  },
  "q.life-3-15.hint": {
-  "file": "b2d6790d90814469.m4a",
+  "file": "241833d305729933.m4a",
   "text": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
   "voice": "mama|"
  },
  "q.life-3-15.hint.gentle": {
-  "file": "505317a91e16faf7.m4a",
+  "file": "ffaec8b15aaf61a4.m4a",
   "text": "沒關係喔，有阿悟陪你。刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -11955,12 +11955,12 @@
   "voice": "mama|"
  },
  "q.life-3-18.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-3-18.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12000,12 +12000,12 @@
   "voice": "mama|"
  },
  "q.life-3-21.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-3-21.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12015,12 +12015,12 @@
   "voice": "mama|"
  },
  "q.life-3-22.hint": {
-  "file": "b2d6790d90814469.m4a",
+  "file": "241833d305729933.m4a",
   "text": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
   "voice": "mama|"
  },
  "q.life-3-22.hint.gentle": {
-  "file": "505317a91e16faf7.m4a",
+  "file": "ffaec8b15aaf61a4.m4a",
   "text": "沒關係喔，有阿悟陪你。刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12030,12 +12030,12 @@
   "voice": "mama|"
  },
  "q.life-3-23.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-3-23.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12045,12 +12045,12 @@
   "voice": "mama|"
  },
  "q.life-3-24.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-3-24.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12115,7 +12115,7 @@
   "voice": "mama|"
  },
  "q.life-3-28.prompt": {
-  "file": "e302eb43ba8de13c.m4a",
+  "file": "882a5a3ec1399579.m4a",
   "text": "請把吃飯前的步驟，依順序排好。",
   "voice": "mama|"
  },
@@ -12135,12 +12135,12 @@
   "voice": "mama|"
  },
  "q.life-3-30.hint": {
-  "file": "c8b311ba560c2afc.m4a",
+  "file": "a01f48ead2f92273.m4a",
   "text": "刷牙的順序是：把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
   "voice": "mama|"
  },
  "q.life-3-30.hint.gentle": {
-  "file": "c07d5e8bb7b65b58.m4a",
+  "file": "7714f88fef50146a.m4a",
   "text": "沒關係喔，有阿悟陪你。刷牙的順序是：把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12150,17 +12150,17 @@
   "voice": "mama|"
  },
  "q.life-3-31.hint": {
-  "file": "16f006113398e441.m4a",
+  "file": "55ab43a4e29a2826.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-3-31.hint.gentle": {
-  "file": "0bc064a6acf75952.m4a",
+  "file": "002a09d5155ff788.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-3-31.prompt": {
-  "file": "d6feed61a6cf4dad.m4a",
+  "file": "d36006309253319c.m4a",
   "text": "洗手要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -12195,17 +12195,17 @@
   "voice": "mama|"
  },
  "q.life-3-34.hint": {
-  "file": "37e3d22dc35127f6.m4a",
+  "file": "bdfb6a6173a94e16.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再用水沖乾淨。",
   "voice": "mama|"
  },
  "q.life-3-34.hint.gentle": {
-  "file": "befc00754b3719bb.m4a",
+  "file": "813ba433c741975d.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再用水沖乾淨。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-3-34.prompt": {
-  "file": "d6feed61a6cf4dad.m4a",
+  "file": "d36006309253319c.m4a",
   "text": "洗手要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -12240,22 +12240,22 @@
   "voice": "mama|"
  },
  "q.life-3-36.hint": {
-  "file": "0386aff7d4920277.m4a",
+  "file": "52e3bb11203a78c5.m4a",
   "text": "把垃圾撿起來丟進垃圾桶，地方就會變乾淨，大家都開心。",
   "voice": "mama|"
  },
  "q.life-3-36.hint.gentle": {
-  "file": "80ecc9c6dc037a04.m4a",
+  "file": "d2d586b8d4ebd7ab.m4a",
   "text": "沒關係喔，有阿悟陪你。把垃圾撿起來丟進垃圾桶，地方就會變乾淨，大家都開心。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-3-36.hint.gentle.kid": {
-  "file": "80ecc9c6dc037a04.m4a",
+  "file": "d2d586b8d4ebd7ab.m4a",
   "text": "沒關係喔，有阿悟陪你。把垃圾撿起來丟進垃圾桶，地方就會變乾淨，大家都開心。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-3-36.hint.kid": {
-  "file": "0386aff7d4920277.m4a",
+  "file": "52e3bb11203a78c5.m4a",
   "text": "把垃圾撿起來丟進垃圾桶，地方就會變乾淨，大家都開心。",
   "voice": "mama|"
  },
@@ -12370,7 +12370,7 @@
   "voice": "mama|"
  },
  "q.life-4-01.prompt": {
-  "file": "088c947a7d8d7996.m4a",
+  "file": "5651ac76036e1208.m4a",
   "text": "請把過馬路的步驟，依順序排好。",
   "voice": "mama|"
  },
@@ -12385,7 +12385,7 @@
   "voice": "mama|"
  },
  "q.life-4-02.prompt": {
-  "file": "5fe659faa08ac1e5.m4a",
+  "file": "5575061ac9e67ece.m4a",
   "text": "請把睡覺前的步驟，依順序排好。",
   "voice": "mama|"
  },
@@ -12430,7 +12430,7 @@
   "voice": "mama|"
  },
  "q.life-4-05.prompt": {
-  "file": "db7b943391e64fd2.m4a",
+  "file": "d1c70562b6a61958.m4a",
   "text": "吃飯前要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -12445,22 +12445,22 @@
   "voice": "mama|"
  },
  "q.life-4-06.prompt": {
-  "file": "db7b943391e64fd2.m4a",
+  "file": "d1c70562b6a61958.m4a",
   "text": "吃飯前要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
  "q.life-4-07.hint": {
-  "file": "99e07df0cbccc7d8.m4a",
+  "file": "f66a83feb566f08c.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨。",
   "voice": "mama|"
  },
  "q.life-4-07.hint.gentle": {
-  "file": "bfa758e04e39974f.m4a",
+  "file": "50443b8c126e1126.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-4-07.prompt": {
-  "file": "d6feed61a6cf4dad.m4a",
+  "file": "d36006309253319c.m4a",
   "text": "洗手要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -12475,7 +12475,7 @@
   "voice": "mama|"
  },
  "q.life-4-08.prompt": {
-  "file": "a7cd372556e0e5f4.m4a",
+  "file": "fe584d2cd1b0e088.m4a",
   "text": "過馬路要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -12490,7 +12490,7 @@
   "voice": "mama|"
  },
  "q.life-4-09.prompt": {
-  "file": "424348e72ba5767b.m4a",
+  "file": "22d1b5edb115db18.m4a",
   "text": "睡覺前要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -12505,7 +12505,7 @@
   "voice": "mama|"
  },
  "q.life-4-10.prompt": {
-  "file": "5fe659faa08ac1e5.m4a",
+  "file": "5575061ac9e67ece.m4a",
   "text": "請把睡覺前的步驟，依順序排好。",
   "voice": "mama|"
  },
@@ -12520,17 +12520,17 @@
   "voice": "mama|"
  },
  "q.life-4-11.prompt": {
-  "file": "e302eb43ba8de13c.m4a",
+  "file": "882a5a3ec1399579.m4a",
   "text": "請把吃飯前的步驟，依順序排好。",
   "voice": "mama|"
  },
  "q.life-4-12.hint": {
-  "file": "aa47abbabf726548.m4a",
+  "file": "77e630f7e06a1f47.m4a",
   "text": "洗手的順序是：擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-12.hint.gentle": {
-  "file": "226f506bdd7f5b30.m4a",
+  "file": "b80478dedbc5f817.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12540,12 +12540,12 @@
   "voice": "mama|"
  },
  "q.life-4-13.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-13.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12555,57 +12555,57 @@
   "voice": "mama|"
  },
  "q.life-4-14.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-14.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-4-14.prompt": {
-  "file": "d6feed61a6cf4dad.m4a",
+  "file": "d36006309253319c.m4a",
   "text": "洗手要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
  "q.life-4-15.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-15.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-4-15.prompt": {
-  "file": "182506e63a56397f.m4a",
+  "file": "c865576cb8a8a4e4.m4a",
   "text": "請把洗手的步驟，依順序排好。",
   "voice": "mama|"
  },
  "q.life-4-16.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-16.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-4-16.prompt": {
-  "file": "d6feed61a6cf4dad.m4a",
+  "file": "d36006309253319c.m4a",
   "text": "洗手要怎麼做呢？請依順序排好。",
   "voice": "mama|"
  },
  "q.life-4-17.hint": {
-  "file": "3708c8bc4b858ac7.m4a",
+  "file": "f53820a3da246b6d.m4a",
   "text": "垃圾放進垃圾桶，地方才不會髒髒臭臭，大家都舒服。",
   "voice": "mama|"
  },
  "q.life-4-17.hint.gentle": {
-  "file": "2c4a40c2d1a3b619.m4a",
+  "file": "d8845f383d98c1ae.m4a",
   "text": "沒關係喔，有阿悟陪你。垃圾放進垃圾桶，地方才不會髒髒臭臭，大家都舒服。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12615,17 +12615,17 @@
   "voice": "mama|"
  },
  "q.life-4-18.hint": {
-  "file": "532806953a533d5c.m4a",
+  "file": "d77543a31d32fe3c.m4a",
   "text": "紅燈的時候車子在走，我們停下來等，就不會被撞到。",
   "voice": "mama|"
  },
  "q.life-4-18.hint.gentle": {
-  "file": "c6e098c16b9a8ba1.m4a",
+  "file": "4504f5213e5c0ad3.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈的時候車子在走，我們停下來等，就不會被撞到。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-4-18.prompt": {
-  "file": "d53cbd7195676e6d.m4a",
+  "file": "4df2c3ad36adc811.m4a",
   "text": "紅燈亮了，為什麼要停下來等呢？",
   "voice": "mama|"
  },
@@ -12690,12 +12690,12 @@
   "voice": "mama|"
  },
  "q.life-4-23.hint": {
-  "file": "80b0d147e01dcbf3.m4a",
+  "file": "ddc092dd29c2fdcc.m4a",
   "text": "玩具收進箱子，房間乾乾淨淨，下次想玩馬上找得到。",
   "voice": "mama|"
  },
  "q.life-4-23.hint.gentle": {
-  "file": "bedcc066d814f607.m4a",
+  "file": "1f018159ae8c9405.m4a",
   "text": "沒關係喔，有阿悟陪你。玩具收進箱子，房間乾乾淨淨，下次想玩馬上找得到。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12720,12 +12720,12 @@
   "voice": "mama|"
  },
  "q.life-4-25.hint": {
-  "file": "0585719c7698d5c2.m4a",
+  "file": "f85a0463fb1e3f04.m4a",
   "text": "手上有看不見的細菌，洗乾淨再吃東西，肚子才不會痛喔。",
   "voice": "mama|"
  },
  "q.life-4-25.hint.gentle": {
-  "file": "099f4bb5bfa1dd60.m4a",
+  "file": "effe26e81db64bed.m4a",
   "text": "沒關係喔，有阿悟陪你。手上有看不見的細菌，洗乾淨再吃東西，肚子才不會痛喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12750,12 +12750,12 @@
   "voice": "mama|"
  },
  "q.life-4-27.hint": {
-  "file": "0585719c7698d5c2.m4a",
+  "file": "f85a0463fb1e3f04.m4a",
   "text": "手上有看不見的細菌，洗乾淨再吃東西，肚子才不會痛喔。",
   "voice": "mama|"
  },
  "q.life-4-27.hint.gentle": {
-  "file": "099f4bb5bfa1dd60.m4a",
+  "file": "effe26e81db64bed.m4a",
   "text": "沒關係喔，有阿悟陪你。手上有看不見的細菌，洗乾淨再吃東西，肚子才不會痛喔。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12810,12 +12810,12 @@
   "voice": "mama|"
  },
  "q.life-4-31.hint": {
-  "file": "3708c8bc4b858ac7.m4a",
+  "file": "f53820a3da246b6d.m4a",
   "text": "垃圾放進垃圾桶，地方才不會髒髒臭臭，大家都舒服。",
   "voice": "mama|"
  },
  "q.life-4-31.hint.gentle": {
-  "file": "2c4a40c2d1a3b619.m4a",
+  "file": "d8845f383d98c1ae.m4a",
   "text": "沒關係喔，有阿悟陪你。垃圾放進垃圾桶，地方才不會髒髒臭臭，大家都舒服。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12825,27 +12825,27 @@
   "voice": "mama|"
  },
  "q.life-4-32.hint": {
-  "file": "532806953a533d5c.m4a",
+  "file": "d77543a31d32fe3c.m4a",
   "text": "紅燈的時候車子在走，我們停下來等，就不會被撞到。",
   "voice": "mama|"
  },
  "q.life-4-32.hint.gentle": {
-  "file": "c6e098c16b9a8ba1.m4a",
+  "file": "4504f5213e5c0ad3.m4a",
   "text": "沒關係喔，有阿悟陪你。紅燈的時候車子在走，我們停下來等，就不會被撞到。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-4-32.prompt": {
-  "file": "d53cbd7195676e6d.m4a",
+  "file": "4df2c3ad36adc811.m4a",
   "text": "紅燈亮了，為什麼要停下來等呢？",
   "voice": "mama|"
  },
  "q.life-4-33.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-33.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12870,12 +12870,12 @@
   "voice": "mama|"
  },
  "q.life-4-35.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-35.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12885,12 +12885,12 @@
   "voice": "mama|"
  },
  "q.life-4-36.hint": {
-  "file": "b2d6790d90814469.m4a",
+  "file": "241833d305729933.m4a",
   "text": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
   "voice": "mama|"
  },
  "q.life-4-36.hint.gentle": {
-  "file": "505317a91e16faf7.m4a",
+  "file": "ffaec8b15aaf61a4.m4a",
   "text": "沒關係喔，有阿悟陪你。刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12900,12 +12900,12 @@
   "voice": "mama|"
  },
  "q.life-4-37.hint": {
-  "file": "b2d6790d90814469.m4a",
+  "file": "241833d305729933.m4a",
   "text": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
   "voice": "mama|"
  },
  "q.life-4-37.hint.gentle": {
-  "file": "505317a91e16faf7.m4a",
+  "file": "ffaec8b15aaf61a4.m4a",
   "text": "沒關係喔，有阿悟陪你。刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12915,12 +12915,12 @@
   "voice": "mama|"
  },
  "q.life-4-38.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-38.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12930,12 +12930,12 @@
   "voice": "mama|"
  },
  "q.life-4-39.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-39.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12960,12 +12960,12 @@
   "voice": "mama|"
  },
  "q.life-4-41.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-41.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -12975,12 +12975,12 @@
   "voice": "mama|"
  },
  "q.life-4-42.hint": {
-  "file": "d48f23dcb8106843.m4a",
+  "file": "6c812deeef4e55ae.m4a",
   "text": "洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。",
   "voice": "mama|"
  },
  "q.life-4-42.hint.gentle": {
-  "file": "98377bf1514c1c67.m4a",
+  "file": "8b57ce3c4da1b49b.m4a",
   "text": "沒關係喔，有阿悟陪你。洗手的順序是：把手弄濕，再擦上肥皂，再搓出泡泡，再用水沖乾淨，再用毛巾擦乾。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -13005,12 +13005,12 @@
   "voice": "mama|"
  },
  "q.life-4-44.hint": {
-  "file": "b2d6790d90814469.m4a",
+  "file": "241833d305729933.m4a",
   "text": "刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。",
   "voice": "mama|"
  },
  "q.life-4-44.hint.gentle": {
-  "file": "505317a91e16faf7.m4a",
+  "file": "ffaec8b15aaf61a4.m4a",
   "text": "沒關係喔，有阿悟陪你。刷牙的順序是：擠一點點牙膏，再把牙齒刷乾淨，再用水漱口，再擦擦嘴巴。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -13170,32 +13170,32 @@
   "voice": "mama|"
  },
  "q.life-4-50.hint": {
-  "file": "70756fd9021b2e46.m4a",
+  "file": "9e8994c3ee4b8727.m4a",
   "text": "請別人幫忙的時候，要說「請」。",
   "voice": "mama|"
  },
  "q.life-4-50.hint.gentle": {
-  "file": "0313e5e2c6da43b1.m4a",
+  "file": "d008e2f8df4cee35.m4a",
   "text": "沒關係喔，有阿悟陪你。請別人幫忙的時候，要說「請」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-4-50.hint.gentle.kid": {
-  "file": "0313e5e2c6da43b1.m4a",
+  "file": "d008e2f8df4cee35.m4a",
   "text": "沒關係喔，有阿悟陪你。請別人幫忙的時候，要說「請」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.life-4-50.hint.kid": {
-  "file": "70756fd9021b2e46.m4a",
+  "file": "9e8994c3ee4b8727.m4a",
   "text": "請別人幫忙的時候，要說「請」。",
   "voice": "mama|"
  },
  "q.life-4-50.prompt": {
-  "file": "941efa9bbcb9557b.m4a",
+  "file": "2037ea755feb5c80.m4a",
   "text": "阿悟想請媽媽幫忙拿高高的杯子。阿悟要說什麼才有禮貌呢？",
   "voice": "mama|"
  },
  "q.life-4-50.prompt.kid": {
-  "file": "7cb66dab57ebaee2.m4a",
+  "file": "7c875862637b70fc.m4a",
   "text": "小朋友想請媽媽幫忙拿高高的杯子。小朋友要說什麼才有禮貌呢？",
   "voice": "mama|"
  },
@@ -13210,7 +13210,7 @@
   "voice": "mama|"
  },
  "q.measure-1-01.prompt": {
-  "file": "573c252ced8c2d2d.m4a",
+  "file": "bf58ad9df115acc0.m4a",
   "text": "請指出比較長的那一條小魚。",
   "voice": "mama|"
  },
@@ -13230,17 +13230,17 @@
   "voice": "mama|"
  },
  "q.measure-1-03.hint": {
-  "file": "44a473cb6dd5ad66.m4a",
+  "file": "a84a814202daf0ad.m4a",
   "text": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛比較長。",
   "voice": "mama|"
  },
  "q.measure-1-03.hint.gentle": {
-  "file": "2a46b1917a2a96a3.m4a",
+  "file": "ab6f0ddeda2b8c4b.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛比較長。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-1-03.prompt": {
-  "file": "befe81e4fec7d687.m4a",
+  "file": "371b77625f34ba7b.m4a",
   "text": "哪一輛汽車比較長？",
   "voice": "mama|"
  },
@@ -13300,7 +13300,7 @@
   "voice": "mama|"
  },
  "q.measure-1-07.prompt": {
-  "file": "32e7aad69fe09a1b.m4a",
+  "file": "1c6c1acf0e7f7c3f.m4a",
   "text": "請指出比較小的那一台鋼琴。",
   "voice": "mama|"
  },
@@ -13365,17 +13365,17 @@
   "voice": "mama|"
  },
  "q.measure-1-12.hint": {
-  "file": "7e6799c6330b066f.m4a",
+  "file": "996b40aa25cedf19.m4a",
   "text": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個比較小。",
   "voice": "mama|"
  },
  "q.measure-1-12.hint.gentle": {
-  "file": "268b3016e167ac12.m4a",
+  "file": "d719b6fbb5833784.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個比較小。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-1-12.prompt": {
-  "file": "c1fb6495d63d54a6.m4a",
+  "file": "a3e55d98278e4b7d.m4a",
   "text": "請指出比較小的那一個貝殼。",
   "voice": "mama|"
  },
@@ -13465,17 +13465,17 @@
   "voice": "mama|"
  },
  "q.measure-1-18.prompt": {
-  "file": "20749d6902c180c1.m4a",
+  "file": "4d310156f8a515fb.m4a",
   "text": "請指出最矮的那一朵花。",
   "voice": "mama|"
  },
  "q.measure-1-19.hint": {
-  "file": "a4f379e51cdba270.m4a",
+  "file": "ac0d991cabcfd0ca.m4a",
   "text": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。",
   "voice": "mama|"
  },
  "q.measure-1-19.hint.gentle": {
-  "file": "6206a62ddbf641f9.m4a",
+  "file": "1bbff53822533bcc.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -13485,17 +13485,17 @@
   "voice": "mama|"
  },
  "q.measure-1-20.hint": {
-  "file": "3e40876998ca8259.m4a",
+  "file": "02460c9cddb5d8a3.m4a",
   "text": "它們都是蘋果，只是有大有小。一個一個比一比，看看哪一顆最小。",
   "voice": "mama|"
  },
  "q.measure-1-20.hint.gentle": {
-  "file": "c345a872a39f0e66.m4a",
+  "file": "d8913e0ae67622ae.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是蘋果，只是有大有小。一個一個比一比，看看哪一顆最小。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-1-20.prompt": {
-  "file": "e6fd8c8d34dcfec4.m4a",
+  "file": "083f9a820012808a.m4a",
   "text": "哪一顆蘋果最小？",
   "voice": "mama|"
  },
@@ -13515,17 +13515,17 @@
   "voice": "mama|"
  },
  "q.measure-1-22.hint": {
-  "file": "8a74c3732536c2dc.m4a",
+  "file": "4aca44ece943d2e4.m4a",
   "text": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。",
   "voice": "mama|"
  },
  "q.measure-1-22.hint.gentle": {
-  "file": "0236045af9a62e60.m4a",
+  "file": "25d210f79f8a77e3.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-1-22.prompt": {
-  "file": "a6b05284a701dce6.m4a",
+  "file": "62ac11937ce6fa13.m4a",
   "text": "哪一輛汽車最短？",
   "voice": "mama|"
  },
@@ -13585,7 +13585,7 @@
   "voice": "mama|"
  },
  "q.measure-1-26.prompt": {
-  "file": "b3322f04c4ec4eb8.m4a",
+  "file": "e76cc9fa873c5496.m4a",
   "text": "請指出最大的那一隻小兔子。",
   "voice": "mama|"
  },
@@ -13785,12 +13785,12 @@
   "voice": "mama|"
  },
  "q.measure-1-g04.hint": {
-  "file": "9283f813cc4b1efa.m4a",
+  "file": "bcd8847ac0cec4af.m4a",
   "text": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個比較大。",
   "voice": "mama|"
  },
  "q.measure-1-g04.hint.gentle": {
-  "file": "1d90305ccb76cfc7.m4a",
+  "file": "c43920f6684af1fb.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個比較大。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -13810,7 +13810,7 @@
   "voice": "mama|"
  },
  "q.measure-1-g05.prompt": {
-  "file": "a7deda1c6d60cb2c.m4a",
+  "file": "a932cde212f5d400.m4a",
   "text": "請指出比較大的那一隻小雞。",
   "voice": "mama|"
  },
@@ -13860,12 +13860,12 @@
   "voice": "mama|"
  },
  "q.measure-1-g09.hint": {
-  "file": "370d4b0d3b841ec1.m4a",
+  "file": "a13316ad58a57567.m4a",
   "text": "它們都是汽車，只是有大有小。一個一個比一比，看看哪一輛比較大。",
   "voice": "mama|"
  },
  "q.measure-1-g09.hint.gentle": {
-  "file": "3416f544ff4639f3.m4a",
+  "file": "e2ce359a5972c203.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有大有小。一個一個比一比，看看哪一輛比較大。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -13915,7 +13915,7 @@
   "voice": "mama|"
  },
  "q.measure-1-g12.prompt": {
-  "file": "62c38f10fc98da9e.m4a",
+  "file": "e371368786c8a632.m4a",
   "text": "請指出比較大的那一顆星星。",
   "voice": "mama|"
  },
@@ -13945,7 +13945,7 @@
   "voice": "mama|"
  },
  "q.measure-1-g14.prompt": {
-  "file": "5e77fc7ae61c5ffb.m4a",
+  "file": "5cbdd758dac19215.m4a",
   "text": "請指出比較小的那一顆皮球。",
   "voice": "mama|"
  },
@@ -13990,7 +13990,7 @@
   "voice": "mama|"
  },
  "q.measure-1-g17.prompt": {
-  "file": "a972b96c7899accb.m4a",
+  "file": "157b1a516a69ac0b.m4a",
   "text": "請指出比較高的那一顆桃子。",
   "voice": "mama|"
  },
@@ -14155,7 +14155,7 @@
   "voice": "mama|"
  },
  "q.measure-1-g28.prompt": {
-  "file": "573e50624856754b.m4a",
+  "file": "edbd9de90b2f5ffd.m4a",
   "text": "請指出比較長的那一台鋼琴。",
   "voice": "mama|"
  },
@@ -14170,17 +14170,17 @@
   "voice": "mama|"
  },
  "q.measure-1-g29.prompt": {
-  "file": "573c252ced8c2d2d.m4a",
+  "file": "bf58ad9df115acc0.m4a",
   "text": "請指出比較長的那一條小魚。",
   "voice": "mama|"
  },
  "q.measure-1-g30.hint": {
-  "file": "44a473cb6dd5ad66.m4a",
+  "file": "a84a814202daf0ad.m4a",
   "text": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛比較長。",
   "voice": "mama|"
  },
  "q.measure-1-g30.hint.gentle": {
-  "file": "2a46b1917a2a96a3.m4a",
+  "file": "ab6f0ddeda2b8c4b.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛比較長。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -14265,32 +14265,32 @@
   "voice": "mama|"
  },
  "q.measure-1-g36.hint": {
-  "file": "cfa280b22f024ff6.m4a",
+  "file": "a97cbfcef2021f4c.m4a",
   "text": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛比較短。",
   "voice": "mama|"
  },
  "q.measure-1-g36.hint.gentle": {
-  "file": "3591b20735a1bfab.m4a",
+  "file": "f3612c12b2dce752.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛比較短。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-1-g36.prompt": {
-  "file": "26b9a56857a545c7.m4a",
+  "file": "b387673b1467b057.m4a",
   "text": "請指出比較短的那一輛汽車。",
   "voice": "mama|"
  },
  "q.measure-2-01.hint": {
-  "file": "a17871d211dffeb5.m4a",
+  "file": "64a80e0bb2b4ff64.m4a",
   "text": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最長。",
   "voice": "mama|"
  },
  "q.measure-2-01.hint.gentle": {
-  "file": "68c4cc61a7366e73.m4a",
+  "file": "79f564136257a6d0.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最長。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-2-01.prompt": {
-  "file": "6e631f9b93deb96a.m4a",
+  "file": "a60df04ee496de24.m4a",
   "text": "請指出最長的那一輛汽車。",
   "voice": "mama|"
  },
@@ -14305,7 +14305,7 @@
   "voice": "mama|"
  },
  "q.measure-2-02.prompt": {
-  "file": "30f78444afc4f8b8.m4a",
+  "file": "0f06c1091302f486.m4a",
   "text": "請指出最大的那一根香蕉。",
   "voice": "mama|"
  },
@@ -14320,7 +14320,7 @@
   "voice": "mama|"
  },
  "q.measure-2-03.prompt": {
-  "file": "d2a98d3de5b98bfb.m4a",
+  "file": "07df9b5d716a3a19.m4a",
   "text": "請指出最矮的那一隻小雞。",
   "voice": "mama|"
  },
@@ -14370,17 +14370,17 @@
   "voice": "mama|"
  },
  "q.measure-2-07.hint": {
-  "file": "250911eeaec135a2.m4a",
+  "file": "0a29391df1a6d968.m4a",
   "text": "它們都是蘋果，只是有高有矮。一個一個比一比，看看哪一顆最矮。",
   "voice": "mama|"
  },
  "q.measure-2-07.hint.gentle": {
-  "file": "ace8897670003561.m4a",
+  "file": "dbfe4571a7bc529f.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是蘋果，只是有高有矮。一個一個比一比，看看哪一顆最矮。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-2-07.prompt": {
-  "file": "2e22958a61fead89.m4a",
+  "file": "ab406ab6b175baf4.m4a",
   "text": "請指出最矮的那一顆蘋果。",
   "voice": "mama|"
  },
@@ -14395,22 +14395,22 @@
   "voice": "mama|"
  },
  "q.measure-2-08.prompt": {
-  "file": "1a7bbdf5fc470beb.m4a",
+  "file": "0bd6dad38d00732d.m4a",
   "text": "請指出最長的那一根香蕉。",
   "voice": "mama|"
  },
  "q.measure-2-09.hint": {
-  "file": "8a74c3732536c2dc.m4a",
+  "file": "4aca44ece943d2e4.m4a",
   "text": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。",
   "voice": "mama|"
  },
  "q.measure-2-09.hint.gentle": {
-  "file": "0236045af9a62e60.m4a",
+  "file": "25d210f79f8a77e3.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-2-09.prompt": {
-  "file": "6e4807550e9b5612.m4a",
+  "file": "12b9966665ac4ac2.m4a",
   "text": "請指出最短的那一輛汽車。",
   "voice": "mama|"
  },
@@ -14445,17 +14445,17 @@
   "voice": "mama|"
  },
  "q.measure-2-12.hint": {
-  "file": "a4f379e51cdba270.m4a",
+  "file": "ac0d991cabcfd0ca.m4a",
   "text": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。",
   "voice": "mama|"
  },
  "q.measure-2-12.hint.gentle": {
-  "file": "6206a62ddbf641f9.m4a",
+  "file": "1bbff53822533bcc.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-2-12.prompt": {
-  "file": "d956d6ae2c7eb24e.m4a",
+  "file": "6b48380e28899c88.m4a",
   "text": "哪一個貝殼最大？",
   "voice": "mama|"
  },
@@ -14515,7 +14515,7 @@
   "voice": "mama|"
  },
  "q.measure-2-16.prompt": {
-  "file": "c8bbafd2669ef90a.m4a",
+  "file": "b7ae3ff0709feedd.m4a",
   "text": "請指出最小的那一串葡萄。",
   "voice": "mama|"
  },
@@ -14860,7 +14860,7 @@
   "voice": "mama|"
  },
  "q.measure-3-01.prompt": {
-  "file": "c4c04b3f49137118.m4a",
+  "file": "bed6347b508da972.m4a",
   "text": "請指出最小的那一顆桃子。",
   "voice": "mama|"
  },
@@ -14905,7 +14905,7 @@
   "voice": "mama|"
  },
  "q.measure-3-04.prompt": {
-  "file": "c8bbafd2669ef90a.m4a",
+  "file": "b7ae3ff0709feedd.m4a",
   "text": "請指出最小的那一串葡萄。",
   "voice": "mama|"
  },
@@ -14925,17 +14925,17 @@
   "voice": "mama|"
  },
  "q.measure-3-06.hint": {
-  "file": "cc522aa0ccd7c54e.m4a",
+  "file": "58fb05946b819394.m4a",
   "text": "它們都是汽車，只是有大有小。一個一個比一比，看看哪一輛最大。",
   "voice": "mama|"
  },
  "q.measure-3-06.hint.gentle": {
-  "file": "7af229c5f3008b18.m4a",
+  "file": "021a906d3c46f46a.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有大有小。一個一個比一比，看看哪一輛最大。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-3-06.prompt": {
-  "file": "e33b48e4b9a8d2ea.m4a",
+  "file": "75406be6ab3a8b2c.m4a",
   "text": "哪一輛汽車最大？",
   "voice": "mama|"
  },
@@ -14970,12 +14970,12 @@
   "voice": "mama|"
  },
  "q.measure-3-09.hint": {
-  "file": "8a74c3732536c2dc.m4a",
+  "file": "4aca44ece943d2e4.m4a",
   "text": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。",
   "voice": "mama|"
  },
  "q.measure-3-09.hint.gentle": {
-  "file": "0236045af9a62e60.m4a",
+  "file": "25d210f79f8a77e3.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -15015,12 +15015,12 @@
   "voice": "mama|"
  },
  "q.measure-3-12.hint": {
-  "file": "a4f379e51cdba270.m4a",
+  "file": "ac0d991cabcfd0ca.m4a",
   "text": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。",
   "voice": "mama|"
  },
  "q.measure-3-12.hint.gentle": {
-  "file": "6206a62ddbf641f9.m4a",
+  "file": "1bbff53822533bcc.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -15420,32 +15420,32 @@
   "voice": "mama|"
  },
  "q.measure-4-03.hint": {
-  "file": "8a74c3732536c2dc.m4a",
+  "file": "4aca44ece943d2e4.m4a",
   "text": "它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。",
   "voice": "mama|"
  },
  "q.measure-4-03.hint.gentle": {
-  "file": "0236045af9a62e60.m4a",
+  "file": "25d210f79f8a77e3.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是汽車，只是有長有短。一個一個比一比，看看哪一輛最短。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-4-03.prompt": {
-  "file": "a6b05284a701dce6.m4a",
+  "file": "62ac11937ce6fa13.m4a",
   "text": "哪一輛汽車最短？",
   "voice": "mama|"
  },
  "q.measure-4-04.hint": {
-  "file": "a4f379e51cdba270.m4a",
+  "file": "ac0d991cabcfd0ca.m4a",
   "text": "它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。",
   "voice": "mama|"
  },
  "q.measure-4-04.hint.gentle": {
-  "file": "6206a62ddbf641f9.m4a",
+  "file": "1bbff53822533bcc.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是貝殼，只是有大有小。一個一個比一比，看看哪一個最大。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-4-04.prompt": {
-  "file": "d956d6ae2c7eb24e.m4a",
+  "file": "6b48380e28899c88.m4a",
   "text": "哪一個貝殼最大？",
   "voice": "mama|"
  },
@@ -15465,17 +15465,17 @@
   "voice": "mama|"
  },
  "q.measure-4-06.hint": {
-  "file": "636ae72d29d17753.m4a",
+  "file": "266142ee5266431a.m4a",
   "text": "它們都是蘋果，只是有高有矮。一個一個比一比，看看哪一顆最高。",
   "voice": "mama|"
  },
  "q.measure-4-06.hint.gentle": {
-  "file": "e5b951d6d4ddbda5.m4a",
+  "file": "c77c22486d502385.m4a",
   "text": "沒關係喔，有阿悟陪你。它們都是蘋果，只是有高有矮。一個一個比一比，看看哪一顆最高。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.measure-4-06.prompt": {
-  "file": "976fa2852e822090.m4a",
+  "file": "9e2e863dc92859b1.m4a",
   "text": "請指出最高的那一顆蘋果。",
   "voice": "mama|"
  },
@@ -17430,12 +17430,12 @@
   "voice": "mama|"
  },
  "q.nature-2-08.hint": {
-  "file": "4d8b813ff004968f.m4a",
+  "file": "b01ead9f45061817.m4a",
   "text": "下雨的時候，撐起雨傘，頭和衣服就不會被雨淋濕了。",
   "voice": "mama|"
  },
  "q.nature-2-08.hint.gentle": {
-  "file": "647fb4865f206e7d.m4a",
+  "file": "8a817b0a5de4a02c.m4a",
   "text": "沒關係喔，有阿悟陪你。下雨的時候，撐起雨傘，頭和衣服就不會被雨淋濕了。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -17475,12 +17475,12 @@
   "voice": "mama|"
  },
  "q.nature-2-11.hint": {
-  "file": "4d8b813ff004968f.m4a",
+  "file": "b01ead9f45061817.m4a",
   "text": "下雨的時候，撐起雨傘，頭和衣服就不會被雨淋濕了。",
   "voice": "mama|"
  },
  "q.nature-2-11.hint.gentle": {
-  "file": "647fb4865f206e7d.m4a",
+  "file": "8a817b0a5de4a02c.m4a",
   "text": "沒關係喔，有阿悟陪你。下雨的時候，撐起雨傘，頭和衣服就不會被雨淋濕了。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -18070,7 +18070,7 @@
   "voice": "mama|"
  },
  "q.nature-3-01.prompt": {
-  "file": "547d44870ba15e56.m4a",
+  "file": "267fd6d7a6d8ad37.m4a",
   "text": "小動物們要回家了，請把牠們放進自己的家。",
   "voice": "mama|"
  },
@@ -18085,7 +18085,7 @@
   "voice": "mama|"
  },
  "q.nature-3-02.prompt": {
-  "file": "01c63326e32da9a2.m4a",
+  "file": "3b34602ff78406ad.m4a",
   "text": "請送小動物回家，看看牠們住在哪裡。",
   "voice": "mama|"
  },
@@ -18100,7 +18100,7 @@
   "voice": "mama|"
  },
  "q.nature-3-03.prompt": {
-  "file": "140ea36fbc98f997.m4a",
+  "file": "b815867a6eb24ee9.m4a",
   "text": "每一個小動物都有自己的家，請把牠們放進對的地方。",
   "voice": "mama|"
  },
@@ -18115,7 +18115,7 @@
   "voice": "mama|"
  },
  "q.nature-3-04.prompt": {
-  "file": "140ea36fbc98f997.m4a",
+  "file": "b815867a6eb24ee9.m4a",
   "text": "每一個小動物都有自己的家，請把牠們放進對的地方。",
   "voice": "mama|"
  },
@@ -18130,7 +18130,7 @@
   "voice": "mama|"
  },
  "q.nature-3-05.prompt": {
-  "file": "547d44870ba15e56.m4a",
+  "file": "267fd6d7a6d8ad37.m4a",
   "text": "小動物們要回家了，請把牠們放進自己的家。",
   "voice": "mama|"
  },
@@ -18145,7 +18145,7 @@
   "voice": "mama|"
  },
  "q.nature-3-06.prompt": {
-  "file": "140ea36fbc98f997.m4a",
+  "file": "b815867a6eb24ee9.m4a",
   "text": "每一個小動物都有自己的家，請把牠們放進對的地方。",
   "voice": "mama|"
  },
@@ -18160,7 +18160,7 @@
   "voice": "mama|"
  },
  "q.nature-3-07.prompt": {
-  "file": "547d44870ba15e56.m4a",
+  "file": "267fd6d7a6d8ad37.m4a",
   "text": "小動物們要回家了，請把牠們放進自己的家。",
   "voice": "mama|"
  },
@@ -18175,7 +18175,7 @@
   "voice": "mama|"
  },
  "q.nature-3-08.prompt": {
-  "file": "01c63326e32da9a2.m4a",
+  "file": "3b34602ff78406ad.m4a",
   "text": "請送小動物回家，看看牠們住在哪裡。",
   "voice": "mama|"
  },
@@ -18460,7 +18460,7 @@
   "voice": "mama|"
  },
  "q.nature-3-27.prompt": {
-  "file": "316f5b9e51fbf5df.m4a",
+  "file": "721e7ec2d8c1c643.m4a",
   "text": "種子慢慢長大，請把植物生長的順序排好。",
   "voice": "mama|"
  },
@@ -18475,7 +18475,7 @@
   "voice": "mama|"
  },
  "q.nature-3-28.prompt": {
-  "file": "0a77aab624eb8043.m4a",
+  "file": "f3a128d1fd1b849d.m4a",
   "text": "請把小種子長成花的順序排好。",
   "voice": "mama|"
  },
@@ -18490,7 +18490,7 @@
   "voice": "mama|"
  },
  "q.nature-3-29.prompt": {
-  "file": "c2156b8370e32345.m4a",
+  "file": "6f26186becaee5b6.m4a",
   "text": "植物是怎麼長大的呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -18505,7 +18505,7 @@
   "voice": "mama|"
  },
  "q.nature-3-30.prompt": {
-  "file": "316f5b9e51fbf5df.m4a",
+  "file": "721e7ec2d8c1c643.m4a",
   "text": "種子慢慢長大，請把植物生長的順序排好。",
   "voice": "mama|"
  },
@@ -18520,7 +18520,7 @@
   "voice": "mama|"
  },
  "q.nature-3-31.prompt": {
-  "file": "0a77aab624eb8043.m4a",
+  "file": "f3a128d1fd1b849d.m4a",
   "text": "請把小種子長成花的順序排好。",
   "voice": "mama|"
  },
@@ -18535,7 +18535,7 @@
   "voice": "mama|"
  },
  "q.nature-3-32.prompt": {
-  "file": "c2156b8370e32345.m4a",
+  "file": "6f26186becaee5b6.m4a",
   "text": "植物是怎麼長大的呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -18550,7 +18550,7 @@
   "voice": "mama|"
  },
  "q.nature-3-33.prompt": {
-  "file": "0a77aab624eb8043.m4a",
+  "file": "f3a128d1fd1b849d.m4a",
   "text": "請把小種子長成花的順序排好。",
   "voice": "mama|"
  },
@@ -18565,7 +18565,7 @@
   "voice": "mama|"
  },
  "q.nature-3-34.prompt": {
-  "file": "c2156b8370e32345.m4a",
+  "file": "6f26186becaee5b6.m4a",
   "text": "植物是怎麼長大的呢？請依順序排好。",
   "voice": "mama|"
  },
@@ -18730,7 +18730,7 @@
   "voice": "mama|"
  },
  "q.nature-4-01.prompt": {
-  "file": "547d44870ba15e56.m4a",
+  "file": "267fd6d7a6d8ad37.m4a",
   "text": "小動物們要回家了，請把牠們放進自己的家。",
   "voice": "mama|"
  },
@@ -18745,7 +18745,7 @@
   "voice": "mama|"
  },
  "q.nature-4-02.prompt": {
-  "file": "01c63326e32da9a2.m4a",
+  "file": "3b34602ff78406ad.m4a",
   "text": "請送小動物回家，看看牠們住在哪裡。",
   "voice": "mama|"
  },
@@ -18760,7 +18760,7 @@
   "voice": "mama|"
  },
  "q.nature-4-03.prompt": {
-  "file": "547d44870ba15e56.m4a",
+  "file": "267fd6d7a6d8ad37.m4a",
   "text": "小動物們要回家了，請把牠們放進自己的家。",
   "voice": "mama|"
  },
@@ -18775,7 +18775,7 @@
   "voice": "mama|"
  },
  "q.nature-4-04.prompt": {
-  "file": "01c63326e32da9a2.m4a",
+  "file": "3b34602ff78406ad.m4a",
   "text": "請送小動物回家，看看牠們住在哪裡。",
   "voice": "mama|"
  },
@@ -18790,7 +18790,7 @@
   "voice": "mama|"
  },
  "q.nature-4-05.prompt": {
-  "file": "547d44870ba15e56.m4a",
+  "file": "267fd6d7a6d8ad37.m4a",
   "text": "小動物們要回家了，請把牠們放進自己的家。",
   "voice": "mama|"
  },
@@ -18805,7 +18805,7 @@
   "voice": "mama|"
  },
  "q.nature-4-06.prompt": {
-  "file": "01c63326e32da9a2.m4a",
+  "file": "3b34602ff78406ad.m4a",
   "text": "請送小動物回家，看看牠們住在哪裡。",
   "voice": "mama|"
  },
@@ -18820,7 +18820,7 @@
   "voice": "mama|"
  },
  "q.nature-4-07.prompt": {
-  "file": "01c63326e32da9a2.m4a",
+  "file": "3b34602ff78406ad.m4a",
   "text": "請送小動物回家，看看牠們住在哪裡。",
   "voice": "mama|"
  },
@@ -18835,7 +18835,7 @@
   "voice": "mama|"
  },
  "q.nature-4-08.prompt": {
-  "file": "547d44870ba15e56.m4a",
+  "file": "267fd6d7a6d8ad37.m4a",
   "text": "小動物們要回家了，請把牠們放進自己的家。",
   "voice": "mama|"
  },
@@ -18850,7 +18850,7 @@
   "voice": "mama|"
  },
  "q.nature-4-09.prompt": {
-  "file": "ddff2768fafc8a79.m4a",
+  "file": "f538ae3361a51468.m4a",
   "text": "一年有四個季節，請從春天開始，依順序排好。",
   "voice": "mama|"
  },
@@ -18865,7 +18865,7 @@
   "voice": "mama|"
  },
  "q.nature-4-10.prompt": {
-  "file": "f7703a1c783ec8a4.m4a",
+  "file": "6bb29f63a08096f3.m4a",
   "text": "請把四個季節，依春夏秋冬的順序排好。",
   "voice": "mama|"
  },
@@ -18880,7 +18880,7 @@
   "voice": "mama|"
  },
  "q.nature-4-11.prompt": {
-  "file": "1875f34ed18e33cb.m4a",
+  "file": "fd000ae0657fe3c8.m4a",
   "text": "季節會一個接著一個來，請依順序排好。",
   "voice": "mama|"
  },
@@ -18895,7 +18895,7 @@
   "voice": "mama|"
  },
  "q.nature-4-12.prompt": {
-  "file": "ddff2768fafc8a79.m4a",
+  "file": "f538ae3361a51468.m4a",
   "text": "一年有四個季節，請從春天開始，依順序排好。",
   "voice": "mama|"
  },
@@ -18910,7 +18910,7 @@
   "voice": "mama|"
  },
  "q.nature-4-13.prompt": {
-  "file": "f7703a1c783ec8a4.m4a",
+  "file": "6bb29f63a08096f3.m4a",
   "text": "請把四個季節，依春夏秋冬的順序排好。",
   "voice": "mama|"
  },
@@ -18925,7 +18925,7 @@
   "voice": "mama|"
  },
  "q.nature-4-14.prompt": {
-  "file": "1875f34ed18e33cb.m4a",
+  "file": "fd000ae0657fe3c8.m4a",
   "text": "季節會一個接著一個來，請依順序排好。",
   "voice": "mama|"
  },
@@ -18940,7 +18940,7 @@
   "voice": "mama|"
  },
  "q.nature-4-15.prompt": {
-  "file": "ddff2768fafc8a79.m4a",
+  "file": "f538ae3361a51468.m4a",
   "text": "一年有四個季節，請從春天開始，依順序排好。",
   "voice": "mama|"
  },
@@ -18955,7 +18955,7 @@
   "voice": "mama|"
  },
  "q.nature-4-16.prompt": {
-  "file": "f7703a1c783ec8a4.m4a",
+  "file": "6bb29f63a08096f3.m4a",
   "text": "請把四個季節，依春夏秋冬的順序排好。",
   "voice": "mama|"
  },
@@ -18970,7 +18970,7 @@
   "voice": "mama|"
  },
  "q.nature-4-17.prompt": {
-  "file": "1875f34ed18e33cb.m4a",
+  "file": "fd000ae0657fe3c8.m4a",
   "text": "季節會一個接著一個來，請依順序排好。",
   "voice": "mama|"
  },
@@ -18985,7 +18985,7 @@
   "voice": "mama|"
  },
  "q.nature-4-18.prompt": {
-  "file": "ddff2768fafc8a79.m4a",
+  "file": "f538ae3361a51468.m4a",
   "text": "一年有四個季節，請從春天開始，依順序排好。",
   "voice": "mama|"
  },
@@ -19480,7 +19480,7 @@
   "voice": "mama|"
  },
  "q.number-1-08.prompt": {
-  "file": "33927732273080ae.m4a",
+  "file": "aa8828a59f994fd2.m4a",
   "text": "幫我數數看，有幾個貝殼呢？",
   "voice": "mama|"
  },
@@ -19510,7 +19510,7 @@
   "voice": "mama|"
  },
  "q.number-1-10.prompt": {
-  "file": "0c330927ff530259.m4a",
+  "file": "eb960de6a6e5cb2d.m4a",
   "text": "數一數，有幾顆蘋果？",
   "voice": "mama|"
  },
@@ -19525,7 +19525,7 @@
   "voice": "mama|"
  },
  "q.number-1-11.prompt": {
-  "file": "a3db0d8a1069b2e9.m4a",
+  "file": "ba6f5e13c314a1fe.m4a",
   "text": "幫我數數看，有幾輛汽車呢？",
   "voice": "mama|"
  },
@@ -19710,17 +19710,17 @@
   "voice": "mama|"
  },
  "q.number-1-24.hint": {
-  "file": "1f407248e8b0ea48.m4a",
+  "file": "c7c23ef7e033bc52.m4a",
   "text": "我們一起數數看，要拿兩輛汽車喔，拿到剛好就按「好了」。",
   "voice": "mama|"
  },
  "q.number-1-24.hint.gentle": {
-  "file": "b619d9dfc60cb626.m4a",
+  "file": "84f353e8f2eb05f4.m4a",
   "text": "沒關係喔，有阿悟陪你。我們一起數數看，要拿兩輛汽車喔，拿到剛好就按「好了」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.number-1-24.prompt": {
-  "file": "9f28ffa1bbf1ca0e.m4a",
+  "file": "791cb4348f33342b.m4a",
   "text": "幫我拿兩輛汽車，放進籃子裡。",
   "voice": "mama|"
  },
@@ -19735,7 +19735,7 @@
   "voice": "mama|"
  },
  "q.number-1-25.prompt": {
-  "file": "23855a38d5dc7e34.m4a",
+  "file": "7f8f5ebe0cad5b39.m4a",
   "text": "請拿三顆皮球給阿悟。",
   "voice": "mama|"
  },
@@ -19770,17 +19770,17 @@
   "voice": "mama|"
  },
  "q.number-1-28.hint": {
-  "file": "0cda7d0965e637f8.m4a",
+  "file": "7151ae13e585b22a.m4a",
   "text": "我們一起數數看，要拿一個貝殼喔，拿到剛好就按「好了」。",
   "voice": "mama|"
  },
  "q.number-1-28.hint.gentle": {
-  "file": "b5914adce3d1ddfa.m4a",
+  "file": "d9e0660424eeb47e.m4a",
   "text": "沒關係喔，有阿悟陪你。我們一起數數看，要拿一個貝殼喔，拿到剛好就按「好了」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.number-1-28.prompt": {
-  "file": "af12e92a0f39edf1.m4a",
+  "file": "63641efc006eca72.m4a",
   "text": "請拿一個貝殼給阿悟。",
   "voice": "mama|"
  },
@@ -19825,7 +19825,7 @@
   "voice": "mama|"
  },
  "q.number-1-31.prompt": {
-  "file": "fb721a856032fa43.m4a",
+  "file": "06e54bd24ac84cd2.m4a",
   "text": "請拿四隻恐龍給阿悟。",
   "voice": "mama|"
  },
@@ -19870,7 +19870,7 @@
   "voice": "mama|"
  },
  "q.number-1-34.prompt": {
-  "file": "8895b735cfb22bee.m4a",
+  "file": "99b20673abbedb06.m4a",
   "text": "請拿兩根香蕉給阿悟。",
   "voice": "mama|"
  },
@@ -19890,17 +19890,17 @@
   "voice": "mama|"
  },
  "q.number-1-36.hint": {
-  "file": "b5e2971259a945d9.m4a",
+  "file": "69ba8a39472f498e.m4a",
   "text": "我們一起數數看，要拿四顆蘋果喔，拿到剛好就按「好了」。",
   "voice": "mama|"
  },
  "q.number-1-36.hint.gentle": {
-  "file": "5770c3556fcc4559.m4a",
+  "file": "758f2fdbe940542f.m4a",
   "text": "沒關係喔，有阿悟陪你。我們一起數數看，要拿四顆蘋果喔，拿到剛好就按「好了」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.number-1-36.prompt": {
-  "file": "5d0e387befbe4159.m4a",
+  "file": "83216135cadf3842.m4a",
   "text": "幫我拿四顆蘋果，放進籃子裡。",
   "voice": "mama|"
  },
@@ -19960,7 +19960,7 @@
   "voice": "mama|"
  },
  "q.number-1-g04.prompt": {
-  "file": "cba33c6de071c195.m4a",
+  "file": "cd6770e81c50fff2.m4a",
   "text": "看一下，有幾顆蘋果？",
   "voice": "mama|"
  },
@@ -20020,7 +20020,7 @@
   "voice": "mama|"
  },
  "q.number-1-g08.prompt": {
-  "file": "c91f48da12736fa1.m4a",
+  "file": "70bc29c6a777934b.m4a",
   "text": "看一下，有幾個貝殼？",
   "voice": "mama|"
  },
@@ -20140,7 +20140,7 @@
   "voice": "mama|"
  },
  "q.number-1-g16.prompt": {
-  "file": "c91f48da12736fa1.m4a",
+  "file": "70bc29c6a777934b.m4a",
   "text": "看一下，有幾個貝殼？",
   "voice": "mama|"
  },
@@ -20290,7 +20290,7 @@
   "voice": "mama|"
  },
  "q.number-2-02.prompt": {
-  "file": "33927732273080ae.m4a",
+  "file": "aa8828a59f994fd2.m4a",
   "text": "幫我數數看，有幾個貝殼呢？",
   "voice": "mama|"
  },
@@ -20410,7 +20410,7 @@
   "voice": "mama|"
  },
  "q.number-2-10.prompt": {
-  "file": "f7e082516754d90a.m4a",
+  "file": "aad9e27d86c9a491.m4a",
   "text": "數一數，有幾輛汽車？",
   "voice": "mama|"
  },
@@ -20440,7 +20440,7 @@
   "voice": "mama|"
  },
  "q.number-2-12.prompt": {
-  "file": "ed8154980efde8ef.m4a",
+  "file": "af28ea6d3f4afc3b.m4a",
   "text": "這裡有幾顆蘋果？",
   "voice": "mama|"
  },
@@ -20680,7 +20680,7 @@
   "voice": "mama|"
  },
  "q.number-2-28.prompt": {
-  "file": "942dc9df6e6ae9c7.m4a",
+  "file": "a5f047acc0de7a88.m4a",
   "text": "請拿七隻小兔子給阿悟。",
   "voice": "mama|"
  },
@@ -20700,17 +20700,17 @@
   "voice": "mama|"
  },
  "q.number-2-30.hint": {
-  "file": "745a67e47e748de9.m4a",
+  "file": "f719323665dfde9b.m4a",
   "text": "我們一起數數看，要拿九個貝殼喔，拿到剛好就按「好了」。",
   "voice": "mama|"
  },
  "q.number-2-30.hint.gentle": {
-  "file": "12349daa3bca6410.m4a",
+  "file": "81aa8686caced228.m4a",
   "text": "沒關係喔，有阿悟陪你。我們一起數數看，要拿九個貝殼喔，拿到剛好就按「好了」。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.number-2-30.prompt": {
-  "file": "60c3de0752961a1f.m4a",
+  "file": "66ad46fdafd02593.m4a",
   "text": "幫我拿九個貝殼，放進籃子裡。",
   "voice": "mama|"
  },
@@ -20725,7 +20725,7 @@
   "voice": "mama|"
  },
  "q.number-2-31.prompt": {
-  "file": "c7782648c210002e.m4a",
+  "file": "54fe5dc584fe0c94.m4a",
   "text": "請拿十台鋼琴給阿悟。",
   "voice": "mama|"
  },
@@ -20770,7 +20770,7 @@
   "voice": "mama|"
  },
  "q.number-2-34.prompt": {
-  "file": "dbde687cc811af76.m4a",
+  "file": "e1895d2e92e4bdc1.m4a",
   "text": "請拿八串葡萄給阿悟。",
   "voice": "mama|"
  },
@@ -20860,7 +20860,7 @@
   "voice": "mama|"
  },
  "q.number-3-04.prompt": {
-  "file": "0c330927ff530259.m4a",
+  "file": "eb960de6a6e5cb2d.m4a",
   "text": "數一數，有幾顆蘋果？",
   "voice": "mama|"
  },
@@ -20920,7 +20920,7 @@
   "voice": "mama|"
  },
  "q.number-3-08.prompt": {
-  "file": "33927732273080ae.m4a",
+  "file": "aa8828a59f994fd2.m4a",
   "text": "幫我數數看，有幾個貝殼呢？",
   "voice": "mama|"
  },
@@ -20980,7 +20980,7 @@
   "voice": "mama|"
  },
  "q.number-3-12.prompt": {
-  "file": "0438507d3ac997ff.m4a",
+  "file": "55f0545c73f1e986.m4a",
   "text": "這裡有幾輛汽車？",
   "voice": "mama|"
  },
@@ -21040,7 +21040,7 @@
   "voice": "mama|"
  },
  "q.number-3-16.prompt": {
-  "file": "6e866e324085bfb3.m4a",
+  "file": "4bb0fe848975d54e.m4a",
   "text": "找找看，哪一堆的貝殼比較多？",
   "voice": "mama|"
  },
@@ -21175,7 +21175,7 @@
   "voice": "mama|"
  },
  "q.number-3-25.prompt": {
-  "file": "a374e395b5281bfb.m4a",
+  "file": "364f77c2228cca8e.m4a",
   "text": "藍色那一堆，比橘色那一堆多幾個貝殼？",
   "voice": "mama|"
  },
@@ -21220,7 +21220,7 @@
   "voice": "mama|"
  },
  "q.number-3-28.prompt": {
-  "file": "4f7da46c19b83117.m4a",
+  "file": "7ad57a6451f433e5.m4a",
   "text": "藍色的比橘色的多幾顆蘋果？",
   "voice": "mama|"
  },
@@ -21310,7 +21310,7 @@
   "voice": "mama|"
  },
  "q.number-3-34.prompt": {
-  "file": "20a5f903c2a261f8.m4a",
+  "file": "37150f5e9e3bf6d6.m4a",
   "text": "藍色的比橘色的多幾輛汽車？",
   "voice": "mama|"
  },
@@ -21415,7 +21415,7 @@
   "voice": "mama|"
  },
  "q.number-4-05.prompt": {
-  "file": "00c408a094e06bcb.m4a",
+  "file": "afb28dcb1db36179.m4a",
   "text": "盤子裡有三顆蘋果，再放一顆，一共有幾顆蘋果？",
   "voice": "mama|"
  },
@@ -21550,7 +21550,7 @@
   "voice": "mama|"
  },
  "q.number-4-14.prompt": {
-  "file": "7a6422466c610c13.m4a",
+  "file": "7b00e2b5c1dbd8f7.m4a",
   "text": "有兩個貝殼，又來了四個，現在一共有幾個？",
   "voice": "mama|"
  },
@@ -21630,17 +21630,17 @@
   "voice": "mama|"
  },
  "q.number-4-20.hint": {
-  "file": "7fb32b3096bfa216.m4a",
+  "file": "5665c7de31191e8f.m4a",
   "text": "一起數：先數五輛，再接著數四輛，數到最後就是一共有幾輛。",
   "voice": "mama|"
  },
  "q.number-4-20.hint.gentle": {
-  "file": "0384aef6d2508659.m4a",
+  "file": "bd32406ee09249f2.m4a",
   "text": "沒關係喔，有阿悟陪你。一起數：先數五輛，再接著數四輛，數到最後就是一共有幾輛。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.number-4-20.prompt": {
-  "file": "bd78ccb449956baf.m4a",
+  "file": "67ceb58786d2eb44.m4a",
   "text": "有五輛汽車，又來了四輛，現在一共有幾輛？",
   "voice": "mama|"
  },
@@ -22105,7 +22105,7 @@
   "voice": "mama|"
  },
  "q.observe-1-15.prompt": {
-  "file": "7b05d4391f0539ba.m4a",
+  "file": "5a9cec4dc2378baa.m4a",
   "text": "請你想一想，剛剛看到的是哪一個？",
   "voice": "mama|"
  },
@@ -22150,17 +22150,17 @@
   "voice": "mama|"
  },
  "q.observe-1-18.prompt": {
-  "file": "7b05d4391f0539ba.m4a",
+  "file": "5a9cec4dc2378baa.m4a",
   "text": "請你想一想，剛剛看到的是哪一個？",
   "voice": "mama|"
  },
  "q.observe-1-19.hint": {
-  "file": "09d2795e42646e69.m4a",
+  "file": "43e09c8a040fe3e4.m4a",
   "text": "再看一次，剛剛出現的有蘋果。找找看，哪一個是剛剛出現過的？",
   "voice": "mama|"
  },
  "q.observe-1-19.hint.gentle": {
-  "file": "e4eb7fc6cc34c37b.m4a",
+  "file": "e79730284d10f17f.m4a",
   "text": "沒關係喔，有阿悟陪你。再看一次，剛剛出現的有蘋果。找找看，哪一個是剛剛出現過的？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -22195,7 +22195,7 @@
   "voice": "mama|"
  },
  "q.observe-1-21.prompt": {
-  "file": "7b05d4391f0539ba.m4a",
+  "file": "5a9cec4dc2378baa.m4a",
   "text": "請你想一想，剛剛看到的是哪一個？",
   "voice": "mama|"
  },
@@ -22240,7 +22240,7 @@
   "voice": "mama|"
  },
  "q.observe-1-24.prompt": {
-  "file": "7b05d4391f0539ba.m4a",
+  "file": "5a9cec4dc2378baa.m4a",
   "text": "請你想一想，剛剛看到的是哪一個？",
   "voice": "mama|"
  },
@@ -22410,12 +22410,12 @@
   "voice": "mama|"
  },
  "q.observe-1-36.hint": {
-  "file": "ae47a69af3c6062e.m4a",
+  "file": "4766e9ccfdef6ceb.m4a",
   "text": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
   "voice": "mama|"
  },
  "q.observe-1-36.hint.gentle": {
-  "file": "a63bbcf0d307aca3.m4a",
+  "file": "f6d580bfd24fbfc0.m4a",
   "text": "沒關係喔，有阿悟陪你。大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -22675,17 +22675,17 @@
   "voice": "mama|"
  },
  "q.observe-1-g15.prompt": {
-  "file": "7b05d4391f0539ba.m4a",
+  "file": "5a9cec4dc2378baa.m4a",
   "text": "請你想一想，剛剛看到的是哪一個？",
   "voice": "mama|"
  },
  "q.observe-1-g16.hint": {
-  "file": "a0289f3b6f60e774.m4a",
+  "file": "e12dba1309f52780.m4a",
   "text": "再看一次，剛剛出現的有貝殼。找找看，哪一個是剛剛出現過的？",
   "voice": "mama|"
  },
  "q.observe-1-g16.hint.gentle": {
-  "file": "80664aa3b814eec4.m4a",
+  "file": "762da43f1383f7ca.m4a",
   "text": "沒關係喔，有阿悟陪你。再看一次，剛剛出現的有貝殼。找找看，哪一個是剛剛出現過的？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -22710,17 +22710,17 @@
   "voice": "mama|"
  },
  "q.observe-1-g18.hint": {
-  "file": "a0289f3b6f60e774.m4a",
+  "file": "e12dba1309f52780.m4a",
   "text": "再看一次，剛剛出現的有貝殼。找找看，哪一個是剛剛出現過的？",
   "voice": "mama|"
  },
  "q.observe-1-g18.hint.gentle": {
-  "file": "80664aa3b814eec4.m4a",
+  "file": "762da43f1383f7ca.m4a",
   "text": "沒關係喔，有阿悟陪你。再看一次，剛剛出現的有貝殼。找找看，哪一個是剛剛出現過的？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.observe-1-g18.prompt": {
-  "file": "7b05d4391f0539ba.m4a",
+  "file": "5a9cec4dc2378baa.m4a",
   "text": "請你想一想，剛剛看到的是哪一個？",
   "voice": "mama|"
  },
@@ -22765,7 +22765,7 @@
   "voice": "mama|"
  },
  "q.observe-1-g21.prompt": {
-  "file": "7b05d4391f0539ba.m4a",
+  "file": "5a9cec4dc2378baa.m4a",
   "text": "請你想一想，剛剛看到的是哪一個？",
   "voice": "mama|"
  },
@@ -22810,7 +22810,7 @@
   "voice": "mama|"
  },
  "q.observe-1-g24.prompt": {
-  "file": "7b05d4391f0539ba.m4a",
+  "file": "5a9cec4dc2378baa.m4a",
   "text": "請你想一想，剛剛看到的是哪一個？",
   "voice": "mama|"
  },
@@ -23175,12 +23175,12 @@
   "voice": "mama|"
  },
  "q.observe-2-13.hint": {
-  "file": "b70866a404f022df.m4a",
+  "file": "93dc690e91f8d1ff.m4a",
   "text": "再看一次，剛剛出現的有貝殼、葡萄。找找看，哪一個是剛剛出現過的？",
   "voice": "mama|"
  },
  "q.observe-2-13.hint.gentle": {
-  "file": "c4c6ec4ee82e2237.m4a",
+  "file": "6b6f2d26e02d0ec1.m4a",
   "text": "沒關係喔，有阿悟陪你。再看一次，剛剛出現的有貝殼、葡萄。找找看，哪一個是剛剛出現過的？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23250,12 +23250,12 @@
   "voice": "mama|"
  },
  "q.observe-2-18.hint": {
-  "file": "b18cc69278d46afd.m4a",
+  "file": "c1bcff26bd415972.m4a",
   "text": "再看一次，剛剛出現的有汽車、蘋果。找找看，哪一個是剛剛出現過的？",
   "voice": "mama|"
  },
  "q.observe-2-18.hint.gentle": {
-  "file": "88701e138b95a612.m4a",
+  "file": "407fb647dd853b74.m4a",
   "text": "沒關係喔，有阿悟陪你。再看一次，剛剛出現的有汽車、蘋果。找找看，哪一個是剛剛出現過的？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23445,12 +23445,12 @@
   "voice": "mama|"
  },
  "q.observe-2-31.hint": {
-  "file": "f7e08bb79861d4ef.m4a",
+  "file": "4f1219e2cbfb0c0b.m4a",
   "text": "大家都是蘋果，一個一個比一比，找出方向不一樣的那一個。",
   "voice": "mama|"
  },
  "q.observe-2-31.hint.gentle": {
-  "file": "57575198a309f2fc.m4a",
+  "file": "badd3beda4b6e60f.m4a",
   "text": "沒關係喔，有阿悟陪你。大家都是蘋果，一個一個比一比，找出方向不一樣的那一個。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23700,12 +23700,12 @@
   "voice": "mama|"
  },
  "q.observe-3-12.hint": {
-  "file": "f8b48f54fa235d38.m4a",
+  "file": "f750631df4152262.m4a",
   "text": "剛剛有蘋果、汽車、葡萄。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-3-12.hint.gentle": {
-  "file": "1fc19e85a6b9c163.m4a",
+  "file": "6be5df763ed1c3f1.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有蘋果、汽車、葡萄。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23715,12 +23715,12 @@
   "voice": "mama|"
  },
  "q.observe-3-13.hint": {
-  "file": "e6770f53d6a45dc7.m4a",
+  "file": "f6d0e6629bcc5c17.m4a",
   "text": "剛剛有星星、小魚、貝殼。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-3-13.hint.gentle": {
-  "file": "e5963586a0699ea9.m4a",
+  "file": "fb76922dc9c1e98f.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有星星、小魚、貝殼。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23745,12 +23745,12 @@
   "voice": "mama|"
  },
  "q.observe-3-15.hint": {
-  "file": "38e2c670b643bde3.m4a",
+  "file": "b94507ec9af99047.m4a",
   "text": "剛剛有蘋果、恐龍、小魚。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-3-15.hint.gentle": {
-  "file": "2214912f2df4b7c8.m4a",
+  "file": "0c43dea631d5c436.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有蘋果、恐龍、小魚。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23760,12 +23760,12 @@
   "voice": "mama|"
  },
  "q.observe-3-16.hint": {
-  "file": "285f8170b9a31815.m4a",
+  "file": "d2f9c86cfce10564.m4a",
   "text": "剛剛有花、恐龍、貝殼。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-3-16.hint.gentle": {
-  "file": "2d763c03dd774be4.m4a",
+  "file": "557481648fdcce04.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有花、恐龍、貝殼。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23790,12 +23790,12 @@
   "voice": "mama|"
  },
  "q.observe-3-18.hint": {
-  "file": "83cb31846b3af856.m4a",
+  "file": "02ab7393d56c0bd4.m4a",
   "text": "剛剛有貝殼、蘋果、小兔子。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-3-18.hint.gentle": {
-  "file": "d0e0e8fb4e9c88e1.m4a",
+  "file": "863aa23a68f62283.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有貝殼、蘋果、小兔子。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23820,12 +23820,12 @@
   "voice": "mama|"
  },
  "q.observe-3-20.hint": {
-  "file": "cf9c84719f486f61.m4a",
+  "file": "96c3494be4131c91.m4a",
   "text": "剛剛有香蕉、小兔子、貝殼。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-3-20.hint.gentle": {
-  "file": "de3082c75229bf37.m4a",
+  "file": "52be18093bf6a5e1.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有香蕉、小兔子、貝殼。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23835,12 +23835,12 @@
   "voice": "mama|"
  },
  "q.observe-3-21.hint": {
-  "file": "a81e18c222390cbb.m4a",
+  "file": "bb87fe100201b107.m4a",
   "text": "剛剛有香蕉、葡萄、蘋果。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-3-21.hint.gentle": {
-  "file": "7de8cbe006a67381.m4a",
+  "file": "3bad002d2e337f3d.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有香蕉、葡萄、蘋果。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23865,12 +23865,12 @@
   "voice": "mama|"
  },
  "q.observe-3-23.hint": {
-  "file": "ab163d3ca30f9ff5.m4a",
+  "file": "c9a15323408d08ce.m4a",
   "text": "剛剛有香蕉、蘋果、花。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-3-23.hint.gentle": {
-  "file": "0d5520ecd5c54149.m4a",
+  "file": "926c831cd2b01e70.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有香蕉、蘋果、花。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -23925,12 +23925,12 @@
   "voice": "mama|"
  },
  "q.observe-3-27.hint": {
-  "file": "ae47a69af3c6062e.m4a",
+  "file": "4766e9ccfdef6ceb.m4a",
   "text": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
   "voice": "mama|"
  },
  "q.observe-3-27.hint.gentle": {
-  "file": "a63bbcf0d307aca3.m4a",
+  "file": "f6d580bfd24fbfc0.m4a",
   "text": "沒關係喔，有阿悟陪你。大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24060,12 +24060,12 @@
   "voice": "mama|"
  },
  "q.observe-3-36.hint": {
-  "file": "ae47a69af3c6062e.m4a",
+  "file": "4766e9ccfdef6ceb.m4a",
   "text": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
   "voice": "mama|"
  },
  "q.observe-3-36.hint.gentle": {
-  "file": "a63bbcf0d307aca3.m4a",
+  "file": "f6d580bfd24fbfc0.m4a",
   "text": "沒關係喔，有阿悟陪你。大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24270,12 +24270,12 @@
   "voice": "mama|"
  },
  "q.observe-4-14.hint": {
-  "file": "36f8f861af240bd9.m4a",
+  "file": "fad7135071452df1.m4a",
   "text": "剛剛有桃子、貝殼、星星、蘋果。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-4-14.hint.gentle": {
-  "file": "a8f9d50ef63cd35d.m4a",
+  "file": "c032e78cc605d53a.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有桃子、貝殼、星星、蘋果。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24285,12 +24285,12 @@
   "voice": "mama|"
  },
  "q.observe-4-15.hint": {
-  "file": "ca31c8523ac5121d.m4a",
+  "file": "06b782e9f183719b.m4a",
   "text": "剛剛有小兔子、汽車、恐龍、貝殼。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-4-15.hint.gentle": {
-  "file": "58bd2267f4c92ec9.m4a",
+  "file": "3c9c4b072597c0f7.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有小兔子、汽車、恐龍、貝殼。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24315,12 +24315,12 @@
   "voice": "mama|"
  },
  "q.observe-4-17.hint": {
-  "file": "178fb1ae4ea7b7af.m4a",
+  "file": "db3b41a47d123f4c.m4a",
   "text": "剛剛有小兔子、小魚、花、貝殼。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-4-17.hint.gentle": {
-  "file": "b55f0ec49165aba8.m4a",
+  "file": "1515975946e84d0e.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有小兔子、小魚、花、貝殼。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24345,12 +24345,12 @@
   "voice": "mama|"
  },
  "q.observe-4-19.hint": {
-  "file": "408dda01bf0a8880.m4a",
+  "file": "54fe7b3545c2d79e.m4a",
   "text": "剛剛有香蕉、恐龍、火箭、貝殼。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-4-19.hint.gentle": {
-  "file": "585248e14af035b6.m4a",
+  "file": "874a29d4da6b0451.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有香蕉、恐龍、火箭、貝殼。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24360,12 +24360,12 @@
   "voice": "mama|"
  },
  "q.observe-4-20.hint": {
-  "file": "97bde3f52ab1c7a3.m4a",
+  "file": "2a124186b70b3e53.m4a",
   "text": "剛剛有桃子、貝殼、恐龍、火箭。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-4-20.hint.gentle": {
-  "file": "d26e441f185b5b15.m4a",
+  "file": "da69a822a795b7c8.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有桃子、貝殼、恐龍、火箭。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24390,12 +24390,12 @@
   "voice": "mama|"
  },
  "q.observe-4-22.hint": {
-  "file": "541a67b249d42d45.m4a",
+  "file": "988177383f1b72ae.m4a",
   "text": "剛剛有貝殼、花、香蕉、星星。現在少了哪一個呢？",
   "voice": "mama|"
  },
  "q.observe-4-22.hint.gentle": {
-  "file": "6f33376ed0dffa5e.m4a",
+  "file": "376b1c4d79cfd676.m4a",
   "text": "沒關係喔，有阿悟陪你。剛剛有貝殼、花、香蕉、星星。現在少了哪一個呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24450,12 +24450,12 @@
   "voice": "mama|"
  },
  "q.observe-4-26.hint": {
-  "file": "ae47a69af3c6062e.m4a",
+  "file": "4766e9ccfdef6ceb.m4a",
   "text": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
   "voice": "mama|"
  },
  "q.observe-4-26.hint.gentle": {
-  "file": "a63bbcf0d307aca3.m4a",
+  "file": "f6d580bfd24fbfc0.m4a",
   "text": "沒關係喔，有阿悟陪你。大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24465,12 +24465,12 @@
   "voice": "mama|"
  },
  "q.observe-4-27.hint": {
-  "file": "ae47a69af3c6062e.m4a",
+  "file": "4766e9ccfdef6ceb.m4a",
   "text": "大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。",
   "voice": "mama|"
  },
  "q.observe-4-27.hint.gentle": {
-  "file": "a63bbcf0d307aca3.m4a",
+  "file": "f6d580bfd24fbfc0.m4a",
   "text": "沒關係喔，有阿悟陪你。大家都是蘋果，一個一個比一比，找出顏色不一樣的那一個。答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24690,12 +24690,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-04.hint": {
-  "file": "c8eedfdfd1140722.m4a",
+  "file": "6ddf4b4845c20a3c.m4a",
   "text": "一個一個看：花、貝殼，花、貝殼。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-04.hint.gentle": {
-  "file": "9862cb6c1de3612f.m4a",
+  "file": "a995499178f0bad1.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：花、貝殼，花、貝殼。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24735,12 +24735,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-07.hint": {
-  "file": "e3902eeab5e7632a.m4a",
+  "file": "4239e4b62e700bdc.m4a",
   "text": "一個一個看：鋼琴、蘋果，鋼琴、蘋果。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-07.hint.gentle": {
-  "file": "f53e3118e1fbf8ed.m4a",
+  "file": "8a4c2c3fc48329fc.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：鋼琴、蘋果，鋼琴、蘋果。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -24840,12 +24840,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-14.hint": {
-  "file": "41e8e7587c8c696c.m4a",
+  "file": "4d0e843f751129e9.m4a",
   "text": "一個一個看：蘋果、恐龍，蘋果、恐龍。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-14.hint.gentle": {
-  "file": "043eac25dc372713.m4a",
+  "file": "ae477993aac52265.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：蘋果、恐龍，蘋果、恐龍。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25050,12 +25050,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-28.hint": {
-  "file": "aa1937ba1c148b32.m4a",
+  "file": "5d1bfd197e6524fc.m4a",
   "text": "一個一個看：恐龍、蘋果，恐龍、蘋果。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-28.hint.gentle": {
-  "file": "6f41ab38343a57a5.m4a",
+  "file": "4011f83ce790c3be.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：恐龍、蘋果，恐龍、蘋果。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25065,12 +25065,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-29.hint": {
-  "file": "c9c553dcb2444a13.m4a",
+  "file": "1c6d8c933a92cbbb.m4a",
   "text": "一個一個看：貝殼、花，貝殼、花。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-29.hint.gentle": {
-  "file": "b610b81143ee5935.m4a",
+  "file": "871251f38c393e0e.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：貝殼、花，貝殼、花。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25230,12 +25230,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g04.hint": {
-  "file": "38f88ea738481e2c.m4a",
+  "file": "d40a59667cf3596e.m4a",
   "text": "你看，蘋果、小兔子，蘋果、小兔子，蘋果、小兔子。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g04.hint.gentle": {
-  "file": "dbff69d0b1b13513.m4a",
+  "file": "49c97f536a3598dc.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，蘋果、小兔子，蘋果、小兔子，蘋果、小兔子。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25245,12 +25245,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g05.hint": {
-  "file": "c4a6e0fb725ab3f8.m4a",
+  "file": "22bc52f274e8965a.m4a",
   "text": "你看，蘋果、香蕉，蘋果、香蕉，蘋果、香蕉。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g05.hint.gentle": {
-  "file": "47d351532fd82119.m4a",
+  "file": "10b89302589c9315.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，蘋果、香蕉，蘋果、香蕉，蘋果、香蕉。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25275,12 +25275,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g07.hint": {
-  "file": "59c86468b4a11d65.m4a",
+  "file": "8a7c3d82c65f68c1.m4a",
   "text": "你看，小魚、蘋果，小魚、蘋果，小魚、蘋果。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g07.hint.gentle": {
-  "file": "dfbf45c397612f0b.m4a",
+  "file": "dc511c98f880f79b.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，小魚、蘋果，小魚、蘋果，小魚、蘋果。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25305,12 +25305,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g09.hint": {
-  "file": "4f9906c0280bff87.m4a",
+  "file": "ae1fceee3a9027b6.m4a",
   "text": "你看，香蕉、蘋果，香蕉、蘋果，香蕉、蘋果。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g09.hint.gentle": {
-  "file": "b39293362865c11b.m4a",
+  "file": "96361ecbcc83d6ca.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，香蕉、蘋果，香蕉、蘋果，香蕉、蘋果。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25320,12 +25320,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g10.hint": {
-  "file": "47d372edfff85345.m4a",
+  "file": "a56a098a1513da4c.m4a",
   "text": "你看，小兔子、蘋果，小兔子、蘋果，小兔子、蘋果。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g10.hint.gentle": {
-  "file": "a2c915d323b33357.m4a",
+  "file": "f4e172319569b302.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，小兔子、蘋果，小兔子、蘋果，小兔子、蘋果。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25350,12 +25350,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g12.hint": {
-  "file": "487acd171f7f18c3.m4a",
+  "file": "c6a5e2b05bc453a4.m4a",
   "text": "你看，蘋果、小魚，蘋果、小魚，蘋果、小魚。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g12.hint.gentle": {
-  "file": "4356592c7e41a8a7.m4a",
+  "file": "42e9727f68ce7d50.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，蘋果、小魚，蘋果、小魚，蘋果、小魚。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25365,12 +25365,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g13.hint": {
-  "file": "a2b38a51522dffb6.m4a",
+  "file": "a8f93f2ece72a0e1.m4a",
   "text": "你看，蘋果、桃子，蘋果、桃子，蘋果、桃子。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g13.hint.gentle": {
-  "file": "6bba0fda02b2d43b.m4a",
+  "file": "144d6022582f842a.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，蘋果、桃子，蘋果、桃子，蘋果、桃子。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25395,7 +25395,7 @@
   "voice": "mama|"
  },
  "q.pattern-1-g15.hint": {
-  "file": "5825d862d7816fe2.m4a",
+  "file": "cdac2614411dbfb9.m4a",
   "text": "你看，小雞、小魚，小雞、小魚，小雞、小魚。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
@@ -25455,12 +25455,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g19.hint": {
-  "file": "04021b5b707f9d32.m4a",
+  "file": "2994e607f58cf7ce.m4a",
   "text": "你看，蘋果、小雞，蘋果、小雞，蘋果、小雞。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g19.hint.gentle": {
-  "file": "24acd398672f444f.m4a",
+  "file": "17ec775335429f80.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，蘋果、小雞，蘋果、小雞，蘋果、小雞。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25530,12 +25530,12 @@
   "voice": "mama|"
  },
  "q.pattern-1-g24.hint": {
-  "file": "1936a2b24152cb63.m4a",
+  "file": "78731fa900347c19.m4a",
   "text": "你看，桃子、蘋果，桃子、蘋果，桃子、蘋果。一個接一個，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-1-g24.hint.gentle": {
-  "file": "e343e9f91bf049c5.m4a",
+  "file": "d54277b98f46c7a5.m4a",
   "text": "沒關係喔，有阿悟陪你。你看，桃子、蘋果，桃子、蘋果，桃子、蘋果。一個接一個，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25605,12 +25605,12 @@
   "voice": "mama|"
  },
  "q.pattern-2-05.hint": {
-  "file": "a555548ebeba10e6.m4a",
+  "file": "7a8d82485650fc5c.m4a",
   "text": "一個一個看：蘋果、蘋果、小魚，蘋果、蘋果、小魚。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-2-05.hint.gentle": {
-  "file": "70f683e449fc3bc8.m4a",
+  "file": "2e079cbd3853d533.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：蘋果、蘋果、小魚，蘋果、蘋果、小魚。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25680,12 +25680,12 @@
   "voice": "mama|"
  },
  "q.pattern-2-10.hint": {
-  "file": "1fe458a2c22589db.m4a",
+  "file": "7b96f0c8e0f08e0a.m4a",
   "text": "一個一個看：蘋果、蘋果、星星，蘋果、蘋果、星星。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-2-10.hint.gentle": {
-  "file": "3c95d57030d6984e.m4a",
+  "file": "f03d7640d1659788.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：蘋果、蘋果、星星，蘋果、蘋果、星星。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25695,12 +25695,12 @@
   "voice": "mama|"
  },
  "q.pattern-2-11.hint": {
-  "file": "94d8be0641a9334b.m4a",
+  "file": "de4bd3af0ecf16f5.m4a",
   "text": "一個一個看：貝殼、貝殼、葡萄，貝殼、貝殼、葡萄。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-2-11.hint.gentle": {
-  "file": "b1d1b614ed6d357d.m4a",
+  "file": "aa940cf8c6ed429f.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：貝殼、貝殼、葡萄，貝殼、貝殼、葡萄。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25755,12 +25755,12 @@
   "voice": "mama|"
  },
  "q.pattern-2-15.hint": {
-  "file": "93d747a18430ea28.m4a",
+  "file": "aacfcf5a9cfa8148.m4a",
   "text": "一個一個看：星星、貝殼、貝殼，星星、貝殼、貝殼。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-2-15.hint.gentle": {
-  "file": "250f258b810bf106.m4a",
+  "file": "baa7c999db69ae66.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：星星、貝殼、貝殼，星星、貝殼、貝殼。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25920,12 +25920,12 @@
   "voice": "mama|"
  },
  "q.pattern-2-26.hint": {
-  "file": "e5d70e5bf90cc49b.m4a",
+  "file": "7be043fe1b7a9b43.m4a",
   "text": "一個一個看：小雞、蘋果，小雞、蘋果。一組一組重複出現，空格是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-2-26.hint.gentle": {
-  "file": "49c46857177c8c0c.m4a",
+  "file": "83e58076de2686f7.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：小雞、蘋果，小雞、蘋果。一組一組重複出現，空格是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -25935,12 +25935,12 @@
   "voice": "mama|"
  },
  "q.pattern-2-27.hint": {
-  "file": "3991eeec70531d8f.m4a",
+  "file": "987605ac1dbcb1b8.m4a",
   "text": "一個一個看：皮球、貝殼，皮球、貝殼。一組一組重複出現，空格是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-2-27.hint.gentle": {
-  "file": "7edef011579750f6.m4a",
+  "file": "13c69a2518fa2c48.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：皮球、貝殼，皮球、貝殼。一組一組重複出現，空格是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26010,12 +26010,12 @@
   "voice": "mama|"
  },
  "q.pattern-2-32.hint": {
-  "file": "b2f4c061f0c13019.m4a",
+  "file": "750b45cc5aee8d16.m4a",
   "text": "一個一個看：蘋果、火箭，蘋果、火箭。一組一組重複出現，空格是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-2-32.hint.gentle": {
-  "file": "c9bd37535c9d505c.m4a",
+  "file": "004b274bbce8bb1d.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：蘋果、火箭，蘋果、火箭。一組一組重複出現，空格是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26070,12 +26070,12 @@
   "voice": "mama|"
  },
  "q.pattern-2-36.hint": {
-  "file": "040c897f910a8872.m4a",
+  "file": "8e8b9d7beecfd91d.m4a",
   "text": "一個一個看：小魚、貝殼，小魚、貝殼。一組一組重複出現，空格是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-2-36.hint.gentle": {
-  "file": "d9b7b41c14e64274.m4a",
+  "file": "a250fd5ff8987748.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：小魚、貝殼，小魚、貝殼。一組一組重複出現，空格是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26085,12 +26085,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-01.hint": {
-  "file": "bcb518b2678d6bf3.m4a",
+  "file": "dc96a46970f77ef5.m4a",
   "text": "一個一個看：汽車、恐龍、蘋果，汽車、恐龍、蘋果。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-01.hint.gentle": {
-  "file": "70140935781e5615.m4a",
+  "file": "08b0a839e94277ec.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：汽車、恐龍、蘋果，汽車、恐龍、蘋果。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26100,12 +26100,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-02.hint": {
-  "file": "daec8d52a5261adf.m4a",
+  "file": "d5a101fa5840a917.m4a",
   "text": "一個一個看：火箭、貝殼、星星，火箭、貝殼、星星。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-02.hint.gentle": {
-  "file": "eafb486142caae2e.m4a",
+  "file": "e9d2307fe5595f4b.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：火箭、貝殼、星星，火箭、貝殼、星星。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26145,12 +26145,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-05.hint": {
-  "file": "21fea7a5b555a593.m4a",
+  "file": "7f5d2b5115bb5c62.m4a",
   "text": "一個一個看：貝殼、汽車、香蕉，貝殼、汽車、香蕉。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-05.hint.gentle": {
-  "file": "70d54a3fed31cdf9.m4a",
+  "file": "d77c3b89dde4e77e.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：貝殼、汽車、香蕉，貝殼、汽車、香蕉。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26280,12 +26280,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-14.hint": {
-  "file": "9ed90ae9b19ee514.m4a",
+  "file": "65760385bdcab91c.m4a",
   "text": "一個一個看：鋼琴、花、蘋果，鋼琴、花、蘋果。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-14.hint.gentle": {
-  "file": "936a7f292c359d66.m4a",
+  "file": "6071657056aaf7c6.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：鋼琴、花、蘋果，鋼琴、花、蘋果。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26295,12 +26295,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-15.hint": {
-  "file": "e8ca74823e219093.m4a",
+  "file": "2d56cba1d44bd504.m4a",
   "text": "一個一個看：桃子、小魚、蘋果，桃子、小魚、蘋果。一組一組重複出現，下一個是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-15.hint.gentle": {
-  "file": "8c1bfd0e4c93b3fd.m4a",
+  "file": "333fa4f832a7472d.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：桃子、小魚、蘋果，桃子、小魚、蘋果。一組一組重複出現，下一個是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26370,12 +26370,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-20.hint": {
-  "file": "ddaed8a91232ea28.m4a",
+  "file": "ee70a3828a3ed3c1.m4a",
   "text": "一個一個看：貝殼、汽車、小雞，貝殼、汽車、小雞。一組一組重複出現，空格是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-20.hint.gentle": {
-  "file": "8559f56f71b3a363.m4a",
+  "file": "9f7c5e57a537e4f4.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：貝殼、汽車、小雞，貝殼、汽車、小雞。一組一組重複出現，空格是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26415,12 +26415,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-23.hint": {
-  "file": "ff4310a08ca4f380.m4a",
+  "file": "32fc862720eaed07.m4a",
   "text": "一個一個看：小雞、貝殼、星星，小雞、貝殼、星星。一組一組重複出現，空格是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-23.hint.gentle": {
-  "file": "31a488c28f38e479.m4a",
+  "file": "21c07730031ac484.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：小雞、貝殼、星星，小雞、貝殼、星星。一組一組重複出現，空格是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26520,12 +26520,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-30.hint": {
-  "file": "e2092fcaa263bf52.m4a",
+  "file": "e400e8f4814003a4.m4a",
   "text": "一個一個看：星星、汽車、蘋果，星星、汽車、蘋果。一組一組重複出現，空格是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-30.hint.gentle": {
-  "file": "ccf559eccaaa734f.m4a",
+  "file": "f86b76f91633ece8.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：星星、汽車、蘋果，星星、汽車、蘋果。一組一組重複出現，空格是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26595,12 +26595,12 @@
   "voice": "mama|"
  },
  "q.pattern-3-35.hint": {
-  "file": "f26e1e37065e68b8.m4a",
+  "file": "e85f82f4ca59badb.m4a",
   "text": "一個一個看：小兔子、蘋果、皮球，小兔子、蘋果、皮球。一組一組重複出現，空格是誰呢？",
   "voice": "mama|"
  },
  "q.pattern-3-35.hint.gentle": {
-  "file": "9e44bd4cdbde3159.m4a",
+  "file": "4fb300b38a8a2b4e.m4a",
   "text": "沒關係喔，有阿悟陪你。一個一個看：小兔子、蘋果、皮球，小兔子、蘋果、皮球。一組一組重複出現，空格是誰呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -26985,12 +26985,12 @@
   "voice": "mama|"
  },
  "q.pattern-4-25.hint": {
-  "file": "ec9f3483024ee418.m4a",
+  "file": "27e6524b43e872bc.m4a",
   "text": "一輛、兩輛、三輛，每一格都多一輛。下一格要放幾輛呢？",
   "voice": "mama|"
  },
  "q.pattern-4-25.hint.gentle": {
-  "file": "e236f88d4062e1e7.m4a",
+  "file": "b8f94ac2071a6eda.m4a",
   "text": "沒關係喔，有阿悟陪你。一輛、兩輛、三輛，每一格都多一輛。下一格要放幾輛呢？答案在這裡，點點看。",
   "voice": "mama|"
  },
@@ -27180,32 +27180,32 @@
   "voice": "mama|"
  },
  "q.space-1-02.hint": {
-  "file": "f9597aaf80f84d86.m4a",
+  "file": "6b0399dfadf108b3.m4a",
   "text": "裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的貝殼在箱子的裡面？",
   "voice": "mama|"
  },
  "q.space-1-02.hint.gentle": {
-  "file": "8e62482a4da1924e.m4a",
+  "file": "144127bf221cb393.m4a",
   "text": "沒關係喔，有阿悟陪你。裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的貝殼在箱子的裡面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-02.prompt": {
-  "file": "db3a490c2cb3f037.m4a",
+  "file": "564c5c42eac82c83.m4a",
   "text": "找找看，貝殼在箱子的裡面是哪一張？",
   "voice": "mama|"
  },
  "q.space-1-03.hint": {
-  "file": "2c10d5efa5be38c8.m4a",
+  "file": "6e929aa0d1cff026.m4a",
   "text": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的貝殼在箱子的下面？",
   "voice": "mama|"
  },
  "q.space-1-03.hint.gentle": {
-  "file": "24e02439408fd18a.m4a",
+  "file": "e08db086b9fed597.m4a",
   "text": "沒關係喔，有阿悟陪你。下面，就是在箱子的腳底下。找找看，哪一張圖裡的貝殼在箱子的下面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-03.prompt": {
-  "file": "468713e42d407e6f.m4a",
+  "file": "75e1e051b1e82e91.m4a",
   "text": "哪一張圖，貝殼在箱子的下面？",
   "voice": "mama|"
  },
@@ -27270,17 +27270,17 @@
   "voice": "mama|"
  },
  "q.space-1-08.hint": {
-  "file": "8fe08323fcd12f6e.m4a",
+  "file": "c042b5e7e598163a.m4a",
   "text": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的蘋果在箱子的上面？",
   "voice": "mama|"
  },
  "q.space-1-08.hint.gentle": {
-  "file": "eb0d1cc62634e32b.m4a",
+  "file": "f54868513a2e2653.m4a",
   "text": "沒關係喔，有阿悟陪你。上面，就是在箱子的頭頂上。找找看，哪一張圖裡的蘋果在箱子的上面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-08.prompt": {
-  "file": "3898774f7c5349a6.m4a",
+  "file": "057f68c0b5b96027.m4a",
   "text": "找找看，蘋果在箱子的上面是哪一張？",
   "voice": "mama|"
  },
@@ -27315,17 +27315,17 @@
   "voice": "mama|"
  },
  "q.space-1-11.hint": {
-  "file": "2c10d5efa5be38c8.m4a",
+  "file": "6e929aa0d1cff026.m4a",
   "text": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的貝殼在箱子的下面？",
   "voice": "mama|"
  },
  "q.space-1-11.hint.gentle": {
-  "file": "24e02439408fd18a.m4a",
+  "file": "e08db086b9fed597.m4a",
   "text": "沒關係喔，有阿悟陪你。下面，就是在箱子的腳底下。找找看，哪一張圖裡的貝殼在箱子的下面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-11.prompt": {
-  "file": "cc55e370c56b7806.m4a",
+  "file": "e569ab1ca1fa3ead.m4a",
   "text": "貝殼在箱子的下面，是哪一張圖？",
   "voice": "mama|"
  },
@@ -27345,17 +27345,17 @@
   "voice": "mama|"
  },
  "q.space-1-13.hint": {
-  "file": "9f467394f25e995c.m4a",
+  "file": "c36fcd992e25ea7d.m4a",
   "text": "裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的蘋果在箱子的裡面？",
   "voice": "mama|"
  },
  "q.space-1-13.hint.gentle": {
-  "file": "79051253ba7c19e3.m4a",
+  "file": "42a7611987d7683e.m4a",
   "text": "沒關係喔，有阿悟陪你。裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的蘋果在箱子的裡面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-13.prompt": {
-  "file": "541947795c5f558c.m4a",
+  "file": "85f7da2aab68b06f.m4a",
   "text": "蘋果在箱子的裡面，是哪一張圖？",
   "voice": "mama|"
  },
@@ -27445,7 +27445,7 @@
   "voice": "mama|"
  },
  "q.space-1-19.prompt": {
-  "file": "45aef959b454a9fa.m4a",
+  "file": "b4711c386567cc86.m4a",
   "text": "請把花送到箱子的上面。",
   "voice": "mama|"
  },
@@ -27460,7 +27460,7 @@
   "voice": "mama|"
  },
  "q.space-1-20.prompt": {
-  "file": "c466e8850203ecbc.m4a",
+  "file": "ecef3ffc4cac7b74.m4a",
   "text": "請把小兔子送到箱子的裡面。",
   "voice": "mama|"
  },
@@ -27475,7 +27475,7 @@
   "voice": "mama|"
  },
  "q.space-1-21.prompt": {
-  "file": "ad1576f0513f312d.m4a",
+  "file": "0e2d29a8860e06d1.m4a",
   "text": "請把香蕉送到箱子的上面。",
   "voice": "mama|"
  },
@@ -27490,7 +27490,7 @@
   "voice": "mama|"
  },
  "q.space-1-22.prompt": {
-  "file": "1d0da96b0ef5f5d4.m4a",
+  "file": "446a827098ed64a0.m4a",
   "text": "請把桃子送到箱子的裡面。",
   "voice": "mama|"
  },
@@ -27505,7 +27505,7 @@
   "voice": "mama|"
  },
  "q.space-1-23.prompt": {
-  "file": "4719401471b42f92.m4a",
+  "file": "80ea7ecc7d2a57ab.m4a",
   "text": "請把葡萄送到箱子的下面。",
   "voice": "mama|"
  },
@@ -27525,17 +27525,17 @@
   "voice": "mama|"
  },
  "q.space-1-25.hint": {
-  "file": "510c7e004f55fb98.m4a",
+  "file": "aff972e67a7f3efb.m4a",
   "text": "蘋果要放在箱子的上面。上面，就是在箱子的頭頂上。",
   "voice": "mama|"
  },
  "q.space-1-25.hint.gentle": {
-  "file": "dca3acff03b36e8a.m4a",
+  "file": "06bb988496f49aa4.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在箱子的上面。上面，就是在箱子的頭頂上。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-25.prompt": {
-  "file": "f17f90516a3eb942.m4a",
+  "file": "4d290e13ec105df0.m4a",
   "text": "請把蘋果送到箱子的上面。",
   "voice": "mama|"
  },
@@ -27570,17 +27570,17 @@
   "voice": "mama|"
  },
  "q.space-1-28.hint": {
-  "file": "3ec3f76bb9916739.m4a",
+  "file": "6389f5fe5313dc82.m4a",
   "text": "蘋果要放在箱子的下面。下面，就是在箱子的腳底下。",
   "voice": "mama|"
  },
  "q.space-1-28.hint.gentle": {
-  "file": "0cd36340472a2a58.m4a",
+  "file": "568d48d80cc1af96.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在箱子的下面。下面，就是在箱子的腳底下。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-28.prompt": {
-  "file": "867b1bbdeac68b89.m4a",
+  "file": "e56abd8f3032acd1.m4a",
   "text": "把蘋果放到箱子的下面。",
   "voice": "mama|"
  },
@@ -28015,22 +28015,22 @@
   "voice": "mama|"
  },
  "q.space-1-g21.prompt": {
-  "file": "b36fe1e39dfbc23f.m4a",
+  "file": "69f285173ddad615.m4a",
   "text": "請把小魚送到桌子的下面。",
   "voice": "mama|"
  },
  "q.space-1-g22.hint": {
-  "file": "0dc2cdc4c2faf9c1.m4a",
+  "file": "e2317a53c39bb262.m4a",
   "text": "貝殼要放在桌子的上面。上面，就是在桌子的頭頂上。",
   "voice": "mama|"
  },
  "q.space-1-g22.hint.gentle": {
-  "file": "f569e9f0e10dcb52.m4a",
+  "file": "e2588ea0d97cc35d.m4a",
   "text": "沒關係喔，有阿悟陪你。貝殼要放在桌子的上面。上面，就是在桌子的頭頂上。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-g22.prompt": {
-  "file": "6eda0c4fcef2870f.m4a",
+  "file": "79bec9eef7d4a8df.m4a",
   "text": "把貝殼放到桌子的上面。",
   "voice": "mama|"
  },
@@ -28075,7 +28075,7 @@
   "voice": "mama|"
  },
  "q.space-1-g25.prompt": {
-  "file": "c6e7519d248813c1.m4a",
+  "file": "120992568ab20ac6.m4a",
   "text": "請把星星送到桌子的上面。",
   "voice": "mama|"
  },
@@ -28095,17 +28095,17 @@
   "voice": "mama|"
  },
  "q.space-1-g27.hint": {
-  "file": "628755dd838ac85e.m4a",
+  "file": "ce7bbaaa830a1233.m4a",
   "text": "蘋果要放在桌子的下面。下面，就是在桌子的腳底下。",
   "voice": "mama|"
  },
  "q.space-1-g27.hint.gentle": {
-  "file": "6207d6b12fab2bcf.m4a",
+  "file": "8cf7734aeb2a0f89.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在桌子的下面。下面，就是在桌子的腳底下。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-g27.prompt": {
-  "file": "672b6c46f6729531.m4a",
+  "file": "ceba30618774faef.m4a",
   "text": "請把蘋果送到桌子的下面。",
   "voice": "mama|"
  },
@@ -28150,7 +28150,7 @@
   "voice": "mama|"
  },
  "q.space-1-g30.prompt": {
-  "file": "139c67cdd1d86576.m4a",
+  "file": "43943bce1b77b2a7.m4a",
   "text": "請把小雞送到桌子的下面。",
   "voice": "mama|"
  },
@@ -28185,32 +28185,32 @@
   "voice": "mama|"
  },
  "q.space-1-g33.hint": {
-  "file": "510c7e004f55fb98.m4a",
+  "file": "aff972e67a7f3efb.m4a",
   "text": "蘋果要放在箱子的上面。上面，就是在箱子的頭頂上。",
   "voice": "mama|"
  },
  "q.space-1-g33.hint.gentle": {
-  "file": "dca3acff03b36e8a.m4a",
+  "file": "06bb988496f49aa4.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在箱子的上面。上面，就是在箱子的頭頂上。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-g33.prompt": {
-  "file": "4e127febfb917f2c.m4a",
+  "file": "06b92303bbf584f0.m4a",
   "text": "幫忙把蘋果放在箱子的上面。",
   "voice": "mama|"
  },
  "q.space-1-g34.hint": {
-  "file": "a9a3ff66ffe0120f.m4a",
+  "file": "7f5b82071e7f09ce.m4a",
   "text": "蘋果要放在桌子的上面。上面，就是在桌子的頭頂上。",
   "voice": "mama|"
  },
  "q.space-1-g34.hint.gentle": {
-  "file": "a47da98fe5f9bda6.m4a",
+  "file": "a646214b65dfa3f3.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在桌子的上面。上面，就是在桌子的頭頂上。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-1-g34.prompt": {
-  "file": "d69fd38da04d718a.m4a",
+  "file": "201f2cc5d02a858d.m4a",
   "text": "把蘋果放到桌子的上面。",
   "voice": "mama|"
  },
@@ -28320,17 +28320,17 @@
   "voice": "mama|"
  },
  "q.space-2-06.hint": {
-  "file": "7eba6d4ce9c98dd8.m4a",
+  "file": "9e603409c5b81031.m4a",
   "text": "先找到帳篷，再看貝殼站在哪裡。外面，就是不在帳篷裡頭，站在旁邊。",
   "voice": "mama|"
  },
  "q.space-2-06.hint.gentle": {
-  "file": "e9b88b3984b3af00.m4a",
+  "file": "6ea092dde2a3c07d.m4a",
   "text": "沒關係喔，有阿悟陪你。先找到帳篷，再看貝殼站在哪裡。外面，就是不在帳篷裡頭，站在旁邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-06.prompt": {
-  "file": "fa531a426fdc2f4c.m4a",
+  "file": "f881f019e7d6b09e.m4a",
   "text": "貝殼在帳篷的外面還是裡面？",
   "voice": "mama|"
  },
@@ -28350,17 +28350,17 @@
   "voice": "mama|"
  },
  "q.space-2-08.hint": {
-  "file": "0848234efda4ecc4.m4a",
+  "file": "ac37ae342ba80cc7.m4a",
   "text": "先找到箱子，再看蘋果站在哪裡。外面，就是不在箱子裡頭，站在旁邊。",
   "voice": "mama|"
  },
  "q.space-2-08.hint.gentle": {
-  "file": "a142f3af170f324a.m4a",
+  "file": "fd7c922c48671d96.m4a",
   "text": "沒關係喔，有阿悟陪你。先找到箱子，再看蘋果站在哪裡。外面，就是不在箱子裡頭，站在旁邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-08.prompt": {
-  "file": "5de4e6d4c9b13e5f.m4a",
+  "file": "a5deb03016328ca2.m4a",
   "text": "看一看，蘋果是在箱子的外面，還是裡面？",
   "voice": "mama|"
  },
@@ -28410,17 +28410,17 @@
   "voice": "mama|"
  },
  "q.space-2-12.hint": {
-  "file": "935c2a1e8c258b9f.m4a",
+  "file": "a360f3b931bc5bbd.m4a",
   "text": "先找到帳篷，再看蘋果站在哪裡。外面，就是不在帳篷裡頭，站在旁邊。",
   "voice": "mama|"
  },
  "q.space-2-12.hint.gentle": {
-  "file": "ee4863f6fc0c91b0.m4a",
+  "file": "2437535be23ac2a8.m4a",
   "text": "沒關係喔，有阿悟陪你。先找到帳篷，再看蘋果站在哪裡。外面，就是不在帳篷裡頭，站在旁邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-12.prompt": {
-  "file": "76525d5e9c733009.m4a",
+  "file": "96b0b7e6892f2cf8.m4a",
   "text": "蘋果在帳篷的裡面還是外面？",
   "voice": "mama|"
  },
@@ -28455,17 +28455,17 @@
   "voice": "mama|"
  },
  "q.space-2-15.hint": {
-  "file": "ee08f27abdfe840c.m4a",
+  "file": "b7df22bd41986053.m4a",
   "text": "外面，就是不在箱子裡頭，站在旁邊。找找看，哪一張圖裡的貝殼在箱子的外面？",
   "voice": "mama|"
  },
  "q.space-2-15.hint.gentle": {
-  "file": "11fd58c6b48068e1.m4a",
+  "file": "ca0745249bc3beae.m4a",
   "text": "沒關係喔，有阿悟陪你。外面，就是不在箱子裡頭，站在旁邊。找找看，哪一張圖裡的貝殼在箱子的外面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-15.prompt": {
-  "file": "5a4f5fa1fa33e1e3.m4a",
+  "file": "863f30b9ce21397e.m4a",
   "text": "哪一張圖，貝殼在箱子的外面？",
   "voice": "mama|"
  },
@@ -28560,17 +28560,17 @@
   "voice": "mama|"
  },
  "q.space-2-22.hint": {
-  "file": "0cd49281603981a4.m4a",
+  "file": "fd3c8339973089c6.m4a",
   "text": "上面，就是在箱子的頭頂上。找找看，哪一張圖裡的貝殼在箱子的上面？",
   "voice": "mama|"
  },
  "q.space-2-22.hint.gentle": {
-  "file": "fbb87a73e5d9c94a.m4a",
+  "file": "7c078d9d338558e9.m4a",
   "text": "沒關係喔，有阿悟陪你。上面，就是在箱子的頭頂上。找找看，哪一張圖裡的貝殼在箱子的上面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-22.prompt": {
-  "file": "9ff88f79736e6c8f.m4a",
+  "file": "016542755dcdbfd5.m4a",
   "text": "找找看，貝殼在箱子的上面是哪一張？",
   "voice": "mama|"
  },
@@ -28605,17 +28605,17 @@
   "voice": "mama|"
  },
  "q.space-2-25.hint": {
-  "file": "9f467394f25e995c.m4a",
+  "file": "c36fcd992e25ea7d.m4a",
   "text": "裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的蘋果在箱子的裡面？",
   "voice": "mama|"
  },
  "q.space-2-25.hint.gentle": {
-  "file": "79051253ba7c19e3.m4a",
+  "file": "42a7611987d7683e.m4a",
   "text": "沒關係喔，有阿悟陪你。裡面，就是躲在箱子裡頭。找找看，哪一張圖裡的蘋果在箱子的裡面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-25.prompt": {
-  "file": "75e14d802f38c16e.m4a",
+  "file": "9dd7819d248760e2.m4a",
   "text": "哪一張圖，蘋果在箱子的裡面？",
   "voice": "mama|"
  },
@@ -28695,17 +28695,17 @@
   "voice": "mama|"
  },
  "q.space-2-31.hint": {
-  "file": "ef25cf18db4cc373.m4a",
+  "file": "eec59914c7973148.m4a",
   "text": "貝殼要放在箱子的上面。上面，就是在箱子的頭頂上。",
   "voice": "mama|"
  },
  "q.space-2-31.hint.gentle": {
-  "file": "62aa11f6ab95a083.m4a",
+  "file": "1dff29903d70f892.m4a",
   "text": "沒關係喔，有阿悟陪你。貝殼要放在箱子的上面。上面，就是在箱子的頭頂上。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-31.prompt": {
-  "file": "42f909fbf81e634d.m4a",
+  "file": "4cdb9970dd6dec0e.m4a",
   "text": "幫忙把貝殼放在箱子的上面。",
   "voice": "mama|"
  },
@@ -28740,17 +28740,17 @@
   "voice": "mama|"
  },
  "q.space-2-34.hint": {
-  "file": "3ec3f76bb9916739.m4a",
+  "file": "6389f5fe5313dc82.m4a",
   "text": "蘋果要放在箱子的下面。下面，就是在箱子的腳底下。",
   "voice": "mama|"
  },
  "q.space-2-34.hint.gentle": {
-  "file": "0cd36340472a2a58.m4a",
+  "file": "568d48d80cc1af96.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在箱子的下面。下面，就是在箱子的腳底下。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-34.prompt": {
-  "file": "6da52907133ac052.m4a",
+  "file": "826033f0d03494e2.m4a",
   "text": "幫忙把蘋果放在箱子的下面。",
   "voice": "mama|"
  },
@@ -28785,17 +28785,17 @@
   "voice": "mama|"
  },
  "q.space-2-37.hint": {
-  "file": "510c7e004f55fb98.m4a",
+  "file": "aff972e67a7f3efb.m4a",
   "text": "蘋果要放在箱子的上面。上面，就是在箱子的頭頂上。",
   "voice": "mama|"
  },
  "q.space-2-37.hint.gentle": {
-  "file": "dca3acff03b36e8a.m4a",
+  "file": "06bb988496f49aa4.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在箱子的上面。上面，就是在箱子的頭頂上。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-2-37.prompt": {
-  "file": "abccb13625022261.m4a",
+  "file": "e25f96ec4c49cfe4.m4a",
   "text": "把蘋果放到箱子的上面。",
   "voice": "mama|"
  },
@@ -28905,32 +28905,32 @@
   "voice": "mama|"
  },
  "q.space-3-05.hint": {
-  "file": "db9a55667e704fb3.m4a",
+  "file": "58b68d85d2f0eb44.m4a",
   "text": "先找到沙發，再看貝殼站在哪裡。舉起你的右手，右手那一邊就是右邊。",
   "voice": "mama|"
  },
  "q.space-3-05.hint.gentle": {
-  "file": "3c75836c7ff0db7f.m4a",
+  "file": "5bb86eb64fee1136.m4a",
   "text": "沒關係喔，有阿悟陪你。先找到沙發，再看貝殼站在哪裡。舉起你的右手，右手那一邊就是右邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-3-05.prompt": {
-  "file": "c1f89887e95e9e93.m4a",
+  "file": "66ebe62be540e1a5.m4a",
   "text": "看一看，貝殼是在沙發的左邊，還是右邊？",
   "voice": "mama|"
  },
  "q.space-3-06.hint": {
-  "file": "9834df986467fcfd.m4a",
+  "file": "93fa160253c6b681.m4a",
   "text": "先找到小床，再看蘋果站在哪裡。舉起你的右手，右手那一邊就是右邊。",
   "voice": "mama|"
  },
  "q.space-3-06.hint.gentle": {
-  "file": "c005f500cbc036db.m4a",
+  "file": "064f11ff94c4fe18.m4a",
   "text": "沒關係喔，有阿悟陪你。先找到小床，再看蘋果站在哪裡。舉起你的右手，右手那一邊就是右邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-3-06.prompt": {
-  "file": "a5894b87a585a43b.m4a",
+  "file": "f1e8643158bd51cf.m4a",
   "text": "蘋果在小床的右邊還是左邊？",
   "voice": "mama|"
  },
@@ -29040,17 +29040,17 @@
   "voice": "mama|"
  },
  "q.space-3-14.hint": {
-  "file": "a62c5b4576594af0.m4a",
+  "file": "efa931d88e11b1d5.m4a",
   "text": "下面，就是在箱子的腳底下。找找看，哪一張圖裡的蘋果在箱子的下面？",
   "voice": "mama|"
  },
  "q.space-3-14.hint.gentle": {
-  "file": "11e6e8f5f58ee55f.m4a",
+  "file": "9c31f29d58d99b7e.m4a",
   "text": "沒關係喔，有阿悟陪你。下面，就是在箱子的腳底下。找找看，哪一張圖裡的蘋果在箱子的下面？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-3-14.prompt": {
-  "file": "fd1134470f11a960.m4a",
+  "file": "4fcac0fd55cf23b5.m4a",
   "text": "哪一張圖，蘋果在箱子的下面？",
   "voice": "mama|"
  },
@@ -29085,17 +29085,17 @@
   "voice": "mama|"
  },
  "q.space-3-17.hint": {
-  "file": "9abec2daaed641d2.m4a",
+  "file": "7202b0f59ad216ba.m4a",
   "text": "舉起你的右手，右手那一邊就是右邊。找找看，哪一張圖裡的蘋果在箱子的右邊？",
   "voice": "mama|"
  },
  "q.space-3-17.hint.gentle": {
-  "file": "e1e94318af2bc2ad.m4a",
+  "file": "9402a3f146c388bc.m4a",
   "text": "沒關係喔，有阿悟陪你。舉起你的右手，右手那一邊就是右邊。找找看，哪一張圖裡的蘋果在箱子的右邊？答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-3-17.prompt": {
-  "file": "e4542625fd8d9898.m4a",
+  "file": "e42fc002b7992066.m4a",
   "text": "找找看，蘋果在箱子的右邊是哪一張？",
   "voice": "mama|"
  },
@@ -29155,7 +29155,7 @@
   "voice": "mama|"
  },
  "q.space-3-21.prompt": {
-  "file": "30e01c1dfb82b73a.m4a",
+  "file": "126a5b6d2a626741.m4a",
   "text": "請把小雞送到桌子的左邊。",
   "voice": "mama|"
  },
@@ -29185,7 +29185,7 @@
   "voice": "mama|"
  },
  "q.space-3-23.prompt": {
-  "file": "02d82ec515072ca5.m4a",
+  "file": "2040431d9f923eae.m4a",
   "text": "請把小魚送到桌子的左邊。",
   "voice": "mama|"
  },
@@ -29205,32 +29205,32 @@
   "voice": "mama|"
  },
  "q.space-3-25.hint": {
-  "file": "2e2a0de9a9a37cb1.m4a",
+  "file": "51adb7a4002a2b1b.m4a",
   "text": "蘋果要放在箱子的右邊。舉起你的右手，右手那一邊就是右邊。",
   "voice": "mama|"
  },
  "q.space-3-25.hint.gentle": {
-  "file": "d6a53afa3bdcabc3.m4a",
+  "file": "c10e724ab4c9c137.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在箱子的右邊。舉起你的右手，右手那一邊就是右邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-3-25.prompt": {
-  "file": "3e138617b30f991c.m4a",
+  "file": "c6e6929083e85b70.m4a",
   "text": "請把蘋果送到箱子的右邊。",
   "voice": "mama|"
  },
  "q.space-3-26.hint": {
-  "file": "2e2a0de9a9a37cb1.m4a",
+  "file": "51adb7a4002a2b1b.m4a",
   "text": "蘋果要放在箱子的右邊。舉起你的右手，右手那一邊就是右邊。",
   "voice": "mama|"
  },
  "q.space-3-26.hint.gentle": {
-  "file": "d6a53afa3bdcabc3.m4a",
+  "file": "c10e724ab4c9c137.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在箱子的右邊。舉起你的右手，右手那一邊就是右邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-3-26.prompt": {
-  "file": "c6a4c5623c675d50.m4a",
+  "file": "fcfeb9ac19a4c249.m4a",
   "text": "把蘋果放到箱子的右邊。",
   "voice": "mama|"
  },
@@ -29245,7 +29245,7 @@
   "voice": "mama|"
  },
  "q.space-3-27.prompt": {
-  "file": "0e9707f3bffe2f3b.m4a",
+  "file": "f4e066c733d7531f.m4a",
   "text": "請把星星送到箱子的下面。",
   "voice": "mama|"
  },
@@ -29280,17 +29280,17 @@
   "voice": "mama|"
  },
  "q.space-3-30.hint": {
-  "file": "628755dd838ac85e.m4a",
+  "file": "ce7bbaaa830a1233.m4a",
   "text": "蘋果要放在桌子的下面。下面，就是在桌子的腳底下。",
   "voice": "mama|"
  },
  "q.space-3-30.hint.gentle": {
-  "file": "6207d6b12fab2bcf.m4a",
+  "file": "8cf7734aeb2a0f89.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在桌子的下面。下面，就是在桌子的腳底下。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-3-30.prompt": {
-  "file": "105896b90dbde07b.m4a",
+  "file": "ea62062d748fbd70.m4a",
   "text": "幫忙把蘋果放在桌子的下面。",
   "voice": "mama|"
  },
@@ -29380,7 +29380,7 @@
   "voice": "mama|"
  },
  "q.space-3-36.prompt": {
-  "file": "903b84900c4b1ef3.m4a",
+  "file": "5b27b241e3400990.m4a",
   "text": "請把桃子送到桌子的右邊。",
   "voice": "mama|"
  },
@@ -29715,32 +29715,32 @@
   "voice": "mama|"
  },
  "q.space-4-23.hint": {
-  "file": "a9b5243847a4576b.m4a",
+  "file": "f193182600bf57b0.m4a",
   "text": "先找到蘋果，再看恐龍排在哪一邊。舉起你的右手，右手那一邊就是右邊。",
   "voice": "mama|"
  },
  "q.space-4-23.hint.gentle": {
-  "file": "ce6aaf220947251e.m4a",
+  "file": "4948eff839853789.m4a",
   "text": "沒關係喔，有阿悟陪你。先找到蘋果，再看恐龍排在哪一邊。舉起你的右手，右手那一邊就是右邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-4-23.prompt": {
-  "file": "79afdcc1cf337f36.m4a",
+  "file": "d3bb3bf50bc54e27.m4a",
   "text": "恐龍在蘋果的左邊還是右邊？",
   "voice": "mama|"
  },
  "q.space-4-24.hint": {
-  "file": "e34213d67e0e5935.m4a",
+  "file": "07ea238a01229929.m4a",
   "text": "先找到葡萄，再看貝殼排在哪一邊。舉起你的左手，左手那一邊就是左邊。",
   "voice": "mama|"
  },
  "q.space-4-24.hint.gentle": {
-  "file": "e393551056218da2.m4a",
+  "file": "962652e27aa5cf8e.m4a",
   "text": "沒關係喔，有阿悟陪你。先找到葡萄，再看貝殼排在哪一邊。舉起你的左手，左手那一邊就是左邊。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-4-24.prompt": {
-  "file": "f3aa96ba5e0fd4b1.m4a",
+  "file": "f9f1da5ed360d9e0.m4a",
   "text": "看一看，貝殼是排在葡萄的左邊，還是右邊？",
   "voice": "mama|"
  },
@@ -29860,22 +29860,22 @@
   "voice": "mama|"
  },
  "q.space-4-32.prompt": {
-  "file": "94e964b61a9dd1b6.m4a",
+  "file": "f6c2365cb781cb33.m4a",
   "text": "請把桃子放在箱子和桌子的中間。",
   "voice": "mama|"
  },
  "q.space-4-33.hint": {
-  "file": "3985d37271183293.m4a",
+  "file": "641e83dd2d483516.m4a",
   "text": "蘋果要放在箱子和桌子的中間。中間，就是在兩個東西的正中央。",
   "voice": "mama|"
  },
  "q.space-4-33.hint.gentle": {
-  "file": "777d04c76e5800ed.m4a",
+  "file": "b7717545e787d99f.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在箱子和桌子的中間。中間，就是在兩個東西的正中央。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-4-33.prompt": {
-  "file": "f2468d514a666184.m4a",
+  "file": "195e4119465762ae.m4a",
   "text": "把蘋果放到箱子和桌子的中間。",
   "voice": "mama|"
  },
@@ -29910,32 +29910,32 @@
   "voice": "mama|"
  },
  "q.space-4-36.hint": {
-  "file": "a9a3ff66ffe0120f.m4a",
+  "file": "7f5b82071e7f09ce.m4a",
   "text": "蘋果要放在桌子的上面。上面，就是在桌子的頭頂上。",
   "voice": "mama|"
  },
  "q.space-4-36.hint.gentle": {
-  "file": "a47da98fe5f9bda6.m4a",
+  "file": "a646214b65dfa3f3.m4a",
   "text": "沒關係喔，有阿悟陪你。蘋果要放在桌子的上面。上面，就是在桌子的頭頂上。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-4-36.prompt": {
-  "file": "033ed8c1800d7e52.m4a",
+  "file": "4ba74ca17eb6c821.m4a",
   "text": "幫忙把蘋果放在桌子的上面。",
   "voice": "mama|"
  },
  "q.space-4-37.hint": {
-  "file": "0dc2cdc4c2faf9c1.m4a",
+  "file": "e2317a53c39bb262.m4a",
   "text": "貝殼要放在桌子的上面。上面，就是在桌子的頭頂上。",
   "voice": "mama|"
  },
  "q.space-4-37.hint.gentle": {
-  "file": "f569e9f0e10dcb52.m4a",
+  "file": "e2588ea0d97cc35d.m4a",
   "text": "沒關係喔，有阿悟陪你。貝殼要放在桌子的上面。上面，就是在桌子的頭頂上。答案在這裡，點點看。",
   "voice": "mama|"
  },
  "q.space-4-37.prompt": {
-  "file": "552dc3790c8de1ee.m4a",
+  "file": "80ade26f66a86e89.m4a",
   "text": "幫忙把貝殼放在桌子的上面。",
   "voice": "mama|"
  },
@@ -29965,7 +29965,7 @@
   "voice": "mama|"
  },
  "q.space-4-39.prompt": {
-  "file": "325f453fbdd251d8.m4a",
+  "file": "b6b4b1624a35cfbc.m4a",
   "text": "請把小兔子放在桌子和箱子的中間。",
   "voice": "mama|"
  },
@@ -30095,7 +30095,7 @@
   "voice": "mama|"
  },
  "ui.album.card.5": {
-  "file": "6760e571359bdcd0.m4a",
+  "file": "d96289bac807f457.m4a",
   "text": "我們一起通關了水簾洞！",
   "voice": "mama|"
  },
@@ -30120,12 +30120,12 @@
   "voice": "mama|"
  },
  "ui.chapter.1": {
-  "file": "639d4bde142f09da.m4a",
+  "file": "eed06366ac0f9317.m4a",
   "text": "水簾洞還沒開，先通關花果山喔",
   "voice": "mama|"
  },
  "ui.chapter.2": {
-  "file": "71bdceeea201e831.m4a",
+  "file": "9d06a21735eb58e8.m4a",
   "text": "水簾洞開門囉！",
   "voice": "mama|"
  },
@@ -30185,7 +30185,7 @@
   "voice": "mama|"
  },
  "ui.feedback.1": {
-  "file": "34e5ad52b91bb6f7.m4a",
+  "file": "c26570fafe024525.m4a",
   "text": "買到囉！",
   "voice": "mama|"
  },
@@ -30200,7 +30200,7 @@
   "voice": "mama|"
  },
  "ui.feedback.4": {
-  "file": "dfe9a8f663ec184e.m4a",
+  "file": "838fc83a180f60bd.m4a",
   "text": "乾淨了！",
   "voice": "mama|"
  },
@@ -30265,7 +30265,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.16": {
-  "file": "c7ca071339d4d054.m4a",
+  "file": "ce06bb2a32435686.m4a",
   "text": "章魚",
   "voice": "mama|"
  },
@@ -30280,7 +30280,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.19": {
-  "file": "d0e885763fb3e4af.m4a",
+  "file": "cdf6203b6a859e5f.m4a",
   "text": "紅蘿蔔",
   "voice": "mama|"
  },
@@ -30295,7 +30295,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.21": {
-  "file": "8cc8aed5ddf3cf90.m4a",
+  "file": "a0a4bc18908d9fd0.m4a",
   "text": "餅乾",
   "voice": "mama|"
  },
@@ -30315,17 +30315,17 @@
   "voice": "mama|"
  },
  "ui.friend.name.25": {
-  "file": "02fb7de5ed4f1818.m4a",
+  "file": "6e2c1b9ea38c4d8f.m4a",
   "text": "時鐘",
   "voice": "mama|"
  },
  "ui.friend.name.26": {
-  "file": "64d58b178250b649.m4a",
+  "file": "290501889447851e.m4a",
   "text": "燈",
   "voice": "mama|"
  },
  "ui.friend.name.27": {
-  "file": "873048569d5b2215.m4a",
+  "file": "9e7a4fe7a5a7c61a.m4a",
   "text": "帳篷",
   "voice": "mama|"
  },
@@ -30340,7 +30340,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.3": {
-  "file": "92fbbed2a6cde9be.m4a",
+  "file": "ba663a5afa79c41d.m4a",
   "text": "蘋果",
   "voice": "mama|"
  },
@@ -30430,7 +30430,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.46": {
-  "file": "5b919ebc13d0e196.m4a",
+  "file": "a6374879102362b8.m4a",
   "text": "髒髒的手",
   "voice": "mama|"
  },
@@ -30440,7 +30440,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.48": {
-  "file": "53c1e66f7bf31d06.m4a",
+  "file": "3aaf5e4a8198ed14.m4a",
   "text": "搶玩具",
   "voice": "mama|"
  },
@@ -30455,7 +30455,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.50": {
-  "file": "8921cd5a1341c806.m4a",
+  "file": "56aec741ab07db33.m4a",
   "text": "收玩具",
   "voice": "mama|"
  },
@@ -30480,7 +30480,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.55": {
-  "file": "979ebf3cc9b80dc4.m4a",
+  "file": "fff66fffd0160e1c.m4a",
   "text": "等紅燈",
   "voice": "mama|"
  },
@@ -30595,7 +30595,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.76": {
-  "file": "64ad08b1498a39eb.m4a",
+  "file": "e32f6f4690737d9c.m4a",
   "text": "數字十",
   "voice": "mama|"
  },
@@ -30605,7 +30605,7 @@
   "voice": "mama|"
  },
  "ui.friend.name.9": {
-  "file": "7a2833c4a6d2189d.m4a",
+  "file": "54bbca8a250b7273.m4a",
   "text": "貝殼",
   "voice": "mama|"
  },
@@ -30630,12 +30630,12 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "ui.gift.food.1": {
-  "file": "5062c8e545a7a2a8.m4a",
+  "file": "74a3d78b9ae1a6b6.m4a",
   "text": "我在路上撿到一根胡蘿蔔，送給你！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "ui.gift.food.2": {
-  "file": "0164e3e6cf5ea1c0.m4a",
+  "file": "5d1f52db06f5f872.m4a",
   "text": "我在路上撿到一片餅乾，送給你！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -30645,12 +30645,12 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "ui.gift.food.4": {
-  "file": "3d45848b6576cfa5.m4a",
+  "file": "374b94b7413db029.m4a",
   "text": "我在路上撿到一顆蘋果，送給你！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "ui.gift.food.5": {
-  "file": "626fef6ab6361655.m4a",
+  "file": "8fad12c7083e5308.m4a",
   "text": "我在路上撿到一串葡萄，送給你！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -30665,7 +30665,7 @@
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "ui.gift.food.8": {
-  "file": "d48137b686e5803b.m4a",
+  "file": "66c8c304a1e740f5.m4a",
   "text": "我在路上撿到一個飯糰，送給你！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -30860,7 +30860,7 @@
   "voice": "mama|"
  },
  "ui.trick.say.1": {
-  "file": "6d388a7de1d1e7e3.m4a",
+  "file": "cf7c24a0f999e564.m4a",
   "text": "矮矮的",
   "voice": "mama|"
  },
@@ -30880,7 +30880,7 @@
   "voice": "mama|"
  },
  "ui.trick.say.5": {
-  "file": "4080785caa230a75.m4a",
+  "file": "2a867dca4b679ced.m4a",
   "text": "記住囉",
   "voice": "mama|"
  },
@@ -30905,7 +30905,7 @@
   "voice": "mama|"
  },
  "word.一輛": {
-  "file": "bd5f1da1b43913f8.m4a",
+  "file": "3487eda1a8804d4f.m4a",
   "text": "一輛",
   "voice": "mama|"
  },
@@ -30955,7 +30955,7 @@
   "voice": "mama|"
  },
  "word.三輛": {
-  "file": "598b21eeec00f0e1.m4a",
+  "file": "df56270fa7900319.m4a",
   "text": "三輛",
   "voice": "mama|"
  },
@@ -31015,12 +31015,12 @@
   "voice": "mama|"
  },
  "word.五": {
-  "file": "fed22a95c31a76e5.m4a",
+  "file": "14db7bcd2fe4337d.m4a",
   "text": "五",
   "voice": "mama|"
  },
  "word.五朵": {
-  "file": "0f30fee87652baac.m4a",
+  "file": "2e63befe4017fac0.m4a",
   "text": "五朵",
   "voice": "mama|"
  },
@@ -31070,7 +31070,7 @@
   "voice": "mama|"
  },
  "word.兩輛": {
-  "file": "0a759fdb2ed3c8ef.m4a",
+  "file": "11e838695a10ff13.m4a",
   "text": "兩輛",
   "voice": "mama|"
  },
@@ -31100,7 +31100,7 @@
   "voice": "mama|"
  },
  "word.六朵": {
-  "file": "5a21bff05c77a66c.m4a",
+  "file": "d3bbd9de92f87e9e.m4a",
   "text": "六朵",
   "voice": "mama|"
  },
@@ -31230,7 +31230,7 @@
   "voice": "mama|"
  },
  "word.因為紅燈會請我們吃糖": {
-  "file": "3c896bed47c111e8.m4a",
+  "file": "b2ccdb886455074a.m4a",
   "text": "因為紅燈會請我們吃糖",
   "voice": "mama|"
  },
@@ -31320,7 +31320,7 @@
   "voice": "mama|"
  },
  "word.把牙齒刷乾淨": {
-  "file": "e535581c7a2e8600.m4a",
+  "file": "f4176dd4c6b32096.m4a",
   "text": "把牙齒刷乾淨",
   "voice": "mama|"
  },
@@ -31425,12 +31425,12 @@
   "voice": "mama|"
  },
  "word.用毛巾擦乾": {
-  "file": "96628d60782146a2.m4a",
+  "file": "cb4e47a73eb61815.m4a",
   "text": "用毛巾擦乾",
   "voice": "mama|"
  },
  "word.用水沖乾淨": {
-  "file": "cf6d3c7e042d727f.m4a",
+  "file": "3640d04840d0910d.m4a",
   "text": "用水沖乾淨",
   "voice": "mama|"
  },
@@ -31480,7 +31480,7 @@
   "voice": "mama|"
  },
  "word.糖果和餅乾": {
-  "file": "8d48230c91c18f59.m4a",
+  "file": "79a4e0e1b74eb4a5.m4a",
   "text": "糖果和餅乾",
   "voice": "mama|"
  },
@@ -31520,7 +31520,7 @@
   "voice": "mama|"
  },
  "word.蘋果": {
-  "file": "92fbbed2a6cde9be.m4a",
+  "file": "ba663a5afa79c41d.m4a",
   "text": "蘋果",
   "voice": "mama|"
  },
@@ -31535,7 +31535,7 @@
   "voice": "mama|"
  },
  "word.請": {
-  "file": "0dd64bc32e520cd3.m4a",
+  "file": "d9e5423d6be415bf.m4a",
   "text": "請",
   "voice": "mama|"
  },
@@ -31550,7 +31550,7 @@
   "voice": "mama|"
  },
  "word.貝殼": {
-  "file": "7a2833c4a6d2189d.m4a",
+  "file": "54bbca8a250b7273.m4a",
   "text": "貝殼",
   "voice": "mama|"
  },
@@ -31600,7 +31600,7 @@
   "voice": "mama|"
  },
  "word.這樣地方才會乾乾淨淨": {
-  "file": "ad650e63dc80b8c3.m4a",
+  "file": "dfd7be24ad70c2c6.m4a",
   "text": "這樣地方才會乾乾淨淨",
   "voice": "mama|"
  },
@@ -31655,7 +31655,7 @@
   "voice": "mama|"
  },
  "word.雨傘": {
-  "file": "724e671a5d342f80.m4a",
+  "file": "a334a28d38b6c478.m4a",
   "text": "雨傘",
   "voice": "mama|"
  },
