@@ -565,7 +565,8 @@ async function workshop(browser) {
     // 點做不起的：語音說明、卡片晃一下
     await page.locator('[data-testid=craft-decor-rocket] .ws-btn').click({ force: true }) // aria-disabled：Playwright 預設不點，孩子的手指點得到
     await page.waitForTimeout(100)
-    check(`[${size}] 點做不起的：語音「還差 1 個木材，6 個石頭，2 個花朵」`, (await page.evaluate(() => window.__spoken)).includes('還差1個木材，6個石頭，2個花朵'), String(await page.evaluate(() => window.__spoken)))
+    // v7.2：語音改成一句固定的話（缺多少用圖示 + 數字顯示；組合太多沒辦法預錄，以前會退回機器語音）
+    check(`[${size}] 點做不起的：語音「材料還不夠喔，去冒險找材料吧」`, (await page.evaluate(() => window.__spoken)).includes('材料還不夠喔，去冒險找材料吧'), String(await page.evaluate(() => window.__spoken)))
     check(`[${size}] 點做不起的：卡片晃一下`, (await page.locator('[data-testid=craft-decor-rocket].ux-shake').count()) === 1)
     check(`[${size}] 點做不起的：什麼都沒被做出來、材料沒扣`, (await qtyOf(page, 'decor-rocket')) === 0 && (await dump(page, 'materialLedger')).every((e) => e.delta >= 0))
     // 做得起的：做 → 大圖慶祝 → 去擺放
