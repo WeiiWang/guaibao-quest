@@ -514,6 +514,1021 @@
   "text": "yellow",
   "voice": "english|"
  },
+ "fb.buy.apple": {
+  "file": "36d50cdb06bc64bc.m4a",
+  "text": "買到蘋果囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.banana": {
+  "file": "2088427eccdea8a3.m4a",
+  "text": "買到香蕉囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.cake": {
+  "file": "0be7b973886032e7.m4a",
+  "text": "買到蛋糕囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.carrot": {
+  "file": "f74b70224769370b.m4a",
+  "text": "買到胡蘿蔔囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-banana-tree": {
+  "file": "b044a4bfb5c9d87c.m4a",
+  "text": "買到香蕉樹囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-car": {
+  "file": "0ecddba7ad96276a.m4a",
+  "text": "買到小汽車囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-chick": {
+  "file": "fa10767bd3370754.m4a",
+  "text": "買到小雞囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-clouds": {
+  "file": "ada4f31560ab335a.m4a",
+  "text": "買到雲朵彩虹囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-dragon-fish": {
+  "file": "225ee8dd171e481b.m4a",
+  "text": "買到龍宮小魚囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-fish": {
+  "file": "567754601cf3b87d.m4a",
+  "text": "買到小魚囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-flame-mountain": {
+  "file": "89d327ae9b271e1c.m4a",
+  "text": "買到火焰山囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-flower": {
+  "file": "a103a05d488e1891.m4a",
+  "text": "買到花朵囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-flower-fruit-mountain": {
+  "file": "ce0341b959a03889.m4a",
+  "text": "買到花果山囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-house": {
+  "file": "c44ffc6a1e8ec6a6.m4a",
+  "text": "買到小房子囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-awu-banana": {
+  "file": "9f6d6fafa086a3c8.m4a",
+  "text": "買到阿悟抱香蕉囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-awu-bath": {
+  "file": "35f08197cb96280e.m4a",
+  "text": "買到阿悟洗澡囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-awu-garden": {
+  "file": "2606cc6319d8645f.m4a",
+  "text": "買到阿悟的花園囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-awu-ocean": {
+  "file": "65c50e645ee87b43.m4a",
+  "text": "買到海底大冒險囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-awu-space": {
+  "file": "bddddd4084eee5e8.m4a",
+  "text": "買到阿悟在月球囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-birthday-cake": {
+  "file": "1620990de23e63ea.m4a",
+  "text": "買到生日蛋糕囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-castle": {
+  "file": "017138fd1eca2fdd.m4a",
+  "text": "買到童話城堡囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-city-street": {
+  "file": "c922be863e96dba4.m4a",
+  "text": "買到小城街道囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-dino": {
+  "file": "7e74baa73c0368f5.m4a",
+  "text": "買到小恐龍囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-farm": {
+  "file": "962d79b69d306a84.m4a",
+  "text": "買到開心農場囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-ice-cream": {
+  "file": "6ff78f12a095f4e8.m4a",
+  "text": "買到冰淇淋囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-mandala-flower": {
+  "file": "9a4b759d4d128681.m4a",
+  "text": "買到花朵曼陀羅囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-rocket": {
+  "file": "f00e5830c1766d96.m4a",
+  "text": "買到小火箭囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-train": {
+  "file": "eaf986b32ea5cebc.m4a",
+  "text": "買到小火車囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-whale": {
+  "file": "4f06f85be5475e5d.m4a",
+  "text": "買到小鯨魚囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-line-wukong-dragon": {
+  "file": "3b20a932de67579a.m4a",
+  "text": "買到悟空與小龍囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-monkey": {
+  "file": "1396c29bc8382432.m4a",
+  "text": "買到小猴子囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-nimbus": {
+  "file": "89ef288dceee90f8.m4a",
+  "text": "買到筋斗雲囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-peach-garden": {
+  "file": "9f3e5dfdea0e832b.m4a",
+  "text": "買到蟠桃園囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-staff": {
+  "file": "c34e7d972f3ed92f.m4a",
+  "text": "買到金箍棒囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-sun-moon": {
+  "file": "f964f00f8528be58.m4a",
+  "text": "買到太陽月亮囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-tang-horse": {
+  "file": "b5f4ef5fc757ab20.m4a",
+  "text": "買到唐僧的馬囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-water-curtain": {
+  "file": "da6ddd86e58e30e2.m4a",
+  "text": "買到水簾洞囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.coloring-wukong-cloud": {
+  "file": "5955c01508b803a7.m4a",
+  "text": "買到筋斗雲上的阿悟囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.cookie": {
+  "file": "a4e81d4f3f3e3f54.m4a",
+  "text": "買到餅乾囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-ball": {
+  "file": "9cc5b7bc2cd0c79e.m4a",
+  "text": "買到玩具球囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-beanbag": {
+  "file": "b29fb957339fd43a.m4a",
+  "text": "買到懶骨頭囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-bed": {
+  "file": "df1517822a8c73ef.m4a",
+  "text": "買到小床囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-bunting": {
+  "file": "62d7474df386500b.m4a",
+  "text": "買到三角彩旗囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-car": {
+  "file": "0ecddba7ad96276a.m4a",
+  "text": "買到小汽車囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-clock": {
+  "file": "1f0d12755b0c1236.m4a",
+  "text": "買到時鐘囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-cloudlamp": {
+  "file": "261b48ee7d239084.m4a",
+  "text": "買到雲朵夜燈囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-crate": {
+  "file": "a33c63317b050a33.m4a",
+  "text": "買到木箱囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-curtain": {
+  "file": "2ff7c17e7521637d.m4a",
+  "text": "買到小窗簾囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-dino": {
+  "file": "09b0dd25bf3f8c8c.m4a",
+  "text": "買到恐龍囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-fishbowl": {
+  "file": "f59f53b7fe1d4fdc.m4a",
+  "text": "買到魚缸囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-frame": {
+  "file": "2110bb6931699c60.m4a",
+  "text": "買到星星畫框囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-lamp": {
+  "file": "4f6824a34971a3aa.m4a",
+  "text": "買到落地燈囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-monstera": {
+  "file": "d29f320eeefc8cf0.m4a",
+  "text": "買到龜背芋囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-piano": {
+  "file": "3b006af06cab57a1.m4a",
+  "text": "買到小鋼琴囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-plant": {
+  "file": "c352cd7760bf1209.m4a",
+  "text": "買到小盆栽囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-poster": {
+  "file": "68a389ce5f2aac56.m4a",
+  "text": "買到香蕉海報囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-rainbow": {
+  "file": "2e5dfb04c08d4595.m4a",
+  "text": "買到彩虹囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-rocket": {
+  "file": "175055e54ea358a8.m4a",
+  "text": "買到火箭囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-rug": {
+  "file": "d67a8a6967f24d7f.m4a",
+  "text": "買到圓地毯囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-shelf": {
+  "file": "e7648b2fa69430ef.m4a",
+  "text": "買到書架囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-table": {
+  "file": "836281fe77c76bc1.m4a",
+  "text": "買到桌椅囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-tent": {
+  "file": "27c8d21ec8096bc8.m4a",
+  "text": "買到帳篷囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.decor-wallshelf": {
+  "file": "9430b937b1f1a34c.m4a",
+  "text": "買到牆上層板囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.floor-checker": {
+  "file": "7b65968431085a10.m4a",
+  "text": "買到粉彩格子地墊囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.floor-grass": {
+  "file": "27e56e8f12942648.m4a",
+  "text": "買到草地囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.floor-oak": {
+  "file": "0e4fbd29ff4e65d2.m4a",
+  "text": "買到白橡木囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.grape": {
+  "file": "726e529d1c96393b.m4a",
+  "text": "買到葡萄囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.hat-cap": {
+  "file": "b70d5f354b802ba1.m4a",
+  "text": "買到棒球帽囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.hat-chef": {
+  "file": "963a4df81f1cf58b.m4a",
+  "text": "買到廚師帽囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.hat-crown": {
+  "file": "da9471021bfd0179.m4a",
+  "text": "買到皇冠囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.hat-flower": {
+  "file": "127e751cc577af22.m4a",
+  "text": "買到花花帽囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.hat-party": {
+  "file": "556411bac1d4466c.m4a",
+  "text": "買到派對帽囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.hat-straw": {
+  "file": "98b2d0c05a6edc02.m4a",
+  "text": "買到草帽囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.milk": {
+  "file": "2db6cfdcab925bcf.m4a",
+  "text": "買到牛奶囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.peach": {
+  "file": "09bc3870551c34e3.m4a",
+  "text": "買到桃子囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.riceball": {
+  "file": "ee37e2539d1328b7.m4a",
+  "text": "買到飯糰囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.wall-banana": {
+  "file": "9b851b75a3278528.m4a",
+  "text": "買到香蕉圖案囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.wall-clouds": {
+  "file": "8d52ca23ce69bfcc.m4a",
+  "text": "買到雲朵囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.wall-mint": {
+  "file": "a91adaf3d6f7b24b.m4a",
+  "text": "買到薄荷條紋囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.wall-pink": {
+  "file": "ae61795b7dc72b0b.m4a",
+  "text": "買到粉色點點囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.wall-stars": {
+  "file": "ef3edac04eba5435.m4a",
+  "text": "買到星空藍囉！",
+  "voice": "mama|"
+ },
+ "fb.buy.watermelon": {
+  "file": "e2be13d5caa6ddc2.m4a",
+  "text": "買到西瓜囉！",
+  "voice": "mama|"
+ },
+ "fb.coloring.price.30": {
+  "file": "298d6cf73b6b8a62.m4a",
+  "text": "這張要用30顆星星，在商店換喔",
+  "voice": "mama|"
+ },
+ "fb.coloring.price.40": {
+  "file": "a2ce7e728127c063.m4a",
+  "text": "這張要用40顆星星，在商店換喔",
+  "voice": "mama|"
+ },
+ "fb.coloring.price.50": {
+  "file": "880c24462ecbe0fc.m4a",
+  "text": "這張要用50顆星星，在商店換喔",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-ball": {
+  "file": "2c39266ea954c029.m4a",
+  "text": "玩具球做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-beanbag": {
+  "file": "a2b8b3922212c210.m4a",
+  "text": "懶骨頭做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-bed": {
+  "file": "c447a806d80ee930.m4a",
+  "text": "小床做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-bunting": {
+  "file": "c9c241b8c1aa15a4.m4a",
+  "text": "三角彩旗做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-car": {
+  "file": "b90b26f76c8a81f8.m4a",
+  "text": "小汽車做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-clock": {
+  "file": "4b684e79e91dc9e0.m4a",
+  "text": "時鐘做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-cloudlamp": {
+  "file": "81dba8f4c6e77071.m4a",
+  "text": "雲朵夜燈做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-crate": {
+  "file": "8154febc13008dcc.m4a",
+  "text": "木箱做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-curtain": {
+  "file": "36f60d5b7ad50ead.m4a",
+  "text": "小窗簾做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-dino": {
+  "file": "eb1fe4a76b60fbb9.m4a",
+  "text": "恐龍做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-fishbowl": {
+  "file": "b7e99eeea7d39d20.m4a",
+  "text": "魚缸做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-frame": {
+  "file": "1eecef0b02cc86f1.m4a",
+  "text": "星星畫框做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-lamp": {
+  "file": "f4564601f142f71b.m4a",
+  "text": "落地燈做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-monstera": {
+  "file": "43450ec90bcb66fc.m4a",
+  "text": "龜背芋做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-piano": {
+  "file": "90b91cd5c3a64707.m4a",
+  "text": "小鋼琴做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-plant": {
+  "file": "66c68985c059764a.m4a",
+  "text": "小盆栽做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-poster": {
+  "file": "132a755aa6708724.m4a",
+  "text": "香蕉海報做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-rainbow": {
+  "file": "c0b2ec6517d1aef3.m4a",
+  "text": "彩虹做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-rocket": {
+  "file": "07699a6fe95280bd.m4a",
+  "text": "火箭做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-rug": {
+  "file": "776f12aadab2106b.m4a",
+  "text": "圓地毯做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-shelf": {
+  "file": "faeb62b81e754de1.m4a",
+  "text": "書架做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-table": {
+  "file": "4c840a1ca8335d07.m4a",
+  "text": "桌椅做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-tent": {
+  "file": "9a3a6fa7a3010961.m4a",
+  "text": "帳篷做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.decor-wallshelf": {
+  "file": "8d5375b99a0423ce.m4a",
+  "text": "牆上層板做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.floor-checker": {
+  "file": "eb5dc36742a445a4.m4a",
+  "text": "粉彩格子地墊做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.floor-grass": {
+  "file": "b53d1309d53be82d.m4a",
+  "text": "草地做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.floor-oak": {
+  "file": "36fd788c8306edb4.m4a",
+  "text": "白橡木做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.floor-wood": {
+  "file": "f833864b5fd94da6.m4a",
+  "text": "原木做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.short": {
+  "file": "da8192749226075a.m4a",
+  "text": "材料還不夠喔，去冒險找材料吧",
+  "voice": "mama|"
+ },
+ "fb.craft.wall-banana": {
+  "file": "1efcb11a1c0417a4.m4a",
+  "text": "香蕉圖案做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.wall-clouds": {
+  "file": "935e1a76f9aa2a62.m4a",
+  "text": "雲朵做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.wall-cream": {
+  "file": "62cbd3fd13483a90.m4a",
+  "text": "奶油素色做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.wall-mint": {
+  "file": "2dc8cfff5ac0d687.m4a",
+  "text": "薄荷條紋做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.wall-pink": {
+  "file": "5abe2d2ae41683ec.m4a",
+  "text": "粉色點點做好了！",
+  "voice": "mama|"
+ },
+ "fb.craft.wall-stars": {
+  "file": "eee8ee5e24d7f500.m4a",
+  "text": "星空藍做好了！",
+  "voice": "mama|"
+ },
+ "fb.refund.apple": {
+  "file": "e251e70caf650081.m4a",
+  "text": "蘋果退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.banana": {
+  "file": "58166fbedc040616.m4a",
+  "text": "香蕉退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.cake": {
+  "file": "21f95a4f17227878.m4a",
+  "text": "蛋糕退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.carrot": {
+  "file": "6c760903601167b5.m4a",
+  "text": "胡蘿蔔退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-banana-tree": {
+  "file": "abb12a0bddb9c6a2.m4a",
+  "text": "香蕉樹退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-car": {
+  "file": "8462c3cfec55ebad.m4a",
+  "text": "小汽車退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-chick": {
+  "file": "7039ed38c93cd57e.m4a",
+  "text": "小雞退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-clouds": {
+  "file": "132bdb07b1ce69d6.m4a",
+  "text": "雲朵彩虹退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-dragon-fish": {
+  "file": "70ea0e36f1fcb968.m4a",
+  "text": "龍宮小魚退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-fish": {
+  "file": "2c03cb571cd64785.m4a",
+  "text": "小魚退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-flame-mountain": {
+  "file": "72ef515994135cf7.m4a",
+  "text": "火焰山退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-flower": {
+  "file": "e5e884e2e930ed17.m4a",
+  "text": "花朵退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-flower-fruit-mountain": {
+  "file": "8bca4bdd36e3b49e.m4a",
+  "text": "花果山退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-house": {
+  "file": "975c7214ac33c42b.m4a",
+  "text": "小房子退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-awu-banana": {
+  "file": "100fa84b46c001e1.m4a",
+  "text": "阿悟抱香蕉退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-awu-bath": {
+  "file": "10422fff4b2b6f83.m4a",
+  "text": "阿悟洗澡退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-awu-garden": {
+  "file": "cfcbfd1a932a81ce.m4a",
+  "text": "阿悟的花園退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-awu-ocean": {
+  "file": "76803033e3c0f64c.m4a",
+  "text": "海底大冒險退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-awu-space": {
+  "file": "8a4e485b24b9dcef.m4a",
+  "text": "阿悟在月球退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-birthday-cake": {
+  "file": "2b79d48d1607f40e.m4a",
+  "text": "生日蛋糕退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-castle": {
+  "file": "9d43bb7d3a8025da.m4a",
+  "text": "童話城堡退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-city-street": {
+  "file": "2b7e8b9757a2fb0a.m4a",
+  "text": "小城街道退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-dino": {
+  "file": "ea18fb56f7bb6dba.m4a",
+  "text": "小恐龍退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-farm": {
+  "file": "72ded33e7ecb1820.m4a",
+  "text": "開心農場退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-ice-cream": {
+  "file": "1fda5afabb67f271.m4a",
+  "text": "冰淇淋退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-mandala-flower": {
+  "file": "be0a4d4f4eeb9154.m4a",
+  "text": "花朵曼陀羅退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-rocket": {
+  "file": "9ab72c70ab094f35.m4a",
+  "text": "小火箭退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-train": {
+  "file": "51f80eb862ebd215.m4a",
+  "text": "小火車退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-whale": {
+  "file": "a1a29dcf48236deb.m4a",
+  "text": "小鯨魚退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-line-wukong-dragon": {
+  "file": "5d805f32e523e608.m4a",
+  "text": "悟空與小龍退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-monkey": {
+  "file": "b7eb24ca006d016e.m4a",
+  "text": "小猴子退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-nimbus": {
+  "file": "c15c5243d0222f33.m4a",
+  "text": "筋斗雲退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-peach-garden": {
+  "file": "4f99c8615deadfda.m4a",
+  "text": "蟠桃園退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-staff": {
+  "file": "302edc36018d9723.m4a",
+  "text": "金箍棒退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-sun-moon": {
+  "file": "9114753cd28846c0.m4a",
+  "text": "太陽月亮退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-tang-horse": {
+  "file": "edd1b7c8abb23b90.m4a",
+  "text": "唐僧的馬退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-water-curtain": {
+  "file": "ae5518c957170a0d.m4a",
+  "text": "水簾洞退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.coloring-wukong-cloud": {
+  "file": "88df5e45cbb19920.m4a",
+  "text": "筋斗雲上的阿悟退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.cookie": {
+  "file": "4ce8b39afe1c33a1.m4a",
+  "text": "餅乾退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-ball": {
+  "file": "430983c54fac9358.m4a",
+  "text": "玩具球退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-beanbag": {
+  "file": "730d1494cc2574a2.m4a",
+  "text": "懶骨頭退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-bed": {
+  "file": "f7d55d8c111eaf4b.m4a",
+  "text": "小床退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-bunting": {
+  "file": "4bb42c592b3f5ac6.m4a",
+  "text": "三角彩旗退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-car": {
+  "file": "8462c3cfec55ebad.m4a",
+  "text": "小汽車退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-clock": {
+  "file": "53c84f354e4ec406.m4a",
+  "text": "時鐘退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-cloudlamp": {
+  "file": "349339c358b3dd94.m4a",
+  "text": "雲朵夜燈退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-crate": {
+  "file": "77da224d535912b6.m4a",
+  "text": "木箱退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-curtain": {
+  "file": "7daa8785cbc2df7f.m4a",
+  "text": "小窗簾退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-dino": {
+  "file": "0f30b2c2b5aa6cee.m4a",
+  "text": "恐龍退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-fishbowl": {
+  "file": "c6e3184d7a2e4d7d.m4a",
+  "text": "魚缸退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-frame": {
+  "file": "a351027b124570f4.m4a",
+  "text": "星星畫框退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-lamp": {
+  "file": "690742096d4803ac.m4a",
+  "text": "落地燈退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-monstera": {
+  "file": "6c931b0d30c73a16.m4a",
+  "text": "龜背芋退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-piano": {
+  "file": "4c283f1feba7de83.m4a",
+  "text": "小鋼琴退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-plant": {
+  "file": "f967304063f921f4.m4a",
+  "text": "小盆栽退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-poster": {
+  "file": "123c258b4e7ef7cf.m4a",
+  "text": "香蕉海報退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-rainbow": {
+  "file": "e9fbc64e0f8f7e8b.m4a",
+  "text": "彩虹退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-rocket": {
+  "file": "36c3119fed5726bf.m4a",
+  "text": "火箭退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-rug": {
+  "file": "6ebab9f2e45f8509.m4a",
+  "text": "圓地毯退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-shelf": {
+  "file": "9ba92adc6859d052.m4a",
+  "text": "書架退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-table": {
+  "file": "fbd25dd405bb8c48.m4a",
+  "text": "桌椅退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-tent": {
+  "file": "6604a747484bb705.m4a",
+  "text": "帳篷退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.decor-wallshelf": {
+  "file": "76152bfbbe65b9a4.m4a",
+  "text": "牆上層板退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.floor-checker": {
+  "file": "a6865e93051d540e.m4a",
+  "text": "粉彩格子地墊退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.floor-grass": {
+  "file": "b6b6873102f2d30b.m4a",
+  "text": "草地退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.floor-oak": {
+  "file": "5d08ec47fd82c4b9.m4a",
+  "text": "白橡木退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.grape": {
+  "file": "04b4a70de4da8775.m4a",
+  "text": "葡萄退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.hat-cap": {
+  "file": "76238e159561dc9b.m4a",
+  "text": "棒球帽退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.hat-chef": {
+  "file": "4c612ab82918807c.m4a",
+  "text": "廚師帽退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.hat-crown": {
+  "file": "2c90a1d4bb70f996.m4a",
+  "text": "皇冠退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.hat-flower": {
+  "file": "066e4a17446de5b3.m4a",
+  "text": "花花帽退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.hat-party": {
+  "file": "d33f5a231756fff3.m4a",
+  "text": "派對帽退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.hat-straw": {
+  "file": "bdd8712296bc2269.m4a",
+  "text": "草帽退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.milk": {
+  "file": "eb25407a77daaab7.m4a",
+  "text": "牛奶退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.peach": {
+  "file": "beca5dcbd39649c7.m4a",
+  "text": "桃子退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.riceball": {
+  "file": "42926f05bcf8af99.m4a",
+  "text": "飯糰退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.wall-banana": {
+  "file": "32e3e30ea0a0acea.m4a",
+  "text": "香蕉圖案退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.wall-clouds": {
+  "file": "1b66b94c780b29b6.m4a",
+  "text": "雲朵退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.wall-mint": {
+  "file": "ae53cc366f6fd003.m4a",
+  "text": "薄荷條紋退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.wall-pink": {
+  "file": "06c0700bd70fd860.m4a",
+  "text": "粉色點點退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.wall-stars": {
+  "file": "3e07e9fde64b2d0a.m4a",
+  "text": "星空藍退回囉",
+  "voice": "mama|"
+ },
+ "fb.refund.watermelon": {
+  "file": "d34f04797c2b1713.m4a",
+  "text": "西瓜退回囉",
+  "voice": "mama|"
+ },
+ "fb.task.undo": {
+  "file": "85be390b2db5a6b4.m4a",
+  "text": "收回囉",
+  "voice": "mama|"
+ },
  "flip.done": {
   "file": "b0009a1bccd473b9.m4a",
   "text": "全部都找到了！",
