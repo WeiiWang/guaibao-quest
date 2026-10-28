@@ -59,6 +59,9 @@ export const ENGLISH_ISLAND: ChapterDef = {
   id: 'english-island',
   name: '英文小島',
   subtitle: '第一章',
+  // 對應 scene-map-english.png：沙灘小路上 5 塊圓形空地，由左下往右上，寶箱放在燈塔旁
+  scene: 'scene-map-english',
+  points: [[15, 76], [32, 63], [52, 49], [73, 38], [88, 25], [93, 14]],
   stations: [
     { index: 1, name: '白沙灘', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
     { index: 2, name: '椰子樹下', material: 'flower', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
@@ -74,6 +77,9 @@ export const LIFE_TOWN: ChapterDef = {
   id: 'life-town',
   name: '生活小鎮',
   subtitle: '第一章',
+  // 對應 scene-map-life.png：小鎮石板路上 5 塊圓形空地，寶箱放在鐘樓前
+  scene: 'scene-map-life',
+  points: [[15, 80], [33, 61], [49, 43], [68, 35], [87, 21], [92, 9]],
   stations: [
     { index: 1, name: '小鎮廣場', material: 'flower', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
     { index: 2, name: '洗手台', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'stepOrder', 'pick', 'pick'] },
@@ -89,6 +95,9 @@ export const NATURE_FOREST: ChapterDef = {
   id: 'nature-forest',
   name: '自然森林',
   subtitle: '第一章',
+  // 對應 scene-map-nature.png：四季森林小徑上 5 塊圓形空地，寶箱放在雪樹下
+  scene: 'scene-map-nature',
+  points: [[11, 79], [33, 64], [52, 51], [70, 40], [86, 27], [92, 12]],
   stations: [
     { index: 1, name: '森林入口', material: 'wood', kind: 'normal', slots: ['pick', 'pick', 'pick', 'pick', 'pick'] },
     { index: 2, name: '小花園', material: 'flower', kind: 'normal', slots: ['pick', 'pick', 'stepOrder', 'pick', 'pick'] },

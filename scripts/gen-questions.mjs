@@ -885,7 +885,13 @@ const wordPhrases = (list, phrases) => shuffle(list.flatMap((w) => Array.from({ 
 const SPELLABLE = [...EN_THINGS.filter((w) => w.length <= 5), ...['red', 'blue', 'pink', 'green'], ...EN_NUMS.filter((w) => w.length <= 5)]
 const spellCands = shuffle(SPELLABLE.flatMap((w) => [...w].map((_, at) => [w, at]))).map(([w, at], k) => [w, at, k % 3])
 
-const english1 = cell('english', 1, [{ count: 40, cands: wordPhrases(EN_THINGS, 3), build: (i, ctx, [w, p]) => hearQ(i, ctx, w, p) }])
+// 難度 1：除了聽英文選圖（hear），再混入看圖選字（pic2en）和中翻英（zh2en）。後兩種的字卡有喇叭可以先聽（見 EnglishView）。
+// 新題接在最後面，原本 40 題的 id 不變。
+const english1 = cell('english', 1, [
+  { count: 40, cands: wordPhrases(EN_THINGS, 3), build: (i, ctx, [w, p]) => hearQ(i, ctx, w, p) },
+  { count: 20, cands: wordPhrases(EN_THINGS, 3), build: (i, ctx, [w, p]) => pic2enQ(i, ctx, w, p) },
+  { count: 20, cands: wordPhrases(EN_THINGS, 3), build: (i, ctx, [w, p]) => zh2enQ(i, ctx, w, p) },
+])
 const english2 = cell('english', 2, [
   { count: 14, cands: wordPhrases(EN_COLORS, 3), build: (i, ctx, [w, p]) => hearQ(i, ctx, w, p) },
   { count: 14, cands: wordPhrases(EN_NUMS, 3), build: (i, ctx, [w, p]) => hearQ(i, ctx, w, p) },
@@ -1353,6 +1359,10 @@ const nature1 = cell(
   [
     { count: 12, cands: WEATHER_C, build: (i, ctx, [w, ph]) => natWeatherQ(i, ctx, w, 3, ph) },
     { count: 20, cands: ANIMAL_C, build: (i, ctx, [a, ph]) => natAnimalNameQ(i, ctx, a, 3, ph) },
+    // 第 1 章也要有季節、動物的家、植物生長，不要只有找動物（試玩審查 G2）；接在後面，原本題目的 id 不變
+    { count: 10, cands: HOME_C, build: (i, ctx, [a, ph]) => natHomeQ(i, ctx, a, 3, ph) },
+    { count: 8, cands: SEASON_C, build: (i, ctx, [s, ph]) => natSeasonPicQ(i, ctx, s, ph) },
+    { count: 9, cands: PLANT_C, build: (i, ctx, [p, ph]) => natPlantStageQ(i, ctx, p, 3, ph) },
   ],
   NP,
 )
@@ -1538,6 +1548,9 @@ const measure4 = cell(
 
 // ---------- v6 第 2 章：空間方位 ----------
 // 場景座標與位置判斷見 src/learning/space.ts（畫面、產生器、單元測試共用）。
+// 上面／下面只用「懸空」的桌子或箱子：貼地的帳篷、床、沙發的「下面」有地面下方或前方兩種解讀（試玩審查 G7）
+const UP_DOWN_PROPS = ['decor-table', 'decor-crate']
+const needsFloat = (rels) => rels.some((r) => r === 'above' || r === 'below')
 const SPACE_SUBJECTS = ['obj-chick', 'obj-fish', 'obj-rabbit', 'obj-apple', 'obj-banana', 'obj-peach', 'obj-star', 'obj-flower', 'obj-grape', 'obj-shell']
 const PROP_NAME = Object.fromEntries(PROPS.map((p) => [p.id, p.name]))
 const REL_HINT = {
@@ -1559,7 +1572,7 @@ const sceneChoice = (id, anchor, subject, rel) => ({ id, scene: { anchor, subjec
 function whereQ(i, ctx, k, relPool, anchorPool, phrase, subject) {
   const rels = sample(relPool, k)
   const target = rels[Math.floor(rnd() * rels.length)]
-  const anchor = pick(anchorPool.filter((a) => rels.every((r) => r !== 'inside' || INSIDE_PROPS.includes(a))))
+  const anchor = pick(anchorPool.filter((a) => rels.every((r) => r !== 'inside' || INSIDE_PROPS.includes(a)) && (!needsFloat(rels) || UP_DOWN_PROPS.includes(a))))
   if (!anchor) reject()
   // outside 和 left / right 不放在同一題（兩個都在旁邊，分不出來）
   if (rels.includes('outside') && (rels.includes('left') || rels.includes('right'))) reject()
@@ -1586,7 +1599,7 @@ const WHEREIS_FORMS = [
 const REL_PAIRS = { d2: [['above', 'below'], ['inside', 'outside']], d3: [['left', 'right']] }
 function whereIsQ(i, ctx, pairs, anchorPool, phrase, subject) {
   const pair = pick(pairs)
-  const anchor = pick(anchorPool.filter((a) => !pair.includes('inside') || INSIDE_PROPS.includes(a)))
+  const anchor = pick(anchorPool.filter((a) => (!pair.includes('inside') || INSIDE_PROPS.includes(a)) && (!needsFloat(pair) || UP_DOWN_PROPS.includes(a))))
   if (!anchor) reject()
   const target = pair[Math.floor(rnd() * 2)]
   const pos = ctx.pos(2)
@@ -1666,7 +1679,7 @@ const zoneList = (specs) => shuffle(specs).map((z, k) => ({ id: `z${k + 1}`, ...
 /** 放到某個位置：單一家具，位置是 rels 的每一個；target 是被問到的那個 */
 function placeSingleQ(i, ctx, rels, anchorPool, phrase, subject) {
   const target = pick(rels)
-  const anchor = pick(anchorPool.filter((a) => rels.every((r) => r !== 'inside' || INSIDE_PROPS.includes(a))))
+  const anchor = pick(anchorPool.filter((a) => rels.every((r) => r !== 'inside' || INSIDE_PROPS.includes(a)) && (!needsFloat(rels) || UP_DOWN_PROPS.includes(a))))
   if (!anchor) reject()
   const zones = zoneList(rels.map((rel) => ({ rel, of: 0 })))
   const pn = PROP_NAME[anchor]
@@ -1683,7 +1696,7 @@ function placeSingleQ(i, ctx, rels, anchorPool, phrase, subject) {
 }
 /** 放到某個位置：兩個家具（上面、下面，難度 4 多一個「中間」） */
 function placeDoubleQ(i, ctx, withBetween, phrase, subject) {
-  const [pa, pb] = sample(PROPS.map((p) => p.id), 2)
+  const [pa, pb] = sample(UP_DOWN_PROPS, 2)
   const specs = [
     { rel: 'above', of: 0 },
     { rel: 'above', of: 1 },

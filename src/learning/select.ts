@@ -1,4 +1,4 @@
-import { QUESTIONS, questionsFor } from './bank'
+import { getQuestion, QUESTIONS, questionsFor } from './bank'
 import { dueReviews } from './skills'
 import { STATION_SIZE } from './scoring'
 import { makeRng, pickOne, shuffled, type Rng } from './rng'
@@ -33,9 +33,89 @@ export interface PickOptions {
   gentle?: boolean
   /** 只抽這種互動的題（沒寫 = 不限）；沒有這種題就回傳 null */
   interaction?: Interaction
+  /** 額外的過濾條件（例如同型題上限、近期答案不重複）；全部被擋掉就回傳 null，由呼叫端放寬後再抽 */
+  accept?: (q: Question) => boolean
+  /** 這一站已經出過的題型次數：同分時優先抽「出現次數最少」的題型，讓一站的題型分散 */
+  typeCounts?: ReadonlyMap<string, number>
+  /** 翻牌題：優先抽接近這個格數的（可以跨難度，最多比目前難度高 1 級） */
+  flipCells?: number
 }
 
+/** 一站內同一個題型最多幾題（題庫不夠時才放寬） */
+export const MAX_SAME_TYPE = 2
+/** 記憶翻牌每站最多幾次 */
+export const MAX_FLIP_PER_STATION = 1
+/** 同一個物件或答案，在最近幾題內不重複當答案 */
+export const ANSWER_WINDOW = 8
+
 const interactionOf = (q: Question): Interaction => q.interaction ?? 'pick'
+
+/** 翻牌題的格數 */
+export const flipCellsOf = (q: Question): number => (q.params?.cols ?? 2) * (q.params?.rows ?? 2)
+
+/**
+ * 一題的「答案物件」：同一個物件或答案 id 不要在最近幾題內重複當答案。
+ * 只算看得出是「哪個東西」的答案：物件圖、英文單字、情境圖。數字、是非、位置這類答案選項很少，不算。
+ */
+export function answerKeyOf(q: Question): string | null {
+  const it = interactionOf(q)
+  if (it === 'tapN') return q.params?.obj ? `o:${q.params.obj}` : null
+  if (it === 'place') return q.params?.subject ? `o:${q.params.subject}` : null
+  if (it !== 'pick') return null
+  if (q.skill === 'english') return q.params?.word ? `en:${q.params.word}` : null
+  if (q.type === 'spot' || q.type === 'where' || q.type === 'whereIs') return null
+  const c = q.choices.find((x) => x.id === q.answer)
+  if (!c) return null
+  if (c.obj) return `o:${c.obj}`
+  if (c.art) return `a:${c.art}`
+  return null
+}
+
+/** 最近作答的幾題各自的答案物件（舊到新；沒有答案物件的題是 null）。找不到的題目（題庫改版）略過 */
+export function recentAnswerKeys(attempts: readonly Pick<Attempt, 'questionId' | 'at'>[], lookup: (id: string) => Question | undefined = getQuestion, n = ANSWER_WINDOW): (string | null)[] {
+  const out: (string | null)[] = []
+  const sorted = [...attempts].sort((a, b) => a.at - b.at)
+  for (let k = sorted.length - 1; k >= 0 && out.length < n; k--) {
+    const q = lookup(sorted[k].questionId)
+    if (q) out.unshift(answerKeyOf(q))
+  }
+  return out
+}
+
+/** 一站已排好的題裡，各題型出現幾次 */
+function typeCountsOf(plan: readonly (PlannedQuestion | undefined)[], skip = -1): Map<string, number> {
+  const m = new Map<string, number>()
+  plan.forEach((p, i) => {
+    if (p && i !== skip) m.set(p.question.type, (m.get(p.question.type) ?? 0) + 1)
+  })
+  return m
+}
+
+/**
+ * 第 i 題的過濾條件（B2）：同一站同一個題型最多 2 題、翻牌最多 1 次、答案物件在最近 8 題內不重複。
+ * relax：0 = 全部遵守；1 = 放寬答案不重複；2 = 再放寬題型上限（翻牌上限一律遵守）
+ */
+function guardFor(plan: readonly (PlannedQuestion | undefined)[], i: number, history: readonly (string | null)[], relax: 0 | 1 | 2): (q: Question) => boolean {
+  const types = typeCountsOf(plan, i)
+  const keys = new Set<string>()
+  for (let j = 0; j < plan.length; j++) {
+    const p = plan[j]
+    if (!p || j === i) continue
+    const k = answerKeyOf(p.question)
+    if (k) keys.add(k)
+  }
+  const room = ANSWER_WINDOW - i
+  if (room > 0) for (const k of history.slice(-room)) if (k) keys.add(k)
+  return (q) => {
+    if (q.type === 'flip' && (types.get('flip') ?? 0) >= MAX_FLIP_PER_STATION) return false
+    if (relax < 2 && (types.get(q.type) ?? 0) >= MAX_SAME_TYPE) return false
+    if (relax < 1) {
+      const k = answerKeyOf(q)
+      if (k && keys.has(k)) return false
+    }
+    return true
+  }
+}
 
 /**
  * 抽一題：排除 exclude；在剩下的題裡，優先「作答次數最少」的，
@@ -43,13 +123,29 @@ const interactionOf = (q: Question): Interaction => q.interaction ?? 'pick'
  * 舊紀錄裡已經不存在的題目 id 只會被當成「沒有人用到」，不影響抽題。
  */
 export function pickQuestion(opts: PickOptions): Question | null {
-  const pool = questionsFor(opts.skill, opts.difficulty, opts.bank ?? QUESTIONS, opts.gentle).filter(
-    (q) => !opts.exclude?.has(q.id) && (!opts.interaction || interactionOf(q) === opts.interaction),
+  const bank = opts.bank ?? QUESTIONS
+  let base = questionsFor(opts.skill, opts.difficulty, bank, opts.gentle)
+  // 翻牌題隨站數加大格數：跨難度找最接近目標格數的（最多高 1 級）
+  if (opts.flipCells !== undefined && opts.interaction === 'flip' && !opts.gentle) {
+    const wide = [...Array.from({ length: Math.min(4, opts.difficulty + 1) }, (_, k) => questionsFor(opts.skill, (k + 1) as Difficulty, bank, false))].flat().filter((q) => interactionOf(q) === 'flip')
+    if (wide.length) {
+      const dist = (q: Question) => Math.abs(flipCellsOf(q) - (opts.flipCells as number))
+      const best = Math.min(...wide.filter((q) => !opts.exclude?.has(q.id) && (!opts.accept || opts.accept(q))).map(dist))
+      if (Number.isFinite(best)) base = wide.filter((q) => dist(q) === best)
+    }
+  }
+  const pool = base.filter(
+    (q) => !opts.exclude?.has(q.id) && (!opts.interaction || interactionOf(q) === opts.interaction) && (!opts.accept || opts.accept(q)),
   )
   if (pool.length === 0) return null
   const cnt = (q: Question) => opts.seen.count.get(q.id) ?? 0
   const fewest = Math.min(...pool.map(cnt))
-  const least = pool.filter((q) => cnt(q) === fewest)
+  let least = pool.filter((q) => cnt(q) === fewest)
+  if (opts.typeCounts && least.length > 1) {
+    const tc = (q: Question) => opts.typeCounts?.get(q.type) ?? 0
+    const lowest = Math.min(...least.map(tc))
+    least = least.filter((q) => tc(q) === lowest)
+  }
   const oldest = Math.min(...least.map((q) => opts.seen.last.get(q.id) ?? 0))
   return pickOne(
     least.filter((q) => (opts.seen.last.get(q.id) ?? 0) === oldest),
@@ -83,6 +179,8 @@ export interface PlanOptions {
   exclude?: ReadonlySet<string>
   /** 最多幾題複習題（預設 1；每日冒險 2） */
   maxReviews?: number
+  /** 翻牌題的格數目標（章節站依站別遞增；沒給 = 照難度） */
+  flipCells?: number
 }
 
 /** 各互動出在哪個技能：拿給我 N 個是數感、拖曳歸類是分類、排序是比較與排序、放到位置是空間方位、翻牌是觀察與記憶 */
@@ -115,12 +213,25 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
   const size = opts.size ?? STATION_SIZE
   const skills = opts.skills ?? MATH_SKILLS
   const seen = seenFromAttempts(opts.attempts)
+  const lookup = opts.bank ? ((m) => (id: string) => m.get(id))(new Map(opts.bank.map((q) => [q.id, q]))) : getQuestion
+  const history = recentAnswerKeys(opts.attempts, lookup)
   const used = new Set<string>()
   const avoid = opts.exclude ?? new Set<string>()
   const plan: PlannedQuestion[] = []
-  /** 先避開 avoid 抽；整個難度的題都被避開了才放寬 */
-  const pickAvoiding = (o: Omit<PickOptions, 'exclude'>): Question | null =>
-    (avoid.size ? pickQuestion({ ...o, exclude: new Set([...used, ...avoid]) }) : null) ?? pickQuestion({ ...o, exclude: used })
+  /**
+   * 抽一題：先避開 avoid、遵守 B2 的規則（同型 ≤2、翻牌 ≤1、答案近期不重複）；
+   * 題庫不夠才一步一步放寬：先放寬 avoid，再放寬答案不重複，再放寬同型上限。
+   */
+  const pickAvoiding = (o: Omit<PickOptions, 'exclude' | 'accept' | 'typeCounts'>, at: number): Question | null => {
+    const typeCounts = typeCountsOf(plan, at)
+    for (const relax of [0, 1, 2] as const) {
+      const accept = guardFor(plan, at, history, relax)
+      const q =
+        (avoid.size ? pickQuestion({ ...o, exclude: new Set([...used, ...avoid]), accept, typeCounts }) : null) ?? pickQuestion({ ...o, exclude: used, accept, typeCounts })
+      if (q) return q
+    }
+    return null
+  }
   const tail = opts.tail && opts.tail.length ? opts.tail : undefined
   const rotation: SkillId[] = Array.from({ length: size }, (_, i) =>
     tail && i === size - 1 ? tail[opts.stationIndex % tail.length] : skills[(opts.stationIndex + i) % skills.length],
@@ -153,12 +264,12 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
   const reviewSlots = new Set<number>()
   for (const d of due) {
     if (reviewSlots.size >= (opts.maxReviews ?? 1)) break
-    const q = pickAvoiding({ skill: d.skill, difficulty: d.level, seen, rng: opts.rng, bank: opts.bank, gentle: opts.gentle })
-    if (!q) continue
     let slot = -1
     for (let k = size - 1; k >= 0 && slot < 0; k--) if (order[k] === d.skill && !reviewSlots.has(k)) slot = k
     for (let k = size - 1; k >= 0 && slot < 0; k--) if (!reviewSlots.has(k)) slot = k
     if (slot < 0) break
+    const q = pickAvoiding({ skill: d.skill, difficulty: d.level, seen, rng: opts.rng, bank: opts.bank, gentle: opts.gentle }, slot)
+    if (!q) continue
     reviewSlots.add(slot)
     used.add(q.id)
     plan[slot] = { question: q, review: true, followUp: d.followUp }
@@ -169,8 +280,8 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
     const skill = order[i]
     const diff = opts.states[skill].difficulty
     // 有站型時，主互動位置抽指定互動；其他位置抽點選題（沒有就不限）
-    const base = { skill, difficulty: diff, seen, rng: opts.rng, bank: opts.bank, gentle: opts.gentle }
-    const q = pickAvoiding({ ...base, interaction: opts.slots ? (wantInteraction[i] ?? 'pick') : undefined }) ?? (opts.slots ? pickAvoiding(base) : null)
+    const base = { skill, difficulty: diff, seen, rng: opts.rng, bank: opts.bank, gentle: opts.gentle, flipCells: opts.flipCells }
+    const q = pickAvoiding({ ...base, interaction: opts.slots ? (wantInteraction[i] ?? 'pick') : undefined }, i) ?? (opts.slots ? pickAvoiding(base, i) : null)
     if (!q) throw new Error(`題庫不足：${skill} 難度 ${diff}`)
     used.add(q.id)
     plan[i] = { question: q, review: false, followUp: false }
@@ -201,6 +312,8 @@ export interface AdaptOptions {
 export function adaptPlan(opts: AdaptOptions): PlannedQuestion[] {
   const plan = [...opts.plan]
   const seen = seenFromAttempts(opts.attempts)
+  const lookup = opts.bank ? ((m) => (id: string) => m.get(id))(new Map(opts.bank.map((q) => [q.id, q]))) : getQuestion
+  const history = recentAnswerKeys(opts.attempts, lookup)
   const rescued = new Set<SkillId>()
   for (const skill of new Set(plan.map((p) => p.question.skill))) {
     const mine = opts.stationAttempts.filter((a) => a.skill === skill)
@@ -220,8 +333,13 @@ export function adaptPlan(opts: AdaptOptions): PlannedQuestion[] {
     const used = new Set(plan.map((x) => x.question.id))
     used.delete(p.question.id)
     // 換題時保持同一種互動（拿給我 N 個還是拿給我、點選還是點選）；沒有就不限
-    const base = { skill, difficulty: target as Difficulty, seen, rng: opts.rng, exclude: used, bank: opts.bank, gentle: opts.gentle }
-    const q = pickQuestion({ ...base, interaction: interactionOf(p.question) }) ?? pickQuestion(base)
+    const base = { skill, difficulty: target as Difficulty, seen, rng: opts.rng, exclude: used, bank: opts.bank, gentle: opts.gentle, typeCounts: typeCountsOf(plan, i) }
+    let q: Question | null = null
+    for (const relax of [0, 1, 2] as const) {
+      const accept = guardFor(plan, i, history, relax)
+      q = pickQuestion({ ...base, accept, interaction: interactionOf(p.question) }) ?? pickQuestion({ ...base, accept })
+      if (q) break
+    }
     if (q) plan[i] = { question: q, review: false, followUp: false }
   }
   return plan

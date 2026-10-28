@@ -141,7 +141,7 @@ describe('英文題庫完整性', () => {
   })
   it('各難度的題型：1 聽英文選圖（物件）、2 顏色數字與看圖選單字、3 聽中文選單字、4 拼字；全部 3 選 1', () => {
     const types = (d: number) => new Set(questionsFor('english', d as 1).map((q) => q.type))
-    expect(types(1)).toEqual(new Set(['hear']))
+    expect(types(1)).toEqual(new Set(['hear', 'pic2en', 'zh2en'])) // v7：難度 1 除了聽英文選圖，也有看圖選字與中翻英
     expect(types(2)).toEqual(new Set(['hear', 'pic2en']))
     expect(types(3)).toEqual(new Set(['zh2en', 'pic2en']))
     expect(types(4)).toEqual(new Set(['spell']))
