@@ -234,7 +234,7 @@ describe('英文語音：key、語言、清單', () => {
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
-  })
+  }, 60_000) // 匯出腳本用 Vite 載入商品清單（feedbackLines），每次執行要幾秒，CI 上會超過預設 5 秒
 })
 
 // ---------- speech.ts：語言參數與連續唸 ----------

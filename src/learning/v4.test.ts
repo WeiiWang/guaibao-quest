@@ -329,5 +329,5 @@ describe('句子清單匯出腳本', () => {
     // 每個 key 都是穩定的：和 allLines 一致
     // v7.2：另外加上商店／工坊的回饋句（feedbackLines）
     expect(lines).toEqual({ ...allLines(QUESTIONS), ...feedbackLines() })
-  })
+  }, 60_000) // 匯出腳本用 Vite 載入商品清單（feedbackLines），每次執行要幾秒，CI 上會超過預設 5 秒
 })
