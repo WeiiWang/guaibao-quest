@@ -127,6 +127,8 @@ export interface ColoringProgress {
   updatedAt: number
   strokes?: ColoringStroke[]
   stickers?: ColoringSticker[]
+  /** 空白畫紙的背景（見 domain/coloring.ts 的 parseBg）；著色頁沒有 */
+  bg?: string
   // ----- 以下只有畫廊作品有 -----
   /** 畫了哪一張著色頁 */
   basePageId?: string
@@ -134,9 +136,16 @@ export interface ColoringProgress {
   png?: string
   createdAt?: number
 }
+/** 筆刷種類（v7）。舊資料沒有 kind，視為 'pen' */
+/** 'erase' = 局部橡皮擦：在筆刷層用 destination-out 畫，只擦掉筆刷（不動線稿與填色）；資料仍是一條向量筆畫，可復原 */
+export type BrushKind = 'pen' | 'crayon' | 'marker' | 'glitter' | 'rainbow' | 'neon' | 'stamp' | 'erase'
 export interface ColoringStroke {
   id: string
   color: string
+  /** v7：筆刷種類，沒有就是 'pen' */
+  kind?: BrushKind
+  /** v7：印章筆的圖案（star / heart / banana / flower / paw） */
+  stamp?: string
   /** 筆刷粗細（著色頁座標空間，viewBox 400） */
   width: number
   /** 座標空間 0–400 */
@@ -172,6 +181,8 @@ export interface Settings {
   petPoopOn?: boolean
   /** v4：已送過免費著色頁（只送一次，之後使用者的庫存怎麼變都不再補） */
   freeColoringGranted?: boolean
+  /** v7：已送過點陣線稿免費頁（新手與既有玩家各送一次） */
+  freeRasterGranted?: boolean
   /** v4：首次進首頁的引導（冒險地圖按鈕跳動 + 語音）是否已經顯示過 */
   homeGuideShown?: boolean
   /** v4：孩子的年齡檔（家長設定）。未設定視為 4–5 歲。學習資料一律透過 getLearnerProfile() 讀，之後改成每個孩子各自一份 */

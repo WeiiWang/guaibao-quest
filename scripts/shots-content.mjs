@@ -162,6 +162,7 @@ try {
     await shot(page, `paint-${suffix}`)
     await page.getByTestId('tool-fill').click()
     await page.getByTestId('finish-btn').click()
+    await page.getByTestId('finish-anyway').click().catch(() => undefined)
     await page.waitForSelector('[data-testid=finish-celebration]')
     await page.waitForTimeout(900)
     await shot(page, `finish-${suffix}`)

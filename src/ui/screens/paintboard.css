@@ -1,0 +1,109 @@
+/* 繪圖板 2.0（v7）：點陣線稿、筆刷盒、空白畫紙、放大與小地圖。class 一律 pb- 開頭，避免撞名。 */
+
+/* ---------- 視窗與放大層 ---------- */
+.pb-viewport { touch-action: none; }
+.pb-world { position: absolute; inset: 0; transform-origin: 0 0; }
+.pb-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pb-live { pointer-events: none; }
+.pb-raster { position: absolute; inset: 0; pointer-events: none; }
+.pb-fill, .pb-line { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
+.raster-thumb { display: block; aspect-ratio: 1; background: #fff; object-fit: contain; }
+.raster-thumb.pending { background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="1.2" fill="%23c9aee0"/></svg>') center / 40% no-repeat; }
+.pb-mirror-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 0; border-left: calc(3px / var(--pb-z, 1)) dashed rgba(122, 82, 200, 0.8); pointer-events: none; z-index: 2; }
+.pt-handle { transform: scale(calc(1 / var(--pb-z, 1))); }
+
+/* 放大縮小：左下角的一排大按鈕（≥56px）；小地圖在右下角。上方留給孩子畫畫 */
+.pb-zoom { pointer-events: none; position: absolute; left: 10px; bottom: 10px; z-index: 6; display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.88); box-shadow: 0 3px 8px rgba(74, 59, 53, 0.22); touch-action: manipulation; }
+.pb-zbtn { pointer-events: auto; width: 56px; height: 56px; border: 0; border-radius: 50%; background: var(--lavender-soft); color: var(--ink); font: inherit; font-size: 1.7rem; font-weight: 900; line-height: 1; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.16); transition: transform 0.12s; }
+.pb-zbtn:active:not(:disabled) { transform: translateY(2px) scale(0.95); }
+.pb-zbtn:disabled { opacity: 0.4; }
+.pb-zlabel { min-width: 40px; text-align: center; font-weight: 900; font-size: 1.05rem; color: var(--ink); }
+
+/* 小地圖 */
+.pb-mini { position: absolute; right: 10px; bottom: 10px; z-index: 6; overflow: hidden; border-radius: 14px; border: 3px solid #fff; background: #fff; box-shadow: 0 3px 10px rgba(74, 59, 53, 0.35); cursor: pointer; }
+.pb-mini-base, .pb-mini-strokes { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; border-radius: 0; pointer-events: none; }
+.pb-mini-view { position: absolute; box-sizing: border-box; border: 3px solid var(--lavender-deep); border-radius: 4px; background: rgba(255, 255, 255, 0.18); box-shadow: 0 0 0 200px rgba(40, 30, 60, 0.28); pointer-events: none; }
+
+/* ---------- 筆刷盒 ---------- */
+.pb-group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pb-brush-opts { gap: 10px; }
+.pb-kind {
+  display: grid; justify-items: center; align-content: center; gap: 0; width: 84px; min-height: 62px; padding: 4px 4px 3px; border: 0; border-radius: 18px;
+  background: #fff; color: var(--ink); font: inherit; font-weight: 900; font-size: 0.78rem; line-height: 1.15;
+  box-shadow: 0 3px 0 rgba(74, 59, 53, 0.16); transition: transform 0.12s;
+}
+.pb-kind:active { transform: translateY(2px) scale(0.96); }
+.pb-kind.on { background: var(--lavender-soft); box-shadow: 0 0 0 3px var(--lavender-deep), 0 3px 0 rgba(74, 59, 53, 0.16); }
+.pb-brush-ico { display: block; border-radius: 10px; background: #fff; }
+.pb-stamp { width: 56px; height: 56px; padding: 0; border: 0; border-radius: 18px; background: #fff; display: grid; place-items: center; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.16); transition: transform 0.12s; }
+.pb-stamp:active { transform: translateY(2px) scale(0.95); }
+.pb-stamp.on { background: var(--lavender-soft); box-shadow: 0 0 0 3px var(--lavender-deep), 0 3px 0 rgba(74, 59, 53, 0.16); }
+.pb-stamp-ico { display: block; }
+.pb-mirror { min-height: 56px; }
+.pb-mirror.on { background: var(--lavender); }
+.pb-scene { min-height: 56px; padding: 0 14px 0 8px; }
+.pb-scene i { display: block; width: 34px; height: 34px; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(74, 59, 53, 0.22); }
+
+/* ---------- 著色本列表：空白畫紙卡、簡單 / 挑戰分區 ---------- */
+.pb-tier-title { margin: 18px 4px 8px; font-size: 1.35rem; font-weight: 900; color: var(--lavender-deep); }
+.pb-free-row { margin-bottom: 4px; }
+.pb-free-row .pb-free-card { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 20px; padding: 12px 18px; background: linear-gradient(160deg, #fff, var(--lavender-soft)); }
+.pb-free-title { font-weight: 900; font-size: 1.25rem; }
+.pb-free-slots { display: flex; gap: 8px; }
+.pb-free-slot { position: relative; width: 72px; aspect-ratio: 1; padding: 0; border: 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.16), inset 0 0 0 2px rgba(122, 82, 200, 0.25); transition: transform 0.12s; }
+.pb-free-slot:active { transform: translateY(2px) scale(0.95); }
+.pb-free-blank { display: block; width: 100%; height: 100%; background: repeating-linear-gradient(45deg, #fff 0 6px, #f6f1ff 6px 12px); }
+.pb-free-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pb-free-n { position: absolute; right: 4px; bottom: 2px; font-weight: 900; font-size: 0.85rem; color: var(--lavender-deep); text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
+.pb-free-hint { font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); }
+
+/* ---------- 直向 / 手機：選項那一列維持固定高度，所有東西排成一條可橫滑的列（「完成」不會被推走） ---------- */
+@media not all and (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .paint .pb-brush-opts { gap: 12px; }
+  .paint .pb-group { flex: none; flex-wrap: nowrap; }
+  .paint .pb-kind { flex: none; min-height: 54px; width: 80px; padding: 3px 4px 1px; }
+  .paint .pb-stamp { flex: none; }
+  .paint .pb-scene { flex: none; }
+  .paint .pb-zbtn { pointer-events: auto; width: 56px; height: 56px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-kind, .pb-stamp, .pb-zbtn, .pb-free-slot { transition: none; }
+}
+
+/* ---------- v7 試玩審查：手柄、最近用過、橡皮擦說明、完成確認、列表 ---------- */
+.pt-handle { right: -28px; bottom: -28px; width: 56px; height: 56px; }
+.pt-handle::after { font-size: 1.6rem; }
+.pb-recent-empty { display: inline-block; width: 48px; height: 48px; border-radius: 50%; border: 3px dashed rgba(122, 82, 200, 0.28); box-sizing: border-box; }
+.pb-eraser { gap: 12px; align-items: center; }
+.pb-erase-hint { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 6px 10px; border-radius: 18px; background: #fff; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.12); }
+.pb-eh { display: inline-flex; align-items: center; gap: 6px; font-size: 1.3rem; }
+.pb-eh b { font-size: 1.8rem; font-weight: 400; }
+.pb-eh em { font-style: normal; font-weight: 900; color: var(--lavender-deep); }
+.pb-eh-color, .pb-eh-blank { display: inline-block; width: 34px; height: 34px; border-radius: 10px; box-shadow: inset 0 0 0 2px rgba(74, 59, 53, 0.22); }
+.pb-eh-blank { background: #fff; }
+.pb-ask { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pb-ask-btn { min-height: 76px; font-size: 1.25rem; }
+.pb-tier { display: inline-block; padding: 1px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 900; }
+.pb-tier.easy { background: #dff5e1; color: #2f7a43; }
+.pb-tier.hard { background: #ffe1d0; color: #b2531f; }
+.pb-locked-thumb { position: relative; width: 100%; border: 0; background: transparent; padding: 0; display: grid; place-items: center; }
+.pb-locked-thumb .shop-thumb { filter: grayscale(1) contrast(0.9); opacity: 0.55; }
+.pb-lock-badge { position: absolute; right: 8px; bottom: 6px; width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, 0.92); display: grid; place-items: center; box-shadow: 0 3px 8px rgba(74, 59, 53, 0.3); }
+
+/* 直向 / 手機：「最近用過」的空圈會讓那條橫滑的色條太長，隱藏（高度本來就固定） */
+@media not all and (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .paint .pb-recent-empty { display: none; }
+  .paint .pb-eraser { flex-wrap: nowrap; }
+  .paint .pb-erase-hint { flex: none; flex-wrap: nowrap; padding: 2px 10px; }
+  .paint .pb-eh b { font-size: 1.5rem; }
+  .paint .pb-eh-color, .paint .pb-eh-blank { width: 28px; height: 28px; }
+}
+.pb-stamps.pb-off { display: none; }
+
+/* 橫向：「最近用過」6 格排成一列（不放文字標籤，標籤只留給螢幕報讀），省下一整列高度，色盤才看得到 */
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .pt-panel .pt-recent { flex-wrap: nowrap; gap: 8px; }
+  .pt-panel .pt-recent .pt-recent-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .pt-panel .pt-recent .swatch, .pb-recent-empty { width: 44px; height: 44px; min-height: 44px; }
+}

@@ -5,6 +5,7 @@ import {
   DEFAULT_TEMPLATES,
   FOOD_EFFECTS,
   FREE_COLORING_PAGES,
+  FREE_RASTER_PAGES,
   FULL_HUNGER,
   PURCHASE_UNDO_MS,
   SHOP_ITEMS,
@@ -34,7 +35,7 @@ import type {
 } from '../domain/types'
 import { now as clockNow } from '../domain/clock'
 import { isArtworkId, spriteSize } from '../art/items'
-import { getColoringPage } from '../art/coloring/pages'
+import { getColoringPage, isFreePage, pageName } from '../art/coloring/pages'
 import { checkApplyTheme, resolveTheme } from '../domain/theme'
 import { docOf, type PaintDoc } from '../domain/coloring'
 import { artworkSpot, clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
@@ -112,6 +113,25 @@ export class Repo {
         if (!inv || inv.qty < 1) await d.inventory.put({ id, itemId: id, qty: 1 })
       }
       await d.settings.update(SETTINGS_ID, { freeColoringGranted: true })
+      return true
+    })
+  }
+
+  /**
+   * v7：送點陣線稿的免費頁（簡單版前 2 張）。新手與既有玩家都送一次（settings.freeRasterGranted）。
+   * 不看素材備妥與否：庫存先給，素材補齊後那一頁自然出現在著色本。
+   */
+  async grantFreeRaster(): Promise<boolean> {
+    const d = this.db
+    return d.transaction('rw', [d.settings, d.inventory], async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s || s.freeRasterGranted) return false
+      for (const p of FREE_RASTER_PAGES) {
+        const id = `coloring-${p}`
+        const inv = await d.inventory.get(id)
+        if (!inv || inv.qty < 1) await d.inventory.put({ id, itemId: id, qty: 1 })
+      }
+      await d.settings.update(SETTINGS_ID, { freeRasterGranted: true })
       return true
     })
   }
@@ -1109,7 +1129,12 @@ export class Repo {
   // ---------- 著色 / 畫廊 ----------
   /** 儲存進行中的作品（填色 + 筆刷 + 貼紙） */
   async saveColoringDoc(pageId: string, doc: PaintDoc, now = this.clock()): Promise<void> {
-    await this.db.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, updatedAt: now })
+    await this.db.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, ...(doc.bg ? { bg: doc.bg } : {}), updatedAt: now })
+  }
+
+  /** 空白畫紙「再畫一張新的」：清掉這個存檔欄位（畫廊裡完成過的作品不受影響） */
+  async resetFreeCanvas(pageId: string): Promise<void> {
+    if (isFreePage(pageId)) await this.db.coloring.delete(pageId)
   }
 
   /** 只更新填色（保留筆刷與貼紙） */
@@ -1124,18 +1149,19 @@ export class Repo {
 
   /** 完成：把目前的作品存成畫廊作品（png 是完成圖的 data URL）。回傳畫廊 id */
   async completeColoring(pageId: string, doc: PaintDoc, png: string, now = this.clock()): Promise<Result<{ galleryId: string }>> {
-    if (!getColoringPage(pageId)) return { ok: false, error: '找不到這張著色頁' }
+    if (!getColoringPage(pageId) && !isFreePage(pageId)) return { ok: false, error: '找不到這張著色頁' }
     if (!png.startsWith('data:image/')) return { ok: false, error: '完成圖不正確' }
     const galleryId = newId()
     const d = this.db
     await d.transaction('rw', d.coloring, async () => {
-      await d.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, updatedAt: now })
+      await d.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, ...(doc.bg ? { bg: doc.bg } : {}), updatedAt: now })
       await d.coloring.put({
         pageId: `g:${galleryId}`,
         basePageId: pageId,
         fills: doc.fills,
         strokes: doc.strokes,
         stickers: doc.stickers,
+        ...(doc.bg ? { bg: doc.bg } : {}),
         png,
         createdAt: now,
         updatedAt: now,
@@ -1159,7 +1185,7 @@ export class Repo {
       const itemId = `art-${galleryId}`
       const already = !!(await d.placements.get(itemId))
       if (already) return { ok: true, itemId, already: true } as const
-      const base = work.basePageId ? getColoringPage(work.basePageId)?.name : undefined
+      const base = work.basePageId ? pageName(work.basePageId) : undefined
       await d.shopItems.put({ id: itemId, kind: 'decor', name: `我的畫：${base ?? '作品'}`, price: 0, asset: itemId, slot: 'wall' })
       await d.inventory.put({ id: itemId, itemId, qty: 1 })
       const hung = (await d.placements.toArray()).filter((p) => isArtworkId(p.itemId)).length

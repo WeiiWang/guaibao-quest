@@ -112,7 +112,7 @@ function Main({ childName }: { childName: string }) {
 
   useEffect(() => {
     // 商品資料就緒後，送新使用者免費著色頁（只送一次）
-    void repo.seedShop().then(() => repo.grantFreeColoring())
+    void repo.seedShop().then(() => repo.grantFreeColoring()).then(() => repo.grantFreeRaster())
   }, [])
 
   // 當天（本地日期）第一次開啟 / 跨日時產生每日任務（idempotent）

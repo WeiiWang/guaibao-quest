@@ -106,7 +106,9 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'ui.map': ['這一站過關囉，好棒！', '還沒到喔，先去前面的站', '寶箱還鎖著，通關五站就能打開喔'],
   // v6 章節選擇
   'ui.chapter': ['水簾洞還沒開，先通關花果山喔', '水簾洞開門囉！'],
-  'ui.coloring.price': ['這張要用30顆星星，在商店換喔', '這張要用40顆星星，在商店換喔'],
+  'ui.coloring.price': ['這張要用30顆星星，在商店換喔', '這張要用40顆星星，在商店換喔', '這張要用50顆星星，在商店換喔'],
+  // v7 繪圖板：選筆刷、換畫紙背景
+  'ui.paint': ['選一支筆', '換個背景吧', '擦掉不要的地方', '再畫一點好嗎？'],
   // v5 禮物：阿悟拿出禮物時說的話（句型見 src/domain/giftLines.ts，兩邊要一字不差，gifts.test.ts 會檢查）
   'ui.gift.daily': '今天的小禮物！',
   'ui.gift.collect': '你認識好多朋友，這個送給你！',

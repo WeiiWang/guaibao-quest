@@ -353,7 +353,8 @@ async function coloringList(browser) {
     await page.locator('.candy.lavender').click()
     await page.waitForSelector('[data-testid=page-monkey]')
     const owned = await page.locator('[data-testid^=page-]').evaluateAll((els) => els.map((e) => e.dataset.testid))
-    check(`[${size}] 新使用者的著色本有 2 張免費頁（小猴子、香蕉樹）`, owned.length === 2 && owned.includes('page-monkey') && owned.includes('page-banana-tree'), owned.join(','))
+    // v7：另外還送點陣線稿簡單版前 2 張（素材備妥的才會出現），所以免費頁 = 向量 2 張 + 0–2 張點陣
+    check(`[${size}] 新使用者的著色本有免費頁（小猴子、香蕉樹，加上點陣線稿的免費頁）`, owned.includes('page-monkey') && owned.includes('page-banana-tree') && owned.every((t) => ['page-monkey', 'page-banana-tree', 'page-line-awu-banana', 'page-line-awu-bath'].includes(t)), owned.join(','))
     const order = await page.locator('ul.shop-grid > li').evaluateAll((els) => els.map((e) => (e.classList.contains('locked') ? 'L' : 'O')).join(''))
     check(`[${size}] 已擁有的排在最前面，上鎖的在後面`, /^O+L+$/.test(order), order)
     const monkeyBtn = await page.locator('[data-testid=page-monkey] .thumb-btn').boundingBox()
@@ -465,6 +466,7 @@ async function artworkSpot(browser) {
       await page.mouse.click(sb.x + sb.w * 0.5, sb.y + sb.h * 0.5)
       await page.waitForTimeout(200)
       await page.getByTestId('finish-btn').click()
+      await page.getByTestId('finish-anyway').click().catch(() => undefined) // v7：完成度 < 60% 先問「再畫一點好嗎？」
       await page.getByTestId('hang-btn').click()
       await page.waitForSelector('[data-testid=hung-ok]')
       await page.getByRole('button', { name: '回著色本' }).click()

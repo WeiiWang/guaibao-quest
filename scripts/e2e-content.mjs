@@ -256,7 +256,8 @@ try {
 
     check('色盤 24 色', (await page.locator('[data-testid=palette] .swatch').count()) === 24)
     check('工具列有 填色/筆刷/貼紙/橡皮擦', (await page.locator('[data-testid^=tool-]').count()) === 4)
-    check('一開始沒有「最近用過」、復原不能按', (await page.getByTestId('recent-colors').count()) === 0 && (await page.getByTestId('undo-btn').isDisabled()))
+    // v7：「最近用過」永遠佔一列（空的時候是空圈），所以改檢查「還沒有色票」
+    check('一開始「最近用過」沒有色票、復原不能按', (await page.locator('[data-testid=recent-colors] .swatch').count()) === 0 && (await page.getByTestId('undo-btn').isDisabled()))
 
     // 填色
     await page.locator('[data-testid=palette] .swatch').nth(3).click()
@@ -292,7 +293,7 @@ try {
     await page.waitForTimeout(300)
     col = await dump(page, 'coloring')
     let doc = col.find((c) => c.pageId === 'monkey')
-    check('筆刷：strokes 存進資料庫（寬度為粗筆刷、多個點）', doc.strokes?.length === 1 && doc.strokes[0].width === 26 && doc.strokes[0].points.length >= 5, JSON.stringify(doc.strokes?.[0]?.width))
+    check('筆刷：strokes 存進資料庫（寬度為粗筆刷、多個點）', doc.strokes?.length === 1 && doc.strokes[0].width === 18 && doc.strokes[0].points.length >= 5, JSON.stringify(doc.strokes?.[0]?.width))
     const inked = await page.getByTestId('brush-canvas').evaluate((c) => {
       const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data
       for (let i = 3; i < d.length; i += 4) if (d[i] > 0) return true
@@ -380,6 +381,8 @@ try {
     await page.getByTestId('tool-fill').click()
     await clickRegion(page, 'head', 0.2, 0.3)
     await page.getByTestId('finish-btn').click()
+    // v7：完成度 < 60% 會先問「再畫一點好嗎？」，這裡選「就這樣完成」
+    await page.getByTestId('finish-anyway').click()
     await page.waitForSelector('[data-testid=finish-celebration]')
     check('完成：慶祝畫面（阿悟拿著畫說好漂亮）', (await page.getByText('好漂亮！').count()) === 1)
     col = await dump(page, 'coloring')
