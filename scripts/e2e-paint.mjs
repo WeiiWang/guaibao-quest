@@ -9,7 +9,7 @@
 import { mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { BASE, freshApp, idb, launch, makeChecker } from './e2e-lib.mjs'
+import { BASE, IS_WEBKIT, freshApp, idb, launch, makeChecker, touchSender } from './e2e-lib.mjs'
 
 const BASE_URL_OF = () => BASE
 
@@ -333,8 +333,8 @@ try {
     check('小地圖：點左上角 → 視窗移到左上（0）', ox3 < 0.05 && oy3 < 0.05, `${ox3},${oy3}`)
 
     // 雙指縮放與平移（真正的觸控事件）：不能畫出筆畫
-    const cdp = await ctx.newCDPSession(page)
-    const touch = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y], i) => ({ x, y, id: i + 1 })) })
+    const sendTouch = await touchSender(ctx, page)
+    const touch = (type, pts) => sendTouch(type, pts.map(([x, y], i) => ({ x, y, id: i + 1 })))
     await page.getByTestId('zoom-out').click() // 回 1×
     const tb = await board(page)
     const cx = tb.x + tb.width / 2
@@ -498,6 +498,9 @@ try {
     await page.mouse.click(a.x, a.y)
     await page.waitForTimeout(150)
     await page.getByTestId('finish-btn').click()
+    // 無介面的 WebKit 沒有畫面輸出時不跑下一個畫格（rAF），彈窗出不來；截一張圖逼它畫一格（真 iPad 一直在畫，沒有這問題）
+    if (IS_WEBKIT) await page.screenshot()
+    await page.getByTestId('finish-more').waitFor({ timeout: 3000 }).catch(() => {})
     check('完成度 < 60% 按完成：先問「再畫一點好嗎？」（兩個大按鈕）', (await page.getByTestId('finish-more').isVisible()) && (await page.getByTestId('finish-anyway').isVisible()) && (await page.getByTestId('finish-more').boundingBox()).height >= 56)
     await page.getByTestId('finish-more').click()
     check('選「再畫一下」：回到畫板，沒有完成', (await page.getByTestId('finish-celebration').count()) === 0 && (await dump(page, 'coloring')).every((c) => !c.pageId.startsWith('g:')))
@@ -585,8 +588,8 @@ try {
     check('色盤：換筆刷種類（出現印章圖案列）色盤位置不跳（直向）', landscape || Math.abs(y1 - y2) < 1, `${y1} vs ${y2}`)
 
     // 手掌防護：接觸面積很大的 touch 不畫
-    const cdp = await ctx.newCDPSession(page)
-    const touch = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y, r], i) => ({ x, y, id: i + 1, radiusX: r ?? 1, radiusY: r ?? 1 })) })
+    const sendTouch = await touchSender(ctx, page)
+    const touch = (type, pts) => sendTouch(type, pts.map(([x, y, r], i) => ({ x, y, id: i + 1, radiusX: r ?? 1, radiusY: r ?? 1 })))
     const cx = bb.x + bb.width / 2
     const cy = bb.y + bb.height / 2
     const n0 = (await docOf(page, PAGE)).strokes?.length ?? 0
@@ -794,8 +797,8 @@ try {
     await page.getByTestId('free-1').tap()
     await page.waitForSelector('[data-testid=free-bg]')
     await page.getByTestId('tool-sticker').tap()
-    const cdp = await ctx.newCDPSession(page)
-    const touch = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y], i) => ({ x, y, id: i + 1 })) })
+    const sendTouch = await touchSender(ctx, page)
+    const touch = (type, pts) => sendTouch(type, pts.map(([x, y], i) => ({ x, y, id: i + 1 })))
     const sz = await page.getByTestId('add-sticker-pet-adult-happy').boundingBox()
     check('手機：貼紙按鈕 ≥ 56px', sz.width >= 55.5 && sz.height >= 55.5, `${sz.width}x${sz.height}`)
     const bb = await board(page)
@@ -821,7 +824,8 @@ try {
     for (let i = 1; i <= 8; i++) await touch('touchMove', [[300 - i * 25, y0]])
     await touch('touchEnd', [])
     await page.waitForTimeout(250)
-    check('手機：在托盤上橫滑只是捲動托盤，不會貼出貼紙', ((await docOf(page, 'free-1'))?.stickers ?? []).length === 1 && (await page.getByTestId('sticker-tray').evaluate((e) => e.scrollLeft)) > scroll0, String(await page.getByTestId('sticker-tray').evaluate((e) => e.scrollLeft)))
+    // WebKit 模式的觸控是合成的 PointerEvent，不會觸發瀏覽器原生捲動，只驗證「不會貼出貼紙」
+    check('手機：在托盤上橫滑只是捲動托盤，不會貼出貼紙', ((await docOf(page, 'free-1'))?.stickers ?? []).length === 1 && (IS_WEBKIT || (await page.getByTestId('sticker-tray').evaluate((e) => e.scrollLeft)) > scroll0), String(await page.getByTestId('sticker-tray').evaluate((e) => e.scrollLeft)))
     check('手機貼紙拖曳：JS 沒有錯誤', errors.length === 0, errors.join(' | '))
     await ctx.close()
   }

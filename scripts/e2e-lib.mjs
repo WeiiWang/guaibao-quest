@@ -1,5 +1,5 @@
 // e2e 共用工具（Playwright）：找 Chromium、建立全新 App、讀寫 IndexedDB、透過 PM 分頁觸發寵物行為。
-import { chromium } from 'playwright-core'
+import { chromium, webkit } from 'playwright-core'
 import { existsSync, readdirSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
@@ -17,7 +17,73 @@ export function findChrome() {
   return undefined
 }
 
-export const launch = () => chromium.launch({ executablePath: findChrome() })
+/**
+ * E2E_BROWSER=webkit：改用 WebKit（Safari 的引擎）並模擬 iPad（觸控、行動版、2 倍解析度、iPad Safari UA）。
+ * 需要先 node node_modules/playwright-core/cli.js install webkit。
+ */
+export const IS_WEBKIT = process.env.E2E_BROWSER === 'webkit'
+export const launch = () => (IS_WEBKIT ? webkit.launch() : chromium.launch({ executablePath: findChrome() }))
+export const IPAD_CTX = IS_WEBKIT
+  ? {
+      hasTouch: true,
+      isMobile: true,
+      deviceScaleFactor: 2,
+      userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
+    }
+  : {}
+
+/**
+ * 送真實觸控（多指、接觸面積）的 sender：(type, touchPoints) => Promise。touchPoints 同 CDP 的 Input.dispatchTouchEvent。
+ * Chromium 用 CDP；WebKit 沒有 CDP，改在頁面裡派發等價的 PointerEvent（pointerType 'touch'、width/height = 接觸直徑），
+ * 測的是同一套手勢邏輯（App 只聽 pointer 事件）。WebKit 模式下 setPointerCapture 對合成的 pointerId 會丟錯，freshApp 已經把它包成不丟錯。
+ */
+export async function touchSender(ctx, page) {
+  if (!IS_WEBKIT) {
+    const cdp = await ctx.newCDPSession(page)
+    const send = (type, touchPoints) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints })
+    send.detach = () => cdp.detach()
+    return send
+  }
+  const send = (type, touchPoints) =>
+    page.evaluate(
+      ([type, pts]) => {
+        const live = (window.__synthTouch ??= new Map())
+        const fire = (name, id, p, target) => {
+          const d = Math.max(1, (p.radiusX ?? 0.5) * 2)
+          const first = [...live.keys()][0]
+          target.dispatchEvent(
+            new PointerEvent(name, {
+              bubbles: true, cancelable: true, composed: true, pointerId: 100 + id, pointerType: 'touch',
+              isPrimary: first === undefined || first === id, clientX: p.x, clientY: p.y, width: d, height: d, pressure: name === 'pointerup' ? 0 : 0.5, buttons: name === 'pointerup' ? 0 : 1,
+            }),
+          )
+        }
+        if (type === 'touchStart') {
+          for (const p of pts) {
+            if (live.has(p.id)) continue
+            const target = document.elementFromPoint(p.x, p.y) ?? document.body
+            live.set(p.id, { target, last: p })
+            fire('pointerdown', p.id, p, target)
+          }
+        } else if (type === 'touchMove') {
+          for (const p of pts) {
+            const t = live.get(p.id)
+            if (!t) continue
+            t.last = p
+            fire('pointermove', p.id, p, t.target)
+          }
+        } else {
+          for (const [id, t] of [...live]) {
+            fire(type === 'touchCancel' ? 'pointercancel' : 'pointerup', id, t.last, t.target)
+            live.delete(id)
+          }
+        }
+      },
+      [type, touchPoints],
+    )
+  send.detach = async () => {}
+  return send
+}
 
 export function makeChecker() {
   const state = { failed: 0 }
@@ -38,7 +104,22 @@ export function makeChecker() {
 export async function freshApp(browser, viewport, opts = {}) {
   // welcome: true = 保留 v7 的歡迎禮物（20 顆星星 + 1 根香蕉 + 禮物袋）；預設拿掉，讓舊測試維持「新孩子 0 星星、沒有禮物」的前提
   const { rand, tod = 'day', stage = 'adult', fast = false, bananas = 5, ctxOpts = {}, decor = [], welcome = false } = opts
-  const ctx = await browser.newContext({ viewport, ...ctxOpts })
+  const ctx = await browser.newContext({ viewport, ...IPAD_CTX, ...ctxOpts })
+  if (IS_WEBKIT) {
+    // touchSender 在 WebKit 派發合成的 PointerEvent：對它們 setPointerCapture 會丟 InvalidPointerId，包成不丟錯
+    await ctx.addInitScript(() => {
+      for (const k of ['setPointerCapture', 'releasePointerCapture']) {
+        const f = Element.prototype[k]
+        Element.prototype[k] = function (id) {
+          try {
+            return f.call(this, id)
+          } catch {
+            /* 合成的觸控指標 */
+          }
+        }
+      }
+    })
+  }
   await ctx.addInitScript(
     ({ rand, tod, fast }) => {
       try {

@@ -67,22 +67,20 @@ const addAttempts = (page, ids) =>
 /** 聲音出口的記錄：Web Speech 唸了什麼字、預錄音檔播了哪個檔 */
 const SPY = () => {
   window.__said = []
-  const hook = () => {
-    try {
-      const s = window.speechSynthesis
-      if (s && !s.__spied) {
-        const sp = s.speak.bind(s)
-        s.speak = (u) => {
-          window.__said.push(u.text)
-          return sp(u)
-        }
-        s.__spied = true
+  // 攔在原型上（WebKit 一開始的 speechSynthesis 物件和之後拿到的不一定是同一個，攔實例會漏）
+  try {
+    const proto = window.SpeechSynthesis?.prototype
+    if (proto && !proto.__spied) {
+      const sp = proto.speak
+      proto.speak = function (u) {
+        window.__said.push(u.text)
+        return sp.call(this, u)
       }
-    } catch {
-      /* ignore */
+      proto.__spied = true
     }
+  } catch {
+    /* ignore */
   }
-  hook()
   const play = HTMLMediaElement.prototype.play
   HTMLMediaElement.prototype.play = function (...a) {
     if (this.src && !this.src.startsWith('data:')) window.__said.push(`audio:${this.src}`)

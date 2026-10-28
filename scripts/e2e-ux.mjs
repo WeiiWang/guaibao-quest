@@ -5,7 +5,7 @@
 import { mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { center, drag, freshApp, getPet, idb, launch, makeChecker, patchPet } from './e2e-lib.mjs'
+import { center, drag, freshApp, getPet, idb, launch, makeChecker, patchPet, touchSender } from './e2e-lib.mjs'
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '../design/screens')
 mkdirSync(OUT, { recursive: true })
@@ -62,11 +62,13 @@ const spyAll = (ctx) =>
     window.__spoken = []
     window.__fb = []
     window.addEventListener('gq-feedback', (e) => window.__fb.push(e.detail))
+    // 攔在原型上（WebKit 一開始的 speechSynthesis 物件和之後拿到的不一定是同一個，攔實例會漏）
     try {
-      const orig = window.speechSynthesis.speak.bind(window.speechSynthesis)
-      window.speechSynthesis.speak = (u) => {
+      const proto = window.SpeechSynthesis.prototype
+      const orig = proto.speak
+      proto.speak = function (u) {
         window.__spoken.push(u.text)
-        return orig(u)
+        return orig.call(this, u)
       }
     } catch {
       /* 沒有 speechSynthesis 就沒有語音可記 */
@@ -213,16 +215,16 @@ async function feedingGuard(browser) {
 // ---------- 第 4 項：食物欄拖曳（觸控、偏水平） ----------
 /** 用 CDP 送真實觸控：從 a 拖到 b（steps 步），放開 */
 async function touchDrag(page, a, b, steps = 14) {
-  const cdp = await page.context().newCDPSession(page)
+  const send = await touchSender(page.context(), page)
   const pt = (p) => [{ x: Math.round(p.x), y: Math.round(p.y), id: 1 }]
-  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(a) })
+  await send('touchStart', pt(a))
   for (let i = 1; i <= steps; i++) {
     const p = { x: a.x + ((b.x - a.x) * i) / steps, y: a.y + ((b.y - a.y) * i) / steps }
-    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(p) })
+    await send('touchMove', pt(p))
     await page.waitForTimeout(16)
   }
-  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
-  await cdp.detach()
+  await send('touchEnd', [])
+  await send.detach()
 }
 
 async function dockTouch(browser) {
