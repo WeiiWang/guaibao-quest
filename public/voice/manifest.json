@@ -324,6 +324,136 @@
   "text": "今天的冒險完成了！",
   "voice": "mama|"
  },
+ "en.A": {
+  "file": "36aeb611acb7ba0d.m4a",
+  "text": "A",
+  "voice": "english|"
+ },
+ "en.B": {
+  "file": "e02dad5e158a68af.m4a",
+  "text": "B",
+  "voice": "english|"
+ },
+ "en.C": {
+  "file": "c610452cc667c768.m4a",
+  "text": "C",
+  "voice": "english|"
+ },
+ "en.D": {
+  "file": "34387908d79a2d32.m4a",
+  "text": "D",
+  "voice": "english|"
+ },
+ "en.E": {
+  "file": "6c1a27dc26805379.m4a",
+  "text": "E",
+  "voice": "english|"
+ },
+ "en.F": {
+  "file": "b017c96ebcfd0ee5.m4a",
+  "text": "F",
+  "voice": "english|"
+ },
+ "en.G": {
+  "file": "6ab998f970b1e51f.m4a",
+  "text": "G",
+  "voice": "english|"
+ },
+ "en.H": {
+  "file": "f8dc752cbfc930fc.m4a",
+  "text": "H",
+  "voice": "english|"
+ },
+ "en.I": {
+  "file": "7465288d4fb255f7.m4a",
+  "text": "I",
+  "voice": "english|"
+ },
+ "en.J": {
+  "file": "10fb928a6786d131.m4a",
+  "text": "J",
+  "voice": "english|"
+ },
+ "en.K": {
+  "file": "7ccdad92f296b556.m4a",
+  "text": "K",
+  "voice": "english|"
+ },
+ "en.L": {
+  "file": "b4360f68fd782cce.m4a",
+  "text": "L",
+  "voice": "english|"
+ },
+ "en.M": {
+  "file": "fb7adc1029c70ffe.m4a",
+  "text": "M",
+  "voice": "english|"
+ },
+ "en.N": {
+  "file": "26fc9b80cb9935b8.m4a",
+  "text": "N",
+  "voice": "english|"
+ },
+ "en.O": {
+  "file": "69a5cf7998f85205.m4a",
+  "text": "O",
+  "voice": "english|"
+ },
+ "en.P": {
+  "file": "abfac30254a5cf12.m4a",
+  "text": "P",
+  "voice": "english|"
+ },
+ "en.Q": {
+  "file": "2e68a8d5b526c2a1.m4a",
+  "text": "Q",
+  "voice": "english|"
+ },
+ "en.R": {
+  "file": "004ad8dc6fca62af.m4a",
+  "text": "R",
+  "voice": "english|"
+ },
+ "en.S": {
+  "file": "3237bc4116bc32a1.m4a",
+  "text": "S",
+  "voice": "english|"
+ },
+ "en.T": {
+  "file": "46e76c12cf2324ac.m4a",
+  "text": "T",
+  "voice": "english|"
+ },
+ "en.U": {
+  "file": "26d721845a1c3294.m4a",
+  "text": "U",
+  "voice": "english|"
+ },
+ "en.V": {
+  "file": "d9bfc949b2098967.m4a",
+  "text": "V",
+  "voice": "english|"
+ },
+ "en.W": {
+  "file": "ef7af6e5eb1ecb38.m4a",
+  "text": "W",
+  "voice": "english|"
+ },
+ "en.X": {
+  "file": "a1871d87671b1d8f.m4a",
+  "text": "X",
+  "voice": "english|"
+ },
+ "en.Y": {
+  "file": "61941ef33e1b5d5a.m4a",
+  "text": "Y",
+  "voice": "english|"
+ },
+ "en.Z": {
+  "file": "7635ec6a72e2db03.m4a",
+  "text": "Z",
+  "voice": "english|"
+ },
  "en.apple": {
   "file": "f2d04ca67e7402fd.m4a",
   "text": "apple",
@@ -1689,9 +1819,59 @@
   "text": "二十",
   "voice": "mama|"
  },
+ "num.21": {
+  "file": "f3312a311f0fd8f5.m4a",
+  "text": "二十一",
+  "voice": "mama|"
+ },
+ "num.22": {
+  "file": "809751bbcd1ea733.m4a",
+  "text": "二十二",
+  "voice": "mama|"
+ },
+ "num.23": {
+  "file": "02add66f8c5630f8.m4a",
+  "text": "二十三",
+  "voice": "mama|"
+ },
+ "num.24": {
+  "file": "ae5c76c7a34d9d39.m4a",
+  "text": "二十四",
+  "voice": "mama|"
+ },
+ "num.25": {
+  "file": "f75932f2c0ec53c9.m4a",
+  "text": "二十五",
+  "voice": "mama|"
+ },
+ "num.26": {
+  "file": "da679fbb9226f92b.m4a",
+  "text": "二十六",
+  "voice": "mama|"
+ },
+ "num.27": {
+  "file": "d4cd88df512dc887.m4a",
+  "text": "二十七",
+  "voice": "mama|"
+ },
+ "num.28": {
+  "file": "aee2bf6c9b0a7315.m4a",
+  "text": "二十八",
+  "voice": "mama|"
+ },
+ "num.29": {
+  "file": "6a5ddc13d7a8bd80.m4a",
+  "text": "二十九",
+  "voice": "mama|"
+ },
  "num.3": {
   "file": "74efb31b4b82ee60.m4a",
   "text": "三",
+  "voice": "mama|"
+ },
+ "num.30": {
+  "file": "eb923bf500c0aae7.m4a",
+  "text": "三十",
   "voice": "mama|"
  },
  "num.4": {
@@ -1812,6 +1992,66 @@
  "pet.bubble.9": {
   "file": "1f4c73c1dd156d43.m4a",
   "text": "整理好囉！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.1": {
+  "file": "c065e36a0d6094e2.m4a",
+  "text": "哇，是星星！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.10": {
+  "file": "9e444b33139988ec.m4a",
+  "text": "哇，是花！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.11": {
+  "file": "28d0a43a8d4f13ba.m4a",
+  "text": "哇，是蛋糕！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.12": {
+  "file": "45ec8cbea6e8f497.m4a",
+  "text": "哇，是阿悟！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.2": {
+  "file": "f8fc6e91dec255f5.m4a",
+  "text": "哇，是小魚！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.3": {
+  "file": "5641dc72004b9a8b.m4a",
+  "text": "哇，是香蕉！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.4": {
+  "file": "d2a9bb01ed2d3973.m4a",
+  "text": "哇，是蘋果！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.5": {
+  "file": "48e5c278d3bd0b7b.m4a",
+  "text": "哇，是小兔子！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.6": {
+  "file": "c8f1c53f0b0daee8.m4a",
+  "text": "哇，是小雞！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.7": {
+  "file": "17b6846736467dde.m4a",
+  "text": "哇，是小熊！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.8": {
+  "file": "7144153c367d32e5.m4a",
+  "text": "哇，是章魚！你連出來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.dots.done.9": {
+  "file": "de098dce11b33a11.m4a",
+  "text": "哇，是西瓜！你連出來了！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.gift.thanks.1": {
@@ -29902,6 +30142,26 @@
  "ui.coloring.price.3": {
   "file": "880c24462ecbe0fc.m4a",
   "text": "這張要用50顆星星，在商店換喔",
+  "voice": "mama|"
+ },
+ "ui.dots.opened": {
+  "file": "8b40b3e57546979e.m4a",
+  "text": "換到囉，開始連吧！",
+  "voice": "mama|"
+ },
+ "ui.dots.price": {
+  "file": "dfb79a99764ff9e2.m4a",
+  "text": "這張要用20顆星星換喔",
+  "voice": "mama|"
+ },
+ "ui.dots.start": {
+  "file": "fb505df1ad19c5f7.m4a",
+  "text": "從數字一開始，一個一個連起來",
+  "voice": "mama|"
+ },
+ "ui.dots.startAbc": {
+  "file": "0dea4a6b49455d67.m4a",
+  "text": "從字母 A 開始，一個一個連起來",
   "voice": "mama|"
  },
  "ui.edit.allPlaced": {
