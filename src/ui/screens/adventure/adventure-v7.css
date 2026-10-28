@@ -146,3 +146,10 @@
 
 /* ---------- 教學「跳過」：>= 56px，放到教學卡的右上角（離操作區遠一點，3 歲不容易誤觸） ---------- */
 .tutorial .tutorial-skip { top: 8px; bottom: auto; right: 10px; min-height: 56px; min-width: 56px; }
+
+/* ---------- 直向 iPad：地圖 16:9 撐滿寬度後下方會空一大片 → 標題與科目分頁留在上方，地圖與今日冒險在剩下的空間垂直置中 ---------- */
+@media (max-aspect-ratio: 1 / 1) and (min-width: 481px) {
+  .adv.adv-map { display: flex; flex-direction: column; }
+  .adv.adv-map > .adv-scroll { margin-top: auto; }
+  .adv.adv-map > :last-child { margin-bottom: auto; }
+}
