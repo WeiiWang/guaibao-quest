@@ -3,6 +3,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
 import { Art } from '../../components/Art'
 import { useFirstArt } from '../../artProbe'
+import { eggArtChain } from '../../../domain/home7'
+import { BABY_AT_FEED_COUNT } from '../../../domain/constants'
 import './adventure.css'
 import './adventure-v4.css'
 
@@ -10,7 +12,8 @@ export type Pose = 'idle' | 'happy' | 'cheer' | 'think' | 'sleepy' | 'eating' | 
 
 /** 依寵物階段挑姿勢圖：蛋沒有姿勢，其餘為 pet-<stage>-<pose>；缺圖時退回 happy / idle */
 export function companionArt(stage: 'egg' | 'baby' | 'adult', pose: Pose, feedCount = 0): string[] {
-  if (stage === 'egg') return feedCount >= 15 ? ['pet-egg-crack', 'pet-egg'] : ['pet-egg', 'pet-egg-crack']
+  // 蛋的外觀跟首頁一樣依孵化進度換（v7：pet-egg → s1 → s2 → crack）
+  if (stage === 'egg') return eggArtChain(feedCount / BABY_AT_FEED_COUNT)
   return [...new Set([pose, 'happy', 'idle'])].map((p) => `pet-${stage}-${p}`)
 }
 
