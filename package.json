@@ -29,6 +29,7 @@
     "shots:math2": "node scripts/shots-math2.mjs",
     "e2e:quest7": "node scripts/e2e-quest7.mjs",
     "e2e:home7": "node scripts/e2e-home7.mjs",
+    "e2e:dots": "node scripts/e2e-dots.mjs",
     "shots:home7": "node scripts/shots-home7.mjs"
   },
   "dependencies": {

@@ -1,4 +1,5 @@
 import { AVAILABLE_RASTER, rasterSrc, type RasterTier } from './rasterDefs'
+import { dotsPageName, parseDotsId, silhouettePath, DOTS_REGION_ID } from '../dots/dots'
 import { band, bar, barAt, circle, cloud, drop, ellipse, flame, leaf, poly, ray, rect, star } from './shapes'
 
 export interface Region {
@@ -448,7 +449,22 @@ export const COLORING_PAGES: ColoringPageDef[] = [
   ...rasterPages,
 ]
 
-export const getColoringPage = (id: string) => COLORING_PAGES.find((p) => p.id === id)
+/**
+ * v7.2 連連看：`dots:<圖名>:<關卡>` 連完之後「拿去塗色」，剪影是一個可填色的區塊（向量頁的機制原樣使用）。
+ * 這種頁面不放進 COLORING_PAGES（不在商店、不在著色本的一般列表），由 id 即時產生。
+ */
+const dotsPages = new Map<string, ColoringPageDef>()
+function dotsPageDef(id: string): ColoringPageDef | undefined {
+  const hit = dotsPages.get(id)
+  if (hit) return hit
+  const p = parseDotsId(id)
+  if (!p) return undefined
+  const def: ColoringPageDef = { id, name: dotsPageName(p.name, p.level), regions: [R(DOTS_REGION_ID, silhouettePath(p.name))], lines: [], dots: [] }
+  dotsPages.set(id, def)
+  return def
+}
+
+export const getColoringPage = (id: string) => COLORING_PAGES.find((p) => p.id === id) ?? dotsPageDef(id)
 export const isRasterPage = (p: ColoringPageDef | undefined): boolean => p?.kind === 'raster'
 
 // ---------- 空白畫紙（自由畫，3 張存檔欄位）----------

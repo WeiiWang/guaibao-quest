@@ -1,0 +1,102 @@
+/* 連連看（點點連線）v7.2：列表上的一排卡片 + 連線畫面。專屬前綴 dt-，主色 lavender。 */
+
+/* ---------- 著色本列表上的一排 ---------- */
+.dt-shelf { margin: 6px 0 4px; }
+.dt-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 14px 4px 6px; }
+.dt-title { margin: 0 !important; font-size: 1.35rem; font-weight: 900; color: var(--lavender-deep); }
+.dt-levels { display: flex; flex-wrap: wrap; gap: 8px; }
+.dt-lv {
+  display: grid; justify-items: center; align-content: center; gap: 0; min-height: 58px; min-width: 72px; padding: 4px 14px; border: 0; border-radius: 20px;
+  background: #fff; color: var(--ink); font: inherit; line-height: 1.15;
+  box-shadow: 0 4px 0 rgba(74, 59, 53, 0.16), inset 0 2px 0 rgba(255, 255, 255, 0.9); transition: transform 0.12s;
+}
+.dt-lv b { font-size: 1.05rem; font-weight: 900; }
+.dt-lv span { font-size: 0.82rem; font-weight: 800; color: var(--ink-soft); }
+.dt-lv:active { transform: translateY(3px) scale(0.96); }
+.dt-lv.on { background: var(--lavender); box-shadow: 0 4px 0 var(--lavender-deep), inset 0 2px 0 rgba(255, 255, 255, 0.55); }
+.dt-lv.on span { color: var(--ink); }
+
+.dt-strip { display: flex; gap: 12px; margin: 0; padding: 6px 4px 26px; list-style: none; overflow-x: auto; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+.dt-card { flex: 0 0 148px; display: grid; gap: 4px; justify-items: center; align-content: start; padding: 10px 8px 12px; scroll-snap-align: start; text-align: center; }
+.dt-card-btn { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; border-radius: 14px; }
+.dt-card-btn:active { transform: scale(0.96); }
+.dt-thumb { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: 14px; background: #fff; box-shadow: 0 4px 0 color-mix(in srgb, var(--theme-deep) 25%, transparent); }
+.dt-thumb.dt-dim { filter: grayscale(1) contrast(0.9); opacity: 0.55; }
+.dt-lock { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.dt-name { font-weight: 900; font-size: 1.05rem; }
+.dt-sub { font-size: 0.85rem; font-weight: 800; color: var(--ink-soft); min-height: 1.3em; }
+.dt-card[data-state='done'] .dt-sub { color: #2f7a43; }
+.dt-price { display: inline-flex; align-items: center; gap: 4px; color: var(--ink); }
+.dt-guide { text-align: center; }
+.dt-guide-thumb { width: 150px; margin: 0 auto 6px; }
+.dt-big { width: 100%; min-height: 60px; font-size: 1.2rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.dt-guide .dt-big { margin-top: 8px; }
+
+/* ---------- 連線畫面 ---------- */
+.dt-layout { display: grid; gap: 14px; grid-template-columns: 1fr; align-items: start; }
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) { .dt-layout { grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); } }
+.dt-stage { padding: 10px; display: grid; place-items: center; }
+.dt-board {
+  position: relative; width: min(100%, 76dvh); aspect-ratio: 1; margin: 0 auto; border-radius: 22px; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: radial-gradient(circle at 50% 40%, #fff, #faf7ff 70%); box-shadow: inset 0 0 0 2px rgba(74, 59, 53, 0.08);
+}
+.dt-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; background: transparent; }
+
+.dt-sil { fill: #cdbcf7; stroke: #8a73db; stroke-width: 5px; stroke-linejoin: round; opacity: 0; transition: opacity 0.6s ease; }
+.dt-phase-solid .dt-sil { opacity: 1; }
+.dt-phase-reveal .dt-sil { opacity: 0; transition: opacity 0.9s ease 0.15s; }
+.dt-img { opacity: 0; pointer-events: none; filter: drop-shadow(0 6px 6px rgba(74, 59, 53, 0.22)); }
+.dt-phase-reveal .dt-img { opacity: 1; transition: opacity 0.8s ease; }
+.dt-lines, .dt-dots { transition: opacity 0.5s ease; }
+.dt-phase-solid .dt-lines, .dt-phase-solid .dt-dots, .dt-phase-reveal .dt-lines, .dt-phase-reveal .dt-dots { opacity: 0; pointer-events: none; }
+
+.dt-line { fill: none; stroke: #8a73db; stroke-width: 5px; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.dt-rubber { stroke-dasharray: 3 9; opacity: 0.55; }
+.dt-close { stroke-dasharray: 1; stroke-dashoffset: 1; animation: dt-draw 0.5s ease forwards; }
+@keyframes dt-draw { to { stroke-dashoffset: 0; } }
+
+.dt-dot { pointer-events: none; }
+.dt-dot-c { fill: #fff; stroke: #8a73db; stroke-width: 3px; }
+.dt-dot.on .dt-dot-c { fill: #8a73db; stroke: #fff; stroke-width: 2.5px; }
+.dt-dot.next .dt-dot-c { fill: #ffd66b; stroke: #e0a52c; stroke-width: 3.5px; }
+.dt-glow { fill: rgba(255, 214, 107, 0.5); transform-box: fill-box; transform-origin: center; animation: dt-breathe 1.8s ease-in-out infinite; }
+@keyframes dt-breathe { 0%, 100% { transform: scale(0.8); opacity: 0.55; } 50% { transform: scale(1.05); opacity: 1; } }
+/* 閒置 5 秒：下一個點放大脈動 */
+.dt-idle .dt-dot.next .dt-dot-c { transform-box: fill-box; transform-origin: center; animation: dt-hint 0.8s ease-in-out infinite; }
+.dt-idle .dt-glow { animation: dt-hint-glow 0.8s ease-in-out infinite; }
+@keyframes dt-hint { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.45); } }
+@keyframes dt-hint-glow { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.7); opacity: 1; } }
+/* 點錯：輕輕晃一下 */
+.dt-wobble { animation: dt-wob 0.5s ease; }
+@keyframes dt-wob { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); } 45% { transform: translateX(4px); } 70% { transform: translateX(-2.5px); } }
+
+.dt-num { fill: var(--ink); font-weight: 900; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; font-family: inherit; pointer-events: none; }
+.dt-leader { stroke: #b9a6f5; stroke-width: 2px; stroke-linecap: round; pointer-events: none; }
+.dt-dot.next .dt-num { fill: #b2531f; }
+.dt-dot.on .dt-num { fill: #6a56b5; }
+
+.dt-actions { display: grid; gap: 12px; }
+@media (max-aspect-ratio: 5/4) and (min-width: 600px) {
+  .dt-actions { grid-template-columns: repeat(3, 1fr); }
+  .dt-actions .dt-big { font-size: 1.05rem; padding: 0 8px; }
+}
+@media (max-aspect-ratio: 5/4) { .dt-board { width: min(100%, max(300px, calc(100dvh - 470px))); } }
+.dt-panel { display: grid; gap: 12px; align-content: start; }
+.dt-next { display: flex; align-items: baseline; justify-content: center; gap: 12px; min-height: 64px; font-weight: 900; font-size: 1.3rem; }
+.dt-next-num { font-size: 3.2rem; line-height: 1; color: var(--lavender-deep); }
+.dt-bar { height: 18px; border-radius: 999px; background: var(--lavender-soft); overflow: hidden; box-shadow: inset 0 2px 0 rgba(74, 59, 53, 0.08); }
+.dt-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--lavender), var(--bubblegum)); transition: width 0.25s; }
+.dt-progress { font-variant-numeric: tabular-nums; }
+.dt-cheer { display: grid; grid-template-columns: 84px 1fr; align-items: center; gap: 10px; }
+.dt-pet { width: 84px; aspect-ratio: 1; }
+.dt-bubble { position: relative; padding: 10px 14px; border-radius: 20px; background: var(--butter-soft); font-weight: 900; font-size: 1.1rem; box-shadow: 0 3px 0 var(--butter-deep); }
+
+@media (max-width: 560px) {
+  .dt-card { flex-basis: 132px; }
+  .dt-next-num { font-size: 2.6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dt-glow, .dt-idle .dt-glow, .dt-idle .dt-dot.next .dt-dot-c, .dt-wobble, .dt-close { animation: none; }
+  .dt-close { stroke-dashoffset: 0; }
+  .dt-sil, .dt-img, .dt-lines, .dt-dots, .dt-bar i, .dt-lv, .dt-phase-reveal .dt-sil, .dt-phase-reveal .dt-img { transition: none; }
+}

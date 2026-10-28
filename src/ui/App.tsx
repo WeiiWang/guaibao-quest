@@ -11,6 +11,8 @@ import { TasksScreen } from './screens/Tasks'
 import { ShopScreen } from './screens/Shop'
 import { BagScreen } from './screens/Bag'
 import { ColoringListScreen, ColoringPlayScreen } from './screens/Coloring'
+import { DotsPlayScreen } from './screens/Dots'
+import { isDotsPageId } from '../art/dots/dots'
 import { ParentArea } from './screens/parent/ParentArea'
 import { MapScreen } from './screens/adventure/MapScreen'
 import { StageScreen } from './screens/adventure/StageScreen'
@@ -34,6 +36,7 @@ export type Screen =
   | { name: 'bag' }
   | { name: 'coloring' }
   | { name: 'paint'; pageId: string }
+  | { name: 'dots'; pageId: string }
   | { name: 'map' }
   | { name: 'workshop' }
   | { name: 'parent' }
@@ -151,10 +154,13 @@ function Main({ childName }: { childName: string }) {
         body = <BagScreen onBack={home} go={go} />
         break
       case 'coloring':
-        body = <ColoringListScreen onBack={home} onOpen={(pageId) => go({ name: 'paint', pageId })} onGallery={() => go('gallery')} onShop={() => go({ name: 'shop', tab: 'coloring' })} />
+        body = <ColoringListScreen onBack={home} onOpen={(pageId) => go(isDotsPageId(pageId) ? { name: 'dots', pageId } : { name: 'paint', pageId })} onGallery={() => go('gallery')} onShop={() => go({ name: 'shop', tab: 'coloring' })} />
         break
       case 'paint':
         body = <ColoringPlayScreen pageId={screen.pageId} onBack={() => go('coloring')} go={go} />
+        break
+      case 'dots':
+        body = <DotsPlayScreen key={screen.pageId} pageId={screen.pageId} onBack={() => go('coloring')} go={go} />
         break
       case 'parent':
         body = <ParentArea onExit={home} />
