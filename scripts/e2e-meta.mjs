@@ -10,7 +10,7 @@
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { launch, freshApp, idb, makeChecker, openParentTab, center } from './e2e-lib.mjs'
+import { launch, freshApp, idb, makeChecker, openParentTab } from './e2e-lib.mjs'
 
 const { state, check } = makeChecker()
 const SHOT_DIR = process.env.SHOT_DIR
@@ -99,24 +99,20 @@ async function app(browser, viewport, opts = {}) {
   return r
 }
 
-/** 把目前待展示的禮物一份一份點掉（每份最多等 timeout ms 出現）；回傳每份的 kind */
+/** v7：禮物改放在房間角落的「禮物袋」，點一次全部收下。回傳收下前袋子上的份數（沒有禮物袋 = 0）。 */
 async function drainGifts(page, timeout = 4000) {
-  const got = []
-  for (;;) {
-    try {
-      await page.waitForSelector('[data-testid=gift]', { timeout })
-    } catch {
-      return got
-    }
-    got.push(await page.getByTestId('gift').getAttribute('data-gift-kind'))
-    await page.getByTestId('gift').click()
-    await page.waitForSelector('[data-testid=gift]', { state: 'detached', timeout: 8000 })
+  try {
+    await page.waitForSelector('[data-testid=gift-bag]', { timeout })
+  } catch {
+    return 0
   }
+  const n = Number(await page.getByTestId('gift-bag').getAttribute('data-count'))
+  await page.getByTestId('gift-bag').click()
+  await page.waitForSelector('[data-testid=gift-bag]', { state: 'detached', timeout: 8000 })
+  return n
 }
-const waitGift = (page, ms = 15000) => page.waitForSelector('[data-testid=gift]', { timeout: ms })
-const waitNoGift = (page, ms = 15000) => page.waitForSelector('[data-testid=gift]', { state: 'detached', timeout: ms })
-const bubbleText = (page) => page.evaluate(() => document.querySelector('[data-testid=pet-bubble]')?.textContent ?? null)
-const petAttr = (page, a) => page.evaluate((a) => document.querySelector('[data-testid=pet]')?.getAttribute(a) ?? null, a)
+const waitGift = (page, ms = 15000) => page.waitForSelector('[data-testid=gift-bag]', { timeout: ms })
+const waitNoGift = (page, ms = 15000) => page.waitForSelector('[data-testid=gift-bag]', { state: 'detached', timeout: ms })
 
 /** 每 40ms 取樣阿悟的動作、泡泡、房間閃光，直到 total ms */
 const sampleTrick = (page, total) =>
@@ -241,29 +237,21 @@ try {
   const qtyBefore = await invQty(page, dropFood)
   await backHome(page)
   await waitGift(page)
-  check('回首頁：阿悟拿出禮物（大圖）', (await page.getByTestId('gift').count()) === 1 && (await page.getByTestId('gift').getAttribute('data-gift-kind')) === 'food')
-  const giftBox = await page.getByTestId('gift').boundingBox()
-  check('禮物是大圖（>= 80px，孩子好點）', giftBox.width >= 80 && giftBox.height >= 80, `${Math.round(giftBox.width)}x${Math.round(giftBox.height)}`)
-  const poseWhileGift = await petAttr(page, 'data-pose')
-  check('阿悟用 happy 或 cheer 姿勢拿出禮物', poseWhileGift === 'cheer' || poseWhileGift === 'happy', poseWhileGift)
-  const bt = await bubbleText(page)
-  check('阿悟說「我在路上撿到…，送給你！」', /^我在路上撿到.+，送給你！$/.test(bt ?? ''), bt)
-  // 阿悟走到畫面中間
-  const pc = await center(page, '[data-testid=pet]')
-  check('阿悟走到畫面中間', Math.abs(pc.x - VP.width / 2) < VP.width * 0.2, `x=${Math.round(pc.x)}`)
+  check('回首頁：房間角落出現禮物袋，徽章顯示份數', (await page.getByTestId('gift-bag').count()) === 1 && Number(await page.getByTestId('gift-bag').getAttribute('data-count')) >= 1)
+  const giftBox = await page.getByTestId('gift-bag').boundingBox()
+  check('禮物袋是大圖（>= 80px，孩子好點）', giftBox.width >= 80 && giftBox.height >= 80, `${Math.round(giftBox.width)}x${Math.round(giftBox.height)}`)
+  check('禮物不再蓋在阿悟身上：沒有 gift 元件，摸阿悟不被攔截', (await page.getByTestId('gift').count()) === 0)
   await shot(page, 'gift', 'land-x')
-  const said = await saidLog(page)
-  check('禮物的話有唸出來（預錄音檔或 Web Speech）', said.some((t) => t === bt || t.startsWith('audio:')), JSON.stringify(said.slice(-3)))
-  // 點一下收下：物品飛進食物欄
+  // 點一次收下全部：物品飛向食物欄、阿悟開心
   const sawFly = page.waitForFunction(() => [...document.body.children].some((e) => e.style?.zIndex === '95'), null, { timeout: 3000, polling: 30 }).then(() => true, () => false)
-  await page.getByTestId('gift').click()
-  check('點一下收下：物品飛向食物欄', await sawFly)
+  const nBag = Number(await page.getByTestId('gift-bag').getAttribute('data-count'))
+  await page.getByTestId('gift-bag').click()
+  check('點一次收下：物品飛向食物欄', await sawFly)
   await waitNoGift(page, 6000)
   const s1b = await settingsOf(page)
-  // 一站 5 題看過的物件通常已經 >= 6 種，所以回首頁時圖鑑也會送一份禮物：排在學習掉落後面、依序展示
-  check('收下第一份後，佇列只剩下一份圖鑑禮物（依序，不是同時）', (s1b.pendingGifts ?? []).every((g) => g.from === 'collection'), JSON.stringify(s1b.pendingGifts))
-  const rest1 = await drainGifts(page, 6000)
-  check('剩下的禮物依序收完、佇列清空、背包數量沒有重複增加', ((await settingsOf(page)).pendingGifts ?? []).length === 0 && (await invQty(page, dropFood)) >= qtyBefore, JSON.stringify(rest1))
+  check(`點一次全部收下（${nBag} 份）：佇列清空、背包數量沒有重複增加`, (s1b.pendingGifts ?? []).length === 0 && (await invQty(page, dropFood)) >= qtyBefore, JSON.stringify(s1b.pendingGifts))
+  const rest1 = await drainGifts(page, 1500)
+  check('再沒有禮物袋', rest1 === 0)
 
   // =====================================================================
   // 2) 隔天 → 今日小禮物（一天一次）、多份依序展示
@@ -276,12 +264,8 @@ try {
   await page.waitForSelector('[data-testid=pet]')
   await advanceDays(page, 1)
   await waitGift(page)
-  const dailyBubble = await bubbleText(page)
-  const xBefore = (await center(page, '[data-testid=pet]')).x
-  await page.waitForTimeout(8000)
-  check('展示期間自主行為暫停（加速排程下等了 8 秒，禮物還在、阿悟沒走開）', (await page.getByTestId('gift').count()) === 1 && Math.abs((await center(page, '[data-testid=pet]')).x - xBefore) < 4, `dx=${Math.abs((await center(page, '[data-testid=pet]')).x - xBefore)}`)
   const gDaily = await settingsOf(page)
-  check('隔天回到首頁：有今日小禮物，說「今天的小禮物！」', gDaily.pendingGifts?.length === 1 && gDaily.pendingGifts[0].from === 'daily' && dailyBubble === '今天的小禮物！', `${JSON.stringify(gDaily.pendingGifts)} ${dailyBubble}`)
+  check('隔天回到首頁：禮物袋裡有今日小禮物', gDaily.pendingGifts?.length === 1 && gDaily.pendingGifts[0].from === 'daily' && Number(await page.getByTestId('gift-bag').getAttribute('data-count')) === 1, JSON.stringify(gDaily.pendingGifts))
   check('lastGiftDate 更新成今天', gDaily.lastGiftDate !== g0)
   const invBefore = await dump(page, 'inventory')
   const matBefore = (await dump(page, 'materialLedger')).length
@@ -299,23 +283,17 @@ try {
         }
       }),
   )
-  let maxAtOnce = 1
-  const kinds = []
-  for (let i = 0; i < 3; i++) {
-    await waitGift(page)
-    maxAtOnce = Math.max(maxAtOnce, await page.getByTestId('gift').count())
-    kinds.push(await page.getByTestId('gift').getAttribute('data-gift-kind'))
-    await page.getByTestId('gift').click()
-    await waitNoGift(page, 6000)
-  }
-  check('3 份禮物依序展示（一次只有一個）', maxAtOnce === 1 && kinds.length === 3 && kinds[1] === 'material' && kinds[2] === 'food', kinds.join('>'))
-  check('全部收下後佇列清空', ((await settingsOf(page)).pendingGifts ?? []).length === 0)
+  await page.reload()
+  await page.waitForSelector('[data-testid=gift-bag]')
+  check('3 份禮物：禮物袋徽章顯示 3', Number(await page.getByTestId('gift-bag').getAttribute('data-count')) === 3)
+  await drainGifts(page)
+  check('點一次全部收下後佇列清空', ((await settingsOf(page)).pendingGifts ?? []).length === 0)
   // 同一天重新整理不會再送
   await page.evaluate(() => localStorage.removeItem('gq-pet-fast'))
   await page.reload()
   await page.waitForSelector('[data-testid=pet]')
   await page.waitForTimeout(2500)
-  check('同一天重新整理：不再送今日小禮物', (await page.getByTestId('gift').count()) === 0 && ((await settingsOf(page)).pendingGifts ?? []).length === 0)
+  check('同一天重新整理：不再送今日小禮物', (await page.getByTestId('gift-bag').count()) === 0 && ((await settingsOf(page)).pendingGifts ?? []).length === 0)
 
   // =====================================================================
   // 3) PM：解鎖新招 → 表演按鈕 → 每一招的動作
@@ -431,7 +409,8 @@ try {
   const rewardedBefore = (await settingsOf(page)).collectionRewarded ?? 0
   const unknownBefore = [...fm0].filter(([, v]) => !v.known).map(([id]) => id)
   await addAttempts(page, QUESTIONS.map((q) => q.id))
-  await page.getByRole('button', { name: /回首頁/ }).click()
+  // 直接寫 IndexedDB 不會讓 Dexie 的查詢快取失效；v7 起首頁不再有「阿悟走出來拿禮物」的等待時間，所以這裡明確重新載入
+  await page.reload()
   await page.waitForSelector('[data-testid=pet]')
   const step = Math.max(2, Math.floor(pr0.total / 8))
   const knownAll = pr0.total // 題庫裡每個朋友都遇得到（單元測試保證）
@@ -440,9 +419,8 @@ try {
   const s4 = await settingsOf(page)
   check(`每收集滿 ${step} 個送 1 份禮物（走 pendingGifts，from=collection），整個圖鑑至少 8 份`, owed >= 1 && Math.floor(knownAll / step) >= 8 && (s4.collectionRewarded ?? 0) === Math.floor(knownAll / step) && (s4.pendingGifts ?? []).filter((g) => g.from === 'collection').length === owed, `known=${knownAll} rewarded=${s4.collectionRewarded} before=${rewardedBefore} gifts=${JSON.stringify((s4.pendingGifts ?? []).map((g) => g.from))}`)
   await waitGift(page)
-  check('阿悟說「你認識好多朋友，這個送給你！」', (await bubbleText(page)) === '你認識好多朋友，這個送給你！', await bubbleText(page))
   const got = await drainGifts(page, 5000)
-  check('圖鑑禮物依序收完、佇列清空', got.length === owed && ((await settingsOf(page)).pendingGifts ?? []).length === 0, `got=${got.length} owed=${owed}`)
+  check('圖鑑禮物在禮物袋裡一次收完、佇列清空', got >= owed && ((await settingsOf(page)).pendingGifts ?? []).length === 0, `got=${got} owed=${owed}`)
   await openMore(page)
   await page.getByTestId('friends-btn').click()
   await page.waitForSelector('[data-testid=friend]')
@@ -539,7 +517,7 @@ try {
       await waitGift(sp)
       await sp.waitForTimeout(900)
       await shot(sp, 'gift', tag)
-      await sp.getByTestId('gift').click()
+      await sp.getByTestId('gift-bag').click()
       await waitNoGift(sp, 6000)
       await shot(sp, 'home-perform', tag)
       // 新招慶祝

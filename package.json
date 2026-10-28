@@ -27,7 +27,9 @@
     "e2e:math2": "node scripts/e2e-math2.mjs",
     "e2e:paint": "node scripts/e2e-paint.mjs",
     "shots:math2": "node scripts/shots-math2.mjs",
-    "e2e:quest7": "node scripts/e2e-quest7.mjs"
+    "e2e:quest7": "node scripts/e2e-quest7.mjs",
+    "e2e:home7": "node scripts/e2e-home7.mjs",
+    "shots:home7": "node scripts/shots-home7.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",

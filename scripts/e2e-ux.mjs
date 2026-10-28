@@ -478,7 +478,9 @@ async function artworkSpot(browser) {
       const hud = await boxOf(page, '.pet-hud')
       const tools = await boxOf(page, '.side-tools')
       const last = arts[arts.length - 1]
-      check(`[${size}] 第 ${n + 1} 幅畫掛上去：在畫面內可見`, !!last && last.x >= 0 && last.x + last.w <= vp.width && last.y >= 0 && last.y + last.h <= vp.height, JSON.stringify(last))
+      // v7：掛畫以「不蓋到窗戶、狀態卡、按鈕」為先；手機畫面太窄，第一屏可能沒有空牆，這時掛在旁邊要捲動才看得到
+      const win = await boxOf(page, '.rb-window')
+      check(`[${size}] 第 ${n + 1} 幅畫掛上去：${size === 'phone' ? '房間內、沒蓋到窗戶' : '在畫面內可見、沒蓋到窗戶'}`, !!last && !overlaps(last, win) && last.y >= 0 && last.y + last.h <= vp.height && (size === 'phone' || (last.x >= 0 && last.x + last.w <= vp.width)), JSON.stringify(last))
       check(`[${size}] 第 ${n + 1} 幅畫：沒有被左上角狀態卡蓋住`, arts.every((a) => !overlaps(a, hud)), `hud ${JSON.stringify(hud)} art ${JSON.stringify(arts)}`)
       check(`[${size}] 第 ${n + 1} 幅畫：沒有被右上角工坊/背包按鈕蓋住`, arts.every((a) => !overlaps(a, tools)))
       if (n === 0) await shot(page, 'art-hung', size)
@@ -700,15 +702,14 @@ async function misc(browser) {
     const tabs = await page.locator('[data-testid=parent-tabs] .tab').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { name: e.textContent, x: r.x, y: Math.round(r.y), w: r.width, h: r.height } }))
     check(`[${size}] 家長分頁 11 個全部存在（含 v6「本週」）`, tabs.length === 11 && tabs.some((t) => t.name === '本週'), String(tabs.length))
     const rows = new Set(tabs.map((t) => t.y)).size
-    check(`[${size}] 家長分頁排成兩列`, rows === 2, String(rows))
-    if (size === 'land' || size === 'port') check(`[${size}] 家長分頁不需要捲動就全部看得到（含「設定」「PM 預覽」）`, tabs.every((t) => t.x >= 0 && t.x + t.w <= vp.width), JSON.stringify(tabs.filter((t) => t.x + t.w > vp.width).map((t) => t.name)))
-    else {
+    check(`[${size}] v7：家長分頁單列（可橫向捲動），視覺順序 = DOM 順序`, rows === 1 && tabs.every((t, i) => i === 0 || t.x > tabs[i - 1].x), String(rows))
+    check(`[${size}] v7：「PM 預覽」排在最後`, tabs.at(-1).name === 'PM 預覽')
+    {
       const scrollable = await page.getByTestId('parent-tabs').evaluate((e) => e.scrollWidth > e.clientWidth + 4)
       await page.getByRole('tab', { name: 'PM 預覽', exact: true }).scrollIntoViewIfNeeded()
       await page.waitForTimeout(300)
       const pm = await boxOf(page, '[role=tab]:has-text("PM 預覽")')
-      check(`[${size}] 手機：分頁列可以左右捲，捲到最後能點到「PM 預覽」`, scrollable && pm.x + pm.w <= vp.width + 1, JSON.stringify(pm))
-      await page.getByRole('tab', { name: 'PM 預覽', exact: true }).click()
+      check(`[${size}] 分頁列可以左右捲，捲到最後能點到「PM 預覽」`, (scrollable || size === 'land') && pm.x + pm.w <= vp.width + 1, JSON.stringify(pm))
     }
     await shot(page, 'parent-tabs', size)
     await page.getByRole('tab', { name: '設定', exact: true }).click({ force: true })

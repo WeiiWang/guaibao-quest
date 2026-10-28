@@ -36,7 +36,8 @@ export function makeChecker() {
  * opts.fast：自主行為加速（2–4 秒）。
  */
 export async function freshApp(browser, viewport, opts = {}) {
-  const { rand, tod = 'day', stage = 'adult', fast = false, bananas = 5, ctxOpts = {}, decor = [] } = opts
+  // welcome: true = 保留 v7 的歡迎禮物（20 顆星星 + 1 根香蕉 + 禮物袋）；預設拿掉，讓舊測試維持「新孩子 0 星星、沒有禮物」的前提
+  const { rand, tod = 'day', stage = 'adult', fast = false, bananas = 5, ctxOpts = {}, decor = [], welcome = false } = opts
   const ctx = await browser.newContext({ viewport, ...ctxOpts })
   await ctx.addInitScript(
     ({ rand, tod, fast }) => {
@@ -109,6 +110,7 @@ export async function freshApp(browser, viewport, opts = {}) {
   await pressPin(page, '1234')
   await page.getByPlaceholder('小朋友的名字').fill('小明')
   await page.getByRole('button', { name: '下一步' }).click()
+  await page.getByTestId('onboard-age-skip').click() // v7：onboarding 多一頁「幾歲」；舊測試選「之後再設定」，維持年齡未設定的前提
   await page.getByRole('button', { name: '下一步' }).click()
   await page.getByRole('button', { name: '開始冒險' }).click()
   await page.waitForSelector('[data-testid=room]')
@@ -116,9 +118,15 @@ export async function freshApp(browser, viewport, opts = {}) {
     page,
     (db, o) =>
       new Promise((res) => {
-        const tx = db.transaction(['pets', 'inventory'], 'readwrite')
+        const tx = db.transaction(['pets', 'inventory', 'ledger', 'settings'], 'readwrite')
         const pets = tx.objectStore('pets')
         const inv = tx.objectStore('inventory')
+        if (!o.welcome) {
+          const led = tx.objectStore('ledger')
+          led.getAll().onsuccess = (e) => e.target.result.filter((l) => l.reason === '歡迎禮物').forEach((l) => led.delete(l.id))
+          const st = tx.objectStore('settings')
+          st.get('main').onsuccess = (e) => st.put({ ...e.target.result, pendingGifts: [] })
+        }
         pets.get('pet').onsuccess = (e) => {
           const pet = e.target.result
           pets.put({ ...pet, stage: o.stage, feedCount: o.feed, hunger: 90, hungerUpdatedAt: Date.now() })
@@ -127,7 +135,7 @@ export async function freshApp(browser, viewport, opts = {}) {
         for (const id of o.decor) inv.put({ id, itemId: id, qty: 1 })
         tx.oncomplete = () => res(1)
       }),
-    { stage, feed: stage === 'adult' ? 80 : stage === 'baby' ? 20 : 0, bananas, decor },
+    { stage, feed: stage === 'adult' ? 80 : stage === 'baby' ? 20 : 0, bananas, decor, welcome },
   )
   await page.reload()
   await page.waitForSelector('[data-testid=pet]')
@@ -256,3 +264,18 @@ export const drag = async (page, from, to, { hold = false, settle = 0 } = {}) =>
   await page.mouse.up()
   if (settle) await page.waitForTimeout(settle)
 }
+
+/** v7：拿掉新孩子的歡迎禮物（20 顆星星流水帳 + 禮物袋佇列），讓自己 onboarding 的舊測試維持「新孩子 0 星星」的前提。要 reload 才會被畫面看到 */
+export const stripWelcome = (page) =>
+  idb(
+    page,
+    (db) =>
+      new Promise((res) => {
+        const tx = db.transaction(['ledger', 'settings'], 'readwrite')
+        const led = tx.objectStore('ledger')
+        led.getAll().onsuccess = (e) => e.target.result.filter((l) => l.reason === '歡迎禮物').forEach((l) => led.delete(l.id))
+        const st = tx.objectStore('settings')
+        st.get('main').onsuccess = (e) => st.put({ ...e.target.result, pendingGifts: [] })
+        tx.oncomplete = () => res(1)
+      }),
+  )

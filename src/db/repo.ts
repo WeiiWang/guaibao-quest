@@ -38,10 +38,12 @@ import { isArtworkId, spriteSize } from '../art/items'
 import { getColoringPage, isFreePage, pageName } from '../art/coloring/pages'
 import { checkApplyTheme, resolveTheme } from '../domain/theme'
 import { docOf, type PaintDoc } from '../domain/coloring'
-import { artworkSpot, clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
+import { clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
 import * as meta from './meta'
 import * as album from './album'
+import * as home7 from './home7'
+import { baseIdOf, canMakeMore, copyOf, estimateViewAspect, MAX_DECOR_COPIES, pickWallSpot, type Box } from '../domain/home7'
 import { isHatId } from '../domain/hats'
 import { CHAPTERS, chapterUnlocked, getChapter } from '../learning/chapter'
 import { addMaterial, emptyCost, stationRewardQty, STATION_SIZE } from '../learning/scoring'
@@ -445,6 +447,7 @@ export class Repo {
       await d.pets.put(r.pet)
       await d.inventory.put({ ...inv, qty: inv.qty - 1 })
       if (r.evolvedTo) await album.addGrowthCard(d, r.pet.name, r.evolvedTo, now) // v6：孵化 / 長大的當下新增一張回憶卡
+      await home7.awardMilestones(d, r.pet.name, pet.feedCount, r.pet.feedCount, now) // v7：幼體到成體路上每餵 20 次送一份小禮物 + 回憶卡
       return { ok: true, pet: r.pet, evolvedTo: r.evolvedTo } as const
     })
   }
@@ -498,18 +501,24 @@ export class Repo {
   }
 
   // ---------- 房間裝飾 ----------
-  /** 驗證擁有該裝飾，回傳規格；否則回 null */
-  private async ownedDecor(itemId: string) {
+  /**
+   * 驗證擁有該裝飾，回傳規格；否則回 null。
+   * itemId 是「擺放 key」：第 1 個就是商品 id，第 2、3 個是 `<id>~2`、`<id>~3`（v7：同一件家具最多擺 3 個，要擁有那麼多個）
+   */
+  private async ownedDecor(key: string) {
+    const itemId = baseIdOf(key)
+    const copy = copyOf(key)
+    if (copy > MAX_DECOR_COPIES) return null
     // 掛到房間的畫廊作品（art-<galleryId>）：牆面裝飾，擁有 = 背包有紀錄
     if (isArtworkId(itemId)) {
       const inv = await this.db.inventory.get(itemId)
-      if (!inv || inv.qty < 1) return null
+      if (!inv || inv.qty < 1 || copy > 1) return null
       return { item: undefined, slot: 'wall' as const, hf: spriteSize(itemId).rows / ROOM_CELLS_H }
     }
     const item = SHOP_ITEMS.find((i) => i.id === itemId)
     if (!item || item.kind !== 'decor' || !item.slot) return null
     const inv = await this.db.inventory.get(itemId)
-    if (!inv || inv.qty < 1) return null
+    if (!inv || inv.qty < copy) return null
     const size = spriteSize(item.asset)
     return { item, slot: item.slot, hf: (size?.rows ?? 0) / ROOM_CELLS_H }
   }
@@ -529,6 +538,7 @@ export class Repo {
         z: prev?.z ?? 0,
         flipped: prev?.flipped ?? false,
         placedAt: prev?.placedAt ?? now,
+        ...(prev?.tint ? { tint: prev.tint } : {}),
       })
       return { ok: true } as const
     })
@@ -537,6 +547,26 @@ export class Repo {
   async moveDecor(itemId: string, x: number, y: number, now = this.clock()): Promise<Result> {
     if (!(await this.db.placements.get(itemId))) return { ok: false, error: '這個裝飾還沒擺放' }
     return this.placeDecor(itemId, x, y, now)
+  }
+
+  /** v7：從佈置列拿一個「還沒擺的」擺進房間（家具有多個時挑第一個空的 key）。回傳實際用的擺放 key */
+  async placeNewDecor(baseId: string, x: number, y: number, now = this.clock()): Promise<Result<{ key: string }>> {
+    const key = await home7.nextPlacementKey(this.db, baseId)
+    if (!key) return { ok: false, error: '這個最多擺三個喔' }
+    const r = await this.placeDecor(key, x, y, now)
+    return r.ok ? { ok: true, key } : r
+  }
+
+  /** v7：家具換色（0 = 原色，1–4 = 四種色調；CSS filter，存在擺放資料的 tint 欄位） */
+  async tintDecor(key: string, tint: number): Promise<Result> {
+    if (!Number.isInteger(tint) || tint < 0 || tint > 4) return { ok: false, error: '沒有這個顏色' }
+    return this.db.transaction('rw', [this.db.placements, this.db.inventory], async () => {
+      if (!(await this.ownedDecor(key))) return { ok: false, error: '你還沒有這個裝飾' } as const
+      const p = await this.db.placements.get(key)
+      if (!p) return { ok: false, error: '這個裝飾還沒擺放' } as const
+      await this.db.placements.update(key, { tint: tint === 0 ? undefined : tint })
+      return { ok: true } as const
+    })
   }
 
   async flipDecor(itemId: string): Promise<Result> {
@@ -909,6 +939,14 @@ export class Repo {
     return meta.popPendingTrick(this.db)
   }
 
+  // ---------- v7：歡迎禮物 / 禮物袋（實作在 db/home7.ts） ----------
+  grantWelcomeGift(now = this.clock()) {
+    return home7.grantWelcomeGift(this.db, now)
+  }
+  collectAllGifts() {
+    return home7.collectAllGifts(this.db)
+  }
+
   // ---------- v6：帽子衣櫃 / 成長相簿（實作在 db/album.ts） ----------
   setHat(hatId: string | null) {
     return album.setHat(this.db, hatId)
@@ -1234,7 +1272,7 @@ export class Repo {
     return balanceOfMaterials(await this.db.materialLedger.toArray())
   }
 
-  /** 用材料做家具 / 壁紙 / 地板：扣材料、放進背包（家具到首頁佈置；壁紙地板在工坊套用）。一種只能有一件。 */
+  /** 用材料做家具 / 壁紙 / 地板：扣材料、放進背包（家具到首頁佈置；壁紙地板在工坊套用）。壁紙、地板一種一件；家具（v7）同一件最多做 3 個。 */
   async craftFurniture(itemId: string, now = this.clock()): Promise<Result> {
     const item = SHOP_CATALOG.find((i) => i.id === itemId)
     if (!item || (item.kind !== 'decor' && item.kind !== 'theme') || !item.cost) return { ok: false, error: '這個不能製作' }
@@ -1242,7 +1280,11 @@ export class Repo {
     const d = this.db
     return d.transaction('rw', [d.materialLedger, d.inventory], async () => {
       const inv = await d.inventory.get(itemId)
-      const check = canCraft(balanceOfMaterials(await d.materialLedger.toArray()), inv?.qty ?? 0, item)
+      const have = inv?.qty ?? 0
+      // v7：家具可以再做（最多 3 個），所以檢查材料時當作「還沒有」；壁紙與地板維持一種一件
+      const isDecor = item.kind === 'decor'
+      if (isDecor && !canMakeMore(have)) return { ok: false, error: '這個最多做三個喔' } as const
+      const check = canCraft(balanceOfMaterials(await d.materialLedger.toArray()), isDecor ? 0 : have, item)
       if (!check.ok) {
         if (check.reason === 'owned') return { ok: false, error: '已經做過了' } as const
         const need = MATERIAL_IDS.filter((m) => check.short[m]).map((m) => `${MATERIAL_NAMES[m]} ${check.short[m]}`)
@@ -1260,7 +1302,7 @@ export class Repo {
           refId: itemId,
         })
       }
-      await d.inventory.put({ id: itemId, itemId, qty: 1 })
+      await d.inventory.put({ id: itemId, itemId, qty: have + 1 })
       return { ok: true } as const
     })
   }
@@ -1347,15 +1389,29 @@ export class Repo {
       const base = work.basePageId ? pageName(work.basePageId) : undefined
       await d.shopItems.put({ id: itemId, kind: 'decor', name: `我的畫：${base ?? '作品'}`, price: 0, asset: itemId, slot: 'wall' })
       await d.inventory.put({ id: itemId, itemId, qty: 1 })
-      const hung = (await d.placements.toArray()).filter((p) => isArtworkId(p.itemId)).length
       const size = spriteSize(itemId)
       const hf = size.rows / ROOM_CELLS_H
-      // 預設放在剛進房間時畫面的右側牆面，避開左上角的狀態卡與右上角的工坊/背包按鈕
-      const spot = artworkSpot(hung)
+      // v7：自動挑空的牆面位置（避開窗戶、狀態卡、按鈕與牆上已有的東西；直向也一樣）
+      const aspect = estimateViewAspect(typeof window === 'undefined' ? 1180 : window.innerWidth, typeof window === 'undefined' ? 820 : window.innerHeight)
+      const wf = (size.cols / ROOM_CELLS_H) * (1 / (2.5 * aspect))
+      const spot = pickWallSpot({ w: wf, h: hf }, await this.wallBoxes(aspect), aspect)
       const pos = clampPlacement('wall', spot.x, spot.y, 0, hf)
       await d.placements.put({ itemId, x: pos.x, y: pos.y, z: 0, flipped: false, placedAt: now })
       return { ok: true, itemId, already: false } as const
     })
+  }
+
+  /** 牆上已經有的東西（中心點與大小，佔房間寬 / 高的比例）；掛畫挑位置時要避開 */
+  private async wallBoxes(aspect: number): Promise<Box[]> {
+    const out: Box[] = []
+    for (const p of await this.db.placements.toArray()) {
+      const base = baseIdOf(p.itemId)
+      const item = SHOP_ITEMS.find((i) => i.id === base)
+      if (!isArtworkId(base) && item?.slot !== 'wall') continue
+      const sz = spriteSize(isArtworkId(base) ? base : (item?.asset ?? base))
+      out.push({ x: p.x, y: p.y, w: (sz.cols / ROOM_CELLS_H) * (1 / (2.5 * aspect)), h: sz.rows / ROOM_CELLS_H })
+    }
+    return out
   }
 
   /** 從房間取下（回到背包，可再到佈置模式擺放） */

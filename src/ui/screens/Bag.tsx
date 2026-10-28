@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { artName, DECOR_EMOJI, FOOD_EMOJI, isArtworkId } from '../../art/items'
+import { MAX_DECOR_COPIES, placedOf } from '../../domain/home7'
 import { GalleryFrame } from '../components/GalleryFrame'
 import { Icon } from '../components/Icon'
 import { ScreenHeader } from '../components/Header'
@@ -24,7 +25,9 @@ export function BagScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
       <ul className="shop-grid">
         {owned.map(({ inv, item }) => {
           const it = item!
-          const placed = placements.some((p) => p.itemId === it.id)
+          const have = Math.min(MAX_DECOR_COPIES, inv.qty)
+          const placedN = placedOf(it.id, placements)
+          const placed = placedN >= have
           return (
             <li key={it.id} className="card shop-item art-card">
               <div className="shop-art">
@@ -42,7 +45,7 @@ export function BagScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
                 </>
               ) : (
                 <>
-                  <div className="shop-price">{placed ? '已擺放' : '還沒擺放'}</div>
+                  <div className="shop-price">{have > 1 ? `擺了 ${placedN} / ${have}` : placed ? '已擺放' : '還沒擺放'}</div>
                   <button className={`btn ${placed ? '' : 'primary'}`} onClick={() => go({ name: 'home', edit: true })}>
                     去擺放
                   </button>

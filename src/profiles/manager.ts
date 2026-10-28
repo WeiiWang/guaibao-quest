@@ -84,6 +84,7 @@ export class ProfileManager {
     if (!r.ok) return r
     const child = await this.register(this.deps.legacyDbName, input.childName.trim(), input.ageBand, hashPin(input.pin))
     if (input.ageBand) await this.repoFor(child.dbName).setAgeBand(input.ageBand)
+    await this.welcome(child)
     return { ok: true, child }
   }
 
@@ -101,11 +102,12 @@ export class ProfileManager {
     if (!r.ok) return r
     if (input.ageBand) await repo.setAgeBand(input.ageBand)
     const child = await this.register(dbName, name, input.ageBand, undefined, id)
+    await this.welcome(child)
     return { ok: true, child }
   }
 
   /** 名冊有這個孩子、但他的資料庫是空的（重設之後）：用簡化 onboarding（不設 PIN）重新建立 */
-  async onboardExisting(id: string, input: { childName: string; petName: string }): Promise<Result> {
+  async onboardExisting(id: string, input: { childName: string; petName: string; ageBand?: AgeBand }): Promise<Result> {
     const c = await this.reg.get(id)
     if (!c) return { ok: false, error: '找不到這個孩子' }
     const pinHash = await this.reg.pinHash()
@@ -113,8 +115,10 @@ export class ProfileManager {
     const repo = this.repoFor(c.dbName)
     const r = await repo.onboard({ pinHash, childName: input.childName, petName: input.petName })
     if (!r.ok) return r
-    await this.reg.db.children.update(id, { name: input.childName.trim() })
-    if (c.ageBand) await repo.setAgeBand(c.ageBand)
+    const age = c.ageBand ?? input.ageBand
+    await this.reg.db.children.update(id, { name: input.childName.trim(), ...(age ? { ageBand: age } : {}) })
+    if (age) await repo.setAgeBand(age)
+    await this.welcome(c) // 只有「新孩子還沒收到歡迎禮物」才會送（v7 以前就有的孩子 welcomed 是 undefined，不補送）
     return { ok: true }
   }
 
@@ -126,6 +130,14 @@ export class ProfileManager {
     await this.reg.db.children.update(id, { name: n })
     await this.repoFor(c.dbName).setChildName(n)
     return { ok: true }
+  }
+
+  /** v7：新孩子的歡迎禮物（20 顆星星 + 1 個食物）。只送一次：名冊記著 welcomed，舊孩子不補送 */
+  private async welcome(c: ChildProfile): Promise<void> {
+    const cur = await this.reg.get(c.id)
+    if (!cur || cur.welcomed !== false) return
+    await this.repoFor(cur.dbName).grantWelcomeGift()
+    await this.reg.db.children.update(c.id, { welcomed: true })
   }
 
   /** 年齡以名冊為準，同步寫進該孩子資料庫的 settings.ageBand（getLearnerProfile 讀的地方） */
@@ -178,7 +190,7 @@ export class ProfileManager {
     return rdb.transaction('rw', [rdb.children, rdb.meta], async () => {
       const all = await rdb.children.toArray()
       const order = all.reduce((m, c) => Math.max(m, c.order), -1) + 1
-      const child: ChildProfile = { id, name, avatar: AVATARS[all.length % AVATARS.length], ageBand, dbName, createdAt: Date.now(), order }
+      const child: ChildProfile = { id, name, avatar: AVATARS[all.length % AVATARS.length], ageBand, dbName, createdAt: Date.now(), order, welcomed: false }
       await rdb.children.put(child)
       if (pinHash) await rdb.meta.put({ key: 'pinHash', value: pinHash })
       if (all.length === 0) await rdb.meta.put({ key: 'activeChildId', value: id })

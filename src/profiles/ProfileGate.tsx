@@ -81,7 +81,7 @@ function ProfileRouter({ renderChild }: { renderChild: (child: ChildProfile) => 
     return (
       <Onboarding
         withPin
-        onFinish={(i) => profiles.setupFirstChild({ pin: i.pin ?? '', childName: i.childName, petName: i.petName })}
+        onFinish={(i) => profiles.setupFirstChild({ pin: i.pin ?? '', childName: i.childName, petName: i.petName, ageBand: i.ageBand })}
       />
     )
   }

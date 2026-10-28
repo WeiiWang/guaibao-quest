@@ -120,10 +120,43 @@ describe('新增與刪除孩子', () => {
     await a.db.inventory.put({ id: 'banana', itemId: 'banana', qty: 3 })
     await a.db.pets.update('pet', { feedCount: 9 })
     expect(await a.db.ledger.count()).toBe(1)
-    expect(await b.db.ledger.count()).toBe(0)
-    expect((await b.db.inventory.get('banana'))?.qty ?? 0).toBe(0)
+    // B 只有自己的歡迎禮物（20 顆星星 + 1 根香蕉），沒有 A 的
+    expect(await b.balance()).toBe(20)
+    expect((await b.db.inventory.get('banana'))?.qty ?? 0).toBe(1)
     expect((await b.db.pets.get('pet'))?.feedCount).toBe(0)
     expect((await a.getLearnerProfile()).ageBand).toBe('6-7')
+    expect((await b.getLearnerProfile()).ageBand).toBe('3')
+  })
+
+  it('歡迎禮物：新增的孩子送一次；v7 以前就有的孩子不補送；重設後重新 onboarding 也不再送', async () => {
+    const r = await mgr.addChild({ name: '二寶', ageBand: '3' })
+    if (!r.ok) throw new Error('addChild failed')
+    const b = mgr.repoFor(r.child.dbName)
+    expect(await b.balance()).toBe(20)
+    expect((await b.db.ledger.toArray())[0]).toMatchObject({ reason: '歡迎禮物', delta: 20 })
+    expect((await reg.get(r.child.id))?.welcomed).toBe(true)
+    // 舊孩子（升級前就有）沒有 welcomed 欄位，也沒有收到
+    const [first] = await reg.list()
+    expect(first.welcomed).toBeUndefined()
+    expect(await mgr.repoFor(legacy).balance()).toBe(0)
+    // 重設二寶的資料後用簡化 onboarding 重新開始：不再送
+    await b.resetAll('1234')
+    expect((await mgr.onboardExisting(r.child.id, { childName: '二寶', petName: '', ageBand: '3' })).ok).toBe(true)
+    expect(await b.balance()).toBe(0)
+    // 舊孩子重設後重新開始也不送
+    const a = mgr.repoFor(legacy)
+    await a.resetAll('1234')
+    expect((await mgr.onboardExisting(first.id, { childName: '大寶', petName: '' })).ok).toBe(true)
+    expect(await a.balance()).toBe(0)
+  })
+
+  it('onboarding 選的年齡：寫進名冊與孩子的資料庫', async () => {
+    const r = await mgr.addChild({ name: '三寶' })
+    if (!r.ok) throw new Error('addChild failed')
+    const b = mgr.repoFor(r.child.dbName)
+    await b.resetAll('1234')
+    expect((await mgr.onboardExisting(r.child.id, { childName: '三寶', petName: '', ageBand: '3' })).ok).toBe(true)
+    expect((await reg.get(r.child.id))?.ageBand).toBe('3')
     expect((await b.getLearnerProfile()).ageBand).toBe('3')
   })
 

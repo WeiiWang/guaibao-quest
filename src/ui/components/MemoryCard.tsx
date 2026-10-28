@@ -1,6 +1,7 @@
 import { ALBUM_KIND_LABEL, albumDateText, parseCardArt } from '../../domain/album'
 import type { AlbumCard } from '../../domain/types'
 import { PetSprite, type PetPose } from './PetSprite'
+import { Icon } from './Icon'
 import '../wardrobe.css'
 
 /**
@@ -17,6 +18,11 @@ export function MemoryCard({ card, petName = '阿悟', big = false, onClick }: {
           {kind.emoji} {kind.label}
         </span>
         <PetSprite pet={{ stage, feedCount: 0, name: petName }} mood="happy" pose={pose as PetPose} hat={card.hat} className="al-pet" />
+        {card.reward && (
+          <span className="h7-al-reward" data-testid="album-reward" data-reward={card.reward}>
+            <Icon name={/^(decor|wall|floor)-/.test(card.reward) ? card.reward : `food-${card.reward}`} emoji={/^(wall|floor)-/.test(card.reward) ? '🎨' : /^decor-/.test(card.reward) ? '🪑' : '🎁'} className="h7-al-reward-img" />
+          </span>
+        )}
       </div>
       <div className="al-meta">
         <time className="al-date" data-testid="album-date">{albumDateText(card)}</time>

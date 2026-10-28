@@ -1,0 +1,18 @@
+/* v7 線 C：家長區（孩子切換 chips、單列可橫向捲動的分頁）。前綴 h7- */
+.h7-chips { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 4px 0 10px; }
+.h7-chip {
+  --chip-bg: #fff3c4; --chip-deep: #e8c66a;
+  min-height: 56px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 18px 4px 6px; border: 0; border-radius: 999px; cursor: pointer; touch-action: manipulation;
+  background: #fff; color: var(--ink, #4a3b35); font: inherit; font-weight: 900; font-size: 1.05rem;
+  box-shadow: 0 4px 0 rgba(74, 59, 53, 0.14), inset 0 2px 0 #fff;
+}
+.h7-chip-avatar { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; font-size: 1.7rem; line-height: 1; background: var(--chip-bg); box-shadow: inset 0 0 0 3px #fff; }
+.h7-chip.on { background: var(--chip-bg); box-shadow: 0 0 0 4px var(--chip-deep), 0 4px 0 4px rgba(74, 59, 53, 0.12); }
+.h7-chip:active { transform: translateY(3px) scale(0.97); }
+.h7-chip-name { max-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 分頁：單列，可橫向捲動；視覺順序 = DOM 順序（Tab 鍵順序也一致） */
+.tabs.parent-tabs.h7-ptabs { display: flex; flex-wrap: nowrap; grid-template-rows: none; gap: 10px; overflow-x: auto; padding: 4px 30px 14px 2px; scroll-snap-type: x proximity; }
+.tabs.parent-tabs.h7-ptabs .tab { flex: 0 0 auto; min-height: 56px; scroll-snap-align: start; }
+.parent .btn, .parent .tab { min-height: 56px; }
+@media (prefers-reduced-motion: reduce) { .h7-chip { transition: none; } }

@@ -97,7 +97,8 @@ function ChildApp({ child }: { child: ChildProfile }) {
       <Onboarding
         withPin={false}
         defaultName={child.name}
-        onFinish={(i) => profiles.onboardExisting(child.id, { childName: i.childName, petName: i.petName })}
+        defaultAge={child.ageBand}
+        onFinish={(i) => profiles.onboardExisting(child.id, { childName: i.childName, petName: i.petName, ageBand: i.ageBand })}
       />
     )
   }

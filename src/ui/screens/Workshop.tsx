@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { repo } from '../../db/repo'
@@ -15,6 +15,7 @@ import { MaterialsChip } from '../components/MaterialsChip'
 import { useToast } from '../hooks'
 import { useLearningSettings, useMaterials } from '../learningHooks'
 import { useCelebrateSmall } from '../feedback'
+import { canMakeMore, MAX_DECOR_COPIES, placedOf } from '../../domain/home7'
 import { useRoomTheme } from '../roomTheme'
 import type { Screen } from '../App'
 import './workshop.css'
@@ -113,39 +114,54 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
   const decorCard = (item: ShopItem) => {
     const cost = item.cost!
     const qty = qtyOf(item.id)
-    const check = canCraft(bal, qty, item)
-    const placed = placements.some((p) => p.itemId === item.id)
+    // v7：做過的家具可以再做（同一件最多 3 個），所以檢查材料時當作「還沒有」
+    const check = canCraft(bal, 0, item)
+    const placed = placedOf(item.id, placements)
+    const more = qty > 0 && canMakeMore(qty)
+    const craftBtn = (label: ReactNode, testId: string) => (
+      <button
+        className={`ws-btn ${check.ok ? 'primary go' : 'gap'} ${qty > 0 ? 'more' : ''}`}
+        aria-disabled={!check.ok}
+        onClick={(e) => {
+          if (check.ok) void craft(item.id, item.name, null, e.currentTarget.closest('.ws-card'))
+          else if (check.reason === 'insufficient') explainShort(item.id, check.short)
+        }}
+        data-testid={testId}
+      >
+        {check.ok ? label : check.reason === 'insufficient' ? <GapButtonBody short={check.short} /> : '不能製作'}
+      </button>
+    )
     return (
-      <li key={item.id} className={`ws-card ${qty > 0 ? 'owned' : check.ok ? 'can' : 'cant'} ${shaking === item.id ? 'ux-shake' : ''}`} data-testid={`craft-${item.id}`}>
+      <li key={item.id} className={`ws-card ${qty > 0 ? 'owned' : check.ok ? 'can' : 'cant'} ${shaking === item.id ? 'ux-shake' : ''}`} data-testid={`craft-${item.id}`} data-qty={qty}>
         <div className="ws-art">
           <Icon name={item.id} emoji={DECOR_EMOJI[item.asset]} alt={item.name} size="100%" />
+          {qty > 1 && <b className="h7-ws-qty" data-testid="ws-qty">x{qty}</b>}
         </div>
         <div className="ws-name">{item.name}</div>
-        <CostRow cost={cost} bal={bal} owned={qty > 0} />
+        <CostRow cost={cost} bal={bal} owned={qty > 0 && !more} />
         {qty > 0 ? (
-          <button className={`ws-btn ${placed ? '' : 'primary'}`} onClick={() => go({ name: 'home', edit: true })}>
-            {placed ? '已擺放，去調整' : '去佈置'}
-          </button>
-        ) : (
-          <button
-            className={`ws-btn ${check.ok ? 'primary go' : 'gap'}`}
-            aria-disabled={!check.ok}
-            onClick={(e) => {
-              if (check.ok) void craft(item.id, item.name, null, e.currentTarget.closest('.ws-card'))
-              else if (check.reason === 'insufficient') explainShort(item.id, check.short)
-            }}
-            data-testid="craft-btn"
-          >
-            {check.ok ? (
-              <>
-                <Icon name="ui-workshop" emoji="🔨" size={32} /> 製作
-              </>
-            ) : check.reason === 'insufficient' ? (
-              <GapButtonBody short={check.short} />
+          <div className="h7-ws-btns">
+            <button className={`ws-btn ${placed >= qty ? '' : 'primary'}`} onClick={() => go({ name: 'home', edit: true })}>
+              {placed >= qty ? '已擺放，去調整' : '去佈置'}
+            </button>
+            {more ? (
+              craftBtn(
+                <>
+                  <Icon name="ui-workshop" emoji="🔨" size={32} /> 再做一個
+                </>,
+                'craft-more',
+              )
             ) : (
-              '不能製作'
+              <span className="h7-ws-max" data-testid="craft-max">最多 {MAX_DECOR_COPIES} 個</span>
             )}
-          </button>
+          </div>
+        ) : (
+          craftBtn(
+            <>
+              <Icon name="ui-workshop" emoji="🔨" size={32} /> 製作
+            </>,
+            'craft-btn',
+          )
         )}
       </li>
     )

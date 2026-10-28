@@ -134,9 +134,11 @@ try {
   check('新增孩子：沒有再設 PIN，她的資料庫沿用共用 PIN', (await getAll(page, xiaoHua.dbName, 'settings'))[0]?.pinHash === settingsBefore.pinHash)
   await shots(page, 'children-settings')
 
-  // 年齡：在「孩子的年齡」卡片改目前的孩子（小明）→ registry 與資料庫同步
-  await page.getByTestId('age-4-5').click()
-  await page.waitForTimeout(300)
+  // 年齡：v7 起只剩名冊的「改名/年齡」入口（沒有「孩子的年齡」卡片了）；改目前的孩子（小明）→ registry 與資料庫同步
+  await page.locator(`[data-child-id="${xiaoMing.id}"] [data-testid=kid-edit]`).click()
+  await page.getByTestId('child-age-4-5').click()
+  await page.getByTestId('kid-edit-submit').click()
+  await page.waitForTimeout(400)
   check('改目前孩子的年齡：registry 與資料庫同步', (await registryChildren(page)).find((k) => k.id === xiaoMing.id).ageBand === '4-5' && (await getAll(page, 'guaibao-quest', 'settings'))[0].ageBand === '4-5')
   // 改名/年齡（對別的孩子）
   await page.locator(`[data-child-id="${xiaoHua.id}"] [data-testid=kid-edit]`).click()
@@ -163,7 +165,7 @@ try {
   const mingBanana0 = (await getAll(page, 'guaibao-quest', 'inventory')).find((i) => i.itemId === 'banana').qty
   await pickChild(page, '小花')
   check('點小花：進她的首頁', (await helloName(page)) === '小花')
-  check('小花的星星 5', (await chipNum(page)) === '5', await chipNum(page))
+  check('小花的星星 25（自己的 5 + v7 歡迎禮物 20）', (await chipNum(page)) === '25', await chipNum(page))
   await page.waitForTimeout(800)
   const a = await center(page, '[data-dock-item=banana]')
   const p = await center(page, '[data-testid=pet]')
@@ -174,7 +176,7 @@ try {
   check('小花餵食：她的香蕉 3 → 2', (await getAll(page, xiaoHua.dbName, 'inventory')).find((i) => i.itemId === 'banana').qty === 2)
   const mingPet1 = await petOf(page, 'guaibao-quest')
   check('小花餵食不影響小明的阿悟與香蕉', mingPet1.feedCount === mingPet0.feedCount && (await getAll(page, 'guaibao-quest', 'inventory')).find((i) => i.itemId === 'banana').qty === mingBanana0)
-  check('小花餵食不影響小明的星星', (await stars(page, 'guaibao-quest')) === 12 && (await stars(page, xiaoHua.dbName)) === 5)
+  check('小花餵食不影響小明的星星', (await stars(page, 'guaibao-quest')) === 12 && (await stars(page, xiaoHua.dbName)) === 25)
 
   // ---------- 5. 換人確認 ----------
   await page.getByTestId('switch-person').click()
@@ -218,7 +220,7 @@ try {
   check('重設後：registry 與其他孩子還在', (await registryChildren(page)).length === 2 && (await petOf(page, xiaoHua.dbName)).feedCount === 21)
   check('重設後：不再問 PIN，直接是簡化 onboarding（名字已預填）', (await page.locator('button.key').count()) === 0 && (await page.getByPlaceholder('小朋友的名字').inputValue()) === '小明')
   await shots(page, 'reset-onboarding')
-  await page.getByRole('button', { name: '下一步' }).click()
+  await page.getByRole('button', { name: '下一步' }).click() // 名冊已有年齡，不再問「幾歲」
   await page.getByRole('button', { name: '下一步' }).click()
   await page.getByRole('button', { name: '開始冒險' }).click()
   await page.waitForSelector('[data-testid=room]')

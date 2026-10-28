@@ -123,10 +123,10 @@ export function Home({ childName, now, go, initialEdit }: Props) {
   // 表演請求：「表演」按鈕與新招慶祝時的示範都走這裡（RoomView 看到 seq 變了就請阿悟演）
   const [perform, setPerform] = useState<{ seq: number; trick: TrickId | 'random' }>({ seq: 0, trick: 'random' })
   const askPerform = (trick: TrickId | 'random') => setPerform((p) => ({ seq: p.seq + 1, trick }))
-  // 新招慶祝：禮物都收下之後才跳；佈置模式（從背包直接進來）不打斷
+  // 新招慶祝：佈置模式（從背包直接進來）不打斷。v7：禮物改放在角落的禮物袋（孩子想收再收），不再擋住新招與回憶卡
   const pendingGifts = settings?.pendingGifts ?? []
   const celebrating = settings?.pendingTricks?.[0]
-  const showTrick = !!celebrating && isTrickId(celebrating) && !initialEdit && !!pet && pendingGifts.length === 0
+  const showTrick = !!celebrating && isTrickId(celebrating) && !initialEdit && !!pet
   const demoed = useRef<string | null>(null)
   useEffect(() => {
     if (!showTrick || !celebrating || !isTrickId(celebrating) || demoed.current === celebrating) return
@@ -137,13 +137,13 @@ export function Home({ childName, now, go, initialEdit }: Props) {
     return () => window.clearTimeout(t)
   }, [showTrick, celebrating])
 
-  // v6：回憶卡是獎勵依序出現的最後一個（材料 → 食物 → 新招 → 回憶卡）：禮物收完、新招慶祝關掉、孵化慶祝關掉之後才跳
+  // v6：回憶卡是獎勵依序出現的最後一個：新招慶祝關掉、孵化慶祝關掉之後才跳
   const toast = useToast()
   const small = useCelebrateSmall()
   const celebrationOpen = useCelebrationOpen()
   const [wardrobeOpen, setWardrobeOpen] = useState(false)
   const nextCard = freshCards(settings?.album)[0]
-  const showMemory = !!nextCard && !!pet && !initialEdit && pendingGifts.length === 0 && !showTrick && !celebrationOpen && !wardrobeOpen
+  const showMemory = !!nextCard && !!pet && !initialEdit && !showTrick && !celebrationOpen && !wardrobeOpen
 
   // 首次進首頁的引導：冒險地圖按鈕亮起、手指指著它，語音「我們去冒險吧」（只出現一次）
   const showGuide = !!settings && !settings.homeGuideShown && !initialEdit
@@ -239,6 +239,8 @@ export function Home({ childName, now, go, initialEdit }: Props) {
         childName={childName}
         favoriteFoodId={favoriteFoodOf(localDateStr(now))}
         goShop={() => go('shop')}
+        goWorkshop={() => go('workshop')}
+        decorQty={Object.fromEntries(inventory.map((v) => [v.itemId, v.qty]))}
         gifts={pendingGifts}
         perform={perform}
       />
