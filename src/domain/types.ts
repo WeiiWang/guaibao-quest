@@ -141,6 +141,11 @@ export interface ColoringProgress {
   createdAt?: number
   /** v7.1：作品選用的畫框（見 domain/frames.ts 的 FrameId）；沒有 = 預設的簡單畫框（舊作品都是這樣） */
   frame?: string
+  // ----- v7.2 連連看：pageId = 'dots:<圖名>:<關卡>' 的列才有；舊存檔沒有這兩欄，當成還沒開始 -----
+  /** 已連到第幾點（0 起算：連好幾個點） */
+  dotsAt?: number
+  /** 這張連連看已經連完（揭曉過 3D 圖） */
+  dotsDone?: boolean
 }
 /** 筆刷種類（v7）。舊資料沒有 kind，視為 'pen' */
 /** 'erase' = 局部橡皮擦：在筆刷層用 destination-out 畫，只擦掉筆刷（不動線稿與填色）；資料仍是一條向量筆畫，可復原 */

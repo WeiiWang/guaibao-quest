@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { QUESTIONS, questionsFor } from './bank'
-import { EN_BY_WORD, EN_GENTLE_WORDS, EN_LANG, EN_WORDS, enKey, englishLines, type EnWord } from './english'
+import { EN_BY_WORD, EN_GENTLE_WORDS, EN_LANG, EN_LETTERS, EN_WORDS, enKey, englishLines, type EnWord } from './english'
 import { englishAnswerParts, englishHintParts, englishPromptParts } from './englishSpeech'
 import { allLines } from './lines'
 import { displayQuestion } from './select'
@@ -185,7 +185,7 @@ describe('英文題庫完整性', () => {
 describe('英文語音：key、語言、清單', () => {
   it('英文單字清單：key 是 en.<word>、文字就是單字；和中文清單分開，key 不衝突', () => {
     const en = englishLines()
-    expect(Object.keys(en)).toHaveLength(EN_WORDS.length)
+    expect(Object.keys(en)).toHaveLength(EN_WORDS.length + EN_LETTERS.length) // v7.2：連連看字母版的 A–Z
     expect(en[enKey('apple')]).toBe('apple')
     expect(en['en.ten']).toBe('ten')
     const zh = allLines(QUESTIONS)

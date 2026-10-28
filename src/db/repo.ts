@@ -36,6 +36,7 @@ import type {
 import { now as clockNow } from '../domain/clock'
 import { isArtworkId, spriteSize } from '../art/items'
 import { getColoringPage, isFreePage, pageName } from '../art/coloring/pages'
+import { DOTS_PRICE, dotsItemId, dotsPoints, isDotsFree, parseDotsId } from '../art/dots/dots'
 import { checkApplyTheme, resolveTheme } from '../domain/theme'
 import { docOf, type PaintDoc } from '../domain/coloring'
 import { bestFrame, isFrameId, isFrameUnlocked, newlyUnlocked, type FrameId } from '../domain/frames'
@@ -1332,7 +1333,58 @@ export class Repo {
   // ---------- 著色 / 畫廊 ----------
   /** 儲存進行中的作品（填色 + 筆刷 + 貼紙） */
   async saveColoringDoc(pageId: string, doc: PaintDoc, now = this.clock()): Promise<void> {
-    await this.db.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, ...(doc.bg ? { bg: doc.bg } : {}), updatedAt: now })
+    const prev = await this.db.coloring.get(pageId)
+    await this.db.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, ...(doc.bg ? { bg: doc.bg } : {}), ...dotsKeep(prev), updatedAt: now })
+  }
+
+  // ---------- 連連看（v7.2 E1）：進度存在 coloring 表同名的列（dotsAt / dotsDone），不升 Dexie 版本 ----------
+  async getDotsProgress(pageId: string): Promise<{ at: number; done: boolean }> {
+    const r = await this.db.coloring.get(pageId)
+    const n = dotsPointCount(pageId)
+    return { at: Math.max(0, Math.min(n, Math.trunc(r?.dotsAt ?? 0))), done: !!r?.dotsDone }
+  }
+
+  /** 連到第 at 點（連完 = at 等於點數時 done 為 true）。中途離開、下次進來接著連 */
+  async saveDotsProgress(pageId: string, at: number, now = this.clock()): Promise<void> {
+    const n = dotsPointCount(pageId)
+    if (!n) return
+    const d = this.db
+    await d.transaction('rw', d.coloring, async () => {
+      const prev = await d.coloring.get(pageId)
+      const a = Math.max(0, Math.min(n, Math.trunc(at)))
+      await d.coloring.put({ ...(prev ?? { fills: {} }), pageId, updatedAt: now, dotsAt: a, ...(a >= n ? { dotsDone: true } : {}) })
+    })
+  }
+
+  /** 「再玩一次」：從頭連，之前塗的顏色、貼紙也清掉（畫廊裡完成過的作品不受影響） */
+  async resetDots(pageId: string, now = this.clock()): Promise<void> {
+    if (!dotsPointCount(pageId)) return
+    await this.db.coloring.put({ pageId, fills: {}, updatedAt: now, dotsAt: 0 })
+  }
+
+  /** 這一頁連連看能不能玩：每種難度前 3 張免費，其餘要換過（背包有 coloring-<pageId>） */
+  async dotsUnlocked(pageId: string): Promise<boolean> {
+    const p = parseDotsId(pageId)
+    if (!p) return false
+    if (isDotsFree(p.name)) return true
+    return ((await this.db.inventory.get(dotsItemId(pageId)))?.qty ?? 0) > 0
+  }
+
+  /** 用 20 顆星星換一張連連看（和商店購買同一本帳，可以在家長區看到） */
+  async unlockDots(pageId: string, now = this.clock()): Promise<Result<{ ledgerId?: string; already: boolean }>> {
+    const p = parseDotsId(pageId)
+    if (!p) return { ok: false, error: '找不到這一頁' }
+    const d = this.db
+    return d.transaction('rw', [d.ledger, d.inventory], async () => {
+      const itemId = dotsItemId(pageId)
+      if (isDotsFree(p.name) || ((await d.inventory.get(itemId))?.qty ?? 0) > 0) return { ok: true, already: true } as const
+      const bal = balanceOf(await d.ledger.toArray())
+      if (bal < DOTS_PRICE) return { ok: false, error: `還差 ${DOTS_PRICE - bal} 點` } as const
+      const ledgerId = newId()
+      await d.ledger.add({ id: ledgerId, at: now, delta: -DOTS_PRICE, reason: `購買：連連看 ${pageName(pageId) ?? ''}`.trim(), kind: 'purchase', refId: itemId })
+      await d.inventory.put({ id: itemId, itemId, qty: 1 })
+      return { ok: true, ledgerId, already: false } as const
+    })
   }
 
   /** 空白畫紙「再畫一張新的」：清掉這個存檔欄位（畫廊裡完成過的作品不受影響） */
@@ -1379,7 +1431,8 @@ export class Repo {
       // 沒算進收藏的作品（畫得太少）不戴畫框，維持預設的簡單畫框
       const frame = counted ? best : undefined
       if (counted && s) await d.settings.update(SETTINGS_ID, { framesDone: after })
-      await d.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, ...(doc.bg ? { bg: doc.bg } : {}), updatedAt: now })
+      const prevRow = await d.coloring.get(pageId)
+      await d.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, ...(doc.bg ? { bg: doc.bg } : {}), ...dotsKeep(prevRow), updatedAt: now })
       await d.coloring.put({
         pageId: `g:${galleryId}`,
         basePageId: pageId,
@@ -1484,6 +1537,17 @@ export class Repo {
       await d.shopItems.delete(itemId)
     })
   }
+}
+
+/** 連連看的進度欄位（存檔時要保留，不能被畫板的存檔蓋掉） */
+function dotsKeep(prev: ColoringProgress | undefined): { dotsAt?: number; dotsDone?: boolean } {
+  if (!prev) return {}
+  return { ...(prev.dotsAt !== undefined ? { dotsAt: prev.dotsAt } : {}), ...(prev.dotsDone ? { dotsDone: true } : {}) }
+}
+/** 這一頁連連看有幾個點（不是連連看頁 = 0） */
+function dotsPointCount(pageId: string): number {
+  const p = parseDotsId(pageId)
+  return p ? dotsPoints(p.name, p.level).length : 0
 }
 
 export const repo = new Repo()

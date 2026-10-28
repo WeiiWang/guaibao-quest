@@ -1,3 +1,4 @@
+import { dotsItem } from '../dots/dots'
 import { STICKER_BASE } from '../../domain/coloring'
 import { drawBackground } from './backgrounds'
 import { drawStroke } from './brushes'
@@ -76,5 +77,36 @@ export async function renderArtworkPng(input: ExportInput, emojiOf: EmojiOf = ()
     }
     ctx.restore()
   })
+  return canvas.toDataURL('image/png')
+}
+
+/**
+ * 連連看連完、直接按「完成」存進畫廊的作品：淡紫底 + 3D 圖（位置與輪廓對齊）。
+ * 要「拿去塗色」的作品走 renderArtworkPng（剪影 + 填色 + 筆刷 + 貼紙）。
+ */
+export async function renderDotsArtworkPng(name: string, size = 720): Promise<string> {
+  const it = dotsItem(name)
+  if (!it) throw new Error('找不到連連看頁')
+  const img = await loadImage(`${import.meta.env.BASE_URL}art/${name}.png`)
+  if (!img) throw new Error('找不到圖片')
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('不能建立畫布')
+  const g = ctx.createLinearGradient(0, 0, 0, size)
+  g.addColorStop(0, '#fbf8ff')
+  g.addColorStop(1, '#ece3ff')
+  ctx.fillStyle = g
+  ctx.fillRect(0, 0, size, size)
+  const px = (v: number) => toUnit(v) * size
+  const unit = size / VIEWBOX.size
+  const [x, y, w, h] = it.img
+  // 腳下的淡淡影子
+  ctx.fillStyle = 'rgba(120, 90, 190, 0.14)'
+  ctx.beginPath()
+  ctx.ellipse(px(200), px(y + h * 0.97), w * unit * 0.34, h * unit * 0.035, 0, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.drawImage(img, px(x), px(y), w * unit, h * unit)
   return canvas.toDataURL('image/png')
 }

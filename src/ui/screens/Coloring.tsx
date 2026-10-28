@@ -45,6 +45,8 @@ import { StickerTray, type DropApi } from './coloring/StickerTray'
 import { stickerEmoji } from './coloring/stickers'
 import { COUNT_MIN_PCT, FRAME_UNLOCK_LINE, countsAsFinished, frameDef, framesToGo, nextFrame, type FrameId } from '../../domain/frames'
 import { GalleryFrameView } from '../components/GalleryFrame'
+import { isDotsPageId } from '../../art/dots/dots'
+import { DotsShelf } from './dots/DotsShelf'
 import type { Screen } from '../App'
 import './coloring.css'
 import './paintboard.css'
@@ -177,6 +179,7 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
         </li>
       
       </ul>
+      <DotsShelf onOpen={onOpen} />
       <h2 className="pb-tier-title" data-testid="tier-easy">簡單</h2>
       {grid(easy, 'easy')}
       {hard.open.length + hard.locked.length > 0 && (
@@ -225,6 +228,8 @@ const SCENE_CSS: Record<string, string> = {
 export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onBack: () => void; go?: (s: Screen["name"] | Screen) => void }) {
   const page = getColoringPage(pageId)
   const free = isFreePage(pageId)
+  /** v7.2 連連看拿來塗的頁：剪影只有一個區塊，不看完成度（有塗就算，和空白畫紙一樣） */
+  const loose = free || isDotsPageId(pageId)
   const toast = useToast()
   const soundOn = useSoundOn()
   const { voiceOn } = useLearningSettings()
@@ -353,7 +358,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
   /** 按「完成」：畫得太少（著色頁完成度 < 60%）先問「再畫一點好嗎？」；空白畫紙沒有完成度，不問 */
   const finish = () => {
     if (docIsEmpty(d)) return toast(free ? '先畫一點東西再按完成吧！' : '先畫一點顏色再按完成吧！', 'info')
-    if (!free && pct < ASK_BELOW_PCT) {
+    if (!loose && pct < ASK_BELOW_PCT) {
       setAsk(true)
       sayText('再畫一點好嗎？', { enabled: voiceOn })
       return
@@ -365,7 +370,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
     setBusy(true)
     try {
       const png = await renderArtworkPng({ pageId, bg: d.bg, fills: d.fills, strokes: d.strokes, stickers: d.stickers }, stickerEmoji)
-      const r = await repo.completeColoring(pageId, d, png, undefined, { counts: countsAsFinished(free, pct) })
+      const r = await repo.completeColoring(pageId, d, png, undefined, { counts: countsAsFinished(loose, pct) })
       if (!r.ok) throw new Error(r.error)
       playChime(soundOn, r.newFrames.length ? [523, 659, 784, 1047, 1319] : [523, 659, 784, 1047])
       setDone({ galleryId: r.galleryId, png, hung: false, frame: r.frame, newFrames: r.newFrames, framesDone: r.framesDone, counted: r.counted })
@@ -662,7 +667,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
 }
 
 /** 完成慶祝：阿悟拿著畫說「好漂亮！」。累計到門檻會多一塊「解鎖新畫框！」 */
-function FinishCelebration({ png, hung, frame, newFrames, framesDone, counted, voiceOn, stage, free, onHang, onGallery, onKeep, onRestart, onBack }: { png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean; voiceOn: boolean; stage: string; free: boolean; onHang: () => void; onGallery: () => void; onKeep: () => void; onRestart: () => void; onBack: () => void }) {
+export function FinishCelebration({ png, hung, frame, newFrames, framesDone, counted, voiceOn, stage, free, onHang, onGallery, onKeep, onRestart, onBack }: { png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean; voiceOn: boolean; stage: string; free: boolean; onHang: () => void; onGallery: () => void; onKeep: () => void; onRestart: () => void; onBack: () => void }) {
   const art = stage === 'egg' ? 'pet-egg' : `pet-${stage}-cheer`
   const confetti = useMemo(
     () => Array.from({ length: 28 }, (_, i) => ({ left: (i * 37) % 100, delay: (i % 7) * 0.18, dur: 2.6 + (i % 5) * 0.4, hue: (i * 47) % 360 })),

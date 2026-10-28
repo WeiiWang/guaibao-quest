@@ -32,11 +32,13 @@ export const numberKey = (n: number): string => `num.${n}`
 export const totalKey = (n: number): string => `count.total.${n}`
 export const totalText = (n: number): string => `一共有${NUM[n] ?? n}個`
 
-/** 1–20 轉中文數字（唸給孩子聽：一、二、三…） */
+/** 1–30 轉中文數字（唸給孩子聽：一、二、三…；21–30 給連連看的挑戰關） */
 export function chineseNumber(n: number): string {
   if (n <= 10) return NUM[n] ?? String(n)
   if (n < 20) return `十${NUM[n - 10]}`
   if (n === 20) return '二十'
+  if (n < 30) return `二十${NUM[n - 20]}`
+  if (n === 30) return '三十'
   return String(n)
 }
 
@@ -181,6 +183,12 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'ui.frame.unlock': '解鎖新畫框！',
   'ui.frame.locked': '再多畫幾幅，這個畫框就是你的了',
   'ui.frame.pick': '幫這幅畫選一個畫框',
+  // v7.2 連連看（點點連線）：開場提示、換到新頁、連完阿悟說的話（句子來源在 src/art/dots/dots.ts 的 DOTS_LINES，兩邊要一字不差，dots.test.ts 會檢查）
+  'ui.dots.start': '從數字一開始，一個一個連起來',
+  'ui.dots.startAbc': '從字母 A 開始，一個一個連起來',
+  'ui.dots.price': '這張要用20顆星星換喔',
+  'ui.dots.opened': '換到囉，開始連吧！',
+  'pet.dots.done': ['哇，是星星！你連出來了！', '哇，是小魚！你連出來了！', '哇，是香蕉！你連出來了！', '哇，是蘋果！你連出來了！', '哇，是小兔子！你連出來了！', '哇，是小雞！你連出來了！', '哇，是小熊！你連出來了！', '哇，是章魚！你連出來了！', '哇，是西瓜！你連出來了！', '哇，是花！你連出來了！', '哇，是蛋糕！你連出來了！', '哇，是阿悟！你連出來了！'],
   // v6 成長相簿：回憶卡上的一句話（句型見 src/domain/album.ts；學會新招那張和 ui.trick.learn 同一句，不重複列）
   'ui.album.card': [
     '阿悟孵出來了！',
@@ -244,7 +252,7 @@ export function questionLines(q: Pick<Question, 'id' | 'skill' | 'prompt' | 'hin
 export function allLines(bank: Pick<Question, 'id' | 'skill' | 'prompt' | 'hint' | 'params'>[]): Record<string, string> {
   const out: Record<string, string> = {}
   for (const l of staticLineList()) out[l.key] = l.text
-  for (let n = 0; n <= 20; n++) out[numberKey(n)] = chineseNumber(n)
+  for (let n = 0; n <= 30; n++) out[numberKey(n)] = chineseNumber(n)
   for (let n = 1; n <= 20; n++) out[totalKey(n)] = totalText(n)
   out[wordKey('空格')] = '空格'
   out['gentle.prefix'] = GENTLE_PREFIX

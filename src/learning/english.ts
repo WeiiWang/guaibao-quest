@@ -84,7 +84,10 @@ export const EN_GENTLE_WORDS = ['apple', 'banana', 'fish', 'chick', 'star', 'car
 export const EN_LANG = 'en-US'
 export const enKey = (word: string): string => `en.${word}`
 
+/** v7.2 連連看字母版：A–Z（大寫，英文語音唸字母名；key = en.A…en.Z） */
+export const EN_LETTERS: readonly string[] = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
+
 /** 所有要生成英文音檔的句子：key → 英文 */
 export function englishLines(): Record<string, string> {
-  return Object.fromEntries(EN_WORDS.map((w) => [enKey(w.word), w.word]))
+  return Object.fromEntries([...EN_WORDS.map((w) => [enKey(w.word), w.word]), ...EN_LETTERS.map((l) => [enKey(l), l])])
 }
