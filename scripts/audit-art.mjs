@@ -43,6 +43,7 @@ const press = (pin) => page.evaluate(async (p) => { for (const d of p) [...docum
 await press('1234'); await press('1234')
 await page.getByPlaceholder('小朋友的名字').fill('小明')
 await page.getByRole('button', { name: '下一步' }).click()
+await page.getByTestId('onboard-age-skip').click() // v7：onboarding 多一頁「幾歲」；舊測試選「之後再設定」，維持年齡未設定的前提
 await page.getByRole('button', { name: '下一步' }).click()
 await scan('Onboarding（蛋）')
 await page.getByRole('button', { name: '開始冒險' }).click()

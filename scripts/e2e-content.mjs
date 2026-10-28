@@ -6,6 +6,7 @@ import { chromium } from 'playwright-core'
 import { existsSync, readdirSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
+import { stripWelcome } from './e2e-lib.mjs'
 
 const BASE = process.env.BASE_URL ?? 'http://localhost:5181'
 
@@ -81,8 +82,12 @@ async function freshApp(browser, viewport, opts = {}) {
   await press('1234')
   await page.getByPlaceholder('小朋友的名字').fill('小明')
   await page.getByRole('button', { name: '下一步' }).click()
+  await page.getByTestId('onboard-age-skip').click() // v7：onboarding 多一頁「幾歲」；舊測試選「之後再設定」，維持年齡未設定的前提
   await page.getByRole('button', { name: '下一步' }).click()
   await page.getByRole('button', { name: '開始冒險' }).click()
+  await page.waitForSelector('[data-testid=room]')
+  await stripWelcome(page) // v7：拿掉歡迎禮物，維持「新孩子 0 星星」的前提
+  await page.reload()
   await page.waitForSelector('[data-testid=room]')
   return { ctx, page, errors }
 }
@@ -177,9 +182,9 @@ try {
     const mats = await dump(page, 'materialLedger')
     const sum = (m) => mats.filter((x) => x.material === m).reduce((s, x) => s + x.delta, 0)
     check('扣掉材料（木 0、石 1、花 3）', sum('wood') === 0 && sum('stone') === 1 && sum('flower') === 3, `${sum('wood')}/${sum('stone')}/${sum('flower')}`)
-    check('做好的變成「去佈置」', (await page.locator('[data-testid=craft-decor-car] .ws-btn').innerText()) === '去佈置')
+    check('做好的變成「去佈置」', (await page.locator('[data-testid=craft-decor-car] .ws-btn').first().innerText()) === '去佈置')
     // 佈置模式能拿到新家具
-    await page.locator('[data-testid=craft-decor-car] .ws-btn').click()
+    await page.locator('[data-testid=craft-decor-car] .ws-btn').first().click()
     await page.waitForSelector('[data-dock-item=decor-car]')
     check('去佈置後，新家具出現在佈置列', (await page.locator('[data-dock-item=decor-car]').count()) === 1)
     check('做家具流程沒有 JS 錯誤', errors.length === 0, errors.join(' | '))

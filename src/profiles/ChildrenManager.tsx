@@ -109,6 +109,7 @@ export function ChildrenManager() {
         ))}
       </ul>
       {onlyOne && <p className="lt-note">目前只有一個孩子，不能刪除。</p>}
+      <p className="lt-note" data-testid="age-hint">年齡決定學習從哪裡開始（3 歲是幼幼模式）；已經玩過的技能不會被改動。要改年齡，按該孩子的「改名/年齡」。</p>
       <button className="btn primary" data-testid="kid-add" onClick={openAdd}>
         新增孩子
       </button>

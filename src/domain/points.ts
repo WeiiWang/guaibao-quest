@@ -2,18 +2,21 @@ import { DAILY_POINT_CAP } from './constants'
 import { localDateStr } from './date'
 import type { PointLedger } from './types'
 
-type L = Pick<PointLedger, 'at' | 'delta' | 'kind'>
+/** 歡迎禮物那筆流水帳的 refId（不計入每日點數上限） */
+export const WELCOME_REF = 'welcome'
+
+type L = Pick<PointLedger, 'at' | 'delta' | 'kind'> & { refId?: string }
 
 /** 餘額 = 流水帳加總，不存欄位 */
 export function balanceOf(ledger: readonly Pick<PointLedger, 'delta'>[]): number {
   return ledger.reduce((s, e) => s + e.delta, 0)
 }
 
-/** 某本地日期已獲得的點數（任務 + 家長加點；扣點與購買不影響上限） */
+/** 某本地日期已獲得的點數（任務 + 家長加點；扣點、購買與一次性的歡迎禮物不影響上限） */
 export function earnedOn(ledger: readonly L[], date: string): number {
   return ledger.reduce(
     (s, e) =>
-      e.delta > 0 && (e.kind === 'task' || e.kind === 'bonus') && localDateStr(e.at) === date
+      e.delta > 0 && (e.kind === 'task' || e.kind === 'bonus') && e.refId !== WELCOME_REF && localDateStr(e.at) === date
         ? s + e.delta
         : s,
     0,

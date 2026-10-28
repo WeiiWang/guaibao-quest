@@ -375,7 +375,7 @@ try {
     const t0 = Date.now()
     while (Date.now() - t0 < 60000) {
       const s = await page.evaluate(() => ({
-        gift: !!document.querySelector('[data-testid=gift]'),
+        gift: false,
         trick: !!document.querySelector('[data-testid=trick-celebrate]'),
         memory: !!document.querySelector('[data-testid=memory-pop]'),
       }))
@@ -387,8 +387,9 @@ try {
       else if (s.memory) break
       await page.waitForTimeout(150)
     }
-    check('獎勵依序出現：禮物 → 新招慶祝 → 回憶卡', seen.join('>') === 'gift>trick>memory', seen.join('>'))
-    check('三種獎勵不會同時出現（任何時刻最多一個）', maxAtOnce <= 1, String(maxAtOnce))
+    check('獎勵依序出現：新招慶祝 → 回憶卡（v7：禮物改放禮物袋，不再擋在前面）', seen.join('>') === 'trick>memory', seen.join('>'))
+    check('兩種獎勵不會同時出現（任何時刻最多一個）', maxAtOnce <= 1, String(maxAtOnce))
+    check('禮物袋一直在角落等孩子收', (await page.getByTestId('gift-bag').count()) === 1)
     check('輪到的回憶卡是這次的新招那張', (await page.getByTestId('memory-pop').getAttribute('data-card')) === 'trick:flip')
     // 沒有操作，回憶卡幾秒後自己收進相簿
     await page.waitForSelector('[data-testid=memory-pop]', { state: 'detached', timeout: 9000 })

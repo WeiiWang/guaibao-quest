@@ -344,13 +344,26 @@ try {
 
   check('頁面沒有 JS 錯誤（一般模式）', errors.length === 0, errors.slice(0, 2).join(' | '))
 
+  // v7：年齡在名冊的「改名/年齡」視窗改（設定分頁的第二個入口已移除）
+  const setAge = async (page, band) => {
+    await page.getByTestId('kid-edit').first().click()
+    await page.getByTestId(`child-age-${band}`).click()
+    await page.getByTestId('kid-edit-submit').click()
+    await page.waitForTimeout(300)
+  }
   // ---------- 年齡設定（家長「設定」分頁）影響起始難度 ----------
   const age = await freshApp(browser, { width: 1024, height: 768 })
   await openParentTab(age.page, '設定')
-  check('設定分頁有三檔年齡：3 歲、4–5 歲、6–7 歲，預設都沒選', (await age.page.locator('[role=radio][data-testid^=age-]').count()) === 3 && (await age.page.locator('[role=radio][data-testid^=age-][aria-checked=true]').count()) === 0)
-  await age.page.getByTestId('age-6-7').click()
+  // v7：年齡只剩名冊（孩子們）裡這一個入口：改名/年齡視窗（freshApp 的 onboarding 選「之後再設定」，所以一開始都沒選）
+  check('v7：設定頁沒有第二個年齡卡', (await age.page.getByTestId('age-card').count()) === 0)
+  await age.page.getByTestId('kid-edit').first().click()
+  check('名冊的改名/年齡視窗有三檔年齡：3 歲、4–5 歲、6–7 歲，onboarding 略過所以都沒選', (await age.page.locator('[role=radio][data-testid^=child-age-]').count()) === 3 && (await age.page.locator('[role=radio][data-testid^=child-age-][aria-checked=true]').count()) === 0)
+  await age.page.getByTestId('child-age-6-7').click()
+  await age.page.getByTestId('kid-edit-submit').click()
   await age.page.waitForTimeout(300)
-  check('選 6–7 歲：存進設定、按鈕亮起', (await age.page.getByTestId('age-6-7').getAttribute('aria-checked')) === 'true')
+  await age.page.getByTestId('kid-edit').first().click()
+  check('選 6–7 歲：存進設定、按鈕亮起', (await age.page.getByTestId('child-age-6-7').getAttribute('aria-checked')) === 'true')
+  await age.page.getByRole('button', { name: '取消' }).click()
   const s67 = await idb(age.page, (db) => new Promise((r) => (db.transaction('settings').objectStore('settings').get('main').onsuccess = (e) => r(e.target.result))))
   check('年齡存在 settings.ageBand（optional 欄位，沒升資料庫版本）', s67.ageBand === '6-7')
   await shot(age.page, 'age-setting')
@@ -382,8 +395,7 @@ try {
   await g.page.reload()
   await g.page.waitForSelector('[data-testid=room]')
   await openParentTab(g.page, '設定')
-  await g.page.getByTestId('age-3').click()
-  await g.page.waitForTimeout(300)
+  await setAge(g.page, '3')
   await g.page.evaluate(() => (location.hash = 'map'))
   await g.page.waitForSelector('[data-testid=map]')
   await g.page.getByTestId('station-1').click()
@@ -434,8 +446,7 @@ try {
   const f = await freshApp(browser, { width: 1024, height: 768 })
   const flash = findG((q) => q.params?.flash)
   await openParentTab(f.page, '設定')
-  await f.page.getByTestId('age-3').click()
-  await f.page.waitForTimeout(250)
+  await setAge(f.page, '3')
   await startPlan(f.page, [flash.id, ...ALL.filter((q) => q.gentle && q.skill === 'classify').slice(0, 4).map((q) => q.id)], { clearAttempts: true })
   check('快閃：一開始看得到物件', (await f.page.locator('.qv-stem .pile').count()) === 1)
   await f.page.waitForSelector('[data-testid=flash-again]', { timeout: 6000 })

@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { Pet } from '../../domain/types'
 import { BABY_AT_FEED_COUNT } from '../../domain/constants'
+import { eggArtChain } from '../../domain/home7'
 import { Art } from './Art'
 import { useArtStatuses, useFirstArt } from '../artProbe'
 import { hasHatEntry, hatAspect } from '../../art/hats'
@@ -45,8 +46,8 @@ export const petPoseArt = (stage: 'baby' | 'adult'): string[] =>
 /** 依成長階段、心情決定要用哪張圖（候選清單：第一張不存在就往後找） */
 export function petArtCandidates(pet: Pick<Pet, 'stage' | 'feedCount'>, mood: Props['mood'], eating?: boolean, pose?: PetPose): string[] {
   if (pet.stage === 'egg') {
-    const nearHatch = pet.feedCount / BABY_AT_FEED_COUNT >= 0.8
-    return nearHatch ? ['pet-egg-crack', 'pet-egg'] : ['pet-egg', 'pet-egg-crack']
+    // v7：蛋依孵化進度換外觀（0–33% 原蛋、33–66% 小裂紋、66–90% 發光、90% 以上快破了）；新圖缺的時候退回前一階段
+    return eggArtChain(pet.feedCount / BABY_AT_FEED_COUNT)
   }
   const s = pet.stage
   const moodPose = mood === 'happy' ? 'happy' : mood === 'low' ? 'sleepy' : 'idle'

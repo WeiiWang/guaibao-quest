@@ -77,7 +77,7 @@ export interface Gift {
   /** 貼紙（public/art 素材名；只記錄） */
   stickerId?: string
   at: number
-  from: 'station' | 'daily' | 'collection'
+  from: 'station' | 'daily' | 'collection' | 'welcome'
 }
 export type DecorSlot = 'wall' | 'floor'
 export type ThemeSlot = 'wall' | 'floor'
@@ -108,6 +108,8 @@ export interface Placement {
   z: number
   flipped: boolean
   placedAt: number
+  /** v7：家具換色（1–4 = 四種色調；沒有 / 0 = 原色），用 CSS filter 呈現。舊資料沒有這欄 */
+  tint?: number
 }
 export interface Inventory {
   id: string
@@ -192,6 +194,10 @@ export interface Settings {
   pendingTricks?: string[]
   /** v6：家長（PM 預覽）直接解鎖的章節 id（正常是通關前一章才解鎖） */
   unlockedChapters?: string[]
+  /** v7：已經送過歡迎禮物（20 顆星星 + 1 個食物，只送一次；舊孩子沒有這欄也不補送） */
+  welcomeGranted?: boolean
+  /** v7：已經送過的成長里程碑（幼體 → 成體路上，每餵 20 次一份；存門檻 40、60） */
+  milestonesGiven?: number[]
   /** v6：成長相簿的回憶卡（依時間排序顯示；不升 Dexie 版本） */
   album?: AlbumCard[]
   /** v6：相簿已經依現況補建過舊里程碑（只補一次；之後新里程碑才會有「新卡」提示） */
@@ -199,7 +205,7 @@ export interface Settings {
 }
 
 /** v6：回憶卡的種類 */
-export type AlbumKind = 'hatch' | 'grow' | 'trick' | 'chapter' | 'hat'
+export type AlbumKind = 'hatch' | 'grow' | 'trick' | 'chapter' | 'hat' | 'milestone'
 /** v6：成長相簿的一張回憶卡。畫面用元件即時繪製（不截圖）：阿悟當時的姿勢圖、日期、一句話 */
 export interface AlbumCard {
   /** 固定規則的 id（hatch、grow、trick:<招>、chapter:<章>、hat:first），同一件事不會重複 */
@@ -215,6 +221,8 @@ export interface AlbumCard {
   fresh?: boolean
   /** 日期是估計的（補建的舊里程碑）：畫面顯示「以前」而不是日期 */
   approx?: boolean
+  /** v7：成長里程碑送的小禮物（商品 id，例 'decor-ball'、'wall-mint'）；卡片上顯示它的圖 */
+  reward?: string
 }
 
 /** 年齡檔：3 歲 = 幼幼模式；4–5 歲從難度 1；6–7 歲從難度 2 */

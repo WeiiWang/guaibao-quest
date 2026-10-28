@@ -170,13 +170,15 @@ describe('工坊', () => {
     expect(await repo.materialBalance()).toEqual({ wood: 0, stone: 0, flower: 0 })
     expect((await repo.db.inventory.get('decor-plant'))?.qty).toBe(1)
   })
-  it('已經做過不能再做；並行連點只做一件、只扣一次', async () => {
-    await give(20, 20, 20)
+  it('v7：同一件家具最多做 3 個，每個各扣一次材料；第 4 個不能做', async () => {
+    await give(40, 40, 40)
     const rs = await Promise.all([repo.craftFurniture('decor-ball', T0), repo.craftFurniture('decor-ball', T0)])
-    expect(rs.filter((r) => r.ok)).toHaveLength(1)
+    expect(rs.filter((r) => r.ok)).toHaveLength(2)
     const c = DECOR_COSTS['decor-ball']
-    expect((await repo.materialBalance()).wood).toBe(20 - c.wood)
+    expect((await repo.materialBalance()).wood).toBe(40 - 2 * c.wood)
+    expect((await repo.craftFurniture('decor-ball', T0)).ok).toBe(true)
     expect((await repo.craftFurniture('decor-ball', T0)).ok).toBe(false)
+    expect((await repo.db.inventory.get('decor-ball'))?.qty).toBe(3)
   })
   it('不是家具/不存在的東西不能做；做好的家具可以擺放', async () => {
     await give(50, 50, 50)
@@ -298,9 +300,10 @@ describe('Dexie v3 migration：舊玩家資料不遺失', () => {
     for (const p of plan) await r.recordAttempt({ sessionId: 'old', questionId: p.question.id, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0)
     expect((await r.completeStation({ chapterId: 'huaguoshan', station: 1, sessionId: 'old' }, T0)).ok).toBe(true)
     expect((await r.getLearningSettings()).dailyLimitMin).toBe(20)
-    // 已擁有的盆栽不能重複製作
+    // v7：已擁有的盆栽可以再做第二個（最多 3 個）
     await r.db.materialLedger.put({ id: 'big', at: T0, material: 'flower', delta: 50, kind: 'station', reason: 't' })
-    expect((await r.craftFurniture('decor-plant')).ok).toBe(false)
+    expect((await r.craftFurniture('decor-plant')).ok).toBe(true)
+    expect((await r.db.inventory.get('decor-plant'))?.qty).toBe(2)
     // 星星帳不受影響
     expect(await r.balance()).toBe(20)
   })

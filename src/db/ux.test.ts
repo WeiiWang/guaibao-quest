@@ -185,14 +185,18 @@ describe('掛畫預設位置', () => {
     expect((first.x - PET_X) * ROOM_WIDTH_FACTOR + 0.5).toBeGreaterThanOrEqual(0.55)
     expect(first.y).toBeLessThan(0.3) // 第一幅放在牆面上方，最顯眼
   })
-  it('hangArtwork 第一幅畫放在右側，不在牆面左上', async () => {
+  it('hangArtwork（v7）自動挑空牆面：不蓋到窗戶，第二幅不蓋到第一幅', async () => {
     await repo.seedShop()
-    const res = await repo.completeColoring('monkey', { fills: { a: '#ff0000' }, strokes: [], stickers: [] }, 'data:image/png;base64,AAAA', T0)
-    if (!res.ok) throw new Error(res.error)
-    const h = await repo.hangArtwork(res.galleryId, T0)
-    if (!h.ok) throw new Error(h.error)
-    const pl = (await repo.db.placements.get(h.itemId))!
-    expect(pl.x).toBeGreaterThan(PET_X)
-    expect(pl.y).toBeLessThan(0.5)
+    const ids: string[] = []
+    for (let i = 0; i < 2; i++) {
+      const res = await repo.completeColoring('monkey', { fills: { a: '#ff0000' }, strokes: [], stickers: [] }, 'data:image/png;base64,AAAA', T0 + i)
+      if (!res.ok) throw new Error(res.error)
+      const h = await repo.hangArtwork(res.galleryId, T0)
+      if (!h.ok) throw new Error(h.error)
+      ids.push(h.itemId)
+    }
+    const [a, b] = await Promise.all(ids.map((id) => repo.db.placements.get(id)))
+    expect(a!.y).toBeLessThan(0.5)
+    expect(Math.hypot(a!.x - b!.x, a!.y - b!.y)).toBeGreaterThan(0.05)
   })
 })

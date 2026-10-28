@@ -38,7 +38,7 @@ export function WeeklyTab() {
         <p className="lt-note">{md(report.from)} 到 {md(report.to)}（最近 7 天，今天是 {md(today)}）</p>
         {many && (
           <p className="lt-tip" data-testid="weekly-switch-note">
-            現在看的是「{data.childName}」。要看其他孩子的報告：回到小孩模式，點左上角的頭像換人，再進家長區的「本週」。
+            現在看的是「{data.childName}」。要看其他孩子的報告：點上方的孩子頭像就能切換，不用離開家長區。
           </p>
         )}
         <div className="lt-big">

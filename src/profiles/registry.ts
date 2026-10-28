@@ -15,8 +15,10 @@ export interface ChildProfile {
   /** 這個孩子的 IndexedDB 名稱：第一個孩子是 `guaibao-quest`，之後是 `guaibao-quest-<id>` */
   dbName: string
   createdAt: number
-  /** 選孩子畫面的排序 */
+  /** 選孩子畫面的排序（也決定選孩子畫面的專屬顏色） */
   order: number
+  /** v7：歡迎禮物的狀態。false = 新孩子還沒送；true = 已送；沒有這欄 = v7 以前就有的孩子（不補送） */
+  welcomed?: boolean
 }
 
 interface MetaRow {

@@ -27,10 +27,12 @@ import { useCelebrate, useToast } from '../hooks'
 import { useCelebrateSmall } from '../feedback'
 import { playSfx } from '../../learning/sfx'
 import { flyOne, iconNode } from '../fly'
-import { giftLine } from '../../domain/giftLines'
-import { giftRef } from '../../domain/gifts'
+import { baseIdOf, GIFT_BAG_DONE_LINE, GIFT_THANKS_LINES, nextTint, tintFilter, unplacedCount, DECOR_TINTS } from '../../domain/home7'
 import type { TrickId } from '../../domain/tricks'
-import { GiftItem, giftArt } from '../pet/GiftItem'
+import { giftArt } from '../pet/GiftItem'
+import { GiftBag } from '../pet/GiftBag'
+import { ProgressEgg } from '../pet/ProgressEgg'
+import { sayRecorded, sayText } from '../../learning/speech'
 import { TAP_FEED_GAP_MS } from '../../domain/constants'
 import { useLearningSettings } from '../learningHooks'
 import { playPetSound } from '../../pet/sounds'
@@ -40,6 +42,7 @@ import { foodMeta } from '../pet/foodFx'
 import { useReducedMotion, useTodMode } from '../pet/hooks'
 import { usePetLife, type Geometry } from '../pet/usePetLife'
 import '../pet/pet.css'
+import '../home7.css'
 
 interface Props {
   pet: Pet
@@ -52,6 +55,10 @@ interface Props {
   feedHintShown: boolean
   initialEdit: boolean
   goShop: () => void
+  /** v7：佈置模式沒有家具時去工坊做 */
+  goWorkshop?: () => void
+  /** v7：每件家具擁有幾個（沒給 = 1；最多擺 3 個） */
+  decorQty?: Record<string, number>
   /** 小孩的名字（阿悟揮手時會叫） */
   childName?: string
   /** 今天阿悟最喜歡的食物 id（SPEC B2）；吃到時愛心加倍、說「最喜歡了！」。沒有就不演 */
@@ -88,15 +95,18 @@ interface DragView {
 
 const MOOD_TEXT = { happy: '好開心！', normal: '還不錯～', low: '好餓，無精打采…' } as const
 const TOOLBAR_H = 64
-const unplacedKey = (decor: ShopItem[], placements: Placement[]) => {
-  const placed = new Set(placements.map((p) => p.itemId))
-  return decor.filter((d) => !placed.has(d.id)).map((d) => d.id).join()
+/** 還沒擺出來的家具（每件家具可能有多個：回傳 [商品, 還剩幾個]） */
+const unplacedOf = (decor: ShopItem[], placements: Placement[], qty?: Record<string, number>): [ShopItem, number][] => {
+  const keys = placements.map((p) => p.itemId)
+  return decor.map((d): [ShopItem, number] => [d, unplacedCount(d.id, qty?.[d.id] ?? 1, keys)]).filter(([, n]) => n > 0)
 }
+const unplacedKey = (decor: ShopItem[], placements: Placement[], qty?: Record<string, number>) =>
+  unplacedOf(decor, placements, qty).map(([d, n]) => `${d.id}:${n}`).join()
 const toRect = (r: DOMRect): Rect => ({ left: r.left, top: r.top, right: r.right, bottom: r.bottom })
 /** 由 id 算一個固定的小數，讓每坨便便的位置、蒼蠅有點不同 */
 const hashOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
 
-export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, childName = '', favoriteFoodId = null, gifts, perform }: Props) {
+export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, goWorkshop, decorQty, childName = '', favoriteFoodId = null, gifts, perform }: Props) {
   const toast = useToast()
   const celebrate = useCelebrate()
   const { soundOn, voiceOn } = useLearningSettings()
@@ -174,7 +184,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 4
     setDockFade((f) => (f.left === left && f.right === right ? f : { left, right }))
   }, [])
-  const dockContentKey = edit ? unplacedKey(ownedDecor, placements) : foods.map((f) => `${f.item.id}${f.qty > 0 ? 1 : 0}`).join()
+  const dockContentKey = edit ? unplacedKey(ownedDecor, placements, decorQty) : foods.filter((f) => f.qty > 0).map((f) => f.item.id).join()
   useLayoutEffect(() => {
     measureDock()
     const el = dockRef.current
@@ -188,10 +198,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const mood = moodAt(pet, now)
   const next = feedsToNextStage(pet)
   const itemById = useMemo(() => new Map(ownedDecor.map((d) => [d.id, d])), [ownedDecor])
-  const placedIds = new Set(placements.map((p) => p.itemId))
   const roomTheme = useRoomTheme()
-  const glows = placements.filter((p) => p.itemId === 'decor-lamp' || p.itemId === 'decor-cloudlamp').map((p) => ({ x: p.x, y: p.y }))
-  const unplaced = ownedDecor.filter((d) => !placedIds.has(d.id))
+  const glows = placements.filter((p) => baseIdOf(p.itemId) === 'decor-lamp' || baseIdOf(p.itemId) === 'decor-cloudlamp').map((p) => ({ x: p.x, y: p.y }))
+  const unplaced = unplacedOf(ownedDecor, placements, decorQty)
 
   // ---------- 餵食 ----------
   const dismissHint = useCallback(() => {
@@ -294,7 +303,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const petW = petH * PET_ASPECT[pet.stage]
 
   // ---------- 阿悟的生命感：行為、睡覺、便便、日夜 ----------
-  const bedPl = placements.find((p) => p.itemId === 'decor-bed')
+  const bedPl = placements.find((p) => baseIdOf(p.itemId) === 'decor-bed')
   const bedItem = bedPl ? itemById.get('decor-bed') : undefined
   const bed = bedPl && bedItem && roomH > 0 ? { x: bedPl.x, y: bedPl.y, h: sizeOf(bedItem).h / roomH } : null
   const geo = (): Geometry => {
@@ -302,15 +311,15 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     let ball: Geometry['ball'] = null
     if (roomW > 0 && roomH > 0) {
       for (const pl of placements) {
-        const it = itemById.get(pl.itemId)
-        if (!it || it.slot !== 'floor' || isFlatDecor(pl.itemId)) continue
+        const it = itemById.get(baseIdOf(pl.itemId))
+        if (!it || it.slot !== 'floor' || isFlatDecor(it.id)) continue
         const sz = sizeOf(it)
         const w = sz.w / roomW
         // 離地板前緣太遠（靠牆）的家具不擋阿悟的路
         if (pl.y + sz.h / roomH / 2 < PET_BOTTOM - 0.1) continue
         obstacles.push({ id: pl.itemId, left: pl.x - w / 2, right: pl.x + w / 2 })
         const sl = scrollerRef.current?.scrollLeft ?? 0
-        if (pl.itemId === 'decor-ball' && pl.x * roomW > sl && pl.x * roomW < sl + view.w) ball = { x: pl.x, halfW: w / 2 }
+        if (it.id === 'decor-ball' && pl.x * roomW > sl && pl.x * roomW < sl + view.w) ball = { x: pl.x, halfW: w / 2 }
       }
     }
     return { roomW, roomH, viewW: view.w, scrollLeft: scrollerRef.current?.scrollLeft ?? 0, petW, obstacles, ball }
@@ -338,38 +347,42 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     if (dragging || edit) life.cancelIdle()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragging, edit])
-  // ---------- v5：禮物展示（阿悟走到中間、拿出禮物，孩子點一下收下；多份依序）----------
-  const gift = gifts?.[0]
-  const giftKey = gift ? `${gifts?.length}:${gift.at}:${giftRef(gift)}:${gift.from}` : null
-  const [giftUi, setGiftUi] = useState<{ key: string; phase: 'walk' | 'pop' | 'taking' } | null>(null)
-  const [giftRetry, setGiftRetry] = useState(0)
-  const canGift = roomW > 0 && !edit && !life.asleep && !dragging && !pv.food && !giftUi
-  useEffect(() => {
-    if (!gift || !giftKey || !canGift) return
-    const t = window.setTimeout(() => {
-      const popAt = life.startGift(giftLine(gift))
-      if (popAt === null) {
-        // 阿悟正忙（吃東西、大便）：等一下再試
-        life.later(() => setGiftRetry((n) => n + 1), 1500)
-        return
-      }
-      setGiftUi({ key: giftKey, phase: 'walk' })
-      life.later(() => setGiftUi((g) => (g && g.key === giftKey ? { ...g, phase: 'pop' } : g)), popAt)
-    }, 700)
-    return () => window.clearTimeout(t)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [giftKey, canGift, giftRetry])
-  const takeGift = async (el: HTMLElement) => {
-    if (!gift || giftUi?.phase !== 'pop') return
-    setGiftUi({ ...giftUi, phase: 'taking' })
+  // ---------- v7：禮物袋（點一次全部收下；孩子正在餵食或拖曳時不晃動）----------
+  const giftList = gifts ?? []
+  const [bagBusy, setBagBusy] = useState(false)
+  const takeAllGifts = async (el: HTMLElement) => {
+    if (bagBusy || edit) return
+    setBagBusy(true)
+    const rect = el.getBoundingClientRect()
+    const list = await repo.collectAllGifts()
+    if (list.length === 0) {
+      setBagBusy(false)
+      return
+    }
+    // 星星炸開 + 一聲「收到」
+    small('task', { at: el, phrase: '' })
     playSfx('reward', soundOn)
-    const art = giftArt(gift)
-    const target = document.querySelector(gift.foodId ? `[data-dock-item="${gift.foodId}"]` : gift.materialId ? '[data-gift-target=material]' : '[data-gift-target=bag]')
-    await flyOne({ rect: el.getBoundingClientRect(), node: iconNode(art.name, art.emoji, 72), hide: el }, target, { duration: 800 })
-    await repo.collectGift()
-    setGiftUi(null)
+    // 每份禮物飛向它該去的地方（食物 → 食物列、材料 → 工坊鈕、貼紙 → 背包鈕）
+    list.slice(0, 8).forEach((g, i) => {
+      const art = giftArt(g)
+      const target = document.querySelector(g.foodId ? `[data-dock-item="${g.foodId}"]` : g.materialId ? '[data-gift-target=material]' : '[data-gift-target=bag]')
+      const px = 64
+      void flyOne({ rect: { left: rect.left + rect.width / 2 - px / 2 + (i % 4) * 8, top: rect.top + rect.height / 2 - px / 2, width: px, height: px }, node: iconNode(art.name, art.emoji, px) }, target, { delay: 120 + i * 130, duration: 800 })
+    })
+    // 阿悟收到禮物：開心跳一下、說一句（阿悟聲；沒有預錄音檔就退回介面旁白）
     life.reactGifted()
+    const thanks = GIFT_THANKS_LINES[list.length % GIFT_THANKS_LINES.length]
+    if (!sayRecorded('pet.', thanks, { enabled: voiceOn })) sayText(GIFT_BAG_DONE_LINE, { enabled: voiceOn })
+    setBagBusy(false)
   }
+  // 佈置模式沒有可擺的家具：唸「去工坊做家具吧」
+  useEffect(() => {
+    if (!edit) return
+    if (unplacedOf(ownedDecor, placements, decorQty).length > 0) return
+    sayText(ownedDecor.length === 0 ? '去工坊做家具吧' : '家具都擺好了，去工坊再做一些吧', { enabled: voiceOn })
+    // 只在進入佈置模式時唸一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [edit])
 
   // v5：表演新招（首頁「表演」按鈕、新招慶祝時的示範）
   const performSeq = perform?.seq ?? 0
@@ -414,7 +427,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     const overPet = d.kind === 'food' && !!pe && inRect(fx, fy, toRect(pe.getBoundingClientRect()), 14)
     let preview: { x: number; y: number; w: number; h: number; invalid: boolean } | null = null
     if (d.kind !== 'food' && room && overRoom) {
-      const it = itemById.get(d.itemId)
+      const it = itemById.get(baseIdOf(d.itemId))
       if (it?.slot) {
         const rr = room.getBoundingClientRect()
         const size = sizeOf(it)
@@ -497,7 +510,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
 
   /** 把玩具球放到阿悟附近：離開佈置模式後，阿悟會跑去追球 */
   const noteBall = (itemId: string, x: number) => {
-    if (itemId === 'decor-ball' && Math.abs(x - life.petXRef.current) < 0.2) ballPending.current = true
+    if (baseIdOf(itemId) === 'decor-ball' && Math.abs(x - life.petXRef.current) < 0.2) ballPending.current = true
   }
 
   const finishPress = async (p: Press, fx: number, fy: number, cancelled: boolean) => {
@@ -509,15 +522,15 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
       /* 已釋放 */
     }
     if (cancelled) return
-    const it = ownedDecor.find((d) => d.id === p.itemId)
+    const it = ownedDecor.find((d) => d.id === baseIdOf(p.itemId))
     if (!p.started) {
       // 點一下
       if (p.kind === 'food') void feed(p.itemId, undefined, 'tap')
       else if (p.kind === 'new' && it) {
         const c = defaultSpot(it)
-        const r = await repo.placeDecor(it.id, c.x, c.y)
+        const r = await repo.placeNewDecor(it.id, c.x, c.y)
         if (r.ok) {
-          setSelected(it.id)
+          setSelected(r.key)
           small('place', { at: p.target })
         } else toast(r.error, 'warn')
       } else if (p.kind === 'move') setSelected((s) => (s === p.itemId ? null : p.itemId))
@@ -530,9 +543,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
       else flyBack(p.itemId, 'food', fx, fy)
     } else if (p.kind === 'new') {
       if (ev.preview) {
-        const r = await repo.placeDecor(p.itemId, ev.preview.x, ev.preview.y)
+        const r = await repo.placeNewDecor(p.itemId, ev.preview.x, ev.preview.y)
         if (r.ok) {
-          setSelected(p.itemId)
+          setSelected(r.key)
           noteBall(p.itemId, ev.preview.x)
           small('place', { at: { x: fx, y: fy } })
         } else toast(r.error, 'warn')
@@ -632,11 +645,11 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   // ---------- 渲染用資料 ----------
   const entries = renderOrder([
     ...placements
-      .filter((p) => itemById.has(p.itemId))
+      .filter((p) => itemById.has(baseIdOf(p.itemId)))
       .map((p) => {
-        const it = itemById.get(p.itemId)!
+        const it = itemById.get(baseIdOf(p.itemId))!
         const size = sizeOf(it)
-        return { id: p.itemId, bottom: isFlatDecor(p.itemId) ? -1 : p.y + size.h / roomH / 2, z: p.z, p, it, size }
+        return { id: p.itemId, bottom: isFlatDecor(it.id) ? -1 : p.y + size.h / roomH / 2, z: p.z, p, it, size }
       }),
     { id: '__pet', bottom: life.onBed && bed ? bed.y + bed.h / 2 + 0.002 : PET_BOTTOM, z: 0 },
   ])
@@ -646,14 +659,16 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const draggingFood = drag?.kind === 'food'
   const hovering = !!(dv && dv.overPet)
   const selPlacement = selected ? placements.find((p) => p.itemId === selected) : undefined
-  const selItem = selected ? itemById.get(selected) : undefined
+  const selItem = selected ? itemById.get(baseIdOf(selected)) : undefined
   const showHint = !feedHintShown && !hintGone && !edit && !drag && foods.some((f) => f.qty > 0)
-  const hintFood = foods.find((f) => f.qty > 0)?.item
+  // O5：提示條用「剛收到的食物」（禮物袋裡最新的食物，背包裡確實有），沒有再用背包裡第一個有的
+  const gotFoodId = [...giftList].reverse().find((g) => g.foodId && (foods.find((f) => f.item.id === g.foodId)?.qty ?? 0) > 0)?.foodId
+  const hintFood = (gotFoodId ? foods.find((f) => f.item.id === gotFoodId)?.item : undefined) ?? foods.find((f) => f.qty > 0)?.item
 
-  const ghostItem = drag ? (drag.kind === 'food' ? foods.find((f) => f.item.id === drag.itemId)?.item : itemById.get(drag.itemId)) : undefined
+  const ghostItem = drag ? (drag.kind === 'food' ? foods.find((f) => f.item.id === drag.itemId)?.item : itemById.get(baseIdOf(drag.itemId))) : undefined
   const ghostSize = ghostItem && drag && drag.kind !== 'food' ? sizeOf(ghostItem) : { w: 56, h: 56 }
 
-  const flyItem = fly ? (foods.find((f) => f.item.id === fly.itemId)?.item ?? itemById.get(fly.itemId)) : undefined
+  const flyItem = fly ? (foods.find((f) => f.item.id === fly.itemId)?.item ?? itemById.get(baseIdOf(fly.itemId))) : undefined
 
   const toggleEdit = () => {
     if (edit && ballPending.current) {
@@ -674,7 +689,12 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
               <span>飽足</span>
               <div className="bar"><i style={{ width: `${hunger}%` }} className={`m-${mood}`} /></div>
             </div>
-            {next !== null && <div className="grow-hint">{pet.stage === 'egg' ? `再餵 ${next} 次就會孵化` : `再餵 ${next} 次會長大`}</div>}
+            {next !== null && (
+              <div className="grow-hint h7-grow">
+                <ProgressEgg pet={pet} />
+                <span>{pet.stage === 'egg' ? `再餵 ${next} 次就會孵化` : `再餵 ${next} 次會長大`}</span>
+              </div>
+            )}
           </div>
 
           {edit && <div className="edit-banner" role="status">佈置中：把裝飾拖進房間，拖回下方可收回</div>}
@@ -745,21 +765,20 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                           <span key={id} className="heart-pop" aria-hidden>💗</span>
                         ))}
                         <PetFx view={pv} asleep={life.asleep} lying={pet.stage !== 'egg'} />
-                        {gift && giftUi && giftUi.phase !== 'walk' && (
-                          <GiftItem gift={gift} taking={giftUi.phase === 'taking'} onTake={takeGift} />
-                        )}
                       </div>
                     )
                   }
                   const ent = e as typeof e & { p: Placement; it: ShopItem; size: { w: number; h: number } }
                   const moving = drag?.kind === 'move' && drag.itemId === ent.id
+                  const tint = tintFilter(ent.p.tint)
                   return (
                     <div
                       key={ent.id}
                       data-nodrag
                       data-placed={ent.id}
                       data-slot={ent.it.slot}
-                      className={`placed ${edit ? 'editable' : ''} ${selected === ent.id ? 'selected' : ''} ${ent.id === 'decor-ball' && pv.ballBounce ? 'pf-ball-play' : ''}`}
+                      data-tint={ent.p.tint || undefined}
+                      className={`placed ${edit ? 'editable' : ''} ${selected === ent.id ? 'selected' : ''} ${ent.it.id === 'decor-ball' && pv.ballBounce ? 'pf-ball-play' : ''}`}
                       style={{
                         left: ent.p.x * roomW - ent.size.w / 2,
                         top: ent.p.y * roomH - ent.size.h / 2,
@@ -768,6 +787,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                         zIndex: zOf(ent.id),
                         opacity: moving ? 0.25 : 1,
                         transform: ent.p.flipped ? 'scaleX(-1)' : undefined,
+                        ...(tint ? { filter: tint } : {}),
                       }}
                       role={edit ? 'button' : undefined}
                       aria-label={edit ? `${ent.it.name}，可拖曳移動` : undefined}
@@ -827,12 +847,17 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                   <div
                     className="decor-toolbar"
                     data-nodrag
-                    style={{ left: Math.min(scrollLeft + view.w - 135, Math.max(scrollLeft + 135, selPlacement.x * roomW)), top: toolTop, transform: `translate(-50%, ${shift})`, zIndex: 1000 }}
+                    style={{ left: Math.min(scrollLeft + view.w - 150, Math.max(scrollLeft + 150, selPlacement.x * roomW)), top: toolTop, transform: `translate(-50%, ${shift})`, zIndex: 1000 }}
                     onPointerDown={(e) => e.stopPropagation()}
                   >
-                    <button className="btn" onClick={() => repo.flipDecor(selItem.id)} aria-label="左右翻轉">↔ 翻轉</button>
-                    <button className="btn" onClick={() => repo.bringToFront(selItem.id)} aria-label="移到最前">⬆ 最前</button>
-                    <button className="btn" onClick={async () => { await repo.removeDecor(selItem.id); setSelected(null) }} aria-label="收回">✕ 收回</button>
+                    <button className="btn" onClick={() => repo.flipDecor(selected!)} aria-label="左右翻轉">↔ 翻轉</button>
+                    <button className="btn" onClick={() => repo.bringToFront(selected!)} aria-label="移到最前">⬆ 最前</button>
+                    {!isArtworkId(selItem.id) && (
+                      <button className="btn h7-tint-btn" onClick={() => { void repo.tintDecor(selected!, nextTint(selPlacement.tint)); sayText('換個顏色吧', { enabled: voiceOn }) }} aria-label={`換色，目前${DECOR_TINTS[selPlacement.tint ?? 0]?.name ?? '原色'}`} data-testid="tint-btn" data-tint={selPlacement.tint ?? 0}>
+                        <span className="h7-tint-dot" aria-hidden style={{ background: ['#f2a65a', '#ee7aa2', '#5a9be6', '#4fb58f', '#8f78e0'][selPlacement.tint ?? 0] }} /> 換色
+                      </button>
+                    )}
+                    <button className="btn" onClick={async () => { await repo.removeDecor(selected!); setSelected(null) }} aria-label="收回">✕ 收回</button>
                   </div>
                 )
               })()}
@@ -840,6 +865,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
           </div>
 
           {canLeft && <button className="room-arrow left" onClick={() => scrollBy(-1)} aria-label="往左看房間" data-testid="room-left"><span aria-hidden>👈</span></button>}
+          {!edit && <GiftBag gifts={giftList} calm={dragging || !!pv.food || bagBusy} onTake={(el) => void takeAllGifts(el)} />}
           {canRight && <button className="room-arrow right" onClick={() => scrollBy(1)} aria-label="往右看房間" data-testid="room-right"><span aria-hidden>👉</span></button>}
         </div>
       </section>
@@ -857,17 +883,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
           {dockFade.right && <button className="dock-arrow right" onClick={() => scrollDock(1)} aria-label="往右看" data-testid="dock-arrow-right">▶</button>}
         <div className="dock" ref={dockRef} onScroll={measureDock} data-testid="dock" aria-label={edit ? '尚未擺放的裝飾' : '飼料'}>
           {!edit &&
-            foods.map(({ item, qty }) => {
-              if (qty < 1) {
-                return (
-                  <button key={item.id} className="dock-item empty" data-dock-item={item.id} onClick={goShop} aria-label={`${item.name}沒有了，去商店買`}>
-                    <Icon name={artName(item)} emoji={FOOD_EMOJI[item.asset]} alt={item.name} className="dock-icon" />
-                    <span className="dock-name">{item.name}</span>
-                    <span className="dock-sub">去商店買</span>
-                  </button>
-                )
-              }
-              return (
+            foods
+              .filter((f) => f.qty > 0)
+              .map(({ item, qty }) => (
                 <div
                   key={item.id}
                   role="button"
@@ -887,37 +905,46 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                   <span className="dock-name">{item.name}</span>
                   <span className="dock-sub">x{qty}</span>
                 </div>
-              )
-            })}
+              ))}
+          {/* v7（V6）：庫存 0 的食物不再灰色排一整排，統一收進這一個「去商店」圖示 */}
+          {!edit && (
+            <button className="dock-item h7-dock-shop" onClick={goShop} data-testid="dock-shop" aria-label={foods.some((f) => f.qty > 0) ? '去商店買更多食物' : '食物都沒有了，去商店買'}>
+              <Icon name="ui-shop" emoji="🛒" className="dock-icon" />
+              <span className="dock-name">去商店</span>
+              <span className="dock-sub">買食物</span>
+            </button>
+          )}
           {edit &&
-            unplaced.map((d) => {
-              return (
-                <div
-                  key={d.id}
-                  role="button"
-                  tabIndex={0}
-                  className={`dock-item decor-item ${drag?.itemId === d.id && drag.kind === 'new' ? 'lifted' : ''}`}
-                  data-dock-item={d.id}
-                  aria-label={`${d.name}，拖進房間擺放`}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      const c = defaultSpot(d)
-                      void repo.placeDecor(d.id, c.x, c.y)
-                    }
-                  }}
-                  {...bind('new', d.id)}
-                >
-                  {isArtworkId(d.id) ? <GalleryFrame artId={d.id} className="dock-icon" /> : <Icon name={artName(d)} alt={d.name} className="dock-icon" />}
-                  <span className="dock-name">{d.name}</span>
-                  <span className="dock-sub">{d.slot === 'wall' ? '牆面' : '地板'}</span>
-                </div>
-              )
-            })}
+            unplaced.map(([d, n]) => (
+              <div
+                key={d.id}
+                role="button"
+                tabIndex={0}
+                className={`dock-item decor-item ${drag?.itemId === d.id && drag.kind === 'new' ? 'lifted' : ''}`}
+                data-dock-item={d.id}
+                data-left={n}
+                aria-label={`${d.name}，${n > 1 ? `還有 ${n} 個，` : ''}拖進房間擺放`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    const c = defaultSpot(d)
+                    void repo.placeNewDecor(d.id, c.x, c.y)
+                  }
+                }}
+                {...bind('new', d.id)}
+              >
+                {isArtworkId(d.id) ? <GalleryFrame artId={d.id} className="dock-icon" /> : <Icon name={artName(d)} alt={d.name} className="dock-icon" />}
+                <span className="dock-name">{d.name}</span>
+                <span className="dock-sub">{d.slot === 'wall' ? '牆面' : '地板'}{n > 1 ? ` · x${n}` : ''}</span>
+              </div>
+            ))}
           {edit && unplaced.length === 0 && (
-            <div className="dock-empty">
-              {ownedDecor.length === 0 ? '還沒有裝飾' : '裝飾都擺好了'}
-              <button className="btn" onClick={goShop}>去商店</button>
+            <div className="dock-empty h7-dock-empty" data-testid="dock-empty">
+              <Icon name="ui-workshop" emoji="🔨" size={44} />
+              <span>{ownedDecor.length === 0 ? '還沒有家具' : '家具都擺好了'}</span>
+              <button className="btn primary h7-go-workshop" onClick={goWorkshop ?? goShop} data-testid="go-workshop">
+                <Icon name="ui-workshop" emoji="🔨" size={32} /> 去工坊
+              </button>
             </div>
           )}
         </div>

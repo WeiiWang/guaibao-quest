@@ -145,6 +145,22 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'ui.hat.off': '好，帽子拿下來囉',
   'ui.hat.egg': '阿悟還在蛋裡，孵出來才能戴帽子',
   'ui.hat.empty': '還沒有帽子，去商店的衣櫃買一頂吧',
+  // v7 線 C：禮物袋、佈置、onboarding 年齡頁、歡迎禮物、成長里程碑（句子來源在 src/domain/home7.ts 的 HOME_LINES，
+  // 兩邊要一字不差，home7.test.ts 會檢查；阿悟說的話 key 以 pet. 開頭，語音生成工具用阿悟聲）
+  'pet.gift.thanks': ['哇，好多禮物！', '謝謝你，我最喜歡了！'],
+  'ui.gift.bag': '禮物都收下囉！',
+  'ui.gift.bagHint': '點一下，收下禮物',
+  'ui.edit.workshop': '去工坊做家具吧',
+  'ui.edit.allPlaced': '家具都擺好了，去工坊再做一些吧',
+  'ui.edit.tint': '換個顏色吧',
+  'ui.edit.full': '這個最多擺三個喔',
+  'ui.onboard.age': '你幾歲了？',
+  'ui.onboard.age3': '三歲',
+  'ui.onboard.age45': '四到五歲',
+  'ui.onboard.age67': '六到七歲',
+  'pet.welcome': '歡迎你！這是給你的禮物！',
+  'pet.milestone': '我又長大一點了，送你一個小禮物！',
+  'ui.workshop.more': '再做一個',
   // v6 成長相簿：回憶卡上的一句話（句型見 src/domain/album.ts；學會新招那張和 ui.trick.learn 同一句，不重複列）
   'ui.album.card': [
     '阿悟孵出來了！',
