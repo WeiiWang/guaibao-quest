@@ -28939,6 +28939,21 @@
   "text": "好，退回囉",
   "voice": "mama|"
  },
+ "ui.frame.locked": {
+  "file": "b57e0c288252b94b.m4a",
+  "text": "再多畫幾幅，這個畫框就是你的了",
+  "voice": "mama|"
+ },
+ "ui.frame.pick": {
+  "file": "9cf23f5784984773.m4a",
+  "text": "幫這幅畫選一個畫框",
+  "voice": "mama|"
+ },
+ "ui.frame.unlock": {
+  "file": "dd6939adab59babc.m4a",
+  "text": "解鎖新畫框！",
+  "voice": "mama|"
+ },
  "ui.friend.name.1": {
   "file": "d735cbab575b9258.m4a",
   "text": "香蕉",
