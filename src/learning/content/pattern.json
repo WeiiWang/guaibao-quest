@@ -2265,137 +2265,137 @@
     "id": "pattern-4-01", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"obj-grape"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-grape"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
       {"obj":null}
     ],
     "choices": [
       {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
-    "answer": "obj-grape",
-    "hint": "看顏色：紫色、藍色，紫色、藍色，輪流出現。下一個要紫色的。",
-    "params": {"core":2,"words":["紫色","藍色","紫色","藍色",""],"groupName":"顏色","colorWord":"紫色"}
+    "answer": "obj-banana",
+    "hint": "看顏色：黃色、紅色，黃色、紅色，輪流出現。下一個要黃色的。",
+    "params": {"core":2,"words":["黃色","紅色","黃色","紅色",""],"groupName":"顏色","colorWord":"黃色"}
   },
   {
     "id": "pattern-4-02", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"obj-fish"},
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
-    "answer": "decor-car",
-    "hint": "看顏色：藍色、綠色，藍色、綠色，輪流出現。下一個要綠色的。",
-    "params": {"core":2,"words":["藍色","綠色","藍色","綠色","藍色",""],"groupName":"顏色","colorWord":"綠色"}
+    "answer": "obj-grape",
+    "hint": "看顏色：黃色、紫色，黃色、紫色，輪流出現。下一個要紫色的。",
+    "params": {"core":2,"words":["黃色","紫色","黃色","紫色","黃色",""],"groupName":"顏色","colorWord":"紫色"}
   },
   {
     "id": "pattern-4-03", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"obj-banana"},
-      {"obj":"obj-fish"},
       {"obj":"obj-chick"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"obj-peach","obj":"obj-peach"}
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-star","obj":"obj-star"}
     ],
-    "answer": "obj-chick",
-    "hint": "看顏色：黃色、藍色，黃色、藍色，輪流出現。下一個要黃色的。",
-    "params": {"core":2,"words":["黃色","藍色","黃色","藍色",""],"groupName":"顏色","colorWord":"黃色"}
+    "answer": "obj-star",
+    "hint": "看顏色：黃色、紅色，黃色、紅色，輪流出現。下一個要黃色的。",
+    "params": {"core":2,"words":["黃色","紅色","黃色","紅色",""],"groupName":"顏色","colorWord":"黃色"}
   },
   {
     "id": "pattern-4-04", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"obj-peach"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-peach"},
+      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-car"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-peach","obj":"obj-peach"}
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
-    "answer": "obj-fish",
-    "hint": "看顏色：粉紅色、藍色，粉紅色、藍色，輪流出現。下一個要藍色的。",
-    "params": {"core":2,"words":["粉紅色","藍色","粉紅色","藍色","粉紅色",""],"groupName":"顏色","colorWord":"藍色"}
+    "answer": "obj-chick",
+    "hint": "看顏色：綠色、黃色，綠色、黃色，輪流出現。下一個要黃色的。",
+    "params": {"core":2,"words":["綠色","黃色","綠色","黃色","綠色",""],"groupName":"顏色","colorWord":"黃色"}
   },
   {
     "id": "pattern-4-05", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"obj-fish"},
       {"obj":"obj-grape"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
       {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-grape","obj":"obj-grape"}
     ],
-    "answer": "obj-fish",
-    "hint": "看顏色：藍色、紫色，藍色、紫色，輪流出現。下一個要藍色的。",
-    "params": {"core":2,"words":["藍色","紫色","藍色","紫色",""],"groupName":"顏色","colorWord":"藍色"}
+    "answer": "obj-grape",
+    "hint": "看顏色：紫色、黃色，紫色、黃色，輪流出現。下一個要紫色的。",
+    "params": {"core":2,"words":["紫色","黃色","紫色","黃色",""],"groupName":"顏色","colorWord":"紫色"}
   },
   {
     "id": "pattern-4-06", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
-      {"obj":"decor-car"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-grape","obj":"obj-grape"},
       {"id":"obj-apple","obj":"obj-apple"}
     ],
-    "answer": "obj-fish",
-    "hint": "看顏色：綠色、藍色，綠色、藍色，輪流出現。下一個要藍色的。",
-    "params": {"core":2,"words":["綠色","藍色","綠色","藍色","綠色",""],"groupName":"顏色","colorWord":"藍色"}
+    "answer": "obj-grape",
+    "hint": "看顏色：黃色、紫色，黃色、紫色，輪流出現。下一個要紫色的。",
+    "params": {"core":2,"words":["黃色","紫色","黃色","紫色","黃色",""],"groupName":"顏色","colorWord":"紫色"}
   },
   {
     "id": "pattern-4-07", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"obj-fish"},
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
-      {"obj":"decor-car"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-banana","obj":"obj-banana"}
     ],
-    "answer": "obj-fish",
-    "hint": "看顏色：藍色、綠色，藍色、綠色，輪流出現。下一個要藍色的。",
-    "params": {"core":2,"words":["藍色","綠色","藍色","綠色",""],"groupName":"顏色","colorWord":"藍色"}
+    "answer": "obj-apple",
+    "hint": "看顏色：紅色、黃色，紅色、黃色，輪流出現。下一個要紅色的。",
+    "params": {"core":2,"words":["紅色","黃色","紅色","黃色",""],"groupName":"顏色","colorWord":"紅色"}
   },
   {
     "id": "pattern-4-08", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
@@ -2404,14 +2404,14 @@
       {"obj":"obj-fish"},
       {"obj":"obj-banana"},
       {"obj":"obj-fish"},
-      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
       {"obj":"obj-fish"},
       {"obj":null}
     ],
     "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
       {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-banana","obj":"obj-banana"}
     ],
     "answer": "obj-banana",
     "hint": "看顏色：藍色、黃色，藍色、黃色，輪流出現。下一個要黃色的。",
@@ -2421,113 +2421,152 @@
     "id": "pattern-4-09", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"}
     ],
-    "answer": "decor-car",
-    "hint": "看顏色：綠色、藍色，綠色、藍色，輪流出現。下一個要綠色的。",
-    "params": {"core":2,"words":["綠色","藍色","綠色","藍色",""],"groupName":"顏色","colorWord":"綠色"}
+    "answer": "obj-banana",
+    "hint": "看顏色：黃色、紫色，黃色、紫色，輪流出現。下一個要黃色的。",
+    "params": {"core":2,"words":["黃色","紫色","黃色","紫色",""],"groupName":"顏色","colorWord":"黃色"}
   },
   {
     "id": "pattern-4-10", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
       {"obj":"obj-chick"},
-      {"obj":"decor-car"},
-      {"obj":"obj-banana"},
-      {"obj":"decor-car"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
       {"obj":"obj-banana"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-banana","obj":"obj-banana"}
     ],
-    "answer": "decor-car",
-    "hint": "看顏色：黃色、綠色，黃色、綠色，輪流出現。下一個要綠色的。",
-    "params": {"core":2,"words":["黃色","綠色","黃色","綠色","黃色",""],"groupName":"顏色","colorWord":"綠色"}
+    "answer": "obj-grape",
+    "hint": "看顏色：黃色、紫色，黃色、紫色，輪流出現。下一個要紫色的。",
+    "params": {"core":2,"words":["黃色","紫色","黃色","紫色","黃色",""],"groupName":"顏色","colorWord":"紫色"}
   },
   {
     "id": "pattern-4-11", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"obj-peach"},
-      {"obj":"obj-fish"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-grape"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-flower","obj":"obj-flower"},
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-fish","obj":"obj-fish"}
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"obj-banana","obj":"obj-banana"}
     ],
-    "answer": "obj-flower",
-    "hint": "看顏色：粉紅色、藍色，粉紅色、藍色，輪流出現。下一個要粉紅色的。",
-    "params": {"core":2,"words":["粉紅色","藍色","粉紅色","藍色",""],"groupName":"顏色","colorWord":"粉紅色"}
+    "answer": "obj-banana",
+    "hint": "看顏色：黃色、紫色，黃色、紫色，輪流出現。下一個要黃色的。",
+    "params": {"core":2,"words":["黃色","紫色","黃色","紫色",""],"groupName":"顏色","colorWord":"黃色"}
   },
   {
     "id": "pattern-4-12", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看顏色，接下來是哪一個？",
     "items": [
-      {"obj":"decor-car"},
-      {"obj":"obj-apple"},
-      {"obj":"decor-car"},
-      {"obj":"obj-apple"},
-      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
       {"obj":null}
     ],
     "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
       {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-apple","obj":"obj-apple"}
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
-    "answer": "obj-apple",
-    "hint": "看顏色：綠色、紅色，綠色、紅色，輪流出現。下一個要紅色的。",
-    "params": {"core":2,"words":["綠色","紅色","綠色","紅色","綠色",""],"groupName":"顏色","colorWord":"紅色"}
+    "answer": "obj-chick",
+    "hint": "看顏色：藍色、黃色，藍色、黃色，輪流出現。下一個要黃色的。",
+    "params": {"core":2,"words":["藍色","黃色","藍色","黃色","藍色",""],"groupName":"顏色","colorWord":"黃色"}
   },
   {
     "id": "pattern-4-13", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
+      {"obj":"obj-fish"},
       {"obj":"obj-grape"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-peach","obj":"obj-peach"},
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"decor-rocket","obj":"decor-rocket"}
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-fish","obj":"obj-fish"}
     ],
-    "answer": "obj-peach",
-    "hint": "看種類：水果、動物，水果、動物，輪流出現。下一個要水果的。",
-    "params": {"core":2,"words":["水果","動物","水果","動物",""],"groupName":"種類"}
+    "answer": "obj-fish",
+    "hint": "看種類：動物、水果，動物、水果，輪流出現。下一個要動物的。",
+    "params": {"core":2,"words":["動物","水果","動物","水果",""],"groupName":"種類"}
   },
   {
     "id": "pattern-4-14", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
-      {"obj":"decor-car"},
       {"obj":"obj-chick"},
-      {"obj":"decor-rocket"},
+      {"obj":"obj-apple"},
       {"obj":"obj-rabbit"},
-      {"obj":"decor-rocket"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-apple",
+    "hint": "看種類：動物、水果，動物、水果，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["動物","水果","動物","水果","動物",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-15", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"decor-car","obj":"decor-car"}
+    ],
+    "answer": "obj-fish",
+    "hint": "看種類：動物、交通工具，動物、交通工具，輪流出現。下一個要動物的。",
+    "params": {"core":2,"words":["動物","交通工具","動物","交通工具",""],"groupName":"種類"}
+  },
+  {
+    "id": "pattern-4-16", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
+    "prompt": "看看種類，接下來是哪一個？",
+    "items": [
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
+      {"obj":null}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
       {"id":"obj-fish","obj":"obj-fish"}
     ],
     "answer": "obj-fish",
@@ -2535,101 +2574,62 @@
     "params": {"core":2,"words":["交通工具","動物","交通工具","動物","交通工具",""],"groupName":"種類"}
   },
   {
-    "id": "pattern-4-15", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
-    "prompt": "看看種類，接下來是哪一個？",
-    "items": [
-      {"obj":"obj-banana"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-apple"},
-      {"obj":"obj-fish"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
-    ],
-    "answer": "obj-apple",
-    "hint": "看種類：水果、動物，水果、動物，輪流出現。下一個要水果的。",
-    "params": {"core":2,"words":["水果","動物","水果","動物",""],"groupName":"種類"}
-  },
-  {
-    "id": "pattern-4-16", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
-    "prompt": "看看種類，接下來是哪一個？",
-    "items": [
-      {"obj":"obj-fish"},
-      {"obj":"obj-apple"},
-      {"obj":"obj-chick"},
-      {"obj":"obj-banana"},
-      {"obj":"obj-rabbit"},
-      {"obj":null}
-    ],
-    "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
-    ],
-    "answer": "obj-apple",
-    "hint": "看種類：動物、水果，動物、水果，輪流出現。下一個要水果的。",
-    "params": {"core":2,"words":["動物","水果","動物","水果","動物",""],"groupName":"種類"}
-  },
-  {
     "id": "pattern-4-17", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-grape"},
-      {"obj":"obj-rabbit"},
-      {"obj":"obj-grape"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"}
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"decor-car","obj":"decor-car"},
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
-    "answer": "obj-rabbit",
-    "hint": "看種類：動物、水果，動物、水果，輪流出現。下一個要動物的。",
-    "params": {"core":2,"words":["動物","水果","動物","水果",""],"groupName":"種類"}
+    "answer": "decor-car",
+    "hint": "看種類：交通工具、動物，交通工具、動物，輪流出現。下一個要交通工具的。",
+    "params": {"core":2,"words":["交通工具","動物","交通工具","動物",""],"groupName":"種類"}
   },
   {
     "id": "pattern-4-18", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
+      {"obj":"obj-chick"},
+      {"obj":"decor-car"},
+      {"obj":"obj-fish"},
       {"obj":"decor-rocket"},
-      {"obj":"obj-grape"},
-      {"obj":"decor-car"},
-      {"obj":"obj-apple"},
-      {"obj":"decor-car"},
+      {"obj":"obj-chick"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"decor-car","obj":"decor-car"}
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
     ],
-    "answer": "obj-grape",
-    "hint": "看種類：交通工具、水果，交通工具、水果，輪流出現。下一個要水果的。",
-    "params": {"core":2,"words":["交通工具","水果","交通工具","水果","交通工具",""],"groupName":"種類"}
+    "answer": "decor-rocket",
+    "hint": "看種類：動物、交通工具，動物、交通工具，輪流出現。下一個要交通工具的。",
+    "params": {"core":2,"words":["動物","交通工具","動物","交通工具","動物",""],"groupName":"種類"}
   },
   {
     "id": "pattern-4-19", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
-      {"obj":"obj-apple"},
       {"obj":"obj-fish"},
-      {"obj":"obj-peach"},
-      {"obj":"obj-fish"},
+      {"obj":"decor-car"},
+      {"obj":"obj-rabbit"},
+      {"obj":"decor-car"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-grape","obj":"obj-grape"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"decor-car","obj":"decor-car"}
+      {"id":"obj-peach","obj":"obj-peach"},
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
     ],
-    "answer": "obj-grape",
-    "hint": "看種類：水果、動物，水果、動物，輪流出現。下一個要水果的。",
-    "params": {"core":2,"words":["水果","動物","水果","動物",""],"groupName":"種類"}
+    "answer": "obj-rabbit",
+    "hint": "看種類：動物、交通工具，動物、交通工具，輪流出現。下一個要動物的。",
+    "params": {"core":2,"words":["動物","交通工具","動物","交通工具",""],"groupName":"種類"}
   },
   {
     "id": "pattern-4-20", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
@@ -2637,15 +2637,15 @@
     "items": [
       {"obj":"obj-rabbit"},
       {"obj":"decor-rocket"},
-      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
       {"obj":"decor-car"},
-      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-chick","obj":"obj-chick"},
       {"id":"decor-car","obj":"decor-car"},
-      {"id":"obj-grape","obj":"obj-grape"}
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"}
     ],
     "answer": "decor-car",
     "hint": "看種類：動物、交通工具，動物、交通工具，輪流出現。下一個要交通工具的。",
@@ -2655,79 +2655,79 @@
     "id": "pattern-4-21", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
-      {"obj":"decor-rocket"},
-      {"obj":"obj-fish"},
-      {"obj":"decor-rocket"},
-      {"obj":"obj-chick"},
+      {"obj":"obj-grape"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-dino"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-banana","obj":"obj-banana"},
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
-      {"id":"decor-car","obj":"decor-car"}
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-dino","obj":"decor-dino"}
     ],
-    "answer": "decor-car",
-    "hint": "看種類：交通工具、動物，交通工具、動物，輪流出現。下一個要交通工具的。",
-    "params": {"core":2,"words":["交通工具","動物","交通工具","動物",""],"groupName":"種類"}
+    "answer": "obj-grape",
+    "hint": "看種類：水果、玩具，水果、玩具，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["水果","玩具","水果","玩具",""],"groupName":"種類"}
   },
   {
     "id": "pattern-4-22", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
-      {"obj":"decor-rocket"},
-      {"obj":"obj-fish"},
-      {"obj":"decor-rocket"},
-      {"obj":"obj-chick"},
-      {"obj":"decor-rocket"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-banana"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-apple"},
+      {"obj":"decor-dino"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-fish","obj":"obj-fish"},
       {"id":"obj-grape","obj":"obj-grape"},
+      {"id":"decor-dino","obj":"decor-dino"},
       {"id":"decor-rocket","obj":"decor-rocket"}
     ],
-    "answer": "obj-fish",
-    "hint": "看種類：交通工具、動物，交通工具、動物，輪流出現。下一個要動物的。",
-    "params": {"core":2,"words":["交通工具","動物","交通工具","動物","交通工具",""],"groupName":"種類"}
+    "answer": "obj-grape",
+    "hint": "看種類：玩具、水果，玩具、水果，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["玩具","水果","玩具","水果","玩具",""],"groupName":"種類"}
   },
   {
     "id": "pattern-4-23", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
+      {"obj":"obj-grape"},
       {"obj":"decor-car"},
-      {"obj":"obj-chick"},
-      {"obj":"decor-rocket"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-car"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-rabbit","obj":"obj-rabbit"},
       {"id":"decor-rocket","obj":"decor-rocket"},
-      {"id":"obj-banana","obj":"obj-banana"}
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-peach","obj":"obj-peach"}
     ],
-    "answer": "decor-rocket",
-    "hint": "看種類：交通工具、動物，交通工具、動物，輪流出現。下一個要交通工具的。",
-    "params": {"core":2,"words":["交通工具","動物","交通工具","動物",""],"groupName":"種類"}
+    "answer": "obj-peach",
+    "hint": "看種類：水果、交通工具，水果、交通工具，輪流出現。下一個要水果的。",
+    "params": {"core":2,"words":["水果","交通工具","水果","交通工具",""],"groupName":"種類"}
   },
   {
     "id": "pattern-4-24", "skill": "pattern", "difficulty": 4, "type": "attr", "version": 2,
     "prompt": "看看種類，接下來是哪一個？",
     "items": [
-      {"obj":"obj-chick"},
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
-      {"obj":"decor-car"},
-      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-peach"},
+      {"obj":"decor-dino"},
+      {"obj":"obj-banana"},
       {"obj":null}
     ],
     "choices": [
-      {"id":"obj-apple","obj":"obj-apple"},
-      {"id":"obj-chick","obj":"obj-chick"},
-      {"id":"decor-car","obj":"decor-car"}
+      {"id":"decor-rocket","obj":"decor-rocket"},
+      {"id":"decor-dino","obj":"decor-dino"},
+      {"id":"obj-peach","obj":"obj-peach"}
     ],
-    "answer": "decor-car",
-    "hint": "看種類：動物、交通工具，動物、交通工具，輪流出現。下一個要交通工具的。",
-    "params": {"core":2,"words":["動物","交通工具","動物","交通工具","動物",""],"groupName":"種類"}
+    "answer": "decor-dino",
+    "hint": "看種類：水果、玩具，水果、玩具，輪流出現。下一個要玩具的。",
+    "params": {"core":2,"words":["水果","玩具","水果","玩具","水果",""],"groupName":"種類"}
   },
   {
     "id": "pattern-4-25", "skill": "pattern", "difficulty": 4, "type": "grow", "version": 2,
@@ -2740,8 +2740,8 @@
     ],
     "choices": [
       {"id":"2","label":"2"},
-      {"id":"3","label":"3"},
-      {"id":"4","label":"4"}
+      {"id":"4","label":"4"},
+      {"id":"5","label":"5"}
     ],
     "answer": "4",
     "hint": "一輛、兩輛、三輛，每一格都多一輛。下一格要放幾輛呢？",
@@ -2757,9 +2757,9 @@
       {"obj":null}
     ],
     "choices": [
-      {"id":"5","label":"5"},
-      {"id":"6","label":"6"},
-      {"id":"7","label":"7"}
+      {"id":"3","label":"3"},
+      {"id":"4","label":"4"},
+      {"id":"5","label":"5"}
     ],
     "answer": "5",
     "hint": "兩個、三個、四個，每一格都多一個。下一格要放幾個呢？",
@@ -2775,9 +2775,9 @@
       {"obj":null}
     ],
     "choices": [
-      {"id":"5","label":"5"},
       {"id":"6","label":"6"},
-      {"id":"9","label":"9"}
+      {"id":"7","label":"7"},
+      {"id":"8","label":"8"}
     ],
     "answer": "6",
     "hint": "三條、四條、五條，每一格都多一條。下一格要放幾條呢？",
@@ -2793,7 +2793,7 @@
       {"obj":null}
     ],
     "choices": [
-      {"id":"5","label":"5"},
+      {"id":"4","label":"4"},
       {"id":"6","label":"6"},
       {"id":"7","label":"7"}
     ],
@@ -2811,7 +2811,7 @@
       {"obj":null}
     ],
     "choices": [
-      {"id":"5","label":"5"},
+      {"id":"7","label":"7"},
       {"id":"8","label":"8"},
       {"id":"9","label":"9"}
     ],
@@ -2829,7 +2829,7 @@
       {"obj":null}
     ],
     "choices": [
-      {"id":"6","label":"6"},
+      {"id":"7","label":"7"},
       {"id":"8","label":"8"},
       {"id":"9","label":"9"}
     ],
@@ -2849,7 +2849,7 @@
     "choices": [
       {"id":"4","label":"4"},
       {"id":"5","label":"5"},
-      {"id":"7","label":"7"}
+      {"id":"6","label":"6"}
     ],
     "answer": "4",
     "hint": "一隻、兩隻、三隻，每一格都多一隻。下一格要放幾隻呢？",
@@ -2883,9 +2883,9 @@
       {"obj":null}
     ],
     "choices": [
-      {"id":"4","label":"4"},
+      {"id":"5","label":"5"},
       {"id":"6","label":"6"},
-      {"id":"7","label":"7"}
+      {"id":"9","label":"9"}
     ],
     "answer": "6",
     "hint": "三顆、四顆、五顆，每一格都多一顆。下一格要放幾顆呢？",
@@ -2919,7 +2919,7 @@
       {"obj":null}
     ],
     "choices": [
-      {"id":"5","label":"5"},
+      {"id":"6","label":"6"},
       {"id":"7","label":"7"},
       {"id":"8","label":"8"}
     ],
@@ -2937,7 +2937,7 @@
       {"obj":null}
     ],
     "choices": [
-      {"id":"6","label":"6"},
+      {"id":"7","label":"7"},
       {"id":"8","label":"8"},
       {"id":"9","label":"9"}
     ],

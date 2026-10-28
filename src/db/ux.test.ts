@@ -3,7 +3,7 @@ import 'fake-indexeddb/auto'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { GuaibaoDB } from './db'
 import { Repo } from './repo'
-import { FREE_COLORING_PAGES, FULL_HUNGER, PURCHASE_UNDO_MS } from '../domain/constants'
+import { DAILY_GROWTH_CAP, FREE_COLORING_PAGES, FULL_HUNGER, PURCHASE_UNDO_MS } from '../domain/constants'
 import { balanceOf } from '../domain/points'
 import { artworkSpot, PET_X, ROOM_WIDTH_FACTOR } from '../domain/room'
 import { transition } from '../domain/tasks'
@@ -20,34 +20,78 @@ beforeEach(async () => {
 const setHunger = (h: number) => repo.db.pets.update('pet', { hunger: h, hungerUpdatedAt: T0 })
 const qty = async (id: string) => (await repo.db.inventory.get(id))?.qty ?? 0
 
-describe('餵食防呆：吃飽了不扣食物', () => {
-  it(`飽足 ≥ ${FULL_HUNGER}：回 full，不扣食物、不增加餵食次數`, async () => {
+describe('餵食（v7.3）：吃飽仍可餵，每日成長有上限', () => {
+  it(`飽足 ≥ ${FULL_HUNGER}：照樣吃——食物照扣、成長 +1、飽足維持在上限、回 full: true`, async () => {
     await repo.db.inventory.put({ id: 'banana', itemId: 'banana', qty: 3 })
     await setHunger(FULL_HUNGER)
     const r = await repo.feedPet('banana', T0)
-    expect(r).toMatchObject({ ok: false, reason: 'full', error: '我吃飽了～' })
-    expect(await qty('banana')).toBe(3)
-    expect((await repo.db.pets.get('pet'))!.feedCount).toBe(0)
+    expect(r).toMatchObject({ ok: true, full: true })
+    expect(await qty('banana')).toBe(2)
+    const pet = (await repo.db.pets.get('pet'))!
+    expect(pet.feedCount).toBe(1)
+    expect(pet.hunger).toBe(100)
   })
-  it('飽足剛好差一點（94）：照常吃，扣 1 個', async () => {
+  it('飽足差一點（94）：照常吃，full: false', async () => {
     await repo.db.inventory.put({ id: 'banana', itemId: 'banana', qty: 3 })
     await setHunger(FULL_HUNGER - 1)
-    expect((await repo.feedPet('banana', T0)).ok).toBe(true)
+    expect(await repo.feedPet('banana', T0)).toMatchObject({ ok: true, full: false })
     expect(await qty('banana')).toBe(2)
   })
-  it('狂點：吃到飽之後再點多少次都不會再扣', async () => {
-    await repo.db.inventory.put({ id: 'cake', itemId: 'cake', qty: 5 })
-    await setHunger(10)
-    expect((await repo.feedPet('cake', T0)).ok).toBe(true) // 蛋糕 +100 → 滿
-    for (let i = 0; i < 6; i++) expect((await repo.feedPet('cake', T0 + i)).ok).toBe(false)
-    expect(await qty('cake')).toBe(4)
-    expect((await repo.db.pets.get('pet'))!.feedCount).toBe(3)
-  })
-  it('時間過去、餓了之後又可以吃', async () => {
-    await repo.db.inventory.put({ id: 'banana', itemId: 'banana', qty: 1 })
+  it(`吃飽後蛋糕只算成長 +1；一天最多長 ${DAILY_GROWTH_CAP}，到了才拒絕（reason: capped）且食物不扣`, async () => {
+    await repo.db.inventory.put({ id: 'cake', itemId: 'cake', qty: 30 })
     await setHunger(100)
-    expect((await repo.feedPet('banana', T0)).ok).toBe(false)
-    expect((await repo.feedPet('banana', T0 + 3 * 60 * 60 * 1000)).ok).toBe(true) // 3 小時 -12 → 88
+    for (let i = 0; i < DAILY_GROWTH_CAP; i++) expect((await repo.feedPet('cake', T0 + i)).ok).toBe(true)
+    expect(await qty('cake')).toBe(30 - DAILY_GROWTH_CAP)
+    expect((await repo.db.pets.get('pet'))!.feedCount).toBe(DAILY_GROWTH_CAP)
+    for (let i = 0; i < 4; i++) expect(await repo.feedPet('cake', T0 + 100 + i)).toMatchObject({ ok: false, reason: 'capped', error: '肚子撐撐的，明天再吃好不好？' })
+    expect(await qty('cake')).toBe(30 - DAILY_GROWTH_CAP)
+    expect((await repo.db.pets.get('pet'))!.feedCount).toBe(DAILY_GROWTH_CAP)
+  })
+  it('沒吃飽時一次吃桃子 / 蛋糕會多長（+2 / +3），最後一次只補到上限', async () => {
+    await repo.db.inventory.put({ id: 'cake', itemId: 'cake', qty: 10 })
+    await setHunger(0)
+    for (let i = 0; i < 4; i++) {
+      await setHunger(0)
+      expect((await repo.feedPet('cake', T0 + i)).ok).toBe(true)
+    }
+    expect((await repo.db.pets.get('pet'))!.feedCount).toBe(DAILY_GROWTH_CAP) // 3+3+3+3
+    await setHunger(0)
+    expect((await repo.feedPet('cake', T0 + 9)).ok).toBe(false)
+  })
+  it('隔天上限歸零，又可以長；growth 欄位依本地日期', async () => {
+    await repo.db.inventory.put({ id: 'banana', itemId: 'banana', qty: 40 })
+    await setHunger(100)
+    for (let i = 0; i < DAILY_GROWTH_CAP; i++) await repo.feedPet('banana', T0 + i)
+    expect((await repo.feedPet('banana', T0 + 1000)).ok).toBe(false)
+    const tomorrow = T0 + 24 * 60 * 60 * 1000
+    const r = await repo.feedPet('banana', tomorrow)
+    expect(r.ok).toBe(true)
+    expect((await repo.db.pets.get('pet'))!.growth).toEqual({ date: '2026-10-28', n: 1 })
+  })
+  it('舊存檔（沒有 growth 欄位）照常餵', async () => {
+    await repo.db.inventory.put({ id: 'banana', itemId: 'banana', qty: 3 })
+    const pet = (await repo.db.pets.get('pet'))!
+    delete pet.growth
+    await repo.db.pets.put(pet)
+    await setHunger(10)
+    expect((await repo.feedPet('banana', T0)).ok).toBe(true)
+  })
+  it('餵蛋第 6 次孵化；既有存檔 feedCount 已經 ≥ 6 的蛋，syncGrowth 補孵化並新增「新」回憶卡，只做一次', async () => {
+    await repo.db.pets.update('pet', { feedCount: 9, stage: 'egg' })
+    const r = await repo.syncGrowth(T0)
+    expect(r).toMatchObject({ evolvedTo: 'baby', from: 'egg' })
+    expect((await repo.db.pets.get('pet'))!.stage).toBe('baby')
+    const card = (await repo.getSettings())!.album?.find((c) => c.id === 'hatch')
+    expect(card).toMatchObject({ kind: 'hatch', fresh: true })
+    expect(await repo.syncGrowth(T0)).toBeNull()
+  })
+  it('既有幼體 feedCount 66–79：syncGrowth 長大成體；< 66 的幼體與蛋 < 6 不動', async () => {
+    await repo.db.pets.update('pet', { feedCount: 70, stage: 'baby' })
+    expect(await repo.syncGrowth(T0)).toMatchObject({ evolvedTo: 'adult', from: 'baby' })
+    await repo.db.pets.update('pet', { feedCount: 40, stage: 'baby' })
+    expect(await repo.syncGrowth(T0)).toBeNull()
+    await repo.db.pets.update('pet', { feedCount: 5, stage: 'egg' })
+    expect(await repo.syncGrowth(T0)).toBeNull()
   })
 })
 

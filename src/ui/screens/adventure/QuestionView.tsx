@@ -128,7 +128,8 @@ function Pile({
   )
 }
 
-const pileSize = (count: number, wide = true) => (count <= 3 ? (wide ? 120 : 72) : count <= 5 ? (wide ? 96 : 64) : count <= 10 ? (wide ? 76 : 48) : wide ? 58 : 38)
+// v7.3（試玩審查 2-7）：選項卡裡的小圖示放大（寬度不夠時 CSS 的 --ps 會自動縮到放得下，直向與手機也不小於 30px）
+const pileSize = (count: number, wide = true) => (count <= 3 ? (wide ? 120 : 96) : count <= 5 ? (wide ? 96 : 84) : count <= 10 ? (wide ? 76 : 64) : wide ? 58 : 50)
 
 /** 配對提示：兩堆一個對一個連起來，多出來的亮起（比多少、多幾個） */
 function MatchBoard({ obj, a, b }: { obj: string; a: number; b: number }) {

@@ -172,19 +172,19 @@ try {
   }
 
   // =====================================================================
-  // 3) 蛋的外觀：依孵化進度換圖（0–33 / 33–66 / 66–90 / 90+）；進度環
+  // 3) 蛋的外觀：依孵化進度換圖（0–33 / 33–66 / 66–90 / 90+，v7.3 孵化門檻 6 次）；進度環
   // =====================================================================
   {
     const { ctx, page } = await freshApp(browser, LAND, { stage: 'egg' })
     const looks = []
-    for (const [feed, want] of [[0, 'pet-egg.png'], [8, 'pet-egg-s1.png'], [15, 'pet-egg-s2.png'], [19, 'pet-egg-crack.png']]) {
+    for (const [feed, want] of [[0, 'pet-egg.png'], [2, 'pet-egg-s1.png'], [4, 'pet-egg-s2.png'], [5, 'pet-egg-s2.png']]) {
       await patchPet(page, { feedCount: feed, hunger: 90, hungerUpdatedAt: Date.now() })
       await reload(page)
       await page.waitForTimeout(400)
       const src = await page.locator('[data-testid=pet] img').first().getAttribute('src')
       looks.push(src)
-      check(`蛋 feedCount=${feed}（${Math.round((feed / 20) * 100)}%）→ ${want}`, src.endsWith(`/${want}`) || src.includes(`/${want}?`), src)
-      check(`進度環顯示 ${Math.round((feed / 20) * 100)}%`, (await page.getByTestId('progress-egg').getAttribute('data-progress')) === String(Math.round((feed / 20) * 100)))
+      check(`蛋 feedCount=${feed}（${Math.round((feed / 6) * 100)}%）→ ${want}`, src.endsWith(`/${want}`) || src.includes(`/${want}?`), src)
+      check(`進度環顯示 ${Math.round((feed / 6) * 100)}%`, (await page.getByTestId('progress-egg').getAttribute('data-progress')) === String(Math.round((feed / 6) * 100)))
       await page.screenshot({ path: `design/reviews/v7-home-shots/egg-${feed}-land.png` })
     }
     await ctx.close()

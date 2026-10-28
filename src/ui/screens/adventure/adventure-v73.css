@@ -1,0 +1,115 @@
+/* v7.3 線 G：遊戲性與版面（試玩審查 2-3、2-4、2-7、3-1、3-2、3-3、B6、B8）。專屬前綴 g73-。
+   既有規則在 adventure*.css，這裡只新增與覆蓋（本檔最後載入） */
+
+/* ---------- G2 生活與自然的文字選項：卡片右上角小喇叭（>= 56px），點卡片直接作答 ---------- */
+.g73-wordwrap { container-type: inline-size; }
+.g73-wordwrap .lw-icon { font-size: clamp(2rem, 6dvh, 3rem); }
+.g73-wordwrap .g73-speak { top: 4px; right: 4px; }
+/* 卡片窄的時候（手機、三張並排）喇叭會壓到中間的圖示：內容往下讓出 52px，這時卡片也要高一點 */
+@container (max-width: 176px) { .g73-wordwrap > .lw-word { padding-top: 52px; } .g73-wordwrap .lw-text { font-size: clamp(1.1rem, 22cqw, 1.8rem); overflow-wrap: normal; } }
+@media (max-width: 560px) { .qv-lw .qv-choices.lw-words.n3, .qv-lw .qv-choices.lw-words.n2 { grid-auto-rows: clamp(150px, 24dvh, 200px); } }
+@media (max-width: 560px) { .qv-lifeWhy .qv-choices.lw-words.n3, .qv-lifeStep .qv-choices.lw-words.n3, .qv-lifeWhy .qv-choices.lw-words.n2, .qv-lifeStep .qv-choices.lw-words.n2 { grid-auto-rows: minmax(84px, auto); } }
+/* 一欄的文字卡（為什麼、步驟）：字靠左，喇叭放在右邊正中間，不壓字 */
+.qv-lifeWhy .qv-choices.lw-words, .qv-lifeStep .qv-choices.lw-words { grid-auto-rows: minmax(84px, auto); }
+/* （原本 3 個選項的「為什麼」會被 .n3 的三欄規則蓋掉，字變成直排；一定是一欄） */
+.qv-lifeWhy .qv-choices.lw-words.n2, .qv-lifeWhy .qv-choices.lw-words.n3, .qv-lifeStep .qv-choices.lw-words.n2, .qv-lifeStep .qv-choices.lw-words.n3 { grid-template-columns: minmax(0, 1fr); }
+.qv-lifeWhy .g73-wordwrap > .lw-word, .qv-lifeStep .g73-wordwrap > .lw-word { padding-top: 10px; padding-right: 78px; min-height: 84px; }
+.qv-lifeWhy .g73-wordwrap .g73-speak, .qv-lifeStep .g73-wordwrap .g73-speak { top: 50%; right: 10px; margin-top: -29px; }
+
+/* ---------- G3 英文選項：字級依字長縮放（下限 28px），不在單字中間斷行；喇叭不壓字；放不下時改成單欄 ---------- */
+.en-choice .g73-enword, .en-choice .choice-word {
+  font-size: clamp(28px, calc(94cqw / (var(--g73-len, 5) * 0.6)), 2.7rem);
+  line-height: 1.15;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  hyphens: none;
+  -webkit-hyphens: none;
+  letter-spacing: 0;
+}
+.q7-lite .g73-enword { margin-top: 0; }
+/* 有喇叭的字卡：喇叭在右上角，字在下面（避開喇叭），字卡的高度留得下兩者 */
+.qv-choices.en-text-choices .q7-cardwrap > .q7-lite { padding-top: 60px; padding-inline: 6px; align-content: center; }
+.qv-choices.en-text-choices:has(.q7-cardwrap) { grid-auto-rows: clamp(124px, 17dvh, 170px); }
+/* 欄數由 EnglishView 量過寬度後決定（g73-cols-N）：卡片寬度放得下 28px 的單字才並排 */
+.qv-choices.g73-cols-1 { grid-template-columns: minmax(0, 1fr) !important; grid-auto-rows: clamp(66px, 8.5dvh, 84px) !important; flex: 0 0 auto; align-content: start; gap: 10px; }
+.qv-choices.g73-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.qv-choices.g73-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.qv-choices.g73-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+/* 單欄：卡片是寬的一條，喇叭在右邊正中間，字置中 */
+.qv-choices.g73-cols-1 .choice { min-height: 62px; }
+.qv-choices.g73-cols-1 .q7-cardwrap > .q7-lite { padding-top: 8px; padding-right: 72px; padding-left: 8px; }
+.qv-choices.g73-cols-1 .q7-cardwrap > .g73-speak-en { top: 50%; right: 10px; margin-top: -29px; }
+
+/* ---------- G4 題目可讀性 ---------- */
+/* 比較多少：藍、橘兩色要對比明確（原本的粉橘和粉紅太像）：藍 vs 橘黃 */
+.qv .tone-blue { --tone: #5fb0ee; --tone-deep: #2f86cf; --tone-soft: #dcefff; }
+.qv .tone-orange { --tone: #ffa63d; --tone-deep: #e07a00; --tone-soft: #fff0d2; }
+.qv .stem-dot.blue { background: #2f86cf; }
+.qv .stem-dot.orange { background: #e07a00; }
+/* 比較多少的小圖示：直向與手機也要 >= 28px。--ps（圖示邊長）不低於 30px；手機卡片窄（約 150px），最多排 3 欄（超過就往下排），
+   卡片高度由內容撐開；平板直向的卡片夠寬，維持 5 欄 */
+@media (max-aspect-ratio: 1 / 1), (max-width: 560px) {
+  .qv-compare .qv-choices.piles { grid-auto-rows: minmax(clamp(200px, 36dvh, 380px), auto); align-content: stretch; }
+  .qv-compare .choice-pile .pile { --ps: max(30px, min(var(--base), calc((100cqw - 20px) / var(--cols) - 6px))); }
+  .qv-compare .choice-pile .pile-item.row-b { margin-bottom: 0; }
+}
+@media (max-width: 560px) {
+  .qv-compare .choice-pile .pile {
+    --ps: max(30px, min(var(--base), calc((100cqw - 20px) / 3 - 6px)));
+    grid-template-columns: repeat(3, var(--ps));
+  }
+  /* 6 個以下排兩欄，圖示更大 */
+  .qv-compare .choice-pile .pile:is([data-count='4'], [data-count='5'], [data-count='6']) {
+    --ps: max(30px, min(var(--base), calc((100cqw - 20px) / 2 - 6px)));
+    grid-template-columns: repeat(2, var(--ps));
+  }
+}
+/* 數量小的卡片（<= 3 個）本來就大，不受影響 */
+.qv-compare .choice-pile { align-content: center; }
+/* 比較長：選項要像卡片（有底框、淡底色），不是一條白色長條 */
+.dim-length.mz-card { border: 4px solid #d9c7ad; background: linear-gradient(180deg, #fff, #fff6e6); }
+.dim-length.mz-card.choice-wrong { border-color: var(--peach); }
+.dim-length.mz-card.choice-right { border-color: var(--mint); background: var(--mint-soft); }
+.dim-length.mz-card.choice-answer { border-color: var(--butter); }
+.dim-length .mz-box { background-image: linear-gradient(transparent calc(100% - 3px), rgba(74, 59, 53, 0.08) 0); }
+
+/* ---------- G5 地圖版面 ---------- */
+/* 橫向平板：一屏要放得下標題、科目、章節、地圖、今日冒險與章節進度（6–7 歲多一列挑戰站也一樣）：
+   保留 440px 給地圖（章節進度列在 6–7 歲會多一顆挑戰站而折成兩行）以外的東西（以前只留 360px，今日冒險卡被擠出畫面下緣）；今日冒險卡與科目分頁在橫向稍微壓扁 */
+@media (min-aspect-ratio: 1 / 1) and (min-width: 700px) {
+  .adv-map .adv-scroll,
+  .adv-map .adv-daily { max-width: max(calc((100dvh - 440px) * 16 / 9), 560px); }
+  .adv-map .adv-scene { width: 100%; }
+  .adv.adv-map { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .adv-map .adv-subject { min-height: 60px; }
+  .adv-map .adv-daily { padding: 8px 20px 8px 12px; }
+  .adv-map .adv-daily-icon { width: 68px; height: 68px; }
+  .adv-map .adv-daily-icon .art, .adv-map .adv-daily-icon .art-emoji { width: 58px !important; height: 58px !important; }
+}
+/* 直向 iPad：地圖緊接在科目與章節分頁下面（靠上），空間留給下面的今日冒險與挑戰站，不再把整塊置中、上面空一大片 */
+@media (max-aspect-ratio: 1 / 1) and (min-width: 481px) {
+  .adv.adv-map > .adv-scroll { margin-top: 0; }
+  .adv.adv-map > :last-child { margin-bottom: 0; }
+  .adv.adv-map { justify-content: flex-start; }
+}
+/* 手機：地圖高度 >= 300px（原本只有約 210px，第 1 站被切掉）。場景寬度至少 = 300px 高度對應的寬，窄螢幕可以左右滑，
+   一開始會自動捲到目前這一站；今日冒險卡改成緊湊的一列 */
+@media (max-width: 480px) {
+  .adv-scene[data-portrait='true'] { width: max(100%, calc(300px * 16 / 9 * var(--g73-span, 100) / 100)) !important; max-width: none; }
+  .adv-map .adv-daily { flex-wrap: nowrap; padding: 8px 12px 8px 8px; gap: 10px; }
+  .adv-map .adv-daily .adv-btn { width: auto; min-width: 96px; padding-inline: 18px; }
+  .adv-map .adv-daily-icon { width: 56px; height: 56px; }
+  .adv-map .adv-daily-icon .art, .adv-map .adv-daily-icon .art-emoji { width: 46px !important; height: 46px !important; }
+  .adv-map .adv-daily-text b { font-size: 1.15rem; }
+  .adv-map .adv-daily-text span { font-size: 0.9rem; }
+  .adv-map .daily-medal { display: none; }
+  /* 第 1 站在場景最下緣：名牌改成只留「出發！」，疊在圓鈕下緣，不會被切掉 */
+  .adv-scene[data-portrait='true'] .adv-node.st-current .adv-node-label { font-size: 0; top: calc(100% - 14px); animation: none; }
+  .adv-scene[data-portrait='true'] .adv-node.st-current .adv-node-label em { font-size: 0.95rem; }
+}
+
+/* ---------- 英文題幹的圖：高瘦的圖（檯燈）不能把題幹撐高、把選項擠出畫面（原本 english-2-36 這種題選項會蓋住「下一題」） ---------- */
+.en-pic { --g73-pic: clamp(110px, 20dvh, 180px); width: var(--g73-pic); height: var(--g73-pic); overflow: hidden; }
+@media (max-width: 480px) { .qv-en .en-stem-spell .en-pic { --g73-pic: clamp(72px, 11dvh, 110px); } }
+.en-pic .art, .en-pic .art-emoji { object-fit: contain; max-width: 100%; max-height: 100%; }

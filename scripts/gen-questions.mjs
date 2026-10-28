@@ -21,8 +21,8 @@ const un = (id) => OBJ[id].unit
 const MULTI = new Set(['decor-ball', 'decor-piano']) // 多色物件：不當顏色題的選項
 
 // ---------- 小工具 ----------
-function mulberry32(seed) {
-  let a = seed >>> 0
+function mulberry32(seed, resumeState = null) {
+  let a = resumeState ?? seed >>> 0
   return () => {
     a = (a + 0x6d2b79f5) >>> 0
     let t = a
@@ -734,6 +734,9 @@ function attrQ(i, ctx, by) {
   const wrongB = pick(pool.filter((id) => attrOf(id) === (want === A ? B : A)))
   if (!wrongA || !wrongB) reject()
   const shown = items.map((it) => it.obj).filter(Boolean)
+  // v7.3（試玩審查 B8）：規則真的要靠「顏色 / 種類」才看得出來。如果題幹本身就是「小魚、汽車、小魚、汽車」這種單看形狀就成立的交替
+  // （同一個屬性輪流出現的都是同一個物件，正解又剛好是形狀交替的下一個），孩子看到的是形狀、題目卻說「看看顏色」，提示語與題目不符，所以不出這種題。
+  if (shown.every((o, k) => k < 2 || o === shown[k - 2]) && shown[L - 2] === rightObj) reject()
   const all = [rightObj, wrongA, wrongB]
   if (new Set(all).size < 3) reject()
   if (conflict([...shown, ...all])) reject()
@@ -882,6 +885,9 @@ function spellQ(i, ctx, word, blankAt, phrase) {
   }
 }
 const wordPhrases = (list, phrases) => shuffle(list.flatMap((w) => Array.from({ length: phrases }, (_, p) => [w, p])))
+// 拼字候選的洗牌是模組層級的（不在 cell 裡重新播種），以前會接著「前一個格子」留下的亂數狀態；v7.3 改了 pattern-4 的題目，
+// 狀態一變整個英文題庫就會換一批。這裡固定成 v7.2 當時的狀態（1142457928），英文題庫維持原樣，之後前面的格子再怎麼改也不會連動。
+rnd = mulberry32(0, 1142457928)
 const SPELLABLE = [...EN_THINGS.filter((w) => w.length <= 5), ...['red', 'blue', 'pink', 'green'], ...EN_NUMS.filter((w) => w.length <= 5)]
 const spellCands = shuffle(SPELLABLE.flatMap((w) => [...w].map((_, at) => [w, at]))).map(([w, at], k) => [w, at, k % 3])
 

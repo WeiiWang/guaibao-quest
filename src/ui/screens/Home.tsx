@@ -25,7 +25,7 @@ import { HAT_IDS, hatEggLine, hatOf, hatOffLine, hatWearLine } from '../../domai
 import { isTrickId, type TrickId } from '../../domain/tricks'
 import '../meta.css'
 import { usePetFace } from '../components/PetSprite'
-import { useBalance, useToast } from '../hooks'
+import { useBalance, useCelebrate, useToast } from '../hooks'
 import { PersonSwitch } from '../../profiles/PersonSwitch'
 import type { Screen } from '../App'
 import type { Pet } from '../../domain/types'
@@ -109,11 +109,15 @@ export function Home({ childName, now, go, initialEdit }: Props) {
   // v5：每次進首頁（跨日也算）：今日小禮物 → 圖鑑滿 6 個的獎勵 → 阿悟學會新招。三件事都只是「發放並排進待展示佇列」，
   // 展示由 RoomView（禮物）與下面的新招慶祝負責，依序出現不會同時跳出
   const today = localDateStr(now)
+  const celebrateGrowth = useCelebrate()
   useEffect(() => {
     void (async () => {
       await repo.grantDailyGift(now)
       await repo.syncCollection(now)
       await repo.syncTricks()
+      // v7.3：孵化門檻降到 6 / 長大門檻 66：舊存檔 feedCount 已經夠了但還沒孵 / 長 → 進首頁時補上並播慶祝
+      const grown = await repo.syncGrowth(now)
+      if (grown) celebrateGrowth({ petName: grown.pet.name, from: grown.from, to: grown.evolvedTo, feedCount: grown.pet.feedCount })
       await repo.syncAlbum(now) // v6：成長相簿：補建舊里程碑、新增剛發生的（排在最後，獎勵才會依序出現）
     })()
     // now 每 15 秒變一次；只在日期變動時重新檢查
@@ -196,7 +200,6 @@ export function Home({ childName, now, go, initialEdit }: Props) {
   }
   const moreItems: MoreItem[] = [
     ...(canPerform ? [{ id: 'perform', label: '表演', emoji: '🎪', tone: 'mint' as const, onClick: () => askPerform('random'), testId: 'perform-btn', aria: `表演：叫${pet.name}表演一招` }] : []),
-    { id: 'friends', label: '朋友', emoji: '📖', tone: 'lavender', onClick: () => go('friends'), testId: 'friends-btn' },
     { id: 'album', label: '相簿', emoji: '📷', tone: 'bubblegum', onClick: () => go('album'), testId: 'album-btn', aria: '成長相簿' },
     { id: 'wardrobe', label: '衣櫃', emoji: '👒', tone: 'butter', onClick: openWardrobe, testId: 'wardrobe-btn', aria: `${pet.name}的衣櫃` },
   ]
@@ -224,6 +227,11 @@ export function Home({ childName, now, go, initialEdit }: Props) {
         <button className="mini-candy bubblegum" onClick={() => go('bag')} data-gift-target="bag">
           <Icon name="ui-bag" emoji="🎒" size={34} />
           <span>背包</span>
+        </button>
+        {/* v7.3（試玩審查 2-6）：朋友圖鑑從「更多」提到右側欄，和工坊、背包並列 */}
+        <button className="mini-candy lavender" onClick={() => go('friends')} data-testid="friends-btn" aria-label="朋友圖鑑">
+          <span className="mini-emoji g73-friends-icon" aria-hidden>📖</span>
+          <span>朋友</span>
         </button>
         <MoreTray items={moreItems} />
       </div>

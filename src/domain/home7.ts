@@ -24,20 +24,24 @@ export function eggArtChain(progress: number): string[] {
 }
 
 // ---------- 成長里程碑（C3） ----------
-/** 幼體到成體的路上，每餵 20 次一份小獎（門檻 40、60；80 是長大本身） */
+/**
+ * 幼體到成體的路上，孵化後每餵 20 次一份小獎（門檻 26、46；66 是長大本身）。
+ * v7.3：孵化門檻 20 → 6、長大門檻 80 → 66（仍是孵化後 60 次）；
+ * 這兩個數字要和 domain/constants.ts 的 BABY_AT_FEED_COUNT、ADULT_AT_FEED_COUNT 一致（這個檔案不 import 專案模組，home7.test.ts 會檢查）
+ */
 export const MILESTONE_EVERY = 20
-export const BABY_FROM = 20
-export const ADULT_AT = 80
+export const BABY_FROM = 6
+export const ADULT_AT = 66
 /** 這次餵食從 before 加到 after 次，跨過了哪些里程碑門檻（40、60） */
 export function milestonesCrossed(before: number, after: number): number[] {
   const out: number[] = []
   for (let t = BABY_FROM + MILESTONE_EVERY; t < ADULT_AT; t += MILESTONE_EVERY) if (before < t && after >= t) out.push(t)
   return out
 }
-/** 每個門檻的候選小禮物（依序挑第一個還沒有的）：40 次是小擺飾、60 次是壁紙 / 地板 */
+/** 每個門檻的候選小禮物（依序挑第一個還沒有的）：第一個里程碑（26 次）是小擺飾、第二個（46 次）是壁紙 / 地板 */
 export const MILESTONE_REWARDS: Record<number, readonly string[]> = {
-  40: ['decor-ball', 'decor-plant', 'decor-clock', 'decor-bunting', 'decor-crate'],
-  60: ['wall-mint', 'floor-oak', 'wall-pink', 'wall-clouds', 'floor-checker'],
+  [BABY_FROM + MILESTONE_EVERY]: ['decor-ball', 'decor-plant', 'decor-clock', 'decor-bunting', 'decor-crate'],
+  [BABY_FROM + 2 * MILESTONE_EVERY]: ['wall-mint', 'floor-oak', 'wall-pink', 'wall-clouds', 'floor-checker'],
 }
 /** 候選都有了就改送一個食物（蛋糕不掉落，這裡是特別的獎勵） */
 export const MILESTONE_FALLBACK_FOOD = 'cake'

@@ -150,12 +150,12 @@ describe('跨日與飢餓', () => {
     const f = await repo.feedPet('banana', later)
     expect(f.ok && f.pet.hunger).toBe(65)
   })
-  it('蛋餵滿 20 次孵化成幼體', async () => {
-    for (let k = 0; k < 20; k++) {
+  it('蛋餵滿 6 次孵化成幼體', async () => {
+    for (let k = 0; k < 6; k++) {
       await repo.db.inventory.put({ id: 'banana', itemId: 'banana', qty: 1 })
-      await repo.db.pets.update('pet', { hunger: 0, hungerUpdatedAt: T0 }) // 吃飽了就不會吃，所以每次先餓著
+      await repo.db.pets.update('pet', { hunger: 0, hungerUpdatedAt: T0 })
       const r = await repo.feedPet('banana', T0)
-      if (k < 19) expect(r.ok && r.evolvedTo).toBeNull()
+      if (k < 5) expect(r.ok && r.evolvedTo).toBeNull()
       else expect(r.ok && r.evolvedTo).toBe('baby')
     }
   })

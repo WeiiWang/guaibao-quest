@@ -221,9 +221,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     const stage = pet.stage
     const r = await repo.feedPet(foodId)
     if (!r.ok) {
-      if (r.reason === 'full') {
-        // 吃飽了：食物沒有被扣；阿悟搖頭說「我吃飽了～」，食物彈回（拖的飛回去、點的抖一下）
-        life.refuse()
+      if (r.reason === 'capped') {
+        // 今天的成長到上限了：食物沒有被扣；阿悟搖頭說「肚子撐撐的，明天再吃好不好？」，食物彈回（拖的飛回去、點的抖一下）
+        life.refuseCapped()
         setNopeId(foodId)
         life.later(() => setNopeId((v) => (v === foodId ? null : v)), 700)
         if (from) flyBack(foodId, 'food', from.x, from.y)
@@ -239,7 +239,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
         const el = document.querySelector(`[data-dock-item="${foodId}"]`)?.getBoundingClientRect()
         if (el) origin = { x: el.left + el.width / 2, y: el.top + el.height / 2 }
       }
-      life.startEat(foodMeta(item, item.id === favoriteFoodId), origin, stage)
+      life.startEat({ ...foodMeta(item, item.id === favoriteFoodId), full: r.full }, origin, stage)
     }
     if (r.evolvedTo === 'baby' || r.evolvedTo === 'adult') {
       celebrate({ petName: r.pet.name, from: r.evolvedTo === 'baby' ? 'egg' : 'baby', to: r.evolvedTo, feedCount: r.pet.feedCount })

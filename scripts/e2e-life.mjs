@@ -107,7 +107,7 @@ const hintStage = (page) => page.locator('[data-testid=question]').getAttribute(
 const sub = async (page) => (await page.getByTestId('subtitle').innerText()).trim()
 const wrongId = (q) => q.choices.find((c) => c.id !== q.answer).id
 const choice = (page, id) => page.locator(`[data-testid=choice][data-choice-id="${id}"]`)
-/** 點選項；文字選項（謝謝…）第一次點只唸並打勾，要再點一次 */
+/** 點選項；v7.3 起文字選項點一下就作答（喇叭鈕才唸字），這裡保留相容的二次點擊 */
 async function clickChoice(page, id) {
   const loc = choice(page, id)
   await loc.click()
@@ -193,19 +193,22 @@ try {
   await pin(page, 'life', 'life-town', 1, [qSay.id, qStep.id, qStory.id, qOrder3.id, qStep2.id], { skills: { life: 3 } })
   check('生活站：章節是生活小鎮、科目是生活', (await page.getByTestId('stage').getAttribute('data-subject')) === 'life' && (await qid(page)) === qSay.id)
 
-  // 1. 這時候要說什麼：文字選項附圖示，點一下會唸出來，再點一次才作答
+  // 1. 這時候要說什麼：文字選項附圖示，喇叭鈕唸字、點卡片直接作答
   const choices = page.locator('[data-testid=choice]')
   check('「要說什麼」：4 個選項（謝謝、對不起、請、不客氣），每個都有圖示和文字', (await choices.count()) === 4 && (await page.locator('.lw-icon').count()) === 4 && (await page.locator('.lw-text').allInnerTexts()).sort().join() === ['不客氣', '對不起', '謝謝', '請'].sort().join())
   const wrongW = qSay.choices.find((c) => c.id !== qSay.answer)
+  // v7.3（G2）：文字選項比照數字題——卡片右上角有小喇叭（>= 56px），點喇叭只唸字、不作答；點卡片就直接作答（沒有兩段式）
+  const speakers = await page.getByTestId('word-speak').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)] }))
+  check('每張文字卡右上角都有小喇叭，>= 56px', speakers.length === 4 && speakers.every(([w, h]) => w >= 56 && h >= 56), JSON.stringify(speakers))
   await clearSpoken(page)
-  await choice(page, wrongW.id).click()
+  await page.locator(`[data-testid=word-speak][data-choice-id="${wrongW.id}"]`).click()
   await page.waitForTimeout(150)
-  check('第一次點選項：唸出這個字、打勾，還沒有作答', (await spoken(page)).at(-1) === wrongW.text && (await choice(page, wrongW.id).getAttribute('data-armed')) === 'true' && (await choice(page, wrongW.id).getAttribute('data-state')) === 'idle' && (await hintStage(page)) === '0')
-  await shot(page, 'say-armed', 'land')
+  check('點喇叭：唸出這個字，不作答（卡片還是 idle、沒有提示）', (await spoken(page)).at(-1) === wrongW.text && (await choice(page, wrongW.id).getAttribute('data-state')) === 'idle' && (await hintStage(page)) === '0' && (await choice(page, wrongW.id).getAttribute('data-armed')) === null)
+  await shot(page, 'say-speaker', 'land')
   await clearSpoken(page)
   await choice(page, wrongW.id).click()
   await page.waitForTimeout(250)
-  check('再點一次才作答：答錯，提示說明為什麼', (await hintStage(page)) === '1' && (await sub(page)) === qSay.hint && (await spoken(page)).includes(qSay.hint), `${await sub(page)}`)
+  check('點卡片一下就作答：答錯，提示說明為什麼', (await hintStage(page)) === '1' && (await sub(page)) === qSay.hint && (await spoken(page)).includes(qSay.hint), `${await sub(page)}`)
   await shot(page, 'say-hint', 'land')
   await clickChoice(page, qSay.answer)
   await page.waitForSelector('.adv-bubble.ok')

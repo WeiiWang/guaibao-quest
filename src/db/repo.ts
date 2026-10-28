@@ -6,7 +6,6 @@ import {
   FOOD_EFFECTS,
   FREE_COLORING_PAGES,
   FREE_RASTER_PAGES,
-  FULL_HUNGER,
   PURCHASE_UNDO_MS,
   SHOP_ITEMS,
   START_HUNGER,
@@ -14,7 +13,7 @@ import {
   TASK_POINTS_MIN,
 } from '../domain/constants'
 import { dayRange, localDateStr } from '../domain/date'
-import { currentHunger, feed } from '../domain/pet'
+import { currentHunger, expressionFor, feed, growthLeft, stageForFeedCount, FEED_CAPPED_LINE } from '../domain/pet'
 import { planFeedPoop, POOP_CAP, resolveDuePoops, type PoopSpread } from '../pet/poop'
 import { checkPin, hashPin, isValidPin } from '../domain/pin'
 import { registry, type PinStore } from '../profiles/registry'
@@ -87,7 +86,7 @@ const SETTINGS_ID = 'main'
 const CHILD_ID = 'child'
 const PET_ID = 'pet'
 
-export type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string; reason?: 'full' | 'expired' | 'used' }
+export type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string; reason?: 'full' | 'capped' | 'expired' | 'used' }
 
 /** 所有寫入都走 Repo；db 與時間來源可注入（測試用） */
 export class Repo {
@@ -422,7 +421,11 @@ export class Repo {
     })
   }
 
-  async feedPet(foodId: string, now = this.clock()): Promise<Result<{ pet: Pet; evolvedTo: Stage | null }>> {
+  /**
+   * 餵食。v7.3：吃飽了（飽足 ≥ FULL_HUNGER）仍然可以餵——食物照扣、成長 +1、飽足維持在上限（full: true）；
+   * 只有今天靠餵食得到的成長到了上限（DAILY_GROWTH_CAP）才拒絕（reason: 'capped'），食物不扣、不增加餵食次數。
+   */
+  async feedPet(foodId: string, now = this.clock()): Promise<Result<{ pet: Pet; evolvedTo: Stage | null; full: boolean }>> {
     const d = this.db
     const effect = FOOD_EFFECTS[foodId]
     if (!effect) return { ok: false, error: '這不是飼料' }
@@ -431,8 +434,8 @@ export class Repo {
       if (!inv || inv.qty < 1) return { ok: false, error: '背包裡沒有這個了' } as const
       const pet = await d.pets.get(PET_ID)
       if (!pet) return { ok: false, error: '找不到寵物' } as const
-      // 吃飽了：不扣食物、不增加餵食次數（小孩狂點也不會白白燒掉星星換來的食物）
-      if (currentHunger(pet, now) >= FULL_HUNGER) return { ok: false, error: '我吃飽了～', reason: 'full' } as const
+      // 今天的成長到上限了：不扣食物、不增加餵食次數（小孩狂點也不會白白燒掉星星換來的食物）
+      if (growthLeft(pet, now) <= 0) return { ok: false, error: FEED_CAPPED_LINE, reason: 'capped' } as const
       const r = feed(pet, effect, now)
       // v3：吃完東西可能在一段時間後大便（蛋不會；家長可關閉）
       const settings = await d.settings.get(SETTINGS_ID)
@@ -451,7 +454,26 @@ export class Repo {
       await d.inventory.put({ ...inv, qty: inv.qty - 1 })
       if (r.evolvedTo) await album.addGrowthCard(d, r.pet.name, r.evolvedTo, now) // v6：孵化 / 長大的當下新增一張回憶卡
       await home7.awardMilestones(d, r.pet.name, pet.feedCount, r.pet.feedCount, now) // v7：幼體到成體路上每餵 20 次送一份小禮物 + 回憶卡
-      return { ok: true, pet: r.pet, evolvedTo: r.evolvedTo } as const
+      return { ok: true, pet: r.pet, evolvedTo: r.evolvedTo, full: r.wasFull } as const
+    })
+  }
+
+  /**
+   * 補上「該長大卻還沒長」的階段（v7.3 孵化門檻降到 6 / 長大門檻 66：舊存檔 feedCount 已經夠了但 stage 還是蛋 / 幼體）。
+   * 進首頁時呼叫；有長大就回新階段與寵物（呼叫端播慶祝），沒有回 null。孵化 / 長大的回憶卡一起新增（標「新」）。
+   */
+  async syncGrowth(now = this.clock()): Promise<{ evolvedTo: 'baby' | 'adult'; from: 'egg' | 'baby'; pet: Pet } | null> {
+    const d = this.db
+    return d.transaction('rw', [d.pets, d.settings], async () => {
+      const pet = await d.pets.get(PET_ID)
+      if (!pet) return null
+      const stage = stageForFeedCount(pet.feedCount)
+      const rank = { egg: 0, baby: 1, adult: 2 } as const
+      if (rank[stage] <= rank[pet.stage] || stage === 'egg') return null
+      const next = { ...pet, stage, mood: expressionFor(currentHunger(pet, now)) }
+      await d.pets.put(next)
+      await album.addGrowthCard(d, next.name, stage, now)
+      return { evolvedTo: stage, from: pet.stage === 'egg' ? 'egg' : 'baby', pet: next } as const
     })
   }
 

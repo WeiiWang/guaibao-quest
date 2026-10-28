@@ -110,48 +110,67 @@ async function lockScreen(browser) {
 }
 
 
-// ---------- 第 2 項：餵食防呆 ----------
+// ---------- 第 2 項：餵食（v7.3：吃飽仍可餵、每日成長上限） ----------
+const todayStr = (page) => page.evaluate(() => { const d = new Date(); const p = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}` })
 async function feedingGuard(browser) {
-  // 吃飽了（≥95）：點、拖都不扣食物，阿悟搖頭說「我吃飽了～」
+  // 吃飽了（≥95）：v7.3 起仍然可以餵——食物照扣、成長 +1、飽足維持在上限，阿悟說「好飽喔，但是好開心！」並冒愛心
   for (const [size, vp] of Object.entries(SIZES)) {
     const { ctx, page, errors } = await freshApp(browser, vp, { bananas: 5 })
     await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now() })
-    // 阿悟頭上的泡泡改用預錄的阿悟聲（只播預錄、沒有就安靜）：開啟語音包測試模式，記下播了哪個音檔
-    await ctx.addInitScript(() => {
-      localStorage.setItem('gq-voice-pack-test', '1')
-      window.__played = []
-      const play = HTMLMediaElement.prototype.play
-      HTMLMediaElement.prototype.play = function (...a) {
-        if (/\.m4a/.test(this.src)) window.__played.push(this.src)
-        return play.apply(this, a)
-      }
-    })
     await page.reload()
     await page.waitForSelector('[data-testid=pet]')
     await page.waitForTimeout(600)
-    await page.evaluate(() => {
+    const before = await getPet(page)
+    await page.locator('[data-dock-item=banana]').click()
+    await page.waitForTimeout(250)
+    check(`[${size}] 飽足 100：輕點食物，食物照扣（5→4）`, (await qtyOf(page, 'banana')) === 4, String(await qtyOf(page, 'banana')))
+    const after = await getPet(page)
+    check(`[${size}] 飽足 100：feedCount +1、飽足維持在上限`, after.feedCount === before.feedCount + 1 && Math.round(after.hunger) === 100, `${before.feedCount}→${after.feedCount} hunger=${after.hunger}`)
+    check(`[${size}] 每日成長記錄 growth = { 今天, 1 }`, after.growth?.n === 1 && after.growth?.date === (await todayStr(page)), JSON.stringify(after.growth))
+    await page.waitForFunction(() => /好飽喔/.test(document.querySelector('[data-testid=pet-bubble]')?.textContent ?? ''), null, { timeout: 4000 }).catch(() => {})
+    const bubble = await page.getByTestId('pet-bubble').innerText().catch(() => '')
+    check(`[${size}] 阿悟說「好飽喔，但是好開心！」`, bubble.includes('好飽喔，但是好開心'), bubble)
+    check(`[${size}] 不是搖頭拒絕（沒有 headshake）、沒有 nope 抖動`, (await page.getByTestId('pet').getAttribute('data-anim')) !== 'headshake' && (await page.locator('[data-dock-item=banana].nope').count()) === 0)
+    await shot(page, 'feed-full', size)
+    check(`[${size}] 無 console 錯誤`, errors.length === 0, errors.join('|'))
+    await ctx.close()
+  }
+  // 每日上限：今天成長到 12 → 拒絕（食物不扣、feedCount 不變），阿悟搖頭說「肚子撐撐的，明天再吃好不好？」；拖曳也一樣
+  for (const [size, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp, { bananas: 5 })
+    await ctx.addInitScript(() => {
       window.__spoken = []
       const orig = window.speechSynthesis.speak.bind(window.speechSynthesis)
       window.speechSynthesis.speak = (u) => (window.__spoken.push(u.text), orig(u))
     })
+    await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now(), growth: { date: await todayStr(page), n: 12 } })
+    await page.reload()
+    await page.waitForSelector('[data-testid=pet]')
+    await page.waitForTimeout(600)
     const before = await getPet(page)
     await page.locator('[data-dock-item=banana]').click()
     await page.waitForTimeout(250)
-    check(`[${size}] 飽足 100：輕點食物，食物不扣（x5）`, (await qtyOf(page, 'banana')) === 5)
-    check(`[${size}] 飽足 100：feedCount 不增加`, (await getPet(page)).feedCount === before.feedCount)
+    check(`[${size}] 今天長滿 12：輕點食物，食物不扣（x5）`, (await qtyOf(page, 'banana')) === 5)
+    check(`[${size}] 今天長滿 12：feedCount 不增加`, (await getPet(page)).feedCount === before.feedCount)
     const bubble = await page.getByTestId('pet-bubble').innerText().catch(() => '')
-    check(`[${size}] 阿悟說「我吃飽了～」`, bubble.includes('我吃飽了'), bubble)
+    check(`[${size}] 阿悟說「肚子撐撐的，明天再吃好不好？」`, bubble.includes('肚子撐撐的，明天再吃好不好'), bubble)
     check(`[${size}] 阿悟搖頭（headshake 動畫）`, (await page.getByTestId('pet').getAttribute('data-anim')) === 'headshake')
-    const fullFile = await page.evaluate(async () => Object.values(await (await fetch('/voice/manifest.json')).json()).find((v) => v.text === '我吃飽了～')?.file)
-    check(`[${size}] 語音唸「我吃飽了」（阿悟聲預錄音檔）`, !!fullFile && (await page.evaluate(() => window.__played)).some((u) => u.includes(fullFile)), String(fullFile))
     check(`[${size}] 被拒絕的食物圖示抖一下（nope）`, (await page.locator('[data-dock-item=banana].nope').count()) === 1)
-    await shot(page, 'feed-full', size)
+    await shot(page, 'feed-capped', size)
     // 拖給阿悟也一樣
-    await page.waitForTimeout(2300)
+    await page.waitForTimeout(3300)
     const from = await center(page, '[data-dock-item=banana]')
     const to = await center(page, '[data-testid=pet]')
     await drag(page, from, to, { settle: 600 })
-    check(`[${size}] 飽足 100：拖給阿悟吃，食物也不扣`, (await qtyOf(page, 'banana')) === 5 && (await getPet(page)).feedCount === before.feedCount)
+    check(`[${size}] 今天長滿 12：拖給阿悟吃，食物也不扣`, (await qtyOf(page, 'banana')) === 5 && (await getPet(page)).feedCount === before.feedCount)
+    // 隔天（growth.date 是昨天）又可以餵
+    await patchPet(page, { growth: { date: '2000-01-01', n: 12 } })
+    await page.reload()
+    await page.waitForSelector('[data-testid=pet]')
+    await page.waitForTimeout(500)
+    await page.locator('[data-dock-item=banana]').click()
+    await page.waitForTimeout(300)
+    check(`[${size}] 隔天：上限歸零，又可以餵（5→4、growth 重算為 1）`, (await qtyOf(page, 'banana')) === 4 && (await getPet(page)).growth?.n === 1, JSON.stringify((await getPet(page)).growth))
     check(`[${size}] 無 console 錯誤`, errors.length === 0, errors.join('|'))
     await ctx.close()
   }
@@ -159,7 +178,7 @@ async function feedingGuard(browser) {
   {
     const { ctx, page } = await freshApp(browser, SIZES.land, { bananas: 5 })
     await patchSettings(page, { voiceOn: false })
-    await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now() })
+    await patchPet(page, { hunger: 100, hungerUpdatedAt: Date.now(), growth: { date: await todayStr(page), n: 12 } })
     // 阿悟頭上的泡泡改用預錄的阿悟聲（只播預錄、沒有就安靜）：開啟語音包測試模式，記下播了哪個音檔
     await ctx.addInitScript(() => {
       localStorage.setItem('gq-voice-pack-test', '1')
@@ -180,7 +199,7 @@ async function feedingGuard(browser) {
     })
     await page.locator('[data-dock-item=banana]').click()
     await page.waitForTimeout(300)
-    check('家長關語音：吃飽了不唸（字幕泡泡還在）', (await page.evaluate(() => window.__spoken.length)) === 0 && (await page.getByTestId('pet-bubble').count()) === 1)
+    check('家長關語音：今天長滿了的話不唸（字幕泡泡還在）', (await page.evaluate(() => window.__spoken.length)) === 0 && (await page.getByTestId('pet-bubble').count()) === 1)
     await ctx.close()
   }
   // 輕點防連點：800ms 內只算一次；拖曳不受限

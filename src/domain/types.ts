@@ -63,6 +63,8 @@ export interface Pet {
   feedStreak?: FeedStreak
   /** v5：阿悟學會的新招（id 見 domain/tricks.ts）。舊資料沒有這欄 = 還沒學會任何一招（不升 Dexie 版本） */
   tricks?: string[]
+  /** v7.3：今天靠餵食得到的成長次數（date = 本地日期；跨日歸零）。舊資料沒有這欄 = 今天還沒成長過（不升 Dexie 版本） */
+  growth?: { date: string; n: number }
   /** v6：戴著的帽子（商品 id，例 'hat-crown'）；沒有 = 沒戴。舊資料沒有這欄（不升 Dexie 版本） */
   hat?: string
 }
