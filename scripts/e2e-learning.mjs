@@ -227,17 +227,20 @@ try {
   check('這一站的 5 筆作答都帶互動方式（pick）', sessAts.length === 5 && sessAts.every((a) => a.interaction === 'pick'))
   await page.getByTestId('back-to-map').click()
 
-  // ---------- 數字選項（難度 1）：第一次點只唸出數字，第二次才作答 ----------
+  // ---------- 數字選項（難度 1）：卡片右上角有小喇叭，點喇叭唸數字、點卡片直接作答（v7 取消兩段式） ----------
   const c1 = find((q) => q.type === 'count' && q.difficulty === 1)
   await startPlan(page, [c1.id, ...ALL.filter((q) => q.skill === 'classify' && q.difficulty === 1 && !q.gentle).slice(0, 4).map((q) => q.id)], { states: [], clearAttempts: true })
   await clearSpoken(page)
   const target = page.locator(`[data-testid=choice][data-choice-id="${c1.answer}"]`)
-  await target.click()
+  const speaker = page.locator(`[data-testid=num-speak][data-choice-id="${c1.answer}"]`)
+  const sb = await speaker.boundingBox()
+  check('數字卡右上角有小喇叭（>= 56px）', !!sb && sb.width >= 56 && sb.height >= 56, JSON.stringify(sb))
+  await speaker.click()
   await page.waitForTimeout(150)
-  check('數字選項：點一下先唸出數字（不會直接作答）', (await target.getAttribute('data-armed')) === 'true' && (await target.getAttribute('data-state')) === 'idle' && (await spoken(page)).includes(['', '一', '二', '三', '四', '五'][Number(c1.answer)]))
+  check('點喇叭：唸出數字，不會作答', (await target.getAttribute('data-state')) === 'idle' && (await spoken(page)).includes(['', '一', '二', '三', '四', '五'][Number(c1.answer)]))
   await target.click()
   await page.waitForSelector('[data-testid=question][data-hint-stage="0"] [data-state=right]')
-  check('數字選項：點第二下才作答，答對', true)
+  check('數字選項：點卡片直接作答，答對（不再點兩下）', true)
   await next(page)
   check('分類難度 1 是 3 選 1', (await page.locator('[data-testid=choice]').count()) === 3)
   // 3 選 1：答錯第一次要有提示（不會因為只剩選項而直接揭曉）

@@ -16,8 +16,9 @@ import { writeChapter } from './subjectPref'
 import type { Screen } from '../../App'
 import { Companion } from './Companion'
 import './adventure.css'
+import './adventure-v7.css'
 
-/** 章末儀式：打開寶箱 → 阿悟歡呼 → 額外材料 → 「今天的冒險完成了！」（chapterId 是哪一章的寶箱，沒給就是花果山） */
+/** 章末儀式：寶箱搖晃閃光約 1 秒 → 打開 → 阿悟歡呼 → 額外材料 → 「<章名>通關！」（chapterId 是哪一章的寶箱，沒給就是花果山） */
 export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: () => void; go: (s: Screen) => void }) {
   const ch = (chapterId && getChapter(chapterId)) || HUAGUOSHAN
   // 通關後會開放的下一章（花果山 → 水簾洞）
@@ -26,7 +27,11 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
   const prog = useLiveQuery(() => db.progress.get(ch.id), [])
   const [rewards, setRewards] = useState<MaterialCost | null>(null)
   const [error, setError] = useState('')
+  /** 打開前搖晃閃光中 */
+  const [shaking, setShaking] = useState(false)
   const busy = useRef(false)
+  const shakeTimer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(shakeTimer.current), [])
 
   // 這輪的寶箱已經開過（重新進來）：直接顯示結尾畫面
   const alreadyOpened = !!prog?.chestClaimed && !rewards
@@ -34,6 +39,15 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
   const open = async () => {
     if (busy.current) return
     busy.current = true
+    // 期待感：先搖晃並閃光約 1 秒（減少動態效果時不等）
+    if (!(typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      setShaking(true)
+      playSfx('tap', soundOn)
+      await new Promise<void>((res) => {
+        shakeTimer.current = window.setTimeout(res, 1000)
+      })
+      setShaking(false)
+    }
     const r = await repo.claimChest(ch.id)
     busy.current = false
     if (!r.ok) {
@@ -47,17 +61,19 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
   useEffect(() => {
     if (!opened) return
     playSfx('reward', soundOn)
-    const l = pickLine('ceremony.done')
+    const l = pickLine('chapter.done')
     const open = pickLine('ui.chapter', 1)
     sayChain([{ key: l.key, text: l.text }, ...(next ? [{ key: open.key, text: open.text }] : [])], { enabled: voiceOn })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened])
 
   return (
-    <main className="adv adv-ceremony" data-testid="ceremony">
+    <main className="adv adv-ceremony q7-cere" data-testid="ceremony">
       <div className="adv-cere-stage">
-        <div className={`adv-chest ${opened ? 'open' : ''}`}>
-          <Icon name="ui-chest" emoji="🎁" alt="寶箱" size={opened ? 150 : 170} />
+        <div className={`q7-chest-wrap ${shaking ? 'shaking' : ''}`} data-testid="chest-wrap" data-shaking={shaking ? 'true' : undefined}>
+          <div className={`adv-chest ${opened ? 'open' : ''}`}>
+            <Icon name="ui-chest" emoji="🎁" alt="寶箱" size={opened ? 190 : 210} />
+          </div>
         </div>
         <Companion pose={opened || alreadyOpened ? 'cheer' : 'happy'} size="clamp(120px, 22dvh, 180px)" className="adv-cere-pet" />
         {opened && (
@@ -73,18 +89,18 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
         <>
           <h1>{ch.name}全部通關了！</h1>
           <p className="adv-sub">寶箱裡有額外的材料，打開看看吧。</p>
-          <button className="adv-btn primary big" onClick={open} data-testid="claim-chest">打開寶箱</button>
+          <button className="adv-btn primary big" onClick={open} disabled={shaking} data-testid="claim-chest">打開寶箱</button>
         </>
       )}
 
       {(opened || alreadyOpened) && (
         <>
-          <h1 data-testid="ceremony-title">今天的冒險完成了！</h1>
+          <h1 data-testid="ceremony-title">{ch.name}通關！</h1>
           {rewards && (
             <div className="adv-cere-rewards" data-testid="chest-rewards">
               {MATERIAL_IDS.filter((m) => rewards[m] > 0).map((m, i) => (
                 <span key={m} className="reward-pop" style={{ animationDelay: `${i * 0.25}s` }}>
-                  <Icon name={`mat-${m}`} emoji={MAT_EMOJI[m]} alt={MATERIAL_NAMES[m]} size={72} />
+                  <Icon name={`mat-${m}`} emoji={MAT_EMOJI[m]} alt={MATERIAL_NAMES[m]} size={120} />
                   <b>× {rewards[m]}</b>
                 </span>
               ))}

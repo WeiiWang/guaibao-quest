@@ -403,7 +403,7 @@ try {
   await page.getByTestId('station-2').click()
   await page.waitForSelector('[data-testid=question]')
   const n2 = BANK[await qid(page)]
-  check('自然第 2 站由系統抽題：都是自然科，難度 1 是天氣圖與動物（圖片選項）', n2.skill === 'nature' && ['natWeather', 'natAnimal'].includes(n2.type))
+  check('自然第 2 站由系統抽題：都是自然科，難度 1 是天氣、動物、動物的家、季節、植物生長（v7）', n2.skill === 'nature' && ['natWeather', 'natAnimal', 'natHome', 'natSeason', 'natPlant'].includes(n2.type))
   await shot(page, 'nature-pics', 'land')
   await clickChoice(page, wrongId(n2))
   await page.waitForTimeout(250)

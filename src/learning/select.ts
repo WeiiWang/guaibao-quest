@@ -1,4 +1,5 @@
 import { getQuestion, QUESTIONS, questionsFor } from './bank'
+import { isKidVariant, kidText } from './lines'
 import { dueReviews } from './skills'
 import { STATION_SIZE } from './scoring'
 import { makeRng, pickOne, shuffled, type Rng } from './rng'
@@ -366,7 +367,8 @@ const isNumericChoices = (q: Question) => q.choices.length > 0 && q.choices.ever
  * - 選項順序用 seed 洗牌（同一個 seed 永遠同一個順序，離開再回來不會變）；
  *   數字選項維持由小到大（答案位置由題庫端保證平均）
  */
-export function displayQuestion(q: Question, seed: string, gentle = false): Question {
+export function displayQuestion(q: Question, seed: string, gentle = false, kid = false): Question {
+  if (kid && isKidVariant(q)) q = { ...q, prompt: kidText(q.prompt), hint: kidText(q.hint), kid: true }
   if (q.interaction && q.interaction !== 'pick') return q
   const rng = makeRng(seedOf(`${seed}:${q.id}`))
   let choices = q.choices

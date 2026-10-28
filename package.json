@@ -25,7 +25,8 @@
     "e2e:wardrobe": "node scripts/e2e-wardrobe.mjs",
     "e2e:life": "node scripts/e2e-life.mjs",
     "e2e:math2": "node scripts/e2e-math2.mjs",
-    "shots:math2": "node scripts/shots-math2.mjs"
+    "shots:math2": "node scripts/shots-math2.mjs",
+    "e2e:quest7": "node scripts/e2e-quest7.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",

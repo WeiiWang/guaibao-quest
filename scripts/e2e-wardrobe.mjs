@@ -571,7 +571,15 @@ try {
       const els = [...document.querySelectorAll('.adv-map > *')]
       return Math.max(...els.map((e) => e.getBoundingClientRect().bottom))
     })
-    check(`[${vp.width}x${vp.height}] 直向地圖：內容底部離畫面底端 <= 110px（不留一大片白）`, vp.height - bottom <= 110, `bottom=${Math.round(bottom)} 空 ${Math.round(vp.height - bottom)}px`)
+    // v7（試玩審查 V7）：直向地圖改成「縮放到所有節點都看得到、不用橫向捲動」，場景寬度 = 畫面寬度，所以下方會比以前空一些（以前是放大到比畫面寬再捲動）。
+    // 這裡改驗：不橫向捲動、6 個節點都在畫面內、下方空白不超過畫面高度的 40%
+    const fitInfo = await page.evaluate(() => {
+      const vw = document.documentElement.clientWidth
+      const sc = document.querySelector('.adv-scroll')
+      return { noScroll: sc.scrollWidth <= sc.clientWidth + 1, nodes: [...document.querySelectorAll('.adv-node-btn')].every((b) => { const r = b.getBoundingClientRect(); return r.left >= 0 && r.right <= vw }) }
+    })
+    check(`[${vp.width}x${vp.height}] 直向地圖：不橫向捲動、節點全部可見`, fitInfo.noScroll && fitInfo.nodes, JSON.stringify(fitInfo))
+    check(`[${vp.width}x${vp.height}] 直向地圖：下方空白 <= 畫面高度的 40%`, vp.height - bottom <= vp.height * 0.4, `bottom=${Math.round(bottom)} 空 ${Math.round(vp.height - bottom)}px`)
     await shot(page, 'map', `${vp.width}x${vp.height}`)
     await ctx.close()
   }

@@ -5,6 +5,7 @@ import { anchorBoxes, isPeek, mustProp, REL_WORD, SCENE_H, SCENE_W, sceneBoxes, 
 import type { PlaceZone, SceneSpec } from '../../../learning/types'
 import { Icon } from '../../components/Icon'
 import './adventure-v6.css'
+import './adventure-v7.css'
 
 const pctX = (b: Box) => `${(b.x / SCENE_W) * 100}%`
 const pctY = (b: Box) => `${(b.y / SCENE_H) * 100}%`
@@ -46,7 +47,7 @@ export function SpaceScene({ anchors, subject, zones, renderZone, className = ''
     <div className={`sc ${className}`} role="img" aria-label={label} data-testid={testId}>
       <i className="sc-floor" aria-hidden />
       {anchors.map((a, i) => (
-        <div key={a} className="sc-prop" style={boxStyle(boxes[i], 2)}>
+        <div key={a} className={`sc-prop ${a === 'decor-table' || a === 'decor-crate' ? 'q7-float' : ''}`} style={boxStyle(boxes[i], 2)}>
           <Pic id={a} alt={mustProp(a).name} />
         </div>
       ))}

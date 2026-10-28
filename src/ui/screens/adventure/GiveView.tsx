@@ -105,6 +105,9 @@ export function GiveView({ q, hintStage, solved, voiceOn, onWrong, onSolved, dem
     if (hintStage < 2 || solved || demo) return
     const ids: number[] = []
     setBasket([])
+    // 示範開始時清掉舊的「再拿一個」之類訊息，不要和示範同時出現（試玩審查 B6）
+    setMsg('')
+    setDizzy(false)
     for (let k = 0; k < n; k++)
       ids.push(
         window.setTimeout(() => {

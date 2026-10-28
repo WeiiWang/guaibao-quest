@@ -27,8 +27,7 @@ export const DAILY_MATERIAL_P = 0.9 // 累積機率：到這裡為止是食物 +
 export const DAILY_MATERIAL_QTY = 2
 /** 貼紙禮物的素材（public/art，只記錄） */
 export const GIFT_STICKERS = ['obj-star', 'obj-flower', 'obj-shell', 'obj-rabbit', 'obj-chick', 'obj-fish', 'decor-rainbow', 'mat-flower'] as const
-/** 圖鑑每收集滿這麼多個，送一份禮物 */
-export const COLLECTION_STEP = 6
+/** v7：圖鑑每收集滿 N 個送一份禮物，N 依總數調整（總數 / 8，至少 2），整個圖鑑至少 8 份；見 domain/friends.ts 的 collectionStep */
 
 /** 每種食物的掉落權重（含今天最愛的加權）。蛋糕一律 0 */
 export function dropWeights(date: string): { id: string; weight: number }[] {
@@ -70,8 +69,8 @@ export function giftRef(g: Gift): string {
   return g.foodId ?? g.materialId ?? g.stickerId ?? ''
 }
 
-/** 圖鑑收集數對應「應該已經送過幾份」 */
-export const collectionRewardsDue = (known: number): number => Math.floor(known / COLLECTION_STEP)
+/** 圖鑑收集數對應「應該已經送過幾份」（step = 每幾個送一份，見 collectionStep） */
+export const collectionRewardsDue = (known: number, step: number): number => Math.floor(known / Math.max(1, step))
 
 /** 禮物材料 id 的型別守門（讀舊資料時用） */
 export const isMaterialId = (v: unknown): v is MaterialId => typeof v === 'string' && (MATERIAL_IDS as readonly string[]).includes(v)

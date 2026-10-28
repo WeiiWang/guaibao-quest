@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { FOOD_IDS } from './constants'
 import { favoriteFoodOf } from './favorite'
-import { friendCount } from './friends'
+import { collectionStep, FRIEND_TABS, familiarityOf, friendCount, friendStats, answerFriendOf } from './friends'
 import { FRIENDS, objectsInQuestion } from './friends'
-import { FAVORITE_BOOST, collectionRewardsDue, dropWeights, giftKind, rollDailyGift, rollStationDrop, DROP_FOODS, COLLECTION_STEP } from './gifts'
+import { FAVORITE_BOOST, collectionRewardsDue, dropWeights, giftKind, rollDailyGift, rollStationDrop, DROP_FOODS } from './gifts'
 import { GIFT_COLLECT_LINE, GIFT_DAILY_LINE, TIME_WARN_LINE, giftFoodLine, giftLine } from './giftLines'
 import { TRICKS, learnLine, earnedTricks, newTricks, pickTrick, skillMilestone } from './tricks'
 import { makeRng } from '../learning/rng'
@@ -84,9 +84,46 @@ describe('今日小禮物', () => {
 })
 
 describe('圖鑑', () => {
-  it('每收集滿 6 個才算 1 份禮物', () => {
-    expect([0, 5, 6, 11, 12, 15].map(collectionRewardsDue)).toEqual([0, 0, 1, 1, 2, 2])
-    expect(COLLECTION_STEP).toBe(6)
+  it('每收集滿 N 個才算 1 份禮物，N 依總數調整，整個圖鑑至少 8 份', () => {
+    expect([0, 5, 6, 11, 12, 15].map((k) => collectionRewardsDue(k, 6))).toEqual([0, 0, 1, 1, 2, 2])
+    expect(collectionStep(15)).toBe(2)
+    expect(collectionStep(98)).toBe(12)
+    for (const total of [40, 64, 98, 130, 200]) expect(collectionRewardsDue(total, collectionStep(total)), `${total}`).toBeGreaterThanOrEqual(8)
+    expect(collectionRewardsDue(friendCount(), collectionStep())).toBeGreaterThanOrEqual(8)
+  })
+  it('熟悉度三級：遇過 1 次認識、答對 3 次好朋友、答對 10 次超級好朋友', () => {
+    expect([undefined, { seen: 0, right: 0 }, { seen: 1, right: 0 }, { seen: 5, right: 2 }, { seen: 5, right: 3 }, { seen: 20, right: 9 }, { seen: 20, right: 10 }].map(familiarityOf)).toEqual([0, 0, 1, 1, 2, 2, 3])
+  })
+  it('答對次數只算「問的就是這個朋友」且第一次就答對；遇過算所有出現的朋友', () => {
+    const q1 = { id: 'q1', skill: 'number', items: [], choices: [{ id: 'obj-apple', obj: 'obj-apple' }, { id: 'obj-fish', obj: 'obj-fish' }], answer: 'obj-apple', params: {} }
+    const qe = { id: 'qe', skill: 'english', items: [], choices: [{ id: 'red', swatch: '#f00' }], answer: 'red', params: { word: 'red' } }
+    const m: Record<string, typeof q1 | typeof qe> = { q1, qe } as never
+    expect(answerFriendOf(q1 as never)).toBe('obj-apple')
+    expect(answerFriendOf(qe as never)).toBe('en:red')
+    const st = friendStats(
+      [
+        { questionId: 'q1', firstTryCorrect: true },
+        { questionId: 'q1', firstTryCorrect: false },
+        { questionId: 'qe', firstTryCorrect: true },
+        { questionId: 'gone', firstTryCorrect: true },
+      ],
+      (id) => m[id] as never,
+    )
+    expect(st['obj-apple']).toEqual({ seen: 2, right: 1 })
+    expect(st['obj-fish']).toEqual({ seen: 2, right: 0 })
+    expect(st['en:red']).toEqual({ seen: 1, right: 1 })
+  })
+  it('分頁：每個朋友都在某一頁；英文頁有全部英文單字', () => {
+    const tabs = new Set(FRIEND_TABS.map((t) => t.id))
+    for (const f of FRIENDS) expect(tabs.has(f.tab), f.id).toBe(true)
+    expect(FRIENDS.filter((f) => f.tab === 'english').length).toBe(38)
+    expect(new Set(FRIENDS.map((f) => f.id)).size).toBe(FRIENDS.length)
+  })
+  it('每個朋友都能在題庫的某一題裡遇到（沒有永遠收不到的格子）', () => {
+    const seen = new Set<string>()
+    for (const q of QUESTIONS) for (const id of objectsInQuestion(q)) seen.add(id)
+    const missing = FRIENDS.filter((f) => !seen.has(f.id)).map((f) => f.id)
+    expect(missing).toEqual([])
   })
   it('題目裡的物件（題幹、選項、籃子）都算遇過；不在物件表的略過', () => {
     const ids = objectsInQuestion({

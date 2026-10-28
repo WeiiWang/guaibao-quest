@@ -230,9 +230,14 @@ try {
   const { page } = A
   await playStationFromHome(page)
   const s1 = await settingsOf(page)
-  check('過一站：settings.pendingGifts 有 1 筆 { foodId, at, from: station }', s1.pendingGifts?.length === 1 && s1.pendingGifts[0].from === 'station' && !!s1.pendingGifts[0].foodId && s1.pendingGifts[0].at > 0, JSON.stringify(s1.pendingGifts))
-  const dropFood = s1.pendingGifts?.[0]?.foodId
-  check('掉落的食物已經寫進背包、不是蛋糕', (await invQty(page, dropFood)) >= 1 && dropFood !== 'cake', dropFood)
+  // v7：站點掉落的食物直接進背包（結算畫面顯示），不再排進 pendingGifts
+  check('過一站：站點掉落不再排進 pendingGifts', !(s1.pendingGifts ?? []).some((g) => g.from === 'station'), JSON.stringify(s1.pendingGifts))
+  const foodIds = ['carrot', 'cookie', 'banana', 'apple', 'grape', 'milk', 'peach', 'riceball', 'watermelon']
+  const foodsHeld = (await dump(page, 'inventory')).filter((i) => foodIds.includes(i.itemId))
+  check('掉落的食物已經直接寫進背包、不是蛋糕', foodsHeld.reduce((a, b) => a + b.qty, 0) >= 1 && !(await dump(page, 'inventory')).some((i) => i.itemId === 'cake'), JSON.stringify(foodsHeld))
+  // 舊存檔裡已經在佇列中的站點禮物，照樣展示（下面沿用這一段測試禮物的展示與收下）
+  const dropFood = 'apple'
+  await patchSettings(page, { pendingGifts: [...(s1.pendingGifts ?? []), { foodId: dropFood, at: Date.now(), from: 'station' }] })
   const qtyBefore = await invQty(page, dropFood)
   await backHome(page)
   await waitGift(page)
@@ -396,25 +401,44 @@ try {
   await page.getByTestId('friends-btn').click()
   await page.waitForSelector('[data-testid=friends]')
   await page.waitForSelector('[data-testid=friend]')
-  const cells = await page.getByTestId('friend').count()
-  const knownCells = await page.locator('[data-testid=friend][data-known=true]').count()
-  check('圖鑑：每個物件一格；已認識的格數 = 作答過的題目裡的物件數', cells === 15 && knownCells === knownNow.size && knownCells >= 1, `cells=${cells} known=${knownCells} expect=${knownNow.size}`)
+  const TABS = ['animal', 'food', 'thing', 'nature', 'life', 'english']
+  /** v7 圖鑑分六頁：逐頁讀每一格（id → 是否認識、哪一頁） */
+  const friendMap = async () => {
+    const m = new Map()
+    for (const t of TABS) {
+      await page.getByTestId(`friend-tab-${t}`).click()
+      for (const c of await page.locator('[data-testid=friend]').evaluateAll((els) => els.map((e) => [e.dataset.friend, e.dataset.known === 'true']))) m.set(c[0], { known: c[1], tab: t })
+    }
+    return m
+  }
+  const parseProgress = async () => {
+    const [, n, total] = (await page.getByTestId('friends-progress').innerText()).match(/認識 (\d+) \/ (\d+)/)
+    return { n: Number(n), total: Number(total) }
+  }
+  const fm0 = await friendMap()
+  const pr0 = await parseProgress()
+  const knownCells = [...fm0.values()].filter((v) => v.known).length
+  check('圖鑑：全部朋友分六頁、每個一格；已認識的格數 = 進度文字的數字，且至少涵蓋作答過的物件', fm0.size === pr0.total && pr0.total >= 90 && knownCells === pr0.n && knownCells >= knownNow.size && knownNow.size >= 1, `cells=${fm0.size} known=${knownCells} objects=${knownNow.size} total=${pr0.total}`)
+  await page.getByTestId('friend-tab-animal').click()
   const unknownFilter = await page.locator('[data-testid=friend][data-known=false] .friend-img').first().evaluate((el) => getComputedStyle(el).filter).catch(() => 'none')
-  check('沒認識的是剪影（filter: brightness(0) opacity(.2)）', knownCells < 15 ? /brightness\(0\)/.test(unknownFilter) && /opacity\(0?\.2\)/.test(unknownFilter) : true, unknownFilter)
+  check('沒認識的是剪影（filter: brightness(0) opacity(.2)）', knownCells < pr0.total ? /brightness\(0\)/.test(unknownFilter) && /opacity\(0?\.2\)/.test(unknownFilter) : true, unknownFilter)
+  const knownTab = [...fm0.values()].find((v) => v.known && v.tab !== 'english')?.tab ?? 'animal'
+  await page.getByTestId(`friend-tab-${knownTab}`).click()
   const knownFilter = await page.locator('[data-testid=friend][data-known=true] .friend-img').first().evaluate((el) => getComputedStyle(el).filter)
   check('已認識的是彩色大圖（沒有 filter）', knownFilter === 'none', knownFilter)
   await shot(page, 'friends-before', 'land-x')
-  // 作答更多題（模擬；直接寫 IndexedDB），回首頁再進圖鑑 → 新認識的朋友從剪影變彩色，滿 6 個再送禮物
+  // 作答更多題（模擬；直接寫 IndexedDB），回首頁再進圖鑑 → 新認識的朋友從剪影變彩色，每收集一批再送禮物（N = 總數 / 8，至少 2）
   const rewardedBefore = (await settingsOf(page)).collectionRewarded ?? 0
-  const unknownBefore = await page.locator('[data-testid=friend][data-known=false]').evaluateAll((els) => els.map((e) => e.dataset.friend))
+  const unknownBefore = [...fm0].filter(([, v]) => !v.known).map(([id]) => id)
   await addAttempts(page, QUESTIONS.map((q) => q.id))
   await page.getByRole('button', { name: /回首頁/ }).click()
   await page.waitForSelector('[data-testid=pet]')
-  const knownAll = new Set(QUESTIONS.flatMap((q) => [...objectsOf(q)])).size
-  const owed = Math.floor(knownAll / 6) - rewardedBefore
+  const step = Math.max(2, Math.floor(pr0.total / 8))
+  const knownAll = pr0.total // 題庫裡每個朋友都遇得到（單元測試保證）
+  const owed = Math.floor(knownAll / step) - rewardedBefore
   await page.waitForTimeout(800)
   const s4 = await settingsOf(page)
-  check('每收集滿 6 個送 1 份禮物（走 pendingGifts，from=collection）', owed >= 1 && (s4.collectionRewarded ?? 0) === Math.floor(knownAll / 6) && (s4.pendingGifts ?? []).filter((g) => g.from === 'collection').length === owed, `known=${knownAll} rewarded=${s4.collectionRewarded} before=${rewardedBefore} gifts=${JSON.stringify((s4.pendingGifts ?? []).map((g) => g.from))}`)
+  check(`每收集滿 ${step} 個送 1 份禮物（走 pendingGifts，from=collection），整個圖鑑至少 8 份`, owed >= 1 && Math.floor(knownAll / step) >= 8 && (s4.collectionRewarded ?? 0) === Math.floor(knownAll / step) && (s4.pendingGifts ?? []).filter((g) => g.from === 'collection').length === owed, `known=${knownAll} rewarded=${s4.collectionRewarded} before=${rewardedBefore} gifts=${JSON.stringify((s4.pendingGifts ?? []).map((g) => g.from))}`)
   await waitGift(page)
   check('阿悟說「你認識好多朋友，這個送給你！」', (await bubbleText(page)) === '你認識好多朋友，這個送給你！', await bubbleText(page))
   const got = await drainGifts(page, 5000)
@@ -423,12 +447,15 @@ try {
   await page.getByTestId('friends-btn').click()
   await page.waitForSelector('[data-testid=friend]')
   await page.waitForTimeout(400)
-  const knownAfter = await page.locator('[data-testid=friend][data-known=true]').count()
-  const unknownAfter = await page.locator('[data-testid=friend][data-known=false]').evaluateAll((els) => els.map((e) => e.dataset.friend))
-  check('答過更多題後，剪影變彩色（認識的朋友變多）', knownAfter === knownAll && knownAfter > knownCells && unknownAfter.length < unknownBefore.length, `${knownCells}→${knownAfter}`)
-  const turned = unknownBefore.filter((id) => !unknownAfter.includes(id))
+  const fm1 = await friendMap()
+  const pr1 = await parseProgress()
+  const knownAfter = [...fm1.values()].filter((v) => v.known).length
+  const unknownAfter = [...fm1].filter(([, v]) => !v.known).map(([id]) => id)
+  check('答過更多題後，剪影變彩色（認識的朋友變多）', knownAfter === knownAll && pr1.n === knownAfter && knownAfter > knownCells && unknownAfter.length < unknownBefore.length, `${knownCells}→${knownAfter}`)
+  const turned = unknownBefore.filter((id) => !unknownAfter.includes(id) && !id.startsWith('en:'))
+  await page.getByTestId(`friend-tab-${fm1.get(turned[0]).tab}`).click()
   check('原本是剪影的格子現在是彩色圖（filter none）', turned.length > 0 && (await page.locator(`[data-testid=friend][data-friend="${turned[0]}"] .friend-img`).evaluate((el) => getComputedStyle(el).filter)) === 'none')
-  check('進度文字顯示認識幾個', (await page.getByTestId('friends-progress').innerText()).includes(`認識 ${knownAfter} / 15`))
+  check('進度文字顯示認識幾個', (await page.getByTestId('friends-progress').innerText()).includes(`認識 ${knownAfter} / ${pr1.total}`))
   // 點一下：放大並唸中文名稱
   await page.evaluate(() => (window.__said.length = 0))
   const target = page.locator(`[data-testid=friend][data-friend="${turned[0]}"]`)
@@ -443,6 +470,7 @@ try {
   await page.getByRole('button', { name: '好' }).click()
   await shot(page, 'friends-after', 'land-x')
   if (unknownAfter.length > 0) {
+    await page.getByTestId(`friend-tab-${fm1.get(unknownAfter[0]).tab}`).click()
     await page.locator(`[data-testid=friend][data-friend="${unknownAfter[0]}"]`).click()
     check('沒認識的剪影點了不會放大', (await page.getByTestId('friend-view').count()) === 0)
   }

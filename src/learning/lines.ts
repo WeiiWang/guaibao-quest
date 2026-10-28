@@ -18,7 +18,14 @@ export interface Line {
 
 const NUM = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
-export const questionKey = (id: string, part: 'prompt' | 'hint'): string => `q.${id}.${part}`
+export const questionKey = (id: string, part: 'prompt' | 'hint', kid = false): string => `q.${id}.${part}${kid ? '.kid' : ''}`
+/**
+ * v7（G8）：寵物還是蛋的時候，生活題裡的主角圖片不能說成「阿悟」（圖裡是猴子，蛋還沒孵出來），
+ * 改說「小朋友」。只影響生活科目；文字替換，語音 key 加 .kid
+ */
+export const KID_NAME = '小朋友'
+export const kidText = (text: string): string => text.replaceAll('阿悟', KID_NAME)
+export const isKidVariant = (q: Pick<Question, 'skill' | 'prompt' | 'hint'>): boolean => q.skill === 'life' && (q.prompt.includes('阿悟') || q.hint.includes('阿悟'))
 export const wordKey = (text: string): string => `word.${text}`
 export const numberKey = (n: number): string => `num.${n}`
 /** 數完之後強調總數：「一共有五個」 */
@@ -78,6 +85,13 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'audio.test': '數一數，有幾根香蕉？',
   'lock.sleepy': '我想睡覺了，明天再一起冒險吧',
   'ceremony.done': '今天的冒險完成了！',
+  // v7 挑戰站、快速分級、站末結算
+  'challenge.open': '挑戰站！連續答對，看看你能連對幾題。',
+  'challenge.done': '挑戰完成了！',
+  'challenge.badge': '你拿到挑戰徽章了！',
+  'placement.ask': '先玩三題，阿悟看看從哪裡開始。',
+  'placement.done': '阿悟知道了，我們出發吧！',
+  'result.food': '哇，有好吃的！',
   'tutorial.skip': '好，我們直接開始。',
   'tutorial.again': '換你試試看！',
   'tutorial.done': '你學會了！',
@@ -136,7 +150,7 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   // v6 新招表演時阿悟說的話（pet/plan.ts 的 voice，兩邊要一字不差，有單元測試）
   'ui.trick.say': ['矮矮的', '高高！', '我躲起來囉', '找到我了！', '記住囉', '是香蕉！'],
   // v5 圖鑑：點一下唸名字（物件名稱；英文名稱等英文科目上線後再加）
-  'ui.friend.name': ['香蕉', '桃子', '蘋果', '葡萄', '小魚', '小雞', '小兔子', '花', '貝殼', '星星', '汽車', '火箭', '皮球', '恐龍', '鋼琴'],
+  'ui.friend.name': ['香蕉', '桃子', '蘋果', '葡萄', '小魚', '小雞', '小兔子', '花', '貝殼', '星星', '汽車', '火箭', '皮球', '恐龍', '鋼琴', '章魚', '熊', '牛', '紅蘿蔔', '蛋糕', '餅乾', '牛奶', '西瓜', '床', '時鐘', '燈', '帳篷', '箱子', '桌子', '沙發', '晴天', '下雨天', '下雪天', '刮風天', '春天', '夏天', '秋天', '冬天', '大海', '森林', '農場', '種子', '發芽', '開花', '洗手', '髒髒的手', '亂亂的玩具', '搶玩具', '亂丟垃圾', '收玩具', '排隊', '插隊', '說謝謝', '丟垃圾', '等紅燈', '過馬路', '刷牙', '吃青菜', '遮住嘴巴咳嗽', '睡覺', '紅色', '黃色', '藍色', '綠色', '粉紅色', '紫色', '數字一', '數字二', '數字三', '數字四', '數字五', '數字六', '數字七', '數字八', '數字九', '數字十'],
   // v5 結束儀式：遊玩時間剩 2 分鐘
   'ui.timewarn': '再玩一下下就要睡覺囉',
   // v6 帽子衣櫃：買到、戴上、拿下（句型見 src/domain/hats.ts，兩邊要一字不差，hats.test.ts 會檢查）
@@ -189,18 +203,23 @@ export const gentleHintKey = (id: string): string => `q.${id}.hint.gentle`
 export const gentleHintText = (hint: string): string => `${GENTLE_PREFIX}${hint}答案在這裡，點點看。`
 
 /** 一題會唸到的所有句子 */
-export function questionLines(q: Pick<Question, 'id' | 'prompt' | 'hint' | 'params'>): Line[] {
+export function questionLines(q: Pick<Question, 'id' | 'skill' | 'prompt' | 'hint' | 'params'>): Line[] {
   const out: Line[] = [
     { key: questionKey(q.id, 'prompt'), text: q.prompt },
     { key: questionKey(q.id, 'hint'), text: q.hint },
     { key: gentleHintKey(q.id), text: gentleHintText(q.hint) },
   ]
+  if (isKidVariant(q)) {
+    out.push({ key: questionKey(q.id, 'prompt', true), text: kidText(q.prompt) })
+    out.push({ key: questionKey(q.id, 'hint', true), text: kidText(q.hint) })
+    out.push({ key: `${gentleHintKey(q.id)}.kid`, text: gentleHintText(kidText(q.hint)) })
+  }
   for (const w of q.params?.words ?? []) if (w) out.push({ key: wordKey(w), text: w })
   return out
 }
 
 /** 全部句子（題庫 + 固定台詞 + 數字），key 唯一 */
-export function allLines(bank: Pick<Question, 'id' | 'prompt' | 'hint' | 'params'>[]): Record<string, string> {
+export function allLines(bank: Pick<Question, 'id' | 'skill' | 'prompt' | 'hint' | 'params'>[]): Record<string, string> {
   const out: Record<string, string> = {}
   for (const l of staticLineList()) out[l.key] = l.text
   for (let n = 0; n <= 20; n++) out[numberKey(n)] = chineseNumber(n)

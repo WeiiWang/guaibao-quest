@@ -137,6 +137,26 @@ export function dailyStationDef(subject: SubjectId, date: string): StationDef {
   return { index: 1, name: DAILY_NAME, material: dailyMaterial(date), kind: 'normal', slots: mustSubject(subject).dailySlots }
 }
 
+// ---------- 挑戰站（v7） ----------
+// 每章一個挑戰站：連續答對有 combo、不給提示、沒有時間壓力。借用關卡畫面，chapterId = challenge:<章節 id>、station = 1。
+
+export const CHALLENGE_PREFIX = 'challenge:'
+export const challengeChapterId = (chapterId: string): string => `${CHALLENGE_PREFIX}${chapterId}`
+export const CHALLENGE_NAME = '挑戰站'
+
+/** challenge:<章節 id> → 章節；不是挑戰站就回傳 null */
+export function parseChallengeId(chapterId: string): ChapterDef | null {
+  if (!chapterId.startsWith(CHALLENGE_PREFIX)) return null
+  return getChapter(chapterId.slice(CHALLENGE_PREFIX.length)) ?? null
+}
+
+/** 挑戰站的 8 個互動位置：這一章最後一站的 5 個，加第 3 站的前 3 個 */
+export function challengeSlots(ch: ChapterDef): Interaction[] {
+  const last = ch.stations[ch.stations.length - 1]?.slots ?? []
+  const mid = ch.stations[Math.min(2, ch.stations.length - 1)]?.slots ?? []
+  return [...last, ...mid.slice(0, 3)]
+}
+
 export interface StageInfo {
   /** 章節名（結算畫面的「英文小島・白沙灘」） */
   chapterName: string
@@ -144,6 +164,8 @@ export interface StageInfo {
   /** 科目 */
   subject: SubjectId
   daily: boolean
+  /** 挑戰站（v7） */
+  challenge?: boolean
 }
 
 /** 關卡畫面要的站資料：一般章節的站，或每日冒險。找不到就是 undefined */
@@ -152,6 +174,19 @@ export function resolveStage(chapterId: string, station: number, date: string): 
   if (daily) {
     if (station !== 1) return undefined
     return { chapterName: mustSubject(daily).name, def: dailyStationDef(daily, date), subject: daily, daily: true }
+  }
+  const chal = parseChallengeId(chapterId)
+  if (chal) {
+    const subj = subjectOfChapter(chal.id)
+    if (!subj || station !== 1) return undefined
+    const boss = chal.stations[chal.stations.length - 1]
+    return {
+      chapterName: chal.name,
+      def: { index: 1, name: CHALLENGE_NAME, material: boss.material, kind: 'normal', slots: challengeSlots(chal) },
+      subject: subj.id,
+      daily: false,
+      challenge: true,
+    }
   }
   const subject = subjectOfChapter(chapterId)
   const ch = getChapter(chapterId)

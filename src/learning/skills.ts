@@ -16,6 +16,8 @@ export const STATION_PASS_RATE = 0.8
 export const MASTER_STREAK = 2
 /** 掌握後第幾天複習：隔天、隔週、第 14 天（追蹤，followUp） */
 export const REVIEW_OFFSET_DAYS = [1, 7, 14]
+/** v7：目前難度連續幾題第一次就答錯 → 自動降一級（降級保護；幼幼模式有自己的規則，不套用） */
+export const WRONG_RUN_DEMOTE = 3
 /** 複習連續答錯幾次 → 清掉這個難度的掌握 */
 export const MISSES_TO_UNMASTER = 2
 
@@ -52,15 +54,17 @@ export function applyAttempt(state: SkillState, a: Attempt, opts: ApplyOptions =
     const promoteAt = opts.gentle ? RECENT_WINDOW : PROMOTE_AT
     target = good >= promoteAt ? clampDiff(state.difficulty + 1, max) : good <= DEMOTE_AT ? clampDiff(state.difficulty - 1, max) : state.difficulty
   }
+  const wrongRun = a.firstTryCorrect ? 0 : (state.wrongRun ?? 0) + 1
+  if (!opts.gentle && wrongRun >= WRONG_RUN_DEMOTE && state.difficulty > 1) target = clampDiff(state.difficulty - 1, max)
   if (!opts.gentle && total === FAST_TRACK_N && recent.length === FAST_TRACK_N && good === FAST_TRACK_N) {
     target = clampDiff(state.difficulty + 1, max)
   }
-  if (target === state.difficulty) return { ...state, recent, ...(total === undefined ? {} : { total }), updatedAt: a.at }
+  if (target === state.difficulty) return { ...state, recent, wrongRun, ...(total === undefined ? {} : { total }), updatedAt: a.at }
   const mastered =
     target > state.difficulty && !state.mastered[state.difficulty]
       ? { ...state.mastered, [state.difficulty]: { masteredAt: a.at, reviews: 0 } }
       : state.mastered
-  return { ...state, difficulty: target, recent: [], stationStreak: 0, mastered, ...(total === undefined ? {} : { total }), updatedAt: a.at }
+  return { ...state, difficulty: target, recent: [], stationStreak: 0, wrongRun: 0, mastered, ...(total === undefined ? {} : { total }), updatedAt: a.at }
 }
 
 /**

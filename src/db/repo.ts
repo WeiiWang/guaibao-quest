@@ -44,15 +44,16 @@ import * as album from './album'
 import { isHatId } from '../domain/hats'
 import { CHAPTERS, chapterUnlocked, getChapter } from '../learning/chapter'
 import { addMaterial, emptyCost, stationRewardQty, STATION_SIZE } from '../learning/scoring'
+import * as quest from './quest7'
 import { SHOP_CATALOG, balanceOfMaterials, canCraft, type MaterialBalance } from '../learning/materials'
 import { DAILY_LIMIT_OPTIONS, EXTEND_MINUTES, learningSettingsOf, type LearningSettings } from '../learning/playtime'
 import { makeRng, type Rng } from '../learning/rng'
 import { adaptPlan, planStation, type PlannedQuestion } from '../learning/select'
 import { avoidIdsFor, dailyInfo, emptyDaily, finishPlay, planDaily, startPlay, type DailyInfo } from '../learning/daily'
-import { dailyChapterId, dailyMaterial, mustSubject, parseDailyId, skillsOfChapter } from '../learning/subject'
+import { challengeChapterId, challengeSlots, dailyChapterId, dailyMaterial, mustSubject, parseChallengeId, parseDailyId, skillsOfChapter } from '../learning/subject'
 import { AGE_BANDS, learnerProfileOf, type LearnerProfile } from '../learning/profile'
 import { applyAttempt, applyStationResult, initialSkillState } from '../learning/skills'
-import { MATERIAL_IDS, MATERIAL_NAMES, SKILLS } from '../learning/types'
+import { CHALLENGE_SIZE, MATERIAL_IDS, MATERIAL_NAMES, SKILLS } from '../learning/types'
 import type {
   Attempt,
   Interaction,
@@ -61,6 +62,7 @@ import type {
   PlayTime,
   DailyBadge,
   DailyState,
+  Difficulty,
   Progress,
   SkillId,
   SkillState,
@@ -625,7 +627,8 @@ export class Repo {
     const [rows, settings] = await Promise.all([this.db.progress.toArray(), this.getSettings()])
     const progs = Object.fromEntries(rows.map((r) => [r.chapterId, r]))
     const pm = settings?.unlockedChapters ?? []
-    return Object.fromEntries(CHAPTERS.map((c) => [c.id, chapterUnlocked(c, progs, pm)]))
+    const band = learnerProfileOf(settings).ageBand
+    return Object.fromEntries(CHAPTERS.map((c) => [c.id, chapterUnlocked(c, progs, pm, band)]))
   }
 
   private freshProgress(chapterId: string, run: number, completedRuns: number, now: number): Progress {
@@ -645,7 +648,9 @@ export class Repo {
     const slots = chapterId ? getChapter(chapterId)?.stations[stationIndex]?.slots : undefined
     // 英文章節只出英文技能；第 2 章（水簾洞）出三個新技能、最後一題複習第 1 章；沒給章節就是數學的三個技能
     const mix = chapterId ? skillsOfChapter(chapterId) : undefined
-    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle, slots, skills: mix?.skills, tail: mix?.tail })
+    // 翻牌的格數隨站數遞增（2×2 → 2×3 → 3×4，上限是目前難度 +1 級的牌數）
+    const flipCells = chapterId ? [4, 4, 4, 6, 8][Math.min(stationIndex, 4)] : undefined
+    return planStation({ stationIndex, states, attempts, now, rng, gentle: profile.gentle, slots, skills: mix?.skills, tail: mix?.tail, flipCells })
   }
 
   /**
@@ -660,6 +665,8 @@ export class Repo {
   ): Promise<{ sessionId: string; plan: PlannedQuestion[]; idx: number; resumed: boolean }> {
     const dailySubject = parseDailyId(chapterId)
     if (dailySubject) return this.openDaily(dailySubject, now, rng)
+    const challengeOf = parseChallengeId(chapterId)
+    if (challengeOf) return this.openChallenge(challengeOf.id, now, rng)
     const [settings, prog] = await Promise.all([this.getSettings(), this.getProgress(chapterId, now)])
     const draft = settings?.stageDraft
     if (draft && draft.chapterId === chapterId && draft.station === station && draft.run === prog.run && !prog.stations[station - 1]?.done) {
@@ -717,6 +724,8 @@ export class Repo {
     input: { chapterId: string; station: number; sessionId: string; plan: PlannedQuestion[]; from: number },
     rng: Rng = makeRng(Math.floor(Math.random() * 2 ** 31)),
   ): Promise<PlannedQuestion[]> {
+    // 挑戰站的題目是固定排好的（比目前難度高 1 級），不在站中調整
+    if (parseChallengeId(input.chapterId)) return input.plan
     const [states, attempts, profile, prog] = await Promise.all([
       this.getSkillStates(),
       this.db.attempts.toArray(),
@@ -793,6 +802,8 @@ export class Repo {
       qty: number
       chapterDone: boolean
       newlyMastered: SkillId[]
+      /** v7：這一站掉落的食物（已經直接進背包） */
+      foods: string[]
     }>
   > {
     const chapter = getChapter(input.chapterId)
@@ -802,7 +813,8 @@ export class Repo {
     return d.transaction('rw', [d.attempts, d.skillState, d.progress, d.materialLedger, d.settings, d.inventory], async () => {
       if (chapter.unlockAfter) {
         const progs = Object.fromEntries((await d.progress.toArray()).map((r) => [r.chapterId, r]))
-        if (!chapterUnlocked(chapter, progs, (await d.settings.get(SETTINGS_ID))?.unlockedChapters ?? [])) return { ok: false, error: '這一章還沒開放，先通關前一章' } as const
+        const st = await d.settings.get(SETTINGS_ID)
+        if (!chapterUnlocked(chapter, progs, st?.unlockedChapters ?? [], learnerProfileOf(st).ageBand)) return { ok: false, error: '這一章還沒開放，先通關前一章' } as const
       }
       const attempts = await d.attempts.where('sessionId').equals(input.sessionId).toArray()
       if (attempts.length < STATION_SIZE) return { ok: false, error: '這一站的題目還沒答完' } as const
@@ -828,7 +840,7 @@ export class Repo {
       )
       await d.progress.put({ ...prog, stations, updatedAt: now })
       await d.settings.update(SETTINGS_ID, { stageDraft: undefined })
-      await meta.grantStationDrop(d, this.rng, now) // v5：每站過關掉落 1 個食物，待首頁展示
+      const foods = await meta.grantStationFoods(d, this.rng, now, independent) // v7：食物直接進背包（答對 >= 4 題 2 個，其他 1 個）
 
       const newlyMastered: SkillId[] = []
       const startDifficulty = learnerProfileOf(await d.settings.get(SETTINGS_ID)).startDifficulty
@@ -846,6 +858,7 @@ export class Repo {
         qty,
         chapterDone: stations.every((s) => s.done),
         newlyMastered,
+        foods,
       } as const
     })
   }
@@ -862,6 +875,9 @@ export class Repo {
   }
   knownFriends() {
     return meta.knownFriends(this.db)
+  }
+  friendStats() {
+    return meta.friendStatsOf(this.db)
   }
   syncCollection(now = this.clock()) {
     return meta.syncCollection(this.db, this.rng, now)
@@ -1010,6 +1026,7 @@ export class Repo {
       chapterDone: boolean
       newlyMastered: SkillId[]
       badge: boolean
+      foods: string[]
     }>
   > {
     const subject = parseDailyId(input.chapterId)
@@ -1033,7 +1050,7 @@ export class Repo {
         reason: `今日冒險・${mustSubject(subject).name}`,
         refId: input.sessionId,
       })
-      await meta.grantStationDrop(d, this.rng, now) // 每日冒險過關也掉落 1 個食物（答題 → 餵食）
+      const foods = await meta.grantStationFoods(d, this.rng, now, independent) // 每日冒險過關也掉落食物（規則同一般站）
       const fin = finishPlay(await this.getDailyState(input.chapterId), date, subject, attempts.map((a) => a.questionId), now)
       await this.putDailyState(input.chapterId, fin.state, now)
       await d.settings.update(SETTINGS_ID, { stageDraft: undefined })
@@ -1046,7 +1063,149 @@ export class Repo {
         if (Object.keys(next.mastered).length > Object.keys(cur.mastered).length) newlyMastered.push(skill)
         if (next !== cur) await d.skillState.put(next)
       }
-      return { ok: true, independent, total: attempts.length, material, qty, chapterDone: false, newlyMastered, badge: !!fin.badge } as const
+      return { ok: true, independent, total: attempts.length, material, qty, chapterDone: false, newlyMastered, badge: !!fin.badge, foods } as const
+    })
+  }
+
+  // ---------- v7：挑戰站 ----------
+  /** 這一章的挑戰站紀錄 */
+  async getChallenge(chapterId: string) {
+    return (await this.db.progress.get(chapterId))?.challenge ?? { plays: 0, best: 0 }
+  }
+
+  /** 開始（或接著玩）挑戰站：8 題，題目比目前難度高 1 級，不複習。chapterId 是真正的章節 id */
+  async openChallenge(
+    chapterId: string,
+    now = this.clock(),
+    rng: Rng = makeRng(Math.floor(Math.random() * 2 ** 31)),
+  ): Promise<{ sessionId: string; plan: PlannedQuestion[]; idx: number; resumed: boolean }> {
+    const ch = getChapter(chapterId)
+    const mix = skillsOfChapter(chapterId)
+    if (!ch || !mix) throw new Error('找不到這一章')
+    const cid = challengeChapterId(chapterId)
+    const [settings, ch0] = await Promise.all([this.getSettings(), this.getChallenge(chapterId)])
+    const draft = settings?.stageDraft
+    if (draft && draft.chapterId === cid && draft.run === ch0.plays) {
+      const plan: PlannedQuestion[] = []
+      for (const p of draft.plan) {
+        const q = getQuestion(p.id)
+        if (!q) break
+        plan.push({ question: q, review: false, followUp: false })
+      }
+      if (plan.length === draft.plan.length && plan.length > 0) {
+        const answered = new Set((await this.db.attempts.where('sessionId').equals(draft.sessionId).toArray()).map((a) => a.questionId))
+        const first = plan.findIndex((p) => !answered.has(p.question.id))
+        return { sessionId: draft.sessionId, plan, idx: first < 0 ? plan.length - 1 : first, resumed: answered.size > 0 }
+      }
+    }
+    const [states, attempts, profile] = await Promise.all([this.getSkillStates(), this.db.attempts.toArray(), this.getLearnerProfile()])
+    const plan = planStation({
+      stationIndex: ch0.plays + 2,
+      states: quest.bumpStates(states),
+      attempts,
+      now,
+      rng,
+      gentle: profile.gentle,
+      slots: challengeSlots(ch),
+      skills: mix.skills,
+      size: CHALLENGE_SIZE,
+      maxReviews: 0,
+    })
+    const sessionId = newId()
+    await this.saveStageDraft({ chapterId: cid, station: 1, run: ch0.plays, sessionId, plan, now })
+    return { sessionId, plan, idx: 0, resumed: false }
+  }
+
+  /**
+   * 完成挑戰站：發材料與食物（用答對比例換算成 5 題的數量，規則同一般站），記錄最高連對；
+   * 連對 CHALLENGE_BADGE_COMBO 題以上第一次拿到章節徽章。不影響技能難度（題目難度和目前難度不同，本來就不算）。
+   */
+  async completeChallenge(
+    input: { chapterId: string; sessionId: string },
+    now = this.clock(),
+  ): Promise<
+    Result<{
+      independent: number
+      total: number
+      material: MaterialId
+      qty: number
+      foods: string[]
+      combo: number
+      best: number
+      /** 這次第一次拿到章節徽章 */
+      badge: boolean
+      chapterDone: boolean
+      newlyMastered: SkillId[]
+    }>
+  > {
+    const chapter = getChapter(input.chapterId)
+    if (!chapter) return { ok: false, error: '找不到這一章' }
+    const d = this.db
+    return d.transaction('rw', [d.attempts, d.progress, d.materialLedger, d.settings, d.inventory], async () => {
+      const attempts = await d.attempts.where('sessionId').equals(input.sessionId).toArray()
+      if (attempts.length < CHALLENGE_SIZE) return { ok: false, error: '挑戰的題目還沒答完' } as const
+      if (await d.materialLedger.get(`challenge:${input.sessionId}`)) return { ok: false, error: '這次的獎勵已經領過了' } as const
+      const independent = attempts.filter((a) => a.firstTryCorrect && a.hintsUsed === 0).length
+      const scaled = quest.scaledIndependent(independent, attempts.length)
+      const material = chapter.stations[chapter.stations.length - 1].material
+      const qty = stationRewardQty(scaled)
+      await d.materialLedger.add({
+        id: `challenge:${input.sessionId}`,
+        at: now,
+        material,
+        delta: qty,
+        kind: 'station',
+        reason: `${chapter.name}・挑戰站`,
+        refId: input.sessionId,
+      })
+      const foods = await meta.grantStationFoods(d, this.rng, now, scaled)
+      const combo = quest.bestCombo(attempts)
+      const prog = (await d.progress.get(chapter.id)) ?? this.freshProgress(chapter.id, 1, 0, now)
+      const cur = prog.challenge ?? { plays: 0, best: 0 }
+      const badge = quest.earnsBadge(combo) && cur.badgeAt === undefined
+      const next = { plays: cur.plays + 1, best: Math.max(cur.best, combo), ...(cur.badgeAt !== undefined ? { badgeAt: cur.badgeAt } : badge ? { badgeAt: now } : {}) }
+      await d.progress.put({ ...prog, challenge: next, updatedAt: now })
+      await d.settings.update(SETTINGS_ID, { stageDraft: undefined })
+      return { ok: true, independent, total: attempts.length, material, qty, foods, combo, best: next.best, badge, chapterDone: false, newlyMastered: [] } as const
+    })
+  }
+
+  /** 所有拿到的章節徽章（章節 id 與時間；圖鑑用） */
+  async listChapterBadges(): Promise<{ chapterId: string; at: number }[]> {
+    const rows = await this.db.progress.toArray()
+    return rows.filter((r) => r.challenge?.badgeAt !== undefined).map((r) => ({ chapterId: r.chapterId, at: r.challenge?.badgeAt as number }))
+  }
+
+  // ---------- v7：6–7 歲快速分級 ----------
+  /** 要不要問快速分級：6–7 歲、還沒做過（或略過）、數學還沒有任何作答紀錄 */
+  async placementDue(): Promise<boolean> {
+    const [settings, attempts] = await Promise.all([this.getSettings(), this.db.attempts.toArray()])
+    if (learnerProfileOf(settings).ageBand !== '6-7' || settings?.placement) return false
+    return !attempts.some((a) => (quest.PLACEMENT_SKILLS as SkillId[]).includes(a.skill))
+  }
+
+  /** 做完（correct = 答對幾題）：還沒有紀錄的數學技能從分級結果起跳；回傳起跳難度。只做一次 */
+  async applyPlacement(correct: number, now = this.clock()): Promise<Result<{ level: Difficulty }>> {
+    const level = quest.placementLevel(correct)
+    const d = this.db
+    return d.transaction('rw', [d.settings, d.skillState], async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s) return { ok: false, error: '還沒完成初始設定' } as const
+      if (s.placement) return { ok: true, level: s.placement.level ?? learnerProfileOf(s).startDifficulty } as const
+      for (const skill of quest.PLACEMENT_SKILLS) {
+        const cur = await d.skillState.get(skill)
+        if (!cur || (cur.total ?? 0) === 0) await d.skillState.put(initialSkillState(skill, now, level))
+      }
+      await d.settings.update(SETTINGS_ID, { placement: { at: now, level } })
+      return { ok: true, level } as const
+    })
+  }
+
+  /** 略過快速分級（之後不再問；難度照年齡預設） */
+  async skipPlacement(now = this.clock()): Promise<void> {
+    await this.db.transaction('rw', this.db.settings, async () => {
+      const s = await this.db.settings.get(SETTINGS_ID)
+      if (s && !s.placement) await this.db.settings.update(SETTINGS_ID, { placement: { at: now, skipped: true } })
     })
   }
 
