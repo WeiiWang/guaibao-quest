@@ -365,7 +365,10 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     // 每份禮物飛向它該去的地方（食物 → 食物列、材料 → 工坊鈕、貼紙 → 背包鈕）
     list.slice(0, 8).forEach((g, i) => {
       const art = giftArt(g)
-      const target = document.querySelector(g.foodId ? `[data-dock-item="${g.foodId}"]` : g.materialId ? '[data-gift-target=material]' : '[data-gift-target=bag]')
+      // 背包裡原本沒有這種食物時，食物列還沒有它的格子：先飛向食物列（「去商店」那格旁），不要直接消失
+      const target = g.foodId
+        ? document.querySelector(`[data-dock-item="${g.foodId}"]`) ?? document.querySelector('[data-dock-item]') ?? document.querySelector('[data-testid=dock-shop]')
+        : document.querySelector(g.materialId ? '[data-gift-target=material]' : '[data-gift-target=bag]')
       const px = 64
       void flyOne({ rect: { left: rect.left + rect.width / 2 - px / 2 + (i % 4) * 8, top: rect.top + rect.height / 2 - px / 2, width: px, height: px }, node: iconNode(art.name, art.emoji, px) }, target, { delay: 120 + i * 130, duration: 800 })
     })
