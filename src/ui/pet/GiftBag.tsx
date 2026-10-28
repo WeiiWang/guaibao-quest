@@ -2,6 +2,7 @@ import type { Gift } from '../../domain/types'
 import { giftKind } from '../../domain/gifts'
 import { giftArt } from './GiftItem'
 import { Icon } from '../components/Icon'
+import { useArtStatus } from '../artProbe'
 import '../home7.css'
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
  * 點一次就把所有禮物全部收下；不閃爍、不催促。沒有禮物時整個不出現。
  */
 export function GiftBag({ gifts, calm, onTake }: Props) {
+  const hasArt = useArtStatus('ui-gift-bag') === 'ok'
   if (gifts.length === 0) return null
   const kinds = [...new Set(gifts.map((g) => giftKind(g)))]
   return (
@@ -32,8 +34,9 @@ export function GiftBag({ gifts, calm, onTake }: Props) {
     >
       {/* 晃動的是裡面這一層；按鈕本身不動，手指點的位置永遠穩定 */}
       <span className="h7-bag-sway">
-        <span className="h7-bag-body">
-          <span className="h7-bag-emoji" aria-hidden>🎁</span>
+        {/* 3D 禮物袋圖；還沒載到時用黃色圓底 + 🎁 */}
+        <span className={`h7-bag-body ${hasArt ? 'h7-bag-art' : ''}`}>
+          {hasArt ? <Icon name="ui-gift-bag" className="h7-bag-img" /> : <span className="h7-bag-emoji" aria-hidden>🎁</span>}
         </span>
         <span className="h7-bag-peek" aria-hidden>
           {gifts.slice(0, 3).map((g, i) => {

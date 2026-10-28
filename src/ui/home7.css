@@ -24,6 +24,8 @@
   position: absolute; right: 0; top: 0; min-width: 40px; height: 40px; padding: 0 8px; display: grid; place-items: center; border-radius: 999px;
   background: var(--bubblegum-deep, #de5a87); color: #fff; font-size: 1.35rem; font-weight: 900; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2), 0 0 0 3px #fff;
 }
+.h7-bag-body.h7-bag-art { width: 100%; height: 100%; border-radius: 0; background: none; box-shadow: none; }
+.h7-bag-img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 8px rgba(120, 70, 30, 0.28)); }
 @keyframes h7-bag-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 @media (prefers-reduced-motion: reduce) { .h7-bag-sway { animation: none; } }
 @media (max-width: 560px) { .h7-bag { right: 10px; bottom: 16px; width: 88px; height: 88px; } .h7-bag-body { width: 80px; height: 80px; } .h7-bag-emoji { font-size: 2.9rem; } }
