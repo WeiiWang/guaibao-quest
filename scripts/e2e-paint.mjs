@@ -293,7 +293,8 @@ try {
     const viewOf = async () => (await page.getByTestId('paint-board').getAttribute('data-view')).split(',').map(Number)
     check('放大：一開始 1×，沒有小地圖', (await zoomOf()) === 1 && (await page.getByTestId('pb-minimap').count()) === 0)
     const zbtn = await page.getByTestId('zoom-in').boundingBox()
-    check('放大：按鈕 >= 56px', zbtn.width >= 56 && zbtn.height >= 56, JSON.stringify([zbtn.width, zbtn.height]))
+    // 標題列裡的縮放鈕在頁面切換動畫（screen-in）進行中量，WebKit 會量到 55.999996，容許 0.5px 的次像素誤差（其他 56px 檢查也是 55.5）
+    check('放大：按鈕 >= 56px', zbtn.width >= 55.5 && zbtn.height >= 55.5, JSON.stringify([zbtn.width, zbtn.height]))
     await page.getByTestId('zoom-in').click()
     check('放大：＋ → 2×，出現小地圖', (await zoomOf()) === 2 && (await page.getByTestId('pb-minimap').count()) === 1)
     await page.getByTestId('zoom-in').click()

@@ -42,6 +42,8 @@ NAMES = [
     "pet-adult-happy",
 ]
 LEVELS = {"e": 10, "m": 20, "h": 30, "a": 26}
+# v7.3 F4：30 點版用「拉開間距」的取點（鰭、尾的細部不再擠在一起）。任兩點的最小距離（0–400 座標）
+MIN_CHORD_H = 20.0
 BOX = 400.0
 MARGIN = 38.0  # 圖離邊界的留白（0–400 空間）
 DENSE = 160  # 稠密輪廓點數
@@ -256,6 +258,74 @@ def pick_dots(dense, n):
     return arcs, acc, total
 
 
+def pick_dots_spaced(dense, n, min_chord=MIN_CHORD_H, samples=480):
+    """v7.3 F4：在稠密輪廓上選 n 個點（0 號點 = 起點），動態規劃：
+    - 相鄰兩點的弧長在平均的 0.6–1.7 倍之間，而且直線距離 ≥ min_chord（細部的點不會黏在一起）；
+    - 偏離平均間距要付代價，轉角處（鰭尖、尾端、嘴角）有加分，所以魚的形狀看得出來；
+    - 選完再檢查「任兩點」的最小距離（隔著凹口的兩個點可能很近），不夠就把那一段的下限調高重做。
+    回傳 (arcs, acc, total)，和 pick_dots 同樣的格式。"""
+    acc = cumlen(dense)
+    total = acc[-1]
+    m = samples
+    fine = [point_at(dense, acc, total * k / m) for k in range(m)]
+    span = max(3, int(m * 0.02))
+    score = [turning(fine, k, span) for k in range(m)]
+    bonus = [
+        min(1.0, max(0.0, score[k] - 25) / 70) if all(score[k] >= score[(k + j) % m] for j in range(-span, span + 1)) else 0.0
+        for k in range(m)
+    ]
+    avg = m / n
+    lo0, hi = max(2, int(avg * 0.6)), int(avg * 1.7) + 1
+    chord = lambda a, b: math.hypot(fine[a % m][0] - fine[b % m][0], fine[a % m][1] - fine[b % m][1])
+    W_CORNER = 0.3
+    INF = float("inf")
+
+    def solve(lo, bad):
+        # f[i][p]：第 i 個點在 p 的最小代價；back 記上一個點
+        f = [dict() for _ in range(n)]
+        back = [dict() for _ in range(n)]
+        f[0][0] = 0.0
+        for i in range(1, n):
+            for q, cq in f[i - 1].items():
+                for g in range(lo, hi + 1):
+                    p = q + g
+                    if p >= m or (i == n - 1 and m - p < lo) or (m - p) > hi * (n - i) or p in bad:
+                        continue
+                    if chord(q, p) < min_chord:
+                        continue
+                    c = cq + (g / avg - 1) ** 2 - W_CORNER * bonus[p]
+                    if c < f[i].get(p, INF):
+                        f[i][p] = c
+                        back[i][p] = q
+        best, bp = INF, None
+        for p, c in f[n - 1].items():
+            g = m - p
+            if lo <= g <= hi and chord(p, 0) >= min_chord:
+                c2 = c + (g / avg - 1) ** 2
+                if c2 < best:
+                    best, bp = c2, p
+        if bp is None:
+            return None
+        pos = [bp]
+        for i in range(n - 1, 0, -1):
+            pos.append(back[i][pos[-1]])
+        return sorted(pos)
+
+    lo, bad = lo0, set()
+    for _ in range(40):
+        pos = solve(lo, bad)
+        if pos is None:
+            lo = max(2, lo - 1)  # 放寬弧長下限（直線距離下限不放寬）
+            continue
+        close = [(a, b) for ai, a in enumerate(pos) for b in pos[ai + 1 :] if chord(a, b) < min_chord]
+        if not close:
+            return [total * k / m for k in pos], acc, total
+        # 隔著凹口的兩個點太近：禁掉其中一個（不能禁起點 0）
+        a, b = close[0]
+        bad.add(b if b != 0 else a)
+    raise SystemExit(f"{n} 點取不出最小間距 {min_chord} 的解")
+
+
 def process(name):
     im = Image.open(ART / f"{name}.png").convert("RGBA")
     w, h = im.size
@@ -306,7 +376,7 @@ def process(name):
     # 重新取樣後 0 號點仍是起點（resample 從 s=0 開始）
     out_levels = {}
     for key, n_dots in LEVELS.items():
-        arcs, acc, total = pick_dots(dense, n_dots)
+        arcs, acc, total = pick_dots_spaced(dense, n_dots) if key == "h" else pick_dots(dense, n_dots)
         dots = [point_at(dense, acc, a) for a in arcs]
         out_levels[key] = [[round(x, 1), round(y, 1)] for x, y in dots]
     return {

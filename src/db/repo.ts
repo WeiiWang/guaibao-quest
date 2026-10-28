@@ -39,6 +39,7 @@ import { getColoringPage, isFreePage, pageName } from '../art/coloring/pages'
 import { DOTS_PRICE, dotsItemId, dotsPoints, isDotsFree, parseDotsId } from '../art/dots/dots'
 import { checkApplyTheme, resolveTheme } from '../domain/theme'
 import { docOf, type PaintDoc } from '../domain/coloring'
+import { PAINT_REWARD_REASON, PAINT_STARS, paintRewardKey } from '../domain/paintReward'
 import { bestFrame, isFrameId, isFrameUnlocked, newlyUnlocked, type FrameId } from '../domain/frames'
 import { clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
@@ -1414,12 +1415,12 @@ export class Repo {
     png: string,
     now = this.clock(),
     opts: { counts?: boolean } = {},
-  ): Promise<Result<{ galleryId: string; counted: boolean; framesDone: number; newFrames: FrameId[]; frame?: FrameId }>> {
+  ): Promise<Result<{ galleryId: string; counted: boolean; framesDone: number; newFrames: FrameId[]; frame?: FrameId; stars: number; starsCapped: boolean }>> {
     if (!getColoringPage(pageId) && !isFreePage(pageId)) return { ok: false, error: '找不到這張著色頁' }
     if (!png.startsWith('data:image/')) return { ok: false, error: '完成圖不正確' }
     const galleryId = newId()
     const d = this.db
-    return d.transaction('rw', [d.coloring, d.settings], async () => {
+    return d.transaction('rw', [d.coloring, d.settings, d.ledger], async () => {
       const sig = (x: { fills?: unknown; strokes?: unknown; stickers?: unknown; bg?: string }) => JSON.stringify([x.fills ?? {}, x.strokes ?? [], x.stickers ?? [], x.bg ?? ''])
       const same = opts.counts ? (await d.coloring.filter((w) => w.pageId.startsWith('g:') && w.basePageId === pageId && sig(w) === sig(doc)).count()) > 0 : false
       const s = await d.settings.get(SETTINGS_ID)
@@ -1431,6 +1432,21 @@ export class Repo {
       // 沒算進收藏的作品（畫得太少）不戴畫框，維持預設的簡單畫框
       const frame = counted ? best : undefined
       if (counted && s) await d.settings.update(SETTINGS_ID, { framesDone: after })
+      // v7.3 F3：第一次算數的完成給固定 5 顆星星（受每日上限約束；同一張不重複，空白畫紙每欄每天一次）
+      let stars = 0
+      let starsCapped = false
+      if (counted) {
+        const refId = paintRewardKey(pageId, now, isFreePage(pageId))
+        const given = (await d.ledger.where('kind').equals('bonus').filter((l) => l.refId === refId).count()) > 0
+        if (!given) {
+          const g = grantPoints(await this.rangeLedger(now), PAINT_STARS, now)
+          starsCapped = g.capped
+          if (g.granted > 0) {
+            stars = g.granted
+            await d.ledger.add({ id: newId(), at: now, delta: g.granted, reason: PAINT_REWARD_REASON, kind: 'bonus', refId })
+          }
+        }
+      }
       const prevRow = await d.coloring.get(pageId)
       await d.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, ...(doc.bg ? { bg: doc.bg } : {}), ...dotsKeep(prevRow), updatedAt: now })
       await d.coloring.put({
@@ -1445,7 +1461,7 @@ export class Repo {
         createdAt: now,
         updatedAt: now,
       })
-      return { ok: true, galleryId, counted, framesDone: after, newFrames, ...(frame ? { frame } : {}) } as const
+      return { ok: true, galleryId, counted, framesDone: after, newFrames, stars, starsCapped, ...(frame ? { frame } : {}) } as const
     })
   }
 

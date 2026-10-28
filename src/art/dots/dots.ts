@@ -147,6 +147,12 @@ export function smoothClosedPath(pts: readonly Pt[]): string {
   }
   return `${d}Z`
 }
+/**
+ * v7.3 F4：連連看「拿去塗色」的參考底圖 = 原 3D 圖，在剪影裡以 25% 透明度疊在填色上面。
+ * 選這個而不是「用 3D 圖做描邊線稿」：3D 圖是柔和的漸層（沒有輪廓線），邊緣偵測出來會是斷斷續續的髒線，
+ * 孩子照著塗的時候反而更困惑；原圖淡淡地透出來，眼睛、鰭的位置一目了然，用筆刷照著描最直覺。
+ */
+export const DOTS_REFERENCE_OPACITY = 0.25
 export const silhouettePath = (name: string): string => smoothClosedPath(ITEMS[name]?.outline ?? [])
 
 // ---------- 數字 / 字母標籤的位置 ----------
@@ -166,6 +172,37 @@ const boxHitsCircle = (b: LabelBox, c: Pt, r: number) => {
   const dx = Math.max(b.x0 - c[0], 0, c[0] - b.x1)
   const dy = Math.max(b.y0 - c[1], 0, c[1] - b.y1)
   return dx * dx + dy * dy < r * r
+}
+
+/** 標籤中心離點（圓心）在「點半徑 + 這個倍數 × 字高」以內就不用畫引線 */
+export const LEADER_FREE_MULT = 1.2
+/**
+ * v7.3 F4：標籤離自己的點太遠（擠的地方）才畫引線：從點的邊緣拉到標籤外框的邊，兩端都接得上，不會變成孤立的線段。
+ * p = 點的位置、c = 標籤中心；回傳 null = 不需要引線。座標單位同 0–400。
+ */
+export interface Leader {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+}
+export function leaderFor(p: Pt, c: Pt, text: string, font: number, r: number): Leader | null {
+  const d = Math.hypot(c[0] - p[0], c[1] - p[1])
+  if (d <= r + font * LEADER_FREE_MULT) return null
+  const ux = (c[0] - p[0]) / d
+  const uy = (c[1] - p[1]) / d
+  const b = labelBox(c, text, font)
+  // 線段 p→c 進入標籤外框（外擴 1.5）的位置：slab 法，t 是 0–1 的比例
+  let t0 = 0
+  for (const [o, v, lo, hi] of [[p[0], c[0] - p[0], b.x0 - 1.5, b.x1 + 1.5], [p[1], c[1] - p[1], b.y0 - 1.5, b.y1 + 1.5]] as const) {
+    if (Math.abs(v) < 1e-9) continue
+    const a = (lo - o) / v
+    const z = (hi - o) / v
+    t0 = Math.max(t0, Math.min(a, z))
+  }
+  const start = r * 1.15
+  if (t0 * d <= start + 2) return null
+  return { x1: p[0] + ux * start, y1: p[1] + uy * start, x2: p[0] + (c[0] - p[0]) * t0, y2: p[1] + (c[1] - p[1]) * t0 }
 }
 
 /**
@@ -188,15 +225,16 @@ export function placeLabels(dots: readonly Pt[], texts: readonly string[], font:
     const ny = -tx / tl
     let best: Pt = [dots[i][0] + nx * (r + font), dots[i][1] + ny * (r + font)]
     let bestScore = -Infinity
-    for (const mult of [0.78, 1.05, 1.4, 1.8, 2.3]) {
-      const dist = r + font * mult + 2
+    // v7.3 F4：先試貼著點的位置（不需要引線），貼不下才往外找（要畫引線，扣分）
+    for (const mult of [0.8, 0.95, 1.1, 1.4, 1.8, 2.3]) {
+      const dist = r + font * mult + 1
       for (let k = 0; k < 48; k++) {
         const a = (k / 48) * Math.PI * 2
         const dx = Math.cos(a)
         const dy = Math.sin(a)
         const c: Pt = [dots[i][0] + dx * dist, dots[i][1] + dy * dist]
         const box = labelBox(c, texts[i] ?? '', font)
-        let score = (dx * nx + dy * ny) * 10 - mult * 14 // 偏好外側、靠近自己的點
+        let score = (dx * nx + dy * ny) * 10 - mult * 14 - (mult > LEADER_FREE_MULT ? 90 : 0) // 偏好外側、靠近自己的點；要畫引線的位置另外扣分
         // 標籤要比任何別的點都更靠近自己的點，不然孩子會認錯是哪一個
         for (let j = 0; j < n; j++) if (j !== i && Math.hypot(c[0] - dots[j][0], c[1] - dots[j][1]) < dist * 1.25) score -= 120
         for (let j = 0; j < n; j++) if (boxHitsCircle(box, dots[j], r * 1.3 + 1.5)) score -= 400

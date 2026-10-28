@@ -33,6 +33,16 @@ export const rasterUrl = (pageId: string): string | null => {
   return p?.kind === 'raster' && p.src ? `${import.meta.env.BASE_URL}${p.src}` : null
 }
 
+/**
+ * 高解析線稿（2048，v7.3 F2）的網址：只有畫板顯示用（放大 2–3 倍不鋸齒）。
+ * 區塊表、縮圖、完成圖都用 1024 那份（rasterUrl），所以點擊判定與區塊數不受影響；
+ * 列表會同時載入 16 張的 1024（各 4MB 解碼後），2048（各 16MB）只在進畫板時載一張。
+ */
+export const rasterHdUrl = (pageId: string): string | null => {
+  const u = rasterUrl(pageId)
+  return u ? u.replace(/\.png$/, '-hd.png') : null
+}
+
 /** 線條遮罩：把線稿縮成工作解析度，alpha ≥ 128 視為線 */
 function lineMaskOf(img: HTMLImageElement, size: number): Uint8Array {
   const c = document.createElement('canvas')

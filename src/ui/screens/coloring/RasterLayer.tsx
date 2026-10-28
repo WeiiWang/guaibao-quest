@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { paintAll, paintRegion, regionRect, rippleMax, type RgbaBuf } from '../../../art/coloring/fillPaint'
 import { labelOfId } from '../../../art/coloring/regions'
-import { rasterUrl, type RasterArt } from '../../../art/coloring/rasterArt'
+import { rasterHdUrl, rasterUrl, type RasterArt } from '../../../art/coloring/rasterArt'
 import { toUnit } from '../../../art/coloring/render'
 
 export interface Ripple {
@@ -32,9 +32,13 @@ interface State {
  * 點陣頁的填色層：768×768 的 canvas（填色）+ 線稿 PNG 疊在最上面。
  * 填色只重畫「有變動的區塊」；剛填的那一塊從點擊位置向外擴散成漣漪（減少動態時直接填滿）。
  */
-export function RasterLayer({ art, fills, ripple }: { art: RasterArt; fills: Record<string, string>; ripple: Ripple | null }) {
+export function RasterLayer({ art, fills, ripple, flashIds }: { art: RasterArt; fills: Record<string, string>; ripple: Ripple | null; flashIds?: readonly string[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const flashRef = useRef<HTMLCanvasElement>(null)
   const st = useRef<State | null>(null)
+  // v7.3 F2：顯示用 2048 高解析線稿；載不到（沒有 -hd 檔）就退回 1024 那份
+  const [hdFailed, setHdFailed] = useState(false)
+  const lineSrc = (!hdFailed && rasterHdUrl(art.pageId)) || rasterUrl(art.pageId) || ''
 
   useLayoutEffect(() => {
     const c = canvasRef.current
@@ -103,10 +107,37 @@ export function RasterLayer({ art, fills, ripple }: { art: RasterArt; fills: Rec
     [],
   )
 
+  // v7.3 F3：「還沒塗」的區塊閃動。把這些區塊（含往線條底下鋪的那幾像素）畫成一層半透明的暖色，CSS 負責閃 2 秒
+  useLayoutEffect(() => {
+    const c = flashRef.current
+    const ctx = c?.getContext('2d')
+    if (!c || !ctx) return
+    ctx.clearRect(0, 0, c.width, c.height)
+    if (!flashIds?.length) return
+    const want = new Set<number>()
+    for (const id of flashIds) {
+      const l = labelOfId(id)
+      if (l) want.add(l)
+    }
+    const { paint, size } = art.map
+    const img = ctx.createImageData(size, size)
+    const d = img.data
+    for (let i = 0, j = 0; i < paint.length; i++, j += 4) {
+      if (want.has(paint[i])) {
+        d[j] = 255
+        d[j + 1] = 176
+        d[j + 2] = 46
+        d[j + 3] = 215
+      }
+    }
+    ctx.putImageData(img, 0, 0)
+  }, [art, flashIds])
+
   return (
     <div className="pb-raster" data-testid="raster-layer" data-regions={art.map.regions.length} data-build-ms={Math.round(art.buildMs)}>
       <canvas ref={canvasRef} className="pb-fill" width={art.map.size} height={art.map.size} />
-      <img className="pb-line" src={rasterUrl(art.pageId) ?? ''} alt="" draggable={false} />
+      <canvas ref={flashRef} className="f73-flash" data-testid="flash-layer" data-on={flashIds?.length ? '1' : '0'} data-n={flashIds?.length ?? 0} width={art.map.size} height={art.map.size} aria-hidden />
+      <img className="pb-line" src={lineSrc} alt="" draggable={false} data-hd={lineSrc.endsWith('-hd.png') ? '1' : '0'} onError={() => setHdFailed(true)} />
     </div>
   )
 }

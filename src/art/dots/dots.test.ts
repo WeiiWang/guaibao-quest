@@ -6,6 +6,8 @@ import {
   DOTS_LINES,
   DOTS_NAMES,
   DOTS_PRICE,
+  DOTS_REFERENCE_OPACITY,
+  LEADER_FREE_MULT,
   defaultDotsLevel,
   dotLabel,
   dotsItem,
@@ -15,6 +17,7 @@ import {
   hitDot,
   isClockwise,
   isDotsFree,
+  leaderFor,
   labelBox,
   parseDotsId,
   placeLabels,
@@ -260,5 +263,78 @@ describe('連連看：新句子', () => {
     expect(chineseNumber(30)).toBe('三十')
     const en = englishLines()
     for (let i = 0; i < 26; i++) expect(en[`en.${String.fromCharCode(65 + i)}`]).toBe(String.fromCharCode(65 + i))
+  })
+})
+
+describe('v7.3 F4：30 點版重新取點、標籤引線只在需要時畫', () => {
+  const pairMin = (pts: Pt[]) => Math.min(...pts.flatMap((p, i) => pts.slice(i + 1).map((q) => Math.hypot(p[0] - q[0], p[1] - q[1]))))
+  it('30 點版：全部 12 張圖，任兩點的距離 ≥ 20（規格要求 ≥ 18），鰭、尾的細部不再擠成一團', () => {
+    for (const id of DOTS_IDS) expect(pairMin(dotsPoints(id, 'h')), id).toBeGreaterThanOrEqual(20)
+  })
+  it('小魚 30 點：相鄰點間距沒有再小於 25（舊版最小 22，4–7、16–20 擠在一起）', () => {
+    const pts = dotsPoints('obj-fish', 'h')
+    const gaps = pts.map((p, i) => Math.hypot(p[0] - pts[(i + 1) % pts.length][0], p[1] - pts[(i + 1) % pts.length][1]))
+    expect(Math.min(...gaps)).toBeGreaterThanOrEqual(25)
+  })
+  it('離自己的點夠近的標籤不畫引線', () => {
+    expect(leaderFor([100, 100], [100, 100 - 9 - 15 * 1.0], '7', 15, 9)).toBeNull()
+    expect(leaderFor([100, 100], [100, 100 + 9 + 15 * LEADER_FREE_MULT], '7', 15, 9)).toBeNull()
+  })
+  it('標籤比較遠時才畫引線：從點的邊緣到標籤外框的邊，兩端都接得上（沒有孤立的線段）', () => {
+    const p: Pt = [100, 100]
+    const c: Pt = [100, 100 - 9 - 15 * 2.3]
+    const l = leaderFor(p, c, '16', 15, 9)!
+    expect(l).not.toBeNull()
+    // 起點在點的圓外緣（半徑 ≈ 1.15 r），終點在標籤外框外緣（標籤中心 c 與終點的距離 ≈ 半個字高 + 1.5）
+    expect(Math.hypot(l.x1 - p[0], l.y1 - p[1])).toBeCloseTo(9 * 1.15, 1)
+    const box = labelBox(c, '16', 15)
+    expect(l.y2).toBeCloseTo(box.y1 + 1.5, 1)
+    expect(l.x2).toBeCloseTo(100, 1)
+    expect(Math.hypot(l.x2 - l.x1, l.y2 - l.y1)).toBeGreaterThan(4)
+  })
+  it('橫斜方向的引線也接在標籤外框上', () => {
+    const p: Pt = [100, 100]
+    const c: Pt = [100 + 40, 100 - 30]
+    const l = leaderFor(p, c, '20', 15, 9)!
+    const b = labelBox(c, '20', 15)
+    const inflated = { x0: b.x0 - 1.6, x1: b.x1 + 1.6, y0: b.y0 - 1.6, y1: b.y1 + 1.6 }
+    expect(l.x2).toBeGreaterThanOrEqual(inflated.x0 - 0.1)
+    expect(l.x2).toBeLessThanOrEqual(inflated.x1 + 0.1)
+    expect(l.y2).toBeGreaterThanOrEqual(inflated.y0 - 0.1)
+    expect(l.y2).toBeLessThanOrEqual(inflated.y1 + 0.1)
+  })
+  it('全部圖與難度：板寬 560 時，引線佔標籤不到 3%（擠的地方才有）；挑戰 30 點版不超過 2%', () => {
+    const px = 560
+    const scale = px / 416
+    let total = 0
+    let leaders = 0
+    let hTotal = 0
+    let hLeaders = 0
+    for (const id of DOTS_IDS) {
+      for (const l of DOTS_LEVELS) {
+        const dots = dotsPoints(id, l.id)
+        const easy = l.id === 'e'
+        const dotR = Math.round(((easy ? Math.min(20, Math.max(12, px * 0.03)) : Math.min(14, Math.max(8, px * 0.022))) / scale) * 2) / 2
+        const font = Math.round(((easy ? Math.min(32, Math.max(18, px * 0.05)) : Math.min(24, Math.max(14, px * 0.036))) / scale) * 2) / 2
+        const texts = dots.map((_, i) => dotLabel(l.id, i))
+        const labels = placeLabels(dots, texts, font, dotR)
+        labels.forEach((c, i) => {
+          total++
+          if (l.id === 'h') hTotal++
+          if (leaderFor(dots[i], c, texts[i], font, dotR)) {
+            leaders++
+            if (l.id === 'h') hLeaders++
+          }
+        })
+      }
+    }
+    expect(leaders / total).toBeLessThan(0.03)
+    expect(hLeaders / hTotal).toBeLessThan(0.02)
+  })
+})
+
+describe('v7.3 F4：拿去塗色的參考底圖', () => {
+  it('原 3D 圖以 25% 透明度疊在剪影裡', () => {
+    expect(DOTS_REFERENCE_OPACITY).toBe(0.25)
   })
 })

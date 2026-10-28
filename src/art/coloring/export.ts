@@ -1,4 +1,4 @@
-import { dotsItem } from '../dots/dots'
+import { DOTS_REFERENCE_OPACITY, dotsItem, parseDotsId, silhouettePath } from '../dots/dots'
 import { STICKER_BASE } from '../../domain/coloring'
 import { drawBackground } from './backgrounds'
 import { drawStroke } from './brushes'
@@ -42,6 +42,20 @@ export async function renderArtworkPng(input: ExportInput, emojiOf: EmojiOf = ()
     const base = await loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`)
     if (!base) throw new Error('不能轉成圖片')
     ctx.drawImage(base, 0, 0, size, size)
+    // v7.3 F4：連連看拿去塗色的頁，剪影裡有 25% 的原 3D 圖當參考（畫板上看到的什麼樣，完成圖就什麼樣）
+    const dp = parseDotsId(input.pageId)
+    const it = dp && dotsItem(dp.name)
+    const ref = dp && it ? await loadImage(`${import.meta.env.BASE_URL}art/${dp.name}.png`) : null
+    if (dp && it && ref) {
+      ctx.save()
+      const k = size / VIEWBOX.size
+      ctx.scale(k, k)
+      ctx.translate(-VIEWBOX.x, -VIEWBOX.y)
+      ctx.clip(new Path2D(silhouettePath(dp.name)))
+      ctx.globalAlpha = DOTS_REFERENCE_OPACITY
+      ctx.drawImage(ref, it.img[0], it.img[1], it.img[2], it.img[3])
+      ctx.restore()
+    }
   }
 
   const px = (v: number) => toUnit(v) * size

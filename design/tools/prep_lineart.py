@@ -11,6 +11,10 @@
   → 對 alpha 做 3×3 最大值濾鏡（線條外擴 1px，把 1px 的小縫補上，區塊才不會漏色）。
 - 輸出格式（選了其中一種）：黑線 + 透明背景的 PNG（RGB 全黑、只有 alpha 通道帶線稿）。
   填色層在它下面，畫面上用一般的 normal 疊合即可，不需要 multiply。
+- v7.3 F2：每張另外輸出一份 2048 的高解析線稿 `<id>-hd.png`，只給畫板顯示用（放大 2–3 倍不鋸齒）：
+  區塊表、縮圖、完成圖、manifest 仍然用 1024 那份，所以區塊數與點擊判定完全不變。
+  做法：灰階先用 bicubic 放大到 2048 → 高斯模糊 0.8px（把來源的階梯邊緣磨平）→ 同一條 alpha 曲線 → 3×3 外擴換成 5×5（1024 的 1px = 2048 的 2px）。
+  存成 4-bit 調色盤 PNG（16 階 alpha 當調色盤的透明度），檔案約為 RGBA 的一半；16 階的反鋸齒在 2048 解析度下看不出來。
 - 整體是黑底（大面積黑色連到邊框）的圖會報錯、跳過、不產出（並清掉舊輸出），結束時以非 0 離開。
 - 可重跑：已存在的 raw 才處理，沒有的略過；最後依「輸出資料夾裡實際存在的 PNG」重寫
   src/art/coloring/lineart-manifest.json，網站只會顯示 manifest 裡有的頁面。
@@ -24,6 +28,9 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageFilter
 
 SIZE = 1024
+HD_SIZE = 2048
+HD_BLUR = 0.8
+HD_LEVELS = 16
 THRESHOLD = 160
 RAMP = 45
 HERE = Path(__file__).resolve().parent
@@ -74,25 +81,46 @@ def check_not_black_bg(alpha: Image.Image) -> None:
         raise BadArt(f"整體是黑底（外圍 {ring:.0%} 是黑、全圖 {total:.0%} 是黑）")
 
 
-def to_line_png(src: Path) -> Image.Image:
+def gray_square(src: Path, size: int, resample) -> Image.Image:
+    """疊在白底 → 灰階 → 等比縮進 size×size、置中補白邊"""
     im = Image.open(src).convert("RGBA")
     bg = Image.new("RGBA", im.size, (255, 255, 255, 255))
     gray = Image.alpha_composite(bg, im).convert("L")
-    # 等比縮進 1024，置中補白邊
     w, h = gray.size
-    s = min(SIZE / w, SIZE / h)
+    s = min(size / w, size / h)
     nw, nh = max(1, round(w * s)), max(1, round(h * s))
-    gray = gray.resize((nw, nh), Image.LANCZOS)
-    canvas = Image.new("L", (SIZE, SIZE), 255)
-    canvas.paste(gray, ((SIZE - nw) // 2, (SIZE - nh) // 2))
-    # 灰階 → alpha：THRESHOLD 時 128（線 / 非線的分界），±RAMP 內線性過渡
+    gray = gray.resize((nw, nh), resample)
+    canvas = Image.new("L", (size, size), 255)
+    canvas.paste(gray, ((size - nw) // 2, (size - nh) // 2))
+    return canvas
+
+
+def gray_to_alpha(canvas: Image.Image) -> Image.Image:
+    """灰階 → alpha：THRESHOLD 時 128（線 / 非線的分界），±RAMP 內線性過渡"""
     lo, hi = THRESHOLD - RAMP, THRESHOLD + RAMP
-    alpha = canvas.point(lambda v: 255 if v <= lo else (0 if v >= hi else int(255 * (hi - v) / (hi - lo))))
+    return canvas.point(lambda v: 255 if v <= lo else (0 if v >= hi else int(255 * (hi - v) / (hi - lo))))
+
+
+def to_line_png(src: Path) -> Image.Image:
+    canvas = gray_square(src, SIZE, Image.LANCZOS)
+    alpha = gray_to_alpha(canvas)
     check_not_black_bg(alpha)
     alpha = alpha.filter(ImageFilter.MaxFilter(3))  # 外擴 1px，補小縫
     out = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
     out.putalpha(alpha)
     return out
+
+
+def save_hd(src: Path, dest: Path) -> None:
+    """2048 高解析線稿（4-bit 調色盤 + tRNS）。只給畫板顯示用，見檔頭說明"""
+    canvas = gray_square(src, HD_SIZE, Image.BICUBIC).filter(ImageFilter.GaussianBlur(HD_BLUR))
+    alpha = gray_to_alpha(canvas).filter(ImageFilter.MaxFilter(5))
+    top = HD_LEVELS - 1
+    idx = alpha.point(lambda v: round(v * top / 255))
+    pal = idx.convert("P")
+    pal.putpalette([0] * 768)  # 全黑；線的濃淡只靠透明度
+    trns = bytes(round(i * 255 / top) for i in range(HD_LEVELS))
+    pal.save(dest, optimize=True, transparency=trns, bits=4)
 
 
 def main() -> None:
@@ -111,10 +139,12 @@ def main() -> None:
         except BadArt as e:
             # 不合格：不產出，也清掉先前留下的舊輸出（不然 manifest 會把它當成可用）
             (out_dir / f"{pid}.png").unlink(missing_ok=True)
+            (out_dir / f"{pid}-hd.png").unlink(missing_ok=True)
             print(f"錯誤：{pid} 不合格，已跳過：{e}", file=sys.stderr)
             bad.append(pid)
             continue
         img.save(out_dir / f"{pid}.png", optimize=True)
+        save_hd(src, out_dir / f"{pid}-hd.png")
         done.append(pid)
     have = [pid for pid in ids if (out_dir / f"{pid}.png").exists()]
     manifest = ROOT / "src" / "art" / "coloring" / "lineart-manifest.json"
