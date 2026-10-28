@@ -51,11 +51,12 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: ({ url }) => /\/art\/[^/]+\.png$/.test(url.pathname),
+            // 含 art/coloring/（v7 點陣線稿，約 16 張）：路徑多一層資料夾
+            urlPattern: ({ url }) => /\/art\/(coloring\/)?[^/]+\.png$/.test(url.pathname),
             handler: 'CacheFirst',
             options: {
               cacheName: 'art',
-              expiration: { maxEntries: 200 },
+              expiration: { maxEntries: 260 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },

@@ -1,3 +1,4 @@
+import { AVAILABLE_RASTER, rasterSrc, type RasterTier } from './rasterDefs'
 import { band, bar, barAt, circle, cloud, drop, ellipse, flame, leaf, poly, ray, rect, star } from './shapes'
 
 export interface Region {
@@ -12,6 +13,11 @@ export interface ColoringPageDef {
   lines: string[]
   /** 實心小圓點（眼睛等） [cx, cy, r] */
   dots: [number, number, number][]
+  /** v7：'raster' = 點陣線稿頁（區塊在載入時由線稿算出，regions 為空）；沒設定 = 向量頁 */
+  kind?: 'vector' | 'raster'
+  /** 點陣頁的線稿網址（相對 BASE_URL） */
+  src?: string
+  tier?: RasterTier
 }
 
 const R = (id: string, d: string): Region => ({ id, d })
@@ -409,6 +415,17 @@ const flameMountain: ColoringPageDef = {
   dots: [],
 }
 
+const rasterPages: ColoringPageDef[] = AVAILABLE_RASTER.map((d) => ({
+  id: d.id,
+  name: d.name,
+  kind: 'raster',
+  src: rasterSrc(d.id),
+  tier: d.tier,
+  regions: [],
+  lines: [],
+  dots: [],
+}))
+
 export const COLORING_PAGES: ColoringPageDef[] = [
   monkey,
   bananaTree,
@@ -428,6 +445,20 @@ export const COLORING_PAGES: ColoringPageDef[] = [
   tangHorse,
   flowerFruitMountain,
   flameMountain,
+  ...rasterPages,
 ]
 
 export const getColoringPage = (id: string) => COLORING_PAGES.find((p) => p.id === id)
+export const isRasterPage = (p: ColoringPageDef | undefined): boolean => p?.kind === 'raster'
+
+// ---------- 空白畫紙（自由畫，3 張存檔欄位）----------
+export const FREE_PAGE_IDS = ['free-1', 'free-2', 'free-3'] as const
+export const isFreePage = (id: string | undefined): boolean => !!id && (FREE_PAGE_IDS as readonly string[]).includes(id)
+export const FREE_PAGE_NAME = '空白畫紙'
+
+/** 頁面名稱（著色頁、空白畫紙都能查） */
+export function pageName(id: string | undefined): string | undefined {
+  if (!id) return undefined
+  if (isFreePage(id)) return `${FREE_PAGE_NAME} ${id.slice(-1)}`
+  return getColoringPage(id)?.name
+}

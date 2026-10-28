@@ -25,6 +25,7 @@
     "e2e:wardrobe": "node scripts/e2e-wardrobe.mjs",
     "e2e:life": "node scripts/e2e-life.mjs",
     "e2e:math2": "node scripts/e2e-math2.mjs",
+    "e2e:paint": "node scripts/e2e-paint.mjs",
     "shots:math2": "node scripts/shots-math2.mjs"
   },
   "dependencies": {

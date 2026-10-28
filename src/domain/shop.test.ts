@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { AVAILABLE_RASTER } from '../art/coloring/rasterDefs'
 import { FOOD_EFFECTS, FOOD_IDS, foodHearts, SHOP_ITEMS } from './constants'
 import { canBuy } from './shop'
 import { hashPin, checkPin, isValidPin } from './pin'
@@ -24,7 +25,7 @@ describe('購買', () => {
     expect(SHOP_ITEMS.filter((i) => i.kind === 'theme' && i.themeSlot === 'wall')).toHaveLength(5)
     expect(SHOP_ITEMS.filter((i) => i.kind === 'theme' && i.themeSlot === 'floor')).toHaveLength(3)
     expect(SHOP_ITEMS.filter((i) => i.kind === 'decor').every((i) => i.slot === 'wall' || i.slot === 'floor')).toBe(true)
-    expect(SHOP_ITEMS.filter((i) => i.kind === 'coloring')).toHaveLength(18)
+    expect(SHOP_ITEMS.filter((i) => i.kind === 'coloring')).toHaveLength(18 + AVAILABLE_RASTER.length)
     expect(SHOP_ITEMS.filter((i) => i.kind === 'decor').every((i) => i.price >= 40 && i.price <= 300)).toBe(true)
   })
   it('食物：10 種、價格與飽足值都遞增（蛋糕最貴、飽足最多並會跳舞）', () => {

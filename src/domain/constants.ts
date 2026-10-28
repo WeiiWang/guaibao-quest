@@ -1,3 +1,4 @@
+import { AVAILABLE_RASTER, RASTER_PRICE } from '../art/coloring/rasterDefs'
 import { HATS } from './hats'
 import { THEME_DEFS } from './theme'
 import type { ShopItem, TaskTemplate } from './types'
@@ -26,6 +27,8 @@ export const TAP_FEED_GAP_MS = 800
 export const PURCHASE_UNDO_MS = 5000
 /** 送給新使用者的免費著色頁（著色本一開始就有東西可畫，不是死路） */
 export const FREE_COLORING_PAGES = ['monkey', 'banana-tree'] as const
+/** v7：新手與既有玩家都送的免費點陣線稿頁（簡單版前 2 張；素材沒備妥時庫存先給，頁面等素材到了才出現） */
+export const FREE_RASTER_PAGES = ['line-awu-banana', 'line-awu-bath'] as const
 export const HOUR_MS = 60 * 60 * 1000
 
 export const DEFAULT_TEMPLATES: TaskTemplate[] = [
@@ -36,7 +39,8 @@ export const DEFAULT_TEMPLATES: TaskTemplate[] = [
   { id: 'tpl-dress', title: '自己穿衣服', emoji: '👕', points: 10, repeatDaily: true, active: true, order: 5 },
 ]
 
-export const COLORING_PAGE_IDS = [
+/** 向量著色頁（v2–v3，程式畫的形狀） */
+export const VECTOR_PAGE_IDS = [
   'monkey',
   'banana-tree',
   'clouds',
@@ -58,6 +62,9 @@ export const COLORING_PAGE_IDS = [
   'flame-mountain',
 ] as const
 
+/** 全部可玩的著色頁：向量頁 + 素材已備妥的點陣線稿頁（v7） */
+export const COLORING_PAGE_IDS: readonly string[] = [...VECTOR_PAGE_IDS, ...AVAILABLE_RASTER.map((d) => d.id)]
+
 export const COLORING_NAMES: Record<string, string> = {
   monkey: '小猴子',
   'banana-tree': '香蕉樹',
@@ -77,7 +84,11 @@ export const COLORING_NAMES: Record<string, string> = {
   'tang-horse': '唐僧的馬',
   'flower-fruit-mountain': '花果山',
   'flame-mountain': '火焰山',
+  ...Object.fromEntries(AVAILABLE_RASTER.map((d) => [d.id, d.name])),
 }
+
+/** 點陣頁的售價：依簡單 / 挑戰分級 */
+const RASTER_PRICES: Record<string, number> = Object.fromEntries(AVAILABLE_RASTER.map((d) => [d.id, RASTER_PRICE[d.tier]]))
 
 export const COLORING_PRICE = 30
 /** 西遊記主題著色頁（較複雜）售價 */
@@ -168,7 +179,7 @@ export const SHOP_ITEMS: ShopItem[] = [
       id: `coloring-${p}`,
       kind: 'coloring',
       name: `著色頁：${COLORING_NAMES[p]}`,
-      price: JOURNEY_PAGES.includes(p) ? COLORING_PRICE_JOURNEY : COLORING_PRICE,
+      price: RASTER_PRICES[p] ?? (JOURNEY_PAGES.includes(p) ? COLORING_PRICE_JOURNEY : COLORING_PRICE),
       asset: p,
     }),
   ),

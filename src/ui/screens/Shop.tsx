@@ -12,7 +12,7 @@ import { hatBuyLine, hatEggLine, hatOffLine, hatOf, hatWearLine } from '../../do
 import { sayText } from '../../learning/speech'
 import { useLearningSettings } from '../learningHooks'
 import type { ShopItem, ShopKind } from '../../domain/types'
-import { ColoringSvg } from '../components/ColoringThumb'
+import { PageThumb } from '../components/ColoringThumb'
 import { Icon } from '../components/Icon'
 import { PointsChip, ScreenHeader } from '../components/Header'
 import { UndoPill } from '../components/UndoPill'
@@ -160,7 +160,7 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
               {fav && <span className="fav-badge" data-testid="fav-badge">今天最喜歡</span>}
               <div className="shop-art">
                 {item.kind === 'coloring' ? (
-                  <ColoringSvg pageId={item.asset} className="shop-thumb" />
+                  <PageThumb pageId={item.asset} className="shop-thumb" />
                 ) : (
                   <Icon name={artName(item)} emoji={emojiOf(item)} alt={item.name} className="shop-sprite" />
                 )}

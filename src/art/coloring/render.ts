@@ -82,6 +82,8 @@ export const fromUnit = (u: number) => u * VIEWBOX.size + VIEWBOX.x
 
 export interface ExportInput {
   pageId: string
+  /** 空白畫紙的背景 */
+  bg?: string
   fills: Record<string, string>
   strokes: ColoringStroke[]
   stickers: ColoringSticker[]
