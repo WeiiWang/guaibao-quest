@@ -24,6 +24,9 @@
 .room-frame .room-arrow { width: 64px; height: 64px; border-radius: 50%; font-size: 1.9rem; display: grid; place-items: center; background: rgba(255, 253, 249, 0.9); box-shadow: 0 4px 0 rgba(74, 59, 53, 0.14), 0 0 0 4px rgba(142, 201, 245, 0.7); }
 .room-frame .room-arrow.left { left: 8px; border-radius: 50%; }
 .room-frame .room-arrow.right { right: 8px; border-radius: 50%; }
+/* v7.3：右側欄多了「朋友」之後，橫向（螢幕不高）和手機上右箭頭會被「更多」蓋住，往內移到側欄左邊 */
+@media (max-height: 900px) { .room-frame .room-arrow.right { right: 96px; } }
+@media (max-width: 560px) { .room-frame .room-arrow.right { right: 84px; } }
 .room-frame .room-arrow span { display: block; animation: ux-nudge 1.4s ease-in-out infinite; }
 .room-frame .room-arrow.left span { animation-name: ux-nudge-l; }
 @keyframes ux-nudge { 50% { transform: translateX(5px); } }

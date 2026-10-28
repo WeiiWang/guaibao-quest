@@ -70,11 +70,14 @@ try {
       const f = document.querySelector('.side-tools [data-testid=friends-btn]')?.getBoundingClientRect()
       const dock = document.querySelector('.dock-row')?.getBoundingClientRect()
       const last = document.querySelector('.side-tools').getBoundingClientRect()
-      return { labels, w: f?.width, h: f?.height, right: f?.right, vw: innerWidth, bottom: last.bottom, dockTop: dock?.top ?? 0, overflow: document.documentElement.scrollWidth > innerWidth + 2 }
+      const arrow = document.querySelector('[data-testid=room-right]')?.getBoundingClientRect()
+      const arrowHit = !!arrow && kids.some((k) => { const b = k.getBoundingClientRect(); return !(b.right <= arrow.left || b.left >= arrow.right || b.bottom <= arrow.top || b.top >= arrow.bottom) })
+      return { labels, w: f?.width, h: f?.height, right: f?.right, vw: innerWidth, bottom: last.bottom, dockTop: dock?.top ?? 0, overflow: document.documentElement.scrollWidth > innerWidth + 2, arrow: !!arrow, arrowHit }
     })
     check(`[${tag}] 右側欄：工坊、背包、朋友、更多（朋友與工坊、背包並列）`, ['工坊', '背包', '朋友', '更多'].every((n, i) => info.labels[i]?.endsWith(n)) && info.labels.length === 4, info.labels.join('|'))
     check(`[${tag}] 朋友按鈕 >= 56px、在畫面內、右側欄沒壓到食物欄`, info.w >= 56 && info.h >= 56 && info.right <= info.vw && info.bottom < info.dockTop, JSON.stringify(info))
     check(`[${tag}] 首頁不橫向溢出`, !info.overflow)
+    check(`[${tag}] 往右看房間的箭頭沒有被右側欄蓋住`, info.arrow && !info.arrowHit, JSON.stringify({ arrow: info.arrow, hit: info.arrowHit }))
     await page.getByTestId('more-btn').click()
     const tray = await page.locator('[data-testid=more-tray] .mini-candy span:last-child').allInnerTexts()
     check(`[${tag}] 「更多」托盤裡沒有朋友了`, !tray.includes('朋友'), tray.join('|'))
