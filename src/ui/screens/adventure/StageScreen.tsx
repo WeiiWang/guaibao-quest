@@ -458,7 +458,10 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
             </section>
           </div>
           <p className="q7-food-line" data-testid="food-line" role="status" style={{ animationDelay: `${foodDelay + 0.2}s` }}>
-            {result.foods[0] ? giftFoodLine(result.foods[0]) : ''}
+            {/* 撿到 2 個時兩句都顯示（語音也是逐句唸），不要畫面寫一樣、圖示是兩樣 */}
+            {result.foods.map((f, i) => (
+              <span key={i} className="q7-food-line-row">{giftFoodLine(f)}</span>
+            ))}
           </p>
           <p className="adv-sub adv-credit" data-testid="result-credit">
             {challenge
