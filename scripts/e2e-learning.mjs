@@ -272,7 +272,8 @@ try {
   await page.getByTestId('give-obj').first().click() // 多拿到 4 個
   await page.getByTestId('give-done').click()
   await page.waitForTimeout(250)
-  check('拿給我：多拿了 → 「放回去一個」，第二次錯（stage 2）阿悟示範拿到剛好', (await page.getByTestId('give-msg').innerText()).includes('放回去') && (await stage(page)) === '2')
+  // v7（試玩審查 B6）：阿悟示範開始時把舊的「放回去一個」訊息清掉，不要和示範同時出現
+  check('拿給我：多拿了，第二次錯（stage 2）阿悟示範拿到剛好，示範開始時舊的錯誤訊息已清掉', (await page.getByTestId('give-msg').innerText()).trim() === '' && (await stage(page)) === '2')
   await page.waitForFunction(() => document.querySelectorAll('[data-testid=give-in]').length === 3, null, { timeout: 8000 })
   await page.getByTestId('give-done').click()
   await page.waitForSelector('[data-testid=give-basket].ok')
@@ -360,6 +361,11 @@ try {
   await age.page.getByRole('button', { name: /離開|回|返回/ }).first().click().catch(() => {})
   await age.page.evaluate(() => (location.hash = 'map'))
   await age.page.waitForSelector('[data-testid=map]')
+  // v7：6–7 歲第一次進數學冒險會先問 3 題快速分級；這裡略過，維持照年齡預設從難度 2 開始
+  await age.page.waitForSelector('[data-testid=placement]')
+  check('6–7 歲第一次進數學冒險：先問快速分級（可以略過）', true)
+  await age.page.getByTestId('placement-skip').click()
+  await age.page.waitForSelector('[data-testid=placement]', { state: 'detached' })
   await age.page.getByTestId('station-1').click()
   await age.page.waitForSelector('[data-testid=question]')
   const diffs = []

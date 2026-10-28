@@ -71,6 +71,13 @@ try {
     await page.waitForFunction(() => getComputedStyle(document.querySelector('.adv-scene')).backgroundImage.includes('scene-map'), null, { timeout: 5000 }).catch(() => {})
     const mapArt = await page.locator('.adv-scene').evaluate((el) => getComputedStyle(el).backgroundImage)
     check('英文地圖用自己的圖（scene-map-english）', mapArt.includes('scene-map-english'), mapArt.slice(0, 80))
+    for (const sid of ['life', 'nature']) {
+      await page.getByTestId(`subject-${sid}`).click()
+      await page.waitForFunction((f) => getComputedStyle(document.querySelector('.adv-scene')).backgroundImage.includes(f), `scene-map-${sid}`, { timeout: 5000 }).catch(() => {})
+      await page.waitForTimeout(300)
+      await shot(page, `map-${sid}`, 'land')
+    }
+    await page.getByTestId('subject-english').click()
     await page.getByTestId('station-1').click()
     const foodBefore = await foodTotal(page)
     const types = []

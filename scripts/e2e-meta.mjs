@@ -15,7 +15,7 @@ import { launch, freshApp, idb, makeChecker, openParentTab, center } from './e2e
 const { state, check } = makeChecker()
 const SHOT_DIR = process.env.SHOT_DIR
 const CONTENT = join(dirname(fileURLToPath(import.meta.url)), '../src/learning/content')
-const QUESTIONS = ['number', 'classify', 'pattern'].flatMap((f) => JSON.parse(readFileSync(join(CONTENT, `${f}.json`), 'utf8')))
+const QUESTIONS = ['number', 'classify', 'pattern', 'measure', 'space', 'observe', 'english', 'life', 'nature'].flatMap((f) => JSON.parse(readFileSync(join(CONTENT, `${f}.json`), 'utf8')))
 const BANK = Object.fromEntries(QUESTIONS.map((q) => [q.id, q]))
 const VP = { width: 1024, height: 768 }
 /** v6：右側按鈕整理成「更多」托盤（表演、朋友、相簿、衣櫃）；要先打開才點得到 */
@@ -467,7 +467,7 @@ try {
   const said2 = await saidLog(page)
   check('點一下唸出中文名稱', said2.includes(targetName) || said2.some((t) => t.startsWith('audio:')), JSON.stringify(said2))
   await shot(page, 'friend-view', 'land-x')
-  await page.getByRole('button', { name: '好' }).click()
+  await page.getByRole('button', { name: '好', exact: true }).click()
   await shot(page, 'friends-after', 'land-x')
   if (unknownAfter.length > 0) {
     await page.getByTestId(`friend-tab-${fm1.get(unknownAfter[0]).tab}`).click()
