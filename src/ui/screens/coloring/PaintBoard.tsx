@@ -12,7 +12,9 @@ import { newId } from '../../../db/repo'
 import { ColoringSvg } from '../../components/ColoringThumb'
 import { Icon } from '../../components/Icon'
 import { playBrush } from '../../sounds'
+import { stickerDropPoint } from '../../../domain/stickerDrop'
 import { Minimap } from './Minimap'
+import type { DropApi } from './StickerTray'
 import { RasterLayer, type Ripple } from './RasterLayer'
 import { stickerEmoji } from './stickers'
 
@@ -44,6 +46,10 @@ interface Props {
   onStickersLive: (next: ColoringSticker[]) => void
   onGestureStart: () => void
   onGestureEnd: () => void
+  /** D1：托盤拖貼紙時，畫板把「螢幕位置 → 貼紙位置」的換算放在這裡（放大時也正確） */
+  dropApi?: React.MutableRefObject<DropApi | null>
+  /** 托盤正在拖貼紙：畫板不接受別的手勢（不會誤畫、也不會被第二根手指縮放） */
+  dragging?: boolean
 }
 
 /** 筆刷畫布的解析度倍率：放大時畫細一點，但畫布邊長不超過 2048（iPad 的記憶體） */
@@ -84,6 +90,8 @@ export function PaintBoard(props: Props) {
   docRef.current = doc
   const toolRef = useRef(tool)
   toolRef.current = tool
+  const draggingRef = useRef(false)
+  draggingRef.current = !!props.dragging
 
   // 量畫板大小，決定 canvas 解析度
   useEffect(() => {
@@ -176,6 +184,28 @@ export function PaintBoard(props: Props) {
     },
     [unitOf],
   )
+
+  // ---- D1：貼紙從托盤拖進來 ----
+  const dropApi = props.dropApi
+  useEffect(() => {
+    if (!dropApi) return
+    dropApi.current = {
+      pointAt: (cx, cy) => {
+        const el = viewportRef.current
+        if (!el) return null
+        // 放在放大鈕、小地圖上 = 取消（那不是畫布）
+        if (document.elementFromPoint(cx, cy)?.closest('[data-pb-ui]')) return null
+        return stickerDropPoint(clampView(viewRef.current), el.getBoundingClientRect(), cx, cy)
+      },
+      stickerPx: (scale) => {
+        const el = viewportRef.current
+        return el ? ((STICKER_BASE * scale) / VIEWBOX.size) * el.getBoundingClientRect().width * clampView(viewRef.current).z : 84
+      },
+    }
+    return () => {
+      dropApi.current = null
+    }
+  }, [dropApi])
 
   // ---- 點一下（填色 / 橡皮擦清區塊） ----
   const regionFromPoint = (clientX: number, clientY: number): string | null => {
@@ -282,6 +312,7 @@ export function PaintBoard(props: Props) {
 
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest('[data-pb-ui]')) return
+    if (draggingRef.current) return // 托盤正在拖貼紙
     if (isPalm(e)) return
     const all = [...ptrs.current.values()]
     // 已經有一根手指 / 一支筆在畫：只有「全部都是 touch」才可能是雙指手勢，其他（筆、滑鼠、手掌）一律忽略
@@ -435,7 +466,7 @@ export function PaintBoard(props: Props) {
   const onStickerDown = (e: React.PointerEvent<HTMLDivElement>, st: ColoringSticker) => {
     if (tool !== 'sticker') return
     e.stopPropagation()
-    if (isPalm(e)) return
+    if (draggingRef.current || isPalm(e)) return
     const all = [...ptrs.current.values()]
     if (all.length >= 1 && !(e.pointerType === 'touch' && all.every((p) => p.type === 'touch'))) return
     ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY, type: e.pointerType })

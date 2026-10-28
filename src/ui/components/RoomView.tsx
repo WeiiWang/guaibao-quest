@@ -27,7 +27,7 @@ import { useCelebrate, useToast } from '../hooks'
 import { useCelebrateSmall } from '../feedback'
 import { playSfx } from '../../learning/sfx'
 import { flyOne, iconNode } from '../fly'
-import { baseIdOf, GIFT_BAG_DONE_LINE, GIFT_THANKS_LINES, nextTint, tintFilter, unplacedCount, DECOR_TINTS } from '../../domain/home7'
+import { baseIdOf, clampArtScale, GIFT_BAG_DONE_LINE, GIFT_THANKS_LINES, nextTint, tintFilter, unplacedCount, DECOR_TINTS } from '../../domain/home7'
 import type { TrickId } from '../../domain/tricks'
 import { giftArt } from '../pet/GiftItem'
 import { GiftBag } from '../pet/GiftBag'
@@ -294,9 +294,11 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   }
 
   // ---------- 幾何 ----------
-  const sizeOf = (it: ShopItem) => {
+  /** scale：掛畫在手機上自動縮小的倍率（只有畫廊作品用） */
+  const sizeOf = (it: ShopItem, scale?: number) => {
     const s = spriteSize(it.asset)
-    return spritePx(s.cols, s.rows, roomH)
+    const k = isArtworkId(it.id) ? clampArtScale(scale) : 1
+    return spritePx(s.cols * k, s.rows * k, roomH)
   }
   // 高度依房間高度，並限制寬度不超過可視寬的 42%（手機直向時不會塞滿房間）
   const petH = Math.min(PET_HEIGHT_FRAC[pet.stage] * roomH, (view.w * 0.42) / PET_ASPECT[pet.stage])
@@ -433,7 +435,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
       const it = itemById.get(baseIdOf(d.itemId))
       if (it?.slot) {
         const rr = room.getBoundingClientRect()
-        const size = sizeOf(it)
+        const size = sizeOf(it, placements.find((p) => p.itemId === d.itemId)?.scale)
         const cx = fx + d.grabDX - rr.left
         const cy = fy + d.grabDY - d.lift - rr.top
         const c = clampPlacement(it.slot, cx / roomW, cy / roomH, size.w / roomW, size.h / roomH)
@@ -651,7 +653,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
       .filter((p) => itemById.has(baseIdOf(p.itemId)))
       .map((p) => {
         const it = itemById.get(baseIdOf(p.itemId))!
-        const size = sizeOf(it)
+        const size = sizeOf(it, p.scale)
         return { id: p.itemId, bottom: isFlatDecor(it.id) ? -1 : p.y + size.h / roomH / 2, z: p.z, p, it, size }
       }),
     { id: '__pet', bottom: life.onBed && bed ? bed.y + bed.h / 2 + 0.002 : PET_BOTTOM, z: 0 },
@@ -669,7 +671,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const hintFood = (gotFoodId ? foods.find((f) => f.item.id === gotFoodId)?.item : undefined) ?? foods.find((f) => f.qty > 0)?.item
 
   const ghostItem = drag ? (drag.kind === 'food' ? foods.find((f) => f.item.id === drag.itemId)?.item : itemById.get(baseIdOf(drag.itemId))) : undefined
-  const ghostSize = ghostItem && drag && drag.kind !== 'food' ? sizeOf(ghostItem) : { w: 56, h: 56 }
+  const ghostSize = ghostItem && drag && drag.kind !== 'food' ? sizeOf(ghostItem, placements.find((p) => p.itemId === drag.itemId)?.scale) : { w: 56, h: 56 }
 
   const flyItem = fly ? (foods.find((f) => f.item.id === fly.itemId)?.item ?? itemById.get(baseIdOf(fly.itemId))) : undefined
 
@@ -838,7 +840,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
               )}
 
               {edit && selPlacement && selItem && roomH > 0 && (() => {
-                const size = sizeOf(selItem)
+                const size = sizeOf(selItem, selPlacement.scale)
                 const top = selPlacement.y * roomH - size.h / 2
                 const bottom = top + size.h
                 // 優先放物件上方；上方放不下改放下方；都放不下就貼在可視區頂端（不會蓋住物件的情況下盡量不遮）

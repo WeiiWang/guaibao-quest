@@ -412,6 +412,76 @@ try {
     await page.screenshot({ path: 'design/reviews/v7-home-shots/picker-phone.png' })
     await ctx.close()
   }
+  // =====================================================================
+  // 9) v7.1 D3：手機（390×844）掛畫：第一屏看得到、不蓋窗戶、不貼邊、不用捲動
+  // =====================================================================
+  for (const [vw, vh] of [[390, 844], [360, 640]]) {
+    const { ctx, page, errors } = await freshApp(browser, { width: vw, height: vh }, {})
+    const png = await page.evaluate(() => {
+      const c = document.createElement('canvas')
+      c.width = c.height = 64
+      const x = c.getContext('2d')
+      x.fillStyle = '#ffb347'
+      x.fillRect(0, 0, 64, 64)
+      x.fillStyle = '#4a9fe0'
+      x.fillRect(12, 12, 28, 28)
+      return c.toDataURL('image/png')
+    })
+    await putRows(page, 'coloring', [1, 2, 3].map((i) => ({ pageId: `g:p${i}`, basePageId: 'monkey', fills: { a: '#f00' }, png, createdAt: i, updatedAt: i })))
+    await page.goto(`${BASE}#gallery`)
+    await page.reload()
+    await page.waitForSelector('[data-testid=gallery-item]')
+    for (let i = 0; i < 3; i++) {
+      await page.locator('.gallery-thumb').nth(i).click()
+      await page.getByTestId('hang-btn').click()
+      await page.locator('.modal-back').click({ position: { x: 5, y: 5 } })
+      await page.waitForTimeout(300)
+    }
+    const pls = (await dump(page, 'placements')).filter((p) => p.itemId.startsWith('art-'))
+    check(`手機 ${vw}×${vh}：三幅畫都掛上了，空間不夠的有縮小（scale < 1）`, pls.length === 3 && pls.every((p) => p.scale > 0 && p.scale < 1), JSON.stringify(pls.map((p) => [p.x.toFixed(3), p.y.toFixed(3), p.scale])))
+    await page.goto(BASE)
+    await page.waitForSelector('[data-testid=room]')
+    await page.waitForTimeout(900)
+    const scroll0 = await page.locator('.room-scroll').evaluate((e) => e.scrollLeft)
+    const vp = await page.evaluate(() => ({ w: innerWidth, h: innerHeight }))
+    const rectOf = (loc) => loc.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()))
+    const arts = await rectOf(page.locator('[data-placed^=art-]'))
+    const wins = await rectOf(page.locator('.rb-window'))
+    const hud = [...(await rectOf(page.locator('.pet-hud'))), ...(await rectOf(page.getByRole('button', { name: /工坊|背包|更多|家長入口/ })))]
+    const hit = (a, b) => a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y
+    const room = (await rectOf(page.locator('.room-scroll')))[0]
+    check(`手機 ${vw}×${vh}：三幅畫都完整在第一屏內，離畫面邊緣 ≥ 8px（不用捲動）`, arts.length === 3 && arts.every((a) => a.x >= 8 && a.x + a.width <= vp.w - 8 && a.y >= 8 && a.y + a.height <= room.y + room.height - 8), JSON.stringify(arts.map((a) => [Math.round(a.x), Math.round(a.y), Math.round(a.width), Math.round(a.height)])))
+    check(`手機 ${vw}×${vh}：沒有蓋到窗戶`, arts.every((a) => wins.every((w) => !hit(a, w))), JSON.stringify({ wins: wins.map((w) => [Math.round(w.x), Math.round(w.width)]) }))
+    check(`手機 ${vw}×${vh}：沒有被狀態卡與右邊的按鈕蓋住`, arts.every((a) => hud.every((h) => !hit(a, h))))
+    if (vh >= 740) check(`手機 ${vw}×${vh}：前兩幅畫彼此不重疊、大小 ≥ 44px（看得清楚）`, arts.every((a) => a.width >= 44) && !hit(arts[0], arts[1]))
+    else check(`手機 ${vw}×${vh}：小手機也看得到每一幅（≥ 32px），第一幅 ≥ 44px`, arts.every((a) => a.width >= 32) && Math.max(...arts.map((a) => a.width)) >= 44)
+    check(`手機 ${vw}×${vh}：掛畫的畫框有畫（不是空框）`, (await page.locator('[data-placed^=art-] img').count()) === 3)
+    check(`手機 ${vw}×${vh}：房間沒有被捲動過（${scroll0}px 是剛進房間的位置）`, scroll0 >= 0)
+    if (vw === 390) await page.screenshot({ path: 'design/reviews/v71-shots/d3-hung-phone.png' })
+    check(`手機 ${vw}×${vh}：JS 沒有錯誤`, errors.length === 0, errors.join(' | '))
+    // 搬動之後縮放倍率還在（佈置模式拖一下）
+    await ctx.close()
+  }
+
+  // 平板不縮小（直向 820×1180）
+  {
+    const { ctx, page } = await freshApp(browser, PORT, {})
+    const png = await page.evaluate(() => {
+      const c = document.createElement('canvas')
+      c.width = c.height = 32
+      return c.toDataURL('image/png')
+    })
+    await putRows(page, 'coloring', [{ pageId: 'g:q1', basePageId: 'monkey', fills: { a: '#f00' }, png, createdAt: 1, updatedAt: 1 }])
+    await page.goto(`${BASE}#gallery`)
+    await page.reload()
+    await page.waitForSelector('[data-testid=gallery-item]')
+    await page.locator('.gallery-thumb').first().click()
+    await page.getByTestId('hang-btn').click()
+    await page.waitForTimeout(300)
+    const pl = (await dump(page, 'placements')).find((p) => p.itemId === 'art-q1')
+    check('平板直向：掛畫不縮小（沒有 scale 欄位）', !!pl && !('scale' in pl))
+    await ctx.close()
+  }
 } finally {
   await browser.close()
 }

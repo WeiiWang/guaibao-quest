@@ -18,6 +18,14 @@ import {
   nextTint,
   pickMilestoneReward,
   pickWallSpot,
+  pickWallSpotFit,
+  isNarrowView,
+  phoneRoomH,
+  hudBoxesPhone,
+  estimatePhoneAspect,
+  clampArtScale,
+  MIN_ART_SCALE,
+  NARROW_MAX_W,
   placementKey,
   tintFilter,
   unplacedCount,
@@ -161,5 +169,69 @@ describe('年齡與顏色與句子', () => {
     expect(m['pet.gift.thanks.1']).toBeTruthy()
     expect(m['pet.welcome']).toBeTruthy()
     expect(m['pet.milestone']).toBeTruthy()
+  })
+})
+
+describe('手機掛畫（v7.1 D3）：一定在第一屏看得到的牆面，不蓋窗戶，擠不下就縮小', () => {
+  it('寬度 ≤ 560px 才算手機', () => {
+    expect(NARROW_MAX_W).toBe(560)
+    expect(isNarrowView(390)).toBe(true)
+    expect(isNarrowView(560)).toBe(true)
+    expect(isNarrowView(561)).toBe(false)
+    expect(isNarrowView(820)).toBe(false)
+  })
+  it('縮放倍率夾在 0.45–1；沒有 = 原大小', () => {
+    expect(clampArtScale(undefined)).toBe(1)
+    expect(clampArtScale(0.1)).toBe(MIN_ART_SCALE)
+    expect(clampArtScale(5)).toBe(1)
+    expect(clampArtScale(0.6)).toBe(0.6)
+  })
+  const phones: [number, number][] = [[360, 640], [375, 667], [390, 844], [393, 852], [414, 896], [430, 932]]
+  for (const [w, h] of phones) {
+    for (const adult of [false, true]) {
+      it(`${w}×${h}（${adult ? '成體' : '蛋 / 幼體'}）：連掛 3 幅都在第一屏內、沒蓋窗戶與按鈕；${h >= 740 ? '前兩幅互不重疊' : '第 1 幅獨佔'}（擠的時候後面的才錯開）`, () => {
+        const aspect = estimatePhoneAspect(w, h)
+        const sz = art(aspect)
+        const walls: Box[] = []
+        // 真實的畫面寬高比：實測房間高 = 視窗高 − 234（小手機）～ 269（大手機）；窗戶要用真實的比例檢查
+        const reals = [w / (h - 275), w / (h - 230)]
+        for (let i = 0; i < 3; i++) {
+          const p = pickWallSpotFit(sz, walls, aspect, { viewW: w, roomH: phoneRoomH(h), adult })
+          const box: Box = { x: p.x, y: p.y, w: sz.w * p.scale, h: sz.h * p.scale }
+          expect(p.scale).toBeGreaterThanOrEqual(MIN_ART_SCALE)
+          expect(box.x - box.w / 2).toBeGreaterThan(0.1) // 第一屏左緣（房間寬 0.1–0.5）
+          expect(box.x + box.w / 2).toBeLessThan(0.5)
+          expect(box.y + box.h / 2).toBeLessThan(0.62)
+          // 用估計的與真實的畫面寬高比各檢查一次（畫的寬度、窗戶的寬度都跟著寬高比變）
+          for (const a of [aspect, ...reals]) {
+            const ba: Box = { x: p.x, y: p.y, w: art(a).w * p.scale, h: sz.h * p.scale }
+            for (const win of wallKeepOut(a).slice(0, 2)) expect(hits(ba, win), `第 ${i + 1} 幅蓋到窗戶（寬高比 ${a.toFixed(2)}）`).toBe(false)
+          }
+          for (const k of hudBoxesPhone(w, phoneRoomH(h), adult)) expect(hits(box, k), `第 ${i + 1} 幅被狀態卡 / 按鈕蓋住`).toBe(false)
+          // 高度 ≥ 740 的手機（390×844 起）左邊那一欄放得下兩幅；更矮的小手機（SE、360×640）只保證第 1 幅有乾淨的位置，其餘錯開疊放
+          if (i < (h >= 740 ? 2 : 1)) for (const o of walls) expect(hits(box, o), `第 ${i + 1} 幅互相重疊`).toBe(false)
+          walls.push(box)
+        }
+      })
+    }
+  }
+  it('牆擠滿了（連掛 8 幅）仍然在第一屏內、不蓋窗戶，只與別的畫錯開疊放', () => {
+    const aspect = estimatePhoneAspect(390, 844)
+    const sz = art(aspect)
+    const walls: Box[] = []
+    for (let i = 0; i < 8; i++) {
+      const p = pickWallSpotFit(sz, walls, aspect, { viewW: 390, roomH: phoneRoomH(844) })
+      const box: Box = { x: p.x, y: p.y, w: sz.w * p.scale, h: sz.h * p.scale }
+      expect(box.x - box.w / 2).toBeGreaterThan(0.1)
+      expect(box.x + box.w / 2).toBeLessThan(0.5)
+      for (const win of wallKeepOut(aspect).slice(0, 2)) expect(hits(box, win)).toBe(false)
+      walls.push(box)
+    }
+  })
+  it('第一幅在手機上會縮小（原大小放不下），在 iPad 不縮', () => {
+    const phone = estimatePhoneAspect(390, 844)
+    expect(pickWallSpotFit(art(phone), [], phone, { viewW: 390, roomH: phoneRoomH(844) }).scale).toBeLessThan(1)
+    const pad = estimateViewAspect(1180, 820)
+    expect(pickWallSpotFit(art(pad), [], pad).scale).toBe(1)
   })
 })

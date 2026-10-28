@@ -38,12 +38,13 @@ import { isArtworkId, spriteSize } from '../art/items'
 import { getColoringPage, isFreePage, pageName } from '../art/coloring/pages'
 import { checkApplyTheme, resolveTheme } from '../domain/theme'
 import { docOf, type PaintDoc } from '../domain/coloring'
+import { bestFrame, isFrameId, isFrameUnlocked, newlyUnlocked, type FrameId } from '../domain/frames'
 import { clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
 import * as meta from './meta'
 import * as album from './album'
 import * as home7 from './home7'
-import { baseIdOf, canMakeMore, copyOf, estimateViewAspect, MAX_DECOR_COPIES, pickWallSpot, type Box } from '../domain/home7'
+import { baseIdOf, canMakeMore, clampArtScale, copyOf, estimatePhoneAspect, estimateViewAspect, isNarrowView, MAX_DECOR_COPIES, phoneRoomH, pickWallSpot, pickWallSpotFit, type Box } from '../domain/home7'
 import { isHatId } from '../domain/hats'
 import { CHAPTERS, chapterUnlocked, getChapter } from '../learning/chapter'
 import { addMaterial, emptyCost, stationRewardQty, STATION_SIZE } from '../learning/scoring'
@@ -529,8 +530,8 @@ export class Repo {
     return this.db.transaction('rw', [this.db.placements, this.db.inventory], async () => {
       const d = await this.ownedDecor(itemId)
       if (!d) return { ok: false, error: '你還沒有這個裝飾' } as const
-      const pos = clampPlacement(d.slot, x, y, 0, d.hf)
       const prev = await this.db.placements.get(itemId)
+      const pos = clampPlacement(d.slot, x, y, 0, d.hf * (isArtworkId(baseIdOf(itemId)) ? clampArtScale(prev?.scale) : 1))
       await this.db.placements.put({
         itemId,
         x: pos.x,
@@ -539,6 +540,7 @@ export class Repo {
         flipped: prev?.flipped ?? false,
         placedAt: prev?.placedAt ?? now,
         ...(prev?.tint ? { tint: prev.tint } : {}),
+        ...(prev?.scale ? { scale: prev.scale } : {}),
       })
       return { ok: true } as const
     })
@@ -1348,13 +1350,35 @@ export class Repo {
     return docOf(await this.db.coloring.get(pageId))
   }
 
-  /** 完成：把目前的作品存成畫廊作品（png 是完成圖的 data URL）。回傳畫廊 id */
-  async completeColoring(pageId: string, doc: PaintDoc, png: string, now = this.clock()): Promise<Result<{ galleryId: string }>> {
+  /**
+   * 完成：把目前的作品存成畫廊作品（png 是完成圖的 data URL）。回傳畫廊 id。
+   * v7.1：opts.counts = true 才算「完成一幅」（著色頁完成度 ≥ 60%、空白畫紙有內容；由畫面判斷），
+   * 累計幅數 +1（settings.framesDone）並回傳新解鎖的畫框；作品自動戴上目前最高級的畫框。
+   * 同一張畫沒有再畫就重複按完成，不會重複累計（拿作品內容和同一頁上次完成的比對）。
+   */
+  async completeColoring(
+    pageId: string,
+    doc: PaintDoc,
+    png: string,
+    now = this.clock(),
+    opts: { counts?: boolean } = {},
+  ): Promise<Result<{ galleryId: string; counted: boolean; framesDone: number; newFrames: FrameId[]; frame?: FrameId }>> {
     if (!getColoringPage(pageId) && !isFreePage(pageId)) return { ok: false, error: '找不到這張著色頁' }
     if (!png.startsWith('data:image/')) return { ok: false, error: '完成圖不正確' }
     const galleryId = newId()
     const d = this.db
-    await d.transaction('rw', d.coloring, async () => {
+    return d.transaction('rw', [d.coloring, d.settings], async () => {
+      const sig = (x: { fills?: unknown; strokes?: unknown; stickers?: unknown; bg?: string }) => JSON.stringify([x.fills ?? {}, x.strokes ?? [], x.stickers ?? [], x.bg ?? ''])
+      const same = opts.counts ? (await d.coloring.filter((w) => w.pageId.startsWith('g:') && w.basePageId === pageId && sig(w) === sig(doc)).count()) > 0 : false
+      const s = await d.settings.get(SETTINGS_ID)
+      const before = s?.framesDone ?? 0
+      const counted = !!opts.counts && !same
+      const after = counted ? before + 1 : before
+      const newFrames = newlyUnlocked(before, after).map((f) => f.id)
+      const best = bestFrame(after)?.id
+      // 沒算進收藏的作品（畫得太少）不戴畫框，維持預設的簡單畫框
+      const frame = counted ? best : undefined
+      if (counted && s) await d.settings.update(SETTINGS_ID, { framesDone: after })
       await d.coloring.put({ pageId, fills: doc.fills, strokes: doc.strokes, stickers: doc.stickers, ...(doc.bg ? { bg: doc.bg } : {}), updatedAt: now })
       await d.coloring.put({
         pageId: `g:${galleryId}`,
@@ -1363,12 +1387,36 @@ export class Repo {
         strokes: doc.strokes,
         stickers: doc.stickers,
         ...(doc.bg ? { bg: doc.bg } : {}),
+        ...(frame ? { frame } : {}),
         png,
         createdAt: now,
         updatedAt: now,
       })
+      return { ok: true, galleryId, counted, framesDone: after, newFrames, ...(frame ? { frame } : {}) } as const
     })
-    return { ok: true, galleryId }
+  }
+
+  /** 累計完成幾幅（畫框收藏） */
+  async framesDone(): Promise<number> {
+    return (await this.db.settings.get(SETTINGS_ID))?.framesDone ?? 0
+  }
+
+  /** 幫畫廊作品選畫框：只能選已解鎖的；frame 為 undefined = 換回預設的簡單畫框 */
+  async setArtworkFrame(galleryId: string, frame: FrameId | undefined): Promise<Result<{ frame?: FrameId }>> {
+    const d = this.db
+    return d.transaction('rw', [d.coloring, d.settings], async () => {
+      const work = await d.coloring.get(`g:${galleryId}`)
+      if (!work) return { ok: false, error: '找不到這幅畫' } as const
+      if (frame !== undefined) {
+        const done = (await d.settings.get(SETTINGS_ID))?.framesDone ?? 0
+        if (!isFrameId(frame) || !isFrameUnlocked(frame, done)) return { ok: false, error: '這個畫框還沒解鎖' } as const
+      }
+      const next = { ...work }
+      if (frame) next.frame = frame
+      else delete next.frame
+      await d.coloring.put(next)
+      return { ok: true, ...(frame ? { frame } : {}) } as const
+    })
   }
 
   /** 畫廊作品，新的在前 */
@@ -1380,7 +1428,7 @@ export class Repo {
   /** 把畫廊作品掛到房間（牆面裝飾 art-<galleryId>）。已掛過就維持原位。 */
   async hangArtwork(galleryId: string, now = this.clock()): Promise<Result<{ itemId: string; already: boolean }>> {
     const d = this.db
-    return d.transaction('rw', [d.coloring, d.shopItems, d.inventory, d.placements], async () => {
+    return d.transaction('rw', [d.coloring, d.shopItems, d.inventory, d.placements, d.pets], async () => {
       const work = await d.coloring.get(`g:${galleryId}`)
       if (!work) return { ok: false, error: '找不到這幅畫' } as const
       const itemId = `art-${galleryId}`
@@ -1392,11 +1440,16 @@ export class Repo {
       const size = spriteSize(itemId)
       const hf = size.rows / ROOM_CELLS_H
       // v7：自動挑空的牆面位置（避開窗戶、狀態卡、按鈕與牆上已有的東西；直向也一樣）
-      const aspect = estimateViewAspect(typeof window === 'undefined' ? 1180 : window.innerWidth, typeof window === 'undefined' ? 820 : window.innerHeight)
+      const innerW = typeof window === 'undefined' ? 1180 : window.innerWidth
+      const innerH = typeof window === 'undefined' ? 820 : window.innerHeight
+      const narrow = isNarrowView(innerW)
+      const aspect = narrow ? estimatePhoneAspect(innerW, innerH) : estimateViewAspect(innerW, innerH)
       const wf = (size.cols / ROOM_CELLS_H) * (1 / (2.5 * aspect))
-      const spot = pickWallSpot({ w: wf, h: hf }, await this.wallBoxes(aspect), aspect)
-      const pos = clampPlacement('wall', spot.x, spot.y, 0, hf)
-      await d.placements.put({ itemId, x: pos.x, y: pos.y, z: 0, flipped: false, placedAt: now })
+      const walls = await this.wallBoxes(aspect)
+      // v7.1 D3：手機（≤ 560px）一定要掛在第一屏看得到的牆面，擠不下就縮小畫框
+      const spot = narrow ? pickWallSpotFit({ w: wf, h: hf }, walls, aspect, { viewW: innerW, roomH: phoneRoomH(innerH), adult: (await d.pets.get('pet'))?.stage === 'adult' }) : { ...pickWallSpot({ w: wf, h: hf }, walls, aspect), scale: 1 }
+      const pos = clampPlacement('wall', spot.x, spot.y, 0, hf * spot.scale)
+      await d.placements.put({ itemId, x: pos.x, y: pos.y, z: 0, flipped: false, placedAt: now, ...(spot.scale < 1 ? { scale: spot.scale } : {}) })
       return { ok: true, itemId, already: false } as const
     })
   }
@@ -1409,7 +1462,8 @@ export class Repo {
       const item = SHOP_ITEMS.find((i) => i.id === base)
       if (!isArtworkId(base) && item?.slot !== 'wall') continue
       const sz = spriteSize(isArtworkId(base) ? base : (item?.asset ?? base))
-      out.push({ x: p.x, y: p.y, w: (sz.cols / ROOM_CELLS_H) * (1 / (2.5 * aspect)), h: sz.rows / ROOM_CELLS_H })
+      const k = isArtworkId(base) ? clampArtScale(p.scale) : 1
+      out.push({ x: p.x, y: p.y, w: k * (sz.cols / ROOM_CELLS_H) * (1 / (2.5 * aspect)), h: k * (sz.rows / ROOM_CELLS_H) })
     }
     return out
   }

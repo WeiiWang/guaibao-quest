@@ -177,6 +177,10 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'pet.welcome': '歡迎你！這是給你的禮物！',
   'pet.milestone': '我又長大一點了，送你一個小禮物！',
   'ui.workshop.more': '再做一個',
+  // v7.1 畫框收藏：完成慶祝解鎖新畫框、點到還沒解鎖的畫框（句子來源在 src/domain/frames.ts 的 FRAME_LINES，兩邊要一字不差，frames.test.ts 會檢查）
+  'ui.frame.unlock': '解鎖新畫框！',
+  'ui.frame.locked': '再多畫幾幅，這個畫框就是你的了',
+  'ui.frame.pick': '幫這幅畫選一個畫框',
   // v6 成長相簿：回憶卡上的一句話（句型見 src/domain/album.ts；學會新招那張和 ui.trick.learn 同一句，不重複列）
   'ui.album.card': [
     '阿悟孵出來了！',
