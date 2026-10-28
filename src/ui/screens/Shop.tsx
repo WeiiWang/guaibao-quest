@@ -1,3 +1,4 @@
+import { buyLine, refundLine } from '../../learning/feedbackLines'
 import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
@@ -84,7 +85,7 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
       if (!r.ok) return toast(r.error, 'warn')
       const card = btn.closest('.shop-item')
       const art = card?.querySelector('.shop-art') ?? btn
-      small('buy', { at: art, phrase: item.kind === 'hat' ? hatBuyLine(item.name) : `買到${item.name.replace('著色頁：', '')}囉！` })
+      small('buy', { at: art, phrase: item.kind === 'hat' ? hatBuyLine(item.name) : buyLine(item.name) })
       // 買到的東西飛進右上角的背包
       const rect = art.getBoundingClientRect()
       const px = Math.min(72, rect.height)
@@ -119,7 +120,7 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
     setUndo(null)
     const r = await repo.undoPurchase(u.ledgerId)
     if (r.ok) {
-      small('undo', { phrase: `${u.item.name.replace('著色頁：', '')}退回囉` })
+      small('undo', { phrase: refundLine(u.item.name) })
       toast(`退回了，還你 ${r.refunded} 顆星星`, 'info')
     } else toast(r.error, 'warn')
   }

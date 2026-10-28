@@ -1,3 +1,4 @@
+import { coloringPriceLine } from '../../learning/feedbackLines'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
@@ -138,7 +139,7 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
     setShaking(id)
     window.setTimeout(() => setShaking((v) => (v === id ? null : v)), 520)
     setGuide({ id, name, price })
-    sayText(`這張要用${price}顆星星，在商店換喔`, { enabled: voiceOn })
+    sayText(coloringPriceLine(price), { enabled: voiceOn })
   }
 
   const grid = (sec: { open: ColoringPageDef[]; locked: ColoringPageDef[] }, tier: 'easy' | 'hard') => (

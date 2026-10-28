@@ -1,3 +1,4 @@
+import { TASK_UNDO_LINE } from '../../learning/feedbackLines'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { repo } from '../../db/repo'
@@ -27,7 +28,7 @@ export function TasksScreen({ onBack, now }: { onBack: () => void; now: number }
   /** 按錯了：家長還沒審核之前可以收回 */
   const withdraw = async (id: string) => {
     const r = await repo.withdrawTask(id)
-    if (r.ok) small('undo', { phrase: '收回囉' })
+    if (r.ok) small('undo', { phrase: TASK_UNDO_LINE })
     else toast(r.error, 'warn')
   }
 

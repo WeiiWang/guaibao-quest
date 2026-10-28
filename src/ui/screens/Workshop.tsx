@@ -6,6 +6,7 @@ import { canCraft, craftableOf } from '../../learning/materials'
 import { THEME_DEFS, themesOf, ownsTheme, sortThemesByCost } from '../../domain/theme'
 import { MATERIAL_IDS, MATERIAL_NAMES } from '../../learning/types'
 import { sayText } from '../../learning/speech'
+import { CRAFT_SHORT_LINE, craftLine } from '../../learning/feedbackLines'
 import type { MaterialCost } from '../../learning/types'
 import { DECOR_EMOJI, MAT_EMOJI } from '../../art/items'
 import type { ShopItem, ThemeSlot } from '../../domain/types'
@@ -30,7 +31,7 @@ const TABS: { id: Tab; label: string }[] = [
 const shortText = (short: Partial<MaterialCost>) =>
   MATERIAL_IDS.filter((m) => short[m]).map((m) => `${MATERIAL_NAMES[m]}${short[m]}`).join(' ')
 /** 唸給孩子聽：「還差 2 個石頭、3 個花朵」 */
-const shortSpeech = (short: Partial<MaterialCost>) => `還差${MATERIAL_IDS.filter((m) => short[m]).map((m) => `${short[m]}個${MATERIAL_NAMES[m]}`).join('，')}`
+// v7.2：語音改成一句固定的話（缺多少已經用圖示 + 數字顯示；組合太多沒辦法預錄，以前會退回機器語音）
 
 /** 做不起時的按鈕內容：缺的材料圖示 + 數字缺口（不識字也看得懂還差多少）；文字只留給讀屏與測試 */
 function GapButtonBody({ short }: { short: Partial<MaterialCost> }) {
@@ -94,7 +95,7 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
   const craft = async (id: string, name: string, themeSlot: ThemeSlot | null, card: Element | null) => {
     const r = await repo.craftFurniture(id)
     if (!r.ok) return toast(r.error, 'warn')
-    small('craft', { at: card?.querySelector('.ws-art') ?? card, phrase: `${name}做好了！` })
+    small('craft', { at: card?.querySelector('.ws-art') ?? card, phrase: craftLine(name) })
     setDone({ id, name, theme: themeSlot })
   }
   const apply = async (id: string, name: string) => {
@@ -103,10 +104,10 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
     else toast(r.error, 'warn')
   }
   /** 做不起：卡片晃一下，唸出還差什麼（按鈕上只有材料圖示與數字） */
-  const explainShort = (id: string, short: Partial<MaterialCost>) => {
+  const explainShort = (id: string) => {
     setShaking(id)
     window.setTimeout(() => setShaking((v) => (v === id ? null : v)), 520)
-    sayText(shortSpeech(short), { enabled: voiceOn })
+    sayText(CRAFT_SHORT_LINE, { enabled: voiceOn })
   }
 
   const qtyOf = (id: string) => inventory.find((v) => v.itemId === id)?.qty ?? 0
@@ -124,7 +125,7 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
         aria-disabled={!check.ok}
         onClick={(e) => {
           if (check.ok) void craft(item.id, item.name, null, e.currentTarget.closest('.ws-card'))
-          else if (check.reason === 'insufficient') explainShort(item.id, check.short)
+          else if (check.reason === 'insufficient') explainShort(item.id)
         }}
         data-testid={testId}
       >
@@ -190,7 +191,7 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
             aria-disabled={!check?.ok}
             onClick={(e) => {
               if (check?.ok) void craft(id, def.name, slot, e.currentTarget.closest('.ws-card'))
-              else if (check && check.reason === 'insufficient') explainShort(id, check.short)
+              else if (check && check.reason === 'insufficient') explainShort(id)
             }}
             data-testid="craft-btn"
           >

@@ -16,10 +16,15 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { allLines } from '../src/learning/lines.ts'
 import { englishLines, EN_LANG } from '../src/learning/english.ts'
+import { createServer } from 'vite'
 
 const CONTENT = join(dirname(fileURLToPath(import.meta.url)), '../src/learning/content')
 const bank = ['number', 'classify', 'pattern', 'measure', 'space', 'observe', 'english', 'life', 'nature'].flatMap((f) => JSON.parse(readFileSync(join(CONTENT, `${f}.json`), 'utf8')))
-const zh = allLines(bank)
+// 商店／工坊的回饋句要讀商品清單（constants.ts 會 import JSON、沒有副檔名），用 Vite 載入
+const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
+const { feedbackLines } = await vite.ssrLoadModule('/src/learning/feedbackLines.ts')
+await vite.close()
+const zh = Object.fromEntries(Object.entries({ ...allLines(bank), ...feedbackLines() }).sort(([a], [b]) => a.localeCompare(b)))
 const en = englishLines()
 const fmt = (o) => `${JSON.stringify(o, null, 2)}\n`
 

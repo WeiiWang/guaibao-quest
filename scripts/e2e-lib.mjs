@@ -97,7 +97,24 @@ export async function freshApp(browser, viewport, opts = {}) {
     },
     { rand, tod, fast },
   )
+  // E2E_VOICE=<檔案>：載入語音包，並把「退回機器語音」的句子附加寫進該檔（找還沒錄到的句子用）
+  if (process.env.E2E_VOICE) {
+    await ctx.addInitScript(() => {
+      try {
+        localStorage.setItem('gq-voice-pack-test', '1')
+        localStorage.setItem('gq-voice-debug', '1')
+      } catch {
+        /* ignore */
+      }
+    })
+  }
   const page = await ctx.newPage()
+  if (process.env.E2E_VOICE) {
+    const { appendFileSync } = await import('node:fs')
+    page.on('console', (m) => {
+      if (m.type() === 'debug' && m.text().startsWith('[voice-miss]')) appendFileSync(process.env.E2E_VOICE, m.text() + '\n')
+    })
+  }
   const errors = []
   page.on('pageerror', (e) => errors.push(String(e)))
   page.on('console', (m) => {

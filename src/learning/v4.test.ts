@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { HUAGUOSHAN } from './chapter'
 import { isTutorialId, needsTutorial, TUTORIAL_INTERACTIONS, tutorialQuestion } from './tutorial'
 import { QUESTIONS, questionsFor } from './bank'
+import { feedbackLines } from './feedbackLines'
 import { allLines, gentleHintKey, questionKey, questionLines, pickLine, STATIC_LINES, wordKey } from './lines'
 import { learnerProfileOf } from './profile'
 import { makeRng } from './rng'
@@ -326,6 +327,7 @@ describe('句子清單匯出腳本', () => {
     expect(lines['num.3']).toBe('三')
     expect(Object.keys(lines).length).toBeGreaterThan(1200)
     // 每個 key 都是穩定的：和 allLines 一致
-    expect(lines).toEqual(allLines(QUESTIONS))
+    // v7.2：另外加上商店／工坊的回饋句（feedbackLines）
+    expect(lines).toEqual({ ...allLines(QUESTIONS), ...feedbackLines() })
   })
 })

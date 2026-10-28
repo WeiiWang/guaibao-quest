@@ -122,6 +122,11 @@ function missLog(reason: 'no-recording' | 'text-mismatch' | 'play-failed', text:
   const list = (w.__gqVoiceMiss ??= [])
   list.push({ reason, text })
   if (list.length > 200) list.shift()
+  try {
+    if (localStorage.getItem('gq-voice-debug') === '1') console.debug('[voice-miss]', reason, text)
+  } catch {
+    /* ignore */
+  }
 }
 
 /** 註冊預錄音檔：key（見 lines.ts）→ 網址（或 {url, text}）。沒註冊的 key 一律退回 Web Speech */
