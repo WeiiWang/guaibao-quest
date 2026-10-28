@@ -109,6 +109,20 @@ let lineAudio: Record<string, LineAudio> = {}
 let textIndex: Record<string, string> = {}
 let player: HTMLAudioElement | null = null
 let unlocked = false
+/** 每次播預錄音檔 +1：舊的那一句的失敗回呼看到不是自己就不動作 */
+let playGen = 0
+
+/**
+ * 沒有用到預錄音檔、改用機器語音的句子（除錯用）：記在 window.__gqVoiceMiss，
+ * e2e 用它找出「還沒錄到」或「原文對不上」的句子。只記最後 200 筆。
+ */
+function missLog(reason: 'no-recording' | 'text-mismatch' | 'play-failed', text: string): void {
+  if (typeof window === 'undefined' || !text) return
+  const w = window as unknown as { __gqVoiceMiss?: { reason: string; text: string }[] }
+  const list = (w.__gqVoiceMiss ??= [])
+  list.push({ reason, text })
+  if (list.length > 200) list.shift()
+}
 
 /** 註冊預錄音檔：key（見 lines.ts）→ 網址（或 {url, text}）。沒註冊的 key 一律退回 Web Speech */
 export function registerLineAudio(map: Record<string, string | LineAudio>): void {
@@ -130,6 +144,7 @@ export function sayRecorded(prefix: string, text: string, opts: SpeakOptions = {
 /** 沒有 key 的句子：用原文找預錄音檔，找不到就用 Web Speech */
 export function sayText(text: string, opts: SpeakOptions = {}): boolean {
   const key = textIndex[text]
+  if (!key && opts.enabled !== false) missLog('no-recording', text)
   return key ? say(key, text, opts) : speak(text, opts)
 }
 
@@ -180,14 +195,19 @@ function sayCore(key: string, text: string, opts: SpeakOptions): boolean {
     try {
       synth()?.cancel()
       stopLineAudio()
+      // 共用同一個播放器：下一句換 src 時，這一句的 play() 會以 AbortError 失敗。
+      // 那是「被打斷」不是「播不出來」，不能退回機器語音（否則會用機器聲唸上一句、還把新那句的錄音停掉）。
+      const gen = ++playGen
       let fellBack = false
-      const fallback = () => {
-        if (fellBack) return
+      const fallback = (err?: unknown) => {
+        if (fellBack || gen !== playGen) return
+        if (err instanceof DOMException && err.name === 'AbortError') return
         fellBack = true
+        missLog('play-failed', text)
         if (!speakCore(text, opts)) opts.onEnd?.()
       }
-      a.onended = opts.onEnd ? () => opts.onEnd?.() : null
-      a.onerror = fallback
+      a.onended = opts.onEnd ? () => gen === playGen && opts.onEnd?.() : null
+      a.onerror = () => fallback()
       a.src = line.url
       void a.play().catch(fallback)
       return true
@@ -195,6 +215,7 @@ function sayCore(key: string, text: string, opts: SpeakOptions): boolean {
       /* 退回 Web Speech */
     }
   }
+  missLog(line ? 'text-mismatch' : 'no-recording', text)
   return speakCore(text, opts)
 }
 
