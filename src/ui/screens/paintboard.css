@@ -107,3 +107,12 @@
   .pt-panel .pt-recent .pt-recent-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .pt-panel .pt-recent .swatch, .pb-recent-empty { width: 44px; height: 44px; min-height: 44px; }
 }
+
+/* 橫向：筆刷種類排成 4 欄 × 2 列的小卡，讓下方色盤不被擠出畫面 */
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .paint .pb-brush-opts > .pb-group:first-child { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .paint .pb-brush-opts .pb-kind { width: auto; min-height: 56px; padding: 2px 2px 2px; }
+  .paint .pb-brush-opts .pb-kind svg { max-height: 30px; }
+  /* 筆刷模式選項多一列，「最近用過」在這裡收起來（換工具時才變，同一工具內不會跳） */
+  .paint .pb-brush-opts ~ .pt-palette .pt-recent { display: none; }
+}

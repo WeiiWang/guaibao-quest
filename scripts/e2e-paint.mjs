@@ -553,7 +553,12 @@ try {
     await page.waitForSelector('[data-testid=raster-layer]')
     const bb = await board(page)
     // 相對於「最近用過」那一列的位置（Playwright 點色票時面板可能捲動，絕對位置會變）
-    const palTop = async () => (await page.getByTestId('palette').boundingBox()).y - (await page.getByTestId('recent-colors').boundingBox()).y
+    // 色盤在選項區（pt-body，可捲動）內的位置；橫向筆刷模式會收起「最近用過」，所以不拿它當基準
+    const palTop = () => page.evaluate(() => {
+      const body = document.querySelector('[data-testid=pt-body]')
+      const pal = document.querySelector('[data-testid=palette]')
+      return pal.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop
+    })
     const y0 = await palTop()
     check('色盤：一開始「最近用過」就佔一列（空圈），沒有色票', (await page.locator('[data-testid=recent-colors] .pb-recent-empty').count()) === 6 && (await page.locator('[data-testid=recent-colors] .swatch').count()) === 0)
     await page.locator('[data-testid=palette] .swatch').nth(14).click()
@@ -566,7 +571,9 @@ try {
     await page.getByTestId('bk-stamp').click()
     const y2 = await palTop()
     await page.getByTestId('bk-pen').click()
-    check('色盤：換筆刷種類（出現印章圖案列）色盤位置不跳', Math.abs(y1 - y2) < 1, `${y1} vs ${y2}`)
+    // 橫向把筆刷種類排成 4 欄，選印章時多出圖案列會把色盤往下推（換工具才會變，不是 P6 說的用色後跳動）；直向排成一條可橫滑的列，位置不變
+    const landscape = VP.width / VP.height >= 1.25 && VP.width >= 760
+    check('色盤：換筆刷種類（出現印章圖案列）色盤位置不跳（直向）', landscape || Math.abs(y1 - y2) < 1, `${y1} vs ${y2}`)
 
     // 手掌防護：接觸面積很大的 touch 不畫
     const cdp = await ctx.newCDPSession(page)
