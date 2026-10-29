@@ -1,7 +1,7 @@
 // v5 線 C：經濟與長期目標的資料操作（學習掉落、今日小禮物、圖鑑、新招）。
 // 全部是「給 db 的函式」，由 repo.ts 的薄薄一層方法呼叫；這樣 repo.ts 只多幾行，其他線合併時好處理。
 import { localDateStr } from '../domain/date'
-import { collectionRewardsDue, rollDailyGift, rollStationDrop } from '../domain/gifts'
+import { collectionRewardsDue, dailyGiftAt, dropFoods } from '../domain/gifts'
 import { collectionStep, friendStats, type FriendStat } from '../domain/friends'
 import { collectionGiftSticker } from '../domain/stickers'
 import { newTricks, type TrickId } from '../domain/tricks'
@@ -39,12 +39,24 @@ export async function queueGifts(d: GuaibaoDB, gifts: Gift[]): Promise<void> {
 }
 
 /**
- * 一站過關掉落的食物（在 completeStation 的交易裡呼叫）。v7：直接進背包，不再排進 pendingGifts，
- * 結算畫面當場顯示得到什麼。個數固定（見 stationFoodQty），種類隨機（今天最愛的食物機率較高，不掉蛋糕）。
- * 回傳掉落的食物 id（依序）。呼叫端的交易要包含 inventory。
+ * v7.4 H5：從今天的固定輪替裡取 count 個食物（今天最愛的先掉，之後依清單順序輪下去），並記下今天掉到第幾個。
+ * 呼叫端的交易要包含 settings。
  */
-export async function grantStationFoods(d: GuaibaoDB, rng: () => number, now: number, independent: number): Promise<string[]> {
-  const foods = Array.from({ length: stationFoodQty(independent) }, () => rollStationDrop(rng, localDateStr(now)))
+export async function takeDropFoods(d: GuaibaoDB, now: number, count: number): Promise<string[]> {
+  const date = localDateStr(now)
+  const s = await d.settings.get(SETTINGS_ID)
+  const from = s?.foodDrop?.date === date ? s.foodDrop.n : 0
+  if (s && count > 0) await d.settings.update(SETTINGS_ID, { foodDrop: { date, n: from + count } })
+  return dropFoods(date, from, count)
+}
+
+/**
+ * 一站過關掉落的食物（在 completeStation 的交易裡呼叫）。v7：直接進背包，不再排進 pendingGifts，
+ * 結算畫面當場顯示得到什麼。個數固定（見 stationFoodQty；重玩一律 1 個），種類也固定輪替（見 takeDropFoods），不靠亂數。
+ * 回傳掉落的食物 id（依序）。呼叫端的交易要包含 inventory、settings。
+ */
+export async function grantStationFoods(d: GuaibaoDB, now: number, independent: number, qty = stationFoodQty(independent)): Promise<string[]> {
+  const foods = await takeDropFoods(d, now, qty)
   for (const foodId of foods) {
     const inv = await d.inventory.get(foodId)
     await d.inventory.put({ id: foodId, itemId: foodId, qty: (inv?.qty ?? 0) + 1 })
@@ -53,10 +65,23 @@ export async function grantStationFoods(d: GuaibaoDB, rng: () => number, now: nu
 }
 
 /**
+ * 發下一份每日小禮物（固定輪替：食物、材料、食物、貼紙…，貼紙依固定順序送沒擁有的，送完改送食物），並記下送到第幾份。
+ * 呼叫端的交易要包含 settings、inventory、materialLedger。
+ */
+export async function rotateDailyGift(d: GuaibaoDB, now: number): Promise<Gift | null> {
+  const s = await d.settings.get(SETTINGS_ID)
+  if (!s) return null
+  const g = dailyGiftAt(s.dailyGiftSeq ?? 0, localDateStr(now), now, s.stickers ?? [])
+  await d.settings.update(SETTINGS_ID, { dailyGiftSeq: (s.dailyGiftSeq ?? 0) + 1 })
+  await queueGifts(d, [g])
+  return g
+}
+
+/**
  * 今日小禮物：每天第一次進首頁送一份（沒有連續天數獎勵，漏掉不補）。
  * 全新使用者的第一天有首次引導（阿悟指著冒險地圖），那天不送，從隔天開始。
  */
-export async function grantDailyGift(d: GuaibaoDB, rng: () => number, now: number): Promise<Gift | null> {
+export async function grantDailyGift(d: GuaibaoDB, now: number): Promise<Gift | null> {
   const date = localDateStr(now)
   return d.transaction('rw', [d.settings, d.inventory, d.materialLedger], async () => {
     const s = await d.settings.get(SETTINGS_ID)
@@ -65,10 +90,8 @@ export async function grantDailyGift(d: GuaibaoDB, rng: () => number, now: numbe
       await d.settings.update(SETTINGS_ID, { lastGiftDate: date })
       return null
     }
-    const g = rollDailyGift(rng, date, now)
     await d.settings.update(SETTINGS_ID, { lastGiftDate: date })
-    await queueGifts(d, [g])
-    return g
+    return rotateDailyGift(d, now)
   })
 }
 
@@ -97,7 +120,7 @@ export async function knownFriends(d: GuaibaoDB, lookup: (id: string) => Questio
 }
 
 /** 圖鑑每收集滿 N 個送 1 份禮物（N 依總數調整，見 collectionStep；補發還沒送的）。回傳這次新送出幾份 */
-export async function syncCollection(d: GuaibaoDB, rng: () => number, now: number): Promise<number> {
+export async function syncCollection(d: GuaibaoDB, now: number): Promise<number> {
   const known = (await knownFriends(d)).size
   const due = collectionRewardsDue(known, collectionStep())
   return d.transaction('rw', [d.settings, d.inventory, d.materialLedger], async () => {
@@ -113,7 +136,7 @@ export async function syncCollection(d: GuaibaoDB, rng: () => number, now: numbe
       if (stickerId) {
         have.push(stickerId)
         gifts.push({ stickerId, at: now, from: 'collection' as const })
-      } else gifts.push({ foodId: rollStationDrop(rng, localDateStr(now)), at: now, from: 'collection' as const })
+      } else gifts.push({ foodId: (await takeDropFoods(d, now, 1))[0], at: now, from: 'collection' as const })
     }
     await queueGifts(d, gifts)
     await d.settings.update(SETTINGS_ID, { collectionRewarded: due })

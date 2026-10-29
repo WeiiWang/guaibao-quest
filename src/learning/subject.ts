@@ -157,6 +157,19 @@ export function challengeSlots(ch: ChapterDef): Interaction[] {
   return [...last, ...mid.slice(0, 3)]
 }
 
+// ---------- 重玩已通關的站（v7.4 H1） ----------
+// 借用關卡畫面：chapterId = replay:<章節 id>、station = 那一站的序號（1 起算）。題目重新抽、盡量避開最近答過的；
+// 獎勵固定一份食物，不給材料。
+
+export const REPLAY_PREFIX = 'replay:'
+export const replayChapterId = (chapterId: string): string => `${REPLAY_PREFIX}${chapterId}`
+
+/** replay:<章節 id> → 章節；不是重玩就回傳 null */
+export function parseReplayId(chapterId: string): ChapterDef | null {
+  if (!chapterId.startsWith(REPLAY_PREFIX)) return null
+  return getChapter(chapterId.slice(REPLAY_PREFIX.length)) ?? null
+}
+
 export interface StageInfo {
   /** 章節名（結算畫面的「英文小島・白沙灘」） */
   chapterName: string
@@ -166,6 +179,8 @@ export interface StageInfo {
   daily: boolean
   /** 挑戰站（v7） */
   challenge?: boolean
+  /** 重玩已通關的站（v7.4）：def 是原本那一站 */
+  replay?: boolean
 }
 
 /** 關卡畫面要的站資料：一般章節的站，或每日冒險。找不到就是 undefined */
@@ -187,6 +202,12 @@ export function resolveStage(chapterId: string, station: number, date: string): 
       daily: false,
       challenge: true,
     }
+  }
+  const rep = parseReplayId(chapterId)
+  if (rep) {
+    const subj = subjectOfChapter(rep.id)
+    const def = rep.stations[station - 1]
+    return subj && def ? { chapterName: rep.name, def, subject: subj.id, daily: false, replay: true } : undefined
   }
   const subject = subjectOfChapter(chapterId)
   const ch = getChapter(chapterId)

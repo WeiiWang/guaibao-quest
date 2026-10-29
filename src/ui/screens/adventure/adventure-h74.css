@@ -1,0 +1,48 @@
+/* v7.4 線 H：冒險內容與經濟（重玩標示、溫和的預告、結算精簡）。前綴 h74- */
+
+/* ---------- 已通關的站：右上角「↻ 再玩」小標（整顆圓鈕本來就可以點，標示讓孩子知道可以再玩） ---------- */
+.h74-replay-tag {
+  position: absolute;
+  top: -14%;
+  right: -26%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 26px;
+  padding: 0 9px 0 4px;
+  border-radius: 999px;
+  background: #23805e;
+  color: #fff;
+  font-size: clamp(0.72rem, 1.5cqw, 0.95rem);
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 3px 0 rgba(74, 59, 53, 0.28), 0 0 0 2px #fff;
+  pointer-events: none;
+}
+.h74-replay-tag i { font-style: normal; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #fff; color: #23805e; font-size: 0.85em; }
+.adv-node.st-done .adv-node-btn { cursor: pointer; }
+
+/* ---------- 預告：沒有鎖頭、沒有「即將開放」 ---------- */
+.h74-soon span { color: #23805e; }
+
+@media (max-width: 480px) {
+  .h74-replay-tag { right: -22%; top: -46%; padding: 0 7px 0 3px; min-height: 24px; }
+  .h74-replay-tag i { width: 16px; height: 16px; }
+}
+
+/* ---------- 英文題答對後「下一題」鈕不能壓到選項卡（H4）：題幹只佔需要的高度，剩下的給選項，選項卡不會溢出到鈕的那一列 ---------- */
+.adv-stage .qv-en .qv-stem { flex: 0 1 auto; }
+
+/* ---------- 3 歲的比多少（H2）：手機上卡片窄。1–5 個一律 2 欄、圖示一樣大（兩堆的圖示大小不同，孩子會拿「圖大」當答案；原本 3 欄只有約 36px，4–6 個又是約 59px） ---------- */
+@media (max-width: 560px) {
+  .adv-stage.gentle .qv-compare .choice-pile .pile {
+    --ps: max(30px, min(var(--base), calc((100cqw - 20px) / 2 - 6px)));
+    grid-template-columns: repeat(2, var(--ps));
+  }
+}
+
+/* ---------- 重玩的結算：只有食物一欄（不給材料），置中、維持食物欄的奶油色 ---------- */
+.q7-loot.h74-solo { grid-template-columns: minmax(0, 340px); justify-content: center; }
+.q7-loot.h74-solo .q7-loot-col:last-child { background: color-mix(in srgb, var(--butter-soft) 70%, white); }

@@ -3424,5 +3424,461 @@
     "answer": "obj-peach",
     "hint": "你看，桃子、蘋果，桃子、蘋果，桃子、蘋果。一個接一個，下一個是誰呢？",
     "params": {"core":2,"words":["桃子","蘋果","桃子","蘋果","桃子","蘋果",""]}
+  },
+  {
+    "id": "pattern-1-g25", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":null},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，小魚、蘋果，小魚、蘋果，小魚、蘋果。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小魚","蘋果","小魚","","小魚","蘋果"]}
+  },
+  {
+    "id": "pattern-1-g26", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-peach"},
+      {"obj":null},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、桃子，小兔子、桃子，小兔子、桃子。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小兔子","桃子","小兔子","桃子","","桃子"]}
+  },
+  {
+    "id": "pattern-1-g27", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-banana"},
+      {"obj":null},
+      {"obj":"obj-banana"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，香蕉、蘋果，香蕉、蘋果，香蕉、蘋果。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["香蕉","蘋果","香蕉","","香蕉","蘋果"]}
+  },
+  {
+    "id": "pattern-1-g28", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":null},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，蘋果、小兔子，蘋果、小兔子，蘋果、小兔子。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["蘋果","小兔子","蘋果","小兔子","","小兔子"]}
+  },
+  {
+    "id": "pattern-1-g29", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":null},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，桃子、小魚，桃子、小魚，桃子、小魚。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["桃子","小魚","桃子","","桃子","小魚"]}
+  },
+  {
+    "id": "pattern-1-g30", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":null},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、小雞，小兔子、小雞，小兔子、小雞。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小兔子","小雞","小兔子","小雞","","小雞"]}
+  },
+  {
+    "id": "pattern-1-g31", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-chick"},
+      {"obj":null},
+      {"obj":"obj-chick"},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "你看，小雞、蘋果，小雞、蘋果，小雞、蘋果。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小雞","蘋果","小雞","","小雞","蘋果"]}
+  },
+  {
+    "id": "pattern-1-g32", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":null},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-chick",
+    "hint": "你看，小雞、香蕉，小雞、香蕉，小雞、香蕉。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小雞","香蕉","小雞","香蕉","","香蕉"]}
+  },
+  {
+    "id": "pattern-1-g33", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-banana"},
+      {"obj":null},
+      {"obj":"obj-banana"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "你看，香蕉、桃子，香蕉、桃子，香蕉、桃子。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["香蕉","桃子","香蕉","","香蕉","桃子"]}
+  },
+  {
+    "id": "pattern-1-g34", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-peach"},
+      {"obj":null},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，小魚、桃子，小魚、桃子，小魚、桃子。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小魚","桃子","小魚","桃子","","桃子"]}
+  },
+  {
+    "id": "pattern-1-g35", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":null},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，香蕉、小魚，香蕉、小魚，香蕉、小魚。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["香蕉","小魚","香蕉","","香蕉","小魚"]}
+  },
+  {
+    "id": "pattern-1-g36", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":null},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、小魚，小兔子、小魚，小兔子、小魚。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小兔子","小魚","小兔子","小魚","","小魚"]}
+  },
+  {
+    "id": "pattern-1-g37", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-fish"},
+      {"obj":null},
+      {"obj":"obj-fish"},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "你看，小魚、香蕉，小魚、香蕉，小魚、香蕉。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小魚","香蕉","小魚","","小魚","香蕉"]}
+  },
+  {
+    "id": "pattern-1-g38", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-apple"},
+      {"obj":null},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、蘋果，小兔子、蘋果，小兔子、蘋果。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小兔子","蘋果","小兔子","蘋果","","蘋果"]}
+  },
+  {
+    "id": "pattern-1-g39", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":null},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，香蕉、小兔子，香蕉、小兔子，香蕉、小兔子。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["香蕉","小兔子","香蕉","","香蕉","小兔子"]}
+  },
+  {
+    "id": "pattern-1-g40", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":null},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，小魚、小雞，小魚、小雞，小魚、小雞。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小魚","小雞","小魚","小雞","","小雞"]}
+  },
+  {
+    "id": "pattern-1-g41", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-chick"},
+      {"obj":null},
+      {"obj":"obj-chick"},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-rabbit","obj":"obj-rabbit"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小雞、小兔子，小雞、小兔子，小雞、小兔子。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小雞","小兔子","小雞","","小雞","小兔子"]}
+  },
+  {
+    "id": "pattern-1-g42", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-fish"},
+      {"obj":null},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-chick",
+    "hint": "你看，小雞、小魚，小雞、小魚，小雞、小魚。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小雞","小魚","小雞","小魚","","小魚"]}
+  },
+  {
+    "id": "pattern-1-g43", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-apple"},
+      {"obj":null},
+      {"obj":"obj-apple"},
+      {"obj":"obj-fish"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，蘋果、小魚，蘋果、小魚，蘋果、小魚。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["蘋果","小魚","蘋果","","蘋果","小魚"]}
+  },
+  {
+    "id": "pattern-1-g44", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-apple"},
+      {"obj":null},
+      {"obj":"obj-apple"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "你看，桃子、蘋果，桃子、蘋果，桃子、蘋果。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["桃子","蘋果","桃子","蘋果","","蘋果"]}
+  },
+  {
+    "id": "pattern-1-g45", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"},
+      {"obj":"obj-banana"},
+      {"obj":null},
+      {"obj":"obj-banana"},
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-chick",
+    "hint": "你看，香蕉、小雞，香蕉、小雞，香蕉、小雞。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["香蕉","小雞","香蕉","","香蕉","小雞"]}
+  },
+  {
+    "id": "pattern-1-g46", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-banana"},
+      {"obj":null},
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-rabbit",
+    "hint": "你看，小兔子、香蕉，小兔子、香蕉，小兔子、香蕉。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小兔子","香蕉","小兔子","香蕉","","香蕉"]}
+  },
+  {
+    "id": "pattern-1-g47", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格裡是哪一個？",
+    "items": [
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"},
+      {"obj":"obj-chick"},
+      {"obj":null},
+      {"obj":"obj-chick"},
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "你看，小雞、桃子，小雞、桃子，小雞、桃子。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小雞","桃子","小雞","","小雞","桃子"]}
+  },
+  {
+    "id": "pattern-1-g48", "skill": "pattern", "difficulty": 1, "type": "missing", "version": 2, "gentle": true,
+    "prompt": "空格要放哪一個？",
+    "items": [
+      {"obj":"obj-fish"},
+      {"obj":"obj-rabbit"},
+      {"obj":"obj-fish"},
+      {"obj":"obj-rabbit"},
+      {"obj":null},
+      {"obj":"obj-rabbit"}
+    ],
+    "choices": [
+      {"id":"obj-rabbit","obj":"obj-rabbit"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "你看，小魚、小兔子，小魚、小兔子，小魚、小兔子。一個接一個，空格裡是誰呢？",
+    "params": {"core":2,"words":["小魚","小兔子","小魚","小兔子","","小兔子"]}
   }
 ]

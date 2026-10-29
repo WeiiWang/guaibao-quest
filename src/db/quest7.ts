@@ -3,9 +3,26 @@ import { questionsFor } from '../learning/bank'
 import { CHALLENGE_BADGE_COMBO, MATH_ALL_SKILLS, type Attempt, type Difficulty, type Question, type SkillId, type SkillState } from '../learning/types'
 import { MAX_DIFFICULTY } from '../learning/types'
 
-/** 挑戰站的題目難度：比目前高 1 級（最高 4） */
-export function bumpStates(states: Record<SkillId, SkillState>): Record<SkillId, SkillState> {
-  return Object.fromEntries(Object.entries(states).map(([k, v]) => [k, { ...v, difficulty: Math.min(MAX_DIFFICULTY, v.difficulty + 1) as Difficulty }])) as Record<SkillId, SkillState>
+/** 6–7 歲挑戰站的最低難度（v7.4 H3）：挑戰站不能比這個簡單 */
+export const CHALLENGE_MIN_DIFFICULTY: Difficulty = 3
+
+/**
+ * 挑戰站的題目難度：比目前高 1 級（最高 4）。minDifficulty：最低從這一級起跳
+ * （6–7 歲用 CHALLENGE_MIN_DIFFICULTY；其他年齡不設，維持原本「高 1 級」）。
+ */
+export function bumpStates(states: Record<SkillId, SkillState>, minDifficulty: Difficulty = 1): Record<SkillId, SkillState> {
+  return Object.fromEntries(
+    Object.entries(states).map(([k, v]) => [k, { ...v, difficulty: Math.min(MAX_DIFFICULTY, Math.max(minDifficulty, v.difficulty + 1)) as Difficulty }]),
+  ) as Record<SkillId, SkillState>
+}
+
+/**
+ * 6–7 歲數學第一站不出「請你指出水果」這種最簡單的種類題（v7.4 H3）：
+ * 只在孩子的分類難度 >= 2（本來就不是從最簡單開始）時才擋；回傳要盡量避開的題型（沒有要擋就是 undefined）。
+ */
+export function easyTypesToSkip(ageBand: string | undefined, chapterId: string, stationIndex: number, classifyDifficulty: Difficulty): ReadonlySet<string> | undefined {
+  if (ageBand !== '6-7' || chapterId !== 'huaguoshan' || stationIndex !== 0 || classifyDifficulty < 2) return undefined
+  return new Set(['kind'])
 }
 
 /** 依作答先後算最高連對（第一次就答對且沒用提示才算；中斷就歸零） */

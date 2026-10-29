@@ -284,7 +284,7 @@ describe('題庫完整性', () => {
   })
   it('題幹 + 答案不重複（找不同的題幹就是那四個物件）；同一格每種題型至少 2 種句型', () => {
     const key = (q: Question) =>
-      JSON.stringify([q.type, q.prompt, q.items, q.answer, q.type === 'odd' ? q.choices.map((c) => c.id).sort() : null, q.params?.n ?? null])
+      JSON.stringify([q.type, q.prompt, q.items, q.answer, q.type === 'odd' || q.gentle ? q.choices.map((c) => `${c.id}:${c.obj ?? ''}:${c.count ?? ''}`).sort() : null, q.params?.n ?? null])
     for (const cellId of new Set(QUESTIONS.map(cellOf))) {
       const qs = QUESTIONS.filter((q) => cellOf(q) === cellId)
       expect(new Set(qs.map(key)).size, cellId).toBe(qs.length)
@@ -439,18 +439,36 @@ describe('幼幼模式（3 歲）的題', () => {
       expect(q.difficulty).toBe(1)
       expect(q.choices, q.id).toHaveLength(2)
     }
+    // 答案物件限定常見的那幾個；v7.4 的顏色配對（同色、不同種類）再多用星星、桃子、花（都是 3 歲認得的）
     const common = new Set(['obj-banana', 'obj-apple', 'obj-fish', 'obj-chick'])
+    const withColorMatch = new Set([...common, 'obj-star', 'obj-peach', 'obj-flower'])
     for (const q of gentle.filter((x) => x.skill === 'classify'))
-      for (const c of [...q.choices, ...q.items]) expect(common.has(c.obj as string), q.id).toBe(true)
+      for (const c of [...q.choices, ...q.items]) expect((q.type === 'same' && q.params?.swatch ? withColorMatch : common).has(c.obj as string), q.id).toBe(true)
   })
-  it('數感只出 1–3 個，一半是快閃辨識；規律只出 AB 且展示 3 輪', () => {
+  it('數感只出 1–3 個（比多少是 1–5 個、兩堆差 2 個以上），一半是快閃辨識；規律只出 AB 且展示 3 輪（接下來 7 格、缺一個 6 格）', () => {
     const num = gentle.filter((q) => q.skill === 'number')
-    for (const q of num) expect(Number(q.answer)).toBeLessThanOrEqual(3)
+    for (const q of num.filter((x) => x.type !== 'compare')) expect(Number(q.answer)).toBeLessThanOrEqual(3)
+    for (const q of num.filter((x) => x.type === 'compare')) {
+      const [a, b] = q.choices.map((c) => c.count as number)
+      expect(Math.max(a, b), q.id).toBeLessThanOrEqual(5)
+      expect(Math.abs(a - b), q.id).toBeGreaterThanOrEqual(2)
+      expect(q.choices.find((c) => c.id === q.answer)!.count, q.id).toBe(Math.max(a, b))
+    }
     expect(num.filter((q) => q.params?.flash).length).toBeGreaterThanOrEqual(8)
     for (const q of gentle.filter((x) => x.skill === 'pattern')) {
       expect(q.params?.core).toBe(2)
-      expect(q.items.length).toBe(7) // 3 輪（6 個）+ 問題格
+      expect(q.items.length).toBe(q.type === 'missing' ? 6 : 7) // 3 輪（6 個）+ 問題格；缺一個的題 6 格裡有 1 個空格
+      if (q.type === 'missing') expect(q.items.filter((i) => i.obj === null).length).toBe(1)
     }
+  })
+  it('v7.4 H2：3 歲數學第 1 章（數感、分類、規律）至少有 8 種題型，每種至少 12 題；新題型都只用現有物件圖', () => {
+    const chapter1 = gentle.filter((q) => ['number', 'classify', 'pattern'].includes(q.skill))
+    const standardOk = QUESTIONS.filter(isGentleOk)
+    const types = new Set(standardOk.filter((q) => ['number', 'classify', 'pattern'].includes(q.skill)).map((q) => q.type))
+    for (const t of ['count', 'give', 'compare', 'kind', 'same', 'color', 'next', 'missing']) expect(types.has(t as never), t).toBe(true)
+    for (const t of ['compare', 'color', 'missing']) expect(chapter1.filter((q) => q.type === t).length, t).toBeGreaterThanOrEqual(12)
+    expect(chapter1.filter((q) => q.type === 'same' && q.params?.swatch).length).toBeGreaterThanOrEqual(12) // 顏色配對
+    for (const q of chapter1) for (const c of [...q.choices, ...q.items]) if (c.obj) expect(getObject(c.obj), q.id).toBeDefined()
   })
   it('幼幼模式的題庫：難度 1 夠用（一般題只取 1–3 個的數數與拿取）；一般模式不會抽到幼幼專用題', () => {
     for (const s of SKILLS) expect(questionsFor(s, 1, QUESTIONS, true).length, s).toBeGreaterThanOrEqual(16)

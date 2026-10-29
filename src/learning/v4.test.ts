@@ -200,7 +200,7 @@ describe('抽題：幼幼模式與舊資料', () => {
   it('一般模式不會抽到幼幼專用題；幼幼模式難度 1 抽得到（且 1–3 個）', () => {
     for (let i = 0; i < 30; i++) {
       const g = pickQuestion({ skill: 'number', difficulty: 1, seen: seenFromAttempts([]), rng: makeRng(i), gentle: true })!
-      expect(Number(g.answer)).toBeLessThanOrEqual(3)
+      expect(g.type === 'compare' || Number(g.answer) <= 3).toBe(true)
       const n = pickQuestion({ skill: 'classify', difficulty: 1, seen: seenFromAttempts([]), rng: makeRng(i) })!
       expect(n.gentle).toBeFalsy()
     }
