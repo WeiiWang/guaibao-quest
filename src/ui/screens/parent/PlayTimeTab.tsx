@@ -6,11 +6,13 @@ import { DAILY_LIMIT_OPTIONS, EXTEND_MINUTES, limitLabel, remainingSeconds } fro
 import { useNow, useToast } from '../../hooks'
 import { useLearningSettings } from '../../learningHooks'
 import './learning.css'
+import { useSpeciesName } from '../../species'
 
 const mins = (s: number) => `${Math.floor(s / 60)} 分 ${Math.round(s % 60)} 秒`
 
 /** 每日遊玩時間：15/20/30/45/不限；今天已玩多久；家長延長 10 分鐘 */
 export function PlayTimeTab() {
+  const petName = useSpeciesName()
   const toast = useToast()
   const now = useNow()
   const date = localDateStr(now)
@@ -22,7 +24,7 @@ export function PlayTimeTab() {
     <section className="lt" data-testid="playtime-tab">
       <div className="card">
         <h2>每日遊玩時間</h2>
-        <p className="lt-text">到時間，阿悟會打哈欠說「我想睡覺了」，學習與餵食會鎖住。只計算孩子在前景使用的時間，家長區不算。</p>
+        <p className="lt-text">到時間，{petName}會打哈欠說「我想睡覺了」，學習與餵食會鎖住。只計算孩子在前景使用的時間，家長區不算。</p>
         <div className="lt-choices" role="radiogroup" aria-label="每日遊玩時間上限">
           {DAILY_LIMIT_OPTIONS.map((m) => (
             <button

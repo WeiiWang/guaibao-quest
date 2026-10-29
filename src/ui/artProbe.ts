@@ -43,13 +43,15 @@ export function useArtStatuses(names: readonly string[]): ArtStatus[] {
 
 export const useArtStatus = (name: string): ArtStatus => useArtStatuses([name])[0]
 
-/** 從候選清單挑第一張存在的圖；都還沒結果就用第一個，全都不存在回 null */
+/**
+ * 從候選清單挑第一張存在的圖；全都不存在回 null。
+ * 前面的候選還在探測中（pending）就先用它（等它載入），不先跳到後面已知存在的圖：
+ * v7.5 兔兔的圖還在探測時，不會先閃一下猴子再換成兔子。已知不存在的（no）直接跳過，不會出現破圖。
+ */
 export function useFirstArt(names: readonly string[]): string | null {
   const st = useArtStatuses(names)
-  const ok = st.findIndex((s) => s === 'ok')
-  if (ok >= 0) return names[ok]
-  if (st.some((s) => s === 'pending')) return names[0]
-  return null
+  const i = st.findIndex((s) => s !== 'no')
+  return i >= 0 ? names[i] : null
 }
 
 /** 同步查目前已知的狀態（給非 React 的程式用，例如飛入動畫）；沒探測過會順便開始探測 */

@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Modal } from '../../components/Modal'
 import './learning.css'
+import { usePetText } from '../../species'
 
 const FREE = ['花果山第一章（5 站）', '每日任務與星星', '寵物阿悟與房間佈置', '著色本與基本學習報告']
 const PAID = ['之後的章節：水簾洞、龍宮…', '更多題庫與難度', '進階學習報告（每週摘要）', '更多家具與阿悟的新造型']
 
 /** 訂閱方案（樣品）。只放在家長區；Prototype 不接任何付款。 */
 export function SubscriptionTab() {
+  const pt = usePetText()
   const [msg, setMsg] = useState<string | null>(null)
   return (
     <section className="lt" data-testid="subscription-tab">
@@ -20,7 +22,7 @@ export function SubscriptionTab() {
             <p className="lt-price">NT$0</p>
             <ul>
               {FREE.map((f) => (
-                <li key={f}>{f}</li>
+                <li key={f}>{pt(f)}</li>
               ))}
             </ul>
           </div>
@@ -35,7 +37,7 @@ export function SubscriptionTab() {
             <ul>
               <li>包含免費版全部內容</li>
               {PAID.map((f) => (
-                <li key={f}>{f}</li>
+                <li key={f}>{pt(f)}</li>
               ))}
             </ul>
           </div>

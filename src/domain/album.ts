@@ -4,6 +4,7 @@
 import { trickOf, type TrickId } from './tricks'
 import { hatOf } from './hats'
 import type { AlbumCard, AlbumKind, Stage } from './types'
+import { parsePetArt, petArt, type Species } from './species'
 
 /** 卡片的 id 規則：同一件事永遠同一個 id，所以補建與事件寫入都不會重複 */
 export const albumId = {
@@ -33,7 +34,8 @@ export const ALBUM_KIND_LABEL: Record<AlbumKind, { label: string; emoji: string 
 const TRICK_POSE: Record<string, string> = { count: 'think', tidy: 'happy', rhythm: 'dance', hello: 'cheer', flip: 'cheer' }
 
 const stageOf = (s: Stage): 'baby' | 'adult' => (s === 'adult' ? 'adult' : 'baby')
-const artOf = (stage: Stage, pose: string): string => `pet-${stageOf(stage)}-${pose}`
+/** v7.5：卡片的圖用這隻寵物的物種（猴子維持 pet-baby-cheer 這種舊檔名） */
+const artOf = (stage: Stage, pose: string, species?: Species): string => petArt(species, stageOf(stage), pose)
 
 export const hatchLine = (petName: string): string => `${petName}孵出來了！`
 export const growLine = (petName: string): string => `${petName}長大了！`
@@ -43,6 +45,8 @@ export const firstHatLine = (petName: string, hatName: string): string => `${pet
 
 export interface AlbumFacts {
   petName: string
+  /** v7.5：寵物的物種（沒有 = 猴子） */
+  species?: Species
   stage: Stage
   tricks: readonly string[]
   /** 已通關的章節（id、名稱、通關時間；時間不明就不填） */
@@ -54,15 +58,15 @@ export interface AlbumFacts {
 /** 依現況算出「應該有」的回憶卡（不看已經有哪些）。時間不明的卡標成 approx（畫面顯示「以前」） */
 export function expectedCards(f: AlbumFacts): AlbumCard[] {
   const out: AlbumCard[] = []
-  if (f.stage !== 'egg') out.push({ id: albumId.hatch, at: 0, kind: 'hatch', art: artOf('baby', 'cheer'), caption: hatchLine(f.petName), approx: true })
-  if (f.stage === 'adult') out.push({ id: albumId.grow, at: 0, kind: 'grow', art: artOf('adult', 'cheer'), caption: growLine(f.petName), approx: true })
+  if (f.stage !== 'egg') out.push({ id: albumId.hatch, at: 0, kind: 'hatch', art: artOf('baby', 'cheer', f.species), caption: hatchLine(f.petName), approx: true })
+  if (f.stage === 'adult') out.push({ id: albumId.grow, at: 0, kind: 'grow', art: artOf('adult', 'cheer', f.species), caption: growLine(f.petName), approx: true })
   for (const id of f.tricks) {
     const def = trickOf(id)
     if (!def) continue
-    out.push({ id: albumId.trick(id), at: 0, kind: 'trick', art: artOf(f.stage, TRICK_POSE[id] ?? 'happy'), caption: trickCardLine(f.petName, def.name), approx: true })
+    out.push({ id: albumId.trick(id), at: 0, kind: 'trick', art: artOf(f.stage, TRICK_POSE[id] ?? 'happy', f.species), caption: trickCardLine(f.petName, def.name), approx: true })
   }
   for (const c of f.chapters) {
-    out.push({ id: albumId.chapter(c.id), at: c.at ?? 0, kind: 'chapter', art: artOf(f.stage, 'cheer'), caption: chapterLine(c.name), ...(c.at === undefined ? { approx: true } : {}) })
+    out.push({ id: albumId.chapter(c.id), at: c.at ?? 0, kind: 'chapter', art: artOf(f.stage, 'cheer', f.species), caption: chapterLine(c.name), ...(c.at === undefined ? { approx: true } : {}) })
   }
   if (f.firstHat) {
     const hat = hatOf(f.firstHat.id)
@@ -71,7 +75,7 @@ export function expectedCards(f: AlbumFacts): AlbumCard[] {
         id: albumId.hat,
         at: f.firstHat.at ?? 0,
         kind: 'hat',
-        art: artOf(f.stage, 'happy'),
+        art: artOf(f.stage, 'happy', f.species),
         caption: firstHatLine(f.petName, hat.name),
         hat: hat.id,
         ...(f.firstHat.at === undefined ? { approx: true } : {}),
@@ -122,10 +126,11 @@ export function albumDateText(card: Pick<AlbumCard, 'at' | 'approx'>): string {
   return `${d.getMonth() + 1}月${d.getDate()}日`
 }
 
-/** 從卡片的圖名取出階段與姿勢（pet-adult-cheer → adult / cheer） */
-export function parseCardArt(art: string): { stage: 'baby' | 'adult'; pose: string } {
-  const m = /^pet-(baby|adult)-(.+)$/.exec(art)
-  return { stage: (m?.[1] as 'baby' | 'adult') ?? 'adult', pose: m?.[2] ?? 'happy' }
+/** 從卡片的圖名取出物種、階段與姿勢（pet-adult-cheer → monkey / adult / cheer；pet-rabbit-baby-happy → rabbit / baby / happy） */
+export function parseCardArt(art: string): { species: Species; stage: 'baby' | 'adult'; pose: string } {
+  const p = parsePetArt(art)
+  if (!p || p.stage === 'egg') return { species: p?.species ?? 'monkey', stage: 'adult', pose: 'happy' }
+  return { species: p.species, stage: p.stage, pose: p.pose }
 }
 
 /** 還沒給孩子看的卡（首頁依序跳出來） */

@@ -23,6 +23,7 @@ import { Modal } from '../components/Modal'
 import { artEmoji } from './adventure/EnglishView'
 import '../meta.css'
 import './adventure/adventure-v7.css'
+import { useSpeciesName } from '../species'
 
 /** 沒有素材時的備援 emoji（朋友 id → emoji）；沒有的再退回 artEmoji（obj-*、food-*、decor-*） */
 const FRIEND_EMOJI: Record<string, string> = {
@@ -68,6 +69,7 @@ function nextGoal(level: Familiarity, st: FriendStat | undefined): string {
  * 點一下放大並唸中文名字（有英文的接著唸英文）；每認識一批朋友，阿悟送一份禮物；章節挑戰徽章也放在這裡。
  */
 export function FriendsScreen({ onBack }: { onBack: () => void }) {
+  const petName = useSpeciesName()
   const { voiceOn } = useLearningSettings()
   const stats = useLiveQuery(() => repo.friendStats(), [], undefined)
   const badges = useLiveQuery(() => repo.listChapterBadges(), [], [])
@@ -92,7 +94,7 @@ export function FriendsScreen({ onBack }: { onBack: () => void }) {
       <ScreenHeader title="我認識的朋友" onBack={onBack} />
       <p className="friends-progress" data-testid="friends-progress">
         認識 {n} / {FRIENDS.length} 個朋友
-        <small>{n >= FRIENDS.length ? '全部都認識了！' : `再認識 ${toNext} 個新朋友，阿悟就送你禮物`}</small>
+        <small>{n >= FRIENDS.length ? '全部都認識了！' : `再認識 ${toNext} 個新朋友，${petName}就送你禮物`}</small>
       </p>
       {badges.length > 0 && (
         <ul className="q7-badges" data-testid="chapter-badges" aria-label="章節徽章">

@@ -13,13 +13,14 @@ import { Modal } from '../components/Modal'
 import { ScreenHeader } from '../components/Header'
 import type { Screen } from '../App'
 import '../wardrobe.css'
+import { speciesName } from '../../domain/species'
 
 /** 成長相簿：翻閱阿悟的回憶卡。點一張放大，並唸出那一句話 */
 export function AlbumScreen({ onBack, go }: { onBack: () => void; go?: (s: Screen) => void }) {
   const { voiceOn } = useLearningSettings()
   const cards = useLiveQuery(() => repo.getAlbum(), [], undefined)
   const pet = useLiveQuery(() => db.pets.get('pet'), [])
-  const petName = pet?.name ?? '阿悟'
+  const petName = pet?.name ?? speciesName(pet?.species)
   const [view, setView] = useState<AlbumCard | null>(null)
   const open = (c: AlbumCard) => {
     setView(c)
@@ -36,7 +37,7 @@ export function AlbumScreen({ onBack, go }: { onBack: () => void; go?: (s: Scree
       ) : (
         <p className="al-progress" data-testid="album-count">
           {`${petName}的 ${list.length} 張回憶卡`}
-          <small>點一張卡片，聽阿悟說那一天的事</small>
+          <small>點一張卡片，聽{speciesName(pet?.species)}說那一天的事</small>
         </p>
       )}
       <ul className="al-grid">

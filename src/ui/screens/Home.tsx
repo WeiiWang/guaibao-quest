@@ -26,6 +26,7 @@ import { HAT_IDS, hatEggLine, hatOf, hatOffLine, hatWearLine } from '../../domai
 import { isTrickId, type TrickId } from '../../domain/tricks'
 import '../meta.css'
 import { usePetFace } from '../components/PetSprite'
+import { speciesEmoji } from '../../domain/species'
 import { useBalance, useCelebrate, useToast } from '../hooks'
 import { PersonSwitch } from '../../profiles/PersonSwitch'
 import type { Screen } from '../App'
@@ -45,7 +46,7 @@ function Avatar({ pet, now }: { pet: Pet; now: number }) {
   const face = usePetFace(pet, moodAt(pet, now))
   return (
     <PersonSwitch pet={pet}>
-      {face ? <Art name={face} className="avatar-img" /> : <span className="avatar-emoji">🐵</span>}
+      {face ? <Art name={face} className="avatar-img" /> : <span className="avatar-emoji">{speciesEmoji(pet.species)}</span>}
     </PersonSwitch>
   )
 }
@@ -120,7 +121,7 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
       await repo.syncTricks()
       // v7.3：孵化門檻降到 6 / 長大門檻 66：舊存檔 feedCount 已經夠了但還沒孵 / 長 → 進首頁時補上並播慶祝
       const grown = await repo.syncGrowth(now)
-      if (grown) celebrateGrowth({ petName: grown.pet.name, from: grown.from, to: grown.evolvedTo, feedCount: grown.pet.feedCount })
+      if (grown) celebrateGrowth({ petName: grown.pet.name, species: grown.pet.species, from: grown.from, to: grown.evolvedTo, feedCount: grown.pet.feedCount })
       await repo.syncAlbum(now) // v6：成長相簿：補建舊里程碑、新增剛發生的（排在最後，獎勵才會依序出現）
     })()
     // now 每 15 秒變一次；只在日期變動時重新檢查

@@ -7,6 +7,7 @@ import { WELCOME_REF } from '../domain/points'
 import type { AlbumCard, Gift } from '../domain/types'
 import * as album from './album'
 import type { GuaibaoDB } from './db'
+import { petArt, type Species } from '../domain/species'
 import { queueGifts } from './meta'
 
 const SETTINGS_ID = 'main'
@@ -46,7 +47,7 @@ const itemName = (id: string): string => SHOP_ITEMS.find((i) => i.id === id)?.na
  * 成長里程碑：幼體到成體的路上，餵食次數每跨過 40、60 送一份小禮物（沒有的小擺飾 / 壁紙 / 地板，都有了就送蛋糕），
  * 並新增一張回憶卡。在 feedPet 的交易裡呼叫（交易要包含 inventory、settings）。回傳這次新增的回憶卡
  */
-export async function awardMilestones(d: GuaibaoDB, petName: string, before: number, after: number, now: number): Promise<AlbumCard[]> {
+export async function awardMilestones(d: GuaibaoDB, petName: string, before: number, after: number, now: number, species?: Species): Promise<AlbumCard[]> {
   const crossed = milestonesCrossed(before, after)
   if (crossed.length === 0) return []
   const s = await d.settings.get(SETTINGS_ID)
@@ -65,7 +66,7 @@ export async function awardMilestones(d: GuaibaoDB, petName: string, before: num
       id: albumId.milestone(t),
       at: now,
       kind: 'milestone',
-      art: 'pet-baby-cheer',
+      art: petArt(species, 'baby', 'cheer'), // v7.5：依物種（猴子維持 pet-baby-cheer）
       caption: `${petName}又長大一點了！送你${itemName(r.itemId)}`,
       reward: r.itemId,
       fresh: true,

@@ -317,3 +317,44 @@ describe('db 代理（切換目前孩子）', () => {
     }
   })
 })
+
+describe('v7.5 新建孩子選寵物；舊存檔仍是阿悟', () => {
+  it('舊玩家（Pet 沒有 species）升級後仍是猴子阿悟，資料不被改寫', async () => {
+    const old = await seedLegacyPlayer({ name: '小明' })
+    await mgr.bootstrap()
+    const pet = await old.db.pets.get('pet')
+    expect(pet && 'species' in pet).toBe(false)
+    const { speciesOf } = await import('../domain/species')
+    expect(speciesOf(pet)).toBe('monkey')
+  })
+  it('第一個孩子選兔兔：名字固定是兔兔、存 species、頭像是兔子', async () => {
+    const r = await mgr.setupFirstChild({ pin: '1234', childName: '小花', species: 'rabbit' })
+    expect(r.ok).toBe(true)
+    if (!r.ok) return
+    const pet = await mgr.repoFor(r.child.dbName).db.pets.get('pet')
+    expect(pet).toMatchObject({ name: '兔兔', species: 'rabbit', stage: 'egg' })
+    expect(r.child.avatar).toBe('🐰')
+  })
+  it('家長區新增孩子選虎虎；沒選（猴子）不寫 species 欄位，跟舊存檔一樣', async () => {
+    await seedLegacyPlayer({ name: '大寶' })
+    await mgr.bootstrap()
+    const t = await mgr.addChild({ name: '二寶', species: 'tiger' })
+    expect(t.ok).toBe(true)
+    if (!t.ok) return
+    expect(await mgr.repoFor(t.child.dbName).db.pets.get('pet')).toMatchObject({ name: '虎虎', species: 'tiger' })
+    const m = await mgr.addChild({ name: '三寶' })
+    expect(m.ok).toBe(true)
+    if (!m.ok) return
+    const pet = await mgr.repoFor(m.child.dbName).db.pets.get('pet')
+    expect(pet?.name).toBe('阿悟')
+    expect(pet && 'species' in pet).toBe(false)
+  })
+  it('重設後重建（onboardExisting）也能選', async () => {
+    const r = await mgr.setupFirstChild({ pin: '1234', childName: '小花' })
+    if (!r.ok) throw new Error(r.error)
+    await mgr.repoFor(r.child.dbName).db.pets.clear()
+    await mgr.repoFor(r.child.dbName).db.settings.clear()
+    expect((await mgr.onboardExisting(r.child.id, { childName: '小花', species: 'tiger' })).ok).toBe(true)
+    expect(await mgr.repoFor(r.child.dbName).db.pets.get('pet')).toMatchObject({ name: '虎虎', species: 'tiger' })
+  })
+})

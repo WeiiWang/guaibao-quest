@@ -6,6 +6,8 @@ import { MATERIAL_NAMES } from '../../learning/types'
 import type { MaterialId } from '../../learning/types'
 import { Icon } from '../components/Icon'
 import { stickerEmoji } from '../screens/coloring/stickers'
+import { artForSpecies, type Species } from '../../domain/species'
+import { useSpecies } from '../species'
 import { flyOne, iconNode } from '../fly'
 import { playSfx } from '../../learning/sfx'
 import '../j74.css'
@@ -17,7 +19,7 @@ const HOLD = 600
 const FLY_GAP = 120
 const FLY_MS = 780
 
-const artOf = (it: RevealItem): { name: string; emoji: string; label: string } => {
+const artOf = (it: RevealItem, species: Species): { name: string; emoji: string; label: string } => {
   switch (it.kind) {
     case 'star':
       return { name: 'ui-star', emoji: '⭐', label: '星星' }
@@ -25,8 +27,11 @@ const artOf = (it: RevealItem): { name: string; emoji: string; label: string } =
       return { name: `food-${it.ref}`, emoji: FOOD_EMOJI[it.ref ?? ''] ?? '🎁', label: SHOP_ITEMS.find((i) => i.id === it.ref)?.name ?? '食物' }
     case 'material':
       return { name: `mat-${it.ref}`, emoji: MAT_EMOJI[it.ref ?? ''] ?? '🎁', label: MATERIAL_NAMES[it.ref as MaterialId] ?? '材料' }
-    default:
-      return { name: it.ref ?? 'ui-star', emoji: stickerEmoji(it.ref ?? '') ?? '⭐', label: '貼紙' }
+    default: {
+      // v7.5：寵物貼紙依目前孩子的物種顯示
+      const name = it.ref ? artForSpecies(it.ref, species) : 'ui-star'
+      return { name, emoji: stickerEmoji(name) ?? '⭐', label: '貼紙' }
+    }
   }
 }
 
@@ -39,7 +44,7 @@ const targetOf = (it: RevealItem): Element | null => {
 
 function Chip({ item, index, from, reduced, soundOn }: { item: RevealItem; index: number; from: DOMRect | null; reduced: boolean; soundOn: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
-  const art = artOf(item)
+  const art = artOf(item, useSpecies())
   const [val, setVal] = useState(reduced ? item.qty : item.qty > 1 ? 0 : item.qty)
   const [shown, setShown] = useState(reduced)
   const delay = reduced ? 0 : index * STEP
@@ -105,6 +110,7 @@ interface Props {
  * 不擋操作（pointer-events: none）；減少動態效果時全部直接顯示再飛走。
  */
 export function GiftReveal({ items, from, soundOn, onDone }: Props) {
+  const species = useSpecies()
   const reduced = useMemo(() => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches, [])
   const rowRef = useRef<HTMLDivElement>(null)
   const [gone, setGone] = useState(false)
@@ -123,7 +129,7 @@ export function GiftReveal({ items, from, soundOn, onDone }: Props) {
       const chips = [...row.querySelectorAll<HTMLElement>('.j74-chip')]
       const flights = chips.map((el, i) => {
         const rect = el.getBoundingClientRect()
-        const art = artOf(items[i])
+        const art = artOf(items[i], species)
         const px = Math.min(72, rect.width)
         el.style.visibility = 'hidden'
         return flyOne({ rect: { left: rect.left + rect.width / 2 - px / 2, top: rect.top + rect.height / 2 - px / 2, width: px, height: px }, node: iconNode(art.name, art.emoji, px) }, targetOf(items[i]), { delay: i * FLY_GAP, duration: FLY_MS })
@@ -137,7 +143,7 @@ export function GiftReveal({ items, from, soundOn, onDone }: Props) {
       alive = false
       window.clearTimeout(t)
     }
-  }, [items, reduced])
+  }, [items, reduced, species])
 
   return (
     <div className={`j74-reveal ${gone ? 'gone' : ''}`} data-testid="gift-reveal" data-count={items.length} aria-hidden>

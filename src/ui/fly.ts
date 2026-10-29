@@ -1,4 +1,5 @@
 import { peekArt } from './artProbe'
+import { artFallbacks } from '../domain/species'
 
 /**
  * 獲得星星 / 材料時，把物件「飛進」貨幣膠囊，到達時膠囊跳一下。
@@ -29,9 +30,11 @@ export interface FlySource {
 export function iconNode(name: string, emoji: string, px: number): HTMLElement {
   const box = document.createElement('span')
   box.style.cssText = `display:grid;place-items:center;width:${px}px;height:${px}px;font-size:${px * 0.78}px;line-height:1`
-  if (peekArt(name) === 'ok') {
+  // v7.5：兔兔、虎虎的寵物圖缺的時候用猴子的同一張，再退回 emoji
+  const shown = artFallbacks(name).find((n) => peekArt(n) === 'ok')
+  if (shown) {
     const img = document.createElement('img')
-    img.src = `${import.meta.env.BASE_URL}art/${name}.png`
+    img.src = `${import.meta.env.BASE_URL}art/${shown}.png`
     img.alt = ''
     img.style.cssText = 'width:100%;height:100%;object-fit:contain'
     box.appendChild(img)

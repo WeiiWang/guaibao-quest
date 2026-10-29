@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import type { AgeBand } from '../domain/types'
 import { AGE_BANDS, AGE_LABEL } from '../learning/profile'
+import { DEFAULT_SPECIES, speciesName, speciesOf, type Species } from '../domain/species'
+import { SpeciesPicker } from '../ui/components/SpeciesPicker'
 import { Modal } from '../ui/components/Modal'
 import { PinPad } from '../ui/components/PinPad'
 import { useToast } from '../ui/hooks'
@@ -39,17 +41,19 @@ export function ChildrenManager() {
   const [adding, setAdding] = useState(false)
   const [editing, setEditing] = useState<ChildProfile | null>(null)
   const [deleting, setDeleting] = useState<ChildProfile | null>(null)
+  // v7.5：要刪掉的孩子養的是哪一隻（刪除警告寫寵物的名字）
+  const deletingSpecies = useLiveQuery(async () => (deleting ? speciesOf(await profiles.deps.openDb(deleting.dbName).pets.get('pet')) : DEFAULT_SPECIES), [deleting?.dbName])
 
   const [name, setName] = useState('')
   const [age, setAge] = useState<AgeBand | undefined>(undefined)
-  const [petName, setPetName] = useState('')
+  const [species, setSpecies] = useState<Species>(DEFAULT_SPECIES)
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
 
   const openAdd = () => {
     setName('')
     setAge(undefined)
-    setPetName('')
+    setSpecies(DEFAULT_SPECIES)
     setErr('')
     setAdding(true)
   }
@@ -62,7 +66,7 @@ export function ChildrenManager() {
 
   const submitAdd = async () => {
     setBusy(true)
-    const r = await profiles.addChild({ name, ageBand: age, petName })
+    const r = await profiles.addChild({ name, ageBand: age, species })
     setBusy(false)
     if (!r.ok) return setErr(r.error)
     setAdding(false)
@@ -83,11 +87,12 @@ export function ChildrenManager() {
 
   if (!list) return null
   const onlyOne = list.length <= 1
+  const deletingPet = speciesName(deletingSpecies)
 
   return (
     <div className="card" data-testid="children-card">
       <h2>孩子們</h2>
-      <p className="lt-text">每個孩子有自己的阿悟、房間、星星和學習進度；家長 PIN 全家共用。</p>
+      <p className="lt-text">每個孩子有自己的寵物、房間、星星和學習進度；家長 PIN 全家共用。</p>
       <ul className="kid-list">
         {list.map((c) => (
           <li key={c.id} className="kid-row" data-testid="kid-row" data-child-id={c.id}>
@@ -131,10 +136,11 @@ export function ChildrenManager() {
               年齡
               <AgeChoices value={age} onChange={setAge} />
             </div>
-            <label className="field">
-              寵物的名字
-              <input className="input" data-testid="kid-pet" value={petName} maxLength={10} placeholder="阿悟" onChange={(e) => setPetName(e.target.value)} />
-            </label>
+            {/* v7.5：新孩子選寵物（阿悟、兔兔、虎虎，名字固定）；建立之後不能換，所以「改名/年齡」裡沒有這一項 */}
+            <div className="field">
+              寵物（建立後不能換）
+              <SpeciesPicker value={species} onChange={setSpecies} compact />
+            </div>
             {err && <p className="form-msg warn" role="alert">{err}</p>}
             <button className="btn primary" type="submit" data-testid="kid-add-submit" disabled={busy || !name.trim()}>
               新增
@@ -177,7 +183,7 @@ export function ChildrenManager() {
       {deleting && (
         <Modal title={`刪除 ${deleting.name}？`} onClose={() => setDeleting(null)}>
           <p className="kid-warn" data-testid="kid-delete-warning">
-            這個孩子的阿悟和進度都會刪掉，無法復原。
+            這個孩子的{deletingPet}和進度都會刪掉，無法復原。
           </p>
           <PinPad
             label="輸入家長 PIN 確認刪除"

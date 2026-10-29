@@ -40,6 +40,9 @@ import './adventure-v4.css'
 import './adventure-v5.css'
 import './adventure-v7.css'
 import './adventure-h74.css'
+import { forSpecies } from '../../../learning/speciesLines'
+import { nameText, speciesName } from '../../../domain/species'
+import { useSpecies } from '../../species'
 
 const AUTO_NEXT_MS = 1600
 /** 食物 id 對應 lines.ts 的 ui.gift.food 句子順序（和 domain/giftLines.ts 的 GIFT_FOOD_PHRASE 同順序） */
@@ -84,6 +87,9 @@ interface Props {
 
 /** 關卡答題畫面：一站 5 題，混合三種技能 */
 export function StageScreen({ chapterId, station, onExit, onNextStation, onCeremony }: Props) {
+  // v7.5：陪你冒險的是孩子自己的寵物（名字句、畫面文字都用它的名字）
+  const species = useSpecies()
+  const petName = speciesName(species)
   // 一般的一站，或每日冒險（chapterId = daily:<科目>）
   const info = useMemo(() => resolveStage(chapterId, station, localDateStr(clockNow())), [chapterId, station])
   const def = info?.def
@@ -286,7 +292,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
         ? pickLine('companion.combo5', rnd)
         : independent && streak.current === 3
           ? pickLine('companion.combo3', rnd)
-          : pickLine(profile.gentle ? 'praise.gentle' : 'praise', rnd)
+          : forSpecies(pickLine(profile.gentle ? 'praise.gentle' : 'praise', rnd), species)
     setPraise(l.text)
     playSfx('correct', soundOn)
     say(l.key, l.text, { enabled: voiceOn })
@@ -326,7 +332,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
       sayChain(stage === 2 && !profile.gentle ? englishAnswerParts(q) : englishHintParts(q, profile.gentle), { enabled: voiceOn })
     } else if (profile.gentle) {
       if (hintDriven(q)) {
-        const l = pickLine('gentle.wrong', Math.floor(Math.random() * 3))
+        const l = forSpecies(pickLine('gentle.wrong', Math.floor(Math.random() * 3)), species)
         say(l.key, l.text, { enabled: voiceOn })
       } else say(q.kid ? `${gentleHintKey(q.id)}.kid` : gentleHintKey(q.id), gentleHintText(q.hint), { enabled: voiceOn })
     } else if (stage === 1) {
@@ -361,7 +367,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
         : feel ?? (hintStage === 2 ? 'shy' : hintStage === 1 ? 'think' : 'idle')
 
   // ---- 教學示範：練習題（不計分）----
-  const tutorialQ = useMemo(() => (intro ? tutorialQuestion(intro) : null), [intro])
+  const tutorialQ = useMemo(() => (intro ? tutorialQuestion(intro, petName) : null), [intro, petName])
   const finishTutorial = (skip = false) => {
     if (!intro) return
     setIntroPhase('done')
@@ -396,7 +402,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   const askLeave = () => {
     if (!plan || result) return onExit()
     setLeaving(true)
-    const l = pickLine('leave.ask')
+    const l = forSpecies(pickLine('leave.ask'), species)
     say(l.key, l.text, { enabled: voiceOn })
   }
   const stayHere = () => {
@@ -437,10 +443,10 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
           )}
           <Companion pose={pose} size="clamp(92px, 15dvh, 140px)" className="adv-result-pet" />
           <h1>{challenge ? '挑戰完成了！' : daily ? '今日冒險完成了！' : isReplay ? `第 ${station} 站，再玩一次完成了！` : `第 ${station} 站過關了！`}</h1>
-          <p className="adv-sub">{challenge ? `${info.chapterName}・挑戰站` : daily ? `${info.chapterName}・5 題新題目` : isReplay ? `${info.chapterName}・${def.name}・換新的題目` : `${info.chapterName}・${def.name}`}</p>
+          <p className="adv-sub">{challenge ? `${info.chapterName}・挑戰站` : daily ? `${info.chapterName}・5 題新題目` : isReplay ? `${info.chapterName}・${nameText(def.name, species)}・換新的題目` : `${info.chapterName}・${nameText(def.name, species)}`}</p>
           <p className="adv-sub adv-wrapup" data-testid="wrapup">{pickLine(def.kind === 'boss' ? 'companion.boss.done' : 'companion.wrapup', station).text}</p>
           <div className={`q7-loot ${result.qty > 0 ? '' : 'h74-solo'}`}>
-            <section className="q7-loot-col" aria-label={`阿悟撿到${foodSummary}`} data-testid="result-food">
+            <section className="q7-loot-col" aria-label={`${petName}撿到${foodSummary}`} data-testid="result-food">
               <div className="q7-loot-icons q7-food-icons">
                 {result.foods.map((f, i) => (
                   <span key={i} className="q7-food" data-testid="result-food-item" data-food={f} style={{ animationDelay: `${foodDelay + i * 0.45}s` }}>
@@ -449,7 +455,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
                 ))}
               </div>
               <p className="q7-loot-text" data-testid="food-text">
-                阿悟撿到 {foodSummary}
+                {petName}撿到 {foodSummary}
               </p>
             </section>
             {result.qty > 0 && (
@@ -479,8 +485,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
               : result.independent >= result.total
                 ? `${result.total} 題都是自己想出來的，好厲害！`
                 : result.independent === 0
-                  ? `跟阿悟一起想出 ${result.total} 題，好棒！`
-                  : `自己想出 ${result.independent} 題，跟阿悟一起想出 ${together} 題！`}
+                  ? `跟${petName}一起想出 ${result.total} 題，好棒！`
+                  : `自己想出 ${result.independent} 題，跟${petName}一起想出 ${together} 題！`}
           </p>
           {result.badge && (
             <div className="daily-got" data-testid={challenge ? 'challenge-badge' : 'daily-badge'}>
@@ -508,7 +514,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
       <header className="adv-top">
         <button className="adv-btn small" onClick={askLeave} aria-label="離開關卡" data-testid="leave">←<span className="adv-leave-label"> 離開</span></button>
         {def.kind === 'boss' ? (
-          <div className="boss-bar" role="progressbar" aria-valuemin={0} aria-valuemax={plan?.length ?? STATION_SIZE} aria-valuenow={Math.min(idx + (solved ? 1 : 0), STATION_SIZE)} aria-label={`${def.name}的進度`} data-testid="boss-bar">
+          <div className="boss-bar" role="progressbar" aria-valuemin={0} aria-valuemax={plan?.length ?? STATION_SIZE} aria-valuenow={Math.min(idx + (solved ? 1 : 0), STATION_SIZE)} aria-label={`${nameText(def.name, species)}的進度`} data-testid="boss-bar">
             <i style={{ width: `${(Math.min(idx + (solved ? 1 : 0), plan?.length ?? STATION_SIZE) / (plan?.length ?? STATION_SIZE)) * 100}%` }} />
           </div>
         ) : (
@@ -535,7 +541,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
         </div>
       )}
 
-      {!plan && !error && <p className="adv-loading">阿悟正在準備題目…</p>}
+      {!plan && !error && <p className="adv-loading">{petName}正在準備題目…</p>}
 
       {q && (
         <section className={`adv-board ${solved && combo >= 2 ? 'combo-glow' : ''}`} data-combo={solved && combo >= 2 ? combo : undefined}>
@@ -564,7 +570,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
             {hintStage > 0 && !solved && !intro && <p className="adv-prompt-keep">{q.prompt}</p>}
             {intro && tutorialQ ? (
               <div className="tutorial" data-testid="tutorial" data-kind={intro} data-phase={introPhase}>
-                <p className="tutorial-tag">阿悟教你</p>
+                <p className="tutorial-tag">{petName}教你</p>
                 {intro === 'tapN' ? (
                   <GiveView
                     key="tutorial-give"
@@ -640,7 +646,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
           <div className="leave-card">
             <Companion pose="think" size={110} />
             <h2>要先休息一下嗎？</h2>
-            <p>阿悟會記得你玩到哪裡喔。</p>
+            <p>{petName}會記得你玩到哪裡喔。</p>
             <div className="leave-actions">
               <button className="adv-btn primary big" onClick={stayHere} data-testid="leave-stay" autoFocus>
                 繼續玩

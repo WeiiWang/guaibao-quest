@@ -3,6 +3,7 @@
 //
 // 句子分兩種語言，各自一份清單（英文要用英文聲音另外生成）：
 //   中文（zh-TW）：題庫 JSON（題目、提示、逐個唸的詞；英文科目的中文旁白也在這裡）+ src/learning/lines.ts 的固定台詞與數字
+//                 + v7.5 物種版本（<key>@rabbit、<key>@tiger，見 src/learning/speciesLines.ts）
 //   英文（en-US）：src/learning/english.ts 的英文單字，key 是 en.<word>，文字就是單字本身
 //
 // 用法：
@@ -24,8 +25,11 @@ const bank = ['number', 'classify', 'pattern', 'measure', 'space', 'observe', 'e
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
 const { feedbackLines } = await vite.ssrLoadModule('/src/learning/feedbackLines.ts')
 const { playLines } = await vite.ssrLoadModule('/src/learning/playLines.ts') // v7.4 線 K：朋友作客與阿悟小願望（每個朋友一句）
+// v7.5 線 L：兔兔、虎虎的版本（key 加 @rabbit / @tiger）：寵物台詞文字不變（各自的寵物聲），名字句換成兔兔、虎虎（媽媽聲）；猴子維持原 key 與原文字
+const { speciesLines } = await vite.ssrLoadModule('/src/learning/speciesLines.ts')
 await vite.close()
-const zh = Object.fromEntries(Object.entries({ ...allLines(bank), ...feedbackLines(), ...playLines() }).sort(([a], [b]) => a.localeCompare(b)))
+const base = { ...allLines(bank), ...feedbackLines(), ...playLines() }
+const zh = Object.fromEntries(Object.entries({ ...base, ...speciesLines(base) }).sort(([a], [b]) => a.localeCompare(b)))
 const en = englishLines()
 const fmt = (o) => `${JSON.stringify(o, null, 2)}\n`
 

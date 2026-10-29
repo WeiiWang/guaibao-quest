@@ -1,6 +1,7 @@
 // v6 線 C：成長相簿與帽子衣櫃的資料操作。和 meta.ts 一樣是「給 db 的函式」，由 repo.ts 的薄薄一層方法呼叫。
 // 卡片存在 settings.album、戴著哪頂存在 pet.hat、擁有紀錄用 inventory，全部是 optional 欄位，不升 Dexie 版本。
 import { albumId, expectedCards, missingCards } from '../domain/album'
+import type { Species } from '../domain/species'
 import { canWearHat, HAT_IDS, isHatId } from '../domain/hats'
 import type { AlbumCard, Stage } from '../domain/types'
 import { getChapter } from '../learning/chapter'
@@ -62,9 +63,9 @@ export async function addCards(d: GuaibaoDB, cards: AlbumCard[]): Promise<AlbumC
 }
 
 /** 孵化 / 長大的當下：寫進一張新卡（feedPet 的交易裡呼叫；交易要包含 settings） */
-export async function addGrowthCard(d: GuaibaoDB, petName: string, evolvedTo: Stage, now: number): Promise<AlbumCard[]> {
+export async function addGrowthCard(d: GuaibaoDB, petName: string, evolvedTo: Stage, now: number, species?: Species): Promise<AlbumCard[]> {
   // 從蛋一路跳到成猴（極少見）時，孵化那張也一起補上；已經有的 id 會被 missingCards 略過
-  const exp = expectedCards({ petName, stage: evolvedTo, tricks: [], chapters: [] }).filter((c) => c.id === albumId.hatch || c.id === albumId.grow)
+  const exp = expectedCards({ petName, species, stage: evolvedTo, tricks: [], chapters: [] }).filter((c) => c.id === albumId.hatch || c.id === albumId.grow)
   const s = await d.settings.get(SETTINGS_ID)
   return addCards(d, missingCards(s?.album ?? [], exp, now, 'event'))
 }
@@ -97,7 +98,7 @@ export async function syncAlbum(d: GuaibaoDB, now: number, forceBackfill = false
       // 買過又退回的帽子不算第一頂：以現在還擁有的為準
       if (!owned.includes(firstHat.id)) firstHat = { id: owned[0], at: buys.find((b) => b.refId === owned[0])?.at }
     }
-    const exp = expectedCards({ petName: pet.name, stage: pet.stage, tricks: pet.tricks ?? [], chapters, firstHat })
+    const exp = expectedCards({ petName: pet.name, species: pet.species, stage: pet.stage, tricks: pet.tricks ?? [], chapters, firstHat })
     const add = missingCards(s.album ?? [], exp, now, backfill ? 'backfill' : 'sync')
     if (add.length === 0 && s.albumInit) return []
     await d.settings.update(SETTINGS_ID, { album: [...(s.album ?? []), ...add], albumInit: true })

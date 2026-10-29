@@ -22,7 +22,7 @@ export function Celebration({ info, onClose }: { info: CelebrateInfo; onClose: (
   const hatched = info.to === 'baby'
   const text = hatched ? `哇！${info.petName}孵出來了！` : `${info.petName}長大了！`
   const stage = phase === 'new' ? info.to : info.from
-  const pet = { stage, feedCount: phase === 'new' ? info.feedCount : Math.max(0, info.feedCount - 1), name: info.petName }
+  const pet = { stage, feedCount: phase === 'new' ? info.feedCount : Math.max(0, info.feedCount - 1), name: info.petName, species: info.species }
   return (
     <div className="celebrate" role="dialog" aria-modal="true" aria-label={text}>
       <div className={`celebrate-stage phase-${phase}`}>

@@ -286,10 +286,12 @@ try {
   // 相簿有卡片時不顯示空狀態
   {
     const { ctx, page } = await freshApp(browser, LAND, { stage: 'baby' })
-    // 先等首頁同步把孵化卡寫進相簿（albumInit），再直接去相簿頁；不然機器忙的時候會比同步先到
-    for (let i = 0; i < 40; i++) {
-      const init = await idb(page, (db) => new Promise((r) => (db.transaction('settings').objectStore('settings').get('main').onsuccess = (e) => r(!!e.target.result?.albumInit))))
-      if (init) break
+    // 先等首頁同步把孵化卡寫進相簿，再直接去相簿頁；不然機器忙的時候會比同步先到。
+    // 不能只看 albumInit：freshApp 在 reload 前（還是蛋的時候）那一次同步就寫了 albumInit（沒有卡），
+    // reload 之後（幼體）這一串同步可能還沒跑到 syncAlbum，這時去相簿頁會把它打斷，相簿就永遠是空的
+    for (let i = 0; i < 50; i++) {
+      const hatched = await idb(page, (db) => new Promise((r) => (db.transaction('settings').objectStore('settings').get('main').onsuccess = (e) => r((e.target.result?.album ?? []).some((c) => c.id === 'hatch')))))
+      if (hatched) break
       await page.waitForTimeout(200)
     }
     await page.goto(`${BASE}/#album`)

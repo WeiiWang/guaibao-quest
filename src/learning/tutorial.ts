@@ -6,7 +6,8 @@ export const needsTutorial = (it: Interaction | undefined, seen: ReadonlySet<str
   !!it && TUTORIAL_INTERACTIONS.includes(it) && !seen.has(it)
 
 /** 教學用的練習題（不在題庫裡，id 以 tutorial- 開頭，不會被記錄） */
-export function tutorialQuestion(it: Interaction): Question {
+/** petName：v7.5 陪你冒險的寵物名字（「請拿一根香蕉給兔兔。」）；預設阿悟 */
+export function tutorialQuestion(it: Interaction, petName = '阿悟'): Question {
   if (it === 'tapN') {
     return {
       id: 'tutorial-tapN',
@@ -14,7 +15,7 @@ export function tutorialQuestion(it: Interaction): Question {
       difficulty: 1,
       type: 'give',
       interaction: 'tapN',
-      prompt: '請拿一根香蕉給阿悟。',
+      prompt: `請拿一根香蕉給${petName}。`,
       items: [],
       choices: [],
       answer: '1',

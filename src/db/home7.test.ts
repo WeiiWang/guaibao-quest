@@ -79,9 +79,20 @@ describe('成長里程碑（幼體到成體每餵 20 次）', () => {
     const card = s.album?.find((c) => c.id === 'milestone:26')
     expect(card).toMatchObject({ kind: 'milestone', reward: 'decor-ball', fresh: true })
     expect(card?.caption).toContain('長大一點')
+    expect(card?.art).toBe('pet-baby-cheer') // 舊存檔（猴子）維持原檔名
     await repo.feedPet('banana', T0 + 1)
     expect((await repo.db.inventory.get('decor-ball'))?.qty).toBe(1)
     expect((await repo.getSettings())!.album?.filter((c) => c.kind === 'milestone')).toHaveLength(1)
+  })
+  it('v7.5 虎虎：里程碑回憶卡用虎虎的圖、名字', async () => {
+    const pet = (await repo.db.pets.get('pet'))!
+    await repo.db.pets.put({ ...pet, species: 'tiger', name: '虎虎' })
+    await give('banana', 5)
+    await setFeed(25)
+    await repo.feedPet('banana', T0)
+    const card = (await repo.getSettings())!.album?.find((c) => c.id === 'milestone:26')
+    expect(card).toMatchObject({ art: 'pet-tiger-baby-cheer' })
+    expect(card?.caption).toContain('虎虎又長大一點了')
   })
   it('餵到 46 次：送壁紙；蛋與成體不送', async () => {
     await give('banana', 5)

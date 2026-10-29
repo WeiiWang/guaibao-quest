@@ -403,8 +403,10 @@ try {
   // =====================================================================
   {
     const { ctx, page, errors } = await freshApp(browser, SIZES.land)
-    // 先等開場那一串首頁同步跑完（最後一步會寫 albumInit），否則它可能在下面清掉相簿之後才寫回 albumInit，補建就變成「新增」
-    for (let i = 0; i < 40 && !(await settingsOf(page))?.albumInit; i++) await page.waitForTimeout(200)
+    // 先等開場那一串首頁同步跑完，否則它可能在下面清掉相簿之後才寫回 albumInit，補建就變成「新增」。
+    // 不能只看 albumInit：freshApp 在 reload 前（還是蛋的時候）那一次同步就已經寫了 albumInit，reload 之後的這一串可能還沒跑完；
+    // 成猴的「長大」卡是 reload 之後這一串的最後一步（syncAlbum）才補上的，等它出現才代表跑完了
+    for (let i = 0; i < 50 && !((await settingsOf(page))?.album ?? []).some((c) => c.id === 'grow'); i++) await page.waitForTimeout(200)
     // 模擬升級前的玩家：成猴、學過三招、通關過花果山、買過帽子，沒有相簿欄位
     await patchSettings(page, { homeGuideShown: true, album: undefined, albumInit: undefined })
     await patchPet(page, { tricks: ['count', 'tidy', 'flip'] })

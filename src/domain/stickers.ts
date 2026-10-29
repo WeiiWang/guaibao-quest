@@ -1,3 +1,5 @@
+import { artForSpecies, monkeyArtOf, parsePetArt, speciesBabyLabel, speciesEmoji, speciesName, type Species } from './species'
+
 /**
  * v7.4 I4：貼紙盤會成長。
  *
@@ -42,7 +44,26 @@ export const DEFAULT_STICKER_COUNT = 8
 export const DEFAULT_STICKERS: readonly string[] = STICKER_CATALOG.slice(0, DEFAULT_STICKER_COUNT).map((s) => s.art)
 
 export const stickerDef = (art: string): StickerDef | undefined => STICKER_CATALOG.find((s) => s.art === art)
-export const stickerEmoji = (art: string): string | undefined => stickerDef(art)?.emoji
+
+/**
+ * v7.5：貼紙盤裡的寵物貼紙依目前孩子的物種顯示（兔兔的孩子看到兔兔貼紙、貼上去的也是兔兔的圖）。
+ * 解鎖狀態（settings.stickers、stickersSeen）一律用目錄裡的猴子圖名記錄；已經貼在作品上的貼紙存的是當時的圖名，不會因此變樣。
+ */
+export function stickerForSpecies(def: StickerDef, species: Species): StickerDef {
+  if (species === 'monkey' || !parsePetArt(def.art)) return def
+  return {
+    art: artForSpecies(def.art, species),
+    emoji: def.emoji === '🐵' || def.emoji === '🐒' ? speciesEmoji(species) : def.emoji,
+    label: def.label.replaceAll(speciesName('monkey'), speciesName(species)).replaceAll(speciesBabyLabel('monkey'), speciesBabyLabel(species)),
+  }
+}
+/** 貼紙的備援 emoji：兔兔、虎虎的寵物貼紙（pet-rabbit-adult-happy…）對回目錄裡的同一張，再換成這個物種的 emoji */
+export const stickerEmoji = (art: string): string | undefined => {
+  const def = stickerDef(monkeyArtOf(art))
+  if (!def) return undefined
+  const p = parsePetArt(art)
+  return p ? stickerForSpecies(def, p.species).emoji : def.emoji
+}
 
 /** 作品裡出現過的貼紙素材名（去重）。works = 進行中的作品與畫廊作品 */
 export function usedStickerIds(works: readonly { stickers?: readonly { art: string }[] }[]): string[] {
@@ -56,13 +77,14 @@ export function usedStickerIds(works: readonly { stickers?: readonly { art: stri
  * 不在目錄裡的素材名忽略（舊資料或亂寫的）。
  */
 export function unlockedStickers(owned: readonly string[] | undefined, used: readonly string[] = []): StickerDef[] {
-  const open = new Set<string>([...DEFAULT_STICKERS, ...(owned ?? []), ...used])
+  // v7.5：作品裡的兔兔、虎虎貼紙算成目錄裡的同一張（猴子的圖名）
+  const open = new Set<string>([...DEFAULT_STICKERS, ...(owned ?? []), ...used.map(monkeyArtOf)])
   return STICKER_CATALOG.filter((s) => open.has(s.art))
 }
 
 /** 貼紙盤要標「新」的：已解鎖、不是預設、沒在 seen 裡、舊作也沒用過 */
 export function newStickerIds(owned: readonly string[] | undefined, seen: readonly string[] | undefined, used: readonly string[] = []): string[] {
-  const skip = new Set<string>([...DEFAULT_STICKERS, ...(seen ?? []), ...used])
+  const skip = new Set<string>([...DEFAULT_STICKERS, ...(seen ?? []).map(monkeyArtOf), ...used.map(monkeyArtOf)])
   return unlockedStickers(owned, []).filter((s) => !skip.has(s.art)).map((s) => s.art)
 }
 

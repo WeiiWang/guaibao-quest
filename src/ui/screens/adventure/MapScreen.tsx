@@ -25,6 +25,7 @@ import './adventure-v7.css'
 import './adventure-h74.css'
 import { Placement } from './Placement'
 import { readChapter, readSubject, writeChapter, writeSubject } from './subjectPref'
+import { usePetText } from '../../species'
 
 function emptyProgress(ch: ChapterDef): Progress {
   return {
@@ -80,6 +81,7 @@ const ROAD_PATH = smoothPath(POINTS)
  * 場景固定 16:9；窄螢幕時可左右捲動，並自動捲到目前這一站。
  */
 export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) => void }) {
+  const pt = usePetText()
   const toast = useToast()
   const [subjectId, setSubjectId] = useState<SubjectId>(readSubject)
   const subject = mustSubject(subjectId)
@@ -269,7 +271,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
                       else nudge(`s${s.index}`, '還沒到喔，先去前面的站')
                     }}
                     data-testid={`station-${s.index}`}
-                    aria-label={`第 ${s.index} 站 ${s.name}，${state === 'done' ? '已通關，可以再玩一次' : state === 'current' ? '出發' : '還沒解鎖'}`}
+                    aria-label={`第 ${s.index} 站 ${pt(s.name)}，${state === 'done' ? '已通關，可以再玩一次' : state === 'current' ? '出發' : '還沒解鎖'}`}
                   >
                     {state === 'locked' ? <Icon name="ui-lock" emoji="🔒" size="52%" /> : state === 'done' ? <span className="adv-check" aria-hidden>✓</span> : <span className="adv-num">{s.index}</span>}
                     {state === 'done' && (
@@ -279,7 +281,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
                     )}
                   </button>
                   <span className="adv-node-label">
-                    {s.name}
+                    {pt(s.name)}
                     {state === 'current' && <em> 出發！</em>}
                     {state === 'locked' && <em className="muted"> 還沒到</em>}
                     {st.done && <em className="muted"> 自己答對 {st.independent}/{st.total}</em>}
@@ -379,7 +381,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
             <div key={c.id} className="adv-soon h74-soon" data-testid="soon-item">
               <Icon name="ui-map" emoji="🧭" size={30} />
               <b>{c.name}</b>
-              <span>阿悟正在探路</span>
+              <span>{pt('阿悟正在探路')}</span>
             </div>
           ))}
         </div>

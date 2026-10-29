@@ -27,6 +27,9 @@ import { GalleryScreen } from './screens/Gallery'
 import { FriendsScreen } from './screens/Friends'
 import { AlbumScreen } from './screens/Album'
 import { HatPreview } from './screens/HatPreview'
+import { normSpecies, speciesOf, type Species } from '../domain/species'
+import { setVoiceSpecies } from '../learning/speech'
+import { SpeciesContext } from './species'
 import './ux.css'
 // v7.3 線 G：遊戲性與版面覆蓋規則，要在所有 adventure*.css 之後載入
 import './screens/adventure/adventure-v73.css'
@@ -48,7 +51,7 @@ export type Screen =
   | { name: 'gallery' }
   | { name: 'friends' }
   | { name: 'album' }
-  | { name: 'hatpreview'; hat: string }
+  | { name: 'hatpreview'; hat: string; species?: Species }
   | { name: 'backdrop'; hash: string }
 
 /** 兒童端畫面中，時間到會被鎖住的（學習與餵食）；任務、著色、家長區不鎖 */
@@ -62,7 +65,7 @@ function screenFromHash(): Screen {
   if (h === 'gallery') return { name: 'gallery' }
   if (h === 'friends') return { name: 'friends' }
   if (h === 'album') return { name: 'album' }
-  if (h.startsWith('hatpreview')) return { name: 'hatpreview', hat: `hat-${h.split('/')[1] ?? 'crown'}` }
+  if (h.startsWith('hatpreview')) return { name: 'hatpreview', hat: `hat-${h.split('/')[1] ?? 'crown'}`, species: normSpecies(h.split('/')[2]) }
   if (h.startsWith('backdrop')) return { name: 'backdrop', hash: h }
   return { name: 'home' }
 }
@@ -96,18 +99,26 @@ export function App() {
 /** 一個孩子的整個 App：資料庫已經切到他的檔案。資料是空的（重設之後）就走簡化 onboarding，不再問 PIN */
 function ChildApp({ child }: { child: ChildProfile }) {
   const settings = useLiveQuery(async () => ({ value: await db.settings.get('main') }), [])
-  if (!settings) return <div className="splash">載入中…</div>
+  // v7.5：這個孩子的寵物物種（舊存檔沒有 = 猴子）。回傳字串（不是物件），寵物資料常常更新時這裡不會跟著重畫整個 App
+  const species = useLiveQuery(async () => speciesOf(await db.pets.get('pet')), [])
+  // 語音挑檔在 render 時就設定：子元件 mount 時說的第一句也要用對的聲音
+  setVoiceSpecies(species)
+  if (!settings || !species) return <div className="splash">載入中…</div>
   if (!settings.value?.onboarded) {
     return (
       <Onboarding
         withPin={false}
         defaultName={child.name}
         defaultAge={child.ageBand}
-        onFinish={(i) => profiles.onboardExisting(child.id, { childName: i.childName, petName: i.petName, ageBand: i.ageBand })}
+        onFinish={(i) => profiles.onboardExisting(child.id, { childName: i.childName, species: i.species, ageBand: i.ageBand })}
       />
     )
   }
-  return <Main childName={settings.value.childName} />
+  return (
+    <SpeciesContext.Provider value={species}>
+      <Main childName={settings.value.childName} />
+    </SpeciesContext.Provider>
+  )
 }
 
 function Main({ childName }: { childName: string }) {
@@ -197,7 +208,7 @@ function Main({ childName }: { childName: string }) {
         body = <AlbumScreen onBack={home} go={go} />
         break
       case 'hatpreview':
-        body = <HatPreview hat={screen.hat} />
+        body = <HatPreview hat={screen.hat} species={screen.species} />
         break
       case 'backdrop': {
         const p = parseBackdropHash(screen.hash)

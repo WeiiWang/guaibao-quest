@@ -1,0 +1,31 @@
+/* v7.5 線 L：選寵物（新建孩子）與寵物缺圖時的 emoji 備援。class 一律 l75- 開頭 */
+.l75-onboard { display: grid; gap: 10px; }
+.l75-pick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; width: 100%; }
+.l75-pick-btn {
+  min-height: 168px; display: grid; grid-template-rows: 1fr auto; place-items: center; gap: 4px; padding: 10px 6px 12px;
+  border: 0; border-radius: 28px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  background: linear-gradient(180deg, #fff, var(--butter-soft, #fff3c4)); box-shadow: 0 6px 0 var(--butter-deep, #e8c66a), inset 0 2px 0 #fff;
+  font: inherit; font-weight: 900; color: var(--ink, #4a3b35); transition: transform 0.12s;
+}
+.l75-pick-btn:active { transform: translateY(5px) scale(0.96); box-shadow: 0 1px 0 var(--butter-deep, #e8c66a); }
+.l75-pick-btn.on { background: linear-gradient(180deg, #fff, var(--mint-soft, #d8f5e8)); box-shadow: 0 0 0 5px var(--mint-deep, #4fb58f), 0 6px 0 var(--mint-deep, #4fb58f); }
+.l75-pick-btn:focus-visible { outline: 4px solid var(--sky-deep, #4a90d9); outline-offset: 3px; }
+.l75-pick-art { width: 100%; height: 112px; object-fit: contain; }
+.l75-pick-art.art-emoji { display: grid; place-items: center; }
+.l75-pick-name { font-size: 1.45rem; line-height: 1.1; }
+.l75-note { margin: 0; text-align: center; font-size: 0.95rem; color: var(--ink-soft, #7a6a62); font-weight: 700; }
+/* 家長區「新增孩子」：小一點 */
+.l75-pick-compact .l75-pick-btn { min-height: 118px; border-radius: 22px; }
+.l75-pick-compact .l75-pick-art { height: 72px; }
+.l75-pick-compact .l75-pick-name { font-size: 1.1rem; }
+@media (max-width: 520px) {
+  .l75-pick { gap: 8px; }
+  .l75-pick-btn { min-height: 136px; border-radius: 22px; }
+  .l75-pick-art { height: 84px; }
+  .l75-pick-name { font-size: 1.2rem; }
+}
+@media (prefers-reduced-motion: reduce) { .l75-pick-btn { transition: none; } }
+
+/* 寵物圖（這個物種與猴子）全都沒有時的 emoji：填滿原本圖片的位置 */
+.l75-pet-emoji { display: grid; place-items: end center; line-height: 1; font-size: 4.5rem; }
+.companion .l75-pet-emoji { place-items: center; font-size: 3.2rem; width: 100%; height: 100%; }

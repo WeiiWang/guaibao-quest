@@ -122,7 +122,9 @@ try {
   await page.getByTestId('kid-add').click()
   await page.getByTestId('kid-name').fill('小花')
   await page.getByTestId('child-age-3').click()
-  await page.getByTestId('kid-pet').fill('小猴')
+  // v7.5：寵物的名字跟著物種固定，新增孩子改成選寵物（這裡選兔兔）
+  check('新增孩子：可以選寵物（沒有取名字的欄位），預設是阿悟', (await page.getByTestId('kid-pet').count()) === 0 && (await page.getByTestId('species-monkey').getAttribute('aria-checked')) === 'true')
+  await page.getByTestId('species-rabbit').click()
   await shots(page, 'add-child')
   await page.getByTestId('kid-add-submit').click()
   await page.waitForFunction(() => document.querySelectorAll('[data-testid=kid-row]').length === 2)
@@ -130,7 +132,7 @@ try {
   const xiaoHua = kids.find((k) => k.name === '小花')
   check('新增孩子：registry 有 2 個，第二個用 guaibao-quest-<id>', kids.length === 2 && xiaoHua?.dbName === `guaibao-quest-${xiaoHua?.id}`, JSON.stringify(kids))
   check('新增孩子：年齡存在 registry 與她自己的資料庫', xiaoHua.ageBand === '3' && (await getAll(page, xiaoHua.dbName, 'settings'))[0]?.ageBand === '3')
-  check('新增孩子：寵物名字、是一顆蛋', (await petOf(page, xiaoHua.dbName))?.name === '小猴' && (await petOf(page, xiaoHua.dbName))?.stage === 'egg')
+  check('新增孩子：選的寵物（兔兔，名字固定）、是一顆蛋', (await petOf(page, xiaoHua.dbName))?.name === '兔兔' && (await petOf(page, xiaoHua.dbName))?.species === 'rabbit' && (await petOf(page, xiaoHua.dbName))?.stage === 'egg')
   check('新增孩子：沒有再設 PIN，她的資料庫沿用共用 PIN', (await getAll(page, xiaoHua.dbName, 'settings'))[0]?.pinHash === settingsBefore.pinHash)
   await shots(page, 'children-settings')
 
@@ -236,7 +238,9 @@ try {
   await openParentTab(page, '設定')
   await page.locator(`[data-child-id="${xiaoHua.id}"] [data-testid=kid-delete]`).click()
   await page.getByTestId('kid-delete-warning').waitFor()
-  check('刪除前警告：阿悟和進度都會刪掉', (await page.getByTestId('kid-delete-warning').innerText()).includes('阿悟和進度都會刪掉'))
+  // v7.5：警告寫那個孩子自己的寵物名字（小花養的是兔兔）
+  await page.waitForFunction(() => document.querySelector('[data-testid=kid-delete-warning]')?.textContent.includes('兔兔'), null, { timeout: 3000 }).catch(() => {})
+  check('刪除前警告：兔兔和進度都會刪掉（寫那個孩子的寵物名字）', (await page.getByTestId('kid-delete-warning').innerText()).includes('兔兔和進度都會刪掉'))
   await pressPin(page, '0000')
   check('刪除：PIN 錯誤不會刪', (await registryChildren(page)).length === 2 && (await dbNames(page)).includes(xiaoHua.dbName))
   check('刪除：PIN 錯誤有提示', (await page.locator('.modal').innerText()).includes('PIN 不正確'))

@@ -18,6 +18,7 @@ import '../coloring/i74.css'
 import { PlayWeekly } from '../../play/PlayWeekly'
 import './learning.css'
 import './weekly.css'
+import { nameText, speciesName } from '../../../domain/species'
 
 const md = (date: string) => {
   const [, m, d] = date.split('-').map(Number)
@@ -36,7 +37,7 @@ export function WeeklyTab() {
   const data = useLiveQuery(async () => {
     const [attempts, states, settings, pet] = await Promise.all([db.attempts.toArray(), repo.getSkillStates(), db.settings.get('main'), db.pets.get('pet')])
     const arts = (await repo.listGallery()).filter((w) => !!w.png).slice(0, WEEKLY_ART_MAX)
-    return { attempts, states, album: settings?.album ?? [], childName: settings?.childName ?? '', petName: pet?.name ?? '阿悟', arts }
+    return { attempts, states, album: settings?.album ?? [], childName: settings?.childName ?? '', petName: pet?.name ?? speciesName(pet?.species), species: pet?.species, arts }
   }, [])
   if (!data) return <p className="empty">載入中…</p>
 
@@ -129,7 +130,7 @@ export function WeeklyTab() {
                   <span className="wk-trick-emoji" aria-hidden>{def?.emoji ?? '🎪'}</span>
                   <div>
                     <b>{def?.name ?? c.caption}</b>
-                    <p className="lt-note">{def?.hint ?? c.caption}</p>
+                    <p className="lt-note">{def?.hint ? nameText(def.hint, data.species) : c.caption}</p>
                   </div>
                 </li>
               )

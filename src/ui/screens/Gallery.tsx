@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { petArt, speciesEmoji, speciesName } from '../../domain/species'
 import { db } from '../../db/db'
 import { repo } from '../../db/repo'
 import { FREE_PAGE_IDS, getColoringPage } from '../../art/coloring/pages'
@@ -92,7 +93,7 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
       {empty && (
         <div className="i74-empty" data-testid="gallery-empty">
           <div className="i74-empty-pet" aria-hidden>
-            <Icon name={pet?.stage === 'egg' ? 'pet-egg' : `pet-${pet?.stage ?? 'baby'}-happy`} emoji="🐵" alt="阿悟" size="100%" />
+            <Icon name={petArt(pet?.species, pet?.stage ?? 'baby', 'happy')} emoji={pet?.stage === 'egg' ? '🥚' : speciesEmoji(pet?.species)} alt={speciesName(pet?.species)} size="100%" />
           </div>
           <p className="i74-empty-text">還沒有完成的畫。畫好一張，按「完成」就會放進來！</p>
           <button className="btn primary i74-empty-go" onClick={() => go({ name: 'paint', pageId: FREE_PAGE_IDS[0] })} data-testid="gallery-go-paint">

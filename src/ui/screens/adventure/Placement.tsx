@@ -10,6 +10,9 @@ import { Companion } from './Companion'
 import { QuestionView } from './QuestionView'
 import './adventure.css'
 import './adventure-v7.css'
+import { forSpecies } from '../../../learning/speciesLines'
+import { speciesName } from '../../../domain/species'
+import { useSpecies } from '../../species'
 
 type Step = 'ask' | 'q' | 'done'
 
@@ -19,6 +22,7 @@ type Step = 'ask' | 'q' | 'done'
  * 之後還有自動降級保護（連錯 3 題降一級，見 skills.ts）。
  */
 export function Placement({ onStart, onDone }: { onStart?: () => void; onDone: () => void }) {
+  const species = useSpecies()
   const { soundOn, voiceOn } = useLearningSettings()
   const qs = useMemo(() => placementQuestions().map((q) => displayQuestion(q, 'placement')), [])
   const [step, setStep] = useState<Step>('ask')
@@ -35,7 +39,7 @@ export function Placement({ onStart, onDone }: { onStart?: () => void; onDone: (
   const start = () => {
     onStart?.()
     setStep('q')
-    const l = pickLine('placement.ask')
+    const l = forSpecies(pickLine('placement.ask'), species)
     say(l.key, l.text, { enabled: voiceOn })
     window.setTimeout(() => q && say(questionKey(q.id, 'prompt'), q.prompt, { enabled: voiceOn }), 2600)
   }
@@ -49,7 +53,7 @@ export function Placement({ onStart, onDone }: { onStart?: () => void; onDone: (
     if (idx + 1 >= qs.length) {
       const r = await repo.applyPlacement(total)
       if (r.ok) setLevel(r.level)
-      const l = pickLine('placement.done')
+      const l = forSpecies(pickLine('placement.done'), species)
       say(l.key, l.text, { enabled: voiceOn })
       setStep('done')
       return
@@ -109,7 +113,7 @@ export function Placement({ onStart, onDone }: { onStart?: () => void; onDone: (
         )}
         {step === 'done' && (
           <>
-            <h2 data-testid="placement-done">阿悟知道了！</h2>
+            <h2 data-testid="placement-done">{speciesName(species)}知道了！</h2>
             <p>從難度 {level ?? 2} 開始，之後會自己調整。</p>
             <button className="adv-btn primary big" onClick={onDone} data-testid="placement-go" autoFocus>出發</button>
           </>

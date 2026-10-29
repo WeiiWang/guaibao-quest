@@ -7,7 +7,10 @@
 //   hide：這個姿勢不戴帽子（躺著睡覺的姿勢，帽子會對不準；睡覺時阿悟把帽子放旁邊）
 // 數值是用圖片的不透明像素量出頭頂（金箍帶上緣）之後，再逐張目視微調；改圖要重新量。
 // 蛋（pet-egg*）不能戴帽子，不在表裡。
+// v7.5：依物種查表（HAT_ANCHORS_BY_SPECIES）。兔兔、虎虎的圖（pet-rabbit-*、pet-tiger-*）錨點等圖好了再量
+// （design/tools/measure_hat_anchors.py 量出來貼進 RABBIT / TIGER 表）；還沒量的姿勢先用 SPECIES_DEFAULT_ANCHOR（頭頂中央）。
 import type { Stage } from '../domain/types'
+import { parsePetArt, petArt, type Species } from '../domain/species'
 
 export interface HatAnchor {
   x: number
@@ -51,21 +54,63 @@ export const HAT_ANCHORS: Record<string, HatAnchor> = {
   'pet-adult-shy': a(49.2, 15.3, 46, 0, [390, 512]),
 }
 
+/** v7.5 兔兔的錨點（key = 圖檔名，例 'pet-rabbit-baby-idle'）。圖還沒生成，等量好再填 */
+export const HAT_ANCHORS_RABBIT: Record<string, HatAnchor> = {}
+/** v7.5 虎虎的錨點（key = 圖檔名，例 'pet-tiger-adult-cheer'） */
+export const HAT_ANCHORS_TIGER: Record<string, HatAnchor> = {}
+
+export const HAT_ANCHORS_BY_SPECIES: Record<Species, Record<string, HatAnchor>> = {
+  monkey: HAT_ANCHORS,
+  rabbit: HAT_ANCHORS_RABBIT,
+  tiger: HAT_ANCHORS_TIGER,
+}
+
+/**
+ * 新物種還沒量錨點時的預設：頭頂中央，帽子寬度與猴子同階段相同、不歪；寬高比借猴子同一個姿勢（新圖的長寬比要接近原圖）。
+ * y 刻意比猴子低一些：兔兔的長耳朵在頭頂上方（帽子要戴在耳朵之間的頭頂，不是耳尖）；寧可略低也不要飛出畫面。
+ * 睡覺姿勢照猴子一樣不戴。
+ */
+export const SPECIES_DEFAULT_Y: Record<Exclude<Species, 'monkey'>, Record<'baby' | 'adult', number>> = {
+  rabbit: { baby: 30, adult: 28 },
+  tiger: { baby: 20, adult: 19 },
+}
+export function speciesDefaultAnchor(species: Exclude<Species, 'monkey'>, stage: 'baby' | 'adult', pose: string): HatAnchor {
+  const monkey = HAT_ANCHORS[petArt('monkey', stage, pose)] ?? HAT_ANCHORS[petArt('monkey', stage, 'idle')]
+  if (monkey.hide) return { ...monkey }
+  return { x: 50, y: SPECIES_DEFAULT_Y[species][stage], w: monkey.w, rotate: 0, ar: monkey.ar }
+}
+
+/** 查錨點：依圖檔名的物種查表；新物種沒有量過的姿勢用預設值。不是幼體 / 成體的寵物圖（蛋、別的圖）回 undefined */
+function lookup(artFile: string): HatAnchor | undefined {
+  const p = parsePetArt(artFile)
+  if (!p || p.stage === 'egg') return undefined
+  const table = HAT_ANCHORS_BY_SPECIES[p.species]
+  if (artFile in table) return table[artFile]
+  if (p.species === 'monkey' || !(HAT_POSES as string[]).includes(p.pose)) return undefined
+  return speciesDefaultAnchor(p.species, p.stage, p.pose)
+}
+
 /** 阿悟有哪些姿勢（要跟 PetSprite 的 PetPose 一致，hats.test.ts 會檢查） */
 export const HAT_POSES: PoseKey[] = ['idle', 'happy', 'cheer', 'think', 'eating', 'sing', 'dance', 'laugh', 'dizzy', 'sleep', 'sleepy', 'shy']
 export const HAT_STAGES: Exclude<Stage, 'egg'>[] = ['baby', 'adult']
 
 /** 某張阿悟圖（檔名不含副檔名）的帽子錨點；蛋或不認得的圖回 null（= 不畫帽子） */
 export function hatAnchor(artFile: string): HatAnchor | null {
-  const a = HAT_ANCHORS[artFile]
+  const a = lookup(artFile)
   return a && !a.hide ? a : null
 }
 
-/** 這張圖有沒有登記過（不管戴不戴） */
-export const hasHatEntry = (artFile: string): boolean => artFile in HAT_ANCHORS
+/** 這張圖有沒有登記過（不管戴不戴）；新物種的幼體 / 成體圖一律算有（沒量過的用預設值） */
+export const hasHatEntry = (artFile: string): boolean => lookup(artFile) !== undefined
+
+/** 這張圖的錨點是不是量過的（新物種沒量過 = 用預設值，寬高比改用圖片實際載入後的大小） */
+export const hatAnchorMeasured = (artFile: string): boolean => {
+  const p = parsePetArt(artFile)
+  return !!p && artFile in HAT_ANCHORS_BY_SPECIES[p.species]
+}
 
 /** 這張圖的寬高比（疊圖容器要跟圖片一樣大） */
-export const hatAspect = (artFile: string): number => HAT_ANCHORS[artFile]?.ar ?? 0.75
+export const hatAspect = (artFile: string): number => lookup(artFile)?.ar ?? 0.75
 
 /**
  * 每頂帽子自己的「怎麼戴」：

@@ -31,6 +31,7 @@ import { useToast } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
 import { playChime, playPop } from '../sounds'
 import { stickerEmoji } from './coloring/stickers'
+import { petArt, speciesEmoji, speciesName } from '../../domain/species'
 import { FinishCelebration } from './Coloring'
 import type { Screen } from '../App'
 import './dots.css'
@@ -266,7 +267,8 @@ export function DotsPlayScreen({ pageId, onBack, go }: { pageId: string; onBack:
   const poly = connected.map((p, i) => `${i ? 'L' : 'M'}${p[0]} ${p[1]}`).join('')
   const nextLabel = cur < n ? dotLabel(parsed.level, cur) : ''
   const stage = pet?.stage ?? 'baby'
-  const petArt = stage === 'egg' ? 'pet-egg' : `pet-${stage}-cheer`
+  // v7.5：連完之後歡呼的是孩子自己的寵物（「阿悟」那一頁的圖不變：那是故事書裡的猴子朋友）
+  const cheerArt = petArt(pet?.species, stage, 'cheer')
   const doneLine = (DOTS_LINES['pet.dots.done'] as string[])[Math.max(0, DOTS_IDS.indexOf(parsed.name))]
   const [ix, iy, iw, ih] = item.img
   const wob = wobble
@@ -337,7 +339,7 @@ export function DotsPlayScreen({ pageId, onBack, go }: { pageId: string; onBack:
             <>
               <div className="dt-cheer">
                 <div className="dt-pet">
-                  <Icon name={petArt} emoji="🐵" alt="阿悟" size="100%" />
+                  <Icon name={cheerArt} emoji={stage === 'egg' ? '🥚' : speciesEmoji(pet?.species)} alt={speciesName(pet?.species)} size="100%" />
                 </div>
                 <div className="dt-bubble" data-testid="dots-line-text">{doneLine || `你連出${DOTS_NAMES[parsed.name]}了！`}</div>
               </div>
