@@ -115,7 +115,7 @@ describe('v7.5 petArt：檔名與備援順序', () => {
 })
 
 describe('v7.5 帽子錨點依物種', () => {
-  it('猴子的表不變；新物種沒量過的姿勢用預設值（頭頂中央、在畫面內），睡覺照樣不戴', () => {
+  it('猴子的表不變；兔兔、虎虎每個姿勢都量過（帽子在畫面內），睡覺照樣不戴', () => {
     expect(hatAnchor('pet-adult-idle')).toEqual(HAT_ANCHORS['pet-adult-idle'])
     expect(hatAnchorMeasured('pet-adult-idle')).toBe(true)
     for (const sp of ['rabbit', 'tiger'] as const) {
@@ -123,7 +123,7 @@ describe('v7.5 帽子錨點依物種', () => {
         for (const pose of PET_POSES) {
           const art = petArt(sp, stage, pose)
           expect(hasHatEntry(art), art).toBe(true)
-          expect(hatAnchorMeasured(art), art).toBe(false)
+          expect(hatAnchorMeasured(art), art).toBe(true)
           const a = hatAnchor(art)
           if (pose === 'sleep') {
             expect(a, art).toBeNull()
@@ -131,19 +131,23 @@ describe('v7.5 帽子錨點依物種', () => {
           }
           expect(a, art).not.toBeNull()
           if (!a) continue
-          // 帽子不能飛出畫面：中心在圖片內、帽子寬度不超過圖片
-          expect(a.x).toBe(50)
-          expect(a.y).toBeGreaterThan(8)
-          expect(a.y).toBeLessThan(40)
-          expect(a.w).toBeGreaterThanOrEqual(40)
-          expect(a.w).toBeLessThanOrEqual(55)
-          expect(a.rotate).toBe(0)
-          expect(hatAspect(art)).toBe(HAT_ANCHORS[petArt('monkey', stage, pose)].ar)
+          // 帽子不能飛出畫面：中心在圖片內、帽子寬度不超過圖片、不歪太多
+          expect(a.x, art).toBeGreaterThan(30)
+          expect(a.x, art).toBeLessThan(70)
+          expect(a.y, art).toBeGreaterThan(4)
+          expect(a.y, art).toBeLessThan(40)
+          expect(a.w, art).toBeGreaterThanOrEqual(30)
+          expect(a.w, art).toBeLessThanOrEqual(60)
+          expect(Math.abs(a.rotate), art).toBeLessThanOrEqual(12)
+          expect(hatAspect(art), art).toBe(a.ar)
         }
       }
     }
-    // 兔兔的耳朵在頭頂上方：預設的頭頂比老虎低
-    expect(speciesDefaultAnchor('rabbit', 'baby', 'idle').y).toBeGreaterThan(speciesDefaultAnchor('tiger', 'baby', 'idle').y)
+    // 還沒量的姿勢（日後新增）用預設值：頭頂中央、不歪；兔兔的耳朵在頭頂上方，預設比老虎低
+    const d = speciesDefaultAnchor('rabbit', 'baby', 'idle')
+    expect(d.x).toBe(50)
+    expect(d.rotate).toBe(0)
+    expect(d.y).toBeGreaterThan(speciesDefaultAnchor('tiger', 'baby', 'idle').y)
     expect(hatAnchor('pet-rabbit-egg')).toBeNull()
   })
   it('public/art 裡已經有的兔兔、虎虎幼體 / 成體圖都查得到錨點（量過或預設）', () => {
