@@ -360,7 +360,7 @@ describe('v4：年齡、起始難度、離開關卡保留進度', () => {
     const plan = await repo.planStation(0, T0, makeRng(8))
     expect(plan.every((p) => p.question.difficulty === 1)).toBe(true)
     const num = plan.filter((p) => p.question.skill === 'number')
-    expect(num.every((p) => Number(p.question.answer) <= 3)).toBe(true)
+    expect(num.every((p) => p.question.type === 'compare' || Number(p.question.answer) <= 3)).toBe(true)
     for (let i = 1; i <= 4; i++) await repo.recordAttempt({ sessionId: 's', questionId: `number-1-g0${i}`, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0 + i)
     expect((await repo.getSkillStates()).number.difficulty).toBe(1)
     await repo.recordAttempt({ sessionId: 's', questionId: 'number-1-g05', firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0 + 9)

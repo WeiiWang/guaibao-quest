@@ -109,6 +109,9 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'companion.wrapup': ['這一站我們好棒！', '肚子餓了，想吃桃子。'],
   'companion.boss.open': ['最後一關！大家都在等我們。', '這一站要全部一起加油！'],
   'companion.boss.done': ['我們一起完成了！', '好多好多星星！'],
+  // v7.4 H1 重玩已通關的站：開場、完成（阿悟說的話，key 以 companion. 開頭）
+  'companion.replay.open': ['再玩一次吧，這次是新的題目！', '這一站我們再走一遍！'],
+  'companion.replay.done': '再玩一次，也好棒喔！',
   'companion.tutorial.give': ['看我拿一個，再拿一個。', '拿到剛好，就按好了。'],
   'companion.tutorial.bins': ['看我把它放進籃子裡。', '你也來試試看。'],
   'companion.tutorial.order': ['看我把最小的放在第一格。', '你也來排排看。'],

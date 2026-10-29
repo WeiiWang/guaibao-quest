@@ -22,6 +22,17 @@ export function seenFromAttempts(attempts: Pick<Attempt, 'questionId' | 'at'>[])
   return { count, last }
 }
 
+/** 重玩已通關的站時要避開的題：最近作答過的前 n 題（依時間新到舊，不重複）。題庫不夠換時 planStation 會自己放寬 */
+export const RECENT_AVOID = 100
+export function recentQuestionIds(attempts: readonly Pick<Attempt, 'questionId' | 'at'>[], n = RECENT_AVOID): Set<string> {
+  const out = new Set<string>()
+  for (const a of [...attempts].sort((x, y) => y.at - x.at)) {
+    out.add(a.questionId)
+    if (out.size >= n) break
+  }
+  return out
+}
+
 export interface PickOptions {
   skill: SkillId
   difficulty: Difficulty
@@ -64,7 +75,8 @@ export function answerKeyOf(q: Question): string | null {
   if (it === 'place') return q.params?.subject ? `o:${q.params.subject}` : null
   if (it !== 'pick') return null
   if (q.skill === 'english') return q.params?.word ? `en:${q.params.word}` : null
-  if (q.type === 'spot' || q.type === 'where' || q.type === 'whereIs') return null
+  // compare（哪一堆比較多）的答案是「多的那一堆」，不是哪個物件；v7.4 起 3 歲的比多少只用最常見的 4 個物件，不能再拿物件當近期不重複的依據
+  if (q.type === 'spot' || q.type === 'where' || q.type === 'whereIs' || q.type === 'compare') return null
   const c = q.choices.find((x) => x.id === q.answer)
   if (!c) return null
   if (c.obj) return `o:${c.obj}`
@@ -93,10 +105,21 @@ function typeCountsOf(plan: readonly (PlannedQuestion | undefined)[], skip = -1)
 }
 
 /**
- * 第 i 題的過濾條件（B2）：同一站同一個題型最多 2 題、翻牌最多 1 次、答案物件在最近 8 題內不重複。
- * relax：0 = 全部遵守；1 = 放寬答案不重複；2 = 再放寬題型上限（翻牌上限一律遵守）
+ * 題幹的「句型」：最後一個逗號或句號後面那一段（「吃完東西了，哪一個是對的做法呢？」→「哪一個是對的做法呢？」）。
+ * 同一站不連續出句型一樣的題（v7.4 H3），孩子才不會連續聽到同一句。
  */
-function guardFor(plan: readonly (PlannedQuestion | undefined)[], i: number, history: readonly (string | null)[], relax: 0 | 1 | 2): (q: Question) => boolean {
+export function promptPattern(q: Pick<Question, 'prompt'>): string {
+  const parts = q.prompt.split(/[，。,]/).map((x) => x.trim()).filter(Boolean)
+  return parts[parts.length - 1] ?? q.prompt
+}
+
+/**
+ * 第 i 題的過濾條件（B2）：同一站同一個題型最多 2 題、翻牌最多 1 次、答案物件在最近 8 題內不重複。
+ * v7.4：相鄰兩題的句型不一樣（H3）；skipTypes 裡的題型不出（例如 6–7 歲第一站不出最簡單的「指出水果」）。
+ * relax：0 = 全部遵守；1 = 放寬答案不重複；2 = 再放寬題型上限；3 = 最後放寬相鄰句型與 skipTypes（翻牌上限一律遵守）。
+ * 句型與 skipTypes 最後才放寬：例如生活難度 1 只有兩種題型，第 5 題一定要放寬題型上限，這時句型還是要守。
+ */
+function guardFor(plan: readonly (PlannedQuestion | undefined)[], i: number, history: readonly (string | null)[], relax: 0 | 1 | 2 | 3, skipTypes?: ReadonlySet<string>): (q: Question) => boolean {
   const types = typeCountsOf(plan, i)
   const keys = new Set<string>()
   for (let j = 0; j < plan.length; j++) {
@@ -107,9 +130,12 @@ function guardFor(plan: readonly (PlannedQuestion | undefined)[], i: number, his
   }
   const room = ANSWER_WINDOW - i
   if (room > 0) for (const k of history.slice(-room)) if (k) keys.add(k)
+  const near = [plan[i - 1], plan[i + 1]].filter((p): p is PlannedQuestion => !!p).map((p) => promptPattern(p.question))
   return (q) => {
     if (q.type === 'flip' && (types.get('flip') ?? 0) >= MAX_FLIP_PER_STATION) return false
     if (relax < 2 && (types.get(q.type) ?? 0) >= MAX_SAME_TYPE) return false
+    if (relax < 3 && near.length && near.includes(promptPattern(q))) return false
+    if (relax < 3 && skipTypes?.has(q.type)) return false
     if (relax < 1) {
       const k = answerKeyOf(q)
       if (k && keys.has(k)) return false
@@ -182,6 +208,8 @@ export interface PlanOptions {
   maxReviews?: number
   /** 翻牌題的格數目標（章節站依站別遞增；沒給 = 照難度） */
   flipCells?: number
+  /** v7.4：盡量不出的題型（例如 6–7 歲第一站不出最簡單的 kind）；題庫不夠時才放寬 */
+  skipTypes?: ReadonlySet<string>
 }
 
 /** 各互動出在哪個技能：拿給我 N 個是數感、拖曳歸類是分類、排序是比較與排序、放到位置是空間方位、翻牌是觀察與記憶 */
@@ -225,8 +253,8 @@ export function planStation(opts: PlanOptions): PlannedQuestion[] {
    */
   const pickAvoiding = (o: Omit<PickOptions, 'exclude' | 'accept' | 'typeCounts'>, at: number): Question | null => {
     const typeCounts = typeCountsOf(plan, at)
-    for (const relax of [0, 1, 2] as const) {
-      const accept = guardFor(plan, at, history, relax)
+    for (const relax of [0, 1, 2, 3] as const) {
+      const accept = guardFor(plan, at, history, relax, opts.skipTypes)
       const q =
         (avoid.size ? pickQuestion({ ...o, exclude: new Set([...used, ...avoid]), accept, typeCounts }) : null) ?? pickQuestion({ ...o, exclude: used, accept, typeCounts })
       if (q) return q
@@ -302,6 +330,8 @@ export interface AdaptOptions {
   rng: Rng
   bank?: Question[]
   gentle?: boolean
+  /** v7.4：盡量不出的題型（同 PlanOptions.skipTypes） */
+  skipTypes?: ReadonlySet<string>
 }
 
 /**
@@ -336,8 +366,8 @@ export function adaptPlan(opts: AdaptOptions): PlannedQuestion[] {
     // 換題時保持同一種互動（拿給我 N 個還是拿給我、點選還是點選）；沒有就不限
     const base = { skill, difficulty: target as Difficulty, seen, rng: opts.rng, exclude: used, bank: opts.bank, gentle: opts.gentle, typeCounts: typeCountsOf(plan, i) }
     let q: Question | null = null
-    for (const relax of [0, 1, 2] as const) {
-      const accept = guardFor(plan, i, history, relax)
+    for (const relax of [0, 1, 2, 3] as const) {
+      const accept = guardFor(plan, i, history, relax, opts.skipTypes)
       q = pickQuestion({ ...base, accept, interaction: interactionOf(p.question) }) ?? pickQuestion({ ...base, accept })
       if (q) break
     }

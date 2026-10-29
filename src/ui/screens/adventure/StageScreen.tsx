@@ -4,9 +4,10 @@ import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
 import { SHOP_ITEMS } from '../../../domain/constants'
 import { giftFoodLine } from '../../../domain/giftLines'
+import { groupFoods } from '../../../domain/gifts'
 import { localDateStr } from '../../../domain/date'
 import { now as clockNow } from '../../../domain/clock'
-import { parseChallengeId, resolveStage } from '../../../learning/subject'
+import { parseChallengeId, parseReplayId, resolveStage } from '../../../learning/subject'
 import { englishAnswerParts, englishHintParts, englishPromptParts } from '../../../learning/englishSpeech'
 import { STATION_SIZE } from '../../../learning/scoring'
 import { hintDriven } from '../../../learning/hint'
@@ -38,6 +39,7 @@ import './adventure.css'
 import './adventure-v4.css'
 import './adventure-v5.css'
 import './adventure-v7.css'
+import './adventure-h74.css'
 
 const AUTO_NEXT_MS = 1600
 /** 食物 id 對應 lines.ts 的 ui.gift.food 句子順序（和 domain/giftLines.ts 的 GIFT_FOOD_PHRASE 同順序） */
@@ -88,6 +90,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   const daily = !!info?.daily
   /** v7 挑戰站：連續答對有 combo 計數、不給提示、沒有時間壓力 */
   const challenge = !!info?.challenge
+  /** v7.4 重玩已通關的站：題目重新抽，獎勵固定一份食物、不給材料 */
+  const isReplay = !!info?.replay
   const { soundOn, voiceOn } = useLearningSettings()
   // 寵物還是蛋時，生活題裡的主角不說成「阿悟」（G8）
   const petStage = useLiveQuery(() => db.pets.get('pet').then((p) => p?.stage), [])
@@ -138,7 +142,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
         setIdx(o.idx)
         if (o.idx === 0 && !o.resumed) {
           const st = resolveStage(chapterId, station, localDateStr(clockNow()))
-          setOpener(st?.challenge ? pickLine('challenge.open') : pickLine(st?.def.kind === 'boss' ? 'companion.boss.open' : 'companion.open', station))
+          setOpener(st?.challenge ? pickLine('challenge.open') : st?.replay ? pickLine('companion.replay.open', station) : pickLine(st?.def.kind === 'boss' ? 'companion.boss.open' : 'companion.open', station))
           openerRef.current = true
         }
       })
@@ -222,13 +226,15 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
       ? await repo.completeChallenge({ chapterId: parseChallengeId(chapterId)?.id ?? chapterId, sessionId: sessionId.current })
       : daily
         ? await repo.completeDaily({ chapterId, sessionId: sessionId.current })
-        : await repo.completeStation({ chapterId, station, sessionId: sessionId.current })
+        : isReplay
+          ? await repo.completeReplay({ chapterId: parseReplayId(chapterId)?.id ?? chapterId, station, sessionId: sessionId.current })
+          : await repo.completeStation({ chapterId, station, sessionId: sessionId.current })
     if (!r.ok) {
       setError(r.error)
       return
     }
     playSfx('reward', soundOn)
-    const l = pickLine(challenge ? ((r as { badge?: boolean }).badge ? 'challenge.badge' : 'challenge.done') : daily ? ((r as { badge?: boolean }).badge ? 'daily.badge' : 'daily.done') : r.chapterDone ? 'chapter.done' : 'station.done')
+    const l = pickLine(challenge ? ((r as { badge?: boolean }).badge ? 'challenge.badge' : 'challenge.done') : daily ? ((r as { badge?: boolean }).badge ? 'daily.badge' : 'daily.done') : isReplay ? 'companion.replay.done' : r.chapterDone ? 'chapter.done' : 'station.done')
     // 先唸過關，接著阿悟說撿到的食物（跟畫面上食物彈出的順序一樣）
     const foodLines = r.foods.map((f, i) => {
       const idx = FOOD_LINE_ORDER.indexOf(f)
@@ -236,7 +242,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     })
     sayChain([{ key: l.key, text: l.text }, ...foodLines.slice(0, 1)], { enabled: voiceOn })
     setResult(r)
-  }, [chapterId, station, daily, challenge, soundOn, voiceOn])
+  }, [chapterId, station, daily, challenge, isReplay, soundOn, voiceOn])
 
   const advance = useCallback(async () => {
     window.clearTimeout(nextTimer.current)
@@ -412,7 +418,9 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     // 食物（可能 2 個，可能同一種）：依序彈出；材料接在食物後面
     const foodDelay = 0.25
     const matDelay = foodDelay + result.foods.length * 0.45 + 0.35
-    const foodSummary = result.foods.map(foodName).join('、')
+    // v7.4 H4：同一種食物合併（「蘋果 ×2」），說明那一句也只出現一次
+    const foodGroups = groupFoods(result.foods)
+    const foodSummary = foodGroups.map((g) => (g.n > 1 ? `${foodName(g.id)} ×${g.n}` : foodName(g.id))).join('、')
     return (
       <main className="adv adv-stage adv-result" data-testid="station-result">
         <header className="adv-top">
@@ -428,10 +436,10 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
             </div>
           )}
           <Companion pose={pose} size="clamp(92px, 15dvh, 140px)" className="adv-result-pet" />
-          <h1>{challenge ? '挑戰完成了！' : daily ? '今日冒險完成了！' : `第 ${station} 站過關了！`}</h1>
-          <p className="adv-sub">{challenge ? `${info.chapterName}・挑戰站` : daily ? `${info.chapterName}・5 題新題目` : `${info.chapterName}・${def.name}`}</p>
+          <h1>{challenge ? '挑戰完成了！' : daily ? '今日冒險完成了！' : isReplay ? `第 ${station} 站，再玩一次完成了！` : `第 ${station} 站過關了！`}</h1>
+          <p className="adv-sub">{challenge ? `${info.chapterName}・挑戰站` : daily ? `${info.chapterName}・5 題新題目` : isReplay ? `${info.chapterName}・${def.name}・換新的題目` : `${info.chapterName}・${def.name}`}</p>
           <p className="adv-sub adv-wrapup" data-testid="wrapup">{pickLine(def.kind === 'boss' ? 'companion.boss.done' : 'companion.wrapup', station).text}</p>
-          <div className="q7-loot">
+          <div className={`q7-loot ${result.qty > 0 ? '' : 'h74-solo'}`}>
             <section className="q7-loot-col" aria-label={`阿悟撿到${foodSummary}`} data-testid="result-food">
               <div className="q7-loot-icons q7-food-icons">
                 {result.foods.map((f, i) => (
@@ -444,23 +452,25 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
                 阿悟撿到 {foodSummary}
               </p>
             </section>
-            <section className="q7-loot-col" aria-label={`獲得${MATERIAL_NAMES[result.material]} ${result.qty} 個`} data-testid="result-materials">
-              <div className="q7-loot-icons adv-reward">
-                {Array.from({ length: result.qty }, (_, i) => (
-                  <span key={i} className="q7-mat" data-reward style={{ animationDelay: `${matDelay + i * 0.18}s` }}>
-                    <Icon name={`mat-${result.material}`} emoji={MAT_EMOJI[result.material]} alt={MATERIAL_NAMES[result.material]} size={result.qty > 3 ? 60 : 72} />
-                  </span>
-                ))}
-              </div>
-              <p className="q7-loot-text adv-reward-text" data-testid="reward-text">
-                獲得{MATERIAL_NAMES[result.material]} × {result.qty}
-              </p>
-            </section>
+            {result.qty > 0 && (
+              <section className="q7-loot-col" aria-label={`獲得${MATERIAL_NAMES[result.material]} ${result.qty} 個`} data-testid="result-materials">
+                <div className="q7-loot-icons adv-reward">
+                  {Array.from({ length: result.qty }, (_, i) => (
+                    <span key={i} className="q7-mat" data-reward style={{ animationDelay: `${matDelay + i * 0.18}s` }}>
+                      <Icon name={`mat-${result.material}`} emoji={MAT_EMOJI[result.material]} alt={MATERIAL_NAMES[result.material]} size={result.qty > 3 ? 60 : 72} />
+                    </span>
+                  ))}
+                </div>
+                <p className="q7-loot-text adv-reward-text" data-testid="reward-text">
+                  獲得{MATERIAL_NAMES[result.material]} × {result.qty}
+                </p>
+              </section>
+            )}
           </div>
           <p className="q7-food-line" data-testid="food-line" role="status" style={{ animationDelay: `${foodDelay + 0.2}s` }}>
-            {/* 撿到 2 個時兩句都顯示（語音也是逐句唸），不要畫面寫一樣、圖示是兩樣 */}
-            {result.foods.map((f, i) => (
-              <span key={i} className="q7-food-line-row">{giftFoodLine(f)}</span>
+            {/* 撿到 2 個不同的食物時各一句（語音也是逐句唸）；同一種只說一次 */}
+            {foodGroups.map((g) => (
+              <span key={g.id} className="q7-food-line-row">{giftFoodLine(g.id)}</span>
             ))}
           </p>
           <p className="adv-sub adv-credit" data-testid="result-credit">
@@ -479,14 +489,14 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
             </div>
           )}
           <div className="adv-actions">
-            {daily || challenge ? (
+            {daily || challenge || isReplay ? (
               <button className="adv-btn primary" onClick={onExit} data-testid="back-to-map">回地圖</button>
             ) : result.chapterDone ? (
               <button className="adv-btn primary" onClick={onCeremony} data-testid="open-chest">去開寶箱</button>
             ) : (
               <button className="adv-btn primary" onClick={() => onNextStation(station + 1)} data-testid="next-station">下一站</button>
             )}
-            {!daily && !challenge && <button className="adv-btn" onClick={onExit} data-testid="back-to-map">回地圖</button>}
+            {!daily && !challenge && !isReplay && <button className="adv-btn" onClick={onExit} data-testid="back-to-map">回地圖</button>}
           </div>
         </div>
       </main>
@@ -494,7 +504,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   }
 
   return (
-    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`} data-testid="stage" data-kind={def.kind} data-station={station} data-daily={daily ? 'true' : undefined} data-challenge={challenge ? 'true' : undefined} data-subject={info.subject} data-gentle={profile.gentle ? 'true' : undefined}>
+    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`} data-testid="stage" data-kind={def.kind} data-station={station} data-daily={daily ? 'true' : undefined} data-challenge={challenge ? 'true' : undefined} data-replay={isReplay ? 'true' : undefined} data-subject={info.subject} data-gentle={profile.gentle ? 'true' : undefined}>
       <header className="adv-top">
         <button className="adv-btn small" onClick={askLeave} aria-label="離開關卡" data-testid="leave">←<span className="adv-leave-label"> 離開</span></button>
         {def.kind === 'boss' ? (

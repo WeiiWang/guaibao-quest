@@ -228,6 +228,10 @@ export interface Settings {
   album?: AlbumCard[]
   /** v6：相簿已經依現況補建過舊里程碑（只補一次；之後新里程碑才會有「新卡」提示） */
   albumInit?: boolean
+  /** v7.4：已經送過幾份每日小禮物（固定輪替用：食物、材料、食物、貼紙…）；沒有這欄 = 0 */
+  dailyGiftSeq?: number
+  /** v7.4：今天掉落過幾個食物（固定輪替用；date 不是今天就從 0 開始）。沒有這欄 = 今天還沒掉過 */
+  foodDrop?: { date: string; n: number }
 }
 
 /** v6：回憶卡的種類 */

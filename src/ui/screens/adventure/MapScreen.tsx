@@ -7,7 +7,7 @@ import { now as clockNow } from '../../../domain/clock'
 import type { ChapterDef } from '../../../learning/chapter'
 import { getChapter } from '../../../learning/chapter'
 import { challengeVisible, nodeWindow } from '../../../learning/chapter'
-import { challengeChapterId, chaptersOf, dailyChapterId, DAILY_NAME, mustSubject, SUBJECTS } from '../../../learning/subject'
+import { challengeChapterId, chaptersOf, dailyChapterId, DAILY_NAME, mustSubject, replayChapterId, SUBJECTS } from '../../../learning/subject'
 import type { Progress, SubjectId } from '../../../learning/types'
 import { Icon } from '../../components/Icon'
 import { ScreenHeader } from '../../components/Header'
@@ -22,6 +22,7 @@ import './adventure.css'
 import './adventure-v5.css'
 import './adventure-v6.css'
 import './adventure-v7.css'
+import './adventure-h74.css'
 import { Placement } from './Placement'
 import { readChapter, readSubject, writeChapter, writeSubject } from './subjectPref'
 
@@ -260,16 +261,22 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
                   <button
                     type="button"
                     className={`adv-node-btn ${wobble === `s${s.index}` ? 'ux-wobble' : ''}`}
-                    aria-disabled={state !== 'current'}
+                    aria-disabled={state === 'locked'}
                     onClick={() => {
                       if (state === 'current') go({ name: 'stage', chapterId: ch.id, station: s.index })
-                      else if (state === 'done') nudge(`s${s.index}`, '這一站過關囉，好棒！')
+                      // v7.4 H1：已通關的站可以再玩一次（換新的題目，獎勵固定一份食物）
+                      else if (state === 'done') go({ name: 'stage', chapterId: replayChapterId(ch.id), station: s.index })
                       else nudge(`s${s.index}`, '還沒到喔，先去前面的站')
                     }}
                     data-testid={`station-${s.index}`}
-                    aria-label={`第 ${s.index} 站 ${s.name}，${state === 'done' ? '已通關' : state === 'current' ? '出發' : '還沒解鎖'}`}
+                    aria-label={`第 ${s.index} 站 ${s.name}，${state === 'done' ? '已通關，可以再玩一次' : state === 'current' ? '出發' : '還沒解鎖'}`}
                   >
                     {state === 'locked' ? <Icon name="ui-lock" emoji="🔒" size="52%" /> : state === 'done' ? <span className="adv-check" aria-hidden>✓</span> : <span className="adv-num">{s.index}</span>}
+                    {state === 'done' && (
+                      <span className="h74-replay-tag" data-testid={`replay-tag-${s.index}`} aria-hidden>
+                        <i>↻</i>再玩
+                      </span>
+                    )}
                   </button>
                   <span className="adv-node-label">
                     {s.name}
@@ -364,12 +371,13 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
           <b>{ch.subtitle}・{ch.name}</b>
           <span>已通關 {doneCount} / {ch.stations.length} 站{prog.run > 1 ? `（第 ${prog.run} 輪）` : ''}</span>
         </p>
+        {/* v7.4 H1：不用鎖頭和「即將開放」（會讓孩子覺得快玩完了），改成溫和的預告：阿悟正在探路 */}
         <div className="adv-upcoming">
           {subject.upcoming.map((c) => (
-            <div key={c.id} className="adv-soon" aria-disabled="true">
-              <Icon name="ui-lock" emoji="🔒" size={30} />
+            <div key={c.id} className="adv-soon h74-soon" data-testid="soon-item">
+              <Icon name="ui-map" emoji="🧭" size={30} />
               <b>{c.name}</b>
-              <span>即將開放</span>
+              <span>阿悟正在探路</span>
             </div>
           ))}
         </div>

@@ -1,15 +1,13 @@
 // PM 預覽工具：讓產品端不用實際遊玩就能切換寵物階段、補資源，檢視各種狀態。
 // 只從家長區（PIN 後）的「PM 預覽」分頁呼叫；會繞過每日星星上限，正式給測試家庭前要關掉（PM_TOOLS_ENABLED）。
 import { ADULT_AT_FEED_COUNT, BABY_AT_FEED_COUNT } from '../domain/constants'
-import { localDateStr } from '../domain/date'
-import { rollDailyGift } from '../domain/gifts'
 import { HAT_IDS } from '../domain/hats'
 import { TRICK_IDS } from '../domain/tricks'
 import type { Stage } from '../domain/types'
 import { CHAPTERS } from '../learning/chapter'
 import { MATERIAL_IDS } from '../learning/types'
 import { db, type GuaibaoDB } from './db'
-import { queueGifts } from './meta'
+import { rotateDailyGift } from './meta'
 import { rebuildAlbum } from './album'
 import { newId } from './repo'
 
@@ -81,7 +79,7 @@ export async function pmQueueTrickCelebrations(): Promise<void> {
 export async function pmGrantGift(): Promise<void> {
   const at = Date.now()
   await db.transaction('rw', [db.settings, db.inventory, db.materialLedger], async () => {
-    await queueGifts(db, [rollDailyGift(Math.random, localDateStr(at), at)])
+    await rotateDailyGift(db, at)
   })
 }
 

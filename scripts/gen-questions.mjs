@@ -68,7 +68,7 @@ function dedupKey(q) {
  * 不合格就 reject()。cands 是候選清單（逐個試、用完再循環），保證「題幹 + 答案」不重複。
  * ctx.pos(k, allowed) 回傳「答案放第幾個」，逐題挑目前最少的位置，整格的答案位置會很平均。
  */
-function cell(skill, difficulty, segments, { gentle = false, seed = 0 } = {}) {
+function cell(skill, difficulty, segments, { gentle = false, seed = 0, startAt = 0, sig = false } = {}) {
   rnd = mulberry32(skill.length * 1000 + difficulty * 97 + seed + (gentle ? 5000 : 0))
   const out = []
   const seen = new Set()
@@ -105,13 +105,13 @@ function cell(skill, difficulty, segments, { gentle = false, seed = 0 } = {}) {
         }
         throw e
       }
-      const key = dedupKey(q)
+      const key = dedupKey(q) + (sig ? JSON.stringify([q.items, q.choices]) : '') // sig：選項也算進去（v7.4 新增的幼幼題型：同一個題幹可以有不同的干擾項）
       if (seen.has(key)) {
         restore()
         continue
       }
       seen.add(key)
-      const n = String(out.length + 1).padStart(2, '0')
+      const n = String(startAt + out.length + 1).padStart(2, '0')
       out.push({
         id: `${skill}-${difficulty}-${gentle ? 'g' : ''}${n}`,
         skill,
@@ -1918,6 +1918,104 @@ const observe4 = cell(
   { seed: 13 },
 )
 
+// ---------- v7.4 H2：3 歲（幼幼）題型池擴充 ----------
+// 3 歲數學第 1 章（數感、分類、規律）原本只有 5 種題型（kind、give、next、count、same），「接下來是哪一個」佔 1/3。
+// 補上：比大小（compare）、顏色（color）、顏色配對（same，找一樣顏色的）、中間缺哪一個（missing）。
+// 只用現有的 3D 物件圖，不需要新美術。這些放在所有舊的格子「之後」另外產生（startAt 接著舊題的編號、seed 另開一條亂數），
+// 舊題目的 id 與內容完全不變（scripts 跑完後用 git diff 確認舊題沒有被動到）。
+const GENTLE_COMPARE_PROMPTS = [(o) => `哪一堆的${nm(o)}比較多？`, (o) => `找找看，哪一堆的${nm(o)}比較多？`]
+const number1gAdd = cell(
+  'number',
+  1,
+  [
+    {
+      count: 24,
+      cands: (() => {
+        // 兩堆差 2 個以上（1 對 3、2 對 5…），一眼就看得出來；物件用最常見的那幾個
+        const pairs = [[1, 3], [1, 4], [1, 5], [2, 4], [2, 5], [3, 5]]
+        return pairs.flatMap(([a, b]) => GENTLE_OBJ.map((o) => [a, b, o]))
+      })(),
+      build: (i, ctx, [a, b, o]) => {
+        const q = compareQ(i, ctx, a, b, o)
+        q.prompt = variant(GENTLE_COMPARE_PROMPTS, i)(o)
+        q.hint = '一個配一個看看，多出來的那一堆，就是比較多的。'
+        return q
+      },
+    },
+  ],
+  { gentle: true, seed: 74, startAt: number1g.length, sig: true },
+)
+
+const GENTLE_COLOR_PROMPTS = [(c) => `哪一個是${colorWord(c)}的？`, (c) => `找找看，${colorWord(c)}的是哪一個？`]
+const GENTLE_COLOR_PAIRS = orderedPairs(GENTLE_OBJ, (a, b) => OBJ[a].color !== OBJ[b].color).flatMap(([a, o]) => [[a, o, 0], [a, o, 1]])
+/** 顏色配對的範例與答案（同色、不同種類）；干擾項是不同色、不同種類的常見物件 */
+const GENTLE_MATCH = [
+  { ex: ['obj-banana', 'obj-chick', 'obj-star'], other: ['obj-apple', 'obj-fish'] },
+  { ex: ['obj-peach', 'obj-flower'], other: ['obj-fish'] },
+]
+const GENTLE_MATCH_CANDS = GENTLE_MATCH.flatMap(({ ex, other }) => ex.flatMap((e) => ex.filter((a) => a !== e).flatMap((a) => other.map((o) => [e, a, o]))))
+const classify1gAdd = cell(
+  'classify',
+  1,
+  [
+    {
+      count: 16,
+      cands: GENTLE_COLOR_PAIRS,
+      build: (i, ctx, [answer, other, p]) => {
+        const c = OBJ[answer].color
+        if (!REF[c] || hasColor(other, c)) reject()
+        return {
+          type: 'color',
+          prompt: GENTLE_COLOR_PROMPTS[p](c),
+          items: [],
+          choices: objChoices(answer, [other], ctx.pos(2), ctx),
+          answer,
+          hint: `${colorWord(c)}，${REF[c]}。你看，這個是${nm(answer)}，它是${colorWord(c)}的喔。`,
+          params: { colorWord: colorWord(c), swatch: SWATCH[c] },
+        }
+      },
+    },
+    {
+      count: 16,
+      cands: GENTLE_MATCH_CANDS,
+      build: (i, ctx, [ex, answer, other]) => {
+        const c = OBJ[ex].color
+        if (!REF[c] || OBJ[answer].color !== c || hasColor(other, c) || (catOf(ex) && catOf(other) === catOf(ex))) reject()
+        return {
+          type: 'same',
+          prompt: variant(SAMECOLOR_PROMPTS, i),
+          items: [{ obj: ex }],
+          choices: objChoices(answer, [other], ctx.pos(2), ctx),
+          answer,
+          hint: `這個是${colorWord(c)}，${REF[c]}。找找看，哪一個也是${colorWord(c)}？`,
+          params: { colorWord: colorWord(c), swatch: SWATCH[c] },
+        }
+      },
+    },
+  ],
+  { gentle: true, seed: 74, startAt: classify1g.length, sig: true },
+)
+
+const patternObjs = ['obj-banana', 'obj-apple', 'obj-fish', 'obj-chick', 'obj-peach', 'obj-rabbit']
+const pattern1gAdd = cell(
+  'pattern',
+  1,
+  [
+    {
+      count: 24,
+      cands: orderedPairs(patternObjs, () => true),
+      build: (i, ctx, [a, b]) => {
+        // 展示 6 個（三輪 A B），其中一格是空的（第 4 或第 5 個），問空格裡是哪一個；只有 2 個選項（A、B）
+        const q = seqQ(i, ctx, 'missing', 'AB', [a, b, a], 6, 3 + (i % 2))
+        q.choices = objChoices(q.answer, [q.answer === a ? b : a], ctx.pos(2), ctx)
+        q.hint = `你看，${nm(a)}、${nm(b)}，${nm(a)}、${nm(b)}，${nm(a)}、${nm(b)}。一個接一個，空格裡是誰呢？`
+        return q
+      },
+    },
+  ],
+  { gentle: true, seed: 74, startAt: pattern1g.length, sig: true },
+)
+
 // ---------- 輸出 ----------
 /** 每題一個區塊、items/choices 每個元素一行，方便人工審閱與 diff */
 function toReadableJson(questions) {
@@ -1946,9 +2044,9 @@ const dump = (name, cells) => {
   for (const q of all) byCell[`d${q.difficulty}${q.gentle ? 'g' : ''}`] = (byCell[`d${q.difficulty}${q.gentle ? 'g' : ''}`] ?? 0) + 1
   console.log(`${name}.json  ${all.length} 題  ${JSON.stringify(byCell)}`)
 }
-dump('number', [number1, number2, number3, number4, number1g])
-dump('classify', [classify1, classify2, classify3, classify4, classify1g])
-dump('pattern', [pattern1, pattern2, pattern3, pattern4, pattern1g])
+dump('number', [number1, number2, number3, number4, number1g, number1gAdd])
+dump('classify', [classify1, classify2, classify3, classify4, classify1g, classify1gAdd])
+dump('pattern', [pattern1, pattern2, pattern3, pattern4, pattern1g, pattern1gAdd])
 dump('measure', [measure1, measure2, measure3, measure4, measure1g])
 dump('space', [space1, space2, space3, space4, space1g])
 dump('observe', [observe1, observe2, observe3, observe4, observe1g])

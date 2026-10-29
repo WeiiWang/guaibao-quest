@@ -2618,5 +2618,421 @@
     "answer": "obj-banana",
     "hint": "這個是水果。找找看，哪一個也是水果？",
     "params": {"groupName":"水果"}
+  },
+  {
+    "id": "classify-1-g25", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "哪一個是黃色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g26", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "找找看，黃色的是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-banana",
+    "hint": "黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g27", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "哪一個是黃色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-banana",
+    "hint": "黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g28", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "找找看，黃色的是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g29", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "哪一個是紅色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-apple",
+    "hint": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+    "params": {"colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-1-g30", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "找找看，紅色的是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+    "params": {"colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-1-g31", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "哪一個是藍色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-fish",
+    "hint": "藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。",
+    "params": {"colorWord":"藍色","swatch":"#5aa9f0"}
+  },
+  {
+    "id": "classify-1-g32", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "找找看，藍色的是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。",
+    "params": {"colorWord":"藍色","swatch":"#5aa9f0"}
+  },
+  {
+    "id": "classify-1-g33", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "哪一個是紅色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+    "params": {"colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-1-g34", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "找找看，紅色的是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-apple",
+    "hint": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+    "params": {"colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-1-g35", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "哪一個是紅色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-apple",
+    "hint": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+    "params": {"colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-1-g36", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "找找看，紅色的是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-apple",
+    "hint": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+    "params": {"colorWord":"紅色","swatch":"#ef5350"}
+  },
+  {
+    "id": "classify-1-g37", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "哪一個是黃色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "黃色，像太陽，像小鴨。你看，這個是小雞，它是黃色的喔。",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g38", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "找找看，黃色的是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-chick",
+    "hint": "黃色，像太陽，像小鴨。你看，這個是小雞，它是黃色的喔。",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g39", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "哪一個是藍色的？",
+    "items": [],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-fish",
+    "hint": "藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。",
+    "params": {"colorWord":"藍色","swatch":"#5aa9f0"}
+  },
+  {
+    "id": "classify-1-g40", "skill": "classify", "difficulty": 1, "type": "color", "version": 2, "gentle": true,
+    "prompt": "找找看，藍色的是哪一個？",
+    "items": [],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-fish",
+    "hint": "藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。",
+    "params": {"colorWord":"藍色","swatch":"#5aa9f0"}
+  },
+  {
+    "id": "classify-1-g41", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-chick",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g42", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個顏色一樣的。",
+    "items": [
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g43", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g44", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個顏色一樣的。",
+    "items": [
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-star",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g45", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-banana",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g46", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個顏色一樣的。",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g47", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-chick","obj":"obj-chick"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-chick",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g48", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個顏色一樣的。",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g49", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-peach"}
+    ],
+    "choices": [
+      {"id":"obj-flower","obj":"obj-flower"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-flower",
+    "hint": "這個是粉紅色，像棉花糖，像櫻花。找找看，哪一個也是粉紅色？",
+    "params": {"colorWord":"粉紅色","swatch":"#ffb3c7"}
+  },
+  {
+    "id": "classify-1-g50", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個顏色一樣的。",
+    "items": [
+      {"obj":"obj-flower"}
+    ],
+    "choices": [
+      {"id":"obj-fish","obj":"obj-fish"},
+      {"id":"obj-peach","obj":"obj-peach"}
+    ],
+    "answer": "obj-peach",
+    "hint": "這個是粉紅色，像棉花糖，像櫻花。找找看，哪一個也是粉紅色？",
+    "params": {"colorWord":"粉紅色","swatch":"#ffb3c7"}
+  },
+  {
+    "id": "classify-1-g51", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-banana"}
+    ],
+    "choices": [
+      {"id":"obj-star","obj":"obj-star"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-star",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g52", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個顏色一樣的。",
+    "items": [
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-banana","obj":"obj-banana"}
+    ],
+    "answer": "obj-banana",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g53", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-chick"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-star","obj":"obj-star"}
+    ],
+    "answer": "obj-star",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g54", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個顏色一樣的。",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-apple","obj":"obj-apple"}
+    ],
+    "answer": "obj-banana",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g55", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "哪一個跟這個是一樣的顏色？",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-banana","obj":"obj-banana"},
+      {"id":"obj-fish","obj":"obj-fish"}
+    ],
+    "answer": "obj-banana",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
+  },
+  {
+    "id": "classify-1-g56", "skill": "classify", "difficulty": 1, "type": "same", "version": 2, "gentle": true,
+    "prompt": "找出和這個顏色一樣的。",
+    "items": [
+      {"obj":"obj-star"}
+    ],
+    "choices": [
+      {"id":"obj-apple","obj":"obj-apple"},
+      {"id":"obj-chick","obj":"obj-chick"}
+    ],
+    "answer": "obj-chick",
+    "hint": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+    "params": {"colorWord":"黃色","swatch":"#ffd84d"}
   }
 ]

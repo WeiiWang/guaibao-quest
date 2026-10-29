@@ -5,6 +5,7 @@ import { Repo } from './repo'
 import { FOOD_IDS } from '../domain/constants'
 import { localDateStr } from '../domain/date'
 import { favoriteFoodOf } from '../domain/favorite'
+import { dropFoods, GIFT_STICKERS } from '../domain/gifts'
 import { collectionStep, FRIENDS } from '../domain/friends'
 import { makeRng } from '../learning/rng'
 import { QUESTIONS } from '../learning/bank'
@@ -58,7 +59,7 @@ describe('學習掉落食物（completeStation）', () => {
     expect(r.ok && r.foods.length).toBe(1)
     expect(await repo.getPendingGifts()).toEqual([])
   })
-  it('每日冒險同一規則；同一個 session 重複領不會多掉；注入同樣亂數 → 同樣食物', async () => {
+  it('同一個 session 重複領不會多掉；同樣的答案 → 同樣的食物（固定輪替）', async () => {
     await playStation(1, 's1')
     const first = await repo.completeStation({ chapterId: 'huaguoshan', station: 1, sessionId: 's1' }, T0)
     const again = await repo.completeStation({ chapterId: 'huaguoshan', station: 1, sessionId: 's1' }, T0)
@@ -70,13 +71,22 @@ describe('學習掉落食物（completeStation）', () => {
     const second = await r2.completeStation({ chapterId: 'huaguoshan', station: 1, sessionId: 's1' }, T0)
     expect(second.ok && first.ok && second.foods).toEqual(first.ok ? first.foods : [])
   })
-  it('亂數可注入：rng 固定 0 → 權重表第一個食物；固定接近 1 → 最後一個（不是蛋糕）', async () => {
+  it('食物種類固定輪替：今天第 1 個掉最愛的，之後依清單順序，序號跨站接續；隔天從新的最愛開始', async () => {
     const { grantStationFoods } = await import('./meta')
-    const g0 = await grantStationFoods(repo.db, () => 0, T0, 5)
-    const g1 = await grantStationFoods(repo.db, () => 0.999999, T0, 0)
-    expect(g0).toEqual(['carrot', 'carrot'])
-    expect(g1).toEqual(['watermelon'])
-    expect(favoriteFoodOf(localDateStr(T0))).toBeTruthy() // 加權細節在 domain/gifts.test.ts
+    const date = localDateStr(T0)
+    const g0 = await grantStationFoods(repo.db, T0, 5) // 2 個
+    const g1 = await grantStationFoods(repo.db, T0, 0) // 1 個，接著第 3 個
+    expect(g0).toEqual(dropFoods(date, 0, 2))
+    expect(g1).toEqual(dropFoods(date, 2, 1))
+    expect((await repo.getSettings())?.foodDrop).toEqual({ date, n: 3 })
+    const next = await grantStationFoods(repo.db, T0 + DAY, 0)
+    expect(next).toEqual(dropFoods(localDateStr(T0 + DAY), 0, 1))
+    expect((await repo.getSettings())?.foodDrop).toEqual({ date: localDateStr(T0 + DAY), n: 1 })
+    expect(favoriteFoodOf(date)).toBeTruthy()
+  })
+  it('重玩固定掉 1 個食物，不看答對幾題', async () => {
+    const { grantStationFoods } = await import('./meta')
+    expect(await grantStationFoods(repo.db, T0, 5, 1)).toHaveLength(1)
   })
 })
 
@@ -101,25 +111,43 @@ describe('今日小禮物', () => {
     expect(await repo.grantDailyGift(T0 + 5 * DAY)).not.toBeNull()
     expect(await repo.getPendingGifts()).toHaveLength(2)
   })
-  it('食物進背包、材料進材料帳、貼紙記錄在 settings.stickers', async () => {
+  it('食物進背包、材料進材料帳、貼紙記錄在 settings.stickers；種類固定輪替（食物、材料、食物、貼紙）', async () => {
     await guideDone()
-    const seen = { food: 0, material: 0, sticker: 0 }
-    for (let i = 1; i <= 60; i++) {
+    const kinds: string[] = []
+    const stickers: string[] = []
+    for (let i = 1; i <= 24; i++) {
       const g = await repo.grantDailyGift(T0 + i * DAY)
       if (g?.foodId) {
-        seen.food++
+        kinds.push('food')
         expect(await qty(g.foodId)).toBeGreaterThan(0)
       } else if (g?.materialId) {
-        seen.material++
+        kinds.push('material')
         expect((await repo.materialBalance())[g.materialId]).toBeGreaterThanOrEqual(2)
       } else if (g?.stickerId) {
-        seen.sticker++
+        kinds.push('sticker')
+        stickers.push(g.stickerId)
         expect((await repo.getSettings())?.stickers).toContain(g.stickerId)
       }
     }
-    expect(seen.food).toBeGreaterThan(0)
-    expect(seen.material).toBeGreaterThan(0)
-    expect(seen.food + seen.material + seen.sticker).toBe(60)
+    expect(kinds).toEqual(Array.from({ length: 24 }, (_, n) => ['food', 'material', 'food', 'sticker'][n % 4]))
+    expect(stickers).toEqual(GIFT_STICKERS.slice(0, 6)) // 順序固定、不重複
+    expect((await repo.getSettings())?.dailyGiftSeq).toBe(24)
+  })
+  it('貼紙已經有了（朋友圖鑑之類送的）就跳過；全部送完改送食物', async () => {
+    await guideDone()
+    await repo.db.settings.update('main', { stickers: [...GIFT_STICKERS.slice(0, 2)], dailyGiftSeq: 3 })
+    const g = await repo.grantDailyGift(T0 + DAY)
+    expect(g?.stickerId).toBe(GIFT_STICKERS[2])
+    await repo.db.settings.update('main', { stickers: [...GIFT_STICKERS], dailyGiftSeq: 7 })
+    const f = await repo.grantDailyGift(T0 + 2 * DAY)
+    expect(f?.stickerId).toBeUndefined()
+    expect(f?.foodId).toBeTruthy()
+    expect((await repo.getSettings())?.stickers).toHaveLength(GIFT_STICKERS.length) // 不重複
+  })
+  it('舊存檔沒有 dailyGiftSeq：從第 1 份（食物）開始', async () => {
+    await guideDone()
+    await repo.db.settings.update('main', { lastGiftDate: '2000-01-01', dailyGiftSeq: undefined })
+    expect((await repo.grantDailyGift(T0))?.foodId).toBeTruthy()
   })
 })
 

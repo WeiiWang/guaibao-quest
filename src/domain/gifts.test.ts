@@ -3,7 +3,7 @@ import { FOOD_IDS } from './constants'
 import { favoriteFoodOf } from './favorite'
 import { collectionStep, FRIEND_TABS, familiarityOf, friendCount, friendStats, answerFriendOf } from './friends'
 import { FRIENDS, objectsInQuestion } from './friends'
-import { FAVORITE_BOOST, collectionRewardsDue, dropWeights, giftKind, rollDailyGift, rollStationDrop, DROP_FOODS } from './gifts'
+import { DAILY_ROTATION, DROP_FOODS, GIFT_STICKERS, collectionRewardsDue, dailyGiftAt, dropFoodAt, dropFoodOrder, dropFoods, giftKind, groupFoods, nextGiftSticker } from './gifts'
 import { GIFT_COLLECT_LINE, GIFT_DAILY_LINE, TIME_WARN_LINE, giftFoodLine, giftLine } from './giftLines'
 import { TRICKS, learnLine, earnedTricks, newTricks, pickTrick, skillMilestone } from './tricks'
 import { makeRng } from '../learning/rng'
@@ -12,74 +12,106 @@ import { QUESTIONS } from '../learning/bank'
 
 const DATE = '2026-10-27'
 
-describe('學習掉落食物', () => {
-  it('永遠掉得出東西、不掉蛋糕、只掉列表內的食物', () => {
-    const rng = makeRng(1)
-    for (let i = 0; i < 2000; i++) {
-      const f = rollStationDrop(rng, DATE)
-      expect(f).not.toBe('cake')
-      expect(DROP_FOODS).toContain(f)
-    }
-  })
-  it('今天最愛的食物機率比一般同價位的高（約 3 倍權重）', () => {
+describe('學習掉落食物（固定輪替，不靠亂數）', () => {
+  it('同一天同一個序號永遠掉同一種：今天最愛的先掉，之後依清單順序輪下去，不掉蛋糕', () => {
     const fav = favoriteFoodOf(DATE)
-    const w = dropWeights(DATE)
-    const wf = w.find((x) => x.id === fav)
-    if (fav === 'cake') {
-      expect(wf).toBeUndefined() // 最愛是蛋糕：沒有加權對象，也不會掉
-      return
+    const order = dropFoodOrder(DATE)
+    expect(order).toHaveLength(DROP_FOODS.length)
+    expect([...order].sort()).toEqual([...DROP_FOODS].sort())
+    if (DROP_FOODS.includes(fav)) expect(order[0]).toBe(fav)
+    for (let n = 0; n < 40; n++) {
+      expect(dropFoodAt(DATE, n)).toBe(dropFoodAt(DATE, n))
+      expect(DROP_FOODS).toContain(dropFoodAt(DATE, n))
+      expect(dropFoodAt(DATE, n)).not.toBe('cake')
     }
-    const base = dropWeights('1999-01-01').find((x) => x.id === fav)!.weight
-    // 同一種食物，在「它是最愛」與「不是最愛」兩天的權重差 FAVORITE_BOOST 倍
-    const days = ['2026-10-20', '2026-10-21', '2026-10-22', '2026-10-23', '2026-10-24', '2026-10-25', '2026-10-26', '2026-10-28', '2026-10-29']
-    const notFav = days.find((d) => favoriteFoodOf(d) !== fav)!
-    expect(wf!.weight).toBe(dropWeights(notFav).find((x) => x.id === fav)!.weight * FAVORITE_BOOST)
-    expect(base).toBeGreaterThan(0)
-    // 實際抽樣：最愛的頻率高於「權重相同的一般食物」
-    const rng = makeRng(7)
-    const N = 30000
-    const count: Record<string, number> = {}
-    for (let i = 0; i < N; i++) {
-      const f = rollStationDrop(rng, DATE)
-      count[f] = (count[f] ?? 0) + 1
-    }
-    const total = w.reduce((s, x) => s + x.weight, 0)
-    expect(count[fav] / N).toBeGreaterThan((wf!.weight / total) * 0.9)
-    expect(count[fav] / N).toBeLessThan((wf!.weight / total) * 1.1)
-    const sameBase = w.filter((x) => x.id !== fav && x.weight === wf!.weight / FAVORITE_BOOST)
-    for (const o of sameBase) expect(count[fav]).toBeGreaterThan(count[o.id] * 2)
+    // 連續掉的食物依清單順序（接在最愛後面）
+    const at = DROP_FOODS.indexOf(order[0])
+    for (let k = 0; k < order.length; k++) expect(order[k]).toBe(DROP_FOODS[(at + k) % DROP_FOODS.length])
+    expect(dropFoodAt(DATE, DROP_FOODS.length)).toBe(order[0]) // 輪一圈回到最愛
   })
-  it('每一種不是蛋糕的食物都有機會掉（可以湊齊）', () => {
-    const rng = makeRng(3)
-    const seen = new Set<string>()
-    for (let i = 0; i < 3000; i++) seen.add(rollStationDrop(rng, DATE))
+  it('一次掉 2 個 = 連續兩個序號；兩段拆開掉結果一樣（序號接續）', () => {
+    expect(dropFoods(DATE, 0, 2)).toEqual([dropFoodAt(DATE, 0), dropFoodAt(DATE, 1)])
+    expect([...dropFoods(DATE, 0, 3), ...dropFoods(DATE, 3, 2)]).toEqual(dropFoods(DATE, 0, 5))
+    expect(dropFoods(DATE, 4, 0)).toEqual([])
+  })
+  it('每一種不是蛋糕的食物都會輪到（可以湊齊）；每天的起點是當天最愛，不同日期起點會變', () => {
+    const seen = new Set(dropFoods(DATE, 0, DROP_FOODS.length))
     expect([...seen].sort()).toEqual(FOOD_IDS.filter((f) => f !== 'cake').sort())
+    const firsts = new Set(Array.from({ length: 30 }, (_, i) => dropFoodAt(`2026-11-${String(i + 1).padStart(2, '0')}`, 0)))
+    expect(firsts.size).toBeGreaterThan(3)
+  })
+  it('最愛是蛋糕的日子：從清單第一個開始，一樣不掉蛋糕', () => {
+    let found = ''
+    for (let m = 1; m <= 12 && !found; m++) for (let d = 1; d <= 28 && !found; d++) {
+      const date = `2027-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+      if (favoriteFoodOf(date) === 'cake') found = date
+    }
+    expect(found, '一年裡總會有最愛是蛋糕的日子').not.toBe('')
+    expect(dropFoodAt(found, 0)).toBe(DROP_FOODS[0])
+    expect(dropFoods(found, 0, 20)).not.toContain('cake')
   })
 })
 
-describe('今日小禮物', () => {
-  it('食物 60%、材料 30%（任一種 2 個）、貼紙 10%', () => {
-    const rng = makeRng(11)
-    const N = 20000
-    const k = { food: 0, material: 0, sticker: 0 }
-    const mats = new Set<string>()
-    for (let i = 0; i < N; i++) {
-      const g = rollDailyGift(rng, DATE, 1)
-      k[giftKind(g)]++
-      expect(g.from).toBe('daily')
-      if (g.materialId) {
-        mats.add(g.materialId)
-        expect(g.qty).toBe(2)
-      }
-      if (g.foodId) expect(g.foodId).not.toBe('cake')
+describe('結算的食物合併（H4）', () => {
+  it('同一種合併成一組、保留第一次出現的順序；不同的各一組', () => {
+    expect(groupFoods(['apple', 'apple'])).toEqual([{ id: 'apple', n: 2 }])
+    expect(groupFoods(['apple', 'banana', 'apple'])).toEqual([{ id: 'apple', n: 2 }, { id: 'banana', n: 1 }])
+    expect(groupFoods(['carrot'])).toEqual([{ id: 'carrot', n: 1 }])
+    expect(groupFoods([])).toEqual([])
+  })
+})
+
+describe('今日小禮物（固定輪替：食物、材料、食物、貼紙）', () => {
+  it('種類依序輪替，4 份一輪；沒有機率', () => {
+    expect(DAILY_ROTATION).toEqual(['food', 'material', 'food', 'sticker'])
+    const kinds = Array.from({ length: 12 }, (_, n) => giftKind(dailyGiftAt(n, DATE, 1, [])))
+    expect(kinds).toEqual(['food', 'material', 'food', 'sticker', 'food', 'material', 'food', 'sticker', 'food', 'material', 'food', 'sticker'])
+    // 純函式：同樣輸入同樣結果
+    for (let n = 0; n < 12; n++) expect(dailyGiftAt(n, DATE, 1, [])).toEqual(dailyGiftAt(n, DATE, 1, []))
+  })
+  it('食物是今天掉落順序的第一個（不是蛋糕）；一律標記 daily', () => {
+    for (const n of [0, 2, 4, 6]) {
+      const g = dailyGiftAt(n, DATE, 7)
+      expect(g).toEqual({ foodId: dropFoodAt(DATE, 0), at: 7, from: 'daily' })
+      expect(g.foodId).not.toBe('cake')
     }
-    expect(k.food / N).toBeGreaterThan(0.57)
-    expect(k.food / N).toBeLessThan(0.63)
-    expect(k.material / N).toBeGreaterThan(0.27)
-    expect(k.material / N).toBeLessThan(0.33)
-    expect(k.sticker / N).toBeGreaterThan(0.08)
-    expect(k.sticker / N).toBeLessThan(0.12)
-    expect(mats.size).toBe(3)
+  })
+  it('材料每一輪換一種（木、石、花），一次 2 個', () => {
+    const mats = [1, 5, 9, 13].map((n) => dailyGiftAt(n, DATE, 1))
+    for (const g of mats) expect(g).toMatchObject({ qty: 2, from: 'daily' })
+    expect(mats.map((g) => g.materialId)).toEqual(['wood', 'stone', 'flower', 'wood'])
+  })
+  it('貼紙依固定順序送、不重複；送完改送食物', () => {
+    const owned: string[] = []
+    const got: string[] = []
+    for (let round = 0; round < GIFT_STICKERS.length; round++) {
+      const g = dailyGiftAt(round * 4 + 3, DATE, 1, owned)
+      expect(g.stickerId, `第 ${round + 1} 張貼紙`).toBe(GIFT_STICKERS[round])
+      owned.push(g.stickerId!)
+      got.push(g.stickerId!)
+    }
+    expect(new Set(got).size).toBe(GIFT_STICKERS.length)
+    const after = dailyGiftAt(GIFT_STICKERS.length * 4 + 3, DATE, 1, owned)
+    expect(after.stickerId).toBeUndefined()
+    expect(after.foodId).toBe(dropFoodAt(DATE, 0))
+    // 已經有的貼紙（例如朋友圖鑑送的）會被跳過，不會重複送
+    expect(dailyGiftAt(3, DATE, 1, [GIFT_STICKERS[0], GIFT_STICKERS[1]]).stickerId).toBe(GIFT_STICKERS[2])
+    expect(nextGiftSticker([])).toBe(GIFT_STICKERS[0])
+    expect(nextGiftSticker([...GIFT_STICKERS])).toBeNull()
+  })
+  it('貼紙清單：沒有重複，全部都是貼紙盤裡的貼紙', async () => {
+    const { STICKERS } = await import('../ui/screens/coloring/stickers')
+    expect(new Set(GIFT_STICKERS).size).toBe(GIFT_STICKERS.length)
+    const tray = new Set(STICKERS.map((x) => x.art))
+    for (const id of GIFT_STICKERS) expect(tray.has(id), id).toBe(true)
+  })
+  it('貼紙禮物不含線 I 預設開放的 8 張（孩子本來就有的不能當禮物）', () => {
+    for (const art of ['pet-adult-happy', 'obj-banana', 'obj-apple', 'obj-peach', 'obj-grape', 'food-cake', 'decor-rocket', 'decor-dino']) expect(GIFT_STICKERS, art).not.toContain(art)
+    expect(GIFT_STICKERS).toHaveLength(10)
+  })
+  it('壞掉的序號（負數、小數）也安全', () => {
+    expect(giftKind(dailyGiftAt(-3, DATE, 1, []))).toBe('food')
+    expect(giftKind(dailyGiftAt(1.7, DATE, 1, []))).toBe('material')
   })
 })
 

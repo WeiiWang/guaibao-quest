@@ -426,8 +426,9 @@ try {
     }
     const nChoices = await g.page.locator('[data-testid=choice]').count()
     gentleOk = gentleOk && nChoices === 2 && q.difficulty === 1
-    if (q.skill === 'number') gentleOk = gentleOk && Number(q.answer) <= 3
-    if (q.skill === 'pattern') gentleOk = gentleOk && q.params.core === 2 && q.items.length === 7
+    // v7.4：3 歲題型池擴充：比多少（compare，答案是 A / B、兩堆 1–5 個）、缺一個（missing，6 格含 1 個空格）
+    if (q.skill === 'number') gentleOk = gentleOk && (q.type === 'compare' ? q.choices.every((c) => c.count >= 1 && c.count <= 5) : Number(q.answer) <= 3)
+    if (q.skill === 'pattern') gentleOk = gentleOk && q.params.core === 2 && q.items.length === (q.type === 'missing' ? 6 : 7)
     if (q.skill === 'classify') gentleOk = gentleOk && !!q.gentle
     if (i === 0) {
       await shot(g.page, 'gentle-q')

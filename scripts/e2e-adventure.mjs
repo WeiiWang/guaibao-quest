@@ -231,7 +231,7 @@ try {
   await toHash(page, 'map')
   await page.waitForSelector('[data-testid=map]')
   check('地圖：第 1 站可點、第 2 站與寶箱鎖住', (await page.getByTestId('station-1').isEnabled()) && (await page.getByTestId('station-2').isDisabled()) && (await page.getByTestId('chest-node').isDisabled()))
-  check('地圖：後續章節顯示「即將開放」', (await page.getByText('即將開放').count()) === 2)
+  check('地圖：後續章節改成溫和的預告（v7.4：不再說「即將開放」，也沒有鎖頭）', (await page.getByText('即將開放').count()) === 0 && (await page.getByTestId('soon-item').count()) === 2)
   check('地圖：沒有任何付費/訂閱字樣出現在兒童端', (await page.getByText(/訂閱|NT\$/).count()) === 0)
 
   // ---------- 第 1 站：Q2 錯一次、Q4 錯兩次（若選項夠多） ----------

@@ -2261,5 +2261,269 @@
     "answer": "2",
     "hint": "再看一次，跟阿悟一起數，一個一個點。",
     "params": {"flash":1800}
+  },
+  {
+    "id": "number-1-g25", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的香蕉比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-banana","count":1,"tone":"blue"},
+      {"id":"B","obj":"obj-banana","count":3,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g26", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的蘋果比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-apple","count":3,"tone":"blue"},
+      {"id":"B","obj":"obj-apple","count":1,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g27", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的小魚比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-fish","count":1,"tone":"blue"},
+      {"id":"B","obj":"obj-fish","count":3,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g28", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的小雞比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-chick","count":3,"tone":"blue"},
+      {"id":"B","obj":"obj-chick","count":1,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g29", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的香蕉比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-banana","count":4,"tone":"blue"},
+      {"id":"B","obj":"obj-banana","count":1,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g30", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的蘋果比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-apple","count":1,"tone":"blue"},
+      {"id":"B","obj":"obj-apple","count":4,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g31", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的小魚比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-fish","count":1,"tone":"blue"},
+      {"id":"B","obj":"obj-fish","count":4,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g32", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的小雞比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-chick","count":4,"tone":"blue"},
+      {"id":"B","obj":"obj-chick","count":1,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g33", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的香蕉比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-banana","count":1,"tone":"blue"},
+      {"id":"B","obj":"obj-banana","count":5,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g34", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的蘋果比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-apple","count":5,"tone":"blue"},
+      {"id":"B","obj":"obj-apple","count":1,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g35", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的小魚比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-fish","count":1,"tone":"blue"},
+      {"id":"B","obj":"obj-fish","count":5,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g36", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的小雞比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-chick","count":5,"tone":"blue"},
+      {"id":"B","obj":"obj-chick","count":1,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g37", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的香蕉比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-banana","count":2,"tone":"blue"},
+      {"id":"B","obj":"obj-banana","count":4,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g38", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的蘋果比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-apple","count":4,"tone":"blue"},
+      {"id":"B","obj":"obj-apple","count":2,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g39", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的小魚比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-fish","count":4,"tone":"blue"},
+      {"id":"B","obj":"obj-fish","count":2,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g40", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的小雞比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-chick","count":2,"tone":"blue"},
+      {"id":"B","obj":"obj-chick","count":4,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g41", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的香蕉比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-banana","count":2,"tone":"blue"},
+      {"id":"B","obj":"obj-banana","count":5,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g42", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的蘋果比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-apple","count":5,"tone":"blue"},
+      {"id":"B","obj":"obj-apple","count":2,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g43", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的小魚比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-fish","count":2,"tone":"blue"},
+      {"id":"B","obj":"obj-fish","count":5,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g44", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的小雞比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-chick","count":5,"tone":"blue"},
+      {"id":"B","obj":"obj-chick","count":2,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g45", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的香蕉比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-banana","count":3,"tone":"blue"},
+      {"id":"B","obj":"obj-banana","count":5,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g46", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的蘋果比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-apple","count":5,"tone":"blue"},
+      {"id":"B","obj":"obj-apple","count":3,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g47", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "哪一堆的小魚比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-fish","count":5,"tone":"blue"},
+      {"id":"B","obj":"obj-fish","count":3,"tone":"orange"}
+    ],
+    "answer": "A",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
+  },
+  {
+    "id": "number-1-g48", "skill": "number", "difficulty": 1, "type": "compare", "version": 2, "gentle": true,
+    "prompt": "找找看，哪一堆的小雞比較多？",
+    "items": [],
+    "choices": [
+      {"id":"A","obj":"obj-chick","count":3,"tone":"blue"},
+      {"id":"B","obj":"obj-chick","count":5,"tone":"orange"}
+    ],
+    "answer": "B",
+    "hint": "一個配一個看看，多出來的那一堆，就是比較多的。"
   }
 ]
