@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import type { BrushKind, ColoringSticker, ColoringStroke } from '../../../domain/types'
 import { clampScale, clampStickerPos, mirrorStroke, STICKER_BASE, strokeNear, type PaintDoc } from '../../../domain/coloring'
 import { clientToUnit, clampView, panBy, pinchView, stepZoom, VIEW_HOME, zoomAt, type View } from '../../../domain/viewport'
+import { PALM_INIT, palmCheck, type PalmInput, type PalmState } from '../../../domain/palm'
 import { drawBackground } from '../../../art/coloring/backgrounds'
 import { drawStroke } from '../../../art/coloring/brushes'
 import { getColoringPage, isFreePage } from '../../../art/coloring/pages'
@@ -246,8 +247,9 @@ export function PaintBoard(props: Props) {
       props.onGestureEnd()
     }
   }
-  /** 手掌：touch 的接觸面積很大（半徑 > 20 = 寬 > 40px）就不畫、也不算手指 */
-  const isPalm = (e: { pointerType: string; width: number; height: number }) => e.pointerType === 'touch' && Math.max(e.width, e.height) > 40
+  /** 手掌：touch 的接觸面積很大就不畫、也不算手指；iPhone 這類回報面積偏大的裝置會自動退場（見 domain/palm.ts） */
+  const palm = useRef<PalmState>({ ...PALM_INIT })
+  const isPalm = (e: PalmInput) => palmCheck(palm.current, e, ptrs.current.size === 0)
 
   const cancelSingle = () => {
     if (mode.current === 'brush') {

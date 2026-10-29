@@ -594,16 +594,16 @@ try {
     const cx = bb.x + bb.width / 2
     const cy = bb.y + bb.height / 2
     const n0 = (await docOf(page, PAGE)).strokes?.length ?? 0
-    await touch('touchStart', [[cx - 100, cy, 40]])
-    for (let i = 1; i <= 6; i++) await touch('touchMove', [[cx - 100 + i * 20, cy + i * 5, 40]])
+    await touch('touchStart', [[cx - 100, cy, 60]])
+    for (let i = 1; i <= 6; i++) await touch('touchMove', [[cx - 100 + i * 20, cy + i * 5, 60]])
     await touch('touchEnd', [])
     await page.waitForTimeout(200)
-    check('手掌防護：接觸半徑 > 20（寬 > 40px）的觸控不畫', ((await docOf(page, PAGE)).strokes?.length ?? 0) === n0)
+    check('手掌防護：接觸半徑 > 50（寬 > 100px）的觸控不畫', ((await docOf(page, PAGE)).strokes?.length ?? 0) === n0)
     // 手指畫線中，手掌（大面積）碰到畫面：不影響那一筆
     await touch('touchStart', [[cx - 100, cy - 80, 1]])
     for (let i = 1; i <= 3; i++) await touch('touchMove', [[cx - 100 + i * 20, cy - 80, 1]])
-    await touch('touchStart', [[cx - 100 + 60, cy - 80, 1], [cx + 200, cy + 150, 45]])
-    for (let i = 4; i <= 8; i++) await touch('touchMove', [[cx - 100 + i * 20, cy - 80, 1], [cx + 200 + i, cy + 150, 45]])
+    await touch('touchStart', [[cx - 100 + 60, cy - 80, 1], [cx + 200, cy + 150, 60]])
+    for (let i = 4; i <= 8; i++) await touch('touchMove', [[cx - 100 + i * 20, cy - 80, 1], [cx + 200 + i, cy + 150, 60]])
     await touch('touchEnd', [])
     await page.waitForTimeout(250)
     const st = (await docOf(page, PAGE)).strokes ?? []
@@ -686,6 +686,29 @@ try {
     await page.waitForTimeout(250)
     const undone = (await docOf(page, PAGE)).stickers[0]
     check('貼紙：雙指縮放旋轉是一個復原步驟', Math.abs(undone.scale - before.scale) < 0.001 && undone.rot === before.rot)
+    // v7.3.1 回歸：iPhone 回報的手指接觸寬度常超過 40px（舊門檻），整個畫板沒反應。用寬 50px 的手指：拖貼紙、畫線、填色都要正常
+    const F = 25 // 半徑 25 = 寬 50px
+    const sb2 = await page.locator('[data-testid=sticker]').first().boundingBox()
+    const s0 = (await docOf(page, PAGE)).stickers[0]
+    await touch('touchStart', [[sb2.x + sb2.width / 2, sb2.y + sb2.height / 2, F]])
+    for (let i = 1; i <= 6; i++) await touch('touchMove', [[sb2.x + sb2.width / 2 + i * 15, sb2.y + sb2.height / 2 + i * 8, F]])
+    await touch('touchEnd', [])
+    await page.waitForTimeout(300)
+    const s1 = (await docOf(page, PAGE)).stickers[0]
+    check('iPhone 手指（寬 50px）：拖得動貼紙', Math.hypot(s1.x - s0.x, s1.y - s0.y) > 0.05, JSON.stringify([s0.x, s0.y, s1.x, s1.y]))
+    await page.getByTestId('tool-brush').click()
+    const nB = (await docOf(page, PAGE)).strokes.length
+    await touch('touchStart', [[bb.x + 120, bb.y + 420, F]])
+    for (let i = 1; i <= 8; i++) await touch('touchMove', [[bb.x + 120 + i * 25, bb.y + 420, F]])
+    await touch('touchEnd', [])
+    await page.waitForTimeout(300)
+    check('iPhone 手指（寬 50px）：筆刷畫得出線', (await docOf(page, PAGE)).strokes.length === nB + 1)
+    await page.getByTestId('tool-fill').click()
+    const rf = pt(bb, regs[3].anchor)
+    await touch('touchStart', [[rf.x, rf.y, F]])
+    await touch('touchEnd', [])
+    await page.waitForTimeout(600)
+    check('iPhone 手指（寬 50px）：點區塊會填色', !!(await docOf(page, PAGE)).fills[regs[3].id])
     check('試玩審查項目：JS 沒有錯誤', errors.length === 0, errors.join(' | '))
     await ctx.close()
   }
