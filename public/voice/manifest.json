@@ -144,6 +144,21 @@
   "text": "換你試試看。",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
+ "companion.replay.done": {
+  "file": "5d761c7bf34ff921.m4a",
+  "text": "再玩一次，也好棒喔！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "companion.replay.open.1": {
+  "file": "602acfa4b5ed0cf9.m4a",
+  "text": "再玩一次吧，這次是新的題目！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "companion.replay.open.2": {
+  "file": "50b79eb956915346.m4a",
+  "text": "這一站我們再走一遍！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
  "companion.tutorial.bins.1": {
   "file": "3520f7ceab05102f.m4a",
   "text": "看我把它放進籃子裡。",
@@ -2064,6 +2079,31 @@
   "text": "哇，是西瓜！你連出來了！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
+ "pet.empty.album": {
+  "file": "e82a1ef8189866c3.m4a",
+  "text": "我們一起去冒險，回憶卡就會出現囉",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.empty.food": {
+  "file": "1dd7450a4fce20a3.m4a",
+  "text": "還沒有食物，我們去冒險找吧！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.empty.material": {
+  "file": "48d5c8bffed04b46.m4a",
+  "text": "還沒有材料，我們去冒險找材料吧！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.empty.sticker": {
+  "file": "65865c9c4ac3b45d.m4a",
+  "text": "還沒有貼紙，去畫畫、收小禮物就會有喔",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.gallery.empty": {
+  "file": "0bd66f304fb938ea.m4a",
+  "text": "還沒有畫畫喔，我們去畫一張吧",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
  "pet.gift.thanks.1": {
   "file": "572c93a3af184e03.m4a",
   "text": "哇，好多禮物！",
@@ -2074,9 +2114,19 @@
   "text": "謝謝你，我最喜歡了！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
+ "pet.hungry.back": {
+  "file": "26a7e28d0612246b.m4a",
+  "text": "你回來了！我肚子有點餓餓的",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
  "pet.milestone": {
   "file": "fbf4a21466b92a04.m4a",
   "text": "我又長大一點了，送你一個小禮物！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.paint.free": {
+  "file": "ab12da9e9b458e6e.m4a",
+  "text": "再多畫幾筆，或貼一張貼紙吧",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.paint.full": {
@@ -2099,6 +2149,156 @@
   "text": "歡迎你！這是給你的禮物！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
+ "pet.wish.done.w-ball": {
+  "file": "8912e9c78cd4e379.m4a",
+  "text": "哇，是球！一起玩吧！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-beanbag": {
+  "file": "e9d92bac19cb5e38.m4a",
+  "text": "軟綿綿的，好舒服！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-bed": {
+  "file": "ad503cd3e52084c7.m4a",
+  "text": "好舒服，我要睡一下囉！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-camp": {
+  "file": "44c0b22c05751f46.m4a",
+  "text": "露營囉，好好玩！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-car": {
+  "file": "9d4478f0020515aa.m4a",
+  "text": "嘟嘟，出發囉！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-clock": {
+  "file": "5c1209d257ad44c8.m4a",
+  "text": "滴答滴答，現在是玩的時間！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-dino": {
+  "file": "32912c3d8043b21e.m4a",
+  "text": "吼吼，恐龍來了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-fishbowl": {
+  "file": "0f837b8b1fadde03.m4a",
+  "text": "小魚游來游去，好可愛！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-party": {
+  "file": "3b3165541db1e875.m4a",
+  "text": "派對開始囉！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-piano": {
+  "file": "626b35c0d092b4a7.m4a",
+  "text": "啦啦啦，我來唱歌！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-plant": {
+  "file": "5ada3ee5542c2cfc.m4a",
+  "text": "好香喔，謝謝你！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-rocket": {
+  "file": "f6b01e8e644c781f.m4a",
+  "text": "三、二、一，出發！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-shelf": {
+  "file": "e4dc984600d8d60e.m4a",
+  "text": "好多書，我們每天看一本！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-table": {
+  "file": "cb6ee10c30c0c750.m4a",
+  "text": "太好了，我們一起畫畫！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.done.w-wall": {
+  "file": "0c5b3ace16c88fa9.m4a",
+  "text": "哇，像美術館一樣！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-ball": {
+  "file": "c1819bdff3823ae7.m4a",
+  "text": "我想要一顆球，可以滾來滾去！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-beanbag": {
+  "file": "3c9ebc0e97029c90.m4a",
+  "text": "我想要一個軟軟的位子！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-bed": {
+  "file": "2e58429f8a3c187a.m4a",
+  "text": "我想要一個睡覺的地方！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-camp": {
+  "file": "b42d264934be6095.m4a",
+  "text": "我想去露營！要帳篷、燈和地毯！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-car": {
+  "file": "640bd67ff27eee06.m4a",
+  "text": "我想要一台小汽車，嘟嘟！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-clock": {
+  "file": "0b69afdfd5ba414c.m4a",
+  "text": "我想知道現在幾點了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-dino": {
+  "file": "a5f71b5f809fb453.m4a",
+  "text": "我想要一隻恐龍朋友！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-fishbowl": {
+  "file": "43154f6ced79b9a9.m4a",
+  "text": "我想要小魚做朋友！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-party": {
+  "file": "1e50f9cc9753e5e4.m4a",
+  "text": "我想開派對！要彩旗、彩虹和夜燈！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-piano": {
+  "file": "9e6b3475d0391062.m4a",
+  "text": "我想要彈鋼琴！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-plant": {
+  "file": "3a8780dc72db410e.m4a",
+  "text": "我想要一盆小花草！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-rocket": {
+  "file": "17ac20b6b64239f4.m4a",
+  "text": "我想坐火箭去月亮！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-shelf": {
+  "file": "499d11c079ae3c49.m4a",
+  "text": "我想要一個書架，放好多好多書！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-table": {
+  "file": "340e38c21ff9a613.m4a",
+  "text": "我想要一張桌子，可以畫畫！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.wish.w-wall": {
+  "file": "b8751e2d0b96a84f.m4a",
+  "text": "我想把牆布置得漂漂亮亮！要海報、畫框和層板！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
  "place.done": {
   "file": "a3d808ca67e11acd.m4a",
   "text": "放好了！",
@@ -2117,6 +2317,681 @@
  "placement.done": {
   "file": "e71ef025365d1f21.m4a",
   "text": "阿悟知道了，我們出發吧！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-ball": {
+  "file": "c5a70a75f64e0fd1.m4a",
+  "text": "今天皮球來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-beanbag": {
+  "file": "39ed749566c78e20.m4a",
+  "text": "今天沙發來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-bed": {
+  "file": "909b5f05c9da6ca0.m4a",
+  "text": "今天床來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-car": {
+  "file": "dbc4618934ac8498.m4a",
+  "text": "今天汽車來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-clock": {
+  "file": "89a68e613b47917b.m4a",
+  "text": "今天時鐘來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-crate": {
+  "file": "fd87aeab08ab3633.m4a",
+  "text": "今天箱子來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-dino": {
+  "file": "e7f668129337ef1e.m4a",
+  "text": "今天恐龍來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-lamp": {
+  "file": "ed4a290346e5c2af.m4a",
+  "text": "今天燈來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-piano": {
+  "file": "4d45591afd642ecd.m4a",
+  "text": "今天鋼琴來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-rocket": {
+  "file": "4a85f1ba56934bd9.m4a",
+  "text": "今天火箭來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-table": {
+  "file": "fb7438f4cae8013f.m4a",
+  "text": "今天桌子來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.decor-tent": {
+  "file": "b379a2c1c28a61e0.m4a",
+  "text": "今天帳篷來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.food-cake": {
+  "file": "e2961a6bc5a1d34f.m4a",
+  "text": "今天蛋糕來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.food-carrot": {
+  "file": "176b5285f37ff678.m4a",
+  "text": "今天紅蘿蔔來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.food-cookie": {
+  "file": "88df5516e5a85e56.m4a",
+  "text": "今天餅乾來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.food-milk": {
+  "file": "f96ae03239466f66.m4a",
+  "text": "今天牛奶來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.food-watermelon": {
+  "file": "db8003901d6e1f44.m4a",
+  "text": "今天西瓜來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-apple": {
+  "file": "9e42171211dde99c.m4a",
+  "text": "今天蘋果來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-banana": {
+  "file": "9d908fbbad4fcb71.m4a",
+  "text": "今天香蕉來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-bear": {
+  "file": "92cccd657359736e.m4a",
+  "text": "今天熊來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-chick": {
+  "file": "1460b017b429e4e4.m4a",
+  "text": "今天小雞來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-cow": {
+  "file": "8afe9cae29b48290.m4a",
+  "text": "今天牛來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-fish": {
+  "file": "77f30784e44e9c26.m4a",
+  "text": "今天小魚來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-flower": {
+  "file": "9bcc492d6f834df7.m4a",
+  "text": "今天花來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-grape": {
+  "file": "6b398b8afdb52269.m4a",
+  "text": "今天葡萄來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-octopus": {
+  "file": "cefbd7be607c9a50.m4a",
+  "text": "今天章魚來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-peach": {
+  "file": "64e0c92f597c9ea1.m4a",
+  "text": "今天桃子來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-rabbit": {
+  "file": "b3f2299318d2e9b7.m4a",
+  "text": "今天小兔子來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-shell": {
+  "file": "2d029abf297adae8.m4a",
+  "text": "今天貝殼來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.arrive.obj-star": {
+  "file": "0cdfff86040be12e.m4a",
+  "text": "今天星星來玩囉！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-ball": {
+  "file": "affc7764c63c41eb.m4a",
+  "text": "皮球送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-beanbag": {
+  "file": "9c9503482fb8f09e.m4a",
+  "text": "沙發送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-bed": {
+  "file": "5d68bb662866321b.m4a",
+  "text": "床送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-car": {
+  "file": "91bf14b5c5e6e55d.m4a",
+  "text": "汽車送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-clock": {
+  "file": "e11c8c09c8f87140.m4a",
+  "text": "時鐘送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-crate": {
+  "file": "59079cca5e89b527.m4a",
+  "text": "箱子送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-dino": {
+  "file": "5dc7b9df1747977e.m4a",
+  "text": "恐龍送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-lamp": {
+  "file": "8f7ba42014f84904.m4a",
+  "text": "燈送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-piano": {
+  "file": "8a61291be04064b3.m4a",
+  "text": "鋼琴送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-rocket": {
+  "file": "4fba4ec540c1be35.m4a",
+  "text": "火箭送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-table": {
+  "file": "effe1c5d0f0c9a8a.m4a",
+  "text": "桌子送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.decor-tent": {
+  "file": "112daff5ac76cbe4.m4a",
+  "text": "帳篷送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.food-cake": {
+  "file": "0f0d17562d8211c4.m4a",
+  "text": "蛋糕送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.food-carrot": {
+  "file": "7e7bf8c121a97013.m4a",
+  "text": "紅蘿蔔送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.food-cookie": {
+  "file": "f55b55d8f44f4432.m4a",
+  "text": "餅乾送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.food-milk": {
+  "file": "3aceee861588a9d7.m4a",
+  "text": "牛奶送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.food-watermelon": {
+  "file": "d87511d9b5bee532.m4a",
+  "text": "西瓜送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-apple": {
+  "file": "eae7572f5159d64a.m4a",
+  "text": "蘋果送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-banana": {
+  "file": "a4051143f9cf13c4.m4a",
+  "text": "香蕉送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-bear": {
+  "file": "283db21112d937c4.m4a",
+  "text": "熊送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-chick": {
+  "file": "cd0f3d1b5a68edd8.m4a",
+  "text": "小雞送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-cow": {
+  "file": "df2dd05a76e87d4f.m4a",
+  "text": "牛送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-fish": {
+  "file": "dd877fc62d0a5716.m4a",
+  "text": "小魚送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-flower": {
+  "file": "d0d0e98fbf65db0f.m4a",
+  "text": "花送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-grape": {
+  "file": "784472457ba92893.m4a",
+  "text": "葡萄送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-octopus": {
+  "file": "7bf1ea1ba73e02cd.m4a",
+  "text": "章魚送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-peach": {
+  "file": "c876b3ff9ed904c0.m4a",
+  "text": "桃子送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-rabbit": {
+  "file": "84b58df0a98fab73.m4a",
+  "text": "小兔子送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-shell": {
+  "file": "3f72c54079b3acf6.m4a",
+  "text": "貝殼送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.food.obj-star": {
+  "file": "cb1b3287547d6b4f.m4a",
+  "text": "星星送你好吃的！",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-ball": {
+  "file": "5bb07b978b50e6cc.m4a",
+  "text": "皮球",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-beanbag": {
+  "file": "736d500a86b9b9a8.m4a",
+  "text": "沙發",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-bed": {
+  "file": "39b2ef68aa1a51bb.m4a",
+  "text": "床",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-car": {
+  "file": "71a8803de43646f2.m4a",
+  "text": "汽車",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-clock": {
+  "file": "6e2c1b9ea38c4d8f.m4a",
+  "text": "時鐘",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-crate": {
+  "file": "15812fe31c03d583.m4a",
+  "text": "箱子",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-dino": {
+  "file": "860c846cf79d07a0.m4a",
+  "text": "恐龍",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-lamp": {
+  "file": "290501889447851e.m4a",
+  "text": "燈",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-piano": {
+  "file": "94aac716cad4265b.m4a",
+  "text": "鋼琴",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-rocket": {
+  "file": "ac48136592a47ece.m4a",
+  "text": "火箭",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-table": {
+  "file": "51e8ab6426cbb48d.m4a",
+  "text": "桌子",
+  "voice": "mama|"
+ },
+ "play.guest.name.decor-tent": {
+  "file": "9e7a4fe7a5a7c61a.m4a",
+  "text": "帳篷",
+  "voice": "mama|"
+ },
+ "play.guest.name.food-cake": {
+  "file": "18d1a57d53259f5d.m4a",
+  "text": "蛋糕",
+  "voice": "mama|"
+ },
+ "play.guest.name.food-carrot": {
+  "file": "cdf6203b6a859e5f.m4a",
+  "text": "紅蘿蔔",
+  "voice": "mama|"
+ },
+ "play.guest.name.food-cookie": {
+  "file": "a0a4bc18908d9fd0.m4a",
+  "text": "餅乾",
+  "voice": "mama|"
+ },
+ "play.guest.name.food-milk": {
+  "file": "cc9761746e9666e9.m4a",
+  "text": "牛奶",
+  "voice": "mama|"
+ },
+ "play.guest.name.food-watermelon": {
+  "file": "43d494fdbb0c1dd8.m4a",
+  "text": "西瓜",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-apple": {
+  "file": "ba663a5afa79c41d.m4a",
+  "text": "蘋果",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-banana": {
+  "file": "d735cbab575b9258.m4a",
+  "text": "香蕉",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-bear": {
+  "file": "de464ea284a5609b.m4a",
+  "text": "熊",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-chick": {
+  "file": "fea58a4506d3c377.m4a",
+  "text": "小雞",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-cow": {
+  "file": "c58f74a95bbb2d0b.m4a",
+  "text": "牛",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-fish": {
+  "file": "c5a319c6319e5d14.m4a",
+  "text": "小魚",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-flower": {
+  "file": "0a843af4130a70b9.m4a",
+  "text": "花",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-grape": {
+  "file": "6441e9acf5490da9.m4a",
+  "text": "葡萄",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-octopus": {
+  "file": "ce06bb2a32435686.m4a",
+  "text": "章魚",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-peach": {
+  "file": "5582d033af725473.m4a",
+  "text": "桃子",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-rabbit": {
+  "file": "3dadc03b5001cb49.m4a",
+  "text": "小兔子",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-shell": {
+  "file": "54bbca8a250b7273.m4a",
+  "text": "貝殼",
+  "voice": "mama|"
+ },
+ "play.guest.name.obj-star": {
+  "file": "0e7c22062c3a2c21.m4a",
+  "text": "星星",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-ball": {
+  "file": "c51563025cef93cc.m4a",
+  "text": "皮球送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-beanbag": {
+  "file": "059ad44f950a51fb.m4a",
+  "text": "沙發送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-bed": {
+  "file": "52be97589e81cdca.m4a",
+  "text": "床送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-car": {
+  "file": "25cd45bddafea2a3.m4a",
+  "text": "汽車送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-clock": {
+  "file": "933ed673b5bd0012.m4a",
+  "text": "時鐘送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-crate": {
+  "file": "21bcefb0030c1689.m4a",
+  "text": "箱子送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-dino": {
+  "file": "ac41e59af1e1eed3.m4a",
+  "text": "恐龍送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-lamp": {
+  "file": "82a1d191ebbc2006.m4a",
+  "text": "燈送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-piano": {
+  "file": "84bfeb371362e87a.m4a",
+  "text": "鋼琴送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-rocket": {
+  "file": "6d168ef613f26808.m4a",
+  "text": "火箭送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-table": {
+  "file": "d9b00bff3ae41565.m4a",
+  "text": "桌子送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.decor-tent": {
+  "file": "0423d0c5b031248e.m4a",
+  "text": "帳篷送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.food-cake": {
+  "file": "f74a303f0b2903f2.m4a",
+  "text": "蛋糕送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.food-carrot": {
+  "file": "e08d676838fcc5cf.m4a",
+  "text": "紅蘿蔔送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.food-cookie": {
+  "file": "00ef72919974a9a0.m4a",
+  "text": "餅乾送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.food-milk": {
+  "file": "3a63c691e2d760fc.m4a",
+  "text": "牛奶送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.food-watermelon": {
+  "file": "6bf0a839633981f3.m4a",
+  "text": "西瓜送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-apple": {
+  "file": "4ff2e86c6692d856.m4a",
+  "text": "蘋果送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-banana": {
+  "file": "9ea90efed8db0ec2.m4a",
+  "text": "香蕉送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-bear": {
+  "file": "3af08ff3cf0bb094.m4a",
+  "text": "熊送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-chick": {
+  "file": "fdf616d59bfaf83d.m4a",
+  "text": "小雞送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-cow": {
+  "file": "cad892334d3c7d5c.m4a",
+  "text": "牛送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-fish": {
+  "file": "40343eb209de7ad6.m4a",
+  "text": "小魚送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-flower": {
+  "file": "602189e31fb6f79a.m4a",
+  "text": "花送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-grape": {
+  "file": "0ccb3fa393457001.m4a",
+  "text": "葡萄送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-octopus": {
+  "file": "893830ec8fa31889.m4a",
+  "text": "章魚送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-peach": {
+  "file": "03399c24d6905dfe.m4a",
+  "text": "桃子送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-rabbit": {
+  "file": "c49f947cf15b11cf.m4a",
+  "text": "小兔子送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-shell": {
+  "file": "23b510faadea83df.m4a",
+  "text": "貝殼送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.guest.page.obj-star": {
+  "file": "879b9be50f7f9bfc.m4a",
+  "text": "星星送你一張新的畫！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-ball": {
+  "file": "94712a2cf1341af2.m4a",
+  "text": "小願望實現了：皮球！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-beanbag": {
+  "file": "78948e62c03e27e7.m4a",
+  "text": "小願望實現了：懶骨頭！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-bed": {
+  "file": "15435cb718f20232.m4a",
+  "text": "小願望實現了：小床！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-camp": {
+  "file": "4b1f20c3a08e0ab8.m4a",
+  "text": "小願望實現了：露營組！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-car": {
+  "file": "8cc7e7c635f60ba5.m4a",
+  "text": "小願望實現了：小汽車！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-clock": {
+  "file": "d1b0ffe81613161f.m4a",
+  "text": "小願望實現了：時鐘！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-dino": {
+  "file": "68d23705413a7a18.m4a",
+  "text": "小願望實現了：恐龍！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-fishbowl": {
+  "file": "37c52c12008d3097.m4a",
+  "text": "小願望實現了：魚缸！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-party": {
+  "file": "f5f60df3faaa9d31.m4a",
+  "text": "小願望實現了：派對組！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-piano": {
+  "file": "40de50db3b3c60e5.m4a",
+  "text": "小願望實現了：小鋼琴！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-plant": {
+  "file": "55db0eb49a3a78d1.m4a",
+  "text": "小願望實現了：小盆栽！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-rocket": {
+  "file": "0bb07182690fba50.m4a",
+  "text": "小願望實現了：火箭！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-shelf": {
+  "file": "e4ee6feca4bc5b82.m4a",
+  "text": "小願望實現了：書架！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-table": {
+  "file": "df6f9b1140af7d75.m4a",
+  "text": "小願望實現了：桌椅！",
+  "voice": "mama|"
+ },
+ "play.wish.card.w-wall": {
+  "file": "adf3765e60b716f7.m4a",
+  "text": "小願望實現了：漂亮的牆！",
   "voice": "mama|"
  },
  "praise.1": {
@@ -3067,6 +3942,486 @@
  "q.classify-1-g24.prompt": {
   "file": "add0e90804b903c6.m4a",
   "text": "找出和這個同一類的。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g25.hint": {
+  "file": "a15d2d0f402d1309.m4a",
+  "text": "黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g25.hint.gentle": {
+  "file": "d5ef6cece97ec814.m4a",
+  "text": "沒關係喔，有阿悟陪你。黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g25.prompt": {
+  "file": "7e62540bb3113b83.m4a",
+  "text": "哪一個是黃色的？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g26.hint": {
+  "file": "a15d2d0f402d1309.m4a",
+  "text": "黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g26.hint.gentle": {
+  "file": "d5ef6cece97ec814.m4a",
+  "text": "沒關係喔，有阿悟陪你。黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g26.prompt": {
+  "file": "bb2dc81aa2ad1742.m4a",
+  "text": "找找看，黃色的是哪一個？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g27.hint": {
+  "file": "a15d2d0f402d1309.m4a",
+  "text": "黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g27.hint.gentle": {
+  "file": "d5ef6cece97ec814.m4a",
+  "text": "沒關係喔，有阿悟陪你。黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g27.prompt": {
+  "file": "7e62540bb3113b83.m4a",
+  "text": "哪一個是黃色的？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g28.hint": {
+  "file": "a15d2d0f402d1309.m4a",
+  "text": "黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g28.hint.gentle": {
+  "file": "d5ef6cece97ec814.m4a",
+  "text": "沒關係喔，有阿悟陪你。黃色，像太陽，像小鴨。你看，這個是香蕉，它是黃色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g28.prompt": {
+  "file": "bb2dc81aa2ad1742.m4a",
+  "text": "找找看，黃色的是哪一個？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g29.hint": {
+  "file": "18d20e5cadb1423d.m4a",
+  "text": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g29.hint.gentle": {
+  "file": "83557e897d1a0d63.m4a",
+  "text": "沒關係喔，有阿悟陪你。紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g29.prompt": {
+  "file": "f8d78f45c79bbe61.m4a",
+  "text": "哪一個是紅色的？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g30.hint": {
+  "file": "18d20e5cadb1423d.m4a",
+  "text": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g30.hint.gentle": {
+  "file": "83557e897d1a0d63.m4a",
+  "text": "沒關係喔，有阿悟陪你。紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g30.prompt": {
+  "file": "8b498bbc2483519e.m4a",
+  "text": "找找看，紅色的是哪一個？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g31.hint": {
+  "file": "9f48bef7b5ba26d8.m4a",
+  "text": "藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g31.hint.gentle": {
+  "file": "d1056e03da8642d5.m4a",
+  "text": "沒關係喔，有阿悟陪你。藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g31.prompt": {
+  "file": "040c57d580d98978.m4a",
+  "text": "哪一個是藍色的？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g32.hint": {
+  "file": "9f48bef7b5ba26d8.m4a",
+  "text": "藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g32.hint.gentle": {
+  "file": "d1056e03da8642d5.m4a",
+  "text": "沒關係喔，有阿悟陪你。藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g32.prompt": {
+  "file": "001ff6b1d790ba03.m4a",
+  "text": "找找看，藍色的是哪一個？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g33.hint": {
+  "file": "18d20e5cadb1423d.m4a",
+  "text": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g33.hint.gentle": {
+  "file": "83557e897d1a0d63.m4a",
+  "text": "沒關係喔，有阿悟陪你。紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g33.prompt": {
+  "file": "f8d78f45c79bbe61.m4a",
+  "text": "哪一個是紅色的？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g34.hint": {
+  "file": "18d20e5cadb1423d.m4a",
+  "text": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g34.hint.gentle": {
+  "file": "83557e897d1a0d63.m4a",
+  "text": "沒關係喔，有阿悟陪你。紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g34.prompt": {
+  "file": "8b498bbc2483519e.m4a",
+  "text": "找找看，紅色的是哪一個？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g35.hint": {
+  "file": "18d20e5cadb1423d.m4a",
+  "text": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g35.hint.gentle": {
+  "file": "83557e897d1a0d63.m4a",
+  "text": "沒關係喔，有阿悟陪你。紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g35.prompt": {
+  "file": "f8d78f45c79bbe61.m4a",
+  "text": "哪一個是紅色的？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g36.hint": {
+  "file": "18d20e5cadb1423d.m4a",
+  "text": "紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g36.hint.gentle": {
+  "file": "83557e897d1a0d63.m4a",
+  "text": "沒關係喔，有阿悟陪你。紅色，像消防車，像草莓。你看，這個是蘋果，它是紅色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g36.prompt": {
+  "file": "8b498bbc2483519e.m4a",
+  "text": "找找看，紅色的是哪一個？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g37.hint": {
+  "file": "33dbeaa1da41324a.m4a",
+  "text": "黃色，像太陽，像小鴨。你看，這個是小雞，它是黃色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g37.hint.gentle": {
+  "file": "fc62eb0754d56dc4.m4a",
+  "text": "沒關係喔，有阿悟陪你。黃色，像太陽，像小鴨。你看，這個是小雞，它是黃色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g37.prompt": {
+  "file": "7e62540bb3113b83.m4a",
+  "text": "哪一個是黃色的？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g38.hint": {
+  "file": "33dbeaa1da41324a.m4a",
+  "text": "黃色，像太陽，像小鴨。你看，這個是小雞，它是黃色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g38.hint.gentle": {
+  "file": "fc62eb0754d56dc4.m4a",
+  "text": "沒關係喔，有阿悟陪你。黃色，像太陽，像小鴨。你看，這個是小雞，它是黃色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g38.prompt": {
+  "file": "bb2dc81aa2ad1742.m4a",
+  "text": "找找看，黃色的是哪一個？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g39.hint": {
+  "file": "9f48bef7b5ba26d8.m4a",
+  "text": "藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g39.hint.gentle": {
+  "file": "d1056e03da8642d5.m4a",
+  "text": "沒關係喔，有阿悟陪你。藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g39.prompt": {
+  "file": "040c57d580d98978.m4a",
+  "text": "哪一個是藍色的？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g40.hint": {
+  "file": "9f48bef7b5ba26d8.m4a",
+  "text": "藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g40.hint.gentle": {
+  "file": "d1056e03da8642d5.m4a",
+  "text": "沒關係喔，有阿悟陪你。藍色，像天空，像大海。你看，這個是小魚，它是藍色的喔。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g40.prompt": {
+  "file": "001ff6b1d790ba03.m4a",
+  "text": "找找看，藍色的是哪一個？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g41.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g41.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g41.prompt": {
+  "file": "b1520d44c60ac1b8.m4a",
+  "text": "哪一個跟這個是一樣的顏色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g42.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g42.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g42.prompt": {
+  "file": "d9816fe25ee108ff.m4a",
+  "text": "找出和這個顏色一樣的。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g43.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g43.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g43.prompt": {
+  "file": "b1520d44c60ac1b8.m4a",
+  "text": "哪一個跟這個是一樣的顏色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g44.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g44.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g44.prompt": {
+  "file": "d9816fe25ee108ff.m4a",
+  "text": "找出和這個顏色一樣的。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g45.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g45.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g45.prompt": {
+  "file": "b1520d44c60ac1b8.m4a",
+  "text": "哪一個跟這個是一樣的顏色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g46.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g46.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g46.prompt": {
+  "file": "d9816fe25ee108ff.m4a",
+  "text": "找出和這個顏色一樣的。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g47.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g47.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g47.prompt": {
+  "file": "b1520d44c60ac1b8.m4a",
+  "text": "哪一個跟這個是一樣的顏色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g48.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g48.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g48.prompt": {
+  "file": "d9816fe25ee108ff.m4a",
+  "text": "找出和這個顏色一樣的。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g49.hint": {
+  "file": "3e1bab5fc47ee635.m4a",
+  "text": "這個是粉紅色，像棉花糖，像櫻花。找找看，哪一個也是粉紅色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g49.hint.gentle": {
+  "file": "1258dad869b35aaa.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是粉紅色，像棉花糖，像櫻花。找找看，哪一個也是粉紅色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g49.prompt": {
+  "file": "b1520d44c60ac1b8.m4a",
+  "text": "哪一個跟這個是一樣的顏色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g50.hint": {
+  "file": "3e1bab5fc47ee635.m4a",
+  "text": "這個是粉紅色，像棉花糖，像櫻花。找找看，哪一個也是粉紅色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g50.hint.gentle": {
+  "file": "1258dad869b35aaa.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是粉紅色，像棉花糖，像櫻花。找找看，哪一個也是粉紅色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g50.prompt": {
+  "file": "d9816fe25ee108ff.m4a",
+  "text": "找出和這個顏色一樣的。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g51.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g51.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g51.prompt": {
+  "file": "b1520d44c60ac1b8.m4a",
+  "text": "哪一個跟這個是一樣的顏色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g52.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g52.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g52.prompt": {
+  "file": "d9816fe25ee108ff.m4a",
+  "text": "找出和這個顏色一樣的。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g53.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g53.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g53.prompt": {
+  "file": "b1520d44c60ac1b8.m4a",
+  "text": "哪一個跟這個是一樣的顏色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g54.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g54.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g54.prompt": {
+  "file": "d9816fe25ee108ff.m4a",
+  "text": "找出和這個顏色一樣的。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g55.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g55.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g55.prompt": {
+  "file": "b1520d44c60ac1b8.m4a",
+  "text": "哪一個跟這個是一樣的顏色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g56.hint": {
+  "file": "16c83c0e7d4991f3.m4a",
+  "text": "這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？",
+  "voice": "mama|"
+ },
+ "q.classify-1-g56.hint.gentle": {
+  "file": "a894a58266c190d1.m4a",
+  "text": "沒關係喔，有阿悟陪你。這個是黃色，像太陽，像小鴨。找找看，哪一個也是黃色？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.classify-1-g56.prompt": {
+  "file": "d9816fe25ee108ff.m4a",
+  "text": "找出和這個顏色一樣的。",
   "voice": "mama|"
  },
  "q.classify-2-01.hint": {
@@ -20289,6 +21644,366 @@
   "text": "看一下，有幾顆皮球？",
   "voice": "mama|"
  },
+ "q.number-1-g25.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g25.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g25.prompt": {
+  "file": "aa991795f2967a79.m4a",
+  "text": "哪一堆的香蕉比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g26.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g26.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g26.prompt": {
+  "file": "d903f948a486e01b.m4a",
+  "text": "找找看，哪一堆的蘋果比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g27.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g27.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g27.prompt": {
+  "file": "72f44c669ca02584.m4a",
+  "text": "哪一堆的小魚比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g28.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g28.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g28.prompt": {
+  "file": "78bb031c565241e2.m4a",
+  "text": "找找看，哪一堆的小雞比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g29.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g29.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g29.prompt": {
+  "file": "aa991795f2967a79.m4a",
+  "text": "哪一堆的香蕉比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g30.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g30.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g30.prompt": {
+  "file": "d903f948a486e01b.m4a",
+  "text": "找找看，哪一堆的蘋果比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g31.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g31.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g31.prompt": {
+  "file": "72f44c669ca02584.m4a",
+  "text": "哪一堆的小魚比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g32.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g32.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g32.prompt": {
+  "file": "78bb031c565241e2.m4a",
+  "text": "找找看，哪一堆的小雞比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g33.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g33.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g33.prompt": {
+  "file": "aa991795f2967a79.m4a",
+  "text": "哪一堆的香蕉比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g34.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g34.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g34.prompt": {
+  "file": "d903f948a486e01b.m4a",
+  "text": "找找看，哪一堆的蘋果比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g35.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g35.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g35.prompt": {
+  "file": "72f44c669ca02584.m4a",
+  "text": "哪一堆的小魚比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g36.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g36.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g36.prompt": {
+  "file": "78bb031c565241e2.m4a",
+  "text": "找找看，哪一堆的小雞比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g37.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g37.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g37.prompt": {
+  "file": "aa991795f2967a79.m4a",
+  "text": "哪一堆的香蕉比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g38.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g38.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g38.prompt": {
+  "file": "d903f948a486e01b.m4a",
+  "text": "找找看，哪一堆的蘋果比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g39.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g39.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g39.prompt": {
+  "file": "72f44c669ca02584.m4a",
+  "text": "哪一堆的小魚比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g40.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g40.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g40.prompt": {
+  "file": "78bb031c565241e2.m4a",
+  "text": "找找看，哪一堆的小雞比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g41.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g41.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g41.prompt": {
+  "file": "aa991795f2967a79.m4a",
+  "text": "哪一堆的香蕉比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g42.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g42.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g42.prompt": {
+  "file": "d903f948a486e01b.m4a",
+  "text": "找找看，哪一堆的蘋果比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g43.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g43.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g43.prompt": {
+  "file": "72f44c669ca02584.m4a",
+  "text": "哪一堆的小魚比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g44.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g44.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g44.prompt": {
+  "file": "78bb031c565241e2.m4a",
+  "text": "找找看，哪一堆的小雞比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g45.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g45.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g45.prompt": {
+  "file": "aa991795f2967a79.m4a",
+  "text": "哪一堆的香蕉比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g46.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g46.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g46.prompt": {
+  "file": "d903f948a486e01b.m4a",
+  "text": "找找看，哪一堆的蘋果比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g47.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g47.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g47.prompt": {
+  "file": "72f44c669ca02584.m4a",
+  "text": "哪一堆的小魚比較多？",
+  "voice": "mama|"
+ },
+ "q.number-1-g48.hint": {
+  "file": "bf858e107754a3be.m4a",
+  "text": "一個配一個看看，多出來的那一堆，就是比較多的。",
+  "voice": "mama|"
+ },
+ "q.number-1-g48.hint.gentle": {
+  "file": "02c134a773034b36.m4a",
+  "text": "沒關係喔，有阿悟陪你。一個配一個看看，多出來的那一堆，就是比較多的。答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.number-1-g48.prompt": {
+  "file": "78bb031c565241e2.m4a",
+  "text": "找找看，哪一堆的小雞比較多？",
+  "voice": "mama|"
+ },
  "q.number-2-01.hint": {
   "file": "a559d74f4d6535c9.m4a",
   "text": "跟阿悟一起數，一個一個點，最後一個就是一共有幾個。",
@@ -25569,6 +27284,366 @@
   "text": "下一個是哪一個？",
   "voice": "mama|"
  },
+ "q.pattern-1-g25.hint": {
+  "file": "29e1d427d62fa9f3.m4a",
+  "text": "你看，小魚、蘋果，小魚、蘋果，小魚、蘋果。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g25.hint.gentle": {
+  "file": "9c9c590288e9f05c.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小魚、蘋果，小魚、蘋果，小魚、蘋果。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g25.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g26.hint": {
+  "file": "e025ef7fbe65aa84.m4a",
+  "text": "你看，小兔子、桃子，小兔子、桃子，小兔子、桃子。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g26.hint.gentle": {
+  "file": "0024e0fbb5fb56e0.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小兔子、桃子，小兔子、桃子，小兔子、桃子。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g26.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g27.hint": {
+  "file": "7d097a4b19dc2ea6.m4a",
+  "text": "你看，香蕉、蘋果，香蕉、蘋果，香蕉、蘋果。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g27.hint.gentle": {
+  "file": "dd7a1bb3d7feff70.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，香蕉、蘋果，香蕉、蘋果，香蕉、蘋果。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g27.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g28.hint": {
+  "file": "a3940cf4fcbed425.m4a",
+  "text": "你看，蘋果、小兔子，蘋果、小兔子，蘋果、小兔子。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g28.hint.gentle": {
+  "file": "7852abd0b8afbf1e.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，蘋果、小兔子，蘋果、小兔子，蘋果、小兔子。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g28.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g29.hint": {
+  "file": "1eb84f0d37705e2b.m4a",
+  "text": "你看，桃子、小魚，桃子、小魚，桃子、小魚。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g29.hint.gentle": {
+  "file": "c7a20ae1f15a37bf.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，桃子、小魚，桃子、小魚，桃子、小魚。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g29.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g30.hint": {
+  "file": "80ee4e14e9f0d2fa.m4a",
+  "text": "你看，小兔子、小雞，小兔子、小雞，小兔子、小雞。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g30.hint.gentle": {
+  "file": "b67e70f75a753f7f.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小兔子、小雞，小兔子、小雞，小兔子、小雞。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g30.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g31.hint": {
+  "file": "11eace79e026627b.m4a",
+  "text": "你看，小雞、蘋果，小雞、蘋果，小雞、蘋果。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g31.hint.gentle": {
+  "file": "6898017c3b8f9527.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小雞、蘋果，小雞、蘋果，小雞、蘋果。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g31.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g32.hint": {
+  "file": "d81ae22ba3bfe734.m4a",
+  "text": "你看，小雞、香蕉，小雞、香蕉，小雞、香蕉。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g32.hint.gentle": {
+  "file": "61009f75797966b5.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小雞、香蕉，小雞、香蕉，小雞、香蕉。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g32.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g33.hint": {
+  "file": "1ec260b0f42335b9.m4a",
+  "text": "你看，香蕉、桃子，香蕉、桃子，香蕉、桃子。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g33.hint.gentle": {
+  "file": "38e891d5168471ca.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，香蕉、桃子，香蕉、桃子，香蕉、桃子。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g33.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g34.hint": {
+  "file": "b59e4e2cf7596b3e.m4a",
+  "text": "你看，小魚、桃子，小魚、桃子，小魚、桃子。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g34.hint.gentle": {
+  "file": "167187595919d912.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小魚、桃子，小魚、桃子，小魚、桃子。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g34.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g35.hint": {
+  "file": "916f964c7dd33419.m4a",
+  "text": "你看，香蕉、小魚，香蕉、小魚，香蕉、小魚。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g35.hint.gentle": {
+  "file": "1421fe9df2aa9437.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，香蕉、小魚，香蕉、小魚，香蕉、小魚。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g35.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g36.hint": {
+  "file": "23b9e39ab391836d.m4a",
+  "text": "你看，小兔子、小魚，小兔子、小魚，小兔子、小魚。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g36.hint.gentle": {
+  "file": "fcf054d37fb31d9d.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小兔子、小魚，小兔子、小魚，小兔子、小魚。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g36.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g37.hint": {
+  "file": "449d3cfb8dacb3a6.m4a",
+  "text": "你看，小魚、香蕉，小魚、香蕉，小魚、香蕉。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g37.hint.gentle": {
+  "file": "d3c3f2c72c73fdb7.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小魚、香蕉，小魚、香蕉，小魚、香蕉。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g37.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g38.hint": {
+  "file": "b3214c100f337f0d.m4a",
+  "text": "你看，小兔子、蘋果，小兔子、蘋果，小兔子、蘋果。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g38.hint.gentle": {
+  "file": "487650f4950a25a7.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小兔子、蘋果，小兔子、蘋果，小兔子、蘋果。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g38.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g39.hint": {
+  "file": "8ed7efc1226bb683.m4a",
+  "text": "你看，香蕉、小兔子，香蕉、小兔子，香蕉、小兔子。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g39.hint.gentle": {
+  "file": "82f0ac7e633a561e.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，香蕉、小兔子，香蕉、小兔子，香蕉、小兔子。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g39.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g40.hint": {
+  "file": "7be03e9dcc291f24.m4a",
+  "text": "你看，小魚、小雞，小魚、小雞，小魚、小雞。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g40.hint.gentle": {
+  "file": "6af6140d2ff823a6.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小魚、小雞，小魚、小雞，小魚、小雞。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g40.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g41.hint": {
+  "file": "97e6c08c84e658ce.m4a",
+  "text": "你看，小雞、小兔子，小雞、小兔子，小雞、小兔子。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g41.hint.gentle": {
+  "file": "7fdd0bec741e327c.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小雞、小兔子，小雞、小兔子，小雞、小兔子。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g41.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g42.hint": {
+  "file": "2b7765cde20fe0e1.m4a",
+  "text": "你看，小雞、小魚，小雞、小魚，小雞、小魚。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g42.hint.gentle": {
+  "file": "7d6865aeab0e304f.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小雞、小魚，小雞、小魚，小雞、小魚。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g42.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g43.hint": {
+  "file": "a456b2c69136add9.m4a",
+  "text": "你看，蘋果、小魚，蘋果、小魚，蘋果、小魚。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g43.hint.gentle": {
+  "file": "f5bc743d22fe8228.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，蘋果、小魚，蘋果、小魚，蘋果、小魚。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g43.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g44.hint": {
+  "file": "e70fcbf29738da31.m4a",
+  "text": "你看，桃子、蘋果，桃子、蘋果，桃子、蘋果。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g44.hint.gentle": {
+  "file": "3951a7accf9368c6.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，桃子、蘋果，桃子、蘋果，桃子、蘋果。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g44.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g45.hint": {
+  "file": "2868f051cb572e9c.m4a",
+  "text": "你看，香蕉、小雞，香蕉、小雞，香蕉、小雞。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g45.hint.gentle": {
+  "file": "b77f40314bd6df4d.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，香蕉、小雞，香蕉、小雞，香蕉、小雞。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g45.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g46.hint": {
+  "file": "31157a0c370956a9.m4a",
+  "text": "你看，小兔子、香蕉，小兔子、香蕉，小兔子、香蕉。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g46.hint.gentle": {
+  "file": "9b24d6745565ad37.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小兔子、香蕉，小兔子、香蕉，小兔子、香蕉。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g46.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g47.hint": {
+  "file": "8f7382b2e48842e1.m4a",
+  "text": "你看，小雞、桃子，小雞、桃子，小雞、桃子。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g47.hint.gentle": {
+  "file": "465b01fa74247f5f.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小雞、桃子，小雞、桃子，小雞、桃子。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g47.prompt": {
+  "file": "dca3a3efce892628.m4a",
+  "text": "空格裡是哪一個？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g48.hint": {
+  "file": "27f3b9d9362c007e.m4a",
+  "text": "你看，小魚、小兔子，小魚、小兔子，小魚、小兔子。一個接一個，空格裡是誰呢？",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g48.hint.gentle": {
+  "file": "a3a35e4568ea91b0.m4a",
+  "text": "沒關係喔，有阿悟陪你。你看，小魚、小兔子，小魚、小兔子，小魚、小兔子。一個接一個，空格裡是誰呢？答案在這裡，點點看。",
+  "voice": "mama|"
+ },
+ "q.pattern-1-g48.prompt": {
+  "file": "7c02ac5e8ab998d8.m4a",
+  "text": "空格要放哪一個？",
+  "voice": "mama|"
+ },
  "q.pattern-2-01.hint": {
   "file": "8798db03b4c19bed.m4a",
   "text": "一個一個看：星星、星星、桃子，星星、星星、桃子。一組一組重複出現，下一個是誰呢？",
@@ -30832,6 +32907,21 @@
  "ui.paint.4": {
   "file": "458976ddce2dc248.m4a",
   "text": "再畫一點好嗎？",
+  "voice": "mama|"
+ },
+ "ui.paint.5": {
+  "file": "14390e8a23db8047.m4a",
+  "text": "點一下圈起來的地方，就會塗滿",
+  "voice": "mama|"
+ },
+ "ui.paint.6": {
+  "file": "462fb23e5a481f73.m4a",
+  "text": "選一個形狀，點一下就蓋上去",
+  "voice": "mama|"
+ },
+ "ui.paint.7": {
+  "file": "b03d8ec465d5dede.m4a",
+  "text": "有新的貼紙喔！",
   "voice": "mama|"
  },
  "ui.timewarn": {
