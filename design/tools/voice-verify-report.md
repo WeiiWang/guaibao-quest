@@ -1,12 +1,13 @@
 # 語音辨識比對報告
 
-共 4050 個音檔；拼音錯誤率（同音字不算錯）≥ 0.3 的有 110 個。
+共 5233 個音檔；拼音錯誤率（同音字不算錯）≥ 0.3 的有 127 個。
 
 | 拼音錯誤率 | 聲音 | key | 原文 | 辨識 |
 |---|---|---|---|---|
 | 4.0 | awu | pet.bubble.15 | Hello! | 都了哇哦 |
 | 2.0 | english | en.ten | ten | 10. |
 | 2.0 | awu | pet.bubble.15 | Hello! | 哈喽 |
+| 2.0 | awu-rabbit | pet.bubble.17@rabbit | Hello! | 哈喽! |
 | 1.0 | english | en.chick | chick | Check. |
 | 1.0 | english | en.eight | eight | 8. |
 | 1.0 | english | en.fish | fish | Vish. |
@@ -46,6 +47,12 @@
 | 1.0 | awu | pet.bubble.3 | 哈啾！ | 阿醋 |
 | 1.0 | awu | pet.bubble.5 | 嗝～ | 嘩 |
 | 1.0 | mama | ui.friend.name.26 | 燈 | Dun |
+| 1.0 | awu-rabbit | pet.bubble.13@rabbit | 耶！ | Yay |
+| 1.0 | awu-rabbit | pet.bubble.14@rabbit | 臭臭～ | 吵吵 |
+| 1.0 | awu-rabbit | pet.bubble.1@rabbit | 嘻嘻 | 呵呵 |
+| 1.0 | awu-tiger | pet.bubble.1@tiger | 嘻嘻 | 嘿嘿 |
+| 1.0 | awu-rabbit | pet.bubble.5@rabbit | 嗝～ | 欸! |
+| 1.0 | awu-tiger | pet.bubble.3@tiger | 哈啾！ | 阿臭! |
 | 0.667 | mama | ui.feedback.4 | 乾淨了！ | 前进了 |
 | 0.667 | mama | ui.friend.name.19 | 紅蘿蔔 | 紅流 |
 | 0.667 | mama | ui.friend.name.76 | 數字十 | 数字10 |
@@ -66,6 +73,7 @@
 | 0.5 | mama | word.雨傘 | 雨傘 | 雨伤 |
 | 0.5 | mama | ui.friend.name.25 | 時鐘 | 十周 |
 | 0.5 | mama | word.兩輛 | 兩輛 | 两料 |
+| 0.5 | awu-rabbit | pet.bubble.3@rabbit | 哈啾！ | 哈臭! |
 | 0.44 | mama | q.pattern-1-g15.hint | 你看，小雞、小魚，小雞、小魚，小雞、小魚。一個接一個，下一個是誰呢？ | 你看,小鸡,小鸡,小鸡,小鸡小鸡小鸡小鸡小鸡小鸡小鸡,一个接一个。
 下一个是谁呢? |
 | 0.4 | mama | fb.buy.apple | 買到蘋果囉！ | 买到灵果咯 |
@@ -80,6 +88,8 @@
 | 0.4 | mama | fb.refund.decor-table | 桌椅退回囉 | 所以退回咯 |
 | 0.4 | mama | word.用水沖乾淨 | 用水沖乾淨 | 用水冲前进 |
 | 0.4 | mama | word.這樣地方才會乾乾淨淨 | 這樣地方才會乾乾淨淨 | 这样地方才会前前进进 |
+| 0.4 | awu-rabbit | companion.combo2.1@rabbit | 連續答對了！ | 人是答对了 |
+| 0.4 | awu-tiger | pet.paint.full@tiger | 全部塗滿了！ | 樊木图满了 |
 | 0.333 | awu | companion.open.2 | 出發囉！ | 出发了 |
 | 0.333 | awu | companion.tutorial.flip.2 | 你也來翻翻看。 | 你也来翻门卡 |
 | 0.333 | mama | fb.buy.coloring-banana-tree | 買到香蕉樹囉！ | 买到香蕉树了哦 |
@@ -114,4 +124,11 @@
 | 0.333 | mama | ui.trick.say.5 | 記住囉 | 记住咯 |
 | 0.333 | awu | pet.wish.done.w-dino | 吼吼，恐龍來了！ | 哼哼,恐龙来了 |
 | 0.333 | awu | pet.wish.done.w-dino | 吼吼，恐龍來了！ | 呼呼 恐龙来了 |
+| 0.333 | awu-rabbit | companion.open.2@rabbit | 出發囉！ | 出发了 |
+| 0.333 | awu-tiger | companion.open.2@tiger | 出發囉！ | 出发咯 |
+| 0.333 | awu-rabbit | pet.bubble.2@rabbit | 哈哈哈！ | 哈哈哈哈 |
+| 0.333 | awu-tiger | pet.bubble.2@tiger | 哈哈哈！ | 哈哈哈哈 |
+| 0.333 | awu-rabbit | pet.wish.done.w-dino@rabbit | 吼吼，恐龍來了！ | 呵呵 恐龙来了 |
+| 0.333 | awu-tiger | pet.wish.done.w-dino@tiger | 吼吼，恐龍來了！ | 呼呼 恐龙来了 |
+| 0.333 | awu-rabbit | ui.gift.bag@rabbit | 禮物都收下囉！ | 礼物都收起了 |
 | 0.308 | awu | ui.gift.food.5 | 我在路上撿到一串葡萄，送給你！ | 我在路上调灯顺葡萄送给你 |
