@@ -18,6 +18,7 @@ import { useLearningSettings, useMaterials } from '../learningHooks'
 import { useCelebrateSmall } from '../feedback'
 import { canMakeMore, MAX_DECOR_COPIES, placedOf } from '../../domain/home7'
 import { useRoomTheme } from '../roomTheme'
+import { WishRecipe } from '../play/WishRecipe'
 import type { Screen } from '../App'
 import './workshop.css'
 
@@ -80,7 +81,7 @@ function Swatch({ id, slot }: { id: string; slot: ThemeSlot }) {
 }
 
 /** 工坊：用冒險拿到的材料做家具、壁紙、地板。家具到首頁佈置；壁紙地板在這裡直接套用。 */
-export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Screen["name"] | Screen) => void }) {
+export function WorkshopScreen({ onBack, go, wish }: { onBack: () => void; go: (s: Screen["name"] | Screen) => void; wish?: string }) {
   const toast = useToast()
   const small = useCelebrateSmall()
   const { voiceOn } = useLearningSettings()
@@ -214,6 +215,8 @@ export function WorkshopScreen({ onBack, go }: { onBack: () => void; go: (s: Scr
     <main className="screen workshop theme-butter" data-testid="workshop">
       <ScreenHeader title="工坊" onBack={onBack} right={<MaterialsChip />} />
       <p className="ws-lead">用冒險拿到的木材、石頭和花朵，做出可愛的家具、壁紙和地板。</p>
+      {/* v7.4 K2：從阿悟的願望泡泡進來時，最上面亮出這個願望的食譜 */}
+      {wish && <WishRecipe wishId={wish} bal={bal} inventory={inventory} placements={placements} voiceOn={voiceOn} onCraft={(id, name, card) => void craft(id, name, null, card)} onPlace={() => go({ name: 'home', edit: true })} />}
       <div className="tabs" role="tablist">
         {TABS.map((t) => (
           <button key={t.id} role="tab" aria-selected={tab === t.id} className={`tab ${tab === t.id ? 'on' : ''}`} onClick={() => setTab(t.id)} data-testid={`ws-tab-${t.id}`}>

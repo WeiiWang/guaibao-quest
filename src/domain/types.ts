@@ -234,10 +234,49 @@ export interface Settings {
   album?: AlbumCard[]
   /** v6：相簿已經依現況補建過舊里程碑（只補一次；之後新里程碑才會有「新卡」提示） */
   albumInit?: boolean
+  /** v7.4：新玩法（朋友來作客、阿悟的小願望）的狀態。舊存檔沒有這欄 = 都還沒開始（不升 Dexie 版本） */
+  play?: PlayState
+}
+
+/** v7.4：朋友來作客的禮物。coloring / dots 的 id 是頁面 id（背包庫存 id = giftItemId），food 的 id 是食物 id */
+export interface GuestGift {
+  kind: 'coloring' | 'dots' | 'food'
+  id: string
+}
+/** v7.4：今天來作客的朋友 */
+export interface GuestVisit {
+  /** 本地日期 YYYY-MM-DD；不是今天的就當作沒有人來 */
+  date: string
+  friendId: string
+  /** 這位朋友第一次來（留禮物） */
+  first: boolean
+  gift?: GuestGift
+  /** 孩子看過禮物了 */
+  seen?: boolean
+  /** 「今天 XX 來玩囉」已經說過了（同一天再進首頁不重複說） */
+  greeted?: boolean
+}
+/** v7.4：新玩法的狀態（全部 optional） */
+export interface PlayState {
+  guest?: GuestVisit
+  /** 第一次來過的朋友（依來的順序） */
+  guestVisited?: string[]
+  /** 總共來過幾次（含回訪） */
+  guestVisits?: number
+  /** 最近的作客紀錄（家長區看）：最多 40 筆 */
+  guestLog?: { date: string; friendId: string; gift?: GuestGift }[]
+  /** 已經結束的小願望（實現了，或出現前就已經擺好所以略過） */
+  wishDone?: string[]
+  /** 現在出現中的小願望 */
+  wishActive?: string
+  /** 「說過願望」的那一個（只在它第一次出現時自動說一次） */
+  wishSaid?: string
+  /** 真的實現的小願望（家長區看）：最多 40 筆 */
+  wishLog?: { id: string; at: number }[]
 }
 
 /** v6：回憶卡的種類 */
-export type AlbumKind = 'hatch' | 'grow' | 'trick' | 'chapter' | 'hat' | 'milestone'
+export type AlbumKind = 'hatch' | 'grow' | 'trick' | 'chapter' | 'hat' | 'milestone' | 'wish'
 /** v6：成長相簿的一張回憶卡。畫面用元件即時繪製（不截圖）：阿悟當時的姿勢圖、日期、一句話 */
 export interface AlbumCard {
   /** 固定規則的 id（hatch、grow、trick:<招>、chapter:<章>、hat:first），同一件事不會重複 */

@@ -35,6 +35,9 @@ import { ProgressEgg } from '../pet/ProgressEgg'
 import { sayRecorded, sayText } from '../../learning/speech'
 import { TAP_FEED_GAP_MS } from '../../domain/constants'
 import { useLearningSettings } from '../learningHooks'
+import { GuestFriend, type GuestView } from '../play/GuestFriend'
+import { WishBubble, type WishView } from '../play/WishBubble'
+import { GUEST_BOTTOM_FRAC, GUEST_HEIGHT_FRAC, pickGuestSpot } from '../../domain/play74'
 import { playPetSound } from '../../pet/sounds'
 import { PetFx } from '../pet/PetFx'
 import { PoopBurst, PoopSpot } from '../pet/PoopSpot'
@@ -67,6 +70,10 @@ interface Props {
   gifts?: Gift[]
   /** v5：要阿悟表演新招的請求（seq 變了就表演一次；'random' = 從已學會的挑一招） */
   perform?: { seq: number; trick: TrickId | 'random' }
+  /** v7.4 K1：今天作客的朋友（沒給 = 沒有人來） */
+  guest?: GuestView | null
+  /** v7.4 K2：阿悟現在的小願望泡泡（沒給 = 沒有） */
+  wish?: WishView | null
 }
 
 type DragKind = 'food' | 'new' | 'move'
@@ -106,7 +113,7 @@ const toRect = (r: DOMRect): Rect => ({ left: r.left, top: r.top, right: r.right
 /** 由 id 算一個固定的小數，讓每坨便便的位置、蒼蠅有點不同 */
 const hashOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
 
-export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, goWorkshop, decorQty, childName = '', favoriteFoodId = null, gifts, perform }: Props) {
+export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, goWorkshop, decorQty, childName = '', favoriteFoodId = null, gifts, perform, guest = null, wish = null }: Props) {
   const toast = useToast()
   const celebrate = useCelebrate()
   const { soundOn, voiceOn } = useLearningSettings()
@@ -308,8 +315,51 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const bedPl = placements.find((p) => baseIdOf(p.itemId) === 'decor-bed')
   const bedItem = bedPl ? itemById.get('decor-bed') : undefined
   const bed = bedPl && bedItem && roomH > 0 ? { x: bedPl.x, y: bedPl.y, h: sizeOf(bedItem).h / roomH } : null
+  // v7.4 K1：作客的朋友站在阿悟旁邊、家具與按鈕之外的空位（位置只依房間大小、家具與按鈕決定，不會跳來跳去）；阿悟會繞開它
+  const guestSize = guest ? Math.max(72, Math.min(GUEST_HEIGHT_FRAC * roomH, view.w * 0.24)) : 0
+  const placementsKey = placements.map((p) => `${p.itemId}:${p.x.toFixed(3)}:${p.y.toFixed(3)}`).join('|')
+  // 左右看房間的箭頭、右側按鈕欄的位置（房間座標，以剛進房間的畫面為準）。箭頭只在能捲動時才出現，所以量到就記住、不再拿掉
+  const uiBlocks = useRef<Record<string, { left: number; right: number; top: number; bottom: number }>>({})
+  const [uiTick, setUiTick] = useState(0)
+  useLayoutEffect(() => {
+    const sc = scrollerRef.current
+    if (!guest || !sc || view.w <= 0) return
+    const sr = sc.getBoundingClientRect()
+    const sl0 = Math.max(0, PET_X * roomW - view.w / 2)
+    let changed = false
+    for (const [key, sel] of [['left', '.room-frame .room-arrow.left'], ['right', '.room-frame .room-arrow.right'], ['tools', '.side-tools']] as const) {
+      const el = document.querySelector(sel)
+      if (!el) continue
+      const r = el.getBoundingClientRect()
+      const next = { left: r.left - sr.left + sl0, right: r.right - sr.left + sl0, top: r.top - sr.top, bottom: r.bottom - sr.top }
+      const cur = uiBlocks.current[key]
+      if (!cur || Math.abs(cur.left - next.left) > 1 || Math.abs(cur.top - next.top) > 1 || Math.abs(cur.right - next.right) > 1) {
+        uiBlocks.current[key] = next
+        changed = true
+      }
+    }
+    if (changed) setUiTick((t) => t + 1)
+  }, [guest, view.w, view.h, roomW, scrollLeft])
+  const guestSpot = useMemo(() => {
+    if (!guest || roomW <= 0 || roomH <= 0) return null
+    const furniture = placements.flatMap((pl) => {
+      const it = itemById.get(baseIdOf(pl.itemId))
+      if (!it || it.slot !== 'floor' || isFlatDecor(it.id)) return []
+      const sz = sizeOf(it)
+      return [{ left: pl.x * roomW - sz.w / 2, right: pl.x * roomW + sz.w / 2, top: pl.y * roomH - sz.h / 2, bottom: pl.y * roomH + sz.h / 2 }]
+    })
+    const viewLeft = Math.max(0, PET_X * roomW - view.w / 2)
+    // 右下角的禮物袋（有禮物時才出現，所以固定留位置）+ 量到的箭頭與按鈕欄
+    const blocks = [{ left: viewLeft + view.w - 132, right: viewLeft + view.w, top: roomH - 150, bottom: roomH }, ...Object.values(uiBlocks.current)]
+    return pickGuestSpot({ roomW, roomH, petX: PET_X * roomW, petW, guestW: guestSize, guestH: guestSize, furniture, blocks, viewLeft, viewW: view.w })
+    // sizeOf、itemById 只依房間大小與家具，placementsKey 已涵蓋；uiTick 是量到按鈕位置的通知
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guest?.id, roomW, roomH, view.w, petW, guestSize, placementsKey, uiTick])
+  const guestX = guestSpot?.x ?? null
+  const guestPx = guestSize * (guestSpot?.scale ?? 1)
   const geo = (): Geometry => {
     const obstacles: Geometry['obstacles'] = []
+    if (guestX !== null && roomW > 0) obstacles.push({ id: '__guest', left: (guestX - guestPx / 2 - 8) / roomW, right: (guestX + guestPx / 2 + 8) / roomW })
     let ball: Geometry['ball'] = null
     if (roomW > 0 && roomH > 0) {
       for (const pl of placements) {
@@ -808,6 +858,15 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                 })}
 
               <RoomAmbient timeOfDay={life.tod} />
+
+              {/* v7.4：作客的朋友（K1）與阿悟的小願望泡泡（K2）；佈置模式都先收起來 */}
+              {!edit && guest && guestX !== null && roomH > 0 && <GuestFriend guest={guest} x={guestX} bottom={guestSpot?.bottom ?? GUEST_BOTTOM_FRAC * roomH} size={guestPx} z={entries.length + 1} />}
+              {!edit && wish && roomH > 0 && (() => {
+                const bw = wish.items.length > 1 ? 168 : 104
+                const left = Math.min(scrollLeft + view.w - 96 - bw, Math.max(scrollLeft + 8, life.petX * roomW + petW * 0.38 - bw / 2))
+                const top = Math.max(6, petBottom * roomH - petH - 98)
+                return <WishBubble wish={wish} left={left} top={top} walkMs={reducedMotion ? 0 : life.walkMs} quiet={!!pv.bubble || !!pv.food || dragging} />
+              })()}
 
               {roomH > 0 &&
                 poops.map((po) => {
