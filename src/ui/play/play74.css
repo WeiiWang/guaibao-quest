@@ -1,0 +1,97 @@
+/* ============ v7.4 線 K：朋友來作客、阿悟的小願望 ============
+   新規則一律用 k74- 前綴。不閃爍、不倒數、不催促：只有輕輕上下晃的動畫，prefers-reduced-motion 時全部關掉。 */
+
+/* ---------- 作客的朋友（K1）---------- */
+.k74-guest { position: absolute; pointer-events: none; }
+.k74-guest-shadow {
+  position: absolute; left: 12%; right: 12%; bottom: 2px; height: 14%; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(74, 59, 53, 0.28), rgba(74, 59, 53, 0) 70%);
+}
+.k74-guest-btn {
+  position: absolute; inset: 0; padding: 0; border: 0; background: none; pointer-events: auto; cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.k74-guest-btn:focus-visible { outline: 4px solid var(--mint-deep, #5cb89a); outline-offset: 2px; border-radius: 24px; }
+.k74-guest-bob { display: block; width: 100%; height: 100%; transform-origin: 50% 100%; animation: k74-bob 3.6s ease-in-out infinite, k74-arrive 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+.k74-guest-btn:active .k74-guest-bob { animation: none; transform: scale(0.94); }
+.k74-guest-img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 4px rgba(90, 50, 20, 0.22)); }
+.k74-guest-name {
+  position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%); white-space: nowrap; pointer-events: none;
+  padding: 1px 10px; border-radius: 999px; background: rgba(255, 253, 249, 0.9); color: #4a3b35; font-size: 0.85rem; font-weight: 800; box-shadow: 0 2px 0 rgba(74, 59, 53, 0.12);
+}
+.k74-gift-tag {
+  position: absolute; right: -2px; top: -6px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 1.2rem; line-height: 1;
+  background: #fff; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15), 0 0 0 3px #ffcf5e; pointer-events: none; animation: k74-bob 3.6s ease-in-out infinite;
+}
+@keyframes k74-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes k74-arrive { 0% { transform: translateY(-26px) scale(0.6); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+
+/* ---------- 阿悟的小願望泡泡（K2）---------- */
+.k74-wish {
+  position: absolute; z-index: 500; padding: 0; border: 0; background: none; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.3s;
+}
+.k74-wish.quiet { opacity: 0; pointer-events: none; }
+.k74-wish:focus-visible { outline: 4px solid var(--mint-deep, #5cb89a); outline-offset: 4px; border-radius: 40px; }
+.k74-wish-cloud {
+  display: flex; align-items: center; justify-content: center; gap: 2px; min-width: 96px; height: 92px; padding: 8px 14px; border-radius: 48px;
+  background: #fff; box-shadow: 0 5px 0 rgba(74, 59, 53, 0.14), 0 0 0 3px rgba(142, 201, 245, 0.75), 0 10px 16px rgba(60, 100, 150, 0.2);
+  animation: k74-bob 4.2s ease-in-out infinite;
+}
+.k74-wish:active .k74-wish-cloud { animation: none; transform: scale(0.95); }
+.k74-wish-img { width: 68px; height: 68px; object-fit: contain; filter: drop-shadow(0 3px 2px rgba(90, 50, 20, 0.22)); }
+.k74-wish.set .k74-wish-img { width: 52px; height: 52px; }
+.k74-wish-img.art-emoji { font-size: 0; }
+.k74-wish-tail { position: absolute; left: 24px; bottom: -22px; display: block; width: 30px; height: 28px; pointer-events: none; }
+.k74-wish-tail i { position: absolute; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px rgba(142, 201, 245, 0.75); }
+.k74-wish-tail i:nth-child(1) { left: 6px; top: 0; width: 16px; height: 16px; }
+.k74-wish-tail i:nth-child(2) { left: 0; top: 18px; width: 9px; height: 9px; }
+
+/* ---------- 第一次來作客的禮物卡 ---------- */
+.k74-gift { text-align: center; max-width: min(420px, 92vw); padding: 18px 20px 20px; }
+.k74-gift-top { position: relative; display: grid; place-items: center; }
+.k74-gift-friend { width: 120px; height: 120px; object-fit: contain; filter: drop-shadow(0 6px 4px rgba(90, 50, 20, 0.22)); animation: k74-bob 3.6s ease-in-out infinite; }
+.k74-gift-hi { position: absolute; right: calc(50% - 82px); top: 0; font-size: 1.8rem; }
+.k74-gift-line { margin: 6px 0 10px; font-size: 1.35rem; line-height: 1.4; }
+.k74-gift-item { display: grid; justify-items: center; gap: 6px; margin-bottom: 14px; }
+.k74-gift-item b { font-size: 1.05rem; }
+.k74-gift-thumb { width: 150px; height: 150px; border-radius: 18px; background: #fff; box-shadow: 0 4px 0 rgba(74, 59, 53, 0.12), 0 0 0 3px #ffe9a8; object-fit: contain; }
+.k74-gift-food { width: 96px; height: 96px; object-fit: contain; }
+.k74-gift-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.k74-gift-actions .btn { min-height: 56px; padding: 0 22px; font-size: 1.1rem; }
+.k74-gift-actions .k74-go { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ---------- 工坊：小願望食譜 ---------- */
+.k74-recipe { margin: 4px auto 14px; max-width: 760px; padding: 14px 16px; border-radius: 28px; background: #fff; box-shadow: 0 5px 0 rgba(74, 59, 53, 0.1), 0 0 0 4px rgba(142, 201, 245, 0.7); }
+.k74-recipe-head { display: flex; align-items: center; gap: 12px; }
+.k74-recipe-head img.k74-awu { width: 64px; height: 64px; object-fit: contain; flex: 0 0 auto; }
+.k74-recipe-head p { margin: 0; font-size: 1.15rem; font-weight: 800; line-height: 1.35; }
+.k74-recipe-items { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
+.k74-recipe-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 20px; background: #fff8ea; flex: 1 1 220px; min-width: 0; }
+.k74-recipe-item .k74-ri-art { width: 64px; height: 64px; object-fit: contain; flex: 0 0 auto; }
+.k74-recipe-item .k74-ri-art.art-emoji { font-size: 0; }
+.k74-ri-body { display: grid; gap: 4px; min-width: 0; }
+.k74-ri-body b { font-size: 1.05rem; }
+.k74-ri-state { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 0.95rem; }
+.k74-ri-state.ok { color: #3a8f6d; }
+.k74-ri-state.go { color: #c2711b; }
+.k74-ri-gap { display: inline-flex; gap: 10px; align-items: center; }
+.k74-ri-gap span { display: inline-flex; align-items: center; gap: 2px; font-weight: 900; color: #c4476e; }
+.k74-ri-have { display: inline-flex; gap: 8px; align-items: center; font-weight: 800; }
+.k74-ri-have span { display: inline-flex; align-items: center; gap: 2px; }
+.k74-recipe-btns { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.k74-recipe-btns .btn { min-height: 52px; padding: 0 20px; }
+.ws-card.k74-hl { outline: 5px solid #ffb84d; outline-offset: 2px; box-shadow: 0 0 0 10px rgba(255, 184, 77, 0.25); }
+
+/* ---------- 家長區「本週」---------- */
+.k74-weekly p { margin: 6px 0; }
+
+@media (max-width: 560px) {
+  .k74-wish-cloud { min-width: 84px; height: 80px; padding: 6px 10px; }
+  .k74-wish-img { width: 58px; height: 58px; }
+  .k74-wish.set .k74-wish-img { width: 44px; height: 44px; }
+  .k74-guest-name { font-size: 0.78rem; bottom: -24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k74-guest-bob, .k74-wish-cloud, .k74-gift-tag, .k74-gift-friend { animation: none; }
+}

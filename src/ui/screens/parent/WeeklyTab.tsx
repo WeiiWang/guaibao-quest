@@ -7,6 +7,7 @@ import { trickOf } from '../../../domain/tricks'
 import { buildWeekly } from '../../../domain/weekly'
 import { useProfiles } from '../../../profiles/context'
 import { MemoryCard } from '../../components/MemoryCard'
+import { PlayWeekly } from '../../play/PlayWeekly'
 import { useNow } from '../../hooks'
 import './learning.css'
 import './weekly.css'
@@ -105,6 +106,8 @@ export function WeeklyTab() {
           </ul>
         )}
       </div>
+
+      <PlayWeekly />
 
       <div className="card" data-testid="weekly-tips">
         <h2>在家這樣練</h2>
