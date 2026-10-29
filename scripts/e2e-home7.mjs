@@ -263,6 +263,7 @@ try {
     await page.goto(`${BASE}#workshop`)
     await page.reload() // 直接寫 IndexedDB 不會通知畫面
     await page.waitForSelector('[data-testid=craft-decor-ball]')
+    await page.waitForSelector('[data-testid=craft-decor-ball] [data-testid=craft-more]', { timeout: 3000 }).catch(() => {})
     check('已有 1 個：卡片有「再做一個」', (await page.locator('[data-testid=craft-decor-ball] [data-testid=craft-more]').count()) === 1)
     const mb = await page.locator('[data-testid=craft-decor-ball] [data-testid=craft-more]').boundingBox()
     check('「再做一個」≥ 56px', mb.height >= 56)
