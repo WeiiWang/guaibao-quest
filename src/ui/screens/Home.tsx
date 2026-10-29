@@ -230,7 +230,7 @@ export function Home({ childName, now, go, initialEdit }: Props) {
         </button>
         {/* v7.3（試玩審查 2-6）：朋友圖鑑從「更多」提到右側欄，和工坊、背包並列 */}
         <button className="mini-candy lavender" onClick={() => go('friends')} data-testid="friends-btn" aria-label="朋友圖鑑">
-          <span className="mini-emoji g73-friends-icon" aria-hidden>📖</span>
+          <Icon name="ui-friends" emoji="📖" size={34} />
           <span>朋友</span>
         </button>
         <MoreTray items={moreItems} />
