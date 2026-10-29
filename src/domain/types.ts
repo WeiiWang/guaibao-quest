@@ -1,4 +1,5 @@
 import type { MaterialCost, MaterialId } from '../learning/types'
+import type { Species } from './species'
 
 export type TaskStatus = 'todo' | 'pending' | 'approved' | 'rejected'
 export type LedgerKind = 'task' | 'bonus' | 'penalty' | 'purchase'
@@ -67,6 +68,8 @@ export interface Pet {
   growth?: { date: string; n: number }
   /** v6：戴著的帽子（商品 id，例 'hat-crown'）；沒有 = 沒戴。舊資料沒有這欄（不升 Dexie 版本） */
   hat?: string
+  /** v7.5：物種（猴子阿悟、兔子兔兔、老虎虎虎）。只有新建的孩子能選、之後不能改；舊資料沒有這欄 = 猴子（不升 Dexie 版本） */
+  species?: Species
 }
 
 /** v5：阿悟拿給孩子的禮物（食物、材料或貼紙）。東西在發放當下就已經寫進背包，這裡只是「待展示」的佇列 */

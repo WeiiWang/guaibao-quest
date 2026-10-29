@@ -243,8 +243,11 @@ export function pickLine(group: string, i = 0): Line {
   return { key: group, text: v ?? '' }
 }
 
-/** 幼幼模式答錯時，提示前面加的一句鼓勵（固定文字，讓每題的提示音檔 key 穩定） */
-export const GENTLE_PREFIX = '沒關係喔，有阿悟陪你。'
+/**
+ * 幼幼模式答錯時，提示前面加的一句鼓勵（固定文字，讓每題的提示音檔 key 穩定）。
+ * v7.5：不提寵物的名字（以前是「沒關係喔，有阿悟陪你。」），三種寵物共用同一批音檔，之後加物種也不用重錄
+ */
+export const GENTLE_PREFIX = '沒關係喔，我陪你一起看。'
 export const gentleHintKey = (id: string): string => `q.${id}.hint.gentle`
 export const gentleHintText = (hint: string): string => `${GENTLE_PREFIX}${hint}答案在這裡，點點看。`
 

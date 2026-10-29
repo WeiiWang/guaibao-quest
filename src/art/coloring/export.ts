@@ -1,5 +1,6 @@
 import { DOTS_REFERENCE_OPACITY, dotsItem, parseDotsId, silhouettePath } from '../dots/dots'
 import { STICKER_BASE } from '../../domain/coloring'
+import { artFallbacks } from '../../domain/species'
 import { drawBackground } from './backgrounds'
 import { drawStroke } from './brushes'
 import { getColoringPage, isFreePage } from './pages'
@@ -72,7 +73,15 @@ export async function renderArtworkPng(input: ExportInput, emojiOf: EmojiOf = ()
     }
   }
 
-  const imgs = await Promise.all(input.stickers.map((st) => loadImage(`${import.meta.env.BASE_URL}art/${st.art}.png`)))
+  // v7.5：兔兔、虎虎的貼紙圖缺的時候先畫猴子的同一張，再退回 emoji
+  const loadArt = async (art: string) => {
+    for (const n of artFallbacks(art)) {
+      const img = await loadImage(`${import.meta.env.BASE_URL}art/${n}.png`)
+      if (img) return img
+    }
+    return null
+  }
+  const imgs = await Promise.all(input.stickers.map((st) => loadArt(st.art)))
   input.stickers.forEach((st, i) => {
     const d = STICKER_BASE * st.scale * unit
     ctx.save()

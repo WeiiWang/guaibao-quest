@@ -5,6 +5,7 @@
 
 import { EN_LANG, enKey } from './english'
 import { chineseNumber } from './lines'
+import type { Species } from '../domain/species'
 
 function synth(): SpeechSynthesis | null {
   try {
@@ -133,16 +134,54 @@ function missLog(reason: 'no-recording' | 'text-mismatch' | 'play-failed', text:
 export function registerLineAudio(map: Record<string, string | LineAudio>): void {
   lineAudio = Object.fromEntries(Object.entries(map).map(([k, v]) => [k, typeof v === 'string' ? { url: v } : v]))
   textIndex = {}
-  for (const [k, v] of Object.entries(lineAudio)) if (v.text && !(v.text in textIndex)) textIndex[v.text] = k
+  // v7.5：先登記原 key、再登記物種版本（key@rabbit…）。寵物台詞各物種文字相同，要對到原 key，播放時再依物種挑
+  const keys = Object.keys(lineAudio)
+  for (const k of [...keys.filter((x) => !x.includes('@')), ...keys.filter((x) => x.includes('@'))]) {
+    const v = lineAudio[k]
+    if (v.text && !(v.text in textIndex)) textIndex[v.text] = k
+  }
+}
+
+// ---------- v7.5：依寵物物種挑音檔 ----------
+/** 目前這個孩子的寵物物種（App 切換孩子時設定；沒設定 = 猴子，語音跟以前完全一樣） */
+let voiceSpecies: Species = 'monkey'
+export function setVoiceSpecies(s: Species | undefined): void {
+  voiceSpecies = s ?? 'monkey'
+}
+export const getVoiceSpecies = (): Species => voiceSpecies
+
+/**
+ * 一個 key 依目前物種要依序試的音檔 key：`<原 key>@<物種>` → 呼叫端給的 key → 原 key（去掉後綴）。
+ * 猴子只試呼叫端給的 key（跟以前一樣）。例：兔兔的 praise.gentle.3 → praise.gentle.3@rabbit、praise.gentle.3。
+ */
+export function voiceCandidates(key: string, species: Species = voiceSpecies): string[] {
+  const at = key.indexOf('@')
+  const base = at < 0 ? key : key.slice(0, at)
+  const out = species === 'monkey' ? [key, base] : [`${base}@${species}`, key, base]
+  return [...new Set(out)]
+}
+
+/** 挑音檔：第一個「有錄、而且原文相符」的候選；都不相符就回第一個有錄的（記成 text-mismatch，退回 Web Speech） */
+function resolveLine(key: string, text: string): { line: LineAudio | undefined; ok: boolean } {
+  let first: LineAudio | undefined
+  for (const k of voiceCandidates(key)) {
+    const l = lineAudio[k]
+    if (!l) continue
+    if (!l.text || !text || l.text === text) return { line: l, ok: true }
+    first ??= l
+  }
+  return { line: first, ok: false }
 }
 
 /**
  * 只播預錄音檔、不退回 Web Speech：阿悟頭上的泡泡用（例如「嘻嘻」「臭臭～」）。
  * prefix 指定要哪一組聲音（例：'pet.' = 阿悟聲），找不到就安靜，回傳 false。
+ * v7.5：先找原 key（再由 say 依物種挑 @rabbit / @tiger 版本），沒有原 key 才找任何一個文字相符的
  */
 export function sayRecorded(prefix: string, text: string, opts: SpeakOptions = {}): boolean {
   if (opts.enabled === false || !text) return false
-  const key = Object.keys(lineAudio).find((k) => k.startsWith(prefix) && lineAudio[k].text === text)
+  const keys = Object.keys(lineAudio).filter((k) => k.startsWith(prefix) && lineAudio[k].text === text)
+  const key = keys.find((k) => !k.includes('@')) ?? keys[0]
   return key ? say(key, text, opts) : false
 }
 
@@ -194,8 +233,8 @@ export function say(key: string, text: string, opts: SpeakOptions = {}): boolean
 
 function sayCore(key: string, text: string, opts: SpeakOptions): boolean {
   if (opts.enabled === false) return false
-  const line = lineAudio[key]
-  const a = line && (!line.text || !text || line.text === text) ? getPlayer() : null
+  const { line, ok } = resolveLine(key, text)
+  const a = line && ok ? getPlayer() : null
   if (line && a) {
     try {
       synth()?.cancel()

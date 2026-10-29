@@ -22,6 +22,7 @@ import { flyOne, iconNode } from '../fly'
 import { useBalance, useNow, useToast } from '../hooks'
 import type { Screen } from '../App'
 import './shop.css'
+import { speciesName } from '../../domain/species'
 
 /** 同一顆按鈕在這段時間內只算一次（4–7 歲的孩子會連點） */
 export const BUY_LOCK_MS = 600
@@ -108,10 +109,10 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
     const r = await repo.setHat(off ? null : item.id)
     if (!r.ok) {
       toast(r.error, 'warn')
-      sayText(r.reason === 'egg' ? hatEggLine(pet?.name ?? '阿悟') : r.error, { enabled: voiceOn })
+      sayText(r.reason === 'egg' ? hatEggLine(pet?.name ?? speciesName(pet?.species)) : r.error, { enabled: voiceOn })
       return
     }
-    small('place', { phrase: off ? hatOffLine() : hatWearLine(pet?.name ?? '阿悟', item.name) })
+    small('place', { phrase: off ? hatOffLine() : hatWearLine(pet?.name ?? speciesName(pet?.species), item.name) })
   }
   const doUndo = async () => {
     if (!undo) return
@@ -148,7 +149,7 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
       </div>
       {tab === 'hat' && (
         <p className="wd-shop-note" data-testid="hat-note">
-          用星星買帽子給{pet?.name ?? '阿悟'}戴！買好之後在這裡按「戴上」，或回首頁點「更多」裡的衣櫃。
+          用星星買帽子給{pet?.name ?? speciesName(pet?.species)}戴！買好之後在這裡按「戴上」，或回首頁點「更多」裡的衣櫃。
         </p>
       )}
       <ul className={`shop-grid ${tab === 'food' ? 'food-grid' : ''}`} data-testid={`shop-grid-${tab}`}>

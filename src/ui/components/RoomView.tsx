@@ -272,7 +272,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
       life.startEat({ ...foodMeta(item, item.id === favoriteFoodId), full: r.full }, origin, stage)
     }
     if (r.evolvedTo === 'baby' || r.evolvedTo === 'adult') {
-      celebrate({ petName: r.pet.name, from: r.evolvedTo === 'baby' ? 'egg' : 'baby', to: r.evolvedTo, feedCount: r.pet.feedCount })
+      celebrate({ petName: r.pet.name, species: r.pet.species, from: r.evolvedTo === 'baby' ? 'egg' : 'baby', to: r.evolvedTo, feedCount: r.pet.feedCount })
     } else toast('好好吃！', 'ok')
   }
 

@@ -8,6 +8,7 @@ import { EN_BY_WORD, EN_GENTLE_WORDS, EN_LANG, EN_LETTERS, EN_WORDS, enKey, engl
 import { englishAnswerParts, englishHintParts, englishPromptParts } from './englishSpeech'
 import { feedbackLines } from './feedbackLines'
 import { playLines } from './playLines'
+import { speciesLines } from './speciesLines'
 import { allLines } from './lines'
 import { displayQuestion } from './select'
 import { cancelSpeech, pickEnglishVoice, pickVoiceFor, registerLineAudio, say, sayChain, sayEnglish, speak } from './speech'
@@ -220,8 +221,9 @@ describe('英文語音：key、語言、清單', () => {
     expect(zh.status, zh.stderr).toBe(0)
     const zhLines = JSON.parse(zh.stdout) as Record<string, string>
     expect(Object.keys(zhLines).some((k) => k.startsWith('en.'))).toBe(false)
-    // v7.2：另外加上商店／工坊的回饋句（feedbackLines）
-    expect(zhLines).toEqual({ ...allLines(QUESTIONS), ...feedbackLines(), ...playLines() })
+    // v7.2：另外加上商店／工坊的回饋句（feedbackLines）；v7.5：再加上兔兔、虎虎的物種版本（speciesLines）
+    const base = { ...allLines(QUESTIONS), ...feedbackLines(), ...playLines() }
+    expect(zhLines).toEqual({ ...base, ...speciesLines(base) })
     const en = run(['--lang', 'en'])
     expect(JSON.parse(en.stdout)).toEqual(englishLines())
     const all = JSON.parse(run(['--lang', 'all']).stdout) as Record<string, Record<string, string>>

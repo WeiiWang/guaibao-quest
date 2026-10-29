@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { DEFAULT_PET_NAME } from '../../domain/constants'
 import { AGE_CHOICES } from '../../domain/home7'
+import { DEFAULT_SPECIES, speciesName, type Species } from '../../domain/species'
 import { sayText } from '../../learning/speech'
 import type { AgeBand } from '../../domain/types'
 import { Icon } from '../components/Icon'
 import { PetSprite } from '../components/PetSprite'
 import { PinPad } from '../components/PinPad'
+import { SpeciesPicker } from '../components/SpeciesPicker'
 import '../j74.css'
 
 type Step = 'pin1' | 'pin2' | 'child' | 'age' | 'pet' | 'egg'
@@ -16,14 +17,16 @@ interface Props {
   defaultName?: string
   /** 名冊裡已經知道這個孩子的年齡（例如重設之後）就不再問「幾歲」 */
   defaultAge?: AgeBand
-  onFinish: (input: { pin?: string; childName: string; petName: string; ageBand?: AgeBand }) => Promise<{ ok: true } | { ok: false; error: string }>
+  /** v7.5：寵物的名字跟著物種固定（阿悟、兔兔、虎虎），不再讓孩子取名 */
+  onFinish: (input: { pin?: string; childName: string; species: Species; ageBand?: AgeBand }) => Promise<{ ok: true } | { ok: false; error: string }>
 }
 
 export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: Props) {
   const [step, setStep] = useState<Step>(withPin ? 'pin1' : 'child')
   const [pin, setPin] = useState('')
   const [childName, setChildName] = useState(defaultName)
-  const [petName, setPetName] = useState(DEFAULT_PET_NAME)
+  const [species, setSpecies] = useState<Species>(DEFAULT_SPECIES)
+  const petName = speciesName(species)
   const [age, setAge] = useState<AgeBand | undefined>(defaultAge)
   const advance = useRef<number | undefined>(undefined)
   const [busy, setBusy] = useState(false)
@@ -31,7 +34,7 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
 
   const finish = async () => {
     setBusy(true)
-    const r = await onFinish({ pin: withPin ? pin : undefined, childName, petName, ageBand: age })
+    const r = await onFinish({ pin: withPin ? pin : undefined, childName, species, ageBand: age })
     if (!r.ok) {
       setErr(r.error)
       setBusy(false)
@@ -127,32 +130,29 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
           </div>
         )}
         {step === 'pet' && (
+          // v7.5：選寵物（取代以前的「取名字」：名字跟著物種固定）。預設是阿悟，直接按下一步就跟以前一樣
           <form
+            className="l75-onboard"
+            data-testid="onboard-species"
             onSubmit={(e) => {
               e.preventDefault()
               setStep('egg')
             }}
           >
-            <p className="lead">幫小寵物取個名字吧！</p>
-            <input
-              className="input big"
-              autoFocus
-              value={petName}
-              maxLength={10}
-              placeholder={DEFAULT_PET_NAME}
-              onChange={(e) => setPetName(e.target.value)}
-            />
-            <button className="btn primary" type="submit">下一步</button>
+            <p className="lead">想養哪一隻寵物？</p>
+            <SpeciesPicker value={species} onChange={setSpecies} />
+            <p className="l75-note">選好之後就不能換了喔。</p>
+            <button className="btn primary" type="submit" data-testid="onboard-species-next">下一步</button>
           </form>
         )}
         {step === 'egg' && (
           <div className="egg-step">
             <p className="lead">
-              {childName}，這是{petName.trim() || DEFAULT_PET_NAME}的蛋！
+              {childName}，這是{petName}的蛋！
               <br />
               完成冒險和任務，一起把牠孵出來吧。
             </p>
-            <PetSprite pet={{ stage: 'egg', feedCount: 0, name: petName.trim() || DEFAULT_PET_NAME }} mood="happy" className="egg-big idle" />
+            <PetSprite pet={{ stage: 'egg', feedCount: 0, name: petName, species }} mood="happy" className="egg-big idle" />
             {err && <p className="form-error">{err}</p>}
             <button className="btn primary" disabled={busy} onClick={finish}>開始冒險</button>
           </div>

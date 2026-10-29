@@ -10,12 +10,14 @@ import { useTodMode } from '../../pet/hooks'
 import type { Stage } from '../../../domain/types'
 import { useCelebrate, useToast } from '../../hooks'
 import { Art } from '../../components/Art'
+import { petArt, speciesBabyLabel, speciesName, speciesOf, type Species } from '../../../domain/species'
 import './learning.css'
 
-const STAGES: { id: Stage; label: string; art: string }[] = [
-  { id: 'egg', label: '仙石蛋', art: 'pet-egg' },
-  { id: 'baby', label: '小猴', art: 'pet-baby-happy' },
-  { id: 'adult', label: '阿悟', art: 'pet-adult-happy' },
+/** v7.5：依這個孩子的物種（猴子：仙石蛋、小猴、阿悟；兔兔：蛋、小兔、兔兔…） */
+const stagesOf = (species: Species): { id: Stage; label: string; art: string }[] => [
+  { id: 'egg', label: species === 'monkey' ? '仙石蛋' : '蛋', art: petArt(species, 'egg') },
+  { id: 'baby', label: speciesBabyLabel(species), art: petArt(species, 'baby', 'happy') },
+  { id: 'adult', label: speciesName(species), art: petArt(species, 'adult', 'happy') },
 ]
 
 /** 觸發寵物行為（SPEC-v3 A7）：按下後回首頁立刻執行 */
@@ -53,6 +55,7 @@ export function PmTab({ onExit }: { onExit: () => void }) {
     toast(msg, 'ok')
   }
   if (!pet) return null
+  const STAGES = stagesOf(speciesOf(pet))
 
   return (
     <section className="lt pm-tab" data-testid="pm-tab">
@@ -75,8 +78,8 @@ export function PmTab({ onExit }: { onExit: () => void }) {
         <div className="row-actions" style={{ justifyContent: 'flex-start', flexWrap: 'wrap' }}>
           <button className="btn" onClick={() => run(() => pmSetStage('egg', true), '已設成「再餵 1 次就孵化」，回首頁餵一次看看')}>快孵化（再餵 1 次）</button>
           <button className="btn" onClick={() => run(() => pmSetStage('baby', true), '已設成「再餵 1 次就長大」')}>快長大（再餵 1 次）</button>
-          <button className="btn" onClick={() => celebrate({ petName: pet.name, from: 'egg', to: 'baby', feedCount: pet.feedCount })}>播放孵化慶祝</button>
-          <button className="btn" onClick={() => celebrate({ petName: pet.name, from: 'baby', to: 'adult', feedCount: pet.feedCount })}>播放長大慶祝</button>
+          <button className="btn" onClick={() => celebrate({ petName: pet.name, species: pet.species, from: 'egg', to: 'baby', feedCount: pet.feedCount })}>播放孵化慶祝</button>
+          <button className="btn" onClick={() => celebrate({ petName: pet.name, species: pet.species, from: 'baby', to: 'adult', feedCount: pet.feedCount })}>播放長大慶祝</button>
         </div>
       </div>
 
@@ -109,7 +112,7 @@ export function PmTab({ onExit }: { onExit: () => void }) {
           <button className="btn" data-cmd="clear-poops" onClick={() => run(pmClearPoops, '已清空所有便便')}>清空便便</button>
         </div>
         <h2 style={{ marginTop: 16 }}>日夜</h2>
-        <p className="lt-note">目前：{TOD_OPTIONS.find((o) => o.id === tod)?.label}。切到「晚上」阿悟會去睡覺；回首頁看窗外與房間變化。</p>
+        <p className="lt-note">目前：{TOD_OPTIONS.find((o) => o.id === tod)?.label}。切到「晚上」{speciesName(pet.species)}會去睡覺；回首頁看窗外與房間變化。</p>
         <div className="row-actions" style={{ justifyContent: 'flex-start', flexWrap: 'wrap' }}>
           {TOD_OPTIONS.map((o) => (
             <button key={o.id} className={`btn ${tod === o.id ? 'primary' : ''}`} data-tod={o.id} aria-pressed={tod === o.id} onClick={() => setTodMode(o.id)}>

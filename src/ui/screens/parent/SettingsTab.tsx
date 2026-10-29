@@ -13,6 +13,7 @@ import { useProfiles } from '../../../profiles/context'
 import { profiles } from '../../../profiles/manager'
 import { useViewedChild } from './ViewedChild'
 import './learning.css'
+import { speciesName } from '../../../domain/species'
 
 export function SettingsTab({ onReset }: { onReset: () => void }) {
   const toast = useToast()
@@ -50,7 +51,7 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
         <h2>寵物</h2>
         <Switch
           label="寵物會大便"
-          desc="吃東西後，阿悟偶爾會大便（可愛的卡通風），小孩點一下就能清掉。不會影響飽足、也不會生病。關閉後不會再出現新的便便。"
+          desc={`吃東西後，${speciesName(pet?.species)}偶爾會大便（可愛的卡通風），小孩點一下就能清掉。不會影響飽足、也不會生病。關閉後不會再出現新的便便。`}
           on={poopOn}
           testId="poop-switch"
           onChange={(v) => void repo.setPetPoopOn(v)}

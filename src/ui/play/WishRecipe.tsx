@@ -11,6 +11,7 @@ import { say, sayText } from '../../learning/speech'
 import { MATERIAL_IDS, MATERIAL_NAMES, type MaterialCost } from '../../learning/types'
 import { Art } from '../components/Art'
 import { Icon } from '../components/Icon'
+import { petArt, speciesName } from '../../domain/species'
 import './play74.css'
 
 interface Props {
@@ -41,7 +42,8 @@ const costRow = (cost: MaterialCost) =>
 export function WishRecipe({ wishId, bal, inventory, placements, voiceOn, onCraft, onPlace }: Props) {
   const wish = WISH_BY_ID[wishId]
   const [shaking, setShaking] = useState<string | null>(null)
-  const stage = useLiveQuery(async () => (await db.pets.get('pet'))?.stage, [])
+  const pet = useLiveQuery(() => db.pets.get('pet'), [])
+  const stage = pet?.stage
   useEffect(() => {
     if (wish) say(wishKey(wish.id), wish.line, { enabled: voiceOn })
     // 進工坊時說一次
@@ -53,9 +55,10 @@ export function WishRecipe({ wishId, bal, inventory, placements, voiceOn, onCraf
   const needPlace = wish.items.some((id) => qtyOf(id) > 0 && !placed.has(id))
 
   return (
-    <section className="k74-recipe" data-testid="wish-recipe" data-wish={wish.id} aria-label={`阿悟的小願望：${wish.line}`}>
+    <section className="k74-recipe" data-testid="wish-recipe" data-wish={wish.id} aria-label={`${speciesName(pet?.species)}的小願望：${wish.line}`}>
       <div className="k74-recipe-head">
-        <Art name={`pet-${stage === 'baby' ? 'baby' : 'adult'}-think`} alt="" className="k74-awu" />
+        {/* v7.5：頭像是孩子自己的寵物（缺圖時 Art 先退回猴子的同一張） */}
+        <Art name={petArt(pet?.species, stage === 'baby' ? 'baby' : 'adult', 'think')} alt="" className="k74-awu" />
         <p>{wish.line}</p>
       </div>
       <ul className="k74-recipe-items">

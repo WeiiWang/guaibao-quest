@@ -5,7 +5,7 @@
       （{ key: { file, text, voice } }）。相同文字只生成一次，多個 key 共用同一個檔案。
       文字與聲音沒變的句子會跳過，所以可以反覆執行、中斷後續跑。
 
-usage: uv run --with opencc-python-reimplemented --with pypinyin python -I design/tools/gen_voice.py <lines.json> [--voice mama|awu|english] [--limit N] [--redo texts.txt]
+usage: uv run --with opencc-python-reimplemented --with pypinyin python -I design/tools/gen_voice.py <lines.json> [--voice mama|awu|awu-rabbit|awu-tiger|english] [--limit N] [--redo texts.txt]
 
 v7.2 起：
 - 送去 TTS 的文字先轉簡體（畫面文字不變）：模型主要用簡體訓練，繁體罕用字會唸錯（實測「乾淨」唸成「前進」、「水簾洞」的簾、「鯨魚」唸成「鯊魚」）。
@@ -46,10 +46,30 @@ VOICES = {
     # 阿悟本人（2026-10-27 使用者選 B）：內建男聲 Dylan + 調皮語氣，再升調成卡通小猴子
     'awu': {'profile': '乖寶-阿悟底-Dylan', 'engine': 'qwen_custom_voice', 'instruct': '用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音', 'lang': 'zh',
             'preset': ('qwen_custom_voice', 'Dylan'), 'pitch': 1.45, 'tempo': 1.08},
+    # v7.5 兔兔、虎虎（使用者決定：同一位底音改音高，台詞沿用阿悟那批句子）：只生成 key 以 @rabbit / @tiger 結尾的寵物台詞
+    'awu-rabbit': {'profile': '乖寶-阿悟底-Dylan', 'engine': 'qwen_custom_voice', 'instruct': '用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音', 'lang': 'zh',
+                   'preset': ('qwen_custom_voice', 'Dylan'), 'pitch': 1.6, 'tempo': 1.08, 'species': 'rabbit'},
+    'awu-tiger': {'profile': '乖寶-阿悟底-Dylan', 'engine': 'qwen_custom_voice', 'instruct': '用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音', 'lang': 'zh',
+                  'preset': ('qwen_custom_voice', 'Dylan'), 'pitch': 1.25, 'tempo': 1.0, 'species': 'tiger'},
     'english': {'profile': '乖寶-English', 'engine': 'kokoro', 'instruct': None, 'lang': 'en', 'preset': ('kokoro', 'af_heart')},
 }
 # 阿悟本人說的話：用阿悟聲（--voice awu）；其他中文旁白用媽媽聲
+# 要跟 src/learning/speciesLines.ts 的 PET_VOICE_PREFIXES 一致（speciesLines.test.ts 會檢查）
 PET_KEYS = ('companion.', 'lock.sleepy', 'pet.', 'ui.gift.', 'ui.timewarn')
+
+
+def species_of(key):
+    """v7.5：key 的物種後綴（praise.gentle.3@rabbit → rabbit；沒有後綴 = 猴子 None）"""
+    return key.split('@', 1)[1] if '@' in key else None
+
+
+def voice_owns(voice, key):
+    """這個 key 由哪個聲音生成：寵物台詞依物種分給 awu / awu-rabbit / awu-tiger；其餘（含名字句 @rabbit、@tiger）是媽媽聲"""
+    pet = key.startswith(PET_KEYS)
+    sp = VOICES[voice].get('species')
+    if voice == 'awu' or sp:
+        return pet and species_of(key) == sp
+    return not pet
 # 生成順序：最常聽到的先做，中斷時 App 也已經有大部分常用語音
 PRIORITY = ('q.', 'num.', 'word.', 'count.', 'praise.', 'give.', 'gentle.', 'bins.', 'tutorial.', 'station.', 'ceremony.', 'chapter.', 'leave.', 'hint.', 'audio.')
 
@@ -205,7 +225,7 @@ def main():
     manifest = json.load(open(MANIFEST, encoding='utf-8')) if os.path.exists(MANIFEST) else {}
     profile = find_profile(cfg['profile'], cfg.get('preset'), cfg['lang'])
 
-    mine = (lambda k: k.startswith(PET_KEYS)) if voice == 'awu' else (lambda k: not k.startswith(PET_KEYS))
+    mine = lambda k: voice_owns(voice, k)  # noqa: E731
     keys = sorted((k for k in lines if mine(k)), key=rank)
     # 先把已經有檔案的 key 直接寫進 manifest（共用相同文字的檔案）
     for k in keys:

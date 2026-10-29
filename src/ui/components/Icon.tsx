@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { Art } from './Art'
-import { useArtStatus } from '../artProbe'
+import { useArtStatuses } from '../artProbe'
+import { artFallbacks } from '../../domain/species'
 
 interface Props {
   name: string
@@ -10,11 +11,18 @@ interface Props {
   className?: string
   size?: number | string
   style?: CSSProperties
+  /** v7.5：不要退回猴子的同一張（選寵物那頁：兔兔沒圖就顯示 🐰，不能顯示猴子） */
+  exact?: boolean
 }
 
 /** 小圖示：有 3D 素材就用素材，沒有就顯示 emoji（不會破版、也不會是一塊文字）。 */
-export function Icon({ name, emoji, alt, className = '', size, style }: Props) {
-  const status = useArtStatus(name)
+export function Icon({ name, emoji, alt, className = '', size, style, exact = false }: Props) {
+  // v7.5：兔兔、虎虎的寵物圖缺圖時先用猴子的同一張，再退回 emoji
+  const chain = exact ? [name] : artFallbacks(name)
+  const st = useArtStatuses(chain)
+  const at = st.findIndex((s) => s !== 'no')
+  const status = at < 0 ? 'no' : st[at]
+  const shown = at < 0 ? name : chain[at]
   const dim = size === undefined ? undefined : typeof size === 'number' ? `${size}px` : size
   if (emoji && status !== 'ok') {
     // emoji 大小跟著容器走（cqmin），所以 size 可以是 px、% 或交給 CSS class
@@ -28,5 +36,5 @@ export function Icon({ name, emoji, alt, className = '', size, style }: Props) {
       </span>
     )
   }
-  return <Art name={name} alt={alt} className={className} size={size} style={style} />
+  return <Art name={shown} alt={alt} className={className} size={size} style={style} />
 }

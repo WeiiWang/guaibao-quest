@@ -13,6 +13,7 @@ import {
   TASK_POINTS_MIN,
 } from '../domain/constants'
 import { dayRange, localDateStr } from '../domain/date'
+import { monkeyArtOf, normSpecies, speciesEmoji, speciesName, type Species } from '../domain/species'
 import { currentHunger, expressionFor, feed, growthLeft, stageForFeedCount, FEED_CAPPED_LINE } from '../domain/pet'
 import { planFeedPoop, POOP_CAP, resolveDuePoops, type PoopSpread } from '../pet/poop'
 import { checkPin, hashPin, isValidPin } from '../domain/pin'
@@ -156,11 +157,13 @@ export class Repo {
    * 建立這個孩子的初始資料。第一個孩子帶 pin（同時成為全家共用的 PIN）；
    * 之後新增的孩子帶 pinHash（沿用共用 PIN 的雜湊，不再要求設定 PIN）。
    */
-  async onboard(input: { pin?: string; pinHash?: string; childName: string; petName: string }, now = this.clock()): Promise<Result> {
+  async onboard(input: { pin?: string; pinHash?: string; childName: string; petName?: string; species?: Species }, now = this.clock()): Promise<Result> {
     if (input.pinHash === undefined && !isValidPin(input.pin ?? '')) return { ok: false, error: 'PIN 需為 4 位數字' }
     const childName = input.childName.trim()
     if (!childName) return { ok: false, error: '請輸入小孩的名字' }
-    const petName = input.petName.trim() || DEFAULT_PET_NAME
+    // v7.5：名字跟著物種固定（阿悟、兔兔、虎虎）；猴子仍接受呼叫端給的名字（舊流程、測試），沒給就是阿悟
+    const species = normSpecies(input.species)
+    const petName = species === 'monkey' ? input.petName?.trim() || DEFAULT_PET_NAME : speciesName(species)
     const d = this.db
     await d.transaction('rw', [d.settings, d.children, d.pets, d.templates, d.shopItems], async () => {
       await d.settings.put({
@@ -170,7 +173,7 @@ export class Repo {
         onboarded: true,
         ...learningSettingsOf(undefined),
       })
-      await d.children.put({ id: CHILD_ID, name: childName, avatar: '🐵' })
+      await d.children.put({ id: CHILD_ID, name: childName, avatar: speciesEmoji(species) })
       await d.pets.put({
         id: PET_ID,
         name: petName,
@@ -179,6 +182,8 @@ export class Repo {
         hunger: START_HUNGER,
         hungerUpdatedAt: now,
         mood: 'happy',
+        // 猴子不寫這欄：跟舊存檔長得一樣（沒有 species = 猴子）
+        ...(species === 'monkey' ? {} : { species }),
       })
       await d.templates.bulkPut(DEFAULT_TEMPLATES)
       await d.shopItems.bulkPut(SHOP_CATALOG)
@@ -453,8 +458,8 @@ export class Repo {
       if (pp.due !== null) r.pet.poopDue = [...(pet.poopDue ?? []), pp.due]
       await d.pets.put(r.pet)
       await d.inventory.put({ ...inv, qty: inv.qty - 1 })
-      if (r.evolvedTo) await album.addGrowthCard(d, r.pet.name, r.evolvedTo, now) // v6：孵化 / 長大的當下新增一張回憶卡
-      await home7.awardMilestones(d, r.pet.name, pet.feedCount, r.pet.feedCount, now) // v7：幼體到成體路上每餵 20 次送一份小禮物 + 回憶卡
+      if (r.evolvedTo) await album.addGrowthCard(d, r.pet.name, r.evolvedTo, now, r.pet.species) // v6：孵化 / 長大的當下新增一張回憶卡
+      await home7.awardMilestones(d, r.pet.name, pet.feedCount, r.pet.feedCount, now, r.pet.species) // v7：幼體到成體路上每餵 20 次送一份小禮物 + 回憶卡
       return { ok: true, pet: r.pet, evolvedTo: r.evolvedTo, full: r.wasFull } as const
     })
   }
@@ -473,7 +478,7 @@ export class Repo {
       if (rank[stage] <= rank[pet.stage] || stage === 'egg') return null
       const next = { ...pet, stage, mood: expressionFor(currentHunger(pet, now)) }
       await d.pets.put(next)
-      await album.addGrowthCard(d, next.name, stage, now)
+      await album.addGrowthCard(d, next.name, stage, now, next.species)
       return { evolvedTo: stage, from: pet.stage === 'egg' ? 'egg' : 'baby', pet: next } as const
     })
   }
@@ -1561,7 +1566,8 @@ export class Repo {
       const s = await d.settings.get(SETTINGS_ID)
       if (!s) return
       const seen = new Set(s.stickersSeen ?? [])
-      const next = arts.filter((a) => !seen.has(a))
+      // v7.5：兔兔、虎虎的寵物貼紙記成目錄裡的同一張（猴子的圖名）
+      const next = [...new Set(arts.map(monkeyArtOf))].filter((a) => !seen.has(a))
       if (next.length) await d.settings.update(SETTINGS_ID, { stickersSeen: [...seen, ...next] })
     })
   }

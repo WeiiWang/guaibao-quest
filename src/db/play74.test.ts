@@ -35,6 +35,16 @@ const setStage = async (stage: 'egg' | 'baby' | 'adult') => {
 }
 const place = (itemId: string) => repo.db.placements.put({ itemId, x: 0.5, y: 0.8, z: 0, flipped: false, placedAt: T0 })
 
+describe('v7.5 兔兔的願望回憶卡', () => {
+  it('卡片的圖用兔兔的姿勢圖', async () => {
+    const pet = (await repo.db.pets.get('pet'))!
+    await repo.db.pets.put({ ...pet, stage: 'baby', species: 'rabbit', name: '兔兔' })
+    await repo.syncWish()
+    await place('decor-ball')
+    expect((await repo.completeWish('w-ball', T0 + 1000))?.art).toBe('pet-rabbit-baby-dance')
+  })
+})
+
 describe('K1 朋友來作客', () => {
   it('還不認識任何會來的朋友就沒有人來', async () => {
     expect(await repo.syncGuest(T0)).toBeNull()
@@ -149,6 +159,7 @@ describe('K2 阿悟的小願望', () => {
     expect(s.play?.wishActive).toBe('w-plant')
     expect(s.play?.wishDone).toEqual(['w-ball'])
     expect(s.play?.wishLog).toEqual([{ id: 'w-ball', at: T0 + 1000 }])
+    expect(card?.art).toBe('pet-baby-dance') // 舊存檔（猴子）維持原檔名
     // 重複完成同一個不會多一張卡
     expect(await repo.completeWish('w-ball', T0 + 2000)).toBeNull()
     expect((await repo.db.settings.get('main'))?.album?.filter((c) => c.kind === 'wish')).toHaveLength(1)

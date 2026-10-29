@@ -1,6 +1,7 @@
 import type { Gift } from '../../domain/types'
 import { giftKind } from '../../domain/gifts'
 import { giftArt } from './GiftItem'
+import { useSpecies } from '../species'
 import { Icon } from '../components/Icon'
 import { useArtStatus } from '../artProbe'
 import '../home7.css'
@@ -17,6 +18,7 @@ interface Props {
  * 點一次就把所有禮物全部收下；不閃爍、不催促。沒有禮物時整個不出現。
  */
 export function GiftBag({ gifts, calm, onTake }: Props) {
+  const species = useSpecies()
   const hasArt = useArtStatus('ui-gift-bag') === 'ok'
   if (gifts.length === 0) return null
   const kinds = [...new Set(gifts.map((g) => giftKind(g)))]
@@ -40,7 +42,7 @@ export function GiftBag({ gifts, calm, onTake }: Props) {
         </span>
         <span className="h7-bag-peek" aria-hidden>
           {gifts.slice(0, 3).map((g, i) => {
-            const a = giftArt(g)
+            const a = giftArt(g, species)
             return <Icon key={i} name={a.name} emoji={a.emoji} className="h7-bag-mini" />
           })}
         </span>

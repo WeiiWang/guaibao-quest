@@ -9,6 +9,7 @@ import { learnerProfileOf } from '../learning/profile'
 import type { Question } from '../learning/types'
 import * as album from './album'
 import type { GuaibaoDB } from './db'
+import { petArt } from '../domain/species'
 
 const SETTINGS_ID = 'main'
 const PET_ID = 'pet'
@@ -121,7 +122,7 @@ export async function completeWish(d: GuaibaoDB, id: string, now: number): Promi
       id: albumId.wish(id),
       at: now,
       kind: 'wish',
-      art: `pet-${pet.stage === 'adult' ? 'adult' : 'baby'}-${w.pose}`,
+      art: petArt(pet.species, pet.stage === 'adult' ? 'adult' : 'baby', w.pose), // v7.5：依物種（猴子維持舊檔名）
       caption: w.caption,
       reward: w.items[0],
       fresh: true,

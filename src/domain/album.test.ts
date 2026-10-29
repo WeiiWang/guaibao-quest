@@ -85,8 +85,11 @@ describe('排序、日期、新卡', () => {
     expect(freshCards(undefined)).toEqual([])
   })
   it('parseCardArt', () => {
-    expect(parseCardArt('pet-adult-cheer')).toEqual({ stage: 'adult', pose: 'cheer' })
-    expect(parseCardArt('pet-baby-think')).toEqual({ stage: 'baby', pose: 'think' })
+    // v7.5：多一個物種（舊卡片的圖名 = 猴子）
+    expect(parseCardArt('pet-adult-cheer')).toEqual({ species: 'monkey', stage: 'adult', pose: 'cheer' })
+    expect(parseCardArt('pet-baby-think')).toEqual({ species: 'monkey', stage: 'baby', pose: 'think' })
+    expect(parseCardArt('pet-rabbit-baby-happy')).toEqual({ species: 'rabbit', stage: 'baby', pose: 'happy' })
+    expect(parseCardArt('pet-tiger-adult-dance')).toEqual({ species: 'tiger', stage: 'adult', pose: 'dance' })
   })
 })
 

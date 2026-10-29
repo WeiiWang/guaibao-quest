@@ -5,17 +5,21 @@ import { MATERIAL_NAMES } from '../../learning/types'
 import { SHOP_ITEMS } from '../../domain/constants'
 import { Icon } from '../components/Icon'
 import { stickerEmoji } from '../screens/coloring/stickers'
+import { artForSpecies, type Species } from '../../domain/species'
+import { useSpecies } from '../species'
 import './gift.css'
 
-/** 禮物的素材圖名、缺圖 emoji、名字（給展示與收下動畫用） */
-export function giftArt(g: Gift): { name: string; emoji: string; label: string } {
+/** 禮物的素材圖名、缺圖 emoji、名字（給展示與收下動畫用）。v7.5：寵物貼紙依目前孩子的物種顯示 */
+export function giftArt(g: Gift, species: Species = 'monkey'): { name: string; emoji: string; label: string } {
   switch (giftKind(g)) {
     case 'food':
       return { name: `food-${g.foodId}`, emoji: FOOD_EMOJI[g.foodId ?? ''] ?? '🎁', label: SHOP_ITEMS.find((i) => i.id === g.foodId)?.name ?? '食物' }
     case 'material':
       return { name: `mat-${g.materialId}`, emoji: MAT_EMOJI[g.materialId ?? ''] ?? '🎁', label: `${MATERIAL_NAMES[g.materialId!]} x${g.qty ?? 1}` }
-    default:
-      return { name: g.stickerId ?? 'ui-star', emoji: stickerEmoji(g.stickerId ?? '') ?? '⭐', label: '貼紙' }
+    default: {
+      const name = g.stickerId ? artForSpecies(g.stickerId, species) : 'ui-star'
+      return { name, emoji: stickerEmoji(name) ?? '⭐', label: '貼紙' }
+    }
   }
 }
 
@@ -33,7 +37,7 @@ interface Props {
  * 放在 pet-slot 裡，跟著阿悟的位置；class gift-live 讓自主行為排程暫停。
  */
 export function GiftItem({ gift, taking, onTake }: Props) {
-  const art = giftArt(gift)
+  const art = giftArt(gift, useSpecies())
   return (
     <button
       type="button"

@@ -2,6 +2,7 @@
 // 純邏輯（不碰 React）；資料庫與名冊都可以注入，方便測試。
 import { DEFAULT_PET_NAME } from '../domain/constants'
 import { checkPin, hashPin, isValidPin } from '../domain/pin'
+import { normSpecies, speciesEmoji, type Species } from '../domain/species'
 import type { AgeBand } from '../domain/types'
 import { AGE_BANDS } from '../learning/profile'
 import { DEFAULT_DB_NAME, deleteDb, getDb, type GuaibaoDB } from '../db/db'
@@ -78,18 +79,18 @@ export class ProfileManager {
   }
 
   /** 全新安裝：設定共用 PIN，並建立第一個孩子（使用舊資料庫名稱 `guaibao-quest`） */
-  async setupFirstChild(input: { pin: string; childName: string; petName: string; ageBand?: AgeBand }): Promise<Result<{ child: ChildProfile }>> {
+  async setupFirstChild(input: { pin: string; childName: string; petName?: string; species?: Species; ageBand?: AgeBand }): Promise<Result<{ child: ChildProfile }>> {
     if ((await this.reg.list()).length) return { ok: false, error: '已經有孩子了' }
-    const r = await this.repoFor(this.deps.legacyDbName).onboard({ pin: input.pin, childName: input.childName, petName: input.petName })
+    const r = await this.repoFor(this.deps.legacyDbName).onboard({ pin: input.pin, childName: input.childName, petName: input.petName, species: input.species })
     if (!r.ok) return r
-    const child = await this.register(this.deps.legacyDbName, input.childName.trim(), input.ageBand, hashPin(input.pin))
+    const child = await this.register(this.deps.legacyDbName, input.childName.trim(), input.ageBand, hashPin(input.pin), undefined, input.species)
     if (input.ageBand) await this.repoFor(child.dbName).setAgeBand(input.ageBand)
     await this.welcome(child)
     return { ok: true, child }
   }
 
   /** 新增另一個孩子：用共用 PIN，不再設定 PIN；各自一個新資料庫 */
-  async addChild(input: { name: string; ageBand?: AgeBand; petName?: string }): Promise<Result<{ child: ChildProfile }>> {
+  async addChild(input: { name: string; ageBand?: AgeBand; petName?: string; species?: Species }): Promise<Result<{ child: ChildProfile }>> {
     const name = input.name.trim()
     if (!name) return { ok: false, error: '請輸入孩子的名字' }
     if (input.ageBand && !AGE_BANDS.includes(input.ageBand)) return { ok: false, error: '不支援的年齡' }
@@ -98,22 +99,22 @@ export class ProfileManager {
     const id = newId()
     const dbName = dbNameForChild(id)
     const repo = this.repoFor(dbName)
-    const r = await repo.onboard({ pinHash, childName: name, petName: input.petName?.trim() || DEFAULT_PET_NAME })
+    const r = await repo.onboard({ pinHash, childName: name, petName: input.petName?.trim() || DEFAULT_PET_NAME, species: input.species })
     if (!r.ok) return r
     if (input.ageBand) await repo.setAgeBand(input.ageBand)
-    const child = await this.register(dbName, name, input.ageBand, undefined, id)
+    const child = await this.register(dbName, name, input.ageBand, undefined, id, input.species)
     await this.welcome(child)
     return { ok: true, child }
   }
 
   /** 名冊有這個孩子、但他的資料庫是空的（重設之後）：用簡化 onboarding（不設 PIN）重新建立 */
-  async onboardExisting(id: string, input: { childName: string; petName: string; ageBand?: AgeBand }): Promise<Result> {
+  async onboardExisting(id: string, input: { childName: string; petName?: string; species?: Species; ageBand?: AgeBand }): Promise<Result> {
     const c = await this.reg.get(id)
     if (!c) return { ok: false, error: '找不到這個孩子' }
     const pinHash = await this.reg.pinHash()
     if (!pinHash) return { ok: false, error: '還沒有設定家長 PIN' }
     const repo = this.repoFor(c.dbName)
-    const r = await repo.onboard({ pinHash, childName: input.childName, petName: input.petName })
+    const r = await repo.onboard({ pinHash, childName: input.childName, petName: input.petName, species: input.species })
     if (!r.ok) return r
     const age = c.ageBand ?? input.ageBand
     await this.reg.db.children.update(id, { name: input.childName.trim(), ...(age ? { ageBand: age } : {}) })
@@ -185,12 +186,14 @@ export class ProfileManager {
     return !!hash && isValidPin(pin) && checkPin(pin, hash)
   }
 
-  private async register(dbName: string, name: string, ageBand: AgeBand | undefined, pinHash?: string, id = newId()): Promise<ChildProfile> {
+  private async register(dbName: string, name: string, ageBand: AgeBand | undefined, pinHash?: string, id = newId(), species?: Species): Promise<ChildProfile> {
     const rdb = this.reg.db
     return rdb.transaction('rw', [rdb.children, rdb.meta], async () => {
       const all = await rdb.children.toArray()
       const order = all.reduce((m, c) => Math.max(m, c.order), -1) + 1
-      const child: ChildProfile = { id, name, avatar: AVATARS[all.length % AVATARS.length], ageBand, dbName, createdAt: Date.now(), order, welcomed: false }
+      // v7.5：兔兔、虎虎的備用頭像用自己的動物；猴子照舊依加入順序輪流
+      const avatar = normSpecies(species) === 'monkey' ? AVATARS[all.length % AVATARS.length] : speciesEmoji(species)
+      const child: ChildProfile = { id, name, avatar, ageBand, dbName, createdAt: Date.now(), order, welcomed: false }
       await rdb.children.put(child)
       if (pinHash) await rdb.meta.put({ key: 'pinHash', value: pinHash })
       if (all.length === 0) await rdb.meta.put({ key: 'activeChildId', value: id })

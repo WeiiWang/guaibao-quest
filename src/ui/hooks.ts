@@ -3,6 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db/db'
 import { now as clockNow } from '../domain/clock'
 import { balanceOf } from '../domain/points'
+import type { Species } from '../domain/species'
 
 /** 目前時間（每 15 秒更新；dev 除錯推進時鐘時立即更新） */
 export function useNow(): number {
@@ -30,6 +31,8 @@ export const useToast = () => useContext(ToastContext)
 
 export interface CelebrateInfo {
   petName: string
+  /** v7.5：寵物的物種（沒有 = 猴子） */
+  species?: Species
   from: 'egg' | 'baby'
   to: 'baby' | 'adult'
   feedCount: number

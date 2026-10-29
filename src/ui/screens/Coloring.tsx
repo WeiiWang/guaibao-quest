@@ -53,6 +53,8 @@ import { PaintBoard, type PaintTool } from './coloring/PaintBoard'
 import type { Ripple } from './coloring/RasterLayer'
 import { StickerTray, type DropApi } from './coloring/StickerTray'
 import { stickerEmoji } from './coloring/stickers'
+import { petArt, speciesEmoji, speciesName } from '../../domain/species'
+import { useSpecies } from '../species'
 import { COUNT_MIN_PCT, FRAME_UNLOCK_LINE, countsAsFinished, frameDef, framesToGo, nextFrame, type FrameId } from '../../domain/frames'
 import { GalleryFrameView } from '../components/GalleryFrame'
 import { isDotsPageId } from '../../art/dots/dots'
@@ -839,7 +841,9 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
  * 主按鈕精簡成三個（掛到房間、再畫一張 / 繼續畫、回著色本），畫廊入口放次要。
  */
 export function FinishCelebration({ png, hung, frame, newFrames, framesDone, counted, stars = 0, full = false, voiceOn, stage, free, onHang, onGallery, onKeep, onRestart, onBack }: { png: string; hung: boolean; frame?: FrameId; newFrames: FrameId[]; framesDone: number; counted: boolean; stars?: number; full?: boolean; voiceOn: boolean; stage: string; free: boolean; onHang: () => void; onGallery: () => void; onKeep: () => void; onRestart: () => void; onBack: () => void }) {
-  const art = stage === 'egg' ? 'pet-egg' : `pet-${stage}-cheer`
+  // v7.5：拿著畫的是孩子自己的寵物
+  const species = useSpecies()
+  const art = petArt(species, stage === 'egg' ? 'egg' : stage === 'adult' ? 'adult' : 'baby', 'cheer')
   const pieces = full ? 64 : 28
   const confetti = useMemo(
     () => Array.from({ length: pieces }, (_, i) => ({ left: (i * 37) % 100, delay: (i % 7) * (full ? 0.12 : 0.18), dur: (full ? 2.2 : 2.6) + (i % 5) * 0.4, hue: (i * 47) % 360 })),
@@ -867,7 +871,7 @@ export function FinishCelebration({ png, hung, frame, newFrames, framesDone, cou
         <h2 className="fc-title">{full ? '全部塗滿了！' : '完成了！'}</h2>
         <div className="fc-scene">
           <div className="fc-pet">
-            <Icon name={art} emoji="🐵" alt="阿悟" size="100%" />
+            <Icon name={art} emoji={stage === 'egg' ? '🥚' : speciesEmoji(species)} alt={speciesName(species)} size="100%" />
           </div>
           <div className="fc-bubble">{full ? '全部塗滿了！' : '好漂亮！'}</div>
           {frame ? (
