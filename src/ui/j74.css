@@ -55,7 +55,7 @@
   position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 .home .room-frame .pet-hud.j74-hud-badge .hunger { width: 100%; flex-direction: column; align-items: stretch; gap: 1px; font-size: 0.62rem; line-height: 1; text-align: center; }
-.home .room-frame .pet-hud.j74-hud-badge .hunger .bar { width: 100%; min-width: 0; height: 8px; }
+.home .room-frame .pet-hud.j74-hud-badge .hunger .bar { width: 100%; min-width: 0; height: 8px; flex: 0 0 8px; }
 .home .room-frame .pet-hud.j74-hud-badge .grow-hint { order: -1; justify-content: center; font-size: 0; gap: 0; }
 .home .room-frame .pet-hud.j74-hud-badge .grow-hint > span:not(.h7-ring) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .home .room-frame .pet-hud.j74-hud-badge .h7-ring { width: 38px; height: 38px; }

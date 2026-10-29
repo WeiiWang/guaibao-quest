@@ -291,7 +291,8 @@ try {
     await page.waitForSelector('[data-testid=album]')
     await page.waitForSelector('[data-testid=album-count]', { timeout: 5000 }).catch(() => {})
     await page.waitForTimeout(300)
-    check('[J2 相簿] 有回憶卡時顯示張數、不顯示空狀態', (await page.getByTestId('album-count').count()) === 1 && (await page.getByTestId('album-empty').count()) === 0 && /1 張/.test(await page.getByTestId('album-count').innerText()))
+    const albumInfo = { count: await page.getByTestId('album-count').count(), empty: await page.getByTestId('album-empty').count(), text: await page.getByTestId('album-count').allInnerTexts() }
+    check('[J2 相簿] 有回憶卡時顯示張數、不顯示空狀態', albumInfo.count === 1 && albumInfo.empty === 0 && /1 張/.test(albumInfo.text.join('')), JSON.stringify(albumInfo))
     await ctx.close()
   }
 
@@ -433,6 +434,8 @@ try {
       if (tag.startsWith('phone')) {
         const mode = await page.locator('.pet-hud').getAttribute('data-hud')
         check(`[J5 ${stage} ${tag}] 手機狀態卡縮成徽章（高度 <= ${stage === 'adult' ? 52 : 80}px）`, mode === 'badge' && hud.h <= (stage === 'adult' ? 52 : 80), `${mode} ${hud.h}`)
+        const barH = await page.locator('.pet-hud .hunger .bar').evaluate((e) => e.getBoundingClientRect().height)
+        check(`[J5 ${stage} ${tag}] 徽章裡看得到飽足條（高度 >= 6px）`, barH >= 6, String(barH))
         check(`[J5 ${stage} ${tag}] 徽章仍有螢幕報讀用的名字與飽足度`, /阿悟/.test(await page.locator('.pet-hud').innerText()) && (await page.locator('.pet-hud [role=meter]').count()) === 1)
       }
       // 左右看房間的鈕不壓猴子、不碰右側按鈕、不碰禮物袋
