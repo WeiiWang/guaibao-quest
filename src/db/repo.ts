@@ -45,6 +45,7 @@ import { getQuestion } from '../learning/bank'
 import * as meta from './meta'
 import * as album from './album'
 import * as home7 from './home7'
+import * as play74 from './play74'
 import { baseIdOf, canMakeMore, clampArtScale, copyOf, estimatePhoneAspect, estimateViewAspect, isNarrowView, MAX_DECOR_COPIES, phoneRoomH, pickWallSpot, pickWallSpotFit, type Box } from '../domain/home7'
 import { isHatId } from '../domain/hats'
 import { CHAPTERS, chapterUnlocked, getChapter } from '../learning/chapter'
@@ -991,6 +992,23 @@ export class Repo {
   }
   rebuildAlbum(now = this.clock()) {
     return album.rebuildAlbum(this.db, now)
+  }
+
+  // ---------- v7.4 線 K：朋友來作客、阿悟的小願望（邏輯在 db/play74.ts） ----------
+  syncGuest(now = this.clock()) {
+    return play74.syncGuest(this.db, now)
+  }
+  markGuest(flag: 'seen' | 'greeted') {
+    return play74.markGuest(this.db, flag)
+  }
+  syncWish() {
+    return play74.syncWish(this.db)
+  }
+  markWishSaid(id: string) {
+    return play74.markWishSaid(this.db, id)
+  }
+  completeWish(id: string, now = this.clock()) {
+    return play74.completeWish(this.db, id, now)
   }
 
   /** 章末寶箱：5 站都通關後才能開，每輪一次 */

@@ -18,6 +18,7 @@ import { TrickCelebrate } from '../components/TrickCelebrate'
 import { MoreTray, type MoreItem } from '../components/MoreTray'
 import { Wardrobe } from '../components/Wardrobe'
 import { MemoryPop } from '../components/MemoryPop'
+import { usePlay74 } from '../play/usePlay74'
 import { useCelebrationOpen } from '../celebrating'
 import { useCelebrateSmall } from '../feedback'
 import { freshCards } from '../../domain/album'
@@ -148,8 +149,10 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
   const small = useCelebrateSmall()
   const celebrationOpen = useCelebrationOpen()
   const [wardrobeOpen, setWardrobeOpen] = useState(!!initialWardrobe && !initialEdit)
+  // v7.4 線 K：朋友來作客、阿悟的小願望（邏輯與畫面在 ui/play/）。回憶卡改看「現在是不是在佈置」（從工坊「去擺放」進來時 initialEdit 一直是 true，離開佈置後小願望的回憶卡才跳得出來）
+  const play = usePlay74({ pet, settings, placements, now, go })
   const nextCard = freshCards(settings?.album)[0]
-  const showMemory = !!nextCard && !!pet && !initialEdit && !showTrick && !celebrationOpen && !wardrobeOpen
+  const showMemory = !!nextCard && !!pet && !play.editing && !showTrick && !celebrationOpen && !wardrobeOpen
 
   // 首次進首頁的引導：冒險地圖按鈕亮起、手指指著它，語音「我們去冒險吧」（只出現一次）
   const showGuide = !!settings && !settings.homeGuideShown && !initialEdit
@@ -253,7 +256,9 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
         decorQty={Object.fromEntries(inventory.map((v) => [v.itemId, v.qty]))}
         gifts={pendingGifts}
         perform={perform}
+        {...play.roomProps}
       />
+      {play.overlay}
       {showTrick && celebrating && (
         <TrickCelebrate
           trickId={celebrating}

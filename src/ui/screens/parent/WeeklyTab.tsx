@@ -15,6 +15,7 @@ import type { ColoringProgress } from '../../../domain/types'
 import { useNow, useToast } from '../../hooks'
 import { artFileName, saveArtwork } from '../../shareArt'
 import '../coloring/i74.css'
+import { PlayWeekly } from '../../play/PlayWeekly'
 import './learning.css'
 import './weekly.css'
 
@@ -136,6 +137,8 @@ export function WeeklyTab() {
           </ul>
         )}
       </div>
+
+      <PlayWeekly />
 
       <div className="card" data-testid="weekly-tips">
         <h2>在家這樣練</h2>

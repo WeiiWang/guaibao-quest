@@ -40,11 +40,11 @@ export type Screen =
   | { name: 'paint'; pageId: string }
   | { name: 'dots'; pageId: string }
   | { name: 'map' }
-  | { name: 'workshop' }
+  | { name: 'workshop'; wish?: string }
   | { name: 'parent' }
   | { name: 'map' }
   | { name: 'stage'; chapterId: string; station: number; ceremony?: boolean }
-  | { name: 'workshop' }
+  | { name: 'workshop'; wish?: string }
   | { name: 'gallery' }
   | { name: 'friends' }
   | { name: 'album' }
@@ -185,7 +185,7 @@ function Main({ childName }: { childName: string }) {
         )
         break
       case 'workshop':
-        body = <WorkshopScreen onBack={home} go={go} />
+        body = <WorkshopScreen onBack={home} go={go} wish={screen.wish} />
         break
       case 'gallery':
         body = <GalleryScreen onBack={() => go('coloring')} go={go} />
