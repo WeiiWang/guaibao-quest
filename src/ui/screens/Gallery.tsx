@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { repo } from '../../db/repo'
-import { getColoringPage } from '../../art/coloring/pages'
+import { FREE_PAGE_IDS, getColoringPage } from '../../art/coloring/pages'
+import { Icon } from '../components/Icon'
+import { artFileName, saveArtwork } from '../shareArt'
+import { GALLERY_EMPTY_LINE } from '../../domain/paintReward'
+import { say } from '../../learning/speech'
 import type { ColoringProgress } from '../../domain/types'
 import { FRAMES, FRAME_LOCKED_LINE, FRAME_PICK_LINE, framesToGo, isFrameId, isFrameUnlocked, nextFrame, type FrameId } from '../../domain/frames'
 import { ScreenHeader } from '../components/Header'
@@ -14,6 +18,7 @@ import { sayText } from '../../learning/speech'
 import { playPop } from '../sounds'
 import type { Screen } from '../App'
 import './coloring.css'
+import './coloring/i74.css'
 
 const dateText = (ms?: number) => {
   if (!ms) return ''
@@ -27,10 +32,12 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
   const { voiceOn } = useLearningSettings()
   const soundOn = useLiveQuery(async () => (await db.settings.get('main'))?.soundOn !== false, [], true)
   const framesDone = useLiveQuery(() => repo.framesDone(), [], 0)
-  const works = useLiveQuery(() => repo.listGallery(), [], [] as ColoringProgress[])
+  const worksQ = useLiveQuery(() => repo.listGallery(), [])
+  const works = worksQ ?? ([] as ColoringProgress[])
   const placements = useLiveQuery(() => db.placements.toArray(), [], [])
   const [view, setView] = useState<ColoringProgress | null>(null)
   const [confirmDel, setConfirmDel] = useState<ColoringProgress | null>(null)
+  const pet = useLiveQuery(() => db.pets.get('pet'), [])
 
   // 彈窗裡的作品要跟著資料更新（換畫框後馬上看到），所以每次都從最新的清單找
   const cur = view ? (works.find((w) => w.pageId === view.pageId) ?? view) : null
@@ -63,10 +70,36 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
   }
   const next = nextFrame(framesDone)
 
+  /** v7.4 I2：存圖（分享面板，不支援就下載） */
+  const savePng = async (w: ColoringProgress) => {
+    if (!w.png) return
+    const r = await saveArtwork(w.png, artFileName(w.createdAt, gid(w)), nameOf(w))
+    if (r === 'shared') toast('分享好了！', 'ok')
+    else if (r === 'downloaded') toast('存好了！在「下載」裡找得到', 'ok')
+    else if (r === 'failed') toast('這張畫存不起來，再試一次看看', 'warn')
+  }
+
+  // v7.4 I2：還沒有畫的時候，阿悟說一句邀請的話（只在這個畫面第一次發現是空的時說）
+  const empty = worksQ !== undefined && worksQ.length === 0
+  useEffect(() => {
+    if (empty) say('pet.gallery.empty', GALLERY_EMPTY_LINE, { enabled: voiceOn })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [empty])
+
   return (
     <main className="screen gallery theme-lavender" data-testid="gallery">
       <ScreenHeader title="我的畫廊" onBack={onBack} backLabel="← 著色本" />
-      {works.length === 0 && <p className="empty">還沒有完成的畫。畫好一張，按「完成」就會放進來！</p>}
+      {empty && (
+        <div className="i74-empty" data-testid="gallery-empty">
+          <div className="i74-empty-pet" aria-hidden>
+            <Icon name={pet?.stage === 'egg' ? 'pet-egg' : `pet-${pet?.stage ?? 'baby'}-happy`} emoji="🐵" alt="阿悟" size="100%" />
+          </div>
+          <p className="i74-empty-text">還沒有完成的畫。畫好一張，按「完成」就會放進來！</p>
+          <button className="btn primary i74-empty-go" onClick={() => go({ name: 'paint', pageId: FREE_PAGE_IDS[0] })} data-testid="gallery-go-paint">
+            <span aria-hidden>🎨</span> 去畫畫
+          </button>
+        </div>
+      )}
       <ul className="gallery-grid">
         {works.map((w) => (
           <li key={w.pageId} className="card gallery-item" data-testid="gallery-item">
@@ -121,6 +154,9 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
               <button className="btn primary" onClick={() => hang(cur)} data-testid="hang-btn">掛到房間</button>
             )}
             <button className="btn" onClick={() => go({ name: 'home', edit: true })}>去佈置</button>
+            <button className="btn" onClick={() => void savePng(cur)} data-testid="save-art">
+              <span aria-hidden>💾</span> 存圖
+            </button>
             <button className="btn danger" onClick={() => { setConfirmDel(cur); setView(null) }}>刪除</button>
           </div>
         </Modal>

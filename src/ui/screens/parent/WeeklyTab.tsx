@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
@@ -7,7 +8,13 @@ import { trickOf } from '../../../domain/tricks'
 import { buildWeekly } from '../../../domain/weekly'
 import { useProfiles } from '../../../profiles/context'
 import { MemoryCard } from '../../components/MemoryCard'
-import { useNow } from '../../hooks'
+import { Modal } from '../../components/Modal'
+import { GalleryFrameView } from '../../components/GalleryFrame'
+import { getColoringPage } from '../../../art/coloring/pages'
+import type { ColoringProgress } from '../../../domain/types'
+import { useNow, useToast } from '../../hooks'
+import { artFileName, saveArtwork } from '../../shareArt'
+import '../coloring/i74.css'
 import './learning.css'
 import './weekly.css'
 
@@ -17,12 +24,18 @@ const md = (date: string) => {
 }
 
 /** 家長週報：這一週（最近 7 天）練了幾天、各科目學會了什麼（白話）、阿悟學會的新招、在家這樣練，以及成長相簿 */
+/** v7.4 I2：家長區「本週」最多顯示幾幅最近的作品 */
+export const WEEKLY_ART_MAX = 6
+
 export function WeeklyTab() {
   const now = useNow()
+  const toast = useToast()
+  const [viewArt, setViewArt] = useState<ColoringProgress | null>(null)
   const profiles = useProfiles()
   const data = useLiveQuery(async () => {
     const [attempts, states, settings, pet] = await Promise.all([db.attempts.toArray(), repo.getSkillStates(), db.settings.get('main'), db.pets.get('pet')])
-    return { attempts, states, album: settings?.album ?? [], childName: settings?.childName ?? '', petName: pet?.name ?? '阿悟' }
+    const arts = (await repo.listGallery()).filter((w) => !!w.png).slice(0, WEEKLY_ART_MAX)
+    return { attempts, states, album: settings?.album ?? [], childName: settings?.childName ?? '', petName: pet?.name ?? '阿悟', arts }
   }, [])
   if (!data) return <p className="empty">載入中…</p>
 
@@ -56,6 +69,24 @@ export function WeeklyTab() {
           </div>
         </div>
         {report.empty && <p className="lt-text" data-testid="weekly-empty">這一週還沒有練習紀錄。孩子玩幾站冒險之後，這裡就會出現他學會了什麼。</p>}
+      </div>
+
+      <div className="card" data-testid="weekly-artworks">
+        <h2>最近的作品</h2>
+        {data.arts.length === 0 ? (
+          <p className="lt-note" data-testid="weekly-art-empty">孩子在著色本完成畫作之後，最近的幾幅會出現在這裡，點一下可以看大圖、存起來。</p>
+        ) : (
+          <ul className="i74-wk-arts">
+            {data.arts.map((w) => (
+              <li key={w.pageId}>
+                <button className="i74-wk-art" onClick={() => setViewArt(w)} aria-label={`看大圖：${getColoringPage(w.basePageId ?? '')?.name ?? '作品'}`} data-testid="weekly-art-thumb">
+                  <img src={w.png} alt="" draggable={false} />
+                  <small>{w.createdAt ? md(localDateStr(w.createdAt)) : ''}</small>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="card" data-testid="weekly-subjects">
@@ -138,6 +169,29 @@ export function WeeklyTab() {
           </>
         )}
       </div>
+      {viewArt && (
+        <Modal title={getColoringPage(viewArt.basePageId ?? '')?.name ?? '作品'} onClose={() => setViewArt(null)}>
+          <div className="fr-big" data-testid="weekly-art-view">
+            <GalleryFrameView png={viewArt.png} frame={viewArt.frame} className="fr-big-frame" />
+          </div>
+          <div className="row-actions">
+            <button
+              className="btn primary"
+              data-testid="weekly-art-save"
+              onClick={async () => {
+                if (!viewArt.png) return
+                const r = await saveArtwork(viewArt.png, artFileName(viewArt.createdAt, viewArt.pageId.slice(2)), '孩子的畫')
+                if (r === 'shared') toast('分享好了！', 'ok')
+                else if (r === 'downloaded') toast('存好了！在「下載」裡找得到', 'ok')
+                else if (r === 'failed') toast('存不起來，再試一次看看', 'warn')
+              }}
+            >
+              <span aria-hidden>💾</span> 存圖
+            </button>
+            <button className="btn" onClick={() => setViewArt(null)}>關起來</button>
+          </div>
+        </Modal>
+      )}
     </section>
   )
 }

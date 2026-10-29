@@ -90,6 +90,15 @@ const regionsOf = (page, id) =>
     const art = await m.getRasterArt(pid)
     return art.map.regions.map((x) => ({ id: x.id, area: x.area, anchor: r.regionAnchor(art.map, x.label) }))
   }, id)
+// v7.4 I5：空白畫紙至少要 3 筆才算完成（給星星）
+const threeStrokes = async (page, bb, y0 = 100) => {
+  for (let k = 0; k < 3; k++) {
+    await page.mouse.move(bb.x + 100, bb.y + y0 + k * 60)
+    await page.mouse.down()
+    await page.mouse.move(bb.x + 300, bb.y + y0 + k * 60 + 100, { steps: 8 })
+    await page.mouse.up()
+  }
+}
 const boardBox = (page) => page.getByTestId('paint-board').boundingBox()
 const anchorPt = (bb, a) => ({ x: bb.x + (a[0] / 768) * bb.width, y: bb.y + (a[1] / 768) * bb.height })
 
@@ -339,10 +348,7 @@ try {
     await openFree(page)
     const bb = await boardBox(page)
     await page.getByTestId('tool-brush').click()
-    await page.mouse.move(bb.x + 100, bb.y + 100)
-    await page.mouse.down()
-    await page.mouse.move(bb.x + 300, bb.y + 200, { steps: 8 })
-    await page.mouse.up()
+    await threeStrokes(page, bb)
     await page.getByTestId('finish-btn').click()
     await page.waitForSelector('[data-testid=finish-celebration]')
     const row = (await ledger(page)).find((l) => l.reason === '完成作品')
@@ -356,10 +362,7 @@ try {
     await openFree(page)
     const bb = await boardBox(page)
     await page.getByTestId('tool-brush').click()
-    await page.mouse.move(bb.x + 100, bb.y + 100)
-    await page.mouse.down()
-    await page.mouse.move(bb.x + 300, bb.y + 200, { steps: 8 })
-    await page.mouse.up()
+    await threeStrokes(page, bb)
     await page.getByTestId('finish-btn').click()
     await page.waitForSelector('[data-testid=finish-celebration]')
     const acts = await page.locator('[data-testid=fc-actions] .btn, [data-testid=fc-actions] .fc-hung').evaluateAll((els) => els.map((e) => e.textContent.trim()))
@@ -371,10 +374,7 @@ try {
     await page.waitForTimeout(300)
     // 再畫一張新的、同一天再完成：不再給（每個欄位每天一次）
     const bb2 = await boardBox(page)
-    await page.mouse.move(bb2.x + 120, bb2.y + 300)
-    await page.mouse.down()
-    await page.mouse.move(bb2.x + 380, bb2.y + 260, { steps: 8 })
-    await page.mouse.up()
+    await threeStrokes(page, bb2, 150)
     await page.getByTestId('finish-btn').click()
     await page.waitForSelector('[data-testid=finish-celebration]')
     check('F3 畫紙：同一欄位同一天「再畫一張新的」不能刷星星', (await page.getByTestId('finish-celebration').getAttribute('data-stars')) === '0' && (await ledger(page)).filter((l) => l.reason === '完成作品').length === 1)
