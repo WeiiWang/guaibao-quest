@@ -7,8 +7,8 @@
 //   hide：這個姿勢不戴帽子（躺著睡覺的姿勢，帽子會對不準；睡覺時阿悟把帽子放旁邊）
 // 數值是用圖片的不透明像素量出頭頂（金箍帶上緣）之後，再逐張目視微調；改圖要重新量。
 // 蛋（pet-egg*）不能戴帽子，不在表裡。
-// v7.5：依物種查表（HAT_ANCHORS_BY_SPECIES）。兔兔、虎虎的圖（pet-rabbit-*、pet-tiger-*）錨點等圖好了再量
-// （design/tools/measure_hat_anchors.py 量出來貼進 RABBIT / TIGER 表）；還沒量的姿勢先用 SPECIES_DEFAULT_ANCHOR（頭頂中央）。
+// v7.5：依物種查表（HAT_ANCHORS_BY_SPECIES）。兔兔、虎虎的圖（pet-rabbit-*、pet-tiger-*）已逐張量好；
+// 表裡沒有的姿勢（日後新增）先用 speciesDefaultAnchor（頭頂中央）。
 import type { Stage } from '../domain/types'
 import { parsePetArt, petArt, type Species } from '../domain/species'
 
@@ -54,10 +54,60 @@ export const HAT_ANCHORS: Record<string, HatAnchor> = {
   'pet-adult-shy': a(49.2, 15.3, 46, 0, [390, 512]),
 }
 
-/** v7.5 兔兔的錨點（key = 圖檔名，例 'pet-rabbit-baby-idle'）。圖還沒生成，等量好再填 */
-export const HAT_ANCHORS_RABBIT: Record<string, HatAnchor> = {}
-/** v7.5 虎虎的錨點（key = 圖檔名，例 'pet-tiger-adult-cheer'） */
-export const HAT_ANCHORS_TIGER: Record<string, HatAnchor> = {}
+/** v7.5 兔兔的錨點（key = 圖檔名）。頭頂 = 兩耳之間的凹谷，帽子蓋住耳根；成體戴在花圈上。逐張疊真帽子目視校正 */
+export const HAT_ANCHORS_RABBIT: Record<string, HatAnchor> = {
+  'pet-rabbit-baby-idle': a(49.8, 28.6, 55, 0, [293, 512]),
+  'pet-rabbit-baby-happy': a(51.2, 28.4, 49, 0, [325, 512]),
+  'pet-rabbit-baby-cheer': a(46, 30, 46, -4, [348, 512]),
+  'pet-rabbit-baby-think': a(48.4, 30.9, 52, -6, [306, 512]),
+  'pet-rabbit-baby-eating': a(50.4, 27, 59, 0, [272, 512]),
+  'pet-rabbit-baby-sing': a(46, 29.4, 49, 4, [326, 512]),
+  'pet-rabbit-baby-dance': a(57, 28.8, 44, 8, [365, 512]),
+  'pet-rabbit-baby-laugh': a(49, 32.5, 38, 10, [424, 512]),
+  'pet-rabbit-baby-dizzy': a(60, 33.3, 40, 10, [405, 512]),
+  'pet-rabbit-baby-sleep': hidden([512, 455]),
+  'pet-rabbit-baby-sleepy': a(49.5, 29.4, 56, 0, [287, 512]),
+  'pet-rabbit-baby-shy': a(50, 28.8, 58, 0, [278, 512]),
+  'pet-rabbit-adult-idle': a(49.6, 25.7, 54, 0, [252, 512]),
+  'pet-rabbit-adult-happy': a(49.5, 25.7, 40, 0, [337, 512]),
+  'pet-rabbit-adult-cheer': a(56, 26, 43, 8, [316, 512]),
+  'pet-rabbit-adult-think': a(52, 28, 47, -12, [290, 512]),
+  'pet-rabbit-adult-eating': a(52, 25.3, 49, -6, [273, 512]),
+  'pet-rabbit-adult-sing': a(42, 29.2, 39, -10, [347, 512]),
+  'pet-rabbit-adult-dance': a(57, 28.2, 38, 10, [354, 512]),
+  'pet-rabbit-adult-laugh': a(45, 28.4, 35, -12, [390, 512]),
+  'pet-rabbit-adult-dizzy': a(57, 31.3, 33, 10, [408, 512]),
+  'pet-rabbit-adult-sleep': hidden([512, 430]),
+  'pet-rabbit-adult-sleepy': a(48, 27.4, 49, -2, [278, 512]),
+  'pet-rabbit-adult-shy': a(49.8, 25.9, 53, 0, [255, 512]),
+}
+/** v7.5 虎虎的錨點（key = 圖檔名）。圓耳朵在帽子兩側；逐張疊真帽子目視校正 */
+export const HAT_ANCHORS_TIGER: Record<string, HatAnchor> = {
+  'pet-tiger-baby-idle': a(52.7, 8.6, 41, 0, [441, 512]),
+  'pet-tiger-baby-happy': a(53.6, 9.2, 40, 0, [449, 512]),
+  'pet-tiger-baby-cheer': a(54.1, 10, 38, 3, [473, 512]),
+  'pet-tiger-baby-think': a(50.7, 9.6, 45, -6, [400, 512]),
+  'pet-tiger-baby-eating': a(52.2, 8.6, 46, -3, [388, 512]),
+  'pet-tiger-baby-sing': a(52.1, 9.8, 40, 3, [454, 512]),
+  'pet-tiger-baby-dance': a(51.8, 10, 40, 6, [452, 512]),
+  'pet-tiger-baby-laugh': a(56.1, 10.8, 42, 8, [433, 512]),
+  'pet-tiger-baby-dizzy': a(61.8, 11.2, 36, 10, [496, 512]),
+  'pet-tiger-baby-sleep': hidden([512, 394]),
+  'pet-tiger-baby-sleepy': a(53, 9.8, 43, 5, [418, 512]),
+  'pet-tiger-baby-shy': a(50.1, 9.2, 45, 0, [398, 512]),
+  'pet-tiger-adult-idle': a(53.3, 7.8, 41, 0, [353, 512]),
+  'pet-tiger-adult-happy': a(51.8, 8.4, 38, 0, [381, 512]),
+  'pet-tiger-adult-cheer': a(51.8, 9.6, 35, 3, [409, 512]),
+  'pet-tiger-adult-think': a(53, 9.6, 44, -8, [332, 512]),
+  'pet-tiger-adult-eating': a(55.4, 8.2, 43, 0, [340, 512]),
+  'pet-tiger-adult-sing': a(45.5, 13.3, 35, -8, [413, 512]),
+  'pet-tiger-adult-dance': a(51.7, 8.6, 36, 3, [408, 512]),
+  'pet-tiger-adult-laugh': a(46.8, 15.3, 35, -10, [419, 512]),
+  'pet-tiger-adult-dizzy': a(55.8, 11.2, 33, 10, [441, 512]),
+  'pet-tiger-adult-sleep': hidden([512, 350]),
+  'pet-tiger-adult-sleepy': a(51.2, 9.2, 39, 3, [370, 512]),
+  'pet-tiger-adult-shy': a(56.2, 9.2, 40, 0, [362, 512]),
+}
 
 export const HAT_ANCHORS_BY_SPECIES: Record<Species, Record<string, HatAnchor>> = {
   monkey: HAT_ANCHORS,

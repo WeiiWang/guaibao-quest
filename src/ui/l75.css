@@ -13,7 +13,7 @@
 .l75-pick-art { width: 100%; height: 112px; object-fit: contain; }
 .l75-pick-art.art-emoji { display: grid; place-items: center; }
 .l75-pick-name { font-size: 1.45rem; line-height: 1.1; }
-.l75-note { margin: 0; text-align: center; font-size: 0.95rem; color: var(--ink-soft, #7a6a62); font-weight: 700; }
+.l75-note { margin: 6px 0 0; text-align: center; font-size: 0.95rem; color: var(--ink-soft, #7a6a62); font-weight: 700; }
 /* 家長區「新增孩子」：小一點 */
 .l75-pick-compact .l75-pick-btn { min-height: 118px; border-radius: 22px; }
 .l75-pick-compact .l75-pick-art { height: 72px; }
