@@ -3,6 +3,7 @@
 import { localDateStr } from '../domain/date'
 import { collectionRewardsDue, rollDailyGift, rollStationDrop } from '../domain/gifts'
 import { collectionStep, friendStats, type FriendStat } from '../domain/friends'
+import { collectionGiftSticker } from '../domain/stickers'
 import { newTricks, type TrickId } from '../domain/tricks'
 import type { Gift } from '../domain/types'
 import { getQuestion } from '../learning/bank'
@@ -104,7 +105,16 @@ export async function syncCollection(d: GuaibaoDB, rng: () => number, now: numbe
     if (!s) return 0
     const owed = due - (s.collectionRewarded ?? 0)
     if (owed <= 0) return 0
-    const gifts: Gift[] = Array.from({ length: owed }, () => ({ foodId: rollStationDrop(rng, localDateStr(now)), at: now, from: 'collection' as const }))
+    // v7.4 I4：第 1、3、5… 份收集禮物送下一張還沒擁有的貼紙（固定順序），其餘送食物（見 domain/stickers.ts 的 collectionGiftSticker）
+    const have = [...(s.stickers ?? [])]
+    const gifts: Gift[] = []
+    for (let k = 1; k <= owed; k++) {
+      const stickerId = collectionGiftSticker(have, (s.collectionRewarded ?? 0) + k)
+      if (stickerId) {
+        have.push(stickerId)
+        gifts.push({ stickerId, at: now, from: 'collection' as const })
+      } else gifts.push({ foodId: rollStationDrop(rng, localDateStr(now)), at: now, from: 'collection' as const })
+    }
     await queueGifts(d, gifts)
     await d.settings.update(SETTINGS_ID, { collectionRewarded: due })
     return owed

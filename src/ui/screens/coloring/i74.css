@@ -1,0 +1,78 @@
+/* v7.4 線 I：繪圖板（填色桶、形狀章、貼紙成長、作品出口、列表勾勾、完成對話框圖示）。class 一律 i74- 開頭。
+   載入順序在 paintboard.css / f73.css 之後；手機筆刷列的排版是線 J 的範圍，這裡不碰。 */
+
+/* ---------- I1：空白畫紙工具列 6 顆 ---------- */
+.pt-tools.i74-tools6 { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
+.i74-tools6 .pt-tool { min-height: 64px; padding: 4px 0; border-radius: 18px; font-size: 0.82rem; white-space: nowrap; }
+.i74-tools6 .pt-tool-ico { font-size: 1.45rem; }
+
+.i74-bucket { align-items: center; gap: 12px; padding: 6px 10px; border-radius: 18px; background: #fff; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.12); flex-wrap: nowrap; }
+.i74-bucket-ico { flex: none; display: block; }
+.i74-hint { font-weight: 800; font-size: 1rem; line-height: 1.3; color: var(--ink-soft); }
+.i74-shape-opts { align-items: center; gap: 10px; }
+.i74-shape { width: 60px; height: 60px; padding: 0; border: 0; border-radius: 18px; background: #fff; display: grid; place-items: center; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.16); transition: transform 0.12s; }
+.i74-shape:active { transform: translateY(2px) scale(0.95); }
+.i74-shape.on { background: var(--lavender-soft); box-shadow: 0 0 0 3px var(--lavender-deep), 0 3px 0 rgba(74, 59, 53, 0.16); }
+.i74-shape-ico { display: block; }
+.tool-bucket .pb-bg, .tool-shape .pb-bg { cursor: crosshair; }
+
+/* ---------- I4：貼紙盤的「新」 ---------- */
+.pt-sticker-btn { position: relative; }
+.i74-new { position: absolute; top: -4px; right: -4px; min-width: 26px; height: 22px; padding: 0 6px; border-radius: 999px; background: #ff6b8b; color: #fff; font-size: 0.78rem; font-weight: 900; line-height: 22px; text-align: center; box-shadow: 0 2px 0 rgba(150, 30, 60, 0.4), 0 0 0 2px #fff; pointer-events: none; animation: i74-new 1.4s ease-in-out infinite; }
+@keyframes i74-new { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+[data-new='1'].pt-sticker-btn { box-shadow: 0 0 0 3px #ffb3c4, 0 3px 0 rgba(74, 59, 53, 0.16); }
+
+/* ---------- I5：完成對話框的按鈕加圖示（3 歲不識字）：圖在上、字在下 ---------- */
+.f73-ask .pb-ask { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; justify-content: stretch; }
+.f73-ask .i74-ask-btn { min-height: 84px; width: 100%; }
+.i74-ask-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding-top: 8px; padding-bottom: 8px; line-height: 1.15; }
+.i74-ask-ico { font-size: 2.2rem; line-height: 1; }
+
+/* ---------- I3：著色列表的勾勾、作品縮圖、再畫一次 ---------- */
+.i74-thumb { position: relative; }
+.i74-work { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; background: #fff; }
+.i74-check { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; border-radius: 50%; background: #3fae6a; color: #fff; font-size: 1.6rem; font-weight: 900; line-height: 44px; text-align: center; box-shadow: 0 0 0 3px #fff, 0 3px 8px rgba(40, 90, 60, 0.4); pointer-events: none; }
+.i74-finished i { background: #3fae6a; }
+.i74-again { min-height: 48px; width: 100%; margin-top: 6px; font-size: 0.95rem; }
+
+/* ---------- I2：畫廊的空狀態、家長區的作品縮圖 ---------- */
+.i74-empty { display: grid; justify-items: center; gap: 12px; padding: 26px 16px 34px; text-align: center; }
+.i74-empty-pet { width: min(46vw, 220px); aspect-ratio: 1; animation: i74-bob 2.4s ease-in-out infinite; }
+.i74-empty-pet .art, .i74-empty-pet .art-emoji { width: 100%; height: 100%; }
+.i74-empty-text { margin: 0; max-width: 24em; font-weight: 800; font-size: 1.1rem; color: var(--ink-soft); }
+.i74-empty-go { min-height: 64px; padding: 0 30px; font-size: 1.3rem; }
+@keyframes i74-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.i74-wk-arts { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 10px; }
+.i74-wk-art { position: relative; display: block; width: 100%; padding: 0; border: 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.16), inset 0 0 0 2px rgba(122, 82, 200, 0.2); }
+.i74-wk-art img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.i74-wk-art small { position: absolute; left: 6px; bottom: 6px; padding: 1px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.9); font-weight: 800; font-size: 0.78rem; color: var(--ink-soft); }
+
+/* ---------- I5：橫向面板中間的空白給「最近用過」與較大的筆粗 ---------- */
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) and (min-height: 801px) {
+  /* 筆刷模式：本來為了讓 24 色放得下把「最近用過」收起來；高度夠就放回來 */
+  .paint .pb-brush-opts ~ .f73-pal-wrap .pt-recent { display: flex; }
+  /* 選了印章筆：印章列要佔一列高度，24 色放不下就還是收起來 */
+  .paint .pb-brush-opts.i74-stamping ~ .f73-pal-wrap .pt-recent { display: none; }
+  /* 筆粗：變大、粗細一眼看得出來 */
+  .paint .pb-brush-opts .pt-chip.size, .paint .i74-shape-opts .pt-chip.size { min-height: 64px; min-width: 72px; }
+  /* 背景場景：3 欄大按鈕 */
+  .paint .pb-scenes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .paint .pb-scenes .pb-scene { min-height: 72px; padding: 0 8px; font-size: 0.95rem; }
+  .paint .pb-scenes .pb-scene i { width: 38px; height: 38px; flex: none; }
+  .i74-bucket { min-height: 150px; padding: 14px 16px; gap: 16px; justify-content: center; }
+  .i74-bucket-ico { width: 104px; height: 72px; }
+  .i74-hint { font-size: 1.15rem; }
+  /* 橡皮擦：說明圖示放大，筆粗按鈕變大 */
+  .paint .pb-erase-hint { min-height: 126px; padding: 12px 16px; gap: 12px 24px; justify-content: center; }
+  .paint .pb-eh { gap: 10px; }
+  .paint .pb-eh b { font-size: 2.6rem; }
+  .paint .pb-eh-color, .paint .pb-eh-blank { width: 52px; height: 52px; border-radius: 14px; }
+  .paint .pb-eh svg { width: 100px; height: 40px; }
+  .paint .pb-eraser .pt-chip.size { min-height: 64px; min-width: 72px; }
+  .i74-shape { width: 72px; height: 72px; }
+  .i74-shape-ico { width: 48px; height: 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .i74-new, .i74-empty-pet { animation: none; }
+}

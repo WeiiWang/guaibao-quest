@@ -71,6 +71,10 @@ export const docOf = (p: Pick<ColoringProgress, 'fills' | 'strokes' | 'stickers'
   return d
 }
 
+/** 兩份作品內容一樣嗎（填色、筆畫、貼紙、背景都一樣）；用來判斷完成後有沒有再動過 */
+export const sameDoc = (a: Pick<ColoringProgress, 'fills' | 'strokes' | 'stickers' | 'bg'>, b: Pick<ColoringProgress, 'fills' | 'strokes' | 'stickers' | 'bg'>): boolean =>
+  JSON.stringify([a.fills ?? {}, a.strokes ?? [], a.stickers ?? [], a.bg ?? '']) === JSON.stringify([b.fills ?? {}, b.strokes ?? [], b.stickers ?? [], b.bg ?? ''])
+
 /** 把「變更前」的快照推進復原堆疊，超過上限丟掉最舊的 */
 export function pushUndo<T>(past: readonly T[], snapshot: T, limit = UNDO_LIMIT): T[] {
   const next = [...past, snapshot]
@@ -120,7 +124,7 @@ export const MIRROR_X = 200
 export const mirrorX = (x: number): number => 2 * MIRROR_X - x
 /** 左右對稱的另一筆：獨立的 stroke（新的 id，所以筆刷的隨機圖樣也各自獨立） */
 export function mirrorStroke(s: ColoringStroke, id: string): ColoringStroke {
-  return { ...s, id, points: s.points.map(([x, y]) => [mirrorX(x), y] as [number, number]) }
+  return { ...s, id, twin: true, points: s.points.map(([x, y]) => [mirrorX(x), y] as [number, number]) }
 }
 
 // ---------- 空白畫紙的背景 ----------

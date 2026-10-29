@@ -212,4 +212,19 @@ describe('圖鑑收錄', () => {
     expect((await repo.getSettings())?.collectionRewarded).toBe(Math.floor(total / step))
     expect(Math.floor(total / step)).toBeGreaterThanOrEqual(8)
   })
+  it('v7.4 I4：收集禮物第 1、3、5… 份是貼紙（固定順序、寫進 settings.stickers），偶數份是食物', async () => {
+    let i = 0
+    for (const q of QUESTIONS) await repo.recordAttempt({ sessionId: `c${i++}`, questionId: q.id, firstTryCorrect: true, hintsUsed: 0, durationMs: 1 }, T0 + i)
+    const n = await repo.syncCollection(T0)
+    expect(n).toBeGreaterThanOrEqual(4)
+    const gifts = (await repo.getPendingGifts()).filter((g) => g.from === 'collection')
+    expect(gifts).toHaveLength(n)
+    expect(gifts[0].stickerId).toBe('pet-adult-cheer')
+    expect(gifts[1].foodId).toBeTruthy()
+    expect(gifts[2].stickerId).toBe('pet-baby-happy')
+    expect(gifts[3].foodId).toBeTruthy()
+    const owned = (await repo.getSettings())?.stickers ?? []
+    expect(owned).toEqual(expect.arrayContaining(gifts.filter((g) => g.stickerId).map((g) => g.stickerId!)))
+    expect(new Set(owned).size).toBe(owned.length)
+  })
 })
