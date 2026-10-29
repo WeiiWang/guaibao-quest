@@ -289,7 +289,8 @@ try {
     await page.goto(`${BASE}/#album`)
     await page.reload()
     await page.waitForSelector('[data-testid=album]')
-    await page.waitForTimeout(500)
+    await page.waitForSelector('[data-testid=album-count]', { timeout: 5000 }).catch(() => {})
+    await page.waitForTimeout(300)
     check('[J2 相簿] 有回憶卡時顯示張數、不顯示空狀態', (await page.getByTestId('album-count').count()) === 1 && (await page.getByTestId('album-empty').count()) === 0 && /1 張/.test(await page.getByTestId('album-count').innerText()))
     await ctx.close()
   }
