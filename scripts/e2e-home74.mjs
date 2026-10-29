@@ -286,6 +286,12 @@ try {
   // 相簿有卡片時不顯示空狀態
   {
     const { ctx, page } = await freshApp(browser, LAND, { stage: 'baby' })
+    // 先等首頁同步把孵化卡寫進相簿（albumInit），再直接去相簿頁；不然機器忙的時候會比同步先到
+    for (let i = 0; i < 40; i++) {
+      const init = await idb(page, (db) => new Promise((r) => (db.transaction('settings').objectStore('settings').get('main').onsuccess = (e) => r(!!e.target.result?.albumInit))))
+      if (init) break
+      await page.waitForTimeout(200)
+    }
     await page.goto(`${BASE}/#album`)
     await page.reload()
     await page.waitForSelector('[data-testid=album]')
