@@ -26,11 +26,11 @@ import { PetSprite } from './PetSprite'
 import { useCelebrate, useToast } from '../hooks'
 import { useCelebrateSmall } from '../feedback'
 import { playSfx } from '../../learning/sfx'
-import { flyOne, iconNode } from '../fly'
 import { baseIdOf, clampArtScale, GIFT_BAG_DONE_LINE, GIFT_THANKS_LINES, nextTint, tintFilter, unplacedCount, DECOR_TINTS } from '../../domain/home7'
 import type { TrickId } from '../../domain/tricks'
-import { giftArt } from '../pet/GiftItem'
 import { GiftBag } from '../pet/GiftBag'
+import { GiftReveal } from '../pet/GiftReveal'
+import { giftReveal, hudLayout, HUNGRY_BACK_LINE, HUNGRY_MOOD_TEXT, type RevealItem } from '../../domain/home74'
 import { ProgressEgg } from '../pet/ProgressEgg'
 import { sayRecorded, sayText } from '../../learning/speech'
 import { TAP_FEED_GAP_MS } from '../../domain/constants'
@@ -46,6 +46,7 @@ import { useReducedMotion, useTodMode } from '../pet/hooks'
 import { usePetLife, type Geometry } from '../pet/usePetLife'
 import '../pet/pet.css'
 import '../home7.css'
+import '../j74.css'
 
 interface Props {
   pet: Pet
@@ -100,7 +101,10 @@ interface DragView {
   grabDY: number
 }
 
-const MOOD_TEXT = { happy: '好開心！', normal: '還不錯～', low: '好餓，無精打采…' } as const
+// v7.4 J3：餓的時候不再說「好餓，無精打采…」，改成溫暖的短句；隔天回來的第一句見下面的 greeted
+const MOOD_TEXT = { happy: '好開心！', normal: '還不錯～', low: HUNGRY_MOOD_TEXT } as const
+/** 這次開啟 App 是否已經打過招呼（模組層級：回到首頁重新掛載也不會再說一次） */
+let greetedThisSession = false
 const TOOLBAR_H = 64
 /** 還沒擺出來的家具（每件家具可能有多個：回傳 [商品, 還剩幾個]） */
 const unplacedOf = (decor: ShopItem[], placements: Placement[], qty?: Record<string, number>): [ShopItem, number][] => {
@@ -204,6 +208,25 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const hunger = currentHunger(pet, now)
   const mood = moodAt(pet, now)
   const next = feedsToNextStage(pet)
+  // v7.4 J3：每次開啟 App 第一次進首頁，阿悟（孵出來了）餓著就說「你回來了！我肚子有點餓餓的」；狀態卡也顯示這一句一小段時間
+  const [greeting, setGreeting] = useState(false)
+  const greetOn = useRef(false)
+  useEffect(() => {
+    if (!greetOn.current) {
+      if (greetedThisSession) return
+      greetedThisSession = true
+      if (edit || pet.stage === 'egg' || moodAt(pet, now) !== 'low') return
+      greetOn.current = true // StrictMode 會把 effect 跑兩次：第二次只重新計時，不重複說
+      setGreeting(true)
+      sayText(HUNGRY_BACK_LINE, { enabled: voiceOn })
+    }
+    const t = window.setTimeout(() => setGreeting(false), 7000)
+    return () => window.clearTimeout(t)
+    // 只在第一次掛載時打招呼
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  // v7.4 J5：狀態卡不壓窗簾：放得下就用卡片（寬度不超過窗簾左緣），手機放不下就縮成徽章（進度環 + 飽足條）
+  const hudL = hudLayout(view.w, view.h)
   const itemById = useMemo(() => new Map(ownedDecor.map((d) => [d.id, d])), [ownedDecor])
   const roomTheme = useRoomTheme()
   const glows = placements.filter((p) => baseIdOf(p.itemId) === 'decor-lamp' || baseIdOf(p.itemId) === 'decor-cloudlamp').map((p) => ({ x: p.x, y: p.y }))
@@ -402,6 +425,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   // ---------- v7：禮物袋（點一次全部收下；孩子正在餵食或拖曳時不晃動）----------
   const giftList = gifts ?? []
   const [bagBusy, setBagBusy] = useState(false)
+  const [reveal, setReveal] = useState<{ items: RevealItem[]; from: DOMRect; id: number } | null>(null)
   const takeAllGifts = async (el: HTMLElement) => {
     if (bagBusy || edit) return
     setBagBusy(true)
@@ -414,16 +438,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     // 星星炸開 + 一聲「收到」
     small('task', { at: el, phrase: '' })
     playSfx('reward', soundOn)
-    // 每份禮物飛向它該去的地方（食物 → 食物列、材料 → 工坊鈕、貼紙 → 背包鈕）
-    list.slice(0, 8).forEach((g, i) => {
-      const art = giftArt(g)
-      // 背包裡原本沒有這種食物時，食物列還沒有它的格子：先飛向食物列（「去商店」那格旁），不要直接消失
-      const target = g.foodId
-        ? document.querySelector(`[data-dock-item="${g.foodId}"]`) ?? document.querySelector('[data-dock-item]') ?? document.querySelector('[data-testid=dock-shop]')
-        : document.querySelector(g.materialId ? '[data-gift-target=material]' : '[data-gift-target=bag]')
-      const px = 64
-      void flyOne({ rect: { left: rect.left + rect.width / 2 - px / 2 + (i % 4) * 8, top: rect.top + rect.height / 2 - px / 2, width: px, height: px }, node: iconNode(art.name, art.emoji, px) }, target, { delay: 120 + i * 130, duration: 800 })
-    })
+    // v7.4 J4：內容一項一項從袋子飛出來、數字跳動（星星 +20、香蕉 +1），攤完再各自飛向它該去的地方（GiftReveal）
+    const items = giftReveal(list)
+    if (items.length > 0) setReveal({ items, from: rect, id: Date.now() })
     // 阿悟收到禮物：開心跳一下、說一句（阿悟聲；沒有預錄音檔就退回介面旁白）
     life.reactGifted()
     const thanks = GIFT_THANKS_LINES[list.length % GIFT_THANKS_LINES.length]
@@ -738,8 +755,12 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     <>
       <section className="room-section">
         <div className={`room-frame ${edit ? 'editing' : ''}`}>
-          <div className="pet-hud">
-            <div className="pet-name">{pet.name}<span className="mood-text"> {pv.food || hovering ? '好好吃～' : MOOD_TEXT[mood]}</span></div>
+          <div
+            className={`pet-hud ${hudL.mode === 'badge' ? 'j74-hud-badge' : ''} ${hudL.mode === 'card' && hudL.maxW !== undefined && hudL.maxW < 220 ? 'j74-hud-tight' : ''} ${greeting && mood === 'low' ? 'j74-greeting' : ''}`}
+            data-hud={hudL.mode}
+            style={hudL.mode === 'card' && hudL.maxW ? { maxWidth: `min(280px, 60%, ${hudL.maxW}px)` } : undefined}
+          >
+            <div className="pet-name">{pet.name}<span className="mood-text"> {pv.food || hovering ? '好好吃～' : greeting && mood === 'low' ? HUNGRY_BACK_LINE : MOOD_TEXT[mood]}</span></div>
             <div className="hunger" role="meter" aria-valuemin={0} aria-valuemax={HUNGER_MAX} aria-valuenow={Math.round(hunger)} aria-label="飽足度">
               <span>飽足</span>
               <div className="bar"><i style={{ width: `${hunger}%` }} className={`m-${mood}`} /></div>
@@ -943,8 +964,20 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
         <div className="dock-wrap">
           {dockFade.left && <span className="dock-fade left" aria-hidden data-testid="dock-fade-left" />}
           {dockFade.right && <span className="dock-fade right" aria-hidden data-testid="dock-fade-right" />}
-          {dockFade.left && <button className="dock-arrow left" onClick={() => scrollDock(-1)} aria-label="往左看" data-testid="dock-arrow-left">◀</button>}
-          {dockFade.right && <button className="dock-arrow right" onClick={() => scrollDock(1)} aria-label="往右看" data-testid="dock-arrow-right">▶</button>}
+          {/* v7.4 J5：原本是一顆白色的「▶」（像影片播放鈕）；改成寫明「更多食物」「前面」的黃色按鈕，高度和食物一樣、不蓋住食物。
+              位置維持在食物列前面（左邊）：箭頭出現 / 消失時，食物列的右緣不動，捲到底的那幾個食物不會被箭頭蓋住 */}
+          {dockFade.left && (
+            <button className="dock-arrow left j74-dock-arrow" onClick={() => scrollDock(-1)} aria-label={edit ? '看前面的家具' : '看前面的食物'} data-testid="dock-arrow-left">
+              <span className="j74-da-chev" aria-hidden>‹</span>
+              <span className="j74-da-label" aria-hidden>前面</span>
+            </button>
+          )}
+          {dockFade.right && (
+            <button className="dock-arrow right j74-dock-arrow" onClick={() => scrollDock(1)} aria-label={edit ? '更多家具' : '更多食物'} data-testid="dock-arrow-right">
+              <span className="j74-da-chev" aria-hidden>›</span>
+              <span className="j74-da-label" aria-hidden>{edit ? '更多家具' : '更多食物'}</span>
+            </button>
+          )}
         <div className="dock" ref={dockRef} onScroll={measureDock} data-testid="dock" aria-label={edit ? '尚未擺放的裝飾' : '飼料'}>
           {!edit &&
             foods
@@ -1032,6 +1065,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
           <Icon name={artName(ghostItem)} emoji={FOOD_EMOJI[ghostItem.asset]} alt="" className="ghost-art" />
         </div>
       )}
+      {reveal && <GiftReveal key={reveal.id} items={reveal.items} from={reveal.from} soundOn={soundOn} onDone={() => setReveal((r) => (r && r.id === reveal.id ? null : r))} />}
       {fly && flyItem && (
         <div className={`drag-ghost fly ${fly.go ? 'go' : ''}`} style={{ left: fly.go ? fly.tx : fly.fx, top: fly.go ? fly.ty : fly.fy, width: 56, height: 56 }} aria-hidden>
           <Icon name={artName(flyItem)} emoji={FOOD_EMOJI[flyItem.asset]} alt="" className="ghost-art" />

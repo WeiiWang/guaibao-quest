@@ -32,7 +32,7 @@ import './ux.css'
 import './screens/adventure/adventure-v73.css'
 
 export type Screen =
-  | { name: 'home'; edit?: boolean }
+  | { name: 'home'; edit?: boolean; wardrobe?: boolean }
   | { name: 'tasks' }
   | { name: 'shop'; tab?: 'food' | 'coloring' | 'hat' }
   | { name: 'bag' }
@@ -144,7 +144,7 @@ function Main({ childName }: { childName: string }) {
   else {
     switch (screen.name) {
       case 'home':
-        body = <Home key={screen.edit ? 'edit' : 'home'} childName={childName} go={go} now={now} initialEdit={screen.edit} />
+        body = <Home key={screen.edit ? 'edit' : screen.wardrobe ? 'wardrobe' : 'home'} childName={childName} go={go} now={now} initialEdit={screen.edit} initialWardrobe={screen.wardrobe} />
         break
       case 'tasks':
         body = <TasksScreen onBack={home} now={now} />
@@ -194,7 +194,7 @@ function Main({ childName }: { childName: string }) {
         body = <FriendsScreen onBack={home} />
         break
       case 'album':
-        body = <AlbumScreen onBack={home} />
+        body = <AlbumScreen onBack={home} go={go} />
         break
       case 'hatpreview':
         body = <HatPreview hat={screen.hat} />

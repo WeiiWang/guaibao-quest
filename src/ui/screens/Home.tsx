@@ -36,6 +36,8 @@ interface Props {
   now: number
   go: (s: Screen['name'] | Screen) => void
   initialEdit?: boolean
+  /** v7.4：從「我的東西」的帽子分頁來，直接打開衣櫃 */
+  initialWardrobe?: boolean
 }
 
 /** 左上角頭像：用寵物臉，缺圖就顯示 emoji */
@@ -63,7 +65,7 @@ function NameCapsule({ childName, pet, now }: { childName: string; pet: Pet; now
   )
 }
 
-export function Home({ childName, now, go, initialEdit }: Props) {
+export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props) {
   const pet = useLiveQuery(() => db.pets.get('pet'), [])
   const inventory = useLiveQuery(() => db.inventory.toArray(), [])
   const shopItems = useLiveQuery(() => db.shopItems.toArray(), [])
@@ -146,7 +148,7 @@ export function Home({ childName, now, go, initialEdit }: Props) {
   const toast = useToast()
   const small = useCelebrateSmall()
   const celebrationOpen = useCelebrationOpen()
-  const [wardrobeOpen, setWardrobeOpen] = useState(false)
+  const [wardrobeOpen, setWardrobeOpen] = useState(!!initialWardrobe && !initialEdit)
   // v7.4 線 K：朋友來作客、阿悟的小願望（邏輯與畫面在 ui/play/）。回憶卡改看「現在是不是在佈置」（從工坊「去擺放」進來時 initialEdit 一直是 true，離開佈置後小願望的回憶卡才跳得出來）
   const play = usePlay74({ pet, settings, placements, now, go })
   const nextCard = freshCards(settings?.album)[0]
@@ -202,9 +204,9 @@ export function Home({ childName, now, go, initialEdit }: Props) {
     small('place', { at: document.querySelector('[data-testid=pet]'), phrase: line })
   }
   const moreItems: MoreItem[] = [
-    ...(canPerform ? [{ id: 'perform', label: '表演', emoji: '🎪', tone: 'mint' as const, onClick: () => askPerform('random'), testId: 'perform-btn', aria: `表演：叫${pet.name}表演一招` }] : []),
-    { id: 'album', label: '相簿', emoji: '📷', tone: 'bubblegum', onClick: () => go('album'), testId: 'album-btn', aria: '成長相簿' },
-    { id: 'wardrobe', label: '衣櫃', emoji: '👒', tone: 'butter', onClick: openWardrobe, testId: 'wardrobe-btn', aria: `${pet.name}的衣櫃` },
+    ...(canPerform ? [{ id: 'perform', label: '表演', emoji: '🎪', icon: 'ui-perform', tone: 'mint' as const, onClick: () => askPerform('random'), testId: 'perform-btn', aria: `表演：叫${pet.name}表演一招` }] : []),
+    { id: 'album', label: '相簿', emoji: '📷', icon: 'ui-album', tone: 'bubblegum', onClick: () => go('album'), testId: 'album-btn', aria: '成長相簿' },
+    { id: 'wardrobe', label: '衣櫃', emoji: '👒', icon: 'ui-wardrobe', tone: 'butter', onClick: openWardrobe, testId: 'wardrobe-btn', aria: `${pet.name}的衣櫃` },
   ]
 
   return (

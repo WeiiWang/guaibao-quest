@@ -313,6 +313,8 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
           </ol>
         </section>
       </div>
+      {/* v7.4 J5：提示緊貼在地圖下面（原本在最下面的章節列裡，手機會掉到摺線以下、看不到） */}
+      {canScroll && <p className="adv-swipe-hint" data-testid="swipe-hint">左右滑動看整張地圖 ↔</p>}
 
       {prog.chestClaimed && (
         <section className="adv-again" data-testid="run-complete">
@@ -388,7 +390,6 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
             </span>
           </button>
         )}
-        {canScroll && <p className="adv-swipe-hint">左右滑動看整張地圖 ↔</p>}
       </section>
     </main>
   )

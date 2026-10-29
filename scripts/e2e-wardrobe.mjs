@@ -532,7 +532,7 @@ try {
     await page.getByTestId('more-btn').click()
     await page.waitForSelector('[data-testid=more-tray]')
     await page.waitForTimeout(450) // 等托盤彈出的動畫結束再量
-    const items = await page.locator('[data-testid=more-tray] .mini-candy').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { label: e.querySelector('span:last-child').textContent.trim(), w: Math.round(r.width), h: Math.round(r.height), x: r.x, y: r.y } }))
+    const items = await page.locator('[data-testid=more-tray] .mini-candy').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { label: e.querySelector('.more-label').textContent.trim(), w: Math.round(r.width), h: Math.round(r.height), x: r.x, y: r.y } }))
     check(`[${tag}] 托盤有 表演（學會新招才有）、相簿、衣櫃 3 顆（朋友已經在右側欄）`, items.map((i) => i.label).join() === '表演,相簿,衣櫃', items.map((i) => i.label).join())
     check(`[${tag}] 托盤每顆觸控目標 >= 56px，且都在畫面內`, items.every((i) => i.w >= 56 && i.h >= 56 && i.x >= 0 && i.x + i.w <= vp.width && i.y >= 0 && i.y + i.h <= vp.height), JSON.stringify(items))
     const sideBtns = await page.locator('.side-tools > .mini-candy, .side-tools .more-btn').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)] }))

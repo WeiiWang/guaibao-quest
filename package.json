@@ -34,6 +34,7 @@
     "e2e:paint74": "node scripts/e2e-paint74.mjs",
     "shots:home7": "node scripts/shots-home7.mjs",
     "e2e:game73": "node scripts/e2e-game73.mjs",
+    "e2e:home74": "node scripts/e2e-home74.mjs",
     "shots:game73": "node scripts/shots-game73.mjs",
     "e2e:play74": "node scripts/e2e-play74.mjs"
   },

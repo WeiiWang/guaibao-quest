@@ -3,8 +3,10 @@ import { DEFAULT_PET_NAME } from '../../domain/constants'
 import { AGE_CHOICES } from '../../domain/home7'
 import { sayText } from '../../learning/speech'
 import type { AgeBand } from '../../domain/types'
+import { Icon } from '../components/Icon'
 import { PetSprite } from '../components/PetSprite'
 import { PinPad } from '../components/PinPad'
+import '../j74.css'
 
 type Step = 'pin1' | 'pin2' | 'child' | 'age' | 'pet' | 'egg'
 
@@ -113,7 +115,7 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
                   data-testid={`onboard-age-${a.band}`}
                   onClick={() => pickAge(a.band, a.say)}
                 >
-                  <span className="h7-age-emoji" aria-hidden>{a.emoji}</span>
+                  <Icon name={a.art} emoji={a.emoji} alt="" className="j74-age-icon" />
                   <span className="h7-age-label">{a.label}</span>
                 </button>
               ))}
