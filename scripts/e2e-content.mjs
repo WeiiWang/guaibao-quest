@@ -317,12 +317,12 @@ try {
 
     // 貼紙
     await page.getByTestId('tool-sticker').click()
-    check('貼紙盤 18 種可選', (await page.locator('[data-testid^=add-sticker-]').count()) === 18)
-    await page.getByTestId('add-sticker-obj-star').click()
+    check('貼紙盤預設 8 種可選（v7.4 I4）', (await page.locator('[data-testid^=add-sticker-]').count()) === 8)
+    await page.getByTestId('add-sticker-obj-banana').click()
     await page.waitForTimeout(300)
     col = await dump(page, 'coloring')
     doc = col.find((c) => c.pageId === 'monkey')
-    check('貼紙：stickers 存進資料庫', doc.stickers?.length === 1 && doc.stickers[0].art === 'obj-star', JSON.stringify(doc.stickers))
+    check('貼紙：stickers 存進資料庫', doc.stickers?.length === 1 && doc.stickers[0].art === 'obj-banana', JSON.stringify(doc.stickers))
     const st0 = doc.stickers[0]
     // 拖放
     const sb = await page.getByTestId('sticker').boundingBox()

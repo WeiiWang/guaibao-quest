@@ -124,7 +124,8 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'ui.chapter': ['水簾洞還沒開，先通關花果山喔', '水簾洞開門囉！'],
   'ui.coloring.price': ['這張要用30顆星星，在商店換喔', '這張要用40顆星星，在商店換喔', '這張要用50顆星星，在商店換喔'],
   // v7 繪圖板：選筆刷、換畫紙背景
-  'ui.paint': ['選一支筆', '換個背景吧', '擦掉不要的地方', '再畫一點好嗎？'],
+  // v7.4：填色桶、形狀章、新貼紙（接在後面，舊句子的順序不變）
+  'ui.paint': ['選一支筆', '換個背景吧', '擦掉不要的地方', '再畫一點好嗎？', '點一下圈起來的地方，就會塗滿', '選一個形狀，點一下就蓋上去', '有新的貼紙喔！'],
   // v5 禮物：阿悟拿出禮物時說的話（句型見 src/domain/giftLines.ts，兩邊要一字不差，gifts.test.ts 會檢查）
   'ui.gift.daily': '今天的小禮物！',
   'ui.gift.collect': '你認識好多朋友，這個送給你！',
@@ -199,6 +200,8 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'pet.empty.material': '還沒有材料，我們去冒險找材料吧！',
   'pet.empty.sticker': '還沒有貼紙，去畫畫、收小禮物就會有喔',
   'pet.empty.album': '我們一起去冒險，回憶卡就會出現囉',
+  'pet.paint.free': '再多畫幾筆，或貼一張貼紙吧',
+  'pet.gallery.empty': '還沒有畫畫喔，我們去畫一張吧',
   // v6 成長相簿：回憶卡上的一句話（句型見 src/domain/album.ts；學會新招那張和 ui.trick.learn 同一句，不重複列）
   'ui.album.card': [
     '阿悟孵出來了！',

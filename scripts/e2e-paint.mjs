@@ -32,6 +32,8 @@ const shot71 = async (page, name) => {
   await page.waitForTimeout(350)
   await page.screenshot({ path: join(OUT71, `${name}.png`) })
 }
+// v7.4 I4：貼紙盤預設只開 8 張；這些舊測試要用到後面解鎖的貼紙，先把全部貼紙寫進 settings.stickers
+const ALL_STICKERS = ['pet-adult-cheer', 'pet-baby-happy', 'obj-star', 'obj-flower', 'obj-rabbit', 'obj-chick', 'obj-fish', 'obj-shell', 'decor-rainbow', 'mat-flower']
 const patchSettings = (page, patch) =>
   idb(
     page,
@@ -417,15 +419,16 @@ try {
     await stroke(page, { x: bb.x + 100, y: bb.y + 200 }, { x: bb.x + 420, y: bb.y + 260 }, 14)
     await page.getByTestId('bk-glitter').click()
     await stroke(page, { x: bb.x + 100, y: bb.y + 320 }, { x: bb.x + 420, y: bb.y + 380 }, 14)
+    await stroke(page, { x: bb.x + 100, y: bb.y + 440 }, { x: bb.x + 420, y: bb.y + 500 }, 14) // v7.4：空白畫紙 ≥ 3 筆才算完成
     doc = await docOf(page, 'free-1')
-    check('畫紙：可以畫筆刷（霓虹、亮粉），存在 free-1', doc.strokes.length === 2 && doc.bg === 'night')
+    check('畫紙：可以畫筆刷（霓虹、亮粉），存在 free-1', doc.strokes.length === 3 && doc.bg === 'night')
 
     // 完成 → 畫廊 → 掛到房間
     await page.getByTestId('finish-btn').click()
     await page.waitForSelector('[data-testid=finish-celebration]')
     check('畫紙：完成慶祝畫面有「再畫一張新的」', (await page.getByTestId('free-restart').count()) === 1)
     const g = (await dump(page, 'coloring')).filter((c) => c.pageId.startsWith('g:'))
-    check('畫紙：完成 → 存進畫廊（basePageId = free-1，帶 bg 與筆畫）', g.length === 1 && g[0].basePageId === 'free-1' && g[0].bg === 'night' && g[0].strokes.length === 2 && g[0].png.startsWith('data:image/png'))
+    check('畫紙：完成 → 存進畫廊（basePageId = free-1，帶 bg 與筆畫）', g.length === 1 && g[0].basePageId === 'free-1' && g[0].bg === 'night' && g[0].strokes.length === 3 && g[0].png.startsWith('data:image/png'))
     const dark = await page.evaluate(
       (url) =>
         new Promise((res) => {
@@ -555,6 +558,7 @@ try {
   // ================= 6b) 試玩審查：手掌防護、局部橡皮擦、色盤不跳、貼紙、列表 =================
   {
     const { ctx, page, errors } = await freshApp(browser, VP, { ctxOpts: { hasTouch: true } })
+    await patchSettings(page, { stickers: ALL_STICKERS, stickersSeen: ALL_STICKERS })
     await openList(page)
     // 列表：上鎖頁顯示灰階線稿縮圖 + 價格 + 難度；每張頁面卡都有難度標示
     check('列表：上鎖頁有線稿縮圖（不只有鎖頭），並顯示價格', (await page.locator('[data-testid=locked-clouds] .pb-locked-thumb .coloring-svg').count()) === 1 && /30/.test(await page.getByTestId('locked-clouds').innerText()))
@@ -716,6 +720,7 @@ try {
   // ================= 8) v7.1 D1：貼紙從托盤拖進畫布 =================
   {
     const { ctx, page, errors } = await freshApp(browser, VP)
+    await patchSettings(page, { stickers: ALL_STICKERS, stickersSeen: ALL_STICKERS })
     await openList(page)
     await page.getByTestId('free-1').click()
     await page.waitForSelector('[data-testid=free-bg]')
@@ -816,6 +821,7 @@ try {
   // ================= 8b) D1：手機觸控拖曳（真正的觸控事件，托盤橫向捲動） =================
   {
     const { ctx, page, errors } = await freshApp(browser, { width: 390, height: 844 }, { ctxOpts: { hasTouch: true, isMobile: true } })
+    await patchSettings(page, { stickers: ALL_STICKERS, stickersSeen: ALL_STICKERS })
     await page.getByRole('button', { name: /著色本/ }).first().tap()
     await page.waitForSelector('[data-testid=free-1]')
     await page.getByTestId('free-1').tap()
@@ -862,7 +868,8 @@ try {
     const scribble = async (y) => {
       const bb = await board(page)
       await page.getByTestId('tool-brush').click()
-      await stroke(page, { x: bb.x + 100, y: bb.y + y }, { x: bb.x + 380, y: bb.y + y + 40 }, 10)
+      // v7.4 I5：空白畫紙 ≥ 3 筆才算完成（給畫框收藏的累計）
+      for (let k = 0; k < 3; k++) await stroke(page, { x: bb.x + 100, y: bb.y + y + k * 30 }, { x: bb.x + 380, y: bb.y + y + k * 30 + 40 }, 10)
     }
     await openList(page)
     await page.getByTestId('free-1').click()
@@ -966,7 +973,7 @@ try {
     await page.waitForSelector('[data-testid=free-bg]')
     const bb = await board(page)
     await page.getByTestId('tool-brush').tap()
-    await stroke(page, { x: bb.x + 60, y: bb.y + 120 }, { x: bb.x + 300, y: bb.y + 200 }, 10)
+    for (let k = 0; k < 3; k++) await stroke(page, { x: bb.x + 60, y: bb.y + 120 + k * 40 }, { x: bb.x + 300, y: bb.y + 200 + k * 40 }, 10) // v7.4 I5：≥ 3 筆
     await page.getByTestId('finish-btn').tap()
     await page.waitForSelector('[data-testid=finish-celebration]')
     await page.waitForTimeout(600)

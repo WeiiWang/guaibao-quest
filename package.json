@@ -31,6 +31,7 @@
     "e2e:home7": "node scripts/e2e-home7.mjs",
     "e2e:dots": "node scripts/e2e-dots.mjs",
     "e2e:paint73": "node scripts/e2e-paint73.mjs",
+    "e2e:paint74": "node scripts/e2e-paint74.mjs",
     "shots:home7": "node scripts/shots-home7.mjs",
     "e2e:game73": "node scripts/e2e-game73.mjs",
     "e2e:home74": "node scripts/e2e-home74.mjs",

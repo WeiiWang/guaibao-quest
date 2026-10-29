@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { PAINT_FULL_LINE, PAINT_LINES, PAINT_MORE_LINE, PAINT_REWARD_REASON, PAINT_STARS, PAINT_STARS_LINE, isFullyPainted, paintRewardKey } from './paintReward'
+import { FREE_MIN_STROKES, GALLERY_EMPTY_LINE, PAINT_FREE_LINE, countStrokes, freeCanvasEnough, PAINT_FULL_LINE, PAINT_LINES, PAINT_MORE_LINE, PAINT_REWARD_REASON, PAINT_STARS, PAINT_STARS_LINE, isFullyPainted, paintRewardKey } from './paintReward'
 import { STATIC_LINES, allLines } from '../learning/lines'
 
 describe('v7.3 F3：完成獎勵與新句子的規則', () => {
@@ -36,5 +36,21 @@ describe('v7.3 F3：完成獎勵與新句子的規則', () => {
     expect(all['pet.paint.more']).toBe(PAINT_MORE_LINE)
     expect(all['pet.paint.full']).toBe(PAINT_FULL_LINE)
     expect(all['pet.paint.stars']).toBe(PAINT_STARS_LINE)
+  })
+  it('v7.4 I5：空白畫紙 ≥ 3 筆或有貼紙才算完成（橡皮擦、填色桶、鏡像多出的那一筆不算）', () => {
+    const st = (kind?: 'pen' | 'erase' | 'fill', twin = false) => ({ kind, twin })
+    const noSticker: { id: string }[] = []
+    expect(FREE_MIN_STROKES).toBe(3)
+    expect(freeCanvasEnough({ strokes: [st(), st()], stickers: noSticker })).toBe(false)
+    expect(freeCanvasEnough({ strokes: [st(), st(), st()], stickers: noSticker })).toBe(true)
+    expect(freeCanvasEnough({ strokes: [], stickers: [{ id: 's1' }] })).toBe(true)
+    // 一筆鏡像 = 2 筆資料，只算 1 筆
+    expect(countStrokes([st('pen'), st('pen', true)])).toBe(1)
+    expect(freeCanvasEnough({ strokes: [st(), st(undefined, true), st('erase'), st('fill'), st('fill')], stickers: noSticker })).toBe(false)
+    expect(freeCanvasEnough({ strokes: [st(), st(), st(), st('erase')], stickers: noSticker })).toBe(true)
+  })
+  it('v7.4 新句子：空白畫紙畫太少、畫廊還沒有畫（阿悟說的話，key 以 pet. 開頭）', () => {
+    expect(PAINT_FREE_LINE).toBe('再多畫幾筆，或貼一張貼紙吧')
+    expect(GALLERY_EMPTY_LINE).toBe('還沒有畫畫喔，我們去畫一張吧')
   })
 })

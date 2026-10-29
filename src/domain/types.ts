@@ -151,7 +151,8 @@ export interface ColoringProgress {
 }
 /** 筆刷種類（v7）。舊資料沒有 kind，視為 'pen' */
 /** 'erase' = 局部橡皮擦：在筆刷層用 destination-out 畫，只擦掉筆刷（不動線稿與填色）；資料仍是一條向量筆畫，可復原 */
-export type BrushKind = 'pen' | 'crayon' | 'marker' | 'glitter' | 'rainbow' | 'neon' | 'stamp' | 'erase'
+/** v7.4：'fill' = 空白畫紙的填色桶：points[0] 是點下去的位置，color 是顏色（'clear' = 橡皮擦點掉一塊填色）；重畫時對「這一筆之前的筆畫層」重新做 flood fill，所以存檔很小、可復原、能被橡皮擦清掉 */
+export type BrushKind = 'pen' | 'crayon' | 'marker' | 'glitter' | 'rainbow' | 'neon' | 'stamp' | 'erase' | 'fill'
 export interface ColoringStroke {
   id: string
   color: string
@@ -159,6 +160,9 @@ export interface ColoringStroke {
   kind?: BrushKind
   /** v7：印章筆的圖案（star / heart / banana / flower / paw） */
   stamp?: string
+  /** v7.4：鏡像產生的另一筆（算筆數時只算一次）；形狀章蓋出來的筆畫記圖形名（circle / square / heart），純記錄 */
+  twin?: boolean
+  shape?: string
   /** 筆刷粗細（著色頁座標空間，viewBox 400） */
   width: number
   /** 座標空間 0–400 */
@@ -210,6 +214,8 @@ export interface Settings {
   lastGiftDate?: string
   /** v5：收到的貼紙（public/art 素材名，不重複） */
   stickers?: string[]
+  /** v7.4：貼紙盤裡已經看過（用過）的新貼紙；沒在這裡也沒在作品裡出現過的已解鎖貼紙，貼紙盤標「新」 */
+  stickersSeen?: string[]
   /** v5：圖鑑已經送過幾份「滿 6 個」的禮物 */
   collectionRewarded?: number
   /** v5：待慶祝的新招（依序跳全螢幕慶祝，關掉後移除） */

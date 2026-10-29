@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState, type MutableRefObject, type PointerEvent as RPointerEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { Icon } from '../../components/Icon'
-import { STICKERS } from './stickers'
+import type { StickerDef } from '../../../domain/stickers'
 
 /** 畫板提供的換算（D1）：螢幕位置 → 貼紙位置（座標空間 0–400，放大時已換算；在畫板外 / 放大鈕 / 小地圖上 = null）；貼紙在螢幕上的大小 */
 export interface DropApi {
@@ -13,6 +13,10 @@ export interface DropApi {
 export const DRAG_SLOP = 10
 
 interface Props {
+  /** v7.4 I4：已解鎖的貼紙（已依「新的在前」排好） */
+  stickers: readonly StickerDef[]
+  /** 標「新」的貼紙素材名 */
+  fresh?: readonly string[]
   dropApi: MutableRefObject<DropApi | null>
   /** 點一下：照舊自動偏移避開既有貼紙 */
   onTap: (art: string) => void
@@ -35,7 +39,7 @@ interface Drag {
  * 放在畫布外 = 取消。拖曳用 pointer 事件（觸控、滑鼠、筆都一樣）；按鈕的 touch-action 只留「托盤自己捲動的方向」，
  * 另一個方向的移動才會變成拖曳（橫向托盤往上拖、直向托盤往旁邊拖），不會跟捲動打架。
  */
-export function StickerTray({ dropApi, onTap, onDrop, onDragChange }: Props) {
+export function StickerTray({ stickers, fresh = [], dropApi, onTap, onDrop, onDragChange }: Props) {
   const drag = useRef<Drag | null>(null)
   const swallowClick = useRef(false)
   const ghostRef = useRef<HTMLDivElement>(null)
@@ -105,7 +109,7 @@ export function StickerTray({ dropApi, onTap, onDrop, onDragChange }: Props) {
   return (
     <>
       <div className="pt-stickers-tray sd-tray" data-testid="sticker-tray">
-        {STICKERS.map((s) => (
+        {stickers.map((s) => (
           <button
             key={s.art}
             className="pt-sticker-btn sd-btn"
@@ -121,17 +125,19 @@ export function StickerTray({ dropApi, onTap, onDrop, onDragChange }: Props) {
               }
               onTap(s.art)
             }}
-            aria-label={`貼上${s.label}`}
+            aria-label={`貼上${s.label}${fresh.includes(s.art) ? '（新的）' : ''}`}
             data-testid={`add-sticker-${s.art}`}
+            data-new={fresh.includes(s.art) ? '1' : '0'}
           >
             <Icon name={s.art} emoji={s.emoji} alt={s.label} size="100%" />
+            {fresh.includes(s.art) && <b className="i74-new" data-testid={`new-${s.art}`} aria-hidden>新</b>}
           </button>
         ))}
       </div>
       {ghost &&
         createPortal(
           <div className="sd-ghost" ref={ghostRef} data-testid="sticker-ghost" data-art={ghost.art} data-over="0" style={{ width: ghost.px, height: ghost.px }} aria-hidden>
-            <Icon name={ghost.art} emoji={STICKERS.find((s) => s.art === ghost.art)?.emoji} alt="" size="100%" />
+            <Icon name={ghost.art} emoji={stickers.find((s) => s.art === ghost.art)?.emoji} alt="" size="100%" />
           </div>,
           document.body,
         )}

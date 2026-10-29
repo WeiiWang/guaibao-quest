@@ -3,8 +3,10 @@ import { createPortal } from 'react-dom'
 import type { BrushKind, ColoringSticker, ColoringStroke } from '../../../domain/types'
 import { clampScale, clampStickerPos, mirrorStroke, STICKER_BASE, strokeNear, type PaintDoc } from '../../../domain/coloring'
 import { clientToUnit, clampView, panBy, pinchView, stepZoom, VIEW_HOME, zoomAt, type View } from '../../../domain/viewport'
+import { clampShapeR, SHAPE_DEFAULT_R, shapePoints, type ShapeKind } from '../../../domain/shapeStamp'
 import { PALM_INIT, palmCheck, type PalmInput, type PalmState } from '../../../domain/palm'
 import { drawBackground } from '../../../art/coloring/backgrounds'
+import { FILL_CLEAR, FLOOD_TOL } from '../../../art/coloring/flood'
 import { drawStroke } from '../../../art/coloring/brushes'
 import { getColoringPage, isFreePage } from '../../../art/coloring/pages'
 import { useRasterArt } from '../../../art/coloring/rasterArt'
@@ -13,14 +15,15 @@ import { fromUnit, toUnit, VIEWBOX } from '../../../art/coloring/render'
 import { newId } from '../../../db/repo'
 import { ColoringSvg } from '../../components/ColoringThumb'
 import { Icon } from '../../components/Icon'
-import { playBrush } from '../../sounds'
+import { playBrush, playPop } from '../../sounds'
 import { stickerDropPoint } from '../../../domain/stickerDrop'
 import { Minimap } from './Minimap'
 import type { DropApi } from './StickerTray'
 import { RasterLayer, type Ripple } from './RasterLayer'
 import { stickerEmoji } from './stickers'
 
-export type PaintTool = 'fill' | 'brush' | 'sticker' | 'eraser'
+/** v7.4：bucket = 空白畫紙的填色桶（對筆畫層 flood fill）、shape = 形狀章；fill 在空白畫紙仍是「換背景色」 */
+export type PaintTool = 'fill' | 'brush' | 'sticker' | 'eraser' | 'bucket' | 'shape'
 
 interface Props {
   pageId: string
@@ -32,6 +35,8 @@ interface Props {
   eraseWidth: number
   brushKind: BrushKind
   stamp: string
+  /** v7.4：形狀章選了哪個圖形 */
+  shape?: ShapeKind
   mirror: boolean
   soundOn: boolean
   selected: string | null
@@ -63,7 +68,7 @@ const zoomRes = (z: number) => (z <= 1.25 ? 1 : z <= 1.75 ? 1.5 : z <= 2.5 ? 2 :
 const MAX_CANVAS = 2048
 const TAP_SLOP = 12 // 手指移動超過這麼多 css px 就不算「點一下」
 
-type Mode = 'idle' | 'brush' | 'eraser' | 'fill' | 'pinch' | 'spinch' | 'ignore'
+type Mode = 'idle' | 'brush' | 'eraser' | 'fill' | 'bucket' | 'shape' | 'pinch' | 'spinch' | 'ignore'
 interface LiveStroke {
   main: ColoringStroke
   /** 鏡像那一筆（開鏡像才有）；id 在一開始就定好，預覽和存檔的圖樣才會一樣 */
@@ -147,13 +152,14 @@ export function PaintBoard(props: Props) {
         lc.height = B
       }
     }
-    const ctx = c.getContext('2d')
+    // v7.4：空白畫紙要讀回像素做填色桶；一開始就用軟體繪圖，重畫前後的邊緣反鋸齒才一致（瀏覽器讀太多次會自己切換，切換前後的像素有細微差異）
+    const ctx = c.getContext('2d', free ? { willReadFrequently: true } : undefined)
     if (!ctx) return
     const from = append ? prev.ids.length : 0
     for (const s of doc.strokes.slice(from)) drawStroke(ctx, s, B)
     drawn.current = { key, ids }
     if (!live.current) clearLive() // 剛存檔的那一筆已經畫進主畫布，即時層可以清掉了
-  }, [doc.strokes, B, redraw])
+  }, [doc.strokes, B, redraw, free])
 
   // ---- 即時筆畫（rAF 合併：一個畫面最多重畫一次） ----
   const raf = useRef(0)
@@ -233,6 +239,7 @@ export function PaintBoard(props: Props) {
   const pinch = useRef<{ d0: number; a0: number; c0: [number, number]; v0: View; st?: { id: string; s0: number; r0: number } } | null>(null)
   const down = useRef<{ x: number; y: number } | null>(null)
   const sndAt = useRef({ t: 0, n: 0 })
+  const shapeAt = useRef<[number, number]>([200, 200])
   const eraseLive = useRef<ColoringStroke | null>(null)
   const gestureOpen = useRef(false)
   const openGesture = () => {
@@ -252,7 +259,7 @@ export function PaintBoard(props: Props) {
   const isPalm = (e: PalmInput) => palmCheck(palm.current, e, ptrs.current.size === 0)
 
   const cancelSingle = () => {
-    if (mode.current === 'brush') {
+    if (mode.current === 'brush' || mode.current === 'shape') {
       live.current = null
       clearLive()
     }
@@ -353,6 +360,15 @@ export function PaintBoard(props: Props) {
       eraseLive.current = { id: newId(), color: '#000000', kind: 'erase', width: eraseWidth, points: [[x, y]] }
     } else if (t === 'fill') {
       mode.current = 'fill'
+    } else if (t === 'bucket') {
+      mode.current = 'bucket'
+    } else if (t === 'shape') {
+      // 形狀章：按下去就在那裡蓋出預設大小的外框（點一下就好）；手指拉開 = 依距離調大小，放開才存
+      mode.current = 'shape'
+      shapeAt.current = [Math.min(400, Math.max(0, x)), Math.min(400, Math.max(0, y))]
+      const base: ColoringStroke = { id: newId(), color, kind: 'pen', shape: props.shape ?? 'circle', width: brushWidth, points: shapePoints(props.shape ?? 'circle', shapeAt.current[0], shapeAt.current[1], SHAPE_DEFAULT_R) }
+      live.current = { main: base, twin: null }
+      scheduleLive()
     } else mode.current = 'idle'
   }
 
@@ -388,6 +404,13 @@ export function PaintBoard(props: Props) {
         playBrush(props.soundOn, live.current.main.kind ?? 'pen', sndAt.current.n)
       }
       scheduleLive()
+    } else if (m === 'shape' && live.current) {
+      if (!moved.current) return
+      const [x, y] = pointOf(e)
+      const [cx, cy] = shapeAt.current
+      const l = live.current.main
+      l.points = shapePoints((l.shape ?? 'circle') as ShapeKind, cx, cy, clampShapeR(Math.hypot(x - cx, y - cy)))
+      scheduleLive()
     } else if (m === 'eraser' && eraseLive.current) {
       const [x, y] = pointOf(e)
       const pts = eraseLive.current.points
@@ -400,14 +423,37 @@ export function PaintBoard(props: Props) {
     }
   }
 
+  /** 筆刷層上某個座標的透明度（0–255）。畫布還沒準備好 = 0 */
+  const pixelAlpha = (x: number, y: number): number => {
+    const c = canvasRef.current
+    const ctx = c?.getContext('2d')
+    if (!c || !ctx || !c.width) return 0
+    const px = Math.min(c.width - 1, Math.max(0, Math.round(toUnit(x) * c.width)))
+    const py = Math.min(c.height - 1, Math.max(0, Math.round(toUnit(y) * c.height)))
+    return ctx.getImageData(px, py, 1, 1).data[3]
+  }
+  /** 這一下填色桶會不會改變畫面：點的那一格已經是同樣的顏色就不用存一筆 */
+  const fillWouldChange = (x: number, y: number): boolean => {
+    const c = canvasRef.current
+    const ctx = c?.getContext('2d')
+    if (!c || !ctx || !c.width) return true
+    const px = Math.min(c.width - 1, Math.max(0, Math.round(toUnit(x) * c.width)))
+    const py = Math.min(c.height - 1, Math.max(0, Math.round(toUnit(y) * c.height)))
+    const d = ctx.getImageData(px, py, 1, 1).data
+    const hex = color.replace('#', '')
+    const rgb = [parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16)]
+    return !(d[3] >= 250 && Math.abs(d[0] - rgb[0]) <= 2 && Math.abs(d[1] - rgb[1]) <= 2 && Math.abs(d[2] - rgb[2]) <= 2)
+  }
+
   const onUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (releasePointer(e.pointerId)) return
     const m = mode.current
     mode.current = 'idle'
     owner.current = null
-    if (m === 'brush' && live.current) {
+    if ((m === 'brush' || m === 'shape') && live.current) {
       const l = live.current
       live.current = null
+      if (m === 'shape') playPop(props.soundOn)
       props.onStrokes(l.twin ? [l.main, l.twin] : [l.main])
     } else if (m === 'eraser' && eraseLive.current) {
       const l = eraseLive.current
@@ -421,8 +467,19 @@ export function PaintBoard(props: Props) {
         const id = free ? null : regionFromPoint(e.clientX, e.clientY)
         const [x, y] = l.points[0]
         if (id && id in docRef.current.fills) props.onClearRegion(id)
-        else if (docRef.current.strokes.some((st) => st.kind !== 'erase' && strokeNear(st, x, y, l.width / 2))) props.onStrokes([l])
+        else if (docRef.current.strokes.some((st) => st.kind !== 'erase' && st.kind !== 'fill' && strokeNear(st, x, y, l.width / 2))) props.onStrokes([l])
+        else if (free && pixelAlpha(x, y) > FLOOD_TOL) {
+          // v7.4：點一下填色（不是筆畫）= 把這一塊填色清掉（存成一筆 clear 的填色，可復原）
+          playPop(props.soundOn)
+          props.onStrokes([{ id: newId(), color: FILL_CLEAR, kind: 'fill', width: 0, points: [[x, y]] }])
+        }
       }
+    } else if (m === 'bucket' && !moved.current) {
+      const [x, y] = pointOf(e)
+      const s: ColoringStroke = { id: newId(), color, kind: 'fill', width: 0, points: [[x, y]] }
+      if (!fillWouldChange(x, y)) return void (down.current = null)
+      playPop(props.soundOn)
+      props.onStrokes([s])
     } else if (m === 'fill' && !moved.current) {
       if (free) props.onFillBg()
       else {

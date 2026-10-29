@@ -8,6 +8,7 @@
  * - 取樣沿著折線的「累積弧長」每隔固定距離放一個點，與滑鼠事件分了幾段無關。
  */
 import type { BrushKind, ColoringStroke } from '../../domain/types'
+import { floodFillStroke } from './flood'
 import { toUnit, VIEWBOX } from './render'
 
 export type { BrushKind }
@@ -401,6 +402,9 @@ export function drawStroke(ctx: CanvasRenderingContext2D, s: ColoringStroke, px:
       break
     case 'erase':
       drawErase(c, s)
+      break
+    case 'fill':
+      floodFillStroke(ctx, s) // v7.4：填色桶（對這一筆之前的筆畫層重新 flood fill，見 flood.ts）
       break
     default:
       drawPen(c, s)

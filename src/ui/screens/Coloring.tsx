@@ -18,10 +18,12 @@ import {
   ERASER_WIDTHS,
   RECENT_MAX,
   docIsEmpty,
+  docOf,
   emptyDoc,
   makeSpecialFill,
   PALETTE_24,
   popUndo,
+  sameDoc,
   pushRecent,
   pushUndo,
   SPECIAL_KINDS,
@@ -38,7 +40,11 @@ import { Icon } from '../components/Icon'
 import { useToast } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
 import { say, sayChain, sayText } from '../../learning/speech'
-import { isFullyPainted, PAINT_FULL_LINE, PAINT_MORE_LINE, PAINT_STARS, PAINT_STARS_LINE } from '../../domain/paintReward'
+import { freeCanvasEnough, isFullyPainted, PAINT_FREE_LINE, PAINT_FULL_LINE, PAINT_MORE_LINE, PAINT_STARS, PAINT_STARS_LINE } from '../../domain/paintReward'
+import { SHAPES, type ShapeKind } from '../../domain/shapeStamp'
+import { trayOrder } from '../../domain/stickers'
+import { useUnlockedStickers } from './coloring/useUnlockedStickers'
+import { BucketHint, ShapeIcon } from './coloring/ShapeIcon'
 import { SHOP_ITEMS } from '../../domain/constants'
 import { playChime, playPop } from '../sounds'
 import { BrushPreview, StampShape } from './coloring/BrushIcons'
@@ -55,6 +61,7 @@ import type { Screen } from '../App'
 import './coloring.css'
 import './paintboard.css'
 import './f73.css'
+import './coloring/i74.css'
 
 /** 舊名稱：12 色（v2）。新版色盤見 domain/coloring.ts 的 PALETTE_24 */
 export const COLORING_PALETTE = PALETTE_24.slice(0, 12)
@@ -103,22 +110,48 @@ function TierChip({ page }: { page: ColoringPageDef }) {
   )
 }
 
-/** 著色本列表上的一張頁面卡（點陣頁的完成度要等區塊表算好才有，先顯示「還沒開始」） */
-function PageCard({ page, pr, onOpen }: { page: ColoringPageDef; pr?: ColoringProgress; onOpen: (id: string) => void }) {
+/**
+ * 著色本列表上的一張頁面卡（點陣頁的完成度要等區塊表算好才有，先顯示「還沒開始」）。
+ * v7.4 I3：畫完過（畫廊裡有這一頁、完成度 ≥ 60% 的作品）的卡片右上角有勾勾，縮圖用孩子的作品；
+ * 完成後沒有再動過（進行中的作品和最近一幅完成作品一樣）就有「再畫一次」：進行中的作品清空重畫，舊作留在畫廊。
+ */
+function PageCard({ page, pr, works, onOpen, onRestart }: { page: ColoringPageDef; pr?: ColoringProgress; works: ColoringProgress[]; onOpen: (id: string) => void; onRestart: (pageId: string) => void }) {
   const rasterIds = useRegionIds(page.kind === 'raster' ? page.id : undefined)
   const ids = page.kind === 'raster' ? (rasterIds ?? []) : page.regions.map((r) => r.id)
   const pct = completionPercent(pr?.fills, ids)
+  const done = ids.length > 0 ? works.find((w) => !!w.png && completionPercent(w.fills, ids) >= COUNT_MIN_PCT) : undefined
+  const sameAsDone = !!done && !!pr && sameDoc(pr, done)
+  const blank = !pr || docIsEmpty(docOf(pr))
+  // 完成過：縮圖用孩子的作品。之後又動過進行中的作品（有新內容）才改回顯示進行中的樣子
+  const showWork = !!done && (sameAsDone || blank)
   return (
-    <li className="card shop-item art-card" data-testid={`page-${page.id}`}>
-      <button className="thumb-btn" onClick={() => onOpen(page.id)} aria-label={`畫${page.name}`}>
-        <PageThumb pageId={page.id} fills={pr?.fills} className="shop-thumb" />
+    <li className={`card shop-item art-card ${done ? 'i74-done' : ''}`} data-testid={`page-${page.id}`} data-done={done ? '1' : '0'}>
+      <button className="thumb-btn i74-thumb" onClick={() => onOpen(page.id)} aria-label={`畫${page.name}${done ? '（畫完過了）' : ''}`}>
+        {showWork && done ? <img className="shop-thumb i74-work" src={done.png} alt="" data-testid={`page-work-${page.id}`} draggable={false} /> : <PageThumb pageId={page.id} fills={pr?.fills} className="shop-thumb" />}
+        {done && (
+          <span className="i74-check" data-testid={`page-check-${page.id}`} role="img" aria-label="畫完了">
+            ✓
+          </span>
+        )}
       </button>
       <div className="shop-name">{page.name}</div>
       <TierChip page={page} />
-      <div className="page-progress" role="img" aria-label={`完成度 ${pct}%`} data-pct={pct}>
-        <i style={{ width: `${pct}%` }} />
-        <span>{pct === 0 ? '還沒開始' : pct === 100 ? '全部填好了' : `${pct}%`}</span>
-      </div>
+      {showWork ? (
+        <div className="page-progress i74-finished" role="img" aria-label="完成了" data-pct={100}>
+          <i style={{ width: '100%' }} />
+          <span>完成了！</span>
+        </div>
+      ) : (
+        <div className="page-progress" role="img" aria-label={`完成度 ${pct}%`} data-pct={pct}>
+          <i style={{ width: `${pct}%` }} />
+          <span>{pct === 0 ? '還沒開始' : pct === 100 ? '全部填好了' : `${pct}%`}</span>
+        </div>
+      )}
+      {sameAsDone && (
+        <button className="btn i74-again" onClick={() => onRestart(page.id)} data-testid={`again-${page.id}`}>
+          <span aria-hidden>🔄</span> 再畫一次
+        </button>
+      )}
     </li>
   )
 }
@@ -130,6 +163,13 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
   const [guide, setGuide] = useState<{ id: string; name: string; price: number } | null>(null)
   const [shaking, setShaking] = useState<string | null>(null)
   const galleryCount = progress.filter((p) => p.pageId.startsWith('g:')).length
+  /** 這一頁的畫廊作品，新的在前 */
+  const worksOf = (pageId: string) => progress.filter((w) => w.pageId.startsWith('g:') && w.basePageId === pageId).sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))
+  /** v7.4 I3「再畫一次」：完成的作品本來就在畫廊裡（完成時就存了一份），清掉進行中的作品，然後直接打開這一頁 */
+  const restartPage = async (id: string) => {
+    await repo.restartColoringPage(id)
+    onOpen(id)
+  }
   const unlocked = new Set(inventory.filter((v) => v.qty > 0).map((v) => v.itemId))
   const priceOf = (id: string) => SHOP_ITEMS.find((i) => i.id === `coloring-${id}`)?.price ?? 30
   // 簡單 / 挑戰兩區：已擁有的在前、上鎖的在後；每一組裡點陣頁排前面（最漂亮的「阿悟抱香蕉」第一個，v7.3 F5），向量頁接在後面
@@ -150,7 +190,7 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
     <ul className="shop-grid" data-testid={`grid-${tier}`}>
       {sec.map((p) =>
         unlocked.has(`coloring-${p.id}`) ? (
-          <PageCard key={p.id} page={p} pr={progress.find((x) => x.pageId === p.id)} onOpen={onOpen} />
+          <PageCard key={p.id} page={p} pr={progress.find((x) => x.pageId === p.id)} works={worksOf(p.id)} onOpen={onOpen} onRestart={(id) => void restartPage(id)} />
         ) : (
         <li key={p.id} className={`card shop-item art-card locked ${shaking === p.id ? 'ux-shake' : ''}`} data-testid={`locked-${p.id}`}>
           <button className="thumb-btn locked-btn pb-locked-thumb" onClick={() => tapLocked(p.id, p.name)} aria-label={`${p.name}還沒有，要用${priceOf(p.id)}顆星星換`}>
@@ -259,6 +299,19 @@ const TOOLS: { id: PaintTool; label: string; icon: string }[] = [
   { id: 'sticker', label: '貼紙', icon: '⭐' },
   { id: 'eraser', label: '橡皮擦', icon: '🧽' },
 ]
+/**
+ * v7.4 I1：空白畫紙的工具列。新增「填色」（桶子，對自己畫的封閉圖形 flood fill）與「形狀」（圓、方、愛心）。
+ * 「背景」保留成獨立工具（id 仍是 fill）：換整張紙的底色和「塗滿一個圈圈」是兩件不同的事，孩子的心智模型也不同；
+ * 獨立工具也讓舊的操作方式與存檔行為完全不變。筆刷排第一（空白畫紙一開始就是筆刷）。
+ */
+const FREE_TOOLS: { id: PaintTool; label: string; icon: string }[] = [
+  { id: 'brush', label: '筆刷', icon: '🖌️' },
+  { id: 'shape', label: '形狀', icon: '🔷' },
+  { id: 'bucket', label: '填色', icon: '🪣' },
+  { id: 'sticker', label: '貼紙', icon: '⭐' },
+  { id: 'eraser', label: '橡皮擦', icon: '🧽' },
+  { id: 'fill', label: '背景', icon: '🖼️' },
+]
 const SIZE_LABEL: Record<BrushSize, string> = { s: '細', m: '中', l: '粗' }
 /** 場景按鈕上的小預覽（純 CSS） */
 const SCENE_CSS: Record<string, string> = {
@@ -288,6 +341,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
   const [kind, setKind] = useState<BrushKind>('pen')
   const [stamp, setStamp] = useState<string>(DEFAULT_STAMP)
   const [mirror, setMirror] = useState(false)
+  const [shape, setShape] = useState<ShapeKind>('circle')
   const [recent, setRecent] = useState<string[]>(loadRecent)
   const [selected, setSelected] = useState<string | null>(null)
   const [popped, setPopped] = useState<Ripple | null>(null)
@@ -318,6 +372,11 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
   }, [pageId])
 
   useEffect(() => () => window.clearTimeout(flashTimer.current), [])
+
+  // v7.4 I4：貼紙盤只開已解鎖的（預設 8 張 + settings.stickers + 舊作品用過的）；新的標「新」排最前面
+  const stickerArts = useMemo(() => (doc?.stickers ?? []).map((x) => x.art), [doc?.stickers])
+  const { unlocked, fresh } = useUnlockedStickers(stickerArts)
+  const trayStickers = useMemo(() => trayOrder(unlocked, fresh), [unlocked, fresh])
 
   /** 正式變更：舊畫面進復原堆疊、存檔 */
   const commit = useCallback(
@@ -380,6 +439,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
     const spot = at ?? freeStickerSpot(d.stickers)
     const st: ColoringSticker = { id: newId(), art, x: spot[0], y: spot[1], scale: 1.2, rot: 0 }
     commit({ ...d, stickers: [...d.stickers, st] })
+    if (fresh.includes(art)) void repo.markStickersSeen([art])
     setSelected(st.id)
     playChime(soundOn, [880, 1175])
   }
@@ -407,6 +467,12 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
   /** 按「完成」：畫得太少（著色頁完成度 < 60%）先問「再畫一點好嗎？」；空白畫紙沒有完成度，不問 */
   const finish = () => {
     if (docIsEmpty(d)) return toast(free ? '先畫一點東西再按完成吧！' : '先畫一點顏色再按完成吧！', 'info')
+    // v7.4 I5：空白畫紙至少 3 筆或有一張貼紙才算完成（給星星、算畫框收藏）；太少先問「再畫一點好嗎？」
+    if (free && !freeCanvasEnough(d)) {
+      setAsk(true)
+      say('pet.paint.free', PAINT_FREE_LINE, { enabled: voiceOn })
+      return
+    }
     if (!loose && pct < ASK_BELOW_PCT) {
       setAsk(true)
       // v7.3 F3：除了對話框，沒塗的區塊輕輕閃動 2 秒，阿悟說「還有這些地方喔」
@@ -423,7 +489,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
     setBusy(true)
     try {
       const png = await renderArtworkPng({ pageId, bg: d.bg, fills: d.fills, strokes: d.strokes, stickers: d.stickers }, stickerEmoji)
-      const r = await repo.completeColoring(pageId, d, png, undefined, { counts: countsAsFinished(loose, pct) })
+      const r = await repo.completeColoring(pageId, d, png, undefined, { counts: free ? freeCanvasEnough(d) : countsAsFinished(loose, pct) })
       if (!r.ok) throw new Error(r.error)
       playChime(soundOn, r.newFrames.length ? [523, 659, 784, 1047, 1319] : [523, 659, 784, 1047])
       setFlashIds([])
@@ -458,6 +524,9 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
     if (t === 'brush') sayText('選一支筆', { enabled: voiceOn })
     else if (t === 'eraser') sayText('擦掉不要的地方', { enabled: voiceOn })
     else if (t === 'fill' && free) sayText('換個背景吧', { enabled: voiceOn })
+    else if (t === 'bucket') sayText('點一下圈起來的地方，就會塗滿', { enabled: voiceOn })
+    else if (t === 'shape') sayText('選一個形狀，點一下就蓋上去', { enabled: voiceOn })
+    else if (t === 'sticker' && fresh.length) sayText('有新的貼紙喔！', { enabled: voiceOn })
   }
 
   const ids = page?.kind === 'raster' ? (rasterIds ?? []) : (page?.regions.map((r) => r.id) ?? [])
@@ -498,6 +567,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
             eraseWidth={ERASER_WIDTHS[size]}
             brushKind={kind}
             stamp={stamp}
+            shape={shape}
             mirror={mirror}
             soundOn={soundOn}
             selected={selected}
@@ -528,11 +598,11 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
         </div>
 
         <div className="pt-panel card" role="toolbar" aria-label="著色工具">
-          <div className="pt-tools">
-            {TOOLS.map((t) => (
+          <div className={`pt-tools ${free ? 'i74-tools6' : ''}`}>
+            {(free ? FREE_TOOLS : TOOLS).map((t) => (
               <button key={t.id} className={`pt-tool ${tool === t.id ? 'on' : ''}`} aria-pressed={tool === t.id} onClick={() => pickTool(t.id)} data-testid={`tool-${t.id}`}>
                 <span className="pt-tool-ico" aria-hidden>{t.icon}</span>
-                <span>{free && t.id === 'fill' ? '背景' : t.label}</span>
+                <span>{t.label}</span>
               </button>
             ))}
           </div>
@@ -564,8 +634,33 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
               ))}
             </div>
           )}
+          {tool === 'bucket' && free && (
+            <div className="pt-opts i74-bucket" data-testid="opts-bucket">
+              <BucketHint color={color} />
+              <span className="i74-hint">點一下圈起來的地方，就會塗滿</span>
+            </div>
+          )}
+          {tool === 'shape' && free && (
+            <div className="pt-opts i74-shape-opts" data-testid="opts-shape">
+              <div className="pb-group" role="group" aria-label="形狀">
+                {SHAPES.map((sh) => (
+                  <button key={sh.shape} className={`i74-shape ${shape === sh.shape ? 'on' : ''}`} onClick={() => setShape(sh.shape)} aria-pressed={shape === sh.shape} aria-label={sh.label} data-testid={`shape-${sh.shape}`}>
+                    <ShapeIcon shape={sh.shape} color={color} />
+                  </button>
+                ))}
+              </div>
+              <div className="pb-group">
+                {(Object.keys(BRUSH_WIDTHS) as BrushSize[]).map((k) => (
+                  <button key={k} className={`pt-chip size ${size === k ? 'on' : ''}`} onClick={() => setSize(k)} aria-pressed={size === k} data-testid={`shape-size-${k}`}>
+                    <i style={{ width: BRUSH_WIDTHS[k] * 0.9 + 4, height: BRUSH_WIDTHS[k] * 0.9 + 4, background: color }} />
+                    {SIZE_LABEL[k]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           {tool === 'brush' && (
-            <div className="pt-opts pb-brush-opts" data-testid="opts-brush">
+            <div className={`pt-opts pb-brush-opts ${kind === 'stamp' ? 'i74-stamping' : ''}`} data-testid="opts-brush">
               <div className="pb-group" role="group" aria-label="筆刷種類">
                 {BRUSH_KINDS.map((k) => (
                   <button
@@ -634,7 +729,7 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
             </div>
           )}
           {tool === 'sticker' && (
-            <StickerTray dropApi={dropApi} onTap={(art) => addSticker(art)} onDrop={(art, at) => addSticker(art, at)} onDragChange={setDragging} />
+            <StickerTray stickers={trayStickers} fresh={fresh} dropApi={dropApi} onTap={(art) => addSticker(art)} onDrop={(art, at) => addSticker(art, at)} onDragChange={setDragging} />
           )}
           {tool === 'sticker' && (
             <div className="pt-opts sticker-ctl" data-testid="sticker-controls">
@@ -680,10 +775,16 @@ export function ColoringPlayScreen({ pageId, onBack, go }: { pageId: string; onB
         <div className="f73-ask-back" role="presentation" onClick={() => setAsk(false)}>
           <div className="modal f73-ask" role="dialog" aria-modal="true" aria-label="再畫一點好嗎？" data-testid="finish-ask" onClick={(e) => e.stopPropagation()}>
             <h2>再畫一點好嗎？</h2>
-            <p className="lead">還有很多地方沒有塗到喔。</p>
+            <p className="lead">{free ? '多畫幾筆，或貼一張貼紙，就能得到星星喔。' : '還有很多地方沒有塗到喔。'}</p>
             <div className="row-actions pb-ask">
-              <button className="btn primary pb-ask-btn" onClick={() => setAsk(false)} data-testid="finish-more">再畫一下</button>
-              <button className="btn pb-ask-btn" onClick={() => void doFinish()} data-testid="finish-anyway">就這樣完成</button>
+              <button className="btn primary pb-ask-btn i74-ask-btn" onClick={() => setAsk(false)} data-testid="finish-more">
+                <span className="i74-ask-ico" aria-hidden data-testid="finish-more-ico">✏️</span>
+                <span>再畫一下</span>
+              </button>
+              <button className="btn pb-ask-btn i74-ask-btn" onClick={() => void doFinish()} data-testid="finish-anyway">
+                <span className="i74-ask-ico" aria-hidden data-testid="finish-anyway-ico">✅</span>
+                <span>就這樣完成</span>
+              </button>
             </div>
           </div>
         </div>

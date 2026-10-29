@@ -11,7 +11,7 @@ import { EmptyState } from '../components/EmptyState'
 import { Icon } from '../components/Icon'
 import { ScreenHeader } from '../components/Header'
 import { useMaterials } from '../learningHooks'
-import { bagStickers } from './bagStickers'
+import { useUnlockedStickers } from './coloring/useUnlockedStickers'
 import type { Screen } from '../App'
 import '../j74.css'
 
@@ -32,7 +32,6 @@ export function BagScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const inventory = useLiveQuery(() => db.inventory.toArray(), [], [])
   const shopItems = useLiveQuery(() => db.shopItems.toArray(), [], [])
   const placements = useLiveQuery(() => db.placements.toArray(), [], [])
-  const settings = useLiveQuery(() => db.settings.get('main'), [])
   const pet = useLiveQuery(() => db.pets.get('pet'), [])
   const mats = useMaterials()
 
@@ -44,7 +43,8 @@ export function BagScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
   const furniture = owned.filter((x) => x.item!.kind !== 'food')
   const matList = MATERIAL_IDS.map((m) => ({ id: m, qty: mats[m] ?? 0 }))
   const hats = HATS.filter((h) => (inventory.find((v) => v.itemId === h.id)?.qty ?? 0) > 0)
-  const stickers = bagStickers(settings?.stickers)
+  // 已解鎖的貼紙（線 I：預設 8 張 + settings.stickers + 舊作用過的），和貼紙盤同一份邏輯
+  const { unlocked: stickers } = useUnlockedStickers()
 
   const count: Record<BagTab, number> = {
     food: foods.reduce((n, x) => n + x.inv.qty, 0),

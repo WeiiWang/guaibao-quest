@@ -220,14 +220,14 @@ try {
     await page.getByRole('button', { name: /背包/ }).click()
     await page.getByTestId('bag-tab-sticker').click()
     const defaults = await page.locator('[data-testid=bag-grid-sticker] .j74-sticker').count()
-    check('[J2 貼紙] 貼紙分頁顯示貼紙盤目前的預設貼紙（不是空的）', defaults >= 8, String(defaults))
+    check('[J2 貼紙] 貼紙分頁顯示已解鎖的貼紙（預設 8 張，和貼紙盤同一份）', defaults === 8, String(defaults))
     await patchSettings(page, { stickers: ['obj-star', 'obj-test-new'] })
     await reload(page)
     await page.getByRole('button', { name: /背包/ }).click()
     await page.getByTestId('bag-tab-sticker').click()
     await page.waitForTimeout(300)
     const after = await page.locator('[data-testid=bag-grid-sticker] .j74-sticker').count()
-    check('[J2 貼紙] settings.stickers 多一張新的 → 多顯示 1 張（已有的不重複）', after === defaults + 1, `${defaults} -> ${after}`)
+    check('[J2 貼紙] settings.stickers 解鎖 1 張新的（obj-star；不在目錄的 id 忽略、已有的不重複）→ 多顯示 1 張', after === defaults + 1, `${defaults} -> ${after}`)
     check('[J2] 無 JS 錯誤', errors.length === 0, errors.join(' | '))
 
     // 有東西時：食物、材料、帽子各自顯示卡片

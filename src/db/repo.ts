@@ -1415,6 +1415,28 @@ export class Repo {
     if (isFreePage(pageId)) await this.db.coloring.delete(pageId)
   }
 
+  /**
+   * v7.4 I3「再畫一次」：清掉這一張著色頁進行中的作品，畫廊裡完成過的作品（g: 開頭的列）不受影響。
+   * 只給一般著色頁（空白畫紙用 resetFreeCanvas；連連看的進度欄位不能被清掉）。
+   */
+  async restartColoringPage(pageId: string): Promise<boolean> {
+    if (!getColoringPage(pageId) || isFreePage(pageId)) return false
+    await this.db.coloring.delete(pageId)
+    return true
+  }
+
+  /** v7.4 I4：貼紙盤裡新解鎖的貼紙用過了，以後不再標「新」 */
+  async markStickersSeen(arts: string[]): Promise<void> {
+    const d = this.db
+    await d.transaction('rw', d.settings, async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s) return
+      const seen = new Set(s.stickersSeen ?? [])
+      const next = arts.filter((a) => !seen.has(a))
+      if (next.length) await d.settings.update(SETTINGS_ID, { stickersSeen: [...seen, ...next] })
+    })
+  }
+
   /** 只更新填色（保留筆刷與貼紙） */
   async saveColoring(pageId: string, fills: Record<string, string>, now = this.clock()): Promise<void> {
     const prev = await this.db.coloring.get(pageId)
