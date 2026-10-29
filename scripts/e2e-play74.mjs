@@ -241,7 +241,10 @@ try {
     const full = await spokenFull(page)
     check('點朋友：接著唸英文 rabbit（en-US）', full.some((s) => s.t === 'rabbit' && /^en/i.test(s.lang)), JSON.stringify(full))
     await page.waitForSelector('[data-testid=guest-gift]')
-    check('點朋友：跳出禮物卡，寫「小兔子送你一張新的畫！」，有縮圖與「去畫畫」', (await page.locator('[data-testid=guest-gift] h2').innerText()) === '小兔子送你一張新的畫！' && (await page.locator('[data-testid=guest-gift-item] svg, [data-testid=guest-gift-item] img').count()) >= 1 && (await page.locator('[data-testid=guest-gift-go]').count()) === 1)
+    // 縮圖是非同步合成的點陣圖（ColoringThumb 的 RasterThumb）：先顯示「載入中」，等它出來
+    await page.waitForSelector('[data-testid=guest-gift-item] svg, [data-testid=guest-gift-item] img', { timeout: 6000 }).catch(() => {})
+    const giftInfo = { h2: await page.locator('[data-testid=guest-gift] h2').innerText(), thumb: await page.locator('[data-testid=guest-gift-item] svg, [data-testid=guest-gift-item] img').count(), go: await page.locator('[data-testid=guest-gift-go]').count(), html: (await page.locator('[data-testid=guest-gift-item]').innerHTML().catch(() => '')).slice(0, 200) }
+    check('點朋友：跳出禮物卡，寫「小兔子送你一張新的畫！」，有縮圖與「去畫畫」', giftInfo.h2 === '小兔子送你一張新的畫！' && giftInfo.thumb >= 1 && giftInfo.go === 1, JSON.stringify(giftInfo))
     check('禮物卡唸「小兔子送你一張新的畫！」', await waitSpoken(page, '小兔子送你一張新的畫！', 3000))
     await page.waitForTimeout(600)
     const gb = await box(page, '[data-testid=guest-gift-go]')
