@@ -193,6 +193,12 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'pet.paint.more': '還有這些地方喔',
   'pet.paint.full': '全部塗滿了！',
   'pet.paint.stars': '得到五顆星星囉！',
+  // v7.4 線 J：隔天回來阿悟餓了的第一句話、「我的東西」各分頁與成長相簿的空狀態（句子來源在 src/domain/home74.ts 的 J74_LINES，兩邊要一字不差，home74.test.ts 會檢查；阿悟說的話 key 以 pet. 開頭）
+  'pet.hungry.back': '你回來了！我肚子有點餓餓的',
+  'pet.empty.food': '還沒有食物，我們去冒險找吧！',
+  'pet.empty.material': '還沒有材料，我們去冒險找材料吧！',
+  'pet.empty.sticker': '還沒有貼紙，去畫畫、收小禮物就會有喔',
+  'pet.empty.album': '我們一起去冒險，回憶卡就會出現囉',
   // v6 成長相簿：回憶卡上的一句話（句型見 src/domain/album.ts；學會新招那張和 ui.trick.learn 同一句，不重複列）
   'ui.album.card': [
     '阿悟孵出來了！',

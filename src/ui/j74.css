@@ -1,0 +1,112 @@
+/* ============ v7.4 線 J：首頁與 UI 一致性 ============
+   新規則一律用 j74- 前綴。覆寫舊規則時把選擇器寫得更具體（這個檔比 ux.css 先載入）。 */
+
+/* ---------- J1：onboarding 年齡鈕的 3D 圖示 ---------- */
+.j74-age-icon { width: 92px; height: 92px; filter: drop-shadow(0 5px 4px rgba(90, 50, 20, 0.22)); }
+@media (max-width: 520px) { .j74-age-icon { width: 68px; height: 68px; } }
+
+/* ---------- J2：我的東西（分頁）與空狀態 ---------- */
+.j74-bag-tabs { padding-bottom: 12px; }
+.tab.j74-bag-tab { flex: 0 0 auto; min-width: 72px; min-height: 56px; padding: 0 18px; }
+/* 手機：5 個分頁平分一排（圖在上、字在下），不用橫滑 */
+@media (max-width: 560px) {
+  .tabs.j74-bag-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; overflow: visible; }
+  .tab.j74-bag-tab { display: grid; justify-items: center; align-content: center; gap: 0; min-width: 0; min-height: 62px; padding: 4px 2px; border-radius: 22px; font-size: 0.95rem; line-height: 1.2; }
+  .j74-bag-tab > span { font-size: 1.4rem; line-height: 1.1; }
+}
+.j74-dim { opacity: 0.6; }
+.j74-stickers { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 12px; }
+.j74-sticker { display: grid; justify-items: center; gap: 4px; padding: 10px 6px; font-weight: 800; font-size: 0.9rem; text-align: center; }
+.j74-sticker-img { width: 64px; height: 64px; }
+.j74-sticker-img.art-emoji { width: 64px; height: 64px; }
+.j74-bag-cta { display: grid; place-items: center; margin-top: 18px; }
+.j74-bag-cta .btn { min-height: 60px; padding: 0 28px; font-size: 1.15rem; }
+
+.j74-empty { display: grid; justify-items: center; gap: 14px; padding: 18px 12px 30px; text-align: center; }
+.j74-empty-pet { width: min(46vw, 190px); aspect-ratio: 0.9; display: grid; place-items: end center; }
+.j74-empty-pet .pet-sprite { width: 100%; height: 100%; }
+.j74-empty-pet .pet-img { width: 100%; height: 100%; object-fit: contain; }
+.j74-empty-line {
+  position: relative; margin: 0; max-width: min(92%, 420px); padding: 12px 22px; border-radius: 26px; background: #fff;
+  font-weight: 900; font-size: 1.25rem; line-height: 1.5; color: var(--ink); box-shadow: 0 4px 0 rgba(74, 59, 53, 0.12);
+}
+.j74-empty-line::before { content: ''; position: absolute; left: 50%; top: -9px; width: 18px; height: 18px; background: #fff; transform: translateX(-50%) rotate(45deg); border-radius: 4px; }
+.j74-empty-go { min-height: 64px; min-width: 200px; padding: 0 30px; font-size: 1.25rem; }
+
+/* ---------- J4：禮物袋攤開（星星 +20、香蕉 +1） ---------- */
+.j74-reveal { position: fixed; inset: 0; z-index: 94; pointer-events: none; display: grid; place-items: center; padding-bottom: 12vh; }
+.j74-reveal-row { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(10px, 3vw, 26px); max-width: 92vw; }
+.j74-chip {
+  display: grid; justify-items: center; gap: 2px; width: clamp(92px, 18vw, 140px); padding: 10px 8px 8px; border-radius: 30px;
+  background: radial-gradient(circle at 50% 30%, #fff, #fff3cf); box-shadow: 0 6px 0 rgba(224, 165, 44, 0.55), 0 16px 26px rgba(74, 59, 53, 0.28);
+}
+.j74-chip-img { width: clamp(64px, 12vw, 92px); height: clamp(64px, 12vw, 92px); filter: drop-shadow(0 4px 3px rgba(90, 50, 20, 0.25)); }
+.j74-chip-num { font-size: clamp(1.6rem, 4.2vw, 2.2rem); line-height: 1.1; font-weight: 900; color: var(--peach-deep, #e8825c); text-shadow: 0 2px 0 #fff, 0 0 8px #fff; font-variant-numeric: tabular-nums; }
+.j74-chip-num.done { animation: j74-num-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes j74-num-pop { 0% { transform: scale(1); } 40% { transform: scale(1.4); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .j74-chip-num.done { animation: none; } }
+
+/* ---------- J5：狀態卡不壓窗簾 ---------- */
+/* 手機放不下卡片：縮成徽章（進度環 + 飽足條），窄到不會碰到第一扇窗的窗簾；名字與心情只留給螢幕報讀 */
+.home .room-frame .pet-hud.j74-hud-badge {
+  left: 10px; width: 52px; max-width: 52px; padding: 5px 4px 6px; gap: 2px; justify-items: center; border-radius: 18px;
+}
+.home .room-frame .pet-hud.j74-hud-badge .pet-name {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+.home .room-frame .pet-hud.j74-hud-badge .hunger { width: 100%; flex-direction: column; align-items: stretch; gap: 1px; font-size: 0.62rem; line-height: 1; text-align: center; }
+.home .room-frame .pet-hud.j74-hud-badge .hunger .bar { width: 100%; min-width: 0; height: 8px; }
+.home .room-frame .pet-hud.j74-hud-badge .grow-hint { order: -1; justify-content: center; font-size: 0; gap: 0; }
+.home .room-frame .pet-hud.j74-hud-badge .grow-hint > span:not(.h7-ring) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.home .room-frame .pet-hud.j74-hud-badge .h7-ring { width: 38px; height: 38px; }
+.home .room-frame .pet-hud.j74-hud-badge .h7-ring .h7-ring-art { width: 25px; height: 25px; }
+/* 卡片：窗簾很近的時候（直向平板）卡片寬度被限制，字縮小一點，名字與心情仍然排在同一行 */
+.home .room-frame .pet-hud.j74-hud-tight { padding: 6px 10px; }
+.home .room-frame .pet-hud.j74-hud-tight .pet-name { font-size: 1.05rem; white-space: nowrap; }
+.home .room-frame .pet-hud.j74-hud-tight .pet-name .mood-text { margin-left: 4px; font-size: 0.82rem; }
+.home .room-frame .pet-hud.j74-hud-tight .hunger { font-size: 0.82rem; gap: 6px; }
+.home .room-frame .pet-hud.j74-hud-tight .hunger .bar { min-width: 60px; }
+.home .room-frame .pet-hud.j74-hud-tight .grow-hint { font-size: 0.78rem; line-height: 1.25; }
+/* 隔天回來的第一句比較長：可以換行，不把卡片撐寬（只出現幾秒） */
+.home .room-frame .pet-hud.j74-greeting .pet-name { white-space: normal; }
+
+/* dock 的「更多食物」：以前是一顆白色的「▶」（還排在食物列的最左邊），像影片播放鈕 */
+.dock-wrap > .dock-arrow.j74-dock-arrow {
+  flex: 0 0 56px; width: 56px; min-height: 72px; margin: 0 4px; padding: 4px 1px; border-radius: 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  background: linear-gradient(180deg, #fff, var(--butter-soft)); box-shadow: 0 5px 0 var(--butter-deep), inset 0 2px 0 #fff; color: var(--ink); font-weight: 900;
+}
+.dock-wrap > .dock-arrow.j74-dock-arrow:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--butter-deep); }
+.j74-da-chev { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--butter-deep); color: #fff; font-size: 1.5rem; line-height: 1; padding-bottom: 3px; box-sizing: border-box; }
+.j74-da-label { font-size: 0.72rem; letter-spacing: -0.02em; line-height: 1.05; white-space: nowrap; }
+.dock-row.editing .dock-wrap > .dock-arrow.j74-dock-arrow { background: linear-gradient(180deg, #fff, var(--sky-soft)); box-shadow: 0 5px 0 var(--sky-deep), inset 0 2px 0 #fff; }
+.dock-row.editing .j74-da-chev { background: var(--sky-deep); }
+
+/* 手機（高度 >= 780）：左右看房間的鈕縮小、放在右側欄和禮物袋之間的空隙（以前右鈕為了躲「更多」往內移到 right: 84px，壓在猴子身上）。
+   更矮的手機（例如 375×667）右側欄加禮物袋本來就塞滿了，沒有 56px 的空隙，維持原本的位置（見 ux.css） */
+@media (max-width: 560px) and (min-height: 780px) {
+  .home .room-frame .room-arrow { width: 56px; height: 56px; font-size: 1.6rem; top: 76%; }
+  .home .room-frame .room-arrow.left { left: 8px; }
+  .home .room-frame .room-arrow.right { right: 8px; }
+}
+
+/* ---------- J5：手機地圖的「左右滑動」提示放在地圖正下方（不會掉到摺線以下） ---------- */
+.adv-map > .adv-swipe-hint { margin: -4px 0 0; font-size: 0.9rem; }
+
+/* ---------- J5：手機筆刷列兩排（只改手機 media query；高度夠的手機才改，小手機維持橫滑） ---------- */
+@media (max-width: 560px) and (min-height: 760px) {
+  .paint .pt-body:has(> .pb-brush-opts) { height: 196px; }
+  .paint .pt-body:has(> .pb-brush-opts .pb-stamps:not(.pb-off)) { height: 260px; }
+  .paint .pt-body .pb-brush-opts { width: 100%; min-width: 0; box-sizing: border-box; height: auto; flex-wrap: wrap; overflow: visible; align-content: flex-start; gap: 8px; padding: 0 6px; }
+  .paint .pt-body .pb-brush-opts > .pb-group { flex: 1 1 100%; min-width: 0; height: 56px; align-items: center; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .paint .pt-body .pb-brush-opts > .pb-group::-webkit-scrollbar { display: none; }
+  /* 最後一排：細 / 中 / 粗 / 鏡像 平均分，不用橫滑就看得到 */
+  .paint .pt-body .pb-brush-opts > .pb-group:last-child { overflow: visible; gap: 6px; }
+  .paint .pt-body .pb-brush-opts > .pb-group:last-child .pt-chip { flex: 1 1 0; min-width: 0; padding: 0 4px; justify-content: center; font-size: 0.95rem; }
+}
+
+/* ---------- J5：橫向地圖第 1 站的標籤「山腳小路 出發！」不被地圖下緣切掉 ----------
+   第 1 站在場景最下面（y 84%），標籤原本掛在圓盤下方 10px，會被切到。往上貼到圓盤的下緣（蓋住最底下 10px），略往右（置中的話左邊也會被切）；
+   目前這一站只留「出發！」（和直向地圖一樣，名字在圓盤上面的阿悟旁邊不需要再寫），才不會壓到旁邊第 2 站的標籤 */
+.adv-scene:not([data-portrait='true']) .adv-path > .adv-node:first-child:not(.chest) .adv-node-label { top: calc(100% - 10px); left: calc(50% + 6px); }
+.adv-scene:not([data-portrait='true']) .adv-path > .adv-node.st-current:first-child:not(.chest) .adv-node-label { font-size: 0; }
+.adv-scene:not([data-portrait='true']) .adv-path > .adv-node.st-current:first-child:not(.chest) .adv-node-label em { font-size: clamp(0.9rem, 1.9cqw, 1.25rem); }

@@ -34,7 +34,7 @@ export function Wardrobe({ petName, owned, wearing, voiceOn, onPick, onClose, go
         <ul className="wd-grid">
           <li>
             <button className={`wd-tile off ${wearing ? '' : 'on'}`} onClick={() => onPick(null)} data-testid="wd-off" aria-pressed={!wearing}>
-              <span className="wd-tile-art" aria-hidden>🙈</span>
+              <span className="wd-tile-art" aria-hidden><Icon name="ui-no-hat" emoji="🙈" size={64} alt="" /></span>
               <span className="wd-tile-name">不戴帽子</span>
             </button>
           </li>

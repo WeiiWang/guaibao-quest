@@ -270,10 +270,11 @@ export function growProgress(pet: { stage: string; feedCount: number }): number 
 }
 
 // ---------- 年齡（C2） ----------
-export const AGE_CHOICES: { band: AgeBand; label: string; say: string; emoji: string }[] = [
-  { band: '3', label: '3 歲', say: '三歲', emoji: '🧒' },
-  { band: '4-5', label: '4–5 歲', say: '四到五歲', emoji: '👦' },
-  { band: '6-7', label: '6–7 歲', say: '六到七歲', emoji: '🧑' },
+/** art：v7.4 的 3D 年齡圖示（public/art/<art>.png）；缺圖時退回 emoji */
+export const AGE_CHOICES: { band: AgeBand; label: string; say: string; emoji: string; art: string }[] = [
+  { band: '3', label: '3 歲', say: '三歲', emoji: '🧒', art: 'ui-age-3' },
+  { band: '4-5', label: '4–5 歲', say: '四到五歲', emoji: '👦', art: 'ui-age-5' },
+  { band: '6-7', label: '6–7 歲', say: '六到七歲', emoji: '🧑', art: 'ui-age-7' },
 ]
 
 // ---------- 選孩子畫面的專屬顏色（C2） ----------

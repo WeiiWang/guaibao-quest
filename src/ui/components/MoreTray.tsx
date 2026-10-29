@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Icon } from './Icon'
 import '../wardrobe.css'
 
 export interface MoreItem {
   id: string
   label: string
   emoji: string
+  /** v7.4：3D 圖示名（public/art/<icon>.png）；缺圖時自動退回 emoji */
+  icon?: string
   tone: 'mint' | 'lavender' | 'bubblegum' | 'butter'
   onClick: () => void
   testId?: string
@@ -51,8 +54,8 @@ export function MoreTray({ items, children }: { items: MoreItem[]; children?: Re
               data-testid={it.testId}
               aria-label={it.aria ?? it.label}
             >
-              <span className="mini-emoji" aria-hidden>{it.emoji}</span>
-              <span>{it.label}</span>
+              {it.icon ? <Icon name={it.icon} emoji={it.emoji} size={34} alt="" /> : <span className="mini-emoji" aria-hidden>{it.emoji}</span>}
+              <span className="more-label">{it.label}</span>
             </button>
           ))}
           {children}
