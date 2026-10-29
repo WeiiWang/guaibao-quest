@@ -400,6 +400,8 @@ try {
       }
     })
     await page.getByTestId('child-card').nth(1).click()
+    // 唸名字是點擊後非同步排進語音佇列的（負載高時 WebKit 會晚一點），等它出現再讀
+    await page.waitForFunction(() => (window.__said ?? []).includes('二寶'), null, { timeout: 3000 }).catch(() => {})
     const said = await page.evaluate(() => window.__said ?? [])
     check('點下去先唸名字（二寶）', said.includes('二寶'), JSON.stringify(said))
     await page.waitForSelector('[data-testid=room]', { timeout: 5000 })
