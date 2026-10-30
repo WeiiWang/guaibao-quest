@@ -176,7 +176,10 @@ async function newKid(vp, species, mode, tag, opts = {}) {
   await shot(page, `${tag}-onboard-pick`)
   await fingerTap(page, send, page.getByTestId('onboard-species-next'))
   await page.waitForSelector('.egg-step')
-  const egg = await page.evaluate(() => ({ text: document.querySelector('.egg-step .lead')?.textContent ?? '', src: document.querySelector('.egg-step img.pet-img')?.getAttribute('src') ?? null }))
+  // 缺圖時：兔兔的蛋還在探測時先等它（不閃猴子），探測回來不存在才換成猴子的蛋 → 等圖片定下來再讀
+  const eggWant = `/art/${species === 'monkey' ? 'pet-egg' : want(mode, species, 'pet-egg')}.png`
+  await page.waitForFunction((w) => document.querySelector('.egg-step img.pet-img')?.getAttribute('src')?.endsWith(w), eggWant, { timeout: 3000 }).catch(() => {})
+  const egg =await page.evaluate(() => ({ text: document.querySelector('.egg-step .lead')?.textContent ?? '', src: document.querySelector('.egg-step img.pet-img')?.getAttribute('src') ?? null }))
   check(`[${tag}] 確認頁：「這是${name}的蛋！」，蛋是${name}的（缺圖退回猴子的蛋）`, egg.text.includes(`這是${name}的蛋！`) && isArt(egg.src, species === 'monkey' ? 'pet-egg' : want(mode, species, 'pet-egg')), JSON.stringify(egg))
   await page.getByRole('button', { name: '開始冒險' }).click()
   await page.waitForSelector('[data-testid=room]')
@@ -454,6 +457,28 @@ try {
     check('[parent] 新增孩子：有選寵物（沒有取名字的欄位）', (await page.getByTestId('species-picker').count()) === 1 && (await page.getByTestId('kid-pet').count()) === 0)
     await shot(page, 'parent-add-child')
     check('[parent] 無 JS 錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // ======== 帽子：兔兔的圖探測說有、畫面上卻載入失敗（離線、快取被清）→ 退回猴子的同一張，帽子也用猴子的錨點 ========
+  {
+    const { ctx, page, errors } = await freshApp(browser, LAND)
+    await page.goto(`${BASE}#hatpreview/crown/rabbit`)
+    await page.waitForSelector('[data-pose=adult-happy] [data-testid=pet-hat][data-art=pet-rabbit-adult-happy]')
+    await page.evaluate(() => document.querySelector('[data-pose=adult-happy] .pet-img').dispatchEvent(new Event('error')))
+    await page.waitForFunction(() => document.querySelector('[data-pose=adult-happy] .pet-img')?.getAttribute('src')?.endsWith('/art/pet-adult-happy.png'), null, { timeout: 3000 }).catch(() => {})
+    const r = await page.evaluate(() => {
+      const li = (p) => document.querySelector(`[data-pose=${p}]`)
+      return {
+        img: li('adult-happy').querySelector('.pet-img')?.getAttribute('src'),
+        hat: li('adult-happy').querySelector('[data-testid=pet-hat]')?.dataset.art,
+        other: li('adult-idle').querySelector('[data-testid=pet-hat]')?.dataset.art,
+      }
+    })
+    check('[hat-fallback] 載入失敗的兔兔圖改用猴子的同一張', !!r.img?.endsWith('/art/pet-adult-happy.png'), r.img)
+    check('[hat-fallback] 帽子跟著用猴子那張的錨點', r.hat === 'pet-adult-happy', r.hat)
+    check('[hat-fallback] 其他姿勢不受影響', r.other === 'pet-rabbit-adult-idle', r.other)
+    check('[hat-fallback] 無 JS 錯誤', errors.length === 0, errors.join(' | '))
     await ctx.close()
   }
 } finally {
