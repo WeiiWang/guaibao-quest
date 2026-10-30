@@ -106,8 +106,8 @@ interface LineAudio {
   text?: string
 }
 let lineAudio: Record<string, LineAudio> = {}
-/** 原文 → key：給沒有 key 的固定句子用（sayText） */
-let textIndex: Record<string, string> = {}
+/** 原文 → 所有錄了這句的 key（原 key 在前、物種版本在後）：給沒有 key 的句子用（sayText、sayRecorded） */
+let textKeys = new Map<string, string[]>()
 let player: HTMLAudioElement | null = null
 let unlocked = false
 /** 每次播預錄音檔 +1：舊的那一句的失敗回呼看到不是自己就不動作 */
@@ -133,12 +133,15 @@ function missLog(reason: 'no-recording' | 'text-mismatch' | 'play-failed', text:
 /** 註冊預錄音檔：key（見 lines.ts）→ 網址（或 {url, text}）。沒註冊的 key 一律退回 Web Speech */
 export function registerLineAudio(map: Record<string, string | LineAudio>): void {
   lineAudio = Object.fromEntries(Object.entries(map).map(([k, v]) => [k, typeof v === 'string' ? { url: v } : v]))
-  textIndex = {}
+  textKeys = new Map()
   // v7.5：先登記原 key、再登記物種版本（key@rabbit…）。寵物台詞各物種文字相同，要對到原 key，播放時再依物種挑
   const keys = Object.keys(lineAudio)
   for (const k of [...keys.filter((x) => !x.includes('@')), ...keys.filter((x) => x.includes('@'))]) {
-    const v = lineAudio[k]
-    if (v.text && !(v.text in textIndex)) textIndex[v.text] = k
+    const t = lineAudio[k].text
+    if (!t) continue
+    const list = textKeys.get(t)
+    if (list) list.push(k)
+    else textKeys.set(t, [k])
   }
 }
 
@@ -180,14 +183,13 @@ function resolveLine(key: string, text: string): { line: LineAudio | undefined; 
  */
 export function sayRecorded(prefix: string, text: string, opts: SpeakOptions = {}): boolean {
   if (opts.enabled === false || !text) return false
-  const keys = Object.keys(lineAudio).filter((k) => k.startsWith(prefix) && lineAudio[k].text === text)
-  const key = keys.find((k) => !k.includes('@')) ?? keys[0]
+  const key = textKeys.get(text)?.find((k) => k.startsWith(prefix))
   return key ? say(key, text, opts) : false
 }
 
 /** 沒有 key 的句子：用原文找預錄音檔，找不到就用 Web Speech */
 export function sayText(text: string, opts: SpeakOptions = {}): boolean {
-  const key = textIndex[text]
+  const key = textKeys.get(text)?.[0]
   if (!key && opts.enabled !== false) missLog('no-recording', text)
   return key ? say(key, text, opts) : speak(text, opts)
 }

@@ -30,6 +30,8 @@ export const speciesBabyLabel = (s?: Species | null): string => BABY[normSpecies
 /** 幼體 / 成體的稱呼（圖片替代文字用：幼猴、成猴） */
 const KIND: Record<Species, string> = { monkey: '猴', rabbit: '兔', tiger: '虎' }
 export const speciesKind = (s?: Species | null): string => KIND[normSpecies(s)]
+/** 階段的稱呼：蛋、幼猴、成兔… */
+export const speciesStageLabel = (stage: Stage, s?: Species | null): string => (stage === 'egg' ? '蛋' : `${stage === 'baby' ? '幼' : '成'}${speciesKind(s)}`)
 
 /** 寵物的 12 種姿勢（三種物種都一樣） */
 export const PET_POSES = ['idle', 'happy', 'cheer', 'think', 'eating', 'sing', 'dance', 'laugh', 'dizzy', 'sleep', 'sleepy', 'shy'] as const

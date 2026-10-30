@@ -11,7 +11,7 @@ interface Props {
   size?: number | string
   style?: CSSProperties
   /** 圖片載入完成；src = 實際載入的那張（v7.5：缺圖時可能是備援的猴子圖，帽子要依它對位） */
-  onLoad?: (img: HTMLImageElement, src: string) => void
+  onLoad?: (src: string) => void
 }
 
 /**
@@ -43,7 +43,7 @@ export function Art({ name, alt, className = '', size, style, onLoad }: Props) {
       alt={alt ?? ''}
       draggable={false}
       onError={() => setFail({ name, n: tries + 1 })}
-      onLoad={onLoad ? (e) => onLoad(e.currentTarget, src) : undefined}
+      onLoad={onLoad ? () => onLoad(src) : undefined}
     />
   )
 }

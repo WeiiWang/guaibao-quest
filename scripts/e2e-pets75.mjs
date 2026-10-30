@@ -466,7 +466,13 @@ try {
     await page.goto(`${BASE}#hatpreview/crown/rabbit`)
     await page.waitForSelector('[data-pose=adult-happy] [data-testid=pet-hat][data-art=pet-rabbit-adult-happy]')
     await page.evaluate(() => document.querySelector('[data-pose=adult-happy] .pet-img').dispatchEvent(new Event('error')))
-    await page.waitForFunction(() => document.querySelector('[data-pose=adult-happy] .pet-img')?.getAttribute('src')?.endsWith('/art/pet-adult-happy.png'), null, { timeout: 3000 }).catch(() => {})
+    // 等到猴子圖真的載入完（帽子換錨點是跟著 load 事件），不是只等 src 換掉
+    await page
+      .waitForFunction(() => {
+        const li = document.querySelector('[data-pose=adult-happy]')
+        return li?.querySelector('.pet-img')?.getAttribute('src')?.endsWith('/art/pet-adult-happy.png') && li.querySelector('[data-testid=pet-hat]')?.dataset.art === 'pet-adult-happy'
+      }, null, { timeout: 3000 })
+      .catch(() => {})
     const r = await page.evaluate(() => {
       const li = (p) => document.querySelector(`[data-pose=${p}]`)
       return {

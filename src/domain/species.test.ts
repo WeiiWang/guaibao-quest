@@ -16,8 +16,9 @@ import {
   speciesEmoji,
   speciesName,
   speciesOf,
+  speciesStageLabel,
 } from './species'
-import { HAT_ANCHORS, hasHatEntry, hatAnchor, hatAnchorMeasured, hatAspect, speciesDefaultAnchor } from '../art/hats'
+import { HAT_ANCHORS, HAT_ANCHORS_BY_SPECIES, hasHatEntry, hatAnchor, hatAspect } from '../art/hats'
 import { petArtCandidates } from '../ui/components/PetSprite'
 import { companionArt } from '../ui/screens/adventure/Companion'
 import { expectedCards } from './album'
@@ -117,13 +118,12 @@ describe('v7.5 petArt：檔名與備援順序', () => {
 describe('v7.5 帽子錨點依物種', () => {
   it('猴子的表不變；兔兔、虎虎每個姿勢都量過（帽子在畫面內），睡覺照樣不戴', () => {
     expect(hatAnchor('pet-adult-idle')).toEqual(HAT_ANCHORS['pet-adult-idle'])
-    expect(hatAnchorMeasured('pet-adult-idle')).toBe(true)
     for (const sp of ['rabbit', 'tiger'] as const) {
       for (const stage of ['baby', 'adult'] as const) {
         for (const pose of PET_POSES) {
           const art = petArt(sp, stage, pose)
           expect(hasHatEntry(art), art).toBe(true)
-          expect(hatAnchorMeasured(art), art).toBe(true)
+          expect(art in HAT_ANCHORS_BY_SPECIES[sp], art).toBe(true)
           const a = hatAnchor(art)
           if (pose === 'sleep') {
             expect(a, art).toBeNull()
@@ -143,14 +143,11 @@ describe('v7.5 帽子錨點依物種', () => {
         }
       }
     }
-    // 還沒量的姿勢（日後新增）用預設值：頭頂中央、不歪；兔兔的耳朵在頭頂上方，預設比老虎低
-    const d = speciesDefaultAnchor('rabbit', 'baby', 'idle')
-    expect(d.x).toBe(50)
-    expect(d.rotate).toBe(0)
-    expect(d.y).toBeGreaterThan(speciesDefaultAnchor('tiger', 'baby', 'idle').y)
+    // 表裡沒有的圖不戴帽子：蛋、還沒量的姿勢
     expect(hatAnchor('pet-rabbit-egg')).toBeNull()
+    expect(hasHatEntry('pet-rabbit-baby-swim')).toBe(false)
   })
-  it('public/art 裡已經有的兔兔、虎虎幼體 / 成體圖都查得到錨點（量過或預設）', () => {
+  it('public/art 裡已經有的兔兔、虎虎幼體 / 成體圖都量過錨點', () => {
     const files = readdirSync(ART).filter((f) => /^pet-(rabbit|tiger)-(baby|adult)-.+\.png$/.test(f)).map((f) => f.replace(/\.png$/, ''))
     for (const f of files) expect(hasHatEntry(f), f).toBe(true)
   })
@@ -178,5 +175,14 @@ describe('v7.5 相簿卡、貼紙用目前孩子的物種', () => {
     expect(stickerEmoji('pet-adult-happy')).toBe('🐵')
     expect(unlockedStickers([], ['pet-rabbit-baby-happy']).some((s) => s.art === 'pet-baby-happy')).toBe(true)
     expect(newStickerIds(['pet-baby-happy'], ['pet-rabbit-baby-happy'])).not.toContain('pet-baby-happy')
+  })
+})
+
+describe('v7.5 階段稱呼', () => {
+  it('蛋、幼猴、成兔、幼虎；沒有物種 = 猴子', () => {
+    expect(speciesStageLabel('egg', 'rabbit')).toBe('蛋')
+    expect(speciesStageLabel('baby')).toBe('幼猴')
+    expect(speciesStageLabel('adult', 'rabbit')).toBe('成兔')
+    expect(speciesStageLabel('baby', 'tiger')).toBe('幼虎')
   })
 })

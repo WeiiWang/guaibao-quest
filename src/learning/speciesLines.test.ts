@@ -125,6 +125,16 @@ describe('v7.5 播放：依目前孩子的物種挑音檔', () => {
     'praise.gentle.3@tiger': { url: 'tiger-named.m4a', text: '太棒了，虎虎好開心！' },
     'ui.hat.wear.1@rabbit': { url: 'rabbit-hat.m4a', text: '兔兔戴上了派對帽！' },
   }
+  it('泡泡只找指定那組聲音：同一句也有旁白版時，依 prefix 挑；沒有那組就安靜', async () => {
+    const sp = await import('./speech')
+    sp.registerLineAudio({ 'aa.mama.1': { url: 'mama.m4a', text: '嘻嘻' }, ...manifest })
+    expect(sp.sayRecorded('pet.', '嘻嘻')).toBe(true)
+    expect(FakeAudio.last?.src).toBe('awu.m4a')
+    expect(sp.sayRecorded('companion.', '嘻嘻')).toBe(false)
+    // 沒有 key 的句子照舊用原文找：第一個登記的（原 key 先於物種版本）
+    sp.sayText('嘻嘻')
+    expect(FakeAudio.last?.src).toBe('mama.m4a')
+  })
   it('舊孩子（沒設定 = 猴子）：照舊播原 key 的檔', async () => {
     const sp = await import('./speech')
     sp.registerLineAudio(manifest)

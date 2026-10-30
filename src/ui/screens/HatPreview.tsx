@@ -1,7 +1,7 @@
 import { HATS } from '../../domain/hats'
 import { HAT_POSES, HAT_STAGES } from '../../art/hats'
 import { PetSprite, type PetPose } from '../components/PetSprite'
-import { speciesKind, speciesName, type Species } from '../../domain/species'
+import { speciesName, speciesStageLabel, type Species } from '../../domain/species'
 import '../wardrobe.css'
 
 /**
@@ -16,7 +16,7 @@ export function HatPreview({ hat, species = 'monkey' }: { hat: string; species?:
       </h1>
       {HAT_STAGES.map((stage) => (
         <section key={stage}>
-          <h2>{`${stage === 'baby' ? '幼' : '成'}${speciesKind(species)}`}</h2>
+          <h2>{speciesStageLabel(stage, species)}</h2>
           <ul>
             {HAT_POSES.map((pose) => (
               <li key={pose} data-pose={`${stage}-${pose}`}>

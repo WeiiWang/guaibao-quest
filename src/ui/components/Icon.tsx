@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { Art } from './Art'
-import { useArtStatuses } from '../artProbe'
+import { pickFirstArt, useArtStatuses } from '../artProbe'
 import { artFallbacks } from '../../domain/species'
 
 interface Props {
@@ -20,9 +20,9 @@ export function Icon({ name, emoji, alt, className = '', size, style, exact = fa
   // v7.5：兔兔、虎虎的寵物圖缺圖時先用猴子的同一張，再退回 emoji
   const chain = exact ? [name] : artFallbacks(name)
   const st = useArtStatuses(chain)
-  const at = st.findIndex((s) => s !== 'no')
-  const status = at < 0 ? 'no' : st[at]
-  const shown = at < 0 ? name : chain[at]
+  const picked = pickFirstArt(chain, st)
+  const status = picked === null ? 'no' : st[chain.indexOf(picked)]
+  const shown = picked ?? name
   const dim = size === undefined ? undefined : typeof size === 'number' ? `${size}px` : size
   if (emoji && status !== 'ok') {
     // emoji 大小跟著容器走（cqmin），所以 size 可以是 px、% 或交給 CSS class
