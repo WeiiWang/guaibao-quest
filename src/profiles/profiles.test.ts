@@ -356,5 +356,19 @@ describe('v7.5 新建孩子選寵物；舊存檔仍是阿悟', () => {
     await mgr.repoFor(r.child.dbName).db.settings.clear()
     expect((await mgr.onboardExisting(r.child.id, { childName: '小花', species: 'tiger' })).ok).toBe(true)
     expect(await mgr.repoFor(r.child.dbName).db.pets.get('pet')).toMatchObject({ name: '虎虎', species: 'tiger' })
+    // 名冊頭像跟著換成老虎；再重設回猴子，換回猴子（不留著老虎）
+    expect((await reg.get(r.child.id))?.avatar).toBe('🐯')
+    await mgr.repoFor(r.child.dbName).db.pets.clear()
+    await mgr.repoFor(r.child.dbName).db.settings.clear()
+    expect((await mgr.onboardExisting(r.child.id, { childName: '小花' })).ok).toBe(true)
+    expect((await reg.get(r.child.id))?.avatar).toBe('🐵')
+  })
+  it('養阿悟的孩子輪流拿到的頭像不會是兔子、老虎', async () => {
+    const { avatarFor } = await import('./manager')
+    for (let i = 0; i < 12; i++) expect(['🐰', '🐯']).not.toContain(avatarFor('monkey', i))
+    expect(avatarFor('rabbit', 3)).toBe('🐰')
+    // 重設前的頭像不是別的物種就沿用
+    expect(avatarFor(undefined, 0, '🦊')).toBe('🦊')
+    expect(avatarFor(undefined, 0, '🐰')).toBe('🐵')
   })
 })

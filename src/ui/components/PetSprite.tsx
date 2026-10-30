@@ -64,8 +64,9 @@ export function PetSprite({ pet, mood, eating, pose, className = '', hat }: Prop
   // 先把這個階段所有姿勢的圖探測一遍，之後換姿勢才知道哪張存在
   useArtStatuses(pet.stage === 'egg' ? names : petPoseArt(pet.stage, pet.species))
   const found = useFirstArt(names)
-  // v7.5：新物種的錨點還沒量過時，疊圖容器的寬高比用圖片實際載入的大小（記著是哪張圖的）
-  const [natural, setNatural] = useState<{ name: string; ar: number } | null>(null)
+  // v7.5：實際載入的是哪一張（記著是為哪張候選載入的）。兔兔、虎虎的圖載入失敗時 Art 會改用猴子的同一張，
+  // 帽子的錨點與疊圖容器的寬高比要跟著那張圖；錨點沒量過的圖用圖片實際的寬高比
+  const [loaded, setLoaded] = useState<{ name: string; src: string; ar: number } | null>(null)
   const expr = eating ? 'eating' : pose ?? mood
   const alt = `${pet.name}（${stageLabel(pet)}）`
   if (found === null) {
@@ -79,18 +80,24 @@ export function PetSprite({ pet, mood, eating, pose, className = '', hat }: Prop
     )
   }
   const chosen = found
-  const measured = hatAnchorMeasured(chosen)
-  const onLoad = measured ? undefined : (el: HTMLImageElement) => el.naturalHeight > 0 && setNatural({ name: chosen, ar: Number((el.naturalWidth / el.naturalHeight).toFixed(4)) })
+  const live = loaded?.name === chosen ? loaded : null
+  const shown = live?.src ?? chosen
+  const measured = hatAnchorMeasured(shown)
+  const onLoad = hat
+    ? (el: HTMLImageElement, src: string) => {
+        if (el.naturalHeight > 0) setLoaded({ name: chosen, src, ar: Number((el.naturalWidth / el.naturalHeight).toFixed(4)) })
+      }
+    : undefined
   const img = <Art key={chosen} name={chosen} className="pet-img" alt={alt} onLoad={onLoad} />
   // v6：戴帽子時，圖片和帽子放進同一個和圖片等大的容器（.wd-art），帽子跟著圖片一起動
-  const withHat = !!hat && pet.stage !== 'egg' && hasHatEntry(chosen)
+  const withHat = !!hat && pet.stage !== 'egg' && hasHatEntry(shown)
   if (withHat) {
-    const anchorAr = !measured && natural?.name === chosen ? natural.ar : hatAspect(chosen)
+    const anchorAr = !measured && live ? live.ar : hatAspect(shown)
     return (
       <div className={`pet-sprite stage-${pet.stage} mood-${expr} wd-has-hat ${className}`} data-species={speciesOf(pet)} data-art={chosen}>
         <div className="wd-art" style={{ '--ar': anchorAr } as CSSProperties}>
           {img}
-          <PetHat hat={hat} artFile={chosen} />
+          <PetHat hat={hat} artFile={shown} />
         </div>
       </div>
     )

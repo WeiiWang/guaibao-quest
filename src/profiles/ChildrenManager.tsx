@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import type { AgeBand } from '../domain/types'
 import { AGE_BANDS, AGE_LABEL } from '../learning/profile'
@@ -41,8 +41,22 @@ export function ChildrenManager() {
   const [adding, setAdding] = useState(false)
   const [editing, setEditing] = useState<ChildProfile | null>(null)
   const [deleting, setDeleting] = useState<ChildProfile | null>(null)
-  // v7.5：要刪掉的孩子養的是哪一隻（刪除警告寫寵物的名字）
-  const deletingSpecies = useLiveQuery(async () => (deleting ? speciesOf(await profiles.deps.openDb(deleting.dbName).pets.get('pet')) : DEFAULT_SPECIES), [deleting?.dbName])
+  // v7.5：要刪掉的孩子養的是哪一隻（刪除警告寫寵物的名字）。只讀一次、不訂閱：
+  // 訂閱會在刪除之後重跑查詢，把剛刪掉的資料庫重新開起來（變成一個空的孤兒資料庫）
+  const [deletingSpecies, setDeletingSpecies] = useState<Species | null>(null)
+  useEffect(() => {
+    setDeletingSpecies(null)
+    if (!deleting) return
+    let alive = true
+    void profiles.deps
+      .openDb(deleting.dbName)
+      .pets.get('pet')
+      .then((p) => alive && setDeletingSpecies(speciesOf(p)))
+      .catch(() => alive && setDeletingSpecies(DEFAULT_SPECIES))
+    return () => {
+      alive = false
+    }
+  }, [deleting])
 
   const [name, setName] = useState('')
   const [age, setAge] = useState<AgeBand | undefined>(undefined)
@@ -87,7 +101,7 @@ export function ChildrenManager() {
 
   if (!list) return null
   const onlyOne = list.length <= 1
-  const deletingPet = speciesName(deletingSpecies)
+  const deletingPet = deletingSpecies ? speciesName(deletingSpecies) : '寵物'
 
   return (
     <div className="card" data-testid="children-card">

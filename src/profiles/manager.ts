@@ -2,7 +2,7 @@
 // 純邏輯（不碰 React）；資料庫與名冊都可以注入，方便測試。
 import { DEFAULT_PET_NAME } from '../domain/constants'
 import { checkPin, hashPin, isValidPin } from '../domain/pin'
-import { normSpecies, speciesEmoji, type Species } from '../domain/species'
+import { normSpecies, SPECIES, speciesEmoji, type Species } from '../domain/species'
 import type { AgeBand } from '../domain/types'
 import { AGE_BANDS } from '../learning/profile'
 import { DEFAULT_DB_NAME, deleteDb, getDb, type GuaibaoDB } from '../db/db'
@@ -10,7 +10,16 @@ import { newId, Repo, type Result } from '../db/repo'
 import { registry as defaultRegistry, type ChildProfile, type Registry } from './registry'
 
 /** 備用頭像（沒有寵物圖時用），依加入順序輪流 */
-const AVATARS = ['🐵', '🐼', '🐰', '🦊', '🐶', '🐱']
+// v7.5：輪流的頭像不放兔子、老虎：那兩個代表「養兔兔 / 虎虎的孩子」，養阿悟的孩子不能拿到
+const AVATARS = ['🐵', '🐼', '🐨', '🦊', '🐶', '🐱']
+/** v7.5：名冊頭像。兔兔、虎虎用自己的動物；猴子依加入順序輪流（current 是重設前的頭像，不是別的物種的就沿用） */
+export function avatarFor(species: Species | undefined, index: number, current?: string): string {
+  const s = normSpecies(species)
+  if (s !== 'monkey') return speciesEmoji(s)
+  if (current === undefined) return AVATARS[index % AVATARS.length]
+  const otherPet = SPECIES.some((x) => x !== 'monkey' && speciesEmoji(x) === current)
+  return otherPet ? speciesEmoji('monkey') : current
+}
 const SETTINGS_ID = 'main'
 
 export const dbNameForChild = (id: string) => `${DEFAULT_DB_NAME}-${id}`
@@ -117,7 +126,8 @@ export class ProfileManager {
     const r = await repo.onboard({ pinHash, childName: input.childName, petName: input.petName, species: input.species })
     if (!r.ok) return r
     const age = c.ageBand ?? input.ageBand
-    await this.reg.db.children.update(id, { name: input.childName.trim(), ...(age ? { ageBand: age } : {}) })
+    // v7.5：重設後重選的寵物可能換了物種，名冊頭像跟著換
+    await this.reg.db.children.update(id, { name: input.childName.trim(), avatar: avatarFor(input.species, 0, c.avatar), ...(age ? { ageBand: age } : {}) })
     if (age) await repo.setAgeBand(age)
     await this.welcome(c) // 只有「新孩子還沒收到歡迎禮物」才會送（v7 以前就有的孩子 welcomed 是 undefined，不補送）
     return { ok: true }
@@ -191,8 +201,7 @@ export class ProfileManager {
     return rdb.transaction('rw', [rdb.children, rdb.meta], async () => {
       const all = await rdb.children.toArray()
       const order = all.reduce((m, c) => Math.max(m, c.order), -1) + 1
-      // v7.5：兔兔、虎虎的備用頭像用自己的動物；猴子照舊依加入順序輪流
-      const avatar = normSpecies(species) === 'monkey' ? AVATARS[all.length % AVATARS.length] : speciesEmoji(species)
+      const avatar = avatarFor(species, all.length)
       const child: ChildProfile = { id, name, avatar, ageBand, dbName, createdAt: Date.now(), order, welcomed: false }
       await rdb.children.put(child)
       if (pinHash) await rdb.meta.put({ key: 'pinHash', value: pinHash })
