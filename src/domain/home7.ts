@@ -179,16 +179,16 @@ export const clampArtScale = (s: number | undefined): number => (Number.isFinite
 const EDGE = 0.012
 
 /**
- * 手機的狀態卡與按鈕（固定像素大小）：左上的頭像 + 阿悟狀態卡（蛋 / 幼體還有成長提示，到 y≈176、x≈190），
- * 右邊的鎖頭、工坊 / 背包 / 更多一整排（距右緣 84px 內、到 y≈310）。房間寬 = 2.5 個視窗寬。
+ * 手機的狀態卡與按鈕（固定像素大小）：左上的阿悟狀態徽章（v7.4 起是 52px 寬的小徽章：蛋 / 幼體到 y≈154、成體到 y≈114，留 10px 餘裕），
+ * 右邊的鎖頭與工坊 / 背包 / 朋友 / 更多一整排（v8 起只剩 56px 的圖示鈕，距右緣 70px 內、到 y≈328，留 10px 餘裕）。房間寬 = 2.5 個視窗寬。
  */
 export function hudBoxesPhone(viewW: number, roomH: number, adult = false): Box[] {
   const roomW = 2.5 * viewW
   const rw = (px: number) => px / roomW
   const rh = (px: number) => px / roomH
   return [
-    { x: VIEW_L + rw(192) / 2, y: rh(adult ? 132 : 178) / 2, w: rw(192), h: rh(adult ? 132 : 178) },
-    { x: VIEW_R - rw(84) / 2, y: rh(310) / 2, w: rw(84), h: rh(310) },
+    { x: VIEW_L + rw(72) / 2, y: rh(adult ? 124 : 164) / 2, w: rw(72), h: rh(adult ? 124 : 164) },
+    { x: VIEW_R - rw(70) / 2, y: rh(338) / 2, w: rw(70), h: rh(338) },
   ]
 }
 
@@ -255,8 +255,8 @@ export function estimateViewAspect(innerW: number, innerH: number): number {
   return Math.max(0.6, (innerW / Math.max(300, innerH - 300)) * 0.95)
 }
 
-/** 手機（直向）的畫面寬高比：房間高 ≈ 視窗高 − 255（下方是食物列與四顆大按鈕；實測 640–932 高的手機差在 ±20 以內） */
-export const phoneRoomH = (innerH: number): number => Math.max(300, innerH - 255)
+/** 手機（直向）的畫面寬高比：房間高 ≈ 視窗高 − 312（下方是食物列、冒險地圖主按鈕與一排三顆次級按鈕；v8 主選單改成兩排，原本是 255；實測 640–932 高的手機是 −305 ～ −319） */
+export const phoneRoomH = (innerH: number): number => Math.max(300, innerH - 312)
 export function estimatePhoneAspect(innerW: number, innerH: number): number {
   return Math.max(0.5, innerW / phoneRoomH(innerH))
 }

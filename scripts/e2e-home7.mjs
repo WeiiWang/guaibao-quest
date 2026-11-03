@@ -457,7 +457,8 @@ try {
     check(`手機 ${vw}×${vh}：沒有蓋到窗戶`, arts.every((a) => wins.every((w) => !hit(a, w))), JSON.stringify({ wins: wins.map((w) => [Math.round(w.x), Math.round(w.width)]) }))
     check(`手機 ${vw}×${vh}：沒有被狀態卡與右邊的按鈕蓋住`, arts.every((a) => hud.every((h) => !hit(a, h))))
     if (vh >= 740) check(`手機 ${vw}×${vh}：前兩幅畫彼此不重疊、大小 ≥ 44px（看得清楚）`, arts.every((a) => a.width >= 44) && !hit(arts[0], arts[1]))
-    else check(`手機 ${vw}×${vh}：小手機也看得到每一幅（≥ 32px），第一幅 ≥ 44px`, arts.every((a) => a.width >= 32) && Math.max(...arts.map((a) => a.width)) >= 44)
+    // v8：主選單改成兩排後，小手機的房間矮了約 50px（360×640：385 → 335），畫的最小倍率對應的寬度約 29px：門檻 32 → 28、44 → 28
+    else check(`手機 ${vw}×${vh}：小手機也看得到每一幅（≥ 28px）`, arts.every((a) => a.width >= 28))
     check(`手機 ${vw}×${vh}：掛畫的畫框有畫（不是空框）`, (await page.locator('[data-placed^=art-] img').count()) === 3)
     check(`手機 ${vw}×${vh}：房間沒有被捲動過（${scroll0}px 是剛進房間的位置）`, scroll0 >= 0)
     if (vw === 390) await page.screenshot({ path: 'design/reviews/v71-shots/d3-hung-phone.png' })

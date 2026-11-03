@@ -48,24 +48,31 @@
 
 /* 手機：冒險地圖獨占一整排，次級三顆在下面一排（每顆 >= 72px） */
 @media (max-width: 560px) {
-  .home .main-nav.o8-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding-top: 10px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .home .main-nav.o8-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding-top: 10px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
   .home .main-nav .candy.o8-primary { grid-column: 1 / -1; min-height: 84px; padding: 6px 14px 10px; }
   .home .o8-primary .candy-icon.o8-primary-icon { width: 64px; height: 64px; }
   .home .main-nav .candy.o8-sub { min-height: 76px; }
   .home .main-nav .candy.o8-sub .candy-icon { width: 40px; height: 40px; }
 }
 
-/* 矮手機（例如 360x640）：主選單再壓一點，右側欄只留圖示（名字留給螢幕閱讀器），不然會壓到食物列 */
+/* 矮手機（例如 360x640）：主選單再壓一點 */
 @media (max-width: 560px) and (max-height: 700px) {
-  .home .main-nav.o8-nav { gap: 6px; padding-top: 8px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  .home .main-nav.o8-nav { gap: 6px; padding-top: 8px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
   .home .main-nav .candy.o8-primary { min-height: 74px; padding: 4px 14px 8px; }
   .home .o8-primary .candy-icon.o8-primary-icon { width: 54px; height: 54px; }
   .home .main-nav .candy.o8-sub { min-height: 72px; padding-top: 6px; }
   .home .main-nav .candy.o8-sub .candy-icon { width: 36px; height: 36px; }
+}
+/* 手機：右側欄只留圖示（名字留給螢幕閱讀器；一顆 56px），主選單變兩排以後房間變矮，才放得下左右看房間的鈕與禮物袋 */
+@media (max-width: 560px) {
   .home .side-tools { gap: 8px; }
-  .home .side-tools > .mini-candy, .home .side-tools .more-wrap > .more-btn { width: 56px; min-height: 56px; padding: 6px 0; }
+  .home .side-tools > .mini-candy, .home .side-tools .more-wrap > .more-btn { width: 56px; min-height: 56px; padding: 6px 0; border-radius: 20px; }
   .home .side-tools > .mini-candy > span:not(.mini-emoji), .home .side-tools .more-wrap > .more-btn > span:not(.mini-emoji) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .home .side-tools > .mini-candy .art, .home .side-tools > .mini-candy .art-emoji { width: 34px; height: 34px; }
+}
+/* 高一點的手機：左右看房間的鈕放在右側欄（4 顆 56px，約到 y=328）和禮物袋（88px，離底 20px）之間 */
+@media (max-width: 560px) and (min-height: 780px) {
+  .home .room-frame .room-arrow.o8-arrow { top: calc(50% + 110px); }
 }
 
 /* ---------- 右側的工坊、背包、朋友、更多：退後一點（白底軟膠，保留 3D 圖示），讓冒險地圖當主角 ---------- */

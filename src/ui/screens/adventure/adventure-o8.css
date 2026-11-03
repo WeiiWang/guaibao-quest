@@ -43,7 +43,6 @@
 
 /* ---------- 少一點留白、圖大一點（有場景時；缺圖時維持原本尺寸） ---------- */
 .adv.adv-stage.o8-scene .qv-choices { gap: 14px; }
-.adv.adv-stage.o8-scene .choice { padding: 6px; }
 .adv.adv-stage.o8-scene .choice-art { width: min(84cqw, 260px); }
 .adv.adv-stage.o8-scene .qv.no-stem .choice-art { width: min(88cqw, 300px); }
 .adv.adv-stage.o8-scene .choice-name { font-size: 1.25rem; }
@@ -65,30 +64,39 @@
 .adv.adv-stage.o8-scene .qv-stem .pile[data-count='1'], .adv.adv-stage.o8-scene .qv-stem .pile[data-count='2'], .adv.adv-stage.o8-scene .qv-stem .pile[data-count='3'] { --ps: min(calc(var(--base) * 1.7), calc((100cqw - 20px) / var(--cols) - 6px), 26dvh); }
 .adv.adv-stage.o8-scene .qv-stem .pile[data-count='4'], .adv.adv-stage.o8-scene .qv-stem .pile[data-count='5'] { --ps: min(calc(var(--base) * 1.4), calc((100cqw - 20px) / var(--cols) - 6px), 22dvh); }
 
-/* 生活 / 自然的排順序：卡片與圖放大（手機維持三張並排，寬度不動） */
-.adv.adv-stage.o8-scene .sto-art { width: clamp(64px, 14dvh, 120px); }
-.adv.adv-stage.o8-scene .sto-art.big { width: clamp(80px, 17dvh, 150px); }
-.adv.adv-stage.o8-scene .sto-slot .sto-art { width: clamp(52px, 10dvh, 96px); }
-.adv.adv-stage.o8-scene .sto-text { font-size: clamp(1.05rem, 2.8dvh, 1.45rem); }
-.adv.adv-stage.o8-scene .sto-slot { min-height: clamp(110px, 22dvh, 190px); }
-.adv.adv-stage.o8-scene .sto-card { background: rgba(255, 255, 255, 0.93); min-height: clamp(120px, 24dvh, 220px); }
-@media (min-width: 561px) { .adv.adv-stage.o8-scene .sto-card, .adv.adv-stage.o8-scene .sto-gap { width: clamp(110px, 20vw, 200px); min-height: clamp(120px, 24dvh, 220px); } }
+/* 生活 / 自然的排順序：卡片與圖放大（手機維持三張並排，尺寸不動） */
+.adv.adv-stage.o8-scene .sto-card { background: rgba(255, 255, 255, 0.93); }
+.adv.adv-stage.o8-scene .sto-art { max-width: 100%; }
+@media (min-width: 561px) {
+  .adv.adv-stage.o8-scene .sto-art { width: clamp(64px, 14dvh, 120px); }
+  .adv.adv-stage.o8-scene .sto-art.big { width: clamp(80px, 17dvh, 150px); }
+  .adv.adv-stage.o8-scene .sto-slot .sto-art { width: clamp(52px, 10dvh, 96px); }
+  .adv.adv-stage.o8-scene .sto-text { font-size: clamp(1.05rem, 2.8dvh, 1.45rem); }
+  .adv.adv-stage.o8-scene .sto-slot { min-height: clamp(110px, 22dvh, 190px); }
+  .adv.adv-stage.o8-scene .sto-card, .adv.adv-stage.o8-scene .sto-gap { width: clamp(110px, 20vw, 200px); min-height: clamp(120px, 24dvh, 220px); }
+}
 
 /* ---------- 直向、手機：寵物站在左下角的地面上，對話框與題目在上面 ---------- */
 @media not all and (min-aspect-ratio: 1 / 1) and (min-width: 700px) {
   .adv.adv-stage.o8-scene .adv-board {
     grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr auto;
     grid-template-areas: 'bubble bubble spk' 'qv qv qv' 'pet foot foot';
     align-items: end;
     --pet: clamp(104px, 28vw, 190px);
   }
   .adv.adv-stage.o8-scene .adv-bubble { margin-left: 0; align-self: stretch; }
   .adv.adv-stage.o8-scene .adv-bubble::before { display: none; }
-  .adv.adv-stage.o8-scene .adv-qv { align-self: stretch; }
+  /* 題目比剩下的空間高（小手機）：讓題目區把格子撐高、整頁往下捲，不要往上疊到對話框上 */
+  .adv.adv-stage.o8-scene .adv-qv { align-self: stretch; min-height: min-content; }
+  .adv.adv-stage.o8-scene .adv-qv > .qv, .adv.adv-stage.o8-scene .adv-qv > div { min-height: min-content; }
+  .adv.adv-stage.o8-scene .qv .qv-choices { flex: 0 0 auto; }
   .adv.adv-stage.o8-scene .adv-foot { align-self: center; justify-content: flex-end; padding-bottom: 6px; }
   .adv.adv-stage.o8-scene .adv-speaker { align-self: stretch; }
 }
+
+/* 窄手機的數字卡：小喇叭不蓋住數字 */
+@media (max-width: 480px) { .adv.adv-stage.o8-scene .q7-cardwrap > .choice { padding-top: 48px; } }
 
 /* 橫向：再聽一次和寵物之間留出距離，影子不被按鈕壓住 */
 @media (min-aspect-ratio: 1 / 1) and (min-width: 700px) {

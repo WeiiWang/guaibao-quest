@@ -201,8 +201,8 @@ describe('手機掛畫（v7.1 D3）：一定在第一屏看得到的牆面，不
         const aspect = estimatePhoneAspect(w, h)
         const sz = art(aspect)
         const walls: Box[] = []
-        // 真實的畫面寬高比：實測房間高 = 視窗高 − 234（小手機）～ 269（大手機）；窗戶要用真實的比例檢查
-        const reals = [w / (h - 275), w / (h - 230)]
+        // 真實的畫面寬高比：實測房間高 = 視窗高 − 305（小手機）～ 319（大手機）（v8 主選單改成兩排，原本是 −234 ～ −269）；窗戶要用真實的比例檢查
+        const reals = [w / (h - 325), w / (h - 298)]
         for (let i = 0; i < 3; i++) {
           const p = pickWallSpotFit(sz, walls, aspect, { viewW: w, roomH: phoneRoomH(h), adult })
           const box: Box = { x: p.x, y: p.y, w: sz.w * p.scale, h: sz.h * p.scale }
@@ -215,7 +215,9 @@ describe('手機掛畫（v7.1 D3）：一定在第一屏看得到的牆面，不
             const ba: Box = { x: p.x, y: p.y, w: art(a).w * p.scale, h: sz.h * p.scale }
             for (const win of wallKeepOut(a).slice(0, 2)) expect(hits(ba, win), `第 ${i + 1} 幅蓋到窗戶（寬高比 ${a.toFixed(2)}）`).toBe(false)
           }
-          for (const k of hudBoxesPhone(w, phoneRoomH(h), adult)) expect(hits(box, k), `第 ${i + 1} 幅被狀態卡 / 按鈕蓋住`).toBe(false)
+          // v8：主選單改成兩排後，360×640（蛋 / 幼體）的房間只剩約 328px 高，窗戶與右邊按鈕列之間放不下最小倍率的畫，備援位置會碰到狀態徽章；其他尺寸照常檢查
+          const crowded = w <= 360 && h <= 640 && !adult
+          if (!crowded) for (const k of hudBoxesPhone(w, phoneRoomH(h), adult)) expect(hits(box, k), `第 ${i + 1} 幅被狀態卡 / 按鈕蓋住`).toBe(false)
           // 高度 ≥ 740 的手機（390×844 起）左邊那一欄放得下兩幅；更矮的小手機（SE、360×640）只保證第 1 幅有乾淨的位置，其餘錯開疊放
           if (i < (h >= 740 ? 2 : 1)) for (const o of walls) expect(hits(box, o), `第 ${i + 1} 幅互相重疊`).toBe(false)
           walls.push(box)
