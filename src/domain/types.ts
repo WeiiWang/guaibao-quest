@@ -195,6 +195,8 @@ export interface Settings {
   soundOn?: boolean
   /** 語音唸題開關；未設定視為開 */
   voiceOn?: boolean
+  /** v8：背景音樂開關；未設定視為開 */
+  musicOn?: boolean
   /** 套用中的壁紙 / 地板；未設定用預設（奶油素色 + 原木） */
   roomTheme?: RoomThemeChoice
   /** v3：寵物會大便；未設定視為開 */

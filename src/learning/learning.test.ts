@@ -246,9 +246,10 @@ describe('學習報告', () => {
 })
 
 describe('遊玩時間', () => {
-  it('預設 20 分鐘、音效語音預設開', () => {
-    expect(learningSettingsOf(undefined)).toEqual({ dailyLimitMin: 20, soundOn: true, voiceOn: true })
-    expect(learningSettingsOf({ dailyLimitMin: 0, soundOn: false })).toEqual({ dailyLimitMin: 0, soundOn: false, voiceOn: true })
+  it('預設 20 分鐘、音效語音音樂預設開', () => {
+    expect(learningSettingsOf(undefined)).toEqual({ dailyLimitMin: 20, soundOn: true, voiceOn: true, musicOn: true })
+    expect(learningSettingsOf({ dailyLimitMin: 0, soundOn: false })).toEqual({ dailyLimitMin: 0, soundOn: false, voiceOn: true, musicOn: true })
+    expect(learningSettingsOf({ musicOn: false }).musicOn).toBe(false)
   })
   it('剩餘秒數含家長延長；不限為 null；用完才鎖', () => {
     expect(remainingSeconds(20, { seconds: 600, bonusSeconds: 0 })).toBe(600)

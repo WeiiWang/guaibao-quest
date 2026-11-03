@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "sampleRate": 48000,
+  "music": {
+    "title": {
+      "file": "music-title.m4a",
+      "v": "7ad2edaf",
+      "loopStart": 0.341333,
+      "loopEnd": 42.080458,
+      "loopSeconds": 41.739125,
+      "bpm": 92,
+      "bars": 16
+    },
+    "home-day": {
+      "file": "music-home-day.m4a",
+      "v": "a705e9fb",
+      "loopStart": 0.341333,
+      "loopEnd": 38.741333,
+      "loopSeconds": 38.4,
+      "bpm": 100,
+      "bars": 16
+    },
+    "home-night": {
+      "file": "music-home-night.m4a",
+      "v": "1a2dd315",
+      "loopStart": 0.341333,
+      "loopEnd": 45.341333,
+      "loopSeconds": 45.0,
+      "bpm": 64,
+      "bars": 16
+    },
+    "map": {
+      "file": "music-map.m4a",
+      "v": "cc413346",
+      "loopStart": 0.341333,
+      "loopEnd": 35.896896,
+      "loopSeconds": 35.555563,
+      "bpm": 108,
+      "bars": 16
+    },
+    "stage": {
+      "file": "music-stage.m4a",
+      "v": "bfedb421",
+      "loopStart": 0.341333,
+      "loopEnd": 53.674667,
+      "loopSeconds": 53.333333,
+      "bpm": 72,
+      "bars": 16
+    },
+    "boss": {
+      "file": "music-boss.m4a",
+      "v": "44e53697",
+      "loopStart": 0.341333,
+      "loopEnd": 32.341333,
+      "loopSeconds": 32.0,
+      "bpm": 120,
+      "bars": 16
+    },
+    "ceremony": {
+      "file": "music-ceremony.m4a",
+      "v": "16d40e9d",
+      "loopStart": 0.341333,
+      "loopEnd": 26.055625,
+      "loopSeconds": 25.714292,
+      "bpm": 112,
+      "bars": 12
+    },
+    "paint": {
+      "file": "music-paint.m4a",
+      "v": "baabe6f2",
+      "loopStart": 0.341333,
+      "loopEnd": 43.977688,
+      "loopSeconds": 43.636354,
+      "bpm": 88,
+      "bars": 16
+    }
+  },
+  "sfx": {
+    "tap": {
+      "file": "sfx-tap.m4a",
+      "v": "04056dc6",
+      "duration": 0.11
+    },
+    "pop": {
+      "file": "sfx-pop.m4a",
+      "v": "b1fddcaa",
+      "duration": 0.16
+    },
+    "correct": {
+      "file": "sfx-correct.m4a",
+      "v": "de118e74",
+      "duration": 1.05
+    },
+    "wrong": {
+      "file": "sfx-wrong.m4a",
+      "v": "e36e4560",
+      "duration": 0.95
+    },
+    "reward": {
+      "file": "sfx-reward.m4a",
+      "v": "fad05b4c",
+      "duration": 1.8
+    },
+    "coin": {
+      "file": "sfx-coin.m4a",
+      "v": "7ba93056",
+      "duration": 0.9
+    },
+    "whoosh": {
+      "file": "sfx-whoosh.m4a",
+      "v": "23387952",
+      "duration": 0.547
+    },
+    "page": {
+      "file": "sfx-page.m4a",
+      "v": "a2bc4007",
+      "duration": 0.165
+    },
+    "unlock": {
+      "file": "sfx-unlock.m4a",
+      "v": "a6ac4963",
+      "duration": 1.9
+    },
+    "hatch": {
+      "file": "sfx-hatch.m4a",
+      "v": "fc7ae913",
+      "duration": 2.6
+    },
+    "drop": {
+      "file": "sfx-drop.m4a",
+      "v": "c32237cb",
+      "duration": 0.5
+    },
+    "sparkle": {
+      "file": "sfx-sparkle.m4a",
+      "v": "00ff7099",
+      "duration": 1.5
+    }
+  }
+}

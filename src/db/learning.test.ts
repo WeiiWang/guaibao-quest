@@ -196,11 +196,11 @@ describe('工坊', () => {
 describe('遊玩時間與設定', () => {
   const day = localDateStr(T0)
   it('新使用者預設 20 分鐘、音效與語音開', async () => {
-    expect(await repo.getLearningSettings()).toEqual({ dailyLimitMin: 20, soundOn: true, voiceOn: true })
+    expect(await repo.getLearningSettings()).toEqual({ dailyLimitMin: 20, soundOn: true, voiceOn: true, musicOn: true })
   })
   it('設定可改；不支援的時間限制被拒絕', async () => {
     expect((await repo.setLearningSettings({ dailyLimitMin: 45, soundOn: false })).ok).toBe(true)
-    expect(await repo.getLearningSettings()).toEqual({ dailyLimitMin: 45, soundOn: false, voiceOn: true })
+    expect(await repo.getLearningSettings()).toEqual({ dailyLimitMin: 45, soundOn: false, voiceOn: true, musicOn: true })
     expect((await repo.setLearningSettings({ dailyLimitMin: 7 })).ok).toBe(false)
     expect((await repo.setLearningSettings({ dailyLimitMin: 0 })).ok).toBe(true)
   })
@@ -333,7 +333,7 @@ describe('Dexie v3 migration：舊玩家資料不遺失', () => {
     await first.setLearningSettings({ dailyLimitMin: 45, voiceOn: false })
     first.db.close()
     const again = new Repo(new GuaibaoDB(name), () => T0)
-    expect(await again.getLearningSettings()).toEqual({ dailyLimitMin: 45, soundOn: true, voiceOn: false })
+    expect(await again.getLearningSettings()).toEqual({ dailyLimitMin: 45, soundOn: true, voiceOn: false, musicOn: true })
   })
 })
 

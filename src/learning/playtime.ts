@@ -9,13 +9,16 @@ export interface LearningSettings {
   dailyLimitMin: number
   soundOn: boolean
   voiceOn: boolean
+  /** v8：背景音樂開關（舊存檔沒有 = 開） */
+  musicOn: boolean
 }
 
-export function learningSettingsOf(s: { dailyLimitMin?: number; soundOn?: boolean; voiceOn?: boolean } | undefined): LearningSettings {
+export function learningSettingsOf(s: { dailyLimitMin?: number; soundOn?: boolean; voiceOn?: boolean; musicOn?: boolean } | undefined): LearningSettings {
   return {
     dailyLimitMin: s?.dailyLimitMin ?? DEFAULT_DAILY_LIMIT_MIN,
     soundOn: s?.soundOn ?? true,
     voiceOn: s?.voiceOn ?? true,
+    musicOn: s?.musicOn ?? true,
   }
 }
 

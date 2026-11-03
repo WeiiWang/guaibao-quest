@@ -1,5 +1,6 @@
 import { peekArt } from './artProbe'
 import { artFallbacks } from '../domain/species'
+import { playSound } from '../learning/audioEngine'
 
 /**
  * 獲得星星 / 材料時，把物件「飛進」貨幣膠囊，到達時膠囊跳一下。
@@ -97,7 +98,7 @@ export function flyStars(n: number, from: { x: number; y: number }) {
       flyOne(
         { rect: { left: from.x - size / 2 + jitter, top: from.y - size / 2, width: size, height: size }, node: iconNode('ui-star', '⭐', size) },
         target,
-        { delay: i * 110, duration: 900 },
+        { delay: i * 110, duration: 900, onArrive: i % 2 === 0 ? () => void playSound('coin', { synth: false }) : undefined },
       ),
     )
   }
