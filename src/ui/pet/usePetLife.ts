@@ -571,6 +571,17 @@ export function usePetLife(p: PetLifeParams) {
     startScene(planReaction('gifted'))
   }, [startScene])
 
+  /** v8.1 節慶：開心跳一下，頭上冒出一句話 */
+  const cheerLine = useCallback(
+    (text: string): void => {
+      // 一年一次的小演出：晚上睡著了也醒來說（孩子正看著）
+      if (asleepRef.current) wakeUp()
+      startScene(planReaction('gifted'))
+      showBubble({ text }, 3800, null)
+    },
+    [wakeUp, startScene, showBubble],
+  )
+
   const runCommand = useCallback(
     (cmd: PetCommand): void => {
       const q = P.current
@@ -660,6 +671,7 @@ export function usePetLife(p: PetLifeParams) {
     performTrick,
     startGift,
     reactGifted,
+    cheerLine,
     later,
   }
 }

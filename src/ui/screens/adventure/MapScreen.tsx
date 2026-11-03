@@ -24,6 +24,7 @@ import './adventure-v5.css'
 import './adventure-v6.css'
 import './adventure-v7.css'
 import './adventure-h74.css'
+import './adventure-q81.css'
 import { Placement } from './Placement'
 import { readChapter, readSubject, writeChapter, writeSubject } from './subjectPref'
 import { usePetText } from '../../species'
@@ -190,6 +191,8 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
 
   return (
     <main className={`screen adv adv-map theme-${subject.theme} subject-${subject.id} chapter-${ch.id}`} data-testid="map" data-subject={subject.id} data-chapter={ch.id}>
+      {/* v8.1 線 Q：整頁鋪同一張場景的柔焦背景（色調跟地圖一致），iPad 兩側不再留白；沒有場景圖就維持粉彩底 */}
+      {hasScene && <div className={`adv-bgblur scene-${subject.id} ${tinted ? 'scene-tinted' : ''} ${ownArt ? 'scene-own' : ''}`} style={{ backgroundImage: `url("${bg}")` }} data-testid="map-bgblur" aria-hidden />}
       <ScreenHeader
         title="冒險地圖"
         onBack={onBack}

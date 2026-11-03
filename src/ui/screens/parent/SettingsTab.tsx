@@ -28,6 +28,7 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
   const [pinMsg, setPinMsg] = useState('')
   const [confirmReset, setConfirmReset] = useState(false)
   const poopOn = usePoopSetting()
+  const festivalOn = settings?.festivalOn ?? true
   const ctx = useProfiles()
   // v7：家長區可以切換看哪個孩子；改名要改「正在看的」那一個，不是正在玩的那一個
   const viewed = useViewedChild().id ?? ctx?.activeId ?? null
@@ -56,6 +57,17 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
           on={poopOn}
           testId="poop-switch"
           onChange={(v) => void repo.setPetPoopOn(v)}
+        />
+      </div>
+
+      <div className="card">
+        <h2>節慶</h2>
+        <Switch
+          label="節慶裝飾"
+          desc="春節、兒童節、端午、中秋、聖誕前後，房間會掛上應景裝飾；每個節慶第一次遇到會送一件紀念家具。關閉後不再出現，已經收到的家具還在。"
+          on={festivalOn}
+          testId="festival-switch"
+          onChange={(v) => void repo.setFestivalOn(v)}
         />
       </div>
 

@@ -1,0 +1,61 @@
+/* v8.1 線 Q：地圖整頁鋪同一張場景的柔焦背景，iPad 兩側不再留白。 */
+.adv.adv-map { position: relative; isolation: isolate; }
+.adv-bgblur {
+  position: fixed;
+  inset: -48px;
+  z-index: -1;
+  pointer-events: none;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(26px) saturate(1.06) brightness(1.02);
+}
+/* 一層奶油色薄紗：場景顏色還在，但上面的字（章節進度、提示）讀得清楚 */
+.adv-bgblur::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 250, 240, 0.28), rgba(255, 250, 240, 0.46)); }
+/* 色調跟地圖一致（同 .adv-scene 的 ::before；章節有專屬圖就不轉色） */
+.adv-bgblur.scene-english:not(.scene-own) { filter: blur(26px) hue-rotate(50deg) saturate(0.95) brightness(1.04); }
+.adv-bgblur.scene-tinted:not(.scene-own) { filter: blur(26px) hue-rotate(72deg) saturate(0.95) brightness(0.96); }
+.adv-bgblur.scene-life:not(.scene-own) { filter: blur(26px) hue-rotate(-38deg) saturate(1.05) brightness(1.04); }
+.adv-bgblur.scene-nature:not(.scene-own) { filter: blur(26px) hue-rotate(-12deg) saturate(1.2) brightness(1.02); }
+
+/* 字直接疊在柔焦背景上的地方：加深一點或墊一層，直向與手機也讀得清楚 */
+.adv-map .adv-map-hero span { color: var(--ink); }
+.adv-map .adv-swipe-hint { align-self: center; width: fit-content; margin-inline: auto; padding: 2px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.72); color: var(--ink); }
+
+/* 寬的橫向畫面（iPad 橫向）：地圖盡量放大。
+   把科目與章節分頁排成一列、今日冒險與章節進度排成一列，省下兩列高度給地圖（約 286px 留給其他東西），
+   一屏仍然放得下今日冒險。站點座標是場景百分比，場景維持 16:9，位置不會跑掉。 */
+@media (min-aspect-ratio: 1 / 1) and (min-width: 1000px) {
+  .adv.adv-map {
+    --map-w: min(calc(100vw - 48px), calc((100dvh - 286px) * 16 / 9));
+    /* 今日冒險與章節進度那一列：地圖變小時（矮的畫面）不跟著擠，至少留 940px */
+    --row-w: max(var(--map-w), min(calc(100vw - 48px), 940px));
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: flex-start;
+    gap: 10px 12px;
+    padding-inline: 24px;
+  }
+  .adv.adv-map > .screen-header { flex: 0 0 100%; }
+  .adv.adv-map > .adv-subjects,
+  .adv.adv-map > .adv-chapters { flex: 0 1 auto; flex-wrap: nowrap; gap: 10px; }
+  .adv.adv-map > .adv-scroll { flex: 0 0 var(--map-w); width: var(--map-w); max-width: none; margin-inline: 0; }
+  .adv.adv-map > .adv-swipe-hint,
+  .adv.adv-map > .adv-again { flex: 0 0 var(--map-w); }
+  .adv.adv-map > .adv-daily { flex: 0 0 calc(var(--row-w) * 0.5 - 6px); width: auto; max-width: none; margin-inline: 0; }
+  .adv.adv-map > .adv-foot-row { flex: 0 0 calc(var(--row-w) * 0.5 - 6px); width: auto; flex-wrap: wrap; justify-content: center; gap: 6px 10px; }
+  .adv-map .adv-daily-text b { font-size: 1.3rem; }
+  .adv-map .adv-daily-text span { font-size: 1rem; }
+  /* 這一輪完成了：那張卡排成一列，地圖讓出它的高度，今日冒險才不會掉出畫面 */
+  .adv.adv-map:has(> .adv-again) { --map-w: min(calc(100vw - 48px), calc((100dvh - 356px) * 16 / 9)); }
+  .adv.adv-map .adv-upcoming { flex-wrap: nowrap; }
+  .adv.adv-map > .adv-again { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 6px 16px; }
+  .adv.adv-map > .adv-again p { margin: 0; }
+  .adv.adv-map > .adv-again .adv-btn { min-height: 56px; margin: 0; }
+}
+/* 窄一點的 iPad（1024 寬）：科目鈕縮小，分頁才排得進同一列 */
+@media (min-aspect-ratio: 1 / 1) and (min-width: 1000px) and (max-width: 1100px) {
+  .adv-map .adv-subject { min-width: 0; padding-right: 14px; font-size: 1.15rem; gap: 8px; }
+  .adv-map .adv-subject-glyph { width: 46px; height: 46px; font-size: 1rem; }
+}

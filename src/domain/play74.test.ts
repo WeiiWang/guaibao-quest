@@ -270,7 +270,7 @@ describe('會唸的句子', () => {
     expect(lines['play.guest.food.obj-rabbit']).toBe('小兔子送你好吃的！')
   })
   it('阿悟說的話 key 用 pet. 開頭；每句都不是空的', () => {
-    expect(Object.keys(lines).filter((k) => k.startsWith('pet.')).length).toBe(WISHES.length * 2)
+    expect(Object.keys(lines).filter((k) => k.startsWith('pet.wish.')).length).toBe(WISHES.length * 2)
     for (const t of Object.values(lines)) expect(t.length).toBeGreaterThan(0)
   })
 })

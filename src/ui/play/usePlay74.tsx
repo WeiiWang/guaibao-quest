@@ -21,7 +21,7 @@ export const WISH_SCENE_MS = 4200
 export const WISH_NEXT_GAP_MS = 6000
 
 /** 房間現在是不是在佈置模式（RoomView 的 edit 是它自己的狀態，這裡從外框的 class 讀；佈置中不演、不唸） */
-function useRoomEditing(on: boolean): boolean {
+export function useRoomEditing(on: boolean): boolean {
   const [editing, setEditing] = useState(false)
   useEffect(() => {
     if (!on) return
@@ -39,6 +39,8 @@ interface Params {
   placements: Placement[] | undefined
   now: number
   go: (s: Screen['name'] | Screen) => void
+  /** v8.1：節慶小演出進行中，朋友與願望先別開口 */
+  quiet?: boolean
 }
 
 /**
@@ -47,7 +49,7 @@ interface Params {
  * - 每天第一次進首頁（跨日也算）：決定今天的訪客、決定現在的願望
  * - 願望的家具擺進房間、離開佈置模式後：阿悟演一段、說一句、送回憶卡、輪到下一個
  */
-export function usePlay74({ pet, settings, placements, now, go }: Params): { roomProps: { guest: GuestView | null; wish: WishView | null }; overlay: ReactNode; editing: boolean } {
+export function usePlay74({ pet, settings, placements, now, go, quiet = false }: Params): { roomProps: { guest: GuestView | null; wish: WishView | null }; overlay: ReactNode; editing: boolean } {
   const today = localDateStr(now)
   const ready = !!pet && !!settings
   const { voiceOn, soundOn } = learningSettingsOf(settings)
@@ -73,13 +75,13 @@ export function usePlay74({ pet, settings, placements, now, go }: Params): { roo
   // 「今天 XX 來玩囉！」：朋友出現後說一次（佈置中不說；語音關閉也算說過；同一天再進首頁不重複）
   const greetName = visit && !visit.greeted ? friend?.name : undefined
   useEffect(() => {
-    if (!greetName || editing || !ready) return
+    if (!greetName || editing || !ready || quiet) return
     const t = window.setTimeout(() => {
       sayText(guestArriveLine(greetName), { enabled: voiceOn })
       void repo.markGuest('greeted')
     }, 1300)
     return () => window.clearTimeout(t)
-  }, [greetName, editing, ready, voiceOn])
+  }, [greetName, editing, ready, voiceOn, quiet])
 
   const guest: GuestView | null =
     visit && friend?.art
@@ -107,13 +109,13 @@ export function usePlay74({ pet, settings, placements, now, go }: Params): { roo
   // 願望第一次出現時，阿悟自己說一次（之後只有點泡泡才說）
   const said = settings?.play?.wishSaid
   useEffect(() => {
-    if (!wishDef || fulfilled || editing || stage === 'egg' || hold || said === wishDef.id || !ready) return
+    if (!wishDef || fulfilled || editing || stage === 'egg' || hold || said === wishDef.id || !ready || quiet) return
     const t = window.setTimeout(() => {
       say(wishKey(wishDef.id), wishDef.line, { enabled: voiceOn })
       void repo.markWishSaid(wishDef.id)
     }, 2200)
     return () => window.clearTimeout(t)
-  }, [wishDef, fulfilled, editing, stage, hold, said, ready, voiceOn])
+  }, [wishDef, fulfilled, editing, stage, hold, said, ready, voiceOn, quiet])
 
   // 願望實現：家具擺好、離開佈置模式後，阿悟演一段、說話；過一會兒回憶卡跳出來、輪到下一個願望
   const running = useRef<string | null>(null)

@@ -4,7 +4,7 @@ import { db } from '../../db/db'
 import { repo } from '../../db/repo'
 import { sortAlbum } from '../../domain/album'
 import type { AlbumCard } from '../../domain/types'
-import { sayText } from '../../learning/speech'
+import { sayRecorded, sayText } from '../../learning/speech'
 import { useLearningSettings } from '../learningHooks'
 import { ALBUM_EMPTY } from '../../domain/home74'
 import { EmptyState } from '../components/EmptyState'
@@ -24,7 +24,8 @@ export function AlbumScreen({ onBack, go }: { onBack: () => void; go?: (s: Scree
   const [view, setView] = useState<AlbumCard | null>(null)
   const open = (c: AlbumCard) => {
     setView(c)
-    sayText(c.caption, { enabled: voiceOn })
+    if (c.kind === 'festival') sayRecorded('play.fest.', c.caption, { enabled: voiceOn })
+    else sayText(c.caption, { enabled: voiceOn })
     if (c.fresh) void repo.seeAlbumCard(c.id)
   }
   if (!cards) return <main className="screen theme-bubblegum" data-testid="album"><ScreenHeader title="成長相簿" onBack={onBack} /></main>

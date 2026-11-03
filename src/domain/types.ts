@@ -247,6 +247,10 @@ export interface Settings {
   storySeen?: string[]
   /** v7.4：新玩法（朋友來作客、阿悟的小願望）的狀態。舊存檔沒有這欄 = 都還沒開始（不升 Dexie 版本） */
   play?: PlayState
+  /** v8.1：節慶掛飾與紀念家具（家長區開關）；未設定視為開 */
+  festivalOn?: boolean
+  /** v8.1：節慶紀錄。seen = 遇過的節慶（cny:2027，一年一次）、got = 送過紀念家具的節慶（cny）。舊存檔沒有這欄 = 都還沒遇過 */
+  festival?: { seen?: string[]; got?: string[] }
 }
 
 /** v7.4：朋友來作客的禮物。coloring / dots 的 id 是頁面 id（背包庫存 id = giftItemId），food 的 id 是食物 id */
@@ -287,7 +291,7 @@ export interface PlayState {
 }
 
 /** v6：回憶卡的種類 */
-export type AlbumKind = 'hatch' | 'grow' | 'trick' | 'chapter' | 'hat' | 'milestone' | 'wish'
+export type AlbumKind = 'hatch' | 'grow' | 'trick' | 'chapter' | 'hat' | 'milestone' | 'wish' | 'festival'
 /** v6：成長相簿的一張回憶卡。畫面用元件即時繪製（不截圖）：阿悟當時的姿勢圖、日期、一句話 */
 export interface AlbumCard {
   /** 固定規則的 id（hatch、grow、trick:<招>、chapter:<章>、hat:first），同一件事不會重複 */

@@ -11,14 +11,19 @@
  *   pet.wish.<願望id>            阿悟說的願望（阿悟聲）
  *   pet.wish.done.<願望id>       願望實現後阿悟說的話（阿悟聲）
  *   play.wish.card.<願望id>      回憶卡上的一句話（旁白聲）
+ *   pet.fest.<節慶id>            v8.1：第一次看到當節掛飾時寵物說的話（寵物聲）
+ *   play.fest.card.<節慶id>      v8.1：節慶回憶卡上的一句話（旁白聲）
  */
 import { FRIENDS } from '../domain/friends'
 import { canVisit, guestArriveLine, guestFoodLine, guestPageLine, WISHES } from '../domain/play74'
+import { FESTIVALS, type FestivalId } from '../domain/season'
 
 export const guestKey = (kind: 'arrive' | 'page' | 'food' | 'name', id: string): string => `play.guest.${kind}.${id}`
 export const wishKey = (id: string): string => `pet.wish.${id}`
 export const wishDoneKey = (id: string): string => `pet.wish.done.${id}`
 export const wishCardKey = (id: string): string => `play.wish.card.${id}`
+export const festivalLineKey = (id: FestivalId): string => `pet.fest.${id}`
+export const festivalCardKey = (id: FestivalId): string => `play.fest.card.${id}`
 
 export function playLines(): Record<string, string> {
   const out: Record<string, string> = {}
@@ -33,6 +38,10 @@ export function playLines(): Record<string, string> {
     out[wishKey(w.id)] = w.line
     out[wishDoneKey(w.id)] = w.doneLine
     out[wishCardKey(w.id)] = w.caption
+  }
+  for (const f of FESTIVALS) {
+    out[festivalLineKey(f.id)] = f.line
+    out[festivalCardKey(f.id)] = f.caption
   }
   return out
 }
