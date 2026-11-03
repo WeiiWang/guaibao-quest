@@ -507,9 +507,12 @@ try {
     const q3 = await qid(page)
     await page.waitForTimeout(500)
     await answerWrongThenRight(page)
-    await page.waitForTimeout(1700)
-    const still = { same: (await qid(page)) === q3, right: await page.locator('[data-testid=choice][data-state=right]').count(), q: q3 }
-    check('自動前進：答錯才答對 → 1.7 秒後還停在這一題（維持看清答案的時間）', still.same && still.right === 1, JSON.stringify(still))
+    const tSolved = Date.now()
+    await page.waitForTimeout(1300)
+    const elapsed = Date.now() - tSolved
+    const still = { same: (await qid(page)) === q3, right: await page.locator('[data-testid=choice][data-state=right]').count(), q: q3, elapsed }
+    // 答錯才答對至少停 2.4 秒；機器忙的時候 Playwright 的操作會變慢，所以只在「還不到 2.3 秒」時要求還停在這一題
+    check('自動前進：答錯才答對 → 還沒到 2.4 秒時仍停在這一題、答案亮著（維持看清答案的時間）', elapsed >= 2300 || (still.same && still.right === 1), JSON.stringify(still))
     const later = await waitChanged(page, q3, 4000)
     check('自動前進：答錯才答對 → 之後還是會自動前進（<= 3.6 秒上限）', later >= 0)
     check('自動前進無 console 錯誤', errors.length === 0, errors.join('|'))

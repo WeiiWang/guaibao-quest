@@ -65,13 +65,14 @@
 }
 /* 手機：右側欄只留圖示（名字留給螢幕閱讀器；一顆 56px），主選單變兩排以後房間變矮，才放得下左右看房間的鈕與禮物袋 */
 @media (max-width: 560px) {
-  .home .side-tools { gap: 8px; }
+  .home .side-tools { gap: 4px; }
   .home .side-tools > .mini-candy, .home .side-tools .more-wrap > .more-btn { width: 56px; min-height: 56px; padding: 6px 0; border-radius: 20px; }
   .home .side-tools > .mini-candy > span:not(.mini-emoji), .home .side-tools .more-wrap > .more-btn > span:not(.mini-emoji) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .home .side-tools > .mini-candy .art, .home .side-tools > .mini-candy .art-emoji { width: 34px; height: 34px; }
 }
-/* 高一點的手機：左右看房間的鈕放在右側欄（4 顆 56px，約到 y=328）和禮物袋（88px，離底 20px）之間 */
+/* 高一點的手機：左右看房間的鈕放在右側欄（4 顆 56px + 3 個 4px 縫，到 y=316）和禮物袋（80px，離底 16px）的正中間 */
 @media (max-width: 560px) and (min-height: 780px) {
+  .home .room-frame .h7-bag { width: 80px; height: 80px; }
   .home .room-frame .room-arrow.o8-arrow { top: calc(50% + 110px); }
 }
 

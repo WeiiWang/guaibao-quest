@@ -130,6 +130,16 @@
 .o8-result[data-choreo='on'] .q7-loot-text { animation-delay: 0.9s; }
 .o8-result[data-choreo='on'] .adv-credit { animation-delay: 1.6s; }
 
+/* 結算也放在場景裡；數量膠囊騎在欄位上緣，上面的話留出空間 */
+.o8-result .q7-loot { margin-top: 14px; }
+.adv.adv-stage.o8-scene.o8-result .adv-result-card { background: rgba(255, 255, 255, 0.92); }
+
+/* 手機：結算內容比螢幕高，主按鈕貼在畫面下緣（捲動時一直看得到、一開始就能按） */
+@media (max-width: 560px) {
+  .o8-result .adv-actions { position: fixed; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 30; margin: 0; padding: 8px 12px; border-radius: 32px; background: rgba(255, 255, 255, 0.95); box-shadow: 0 6px 18px rgba(40, 70, 70, 0.22); }
+  .o8-result .adv-result-card { padding-bottom: 104px; }
+}
+
 /* 數量小膠囊（食物 +2、木材 +3）：數字跳動，每跳一格彈一下 */
 .q7-loot-col { position: relative; }
 .o8-pill { position: absolute; top: -12px; right: 10px; z-index: 2; display: inline-flex; align-items: baseline; gap: 2px; padding: 3px 14px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 1.05rem; font-weight: 900; line-height: 1.4; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2), 0 0 0 3px #fff; }

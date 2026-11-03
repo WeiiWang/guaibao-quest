@@ -498,7 +498,8 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     const ready = !choreo || choreoReady
     return (
       <main
-        className="adv adv-stage adv-result o8-result"
+        className={`adv adv-stage adv-result o8-result o8-stage ${sceneOk ? 'o8-scene' : ''}`}
+        style={sceneOk && sceneKey ? ({ ['--o8-scene' as string]: `url("${sceneUrl(sceneKey)}")` } as CSSProperties) : undefined}
         data-testid="station-result"
         data-choreo={choreo ? 'on' : 'off'}
         data-ready={ready ? 'true' : 'false'}

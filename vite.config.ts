@@ -51,8 +51,8 @@ export default defineConfig({
             },
           },
           {
-            // 含 art/coloring/（v7 點陣線稿，約 16 張）：路徑多一層資料夾
-            urlPattern: ({ url }) => /\/art\/(coloring\/)?[^/]+\.png$/.test(url.pathname),
+            // 含 art/coloring/（v7 點陣線稿，約 16 張）：路徑多一層資料夾；v8 的關卡場景背景是 .jpg（scene-stage-*.jpg）
+            urlPattern: ({ url }) => /\/art\/(coloring\/)?[^/]+\.(png|jpg)$/.test(url.pathname),
             handler: 'CacheFirst',
             options: {
               cacheName: 'art',
