@@ -109,6 +109,9 @@
 
 /* 字幕：給家長共讀，白底深字、夠大 */
 .sb-caption {
+  /* 只在標點斷行（不會斷在「回不了／家」中間）；一段太長放不下時才退回任意處斷行 */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   margin: 0; max-width: min(100%, 820px); padding: clamp(10px, 1.7vmin, 16px) clamp(16px, 3vmin, 30px);
   border-radius: 20px; background: rgba(255, 251, 240, 0.94); color: #3b2a1c;
   box-shadow: 0 6px 20px rgba(20, 16, 40, 0.24);
