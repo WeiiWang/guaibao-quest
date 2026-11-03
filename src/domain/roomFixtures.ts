@@ -21,11 +21,11 @@ export interface RoomFixture {
   kin: readonly string[]
 }
 
-const MAT: RoomFixture = { id: 'mat', art: 'ui-room-mat', slot: 'floor', x: 0.3, bottom: 0.985, h: 0.26, aspect: 512 / 296, kin: ['decor-rug'] }
+const MAT: RoomFixture = { id: 'mat', art: 'ui-room-mat', slot: 'floor', x: 0.3, bottom: 0.985, h: 0.26, aspect: 1024 / 574, kin: ['decor-rug'] }
 const CABINET_KIN = ['decor-shelf', 'decor-wallshelf', 'decor-crate', 'decor-table', 'decor-piano']
 const PHOTOS_KIN = ['decor-frame', 'decor-poster', 'decor-rainbow', 'decor-wallshelf']
-const cabinet = (x: number): RoomFixture => ({ id: 'cabinet', art: 'ui-room-cabinet', slot: 'floor', x, bottom: 0.72, h: 0.29, aspect: 453 / 512, kin: CABINET_KIN })
-const photos = (x: number, bottom: number, h: number): RoomFixture => ({ id: 'photos', art: 'ui-room-photos', slot: 'wall', x, bottom, h, aspect: 491 / 512, kin: PHOTOS_KIN })
+const cabinet = (x: number): RoomFixture => ({ id: 'cabinet', art: 'ui-room-cabinet', slot: 'floor', x, bottom: 0.72, h: 0.29, aspect: 900 / 1024, kin: CABINET_KIN })
+const photos = (x: number, bottom: number, h: number): RoomFixture => ({ id: 'photos', art: 'ui-room-photos', slot: 'wall', x, bottom, h, aspect: 922 / 993, kin: PHOTOS_KIN })
 
 /** 節慶掛飾的位置：x = 中心（房間寬的比例）；top 用房間高的比例；寬取兩者較小：佔房間高幾倍、佔房間寬多少 */
 export interface FestivalSpot {
@@ -52,7 +52,7 @@ export interface FixtureLayout {
 export function fixtureLayout(aspect: number): FixtureLayout {
   if (aspect >= 3.2) return { fixtures: [MAT, cabinet(0.385), photos(0.385, 0.41, 0.24)], festival: { x: 0.295, top: 0.005, wOfH: 0.72, wOfW: 0.14 } }
   if (aspect >= 2) return { fixtures: [MAT, cabinet(0.4), photos(0.149, 0.37, 0.18)], festival: { x: 0.32, top: 0.005, wOfH: 0.72, wOfW: 0.22 } }
-  return { fixtures: [MAT, cabinet(0.58), photos(0.58, 0.41, 0.24)], festival: { x: 0.32, top: 0.165, wOfH: 0.72, wOfW: 0.22 } }
+  return { fixtures: [MAT, cabinet(0.58), photos(0.58, 0.41, 0.24)], festival: { x: 0.3, top: 0.165, wOfH: 0.72, wOfW: 0.2 } }
 }
 
 /** 三種版面都有的三件（給測試與清單用；iPad 橫向的位置） */

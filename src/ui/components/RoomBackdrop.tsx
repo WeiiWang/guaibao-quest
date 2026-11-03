@@ -158,14 +158,19 @@ export function RoomBackdrop({ timeOfDay, theme, glows, hideFixtures, festival, 
       ))}
 
       <div className="rb-baseboard" />
-      {/* v8.1：內建陳設與節慶掛飾：在牆面、地板之上，整體色調之下（入夜會一起變暗），在家具與寵物之下 */}
+      {/* v8.1：內建陳設：在牆面、地板之上，整體色調之下（入夜會一起變暗），在家具與寵物之下 */}
       <div className="rb-fixtures">
         {layout.fixtures.filter((f) => !hideFixtures?.includes(f.id)).map((f) => (
           <Fixture key={f.id} f={f} />
         ))}
-        {festival && <FestivalHanging festival={festival} spot={layout.festival} />}
       </div>
       <div className="rb-tint" />
+      {/* 掛飾掛在窗戶前面（窗戶和窗簾有自己的 z-index，比一般陳設高）；入夜的色調由 RoomAmbient 蓋上，和家具一樣 */}
+      {festival && (
+        <div className="rb-fixtures rb-fest-layer">
+          <FestivalHanging festival={festival} spot={layout.festival} />
+        </div>
+      )}
       {timeOfDay === 'night' &&
         glows?.map((g, i) => (
           <div key={i} className="rb-glow" style={{ left: `${g.x * 100}%`, top: `${g.y * 100}%` }} />

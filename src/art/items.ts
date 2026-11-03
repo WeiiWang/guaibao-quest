@@ -35,12 +35,12 @@ const DECOR_BOX: Record<string, { h: number; aspect: number }> = {
   rainbow: { h: 0.22, aspect: 512 / 314 },
   monstera: { h: 0.36, aspect: 459 / 512 },
   piano: { h: 0.32, aspect: 512 / 472 },
-  // v8.1 節慶紀念家具（長寬比先給估計值，圖出來後依實際圖片調整）
-  'fest-lion': { h: 0.24, aspect: 1 },
-  'fest-balloon': { h: 0.42, aspect: 0.7 },
-  'fest-dragonboat': { h: 0.2, aspect: 1.5 },
-  'fest-rabbitlamp': { h: 0.26, aspect: 1 },
-  'fest-tree': { h: 0.44, aspect: 0.85 },
+  // v8.1 節慶紀念家具
+  'fest-lion': { h: 0.26, aspect: 375 / 512 },
+  'fest-balloon': { h: 0.42, aspect: 338 / 512 },
+  'fest-dragonboat': { h: 0.24, aspect: 512 / 459 },
+  'fest-rabbitlamp': { h: 0.28, aspect: 388 / 512 },
+  'fest-tree': { h: 0.44, aspect: 350 / 512 },
 }
 /** 掛到房間的畫廊作品（itemId / asset 為 art-<galleryId>）：方形畫框，牆面裝飾 */
 const ARTWORK_BOX = { h: 0.2, aspect: 1 }

@@ -181,6 +181,15 @@ async function testFestivals(b) {
     await page.waitForSelector(`[data-testid=room-festival][data-art=${f.art}]`, { timeout: 8000 })
     await page.waitForSelector('[data-testid=pet-bubble]', { timeout: 3000 })
     check(`${f.id}：掛飾出現，寵物說一句`, (await page.getByTestId('pet-bubble').innerText()).includes(f.line))
+    const hang = await page.evaluate(() => {
+      const el = document.querySelector('[data-testid=room-festival]')
+      const r = el.getBoundingClientRect()
+      const win = document.querySelector('.rb-drape')
+      const z = (e) => Number(getComputedStyle(e).zIndex) || 0
+      return { z: z(el.parentElement), drape: z(win), right: r.right, left: r.left, w: r.width }
+    })
+    check(`${f.id}：掛飾在窗戶前面，不會被窗簾蓋住`, hang.z > hang.drape, JSON.stringify(hang))
+    check(`${f.id}：掛飾在起始畫面內`, hang.left >= 0 && hang.right <= LAND.width && hang.w > 100, JSON.stringify(hang))
     check(`${f.id}：牆面掛飾第一次有掉下來的演出`, await page.locator('[data-testid=room-festival].enter').count() === 1)
     check(`${f.id}：回憶卡等寵物說完才跳`, (await page.getByTestId('memory-pop').count()) === 0)
     if (f.id === 'cny') await shot(page, `fest-show-${f.id}`)
@@ -226,6 +235,7 @@ async function testFestivals(b) {
   await page.getByText('聖誕樹').first().waitFor()
   const bag = await page.getByTestId('bag').innerText()
   check('「我的東西」看得到紀念家具', bag.includes('小舞獅') && bag.includes('聖誕樹'), bag.replace(/\s+/g, ' ').slice(0, 300))
+  await page.waitForTimeout(700) // 等雲朵轉場散開
   await shot(page, 'fest-bag')
   await page.locator('.screen-header .back, .back').first().click()
   await page.waitForSelector('[data-testid=room]')
@@ -235,6 +245,7 @@ async function testFestivals(b) {
   const tag = await page.locator(`[data-card="festival:cny"] .al-tag`).innerText()
   check('相簿：節慶卡標籤沒有 emoji', tag.trim() === '節慶', tag)
   check('相簿：節慶卡有紀念家具的小圖', (await page.locator(`[data-card="festival:cny"] [data-reward=decor-fest-lion]`).count()) === 1)
+  await page.waitForTimeout(700)
   await shot(page, 'fest-album')
   await page.locator(`[data-card="festival:cny"]`).click()
   await page.waitForSelector('[data-testid=album-view]')
@@ -326,6 +337,13 @@ async function testFestivals(b) {
         await v.page.waitForSelector('[data-testid=memory-pop]', { timeout: 8000 })
         await v.page.getByTestId('memory-close').click()
         await v.page.waitForTimeout(300)
+        const hang = await v.page.evaluate(() => {
+          const r = document.querySelector('[data-testid=room-festival]').getBoundingClientRect()
+          const s = (q) => document.querySelector(q)?.getBoundingClientRect()
+          const o = (a, b) => !!a && !!b && a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom
+          return { inView: r.left >= 0 && r.right <= innerWidth, hello: o(r, s('.hello')), side: o(r, s('.side-tools')), hud: o(r, s('.pet-hud')) }
+        })
+        check(`${name} ${f.id}：掛飾在畫面內、不壓頭像、工具列、狀態卡`, hang.inView && !hang.hello && !hang.side && !hang.hud, JSON.stringify(hang))
         await shot(v.page, `fest-${f.id}-${name}`)
       }
       await v.ctx.close()
