@@ -5,20 +5,21 @@
 .gq-st-veil {
   position: absolute; inset: -4%; display: block;
   background: linear-gradient(180deg, #f6fbff, #e2eeff);
-  animation: gq-veil-out 540ms linear both;
+  animation: gq-veil-out 520ms linear both;
 }
-@keyframes gq-veil-out { 0%, 24% { opacity: 1; } 74%, 100% { opacity: 0; } }
+@keyframes gq-veil-out { 0%, 10% { opacity: 1; } 46%, 100% { opacity: 0; } }
 
 .gq-st-cloud {
   --w: calc((26vw + 20vh) * var(--k, 1));
   position: absolute; width: var(--w); margin: calc(var(--w) * -0.29) 0 0 calc(var(--w) * -0.5);
   will-change: transform, opacity; backface-visibility: hidden;
-  animation: gq-cloud-out 460ms cubic-bezier(0.55, 0, 0.35, 1) both;
+  animation: gq-cloud-out 440ms linear both;
 }
 .gq-st-cloud.flip { --flip: -1; }
 @keyframes gq-cloud-out {
-  0% { transform: translate3d(0, 0, 0) scale(calc(0.88 * var(--flip, 1)), 0.88); opacity: 1; }
-  22% { transform: translate3d(0, 0, 0) scale(calc(1.06 * var(--flip, 1)), 1.06); opacity: 1; }
-  100% { transform: translate3d(calc(var(--vx) * 2.3vw), calc(var(--vy) * 2.3vh), 0) scale(calc(1.2 * var(--flip, 1)), 1.2); opacity: 0; }
+  0% { transform: translate3d(0, 0, 0) scale(calc(0.88 * var(--flip, 1)), 0.88); opacity: 1; animation-timing-function: ease-out; }
+  16% { transform: translate3d(0, 0, 0) scale(calc(1.06 * var(--flip, 1)), 1.06); opacity: 1; animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1); }
+  72% { transform: translate3d(calc(var(--ux) * 58vmax), calc(var(--uy) * 58vmax), 0) scale(calc(1.14 * var(--flip, 1)), 1.14); opacity: 1; animation-timing-function: linear; }
+  100% { transform: translate3d(calc(var(--ux) * 80vmax), calc(var(--uy) * 80vmax), 0) scale(calc(1.2 * var(--flip, 1)), 1.2); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .gq-st { display: none; } }

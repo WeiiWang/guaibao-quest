@@ -17,7 +17,7 @@ import './transition.css'
  * prefers-reduced-motion 時不播。
  */
 
-/** 5 列：偶數列 4 朵、奇數列 5 朵（錯開半格，邊緣也蓋得到）；vx/vy = 離中心的方向（散開時往外飄），越外圍越晚動 */
+/** 5 列：偶數列 4 朵、奇數列 5 朵（錯開半格，邊緣也蓋得到）；ux/uy = 離中心的方向（散開時往外飄），越外圍越晚動 */
 const CLOUDS = [0, 1, 2, 3, 4].flatMap((row) =>
   (row % 2 === 0 ? [12.5, 37.5, 62.5, 87.5] : [0, 25, 50, 75, 100]).map((x0, col) => {
     // 固定的「亂數」（不用 Math.random：每次轉場長一樣，也不會干擾 e2e 固定 Math.random 的測試）
@@ -28,13 +28,17 @@ const CLOUDS = [0, 1, 2, 3, 4].flatMap((row) =>
     const y = 8 + row * 21 + jy
     const vx = x - 50
     const vy = y - 50
+    // 散開的方向：從畫面中心往外的單位向量；正中央附近的雲左右交錯，免得原地不動
+    const len = Math.hypot(vx, vy)
+    const ux = len < 8 ? (col % 2 ? 1 : -1) : vx / len
+    const uy = len < 8 ? 0 : vy / len
     const dist = Math.hypot(vx / 50, vy / 50)
-    return { x, y, vx, vy, k: 0.9 + ((n * 29) % 9) / 24, delay: Math.round(dist * 60), flip: n % 3 === 0 }
+    return { x, y, ux, uy, k: 0.9 + ((n * 29) % 9) / 24, delay: Math.round(dist * 50), flip: n % 3 === 0 }
   }),
 )
 
-/** 轉場整體長度（毫秒）：雲 460ms + 最大延遲 ≈ 540ms；超過這個時間還沒收到 animationend 就強制拿掉 */
-export const TRANSITION_MS = 540
+/** 轉場整體長度（毫秒）：雲 440ms + 最大延遲 65ms ≈ 505ms（底色 520ms，它的 animationend 當結束訊號）；超過 FALLBACK_MS 還沒收到就強制拿掉 */
+export const TRANSITION_MS = 520
 const FALLBACK_MS = 900
 
 export function prefersReducedMotion(): boolean {
@@ -96,7 +100,7 @@ export function ScreenTransition({ screenKey }: { screenKey: string | null }) {
         <i
           key={i}
           className={`gq-cloud gq-st-cloud ${c.flip ? 'flip' : ''}`}
-          style={{ left: `${c.x}%`, top: `${c.y}%`, ['--vx' as string]: c.vx, ['--vy' as string]: c.vy, ['--k' as string]: c.k, animationDelay: `${c.delay}ms` } as CSSProperties}
+          style={{ left: `${c.x}%`, top: `${c.y}%`, ['--ux' as string]: c.ux.toFixed(3), ['--uy' as string]: c.uy.toFixed(3), ['--k' as string]: c.k, animationDelay: `${c.delay}ms` } as CSSProperties}
         />
       ))}
     </div>
