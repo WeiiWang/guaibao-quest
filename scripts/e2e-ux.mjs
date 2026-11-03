@@ -630,8 +630,11 @@ async function workshop(browser) {
 async function misc(browser) {
   // 首頁首次引導
   for (const [size, vp] of Object.entries(SIZES)) {
+    // v8：引導一次只指一件事。新手剛拿到第一份食物（freshApp 給了 5 根香蕉、還沒看過餵食提示）時指的是食物；
+    // 這裡測「冒險地圖的第一次引導」，所以先把餵食提示標成看過（食物指引另外由 e2e-feel 測）
     const { ctx, page, errors } = await freshApp(browser, vp)
     await spyAll(ctx)
+    await patchSettings(page, { feedHintShown: true })
     await page.reload()
     await page.waitForSelector('[data-testid=room]')
     await page.waitForTimeout(500)

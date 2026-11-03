@@ -5,6 +5,7 @@
   /* 每個時段的色票；下面的元件都吃這些變數 */
   --sky-top: #8fd0f8; --sky-bot: #e6f6ff;
   --hill-far: #b4e3a8; --hill-near: #8fd08a; --tree: #6fbf6f; --trunk: #a8794f;
+  --shaft: rgba(255, 238, 170, 0.62);
   --beam: rgba(255, 249, 214, 0.6); --tint: transparent; --wall-shade: rgba(255, 255, 255, 0.4);
   --floor-shade: rgba(130, 70, 20, 0.16);
   --wall-bg: #ffe4c4; --wainscot: #fff1de; --wainscot-line: #f6dfc2;
@@ -12,12 +13,14 @@
 .room-backdrop.tod-dusk {
   --sky-top: #6a72d6; --sky-bot: #ffc58a;
   --hill-far: #a98ab5; --hill-near: #7d6aa0; --tree: #5d4f88; --trunk: #4a3d6c;
+  --shaft: rgba(255, 170, 84, 0.5);
   --beam: rgba(255, 168, 92, 0.52); --tint: rgba(255, 140, 60, 0.2); --wall-shade: rgba(255, 190, 120, 0.4);
   --floor-shade: rgba(150, 60, 20, 0.22);
 }
 .room-backdrop.tod-night {
   --sky-top: #0d1238; --sky-bot: #2d3d83;
   --hill-far: #1d2c5d; --hill-near: #14204a; --tree: #0f1a3d; --trunk: #0b1330;
+  --shaft: rgba(170, 195, 255, 0.22);
   --beam: rgba(170, 195, 255, 0.24); --tint: rgba(18, 26, 86, 0.5); --wall-shade: rgba(140, 160, 255, 0.12);
   --floor-shade: rgba(10, 14, 50, 0.3);
 }
@@ -133,7 +136,26 @@
     radial-gradient(circle 1.2px at 50% 50%, #fff 98%, transparent) 8% 36% / 6px 6px no-repeat;
   animation: rb-twinkle 4.4s ease-in-out infinite 1.4s;
 }
-@keyframes rb-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+.rb-stars-c {
+  background:
+    radial-gradient(circle 1.5px at 50% 50%, #fff 98%, transparent) 6% 14% / 6px 6px no-repeat,
+    radial-gradient(circle 1.7px at 50% 50%, #ffeaa0 98%, transparent) 46% 56% / 6px 6px no-repeat,
+    radial-gradient(circle 1.2px at 50% 50%, #fff 98%, transparent) 66% 8% / 6px 6px no-repeat,
+    radial-gradient(circle 1.6px at 50% 50%, #fff 98%, transparent) 92% 50% / 6px 6px no-repeat;
+  animation: rb-twinkle 2.6s ease-in-out infinite 0.7s;
+}
+@keyframes rb-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+/* 白天偶爾飛過窗外的小鳥（只有 transform + opacity） */
+.rb-bird { position: absolute; left: -16%; top: 20%; width: 14%; height: auto; fill: #5f7388; opacity: 0; will-change: transform, opacity; animation: rb-fly 34s linear infinite 6s; }
+@keyframes rb-fly {
+  0% { transform: translate3d(0, 0, 0) scaleY(1); opacity: 0; }
+  2% { opacity: 0.8; }
+  4% { transform: translate3d(180%, -18%, 0) scaleY(0.6); }
+  6% { transform: translate3d(360%, -30%, 0) scaleY(1); }
+  8% { transform: translate3d(540%, -34%, 0) scaleY(0.6); }
+  10% { transform: translate3d(720%, -40%, 0) scaleY(1); opacity: 0.8; }
+  12%, 100% { transform: translate3d(820%, -42%, 0) scaleY(1); opacity: 0; }
+}
 @keyframes rb-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 
 /* ---------- 地板 ---------- */
@@ -164,17 +186,24 @@
 .floor-grass .rb-baseboard { background: linear-gradient(180deg, #fffdf2, #f0e6bf); border-bottom-color: #8bc36c; }
 
 /* ---------- 光線 ---------- */
+/* 窗口 → 地板的斜光柱：站在牆面上，不擋住牆上的家具，透明度慢慢呼吸 */
+/* 寬度跟著窗戶（放在 .rb-window-set 裡），往下延伸到地板光斑 */
+.rb-shaft { position: absolute; left: 6%; top: 96%; width: 92%; height: 78%; background: linear-gradient(180deg, var(--shaft), rgba(255, 255, 255, 0)); transform-origin: 50% 0; transform: skewX(-6deg); opacity: 0.8; animation: rb-breathe 9s ease-in-out infinite; will-change: opacity; }
+.tod-dusk .rb-shaft { transform: skewX(-16deg); }
+.tod-night .rb-shaft { transform: skewX(-4deg); }
+@keyframes rb-breathe { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
 /* 窗戶投在地板上的光斑：白天直射、傍晚偏橘斜長、夜晚淡淡月光 */
-.rb-beam { position: absolute; top: 62%; bottom: 0; width: 15%; margin-left: -1%; background: linear-gradient(180deg, var(--beam), rgba(255, 255, 255, 0)); clip-path: polygon(24% 0, 100% 0, 76% 100%, 0 100%); }
+.rb-beam { animation: rb-beam-sway 16s ease-in-out infinite; position: absolute; top: 62%; bottom: 0; width: 15%; margin-left: -1%; background: linear-gradient(180deg, var(--beam), rgba(255, 255, 255, 0)); clip-path: polygon(24% 0, 100% 0, 76% 100%, 0 100%); }
 .tod-dusk .rb-beam { margin-left: 3%; width: 20%; clip-path: polygon(10% 0, 80% 0, 100% 100%, 30% 100%); }
 .tod-night .rb-beam { margin-left: 0; width: 13%; }
 .rb-tint { position: absolute; inset: 0; background: var(--tint); }
 .rb-glow { position: absolute; width: 22%; aspect-ratio: 1; margin: -11% 0 0 -11%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 214, 120, 0.7) 0, rgba(255, 190, 90, 0.32) 38%, rgba(255, 190, 90, 0) 70%); mix-blend-mode: screen; animation: rb-flicker 5s ease-in-out infinite; }
+@keyframes rb-beam-sway { 0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.85; } 50% { transform: translate3d(10px, 0, 0); opacity: 1; } }
 @keyframes rb-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.82; } }
 
 /* 漂浮的灰塵光點 */
 .rb-dust { position: absolute; inset: 0; }
-.rb-dust i { position: absolute; display: block; border-radius: 50%; background: rgba(255, 255, 255, 0.75); box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.55); animation: rb-float linear infinite; opacity: 0; }
+.rb-dust i { position: absolute; display: block; border-radius: 50%; will-change: transform, opacity; background: rgba(255, 240, 180, 0.95); box-shadow: 0 0 7px 2px rgba(255, 214, 120, 0.7); animation: rb-float linear infinite; opacity: 0; }
 .tod-dusk .rb-dust i { background: rgba(255, 220, 160, 0.8); box-shadow: 0 0 6px 1px rgba(255, 190, 110, 0.55); }
 .tod-night .rb-dust i { background: rgba(200, 215, 255, 0.7); box-shadow: 0 0 6px 1px rgba(150, 180, 255, 0.5); }
 @keyframes rb-float {
@@ -191,7 +220,8 @@
 .room-ambient.tod-night { background: rgba(20, 28, 90, 0.34); mix-blend-mode: multiply; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rb-cloud, .rb-daysun, .rb-stars, .rb-glow, .rb-dust i { animation: none; }
+  .rb-cloud, .rb-daysun, .rb-stars, .rb-glow, .rb-dust i, .rb-bird, .rb-shaft, .rb-beam { animation: none; }
+  .rb-bird { display: none; }
   .rb-dust i { opacity: 0.5; }
   .rb-cloud.c1 { left: 8%; } .rb-cloud.c2 { left: 52%; } .rb-cloud.c3 { left: 30%; }
 }

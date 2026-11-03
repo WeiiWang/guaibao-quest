@@ -9,6 +9,7 @@ import { getChapter } from '../../../learning/chapter'
 import { challengeVisible, nodeWindow } from '../../../learning/chapter'
 import { challengeChapterId, chaptersOf, dailyChapterId, DAILY_NAME, mustSubject, replayChapterId, SUBJECTS } from '../../../learning/subject'
 import type { Progress, SubjectId } from '../../../learning/types'
+import { Loading } from '../../components/Loading'
 import { Icon } from '../../components/Icon'
 import { ScreenHeader } from '../../components/Header'
 import { MaterialsChip } from '../../components/MaterialsChip'
@@ -158,7 +159,7 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
     return () => ro.disconnect()
   }, [ready, run, doneN, ch.id, ch.stations.length, points])
 
-  if (!prog) return <div className="splash">載入中…</div>
+  if (!prog) return <Loading />
 
   const doneCount = prog.stations.filter((s) => s.done).length
   const allDone = doneCount === ch.stations.length
