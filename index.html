@@ -3,16 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f3e3c3" />
+    <!-- 啟動底色 = 開場畫面的天空藍（src/ui/shell.css 的 --gq-sky）；開場畫面離開後會把 theme-color 換回米色 -->
+    <meta name="theme-color" content="#67b2fd" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="乖寶任務" />
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>乖寶任務</title>
+    <style>
+      /* JS 載入之前就看得到的啟動畫面：藍天底 + 彈跳的蛋（純 CSS，不等任何檔案）。React 掛上去後會整個換掉。 */
+      html, body { margin: 0; min-height: 100%; background: #67b2fd; }
+      #boot { position: fixed; inset: 0; display: grid; place-items: center; align-content: center; gap: 4px; background: linear-gradient(180deg, #67b2fd 0%, #a1d4fe 62%, #e9f6ff 100%); }
+      #boot i.egg { display: block; width: min(21vmin, 110px); height: min(27vmin, 140px); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(circle at 36% 30%, #fffdf2 0 10%, #ffeab8 38%, #f3c46a 100%); box-shadow: inset -8px -10px 0 rgba(200, 130, 40, 0.25); transform-origin: 50% 100%; animation: boot-hop 0.9s cubic-bezier(0.3, 0, 0.6, 1) infinite; }
+      #boot i.sh { display: block; width: min(20vmin, 100px); height: 12px; border-radius: 50%; background: rgba(20, 70, 140, 0.28); animation: boot-sh 0.9s cubic-bezier(0.3, 0, 0.6, 1) infinite; }
+      @keyframes boot-hop { 0% { transform: translateY(0) scale(1.08, 0.9); } 18% { transform: translateY(0) scale(0.96, 1.05); } 50% { transform: translateY(-34%) scale(0.98, 1.04); } 82% { transform: translateY(0) scale(0.98, 1.03); } 100% { transform: translateY(0) scale(1.08, 0.9); } }
+      @keyframes boot-sh { 0%, 100% { transform: scaleX(1.1); opacity: 0.9; } 50% { transform: scaleX(0.6); opacity: 0.5; } }
+      @media (prefers-reduced-motion: reduce) { #boot i { animation: none !important; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div id="boot" role="status" aria-label="載入中"><i class="egg"></i><i class="sh"></i></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

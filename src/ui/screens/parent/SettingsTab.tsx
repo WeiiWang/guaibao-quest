@@ -14,6 +14,7 @@ import { profiles } from '../../../profiles/manager'
 import { useViewedChild } from './ViewedChild'
 import './learning.css'
 import { speciesName } from '../../../domain/species'
+import { ErrorLogCard } from './ErrorLogCard'
 
 export function SettingsTab({ onReset }: { onReset: () => void }) {
   const toast = useToast()
@@ -111,6 +112,8 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
         </p>
         <button className="btn danger" onClick={() => setConfirmReset(true)}>重設這個孩子的資料</button>
       </div>
+
+      <ErrorLogCard />
 
       {confirmReset && (
         <Modal title="再輸入一次 PIN 確認重設" onClose={() => setConfirmReset(false)}>

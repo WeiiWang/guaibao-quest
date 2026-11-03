@@ -9,6 +9,7 @@ from collections import deque
 from PIL import Image, ImageFilter
 
 THRESH = 238  # RGB 都高於這個值視為白底
+MAX = int(sys.argv[3]) if len(sys.argv) > 3 else 512  # 輸出最長邊
 
 
 def main(src, dst):
@@ -54,7 +55,7 @@ def main(src, dst):
         pad = int(max(w, h) * 0.02)
         bbox = (max(0, bbox[0] - pad), max(0, bbox[1] - pad), min(w, bbox[2] + pad), min(h, bbox[3] + pad))
         im = im.crop(bbox)
-    im.thumbnail((512, 512))
+    im.thumbnail((MAX, MAX))
     im.save(dst)
     print('ok', im.size)
 

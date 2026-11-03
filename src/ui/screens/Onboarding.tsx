@@ -1,13 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { AGE_CHOICES } from '../../domain/home7'
 import { DEFAULT_SPECIES, speciesName, type Species } from '../../domain/species'
-import { sayText } from '../../learning/speech'
+import { hasRecordedText, sayText, setVoiceSpecies } from '../../learning/speech'
 import type { AgeBand } from '../../domain/types'
 import { Icon } from '../components/Icon'
 import { PetSprite } from '../components/PetSprite'
 import { PinPad } from '../components/PinPad'
 import { SpeciesPicker } from '../components/SpeciesPicker'
+import { RoomBackdrop } from '../components/RoomBackdrop'
+import { skipShellMotion } from '../titleGate'
+import { prefersReducedMotion } from '../components/ScreenTransition'
 import '../j74.css'
+import '../onboarding.css'
+
+/** 落蛋編排的總長（毫秒）：蛋從天上落下、彈兩下、停穩。要小於 1.5 秒，點一下可以跳過 */
+export const EGG_DROP_MS = 1450
 
 type Step = 'pin1' | 'pin2' | 'child' | 'age' | 'pet' | 'egg'
 
@@ -32,16 +39,47 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
 
+  // v8：按「開始冒險」後先播落蛋（蛋從天上落到房間地板、彈兩下），再真的建立孩子、進首頁
+  const [drop, setDrop] = useState(false)
+  const dropTimer = useRef<number | undefined>(undefined)
+  const finishing = useRef(false)
+
   const finish = async () => {
+    if (finishing.current) return
+    finishing.current = true
+    window.clearTimeout(dropTimer.current)
     setBusy(true)
     const r = await onFinish({ pin: withPin ? pin : undefined, childName, species, ageBand: age })
     if (!r.ok) {
       setErr(r.error)
       setBusy(false)
+      setDrop(false)
+      finishing.current = false
     }
   }
 
-  useEffect(() => () => window.clearTimeout(advance.current), [])
+  const begin = () => {
+    if (busy || drop) return
+    setErr('')
+    // 這一句是寵物自己說的（物種聲音）：先把語音物種設成他選的，沒錄到就不播（不用機器語音硬唸）
+    setVoiceSpecies(species)
+    if (hasRecordedText('出發囉！')) sayText('出發囉！')
+    // e2e（自動化瀏覽器）預設跳過動畫，立刻建立並進首頁；gq-title-test 時才播
+    if (skipShellMotion()) {
+      void finish()
+      return
+    }
+    setDrop(true)
+    dropTimer.current = window.setTimeout(() => void finish(), prefersReducedMotion() ? 400 : EGG_DROP_MS)
+  }
+
+  useEffect(
+    () => () => {
+      window.clearTimeout(advance.current)
+      window.clearTimeout(dropTimer.current)
+    },
+    [],
+  )
   // 進到「幾歲」那一頁：先唸一次問句
   useEffect(() => {
     if (step === 'age') sayText('你幾歲了？')
@@ -57,9 +95,16 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
     <main className="onboarding theme-cream">
       <div className="card onboard-card">
         <h1>乖寶任務</h1>
+        {withPin && (step === 'pin1' || step === 'pin2' || step === 'child') && (
+          // 這個畫面是家長要做的事，但按下開場「開始」的通常是小孩：寫得很清楚、配上鎖的圖
+          <p className="ob-parent" data-testid="onboard-parent-only">
+            <Icon name="ui-lock" emoji="🔒" alt="" className="ob-parent-icon" />
+            <span>這一步請爸媽來</span>
+          </p>
+        )}
         {step === 'pin1' && (
           <>
-            <p className="lead">先請爸媽設定 4 位數家長密碼（PIN）。小孩不要偷看喔。</p>
+            <p className="lead">請爸媽設定 4 位數家長密碼（PIN），之後進家長區要用。小朋友先不要偷看喔。</p>
             <PinPad
               label="設定家長 PIN"
               onComplete={(p) => {
@@ -154,10 +199,21 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
             </p>
             <PetSprite pet={{ stage: 'egg', feedCount: 0, name: petName, species }} mood="happy" className="egg-big idle" />
             {err && <p className="form-error">{err}</p>}
-            <button className="btn primary" disabled={busy} onClick={finish}>開始冒險</button>
+            <button className="btn primary" disabled={busy} onClick={begin}>開始冒險</button>
           </div>
         )}
       </div>
+      {drop && (
+        // 點一下就跳過、直接進首頁
+        <div className="egg-drop" data-testid="egg-drop" onClick={() => void finish()}>
+          <RoomBackdrop timeOfDay="day" />
+          <i className="egg-drop-shadow" aria-hidden />
+          <i className="egg-drop-ring" aria-hidden />
+          <div className="egg-drop-egg">
+            <PetSprite pet={{ stage: 'egg', feedCount: 0, name: petName, species }} mood="happy" className="egg-drop-sprite" />
+          </div>
+        </div>
+      )}
     </main>
   )
 }

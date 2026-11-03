@@ -1,0 +1,123 @@
+/* ============ v8 線 N：開場畫面 ============
+   主視覺 16:9（title-keyart.jpg）：橫向用 cover 鋪滿、縮到底部對齊（天空留給 logo 與開始鈕）；
+   直向把圖放大到三隻角色幾乎占滿寬度、貼在底部，上面用同色天空接起來。圖還沒到時只剩天空漸層，一樣好看。
+   動的東西只有 transform / opacity。 */
+.title {
+  position: fixed; inset: 0; z-index: 40; overflow: hidden; cursor: pointer;
+  background: linear-gradient(180deg, #4f9ff7 0%, var(--gq-sky) 30%, var(--gq-sky-soft) 78%, #d7ecff 100%);
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  animation: gq-title-in 0.25s ease-out;
+}
+@keyframes gq-title-in { from { opacity: 0; } }
+.title-sky { position: absolute; inset: 0; }
+
+/* ---- 主視覺 ---- */
+.title-art {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%;
+  opacity: 0; transition: opacity 0.5s ease-out; transform-origin: 50% 100%;
+  animation: gq-art-breathe 14s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.title-art.on { opacity: 1; }
+@keyframes gq-art-breathe { from { transform: scale(1); } to { transform: scale(1.045); } }
+/* 直向（含手機）：整張圖放大到角色占滿寬、貼底；圖的上緣淡出接上天空 */
+@media (max-aspect-ratio: 1/1) {
+  .title-art {
+    left: 50%; top: auto; bottom: 0; width: 195%; height: auto; max-width: none; object-fit: fill;
+    transform: translateX(-50%); transform-origin: 50% 100%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 9%); mask-image: linear-gradient(180deg, transparent 0, #000 9%);
+    animation: gq-art-breathe-p 14s ease-in-out infinite alternate;
+  }
+}
+@keyframes gq-art-breathe-p { from { transform: translateX(-50%) scale(1); } to { transform: translateX(-50%) scale(1.04); } }
+
+/* ---- 飄的雲 ---- */
+.title-clouds { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.title-cloud { position: absolute; left: 0; will-change: transform; animation: gq-cloud-drift linear infinite; filter: drop-shadow(0 6px 8px rgba(40, 100, 190, 0.18)); }
+@keyframes gq-cloud-drift { from { transform: translateX(-60vmin); } to { transform: translateX(calc(100vw + 10vmin)); } }
+
+/* ---- 花瓣（跟主視覺的桃花一致） ---- */
+.title-petals { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.title-petal {
+  position: absolute; top: -6%; display: block; border-radius: 80% 20% 80% 20% / 70% 30% 70% 30%;
+  background: linear-gradient(135deg, #ffd3e0, #ff9db9); opacity: 0; will-change: transform, opacity;
+  animation: gq-petal-fall linear infinite;
+}
+@keyframes gq-petal-fall {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+  8% { opacity: 0.9; }
+  50% { transform: translate3d(var(--sway), 55vh, 0) rotate(200deg); }
+  92% { opacity: 0.8; }
+  100% { transform: translate3d(calc(var(--sway) * -0.5), 112vh, 0) rotate(420deg); opacity: 0; }
+}
+
+/* ---- Logo 與開始鈕 ---- */
+.title-stack {
+  position: absolute; left: 0; right: 0; top: 0; z-index: 2; display: flex; flex-direction: column; align-items: center;
+  gap: clamp(10px, 2.4vh, 24px); padding: max(clamp(18px, 5vh, 54px), env(safe-area-inset-top)) 16px 0; pointer-events: none;
+}
+.title-logo { margin: 0; height: clamp(110px, 26vh, 250px); display: grid; place-items: center; opacity: 0; }
+.title-logo.in { opacity: 1; animation: gq-logo-pop 0.85s cubic-bezier(0.2, 1, 0.3, 1) 0.1s backwards, gq-logo-bob 4.6s ease-in-out 1s infinite; }
+@keyframes gq-logo-pop {
+  0% { transform: scale(0.2) translateY(-40px); opacity: 0; }
+  55% { transform: scale(1.14) translateY(4px); opacity: 1; }
+  75% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+@keyframes gq-logo-bob { 0%, 100% { transform: translateY(0) rotate(-0.6deg); } 50% { transform: translateY(-7px) rotate(0.6deg); } }
+.title-logo-img { display: block; max-width: min(88vw, 640px); max-height: 100%; width: auto; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(30, 80, 170, 0.28)); }
+/* 沒有 logo 圖時的文字 logo：厚厚的糖果字，白邊、立體底 */
+.title-wordmark { display: flex; gap: 0.06em; font-size: clamp(64px, min(17vmin, 20vw), 170px); line-height: 1; }
+.title-wordmark b {
+  display: block; font-weight: 900; letter-spacing: 0; color: var(--c);
+  --c: #ff9f8a; --cd: #d9654b;
+  text-shadow:
+    3px 0 #fff, -3px 0 #fff, 0 3px #fff, 0 -3px #fff, 2px 2px #fff, -2px -2px #fff, 2px -2px #fff, -2px 2px #fff,
+    0 0.07em 0 var(--cd), 0 0.1em 0.05em rgba(30, 80, 170, 0.35);
+  animation: gq-letter-hop 2.6s ease-in-out infinite; animation-delay: calc(var(--i) * 0.16s);
+}
+.title-wordmark b:nth-child(2) { --c: #ffc93c; --cd: #d9971a; }
+.title-wordmark b:nth-child(3) { --c: #55c99c; --cd: #2e9a72; }
+.title-wordmark b:nth-child(4) { --c: #6ea8f4; --cd: #3c78cc; }
+@keyframes gq-letter-hop { 0%, 70%, 100% { transform: translateY(0); } 80% { transform: translateY(-0.1em); } 90% { transform: translateY(0.01em); } }
+
+.title-start {
+  pointer-events: auto; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.35em;
+  min-width: clamp(220px, 34vmin, 300px); min-height: clamp(104px, 13vh, 132px); padding: 0 clamp(32px, 6vmin, 56px);
+  border: 0; border-radius: 999px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  font: inherit; font-size: clamp(2.2rem, 7vmin, 3rem); font-weight: 900; letter-spacing: 0.08em; color: #fff;
+  background: linear-gradient(180deg, #ffb35c 0%, #ff8a4c 100%);
+  box-shadow: 0 9px 0 #d4622c, 0 18px 26px rgba(30, 80, 170, 0.35), inset 0 4px 0 rgba(255, 255, 255, 0.55);
+  text-shadow: 0 3px 0 rgba(180, 70, 20, 0.55);
+  animation: gq-start-in 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) 0.55s backwards;
+  transition: box-shadow 0.12s, transform 0.12s;
+}
+.title-start::after {
+  /* 一道慢慢掃過的光 */
+  content: ''; position: absolute; inset: 6px 14px auto; height: 38%; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)); pointer-events: none;
+}
+.title-start:active { box-shadow: 0 2px 0 #d4622c, 0 6px 12px rgba(30, 80, 170, 0.3), inset 0 4px 0 rgba(255, 255, 255, 0.45); transform: translateY(7px); animation: none; }
+.title-start:active::before { display: none; }
+.title-start:focus-visible { outline: 5px solid #fff; outline-offset: 5px; }
+.title-play { width: 1.05em; height: 1.05em; flex: 0 0 auto; filter: drop-shadow(0 3px 0 rgba(180, 70, 20, 0.55)); }
+@keyframes gq-start-in { from { transform: scale(0.3); opacity: 0; } }
+/* 呼吸的光圈：動在偽元素上，按鈕本身不動（自動化測試點擊要求元素穩定，孩子的手指也比較好按） */
+.title-start::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: -1; pointer-events: none;
+  background: rgba(255, 255, 255, 0.55); animation: gq-start-ring 1.8s ease-out 1.3s infinite; will-change: transform, opacity;
+}
+@keyframes gq-start-ring { 0% { transform: scale(1); opacity: 0.7; } 80%, 100% { transform: scale(1.22, 1.3); opacity: 0; } }
+
+/* 手機橫放等「很矮」的畫面：logo 縮小、開始鈕移到右下，不蓋住角色 */
+@media (max-height: 520px) and (min-aspect-ratio: 3/2) {
+  .title-stack { left: 0; right: auto; width: 56%; align-items: center; }
+  .title-logo { height: clamp(70px, 32vh, 150px); }
+  .title-start { position: fixed; right: max(20px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); min-height: 96px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-art, .title-cloud, .title-petal, .title-logo.in, .title-wordmark b, .title-start, .title-start::before { animation: none !important; }
+  .title-petals { display: none; }
+  .title-logo.in { opacity: 1; }
+  .title-cloud { transform: translateX(10vmin); }
+}

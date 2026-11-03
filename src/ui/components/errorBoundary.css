@@ -1,0 +1,30 @@
+/* v8 線 N：錯誤畫面 + 家長區的錯誤紀錄。class 一律 eb- 開頭 */
+.eb {
+  position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 20px; overflow-y: auto;
+  background: linear-gradient(180deg, var(--gq-sky, #67b2fd) 0%, var(--gq-sky-soft, #a1d4fe) 60%, #fff6ea 100%);
+}
+.eb-card { display: grid; justify-items: center; gap: 14px; width: min(520px, 100%); padding: 26px 20px 28px; border-radius: 40px; text-align: center; background: var(--white, #fffdf9); box-shadow: 0 8px 0 rgba(74, 59, 53, 0.14), 0 24px 40px rgba(30, 80, 170, 0.28); }
+.eb-pet { width: min(46vw, 200px); height: min(46vw, 200px); object-fit: contain; filter: drop-shadow(0 8px 6px rgba(74, 59, 53, 0.2)); animation: eb-wobble 2.4s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes eb-wobble { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+.eb-line { margin: 0; font-size: 1.35rem; line-height: 1.6; font-weight: 800; color: var(--ink, #4a3b35); }
+.eb-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; width: 100%; margin-top: 4px; }
+.eb-btn {
+  flex: 1 1 190px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 84px; padding: 0 22px;
+  border: 0; border-radius: 30px; cursor: pointer; touch-action: manipulation; font: inherit; font-size: 1.7rem; font-weight: 900; color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.18); transition: transform 0.12s, box-shadow 0.12s;
+}
+.eb-btn svg { width: 40px; height: 40px; flex: 0 0 auto; }
+.eb-btn.eb-go-home { background: linear-gradient(180deg, #ffb35c, #ff8a4c); box-shadow: 0 7px 0 #d4622c, inset 0 3px 0 rgba(255, 255, 255, 0.5); }
+.eb-btn.eb-go-reload { background: linear-gradient(180deg, #7fd6b4, #3fae86); box-shadow: 0 7px 0 #2b8a68, inset 0 3px 0 rgba(255, 255, 255, 0.5); }
+.eb-btn:active { transform: translateY(6px); }
+.eb-btn.eb-go-home:active { box-shadow: 0 1px 0 #d4622c; }
+.eb-btn.eb-go-reload:active { box-shadow: 0 1px 0 #2b8a68; }
+@media (prefers-reduced-motion: reduce) { .eb-pet { animation: none; } }
+
+/* 家長區 設定 → 錯誤紀錄（預設收合） */
+.eb-log > summary { cursor: pointer; font-weight: 900; font-size: 1.15rem; min-height: var(--tap, 56px); display: flex; align-items: center; }
+.eb-log ul { display: grid; gap: 10px; margin-top: 6px; }
+.eb-log li { padding: 10px 12px; border-radius: 16px; background: var(--cream, #fff6ea); font-size: 0.95rem; line-height: 1.5; word-break: break-word; }
+.eb-log time { display: block; color: var(--ink-soft, #8a7469); font-weight: 800; font-size: 0.85rem; }
+.eb-log pre { margin: 6px 0 0; max-height: 150px; overflow: auto; font-size: 0.75rem; line-height: 1.4; white-space: pre-wrap; color: var(--ink-soft, #8a7469); }
+.eb-log .eb-empty { color: var(--ink-soft, #8a7469); font-weight: 700; }
