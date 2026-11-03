@@ -33,7 +33,8 @@ export default defineConfig({
       },
       workbox: {
         // 預快取只留 app shell；3D 素材（public/art）改成執行時快取，第一次看過的圖之後可離線使用
-        globPatterns: ['**/*.{js,css,html,svg,ico,webmanifest}', 'icon-*.png', 'apple-touch-icon.png'],
+        // 圖示只預快取最小的兩張（192 與 apple-touch）；512 與 maskable 是安裝時才抓，不必每個人都先下載
+        globPatterns: ['**/*.{js,css,html,svg,ico,webmanifest}', 'icon-192.png', 'apple-touch-icon.png'],
         globIgnores: ['art/**', 'voice/**'],
         runtimeCaching: [
           {
@@ -53,8 +54,8 @@ export default defineConfig({
             },
           },
           {
-            // 含 art/coloring/（v7 點陣線稿，約 16 張）：路徑多一層資料夾
-            urlPattern: ({ url }) => /\/art\/(coloring\/)?[^/]+\.png$/.test(url.pathname),
+            // 含 art/coloring/（v7 點陣線稿，約 16 張）：路徑多一層資料夾；v8 的開場主視覺是 jpg
+            urlPattern: ({ url }) => /\/art\/(coloring\/)?[^/]+\.(png|jpg)$/.test(url.pathname),
             handler: 'CacheFirst',
             options: {
               cacheName: 'art',

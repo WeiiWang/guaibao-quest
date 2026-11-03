@@ -208,3 +208,29 @@ describe('持久儲存', () => {
     await new Promise((r) => setTimeout(r, 0))
   })
 })
+
+describe('錯誤紀錄去重', () => {
+  it('React 開發模式會把同一個錯誤再丟給 window：window 那筆不重複記，邊界那筆取代 window 那筆', () => {
+    const st = fakeStorage()
+    recordError(new Error('x'), 'window', undefined, st, 1000)
+    recordError(new Error('x'), 'window', undefined, st, 1100)
+    expect(readErrorLog(st)).toHaveLength(1)
+    recordError(new Error('x'), 'child', undefined, st, 1200)
+    const log = readErrorLog(st)
+    expect(log).toHaveLength(1)
+    expect(log[0].where).toBe('child')
+  })
+  it('邊界接到兩次一樣的錯（真的又壞了一次）不合併；不同訊息也不合併', () => {
+    const st = fakeStorage()
+    recordError(new Error('x'), 'child', undefined, st, 1000)
+    recordError(new Error('x'), 'child', undefined, st, 1500)
+    recordError(new Error('y'), 'window', undefined, st, 1600)
+    expect(readErrorLog(st)).toHaveLength(3)
+  })
+  it('StrictMode 讓邊界在 0.3 秒內接到兩次：只留一筆', () => {
+    const st = fakeStorage()
+    recordError(new Error('x'), 'child', undefined, st, 1000)
+    recordError(new Error('x'), 'child', undefined, st, 1002)
+    expect(readErrorLog(st)).toHaveLength(1)
+  })
+})

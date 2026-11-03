@@ -5,6 +5,9 @@
 
 export const ERROR_LOG_KEY = 'gq-error-log'
 export const ERROR_LOG_MAX = 5
+/** 同樣訊息的錯誤在這段時間內只記一筆 */
+const DEDUPE_MS = 3000
+const DUP_FAST_MS = 300
 const CHUNK_RELOAD_KEY = 'gq-chunk-reload'
 /** 同一個 session 內，這段時間內只自動重新整理一次，避免真的壞掉時無限重整 */
 const CHUNK_RELOAD_COOLDOWN_MS = 60_000
@@ -65,7 +68,20 @@ export function recordError(err: unknown, where?: string, extra?: string, storag
   const entry: ErrorEntry = { t: now, msg: errorMessage(err).slice(0, 300), stack, where }
   if (storage) {
     try {
-      storage.setItem(ERROR_LOG_KEY, JSON.stringify([...readErrorLog(storage), entry].slice(-ERROR_LOG_MAX)))
+      let list = readErrorLog(storage)
+      const last = list[list.length - 1]
+      // 同一個錯誤常常被記好幾次：React 開發模式（StrictMode）會讓邊界接到兩次，還會把錯誤再丟給 window。
+      // 0.3 秒內同樣的訊息、或 3 秒內「其中一筆是 window」的同樣訊息，只留一筆，而且邊界那筆（知道是哪一層）優先；
+      // 間隔比較久、兩筆都是邊界接到的（真的又壞了一次）不合併
+      if (last && last.msg === entry.msg) {
+        const dt = Math.abs(entry.t - last.t)
+        const involvesWindow = where === 'window' || last.where === 'window'
+        if (dt < DUP_FAST_MS || (involvesWindow && dt < DEDUPE_MS)) {
+          if (where === 'window') return last
+          list = list.slice(0, -1)
+        }
+      }
+      storage.setItem(ERROR_LOG_KEY, JSON.stringify([...list, entry].slice(-ERROR_LOG_MAX)))
     } catch {
       /* 寫不進去就算了 */
     }

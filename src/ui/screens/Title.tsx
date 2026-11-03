@@ -5,6 +5,8 @@ import '../title.css'
 
 /** 這一頁的天空色（跟 index.html 的啟動畫面、manifest 的 background_color 同一個藍） */
 const TITLE_SKY = '#67b2fd'
+/** 離開開場之後其他畫面的狀態列顏色（米色，跟以前的 theme-color 一樣） */
+const APP_THEME = '#f3e3c3'
 
 /** 飄的雲：位置（%）、寬度（vmin）、速度（秒）、起始延遲（負值 = 一開始就在途中）、透明度 */
 const CLOUDS: { top: number; w: number; dur: number; delay: number; o: number }[] = [
@@ -44,14 +46,13 @@ export function Title({ onStart }: { onStart: () => void }) {
   // 狀態列顏色跟著開場的藍天；離開時還原成其他畫面的米色
   useEffect(() => {
     const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')
-    const prev = meta?.content
     if (meta) meta.content = TITLE_SKY
     warmUp()
     // logo 圖超過 1.5 秒還沒到，就先用文字 logo（之後圖到了也不換，避免跳動）
     const t = window.setTimeout(() => setLogo((s) => (s === 'wait' ? 'text' : s)), 1500)
     return () => {
       window.clearTimeout(t)
-      if (meta && prev !== undefined) meta.content = prev
+      if (meta) meta.content = APP_THEME
     }
   }, [])
 
