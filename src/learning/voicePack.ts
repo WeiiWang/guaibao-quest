@@ -1,3 +1,4 @@
+import { installAudioEngine, unlockAudio } from './audioEngine'
 import { registerLineAudio, unlockLineAudio } from './speech'
 
 interface ManifestEntry {
@@ -28,11 +29,16 @@ export async function loadVoicePack(base = import.meta.env.BASE_URL): Promise<nu
   }
 }
 
-/** 第一次觸碰畫面時解鎖播放器（iPad Safari 的自動播放限制） */
+/**
+ * 第一次觸碰畫面時解鎖播放器與 AudioContext（iPad Safari 的自動播放限制）。
+ * v8：同時安裝音訊引擎的全域監聽（背景暫停、按鈕觸碰音、觸碰時確保 AudioContext 在跑）。
+ */
 export function installAudioUnlock(): void {
   if (typeof window === 'undefined') return
+  installAudioEngine()
   const once = () => {
     unlockLineAudio()
+    unlockAudio()
     window.removeEventListener('pointerdown', once, true)
     window.removeEventListener('keydown', once, true)
   }

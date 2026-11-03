@@ -29,6 +29,10 @@ import { AlbumScreen } from './screens/Album'
 import { HatPreview } from './screens/HatPreview'
 import { normSpecies, speciesOf, type Species } from '../domain/species'
 import { setVoiceSpecies } from '../learning/speech'
+import { setMusicEnabled, setMusicScene, setSfxEnabled } from '../learning/audioEngine'
+import { musicSceneFor } from '../learning/musicScene'
+import { learningSettingsOf } from '../learning/playtime'
+import { useTodMode } from './pet/hooks'
 import { SpeciesContext } from './species'
 import './ux.css'
 // v7.3 線 G：遊戲性與版面覆蓋規則，要在所有 adventure*.css 之後載入
@@ -126,6 +130,18 @@ function Main({ childName }: { childName: string }) {
   const [locked, setLocked] = useState(false)
   const now = useNow()
   const today = localDateStr(now)
+  const todMode = useTodMode()
+
+  // v8 線 M：家長區的音效 / 音樂開關同步給音訊引擎（設定讀到之前不動，避免關著音樂的孩子先響一下）
+  const audioPrefs = useLiveQuery(async () => {
+    const s = await db.settings.get('main')
+    return s ? learningSettingsOf(s) : null
+  }, [])
+  useEffect(() => {
+    if (!audioPrefs) return
+    setSfxEnabled(audioPrefs.soundOn)
+    setMusicEnabled(audioPrefs.musicOn)
+  }, [audioPrefs])
 
   useEffect(() => {
     // 商品資料就緒後，送新使用者免費著色頁（只送一次）
@@ -149,6 +165,12 @@ function Main({ childName }: { childName: string }) {
     setScreen(typeof s === 'string' ? ({ name: s } as Screen) : s)
   }
   const home = () => go('home')
+
+  // v8 線 M：背景音樂場景跟著畫面走（undefined = 維持目前那首；時間到被鎖住時安靜）
+  const scene = musicSceneFor(screen, { locked, lockable: LOCKABLE, now, todMode })
+  useEffect(() => {
+    if (scene !== undefined) setMusicScene(scene)
+  }, [scene])
 
   let body
   if (locked && LOCKABLE.includes(screen.name)) body = <LockScreen go={go} />

@@ -3,6 +3,7 @@
  * 不支援時所有函式都安靜地什麼都不做，畫面仍有字幕。
  */
 
+import { duckMusic } from './audioEngine'
 import { EN_LANG, enKey } from './english'
 import { chineseNumber } from './lines'
 import type { Species } from '../domain/species'
@@ -15,6 +16,16 @@ function synth(): SpeechSynthesis | null {
   } catch {
     return null
   }
+}
+
+// ---------- 語音時壓低背景音樂（v8）----------
+// 預錄音檔（audio 元素）與機器語音（speechSynthesis）各記一個旗標，任何一個在說話就壓低。
+let lineDuck = false
+let synthDuck = false
+/** 每句機器語音 +1：被取消的上一句晚到的 end 事件不能把新那句的壓低放掉 */
+let utterGen = 0
+function syncDuck(): void {
+  duckMusic(lineDuck || synthDuck)
 }
 
 export function isSpeechSupported(): boolean {
@@ -77,9 +88,21 @@ function speakCore(text: string, opts: SpeakOptions): boolean {
     u.pitch = en ? 1.1 : 1.15
     const v = pickVoiceFor(s.getVoices(), lang)
     if (v) u.voice = v as SpeechSynthesisVoice
-    if (opts.onEnd) {
-      u.onend = opts.onEnd
-      u.onerror = opts.onEnd
+    const myGen = ++utterGen
+    const done = () => {
+      if (myGen === utterGen) {
+        synthDuck = false
+        syncDuck()
+      }
+      opts.onEnd?.()
+    }
+    u.onend = done
+    u.onerror = done
+    // 真的開始出聲才壓低（沒有語音、被瀏覽器擋掉時不會白白壓低音樂）；結束 / 出錯 / 被取消時放開
+    u.onstart = () => {
+      if (myGen !== utterGen) return
+      synthDuck = true
+      syncDuck()
     }
     s.speak(u)
     return true
@@ -90,12 +113,15 @@ function speakCore(text: string, opts: SpeakOptions): boolean {
 
 export function cancelSpeech(): void {
   chainGen++
+  utterGen++
+  synthDuck = false
   try {
     synth()?.cancel()
   } catch {
     /* ignore */
   }
   stopLineAudio()
+  syncDuck()
 }
 
 // ---------- 預先錄好的音檔（key → 檔案網址與原文）----------
@@ -197,7 +223,29 @@ export function sayText(text: string, opts: SpeakOptions = {}): boolean {
 /** 共用一個播放器：iPad Safari 只允許「使用者觸碰過」的播放器自動播放，所以第一次觸碰時先解鎖它 */
 function getPlayer(): HTMLAudioElement | null {
   if (typeof Audio === 'undefined') return null
-  if (!player) player = new Audio()
+  if (!player) {
+    player = new Audio()
+    const p = player
+    // 解鎖用的靜音檔（data: 網址）不算「在說話」
+    const talking = () => !String(p.src).startsWith('data:')
+    const on = () => {
+      if (!talking()) return
+      lineDuck = true
+      syncDuck()
+    }
+    const off = () => {
+      if (!lineDuck) return
+      lineDuck = false
+      syncDuck()
+    }
+    try {
+      p.addEventListener('play', on)
+      p.addEventListener('playing', on)
+      for (const ev of ['ended', 'pause', 'error', 'emptied', 'abort']) p.addEventListener(ev, off)
+    } catch {
+      /* 沒有事件介面的環境（測試用的假播放器）就不壓低音樂 */
+    }
+  }
   return player
 }
 

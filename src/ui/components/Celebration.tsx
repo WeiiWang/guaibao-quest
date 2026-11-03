@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { PetSprite } from './PetSprite'
 import type { CelebrateInfo } from '../hooks'
 import { markCelebration } from '../celebrating'
+import { playSound } from '../../learning/audioEngine'
 
 /** 全螢幕孵化 / 進化慶祝：舊型態 → 閃光 → 新型態 */
 export function Celebration({ info, onClose }: { info: CelebrateInfo; onClose: () => void }) {
@@ -20,6 +21,11 @@ export function Celebration({ info, onClose }: { info: CelebrateInfo; onClose: (
     }
   }, [])
   const hatched = info.to === 'baby'
+  // v8：孵化 = 蛋殼喀喀聲配搖晃、閃光時破殼 + 雛鳥叫（檔案裡「啵」在 0.4 秒）；長大 = 閃光時響解鎖的上行音
+  useEffect(() => {
+    const id = window.setTimeout(() => playSound(hatched ? 'hatch' : 'unlock', { synth: false }), hatched ? 1100 : 1500)
+    return () => window.clearTimeout(id)
+  }, [hatched])
   const text = hatched ? `哇！${info.petName}孵出來了！` : `${info.petName}長大了！`
   const stage = phase === 'new' ? info.to : info.from
   const pet = { stage, feedCount: phase === 'new' ? info.feedCount : Math.max(0, info.feedCount - 1), name: info.petName, species: info.species }

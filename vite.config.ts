@@ -32,7 +32,7 @@ export default defineConfig({
       workbox: {
         // 預快取只留 app shell；3D 素材（public/art）改成執行時快取，第一次看過的圖之後可離線使用
         globPatterns: ['**/*.{js,css,html,svg,ico,webmanifest}', 'icon-*.png', 'apple-touch-icon.png'],
-        globIgnores: ['art/**', 'voice/**'],
+        globIgnores: ['art/**', 'voice/**', 'audio/**'],
         runtimeCaching: [
           {
             // 語音清單：有網路拿最新的，離線用快取
@@ -48,6 +48,23 @@ export default defineConfig({
               cacheName: 'voice',
               expiration: { maxEntries: 2000 },
               cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // 音樂與音效清單：有網路拿最新的（換了歌或循環點要馬上生效），離線用快取
+            urlPattern: ({ url }) => url.pathname.endsWith('/audio/manifest.json'),
+            handler: 'NetworkFirst',
+            options: { cacheName: 'audio-manifest', networkTimeoutSeconds: 3 },
+          },
+          {
+            // 背景音樂與音效（design/tools/gen_music.py 算繪的 m4a）：聽過一次就能離線播放
+            urlPattern: ({ url }) => /\/audio\/[^/]+\.m4a$/.test(url.pathname),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'audio',
+              expiration: { maxEntries: 40 },
+              // 檔案很大又要整個解碼，不能用 Range 回應；只快取完整的 200
+              cacheableResponse: { statuses: [200] },
             },
           },
           {

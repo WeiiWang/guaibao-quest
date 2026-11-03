@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
+import { playSound } from '../../../learning/audioEngine'
 
 /**
  * 拖曳工具（Pointer Events，滑鼠、觸控、手寫筆共用）。
@@ -76,7 +77,10 @@ export function useDragKit({ disabled, onTap, onDrop, renderGhost }: DragKitOpti
       const moved = a.moved
       const target = moved ? dropAt(e.clientX, e.clientY) : null
       finish()
-      if (moved) onDrop(a.id, target)
+      if (moved) {
+        if (target) playSound('drop', { synth: false })
+        onDrop(a.id, target)
+      }
       else onTap(a.id)
     },
     onPointerCancel: () => finish(),

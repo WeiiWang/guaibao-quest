@@ -22,13 +22,14 @@ export function Switch({ label, desc, on, onChange, testId }: { label: string; d
 
 /** 音效 / 語音開關 */
 export function AudioTab() {
-  const { soundOn, voiceOn } = useLearningSettings()
+  const { soundOn, voiceOn, musicOn } = useLearningSettings()
   const supported = isSpeechSupported()
   return (
     <section className="lt" data-testid="audio-tab">
       <div className="card">
-        <h2>音效與語音</h2>
+        <h2>音樂、音效與語音</h2>
         <Switch label="音效" desc="答對、答錯、獲得獎勵時的聲音。" on={soundOn} testId="sound-switch" onChange={(v) => void repo.setLearningSettings({ soundOn: v })} />
+        <Switch label="背景音樂" desc="首頁、地圖、關卡和著色時的輕柔音樂。語音說話時會自動變小聲。" on={musicOn} testId="music-switch" onChange={(v) => void repo.setLearningSettings({ musicOn: v })} />
         <Switch label="語音唸題" desc="用國語唸出題目與提示。關閉後只顯示字幕。" on={voiceOn} testId="voice-switch" onChange={(v) => void repo.setLearningSettings({ voiceOn: v })} />
         {!supported && <p className="form-msg warn">這個裝置的瀏覽器不支援語音，題目只會顯示字幕。</p>}
         <div className="row-actions" style={{ justifyContent: 'flex-start' }}>

@@ -47,6 +47,7 @@ import { useUnlockedStickers } from './coloring/useUnlockedStickers'
 import { BucketHint, ShapeIcon } from './coloring/ShapeIcon'
 import { SHOP_ITEMS } from '../../domain/constants'
 import { playChime, playPop } from '../sounds'
+import { playSound } from '../../learning/audioEngine'
 import { BrushPreview, StampShape } from './coloring/BrushIcons'
 import { FreeThumb } from './coloring/FreeThumb'
 import { PaintBoard, type PaintTool } from './coloring/PaintBoard'
@@ -858,6 +859,7 @@ export function FinishCelebration({ png, hung, frame, newFrames, framesDone, cou
     if (unlocked) parts.push({ key: 'ui.frame.unlock', text: FRAME_UNLOCK_LINE })
     if (stars === PAINT_STARS) parts.push({ key: 'pet.paint.stars', text: PAINT_STARS_LINE })
     if (parts.length) sayChain(parts, { enabled: voiceOn })
+    if (unlocked) playSound('unlock', { synth: false })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
