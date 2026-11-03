@@ -158,7 +158,8 @@ const browser = await launch()
   await tap(page)
   await waitNoStory(page)
   await inStage(page)
-  check('演完接著進站', (await page.locator('[data-testid=question], [data-testid=tutorial]').count()) >= 1)
+  await page.waitForSelector('[data-testid=question], [data-testid=tutorial]', { timeout: 10000 })
+  check('演完接著進站（題目出現）', true)
   check('序章與開場都記下了', (await storySeen(page)).join() === 'prologue,huaguoshan-open', (await storySeen(page)).join())
   // 第二次進第一站：不再演
   await toMap(page)
@@ -517,8 +518,10 @@ for (const [species, name, prefix] of [['monkey', '阿悟', 'pet-'], ['rabbit', 
   await page.waitForTimeout(900)
   const f1 = manifest['story.prologue.1']?.file
   check('語音包：序章第 1 句有檔而且真的去抓了', !!f1 && voiceReqs.some((u) => u.endsWith(f1)), f1)
-  await tap(page)
-  await waitPage(page, 'story.prologue.2@rabbit', 3000)
+  // 真的音檔（4.2 秒）播完自動翻頁，不靠上限時間（上限約 12.5 秒）
+  const t0 = Date.now()
+  await waitPage(page, 'story.prologue.2@rabbit', 20000)
+  check('語音包：播完就翻頁，沒有等到上限時間', Date.now() - t0 < 11000, `${Date.now() - t0 + 900}ms`)
   await page.waitForTimeout(900)
   const f2 = manifest['story.prologue.2@rabbit']?.file
   check('語音包：兔兔版有自己的檔、抓的是兔兔版不是阿悟版', !!f2 && voiceReqs.some((u) => u.endsWith(f2)) && !voiceReqs.some((u) => u.endsWith(manifest['story.prologue.2']?.file)), f2)

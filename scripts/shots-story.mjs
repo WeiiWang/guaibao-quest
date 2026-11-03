@@ -1,4 +1,4 @@
-// 截圖：node shots.mjs <輸出資料夾> [story id 清單，逗號分隔]
+// v8.1 線 P 截圖：BASE_URL=... node scripts/shots-story.mjs <輸出資料夾> <story id,逗號分隔> [物種] [land,port,phone]；STORY_FINALE=1 = 夜晚、已看過終章（順便拍窗外的星星）
 import { freshApp, idb, launch, patchPet } from './e2e-lib.mjs'
 import { mkdirSync } from 'node:fs'
 
@@ -10,7 +10,7 @@ const SIZES = { land: { width: 1180, height: 820 }, port: { width: 820, height: 
 mkdirSync(out, { recursive: true })
 const browser = await launch()
 for (const size of sizes) {
-  const { ctx, page, errors } = await freshApp(browser, SIZES[size], { stage: 'baby' })
+  const { ctx, page, errors } = await freshApp(browser, SIZES[size], { stage: 'baby', tod: process.env.STORY_FINALE ? 'night' : 'day' })
   await page.evaluate(() => {
     localStorage.setItem('gq-story-test', '1')
   })
@@ -42,6 +42,10 @@ for (const size of sizes) {
   await page.getByTestId('map').waitFor()
   await page.waitForTimeout(900)
   await page.screenshot({ path: `${out}/${size}-map.png` })
+  await page.evaluate(() => (location.hash = 'home'))
+  await page.waitForSelector('[data-testid=room]')
+  await page.waitForTimeout(1200)
+  await page.screenshot({ path: `${out}/${size}-home.png` })
   console.log(size, errors.join(' | ') || 'no errors')
   await ctx.close()
 }

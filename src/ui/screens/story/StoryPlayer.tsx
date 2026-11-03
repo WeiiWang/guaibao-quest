@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
@@ -153,6 +153,16 @@ export function StoryPlayer({ ids, onClose }: { ids: readonly StoryId[]; onClose
     im.src = artUrl(nextArt)
   }, [nextArt])
 
+  // 終章：小星要飛到背景圖裡那顆最亮的星（水平置中、離頂 11.5%）。動畫有延遲，這時量到的還是起點
+  const starRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const el = starRef.current
+    if (page.move !== 'rise' || !el) return
+    const r = el.getBoundingClientRect()
+    el.style.setProperty('--rise-x', `${window.innerWidth / 2 - (r.left + r.width / 2)}px`)
+    el.style.setProperty('--rise-y', `${window.innerHeight * 0.115 - (r.top + r.height / 2)}px`)
+  }, [page])
+
   const line = forSpecies(pageLine(page), species)
   const moving = page.move !== undefined
 
@@ -173,7 +183,7 @@ export function StoryPlayer({ ids, onClose }: { ids: readonly StoryId[]; onClose
       <div className="sb-front">
         <div className="sb-cast" data-testid="story-cast" data-alone={page.pose ? undefined : 'true'}>
           {page.pose && <StoryPet pose={page.pose} nextPose={next?.pose ?? null} />}
-          <div className={`sb-star-pos ${page.pose ? '' : 'alone'} ${moving ? `move-${page.move}` : ''}`} key={moving ? line.key : 'still'} data-testid="story-star" data-look={page.look} data-move={page.move}>
+          <div ref={starRef} className={`sb-star-pos ${page.pose ? '' : 'alone'} ${moving ? `move-${page.move}` : ''}`} key={moving ? line.key : 'still'} data-testid="story-star" data-look={page.look} data-move={page.move}>
             <div className="sb-star-float">
               <span className="sb-halo" data-look={page.look} />
               {page.look === 'five' && (
