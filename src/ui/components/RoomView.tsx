@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { RoomAmbient, RoomBackdrop } from './RoomBackdrop'
+import { RoomAmbient, RoomBackdrop, type RoomFestival } from './RoomBackdrop'
 import { GalleryFrame } from './GalleryFrame'
 import { useRoomTheme } from '../roomTheme'
 import { repo } from '../../db/repo'
@@ -39,6 +39,7 @@ import { useLearningSettings } from '../learningHooks'
 import { GuestFriend, type GuestView } from '../play/GuestFriend'
 import { WishBubble, type WishView } from '../play/WishBubble'
 import { GUEST_BOTTOM_FRAC, GUEST_HEIGHT_FRAC, pickGuestSpot } from '../../domain/play74'
+import { fixturesGivingWay } from '../../domain/roomFixtures'
 import { playPetSound } from '../../pet/sounds'
 import { PetFx } from '../pet/PetFx'
 import { PoopBurst, PoopSpot } from '../pet/PoopSpot'
@@ -78,6 +79,8 @@ interface Props {
   wish?: WishView | null
   /** v8：首頁現在引導要指的是食物（有食物而且飽足偏低，或新手剛拿到第一份食物）；只有這時那一個食物會發光 */
   guideFood?: boolean
+  /** v8.1：現在的節慶掛飾與第一次的小演出（沒給 = 沒有節慶） */
+  festival?: (RoomFestival & { show?: { seq: number; line: string } }) | null
 }
 
 type DragKind = 'food' | 'new' | 'move'
@@ -120,7 +123,7 @@ const toRect = (r: DOMRect): Rect => ({ left: r.left, top: r.top, right: r.right
 /** 由 id 算一個固定的小數，讓每坨便便的位置、蒼蠅有點不同 */
 const hashOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
 
-export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, goWorkshop, decorQty, childName = '', favoriteFoodId = null, gifts, perform, guest = null, wish = null, guideFood = false }: Props) {
+export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, goWorkshop, decorQty, childName = '', favoriteFoodId = null, gifts, perform, guest = null, wish = null, guideFood = false, festival = null }: Props) {
   const toast = useToast()
   const celebrate = useCelebrate()
   const { soundOn, voiceOn } = useLearningSettings()
@@ -533,6 +536,15 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     if (!sayRecorded('pet.', thanks, { enabled: voiceOn })) sayText(GIFT_BAG_DONE_LINE, { enabled: voiceOn })
     setBagBusy(false)
   }
+  // v8.1：第一次看到當節掛飾：寵物開心跳一下、頭上冒出那一句
+  const festivalSeq = festival?.show?.seq ?? 0
+  useEffect(() => {
+    if (festivalSeq === 0 || !festival?.show) return
+    life.cheerLine(festival.show.line)
+    // 只在演出編號變動時演一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [festivalSeq])
+
   // 佈置模式沒有可擺的家具：唸「去工坊做家具吧」
   useEffect(() => {
     if (!edit) return
@@ -812,6 +824,17 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     { id: '__pet', bottom: life.onBed && bed ? bed.y + bed.h / 2 + 0.002 : PET_BOTTOM, z: 0 },
   ])
   const zOf = (id: string) => entries.findIndex((e) => e.id === id) + 1
+  // v8.1：內建陳設（矮櫃、相框、地墊）碰到同類家具或被大件蓋住就讓位
+  const hideFixtures = fixturesGivingWay(
+    placements.flatMap((p) => {
+      const it = itemById.get(baseIdOf(p.itemId))
+      if (!it) return []
+      const size = sizeOf(it, p.scale)
+      return [{ baseId: it.id, slot: it.slot, x: p.x * roomW, y: p.y * roomH, w: size.w, h: size.h }]
+    }),
+    roomW,
+    roomH,
+  )
 
   const dv = drag ? evaluate(drag, drag.x, drag.y) : null
   const draggingFood = drag?.kind === 'food'
@@ -877,7 +900,7 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
             <div className={`room ${edit ? 'edit' : ''} ${pv.roomFlash ? 'pf-tidy' : ''}`} ref={roomRef} aria-label="寵物房間" data-testid="room" style={{ width: roomW || undefined }}>
               {/* 背景自成一層（z-index: 0）：窗簾等內部圖層不會蓋到阿悟的對話泡泡與家具 */}
               <div className="pf-backdrop-layer" aria-hidden>
-                <RoomBackdrop timeOfDay={life.tod} theme={roomTheme} glows={glows} />
+                <RoomBackdrop timeOfDay={life.tod} theme={roomTheme} glows={glows} hideFixtures={hideFixtures} festival={festival} roomAspect={roomH > 0 ? roomW / roomH : undefined} />
               </div>
               {edit && <div className="floor-line" style={{ top: `${FLOOR_TOP * 100}%` }} aria-hidden><span>牆面</span><span>地板</span></div>}
 

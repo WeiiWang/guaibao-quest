@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { playSfx } from '../../learning/sfx'
-import { sayText } from '../../learning/speech'
+import { sayRecorded, sayText } from '../../learning/speech'
 import type { AlbumCard } from '../../domain/types'
 import { MemoryCard } from './MemoryCard'
 import '../wardrobe.css'
@@ -24,7 +24,9 @@ interface Props {
 export function MemoryPop({ card, petName, voiceOn, soundOn, onClose, onOpenAlbum }: Props) {
   useEffect(() => {
     playSfx('reward', soundOn)
-    sayText(card.caption, { enabled: voiceOn })
+    // v8.1：節慶卡沒有錄音就不唸（不用機器語音）
+    if (card.kind === 'festival') sayRecorded('play.fest.', card.caption, { enabled: voiceOn })
+    else sayText(card.caption, { enabled: voiceOn })
     const t = window.setTimeout(onClose, MEMORY_SHOW_MS)
     return () => window.clearTimeout(t)
     // 每張卡只在出現時唸一次、只計一次時

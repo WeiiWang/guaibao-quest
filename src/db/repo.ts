@@ -34,6 +34,8 @@ import type {
   TaskTemplate,
 } from '../domain/types'
 import { now as clockNow } from '../domain/clock'
+import { festivalDecorOf, type FestivalNow } from '../domain/season'
+import * as festival from './festival'
 import { isArtworkId, spriteSize } from '../art/items'
 import { getColoringPage, isFreePage, pageName } from '../art/coloring/pages'
 import { DOTS_PRICE, dotsItemId, dotsPoints, isDotsFree, parseDotsId } from '../art/dots/dots'
@@ -531,6 +533,14 @@ export class Repo {
     await this.db.settings.update(SETTINGS_ID, { petPoopOn: on })
   }
 
+  // ---------- v8.1：節慶 ----------
+  async setFestivalOn(on: boolean): Promise<void> {
+    await this.db.settings.update(SETTINGS_ID, { festivalOn: on })
+  }
+  greetFestival(f: FestivalNow, now = this.clock()) {
+    return festival.greetFestival(this.db, f, now)
+  }
+
   // ---------- 房間裝飾 ----------
   /**
    * 驗證擁有該裝飾，回傳規格；否則回 null。
@@ -546,7 +556,7 @@ export class Repo {
       if (!inv || inv.qty < 1 || copy > 1) return null
       return { item: undefined, slot: 'wall' as const, hf: spriteSize(itemId).rows / ROOM_CELLS_H }
     }
-    const item = SHOP_ITEMS.find((i) => i.id === itemId)
+    const item = SHOP_ITEMS.find((i) => i.id === itemId) ?? festivalDecorOf(itemId)
     if (!item || item.kind !== 'decor' || !item.slot) return null
     const inv = await this.db.inventory.get(itemId)
     if (!inv || inv.qty < copy) return null

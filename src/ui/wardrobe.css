@@ -93,6 +93,7 @@ button.al-card:active { transform: translateY(3px) !important; }
 .al-meta { display: grid; gap: 2px; }
 .al-date { font-size: 0.85rem; font-weight: 800; color: #8a7b72; }
 .al-caption { margin: 0; font-size: 1rem; font-weight: 900; line-height: 1.35; text-wrap: balance; }
+.al-kind-festival .al-caption { word-break: keep-all; }
 .al-card.big { width: min(76vw, 320px); margin: 0 auto; }
 .al-card.big .al-caption { font-size: 1.2rem; }
 .al-view { display: grid; justify-items: center; padding: 4px 0 10px; }

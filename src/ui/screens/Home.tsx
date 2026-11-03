@@ -26,6 +26,7 @@ import { MoreTray, type MoreItem } from '../components/MoreTray'
 import { Wardrobe } from '../components/Wardrobe'
 import { MemoryPop } from '../components/MemoryPop'
 import { usePlay74 } from '../play/usePlay74'
+import { useFestival } from '../play/useFestival'
 import { useCelebrationOpen } from '../celebrating'
 import { useCelebrateSmall } from '../feedback'
 import { freshCards } from '../../domain/album'
@@ -159,9 +160,11 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
   const celebrationOpen = useCelebrationOpen()
   const [wardrobeOpen, setWardrobeOpen] = useState(!!initialWardrobe && !initialEdit)
   // v7.4 線 K：朋友來作客、阿悟的小願望（邏輯與畫面在 ui/play/）。回憶卡改看「現在是不是在佈置」（從工坊「去擺放」進來時 initialEdit 一直是 true，離開佈置後小願望的回憶卡才跳得出來）
-  const play = usePlay74({ pet, settings, placements, now, go })
+  // v8.1 線 Q：節慶掛飾與第一次的小演出（演出時朋友、願望先別開口，回憶卡等寵物說完才跳）
+  const festival = useFestival({ pet, settings, now, blocked: showTrick || celebrationOpen || wardrobeOpen })
+  const play = usePlay74({ pet, settings, placements, now, go, quiet: festival.holding })
   const nextCard = freshCards(settings?.album)[0]
-  const showMemory = !!nextCard && !!pet && !play.editing && !showTrick && !celebrationOpen && !wardrobeOpen
+  const showMemory = !!nextCard && !!pet && !play.editing && !showTrick && !celebrationOpen && !wardrobeOpen && !festival.holding
 
   // v8 線 O：引導一次只指一件事。有食物而且飽足偏低（或新手剛拿到第一份食物）才指食物，否則只指冒險地圖
   const foodRows = shopItems && inventory ? shopItems.filter((i) => i.kind === 'food') : []
@@ -276,6 +279,7 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
         gifts={pendingGifts}
         perform={perform}
         guideFood={guideFood}
+        festival={festival.view}
         {...play.roomProps}
       />
       {play.overlay}

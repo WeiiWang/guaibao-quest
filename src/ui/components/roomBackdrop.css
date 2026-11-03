@@ -214,13 +214,30 @@
   100% { transform: translate(-6px, -48px); opacity: 0; }
 }
 
+/* ---------- v8.1 內建陳設與節慶掛飾（大小用 cqh：和家具、寵物同一把尺，都跟房間高度走） ---------- */
+.rb-fixtures { position: absolute; inset: 0; container-type: size; pointer-events: none; }
+.rb-fixture { position: absolute; transform: translateX(-50%); }
+.rb-fixture img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%; display: block; }
+/* 接觸陰影：貼在矮櫃底下（站在地上的感覺），扁、中間深、邊緣散開 */
+.rb-contact { position: absolute; left: -6%; right: -6%; bottom: -3%; height: 14%; border-radius: 50%; background: radial-gradient(closest-side, rgba(92, 54, 22, 0.42), rgba(92, 54, 22, 0.2) 62%, rgba(92, 54, 22, 0)); }
+/* 地墊很平：只要邊緣一圈很淡的落影 */
+.rb-fixture-mat img { filter: drop-shadow(0 1cqh 1cqh rgba(92, 54, 22, 0.16)); }
+/* 掛在牆上的相框：貼牆的柔影 */
+.rb-fixture-photos img { filter: drop-shadow(0 0.8cqh 1cqh rgba(92, 54, 22, 0.2)); }
+
+.rb-fest { position: absolute; aspect-ratio: 3 / 1; transform: translateX(-50%); transform-origin: 50% 0; animation: rb-fest-sway 7s ease-in-out infinite; }
+.rb-fest img { width: 100%; height: 100%; object-fit: contain; object-position: 50% 0; display: block; filter: drop-shadow(0 0.8cqh 1cqh rgba(92, 54, 22, 0.18)); }
+.rb-fest.enter { animation: rb-fest-drop 1.1s cubic-bezier(0.3, 1.3, 0.5, 1) both, rb-fest-sway 7s ease-in-out 1.1s infinite; }
+@keyframes rb-fest-sway { 0%, 100% { transform: translateX(-50%) rotate(-0.5deg); } 50% { transform: translateX(-50%) rotate(0.5deg); } }
+@keyframes rb-fest-drop { 0% { transform: translateX(-50%) translateY(-120%); } 62% { transform: translateX(-50%) translateY(5%) rotate(1.4deg); } 82% { transform: translateX(-50%) translateY(-2%) rotate(-0.8deg); } 100% { transform: translateX(-50%); } }
+
 /* 蓋在家具上方的整體色調（RoomAmbient，選用） */
 .room-ambient { position: absolute; inset: 0; pointer-events: none; z-index: 845; }
 .room-ambient.tod-dusk { background: rgba(255, 150, 70, 0.14); mix-blend-mode: multiply; }
 .room-ambient.tod-night { background: rgba(20, 28, 90, 0.34); mix-blend-mode: multiply; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rb-cloud, .rb-daysun, .rb-stars, .rb-glow, .rb-dust i, .rb-bird, .rb-shaft, .rb-beam { animation: none; }
+  .rb-cloud, .rb-daysun, .rb-stars, .rb-glow, .rb-dust i, .rb-bird, .rb-shaft, .rb-beam, .rb-fest, .rb-fest.enter { animation: none; }
   .rb-bird { display: none; }
   .rb-dust i { opacity: 0.5; }
   .rb-cloud.c1 { left: 8%; } .rb-cloud.c2 { left: 52%; } .rb-cloud.c3 { left: 30%; }

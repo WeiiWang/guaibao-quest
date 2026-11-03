@@ -1,4 +1,6 @@
 import './roomBackdrop.css'
+import { useArtStatus } from '../artProbe'
+import { fixtureLayout, type FestivalSpot, type FixtureId, type RoomFixture } from '../../domain/roomFixtures'
 export type TimeOfDay = 'day' | 'dusk' | 'night'
 
 export interface RoomTheme {
@@ -19,6 +21,18 @@ interface Props {
   theme?: RoomTheme
   /** 夜晚燈光：每盞燈一圈暖色光暈（畫在家具下面）；非夜晚時不顯示 */
   glows?: RoomGlow[]
+  /** v8.1：要讓位的內建陳設（玩家擺了同類家具） */
+  hideFixtures?: readonly FixtureId[]
+  /** v8.1：現在的節慶掛飾（沒給 = 沒有節慶） */
+  festival?: RoomFestival | null
+  /** v8.1：房間的寬 / 高（陳設依這個排版）；不給當 iPad 橫向 */
+  roomAspect?: number
+}
+
+/** 節慶掛飾：art = public/art 圖名；enter = 這次是第一次看到，從天花板掉下來晃一晃 */
+export interface RoomFestival {
+  art: string
+  enter?: boolean
 }
 
 const WINDOWS = ['22%', '70%']
@@ -74,6 +88,40 @@ function WindowScene({ tod }: { tod: TimeOfDay }) {
   )
 }
 
+const artUrl = (name: string) => `${import.meta.env.BASE_URL}art/${name}.png`
+
+/** 內建陳設一件：圖還沒有就什麼都不畫（不破版）；地上的東西有接觸陰影，牆上的有貼牆的柔影 */
+function Fixture({ f }: { f: RoomFixture }) {
+  const ok = useArtStatus(f.art) === 'ok'
+  if (!ok) return null
+  return (
+    <div
+      className={`rb-fixture rb-fixture-${f.id}`}
+      data-testid={`room-fixture-${f.id}`}
+      style={{ left: `${f.x * 100}%`, bottom: `${(1 - f.bottom) * 100}%`, height: `${f.h * 100}cqh`, aspectRatio: `${f.aspect}` }}
+    >
+      {f.slot === 'floor' && f.id !== 'mat' && <i className="rb-contact" />}
+      <img src={artUrl(f.art)} alt="" draggable={false} />
+    </div>
+  )
+}
+
+/** 節慶掛飾：圖還沒有就不顯示。掛在牆上半部、寵物頭上的那面牆 */
+function FestivalHanging({ festival, spot }: { festival: RoomFestival; spot: FestivalSpot }) {
+  const ok = useArtStatus(festival.art) === 'ok'
+  if (!ok) return null
+  return (
+    <div
+      className={`rb-fest ${festival.enter ? 'enter' : ''}`}
+      data-testid="room-festival"
+      data-art={festival.art}
+      style={{ left: `${spot.x * 100}%`, top: `${spot.top * 100}%`, width: `min(${spot.wOfH * 100}cqh, ${spot.wOfW * 100}cqw)` }}
+    >
+      <img src={artUrl(festival.art)} alt="" draggable={false} />
+    </div>
+  )
+}
+
 /**
  * 房間背景：牆面（壁紙）、窗戶與窗景、地板、光線與灰塵光點。只負責外觀，不處理互動。
  * 由 RoomView 放在 .room 內最底層；寵物與家具疊在上面。
@@ -81,9 +129,10 @@ function WindowScene({ tod }: { tod: TimeOfDay }) {
  * - theme 決定壁紙與地板（不給用預設）
  * - glows 夜晚燈光（選用）
  */
-export function RoomBackdrop({ timeOfDay, theme, glows }: Props) {
+export function RoomBackdrop({ timeOfDay, theme, glows, hideFixtures, festival, roomAspect = 5.4 }: Props) {
   const wall = theme?.wall ?? 'wall-cream'
   const floor = theme?.floor ?? 'floor-wood'
+  const layout = fixtureLayout(roomAspect)
   return (
     <div className={`room-backdrop tod-${timeOfDay} ${wall} ${floor}`} data-tod={timeOfDay} data-wall={wall} data-floor={floor} aria-hidden>
       <div className="rb-wall" />
@@ -109,6 +158,13 @@ export function RoomBackdrop({ timeOfDay, theme, glows }: Props) {
       ))}
 
       <div className="rb-baseboard" />
+      {/* v8.1：內建陳設與節慶掛飾：在牆面、地板之上，整體色調之下（入夜會一起變暗），在家具與寵物之下 */}
+      <div className="rb-fixtures">
+        {layout.fixtures.filter((f) => !hideFixtures?.includes(f.id)).map((f) => (
+          <Fixture key={f.id} f={f} />
+        ))}
+        {festival && <FestivalHanging festival={festival} spot={layout.festival} />}
+      </div>
       <div className="rb-tint" />
       {timeOfDay === 'night' &&
         glows?.map((g, i) => (

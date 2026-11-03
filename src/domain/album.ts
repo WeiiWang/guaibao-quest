@@ -17,6 +17,8 @@ export const albumId = {
   milestone: (n: number) => `milestone:${n}`,
   /** v7.4：阿悟的小願望實現（id 見 domain/play74.ts 的 WISHES） */
   wish: (id: string) => `wish:${id}`,
+  /** v8.1：節慶的紀念家具（每個節慶一張） */
+  festival: (id: string) => `festival:${id}`,
 } as const
 
 /** 畫面上每一類的小標籤與顏色 */
@@ -28,6 +30,7 @@ export const ALBUM_KIND_LABEL: Record<AlbumKind, { label: string; emoji: string 
   hat: { label: '第一頂帽子', emoji: '👑' },
   milestone: { label: '長大一點', emoji: '🎁' },
   wish: { label: '小願望', emoji: '✨' },
+  festival: { label: '節慶', emoji: '' },
 }
 
 /** 回憶卡一律先選「開心」的姿勢；每一招各配一個姿勢（用現有的阿悟姿勢圖，不需要新素材） */
@@ -108,7 +111,7 @@ export function missingCards(existing: readonly AlbumCard[], expected: readonly 
 }
 
 /** 相簿排序：新的在前；估計日期（approx）的排在最後，同類依「孵化 → 長大 → 新招 → 通關 → 帽子」 */
-const KIND_ORDER: AlbumKind[] = ['hatch', 'milestone', 'grow', 'trick', 'chapter', 'hat', 'wish']
+const KIND_ORDER: AlbumKind[] = ['hatch', 'milestone', 'grow', 'trick', 'chapter', 'hat', 'wish', 'festival']
 export function sortAlbum(cards: readonly AlbumCard[]): AlbumCard[] {
   return [...cards].sort((a, b) => {
     const ax = a.approx ? 1 : 0

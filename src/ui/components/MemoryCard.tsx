@@ -17,7 +17,7 @@ export function MemoryCard({ card, petName, big = false, onClick }: { card: Albu
     <>
       <div className="al-photo">
         <span className="al-tag" aria-hidden>
-          {kind.emoji} {kind.label}
+          {kind.emoji ? `${kind.emoji} ` : ''}{kind.label}
         </span>
         <PetSprite pet={{ stage, feedCount: 0, name: petName ?? speciesName(species), species }} mood="happy" pose={pose as PetPose} hat={card.hat} className="al-pet" />
         {card.reward && (
