@@ -68,12 +68,12 @@ try {
     await page.getByTestId('subject-english').click()
     await page.waitForSelector('[data-testid=station-1]')
     await shot(page, 'map-english', 'land')
-    await page.waitForFunction(() => getComputedStyle(document.querySelector('.adv-scene')).backgroundImage.includes('scene-map'), null, { timeout: 5000 }).catch(() => {})
+    await page.waitForFunction(() => getComputedStyle(document.querySelector('.adv-scene') ?? document.body).backgroundImage.includes('scene-map'), null, { timeout: 5000 }).catch(() => {})
     const mapArt = await page.locator('.adv-scene').evaluate((el) => getComputedStyle(el).backgroundImage)
     check('英文地圖用自己的圖（scene-map-english）', mapArt.includes('scene-map-english'), mapArt.slice(0, 80))
     for (const sid of ['life', 'nature']) {
       await page.getByTestId(`subject-${sid}`).click()
-      await page.waitForFunction((f) => getComputedStyle(document.querySelector('.adv-scene')).backgroundImage.includes(f), `scene-map-${sid}`, { timeout: 5000 }).catch(() => {})
+      await page.waitForFunction((f) => getComputedStyle(document.querySelector('.adv-scene') ?? document.body).backgroundImage.includes(f), `scene-map-${sid}`, { timeout: 5000 }).catch(() => {})
       await page.waitForTimeout(300)
       await shot(page, `map-${sid}`, 'land')
     }
@@ -271,7 +271,7 @@ try {
     ]) {
       await page.getByTestId(`subject-${sid}`).click()
       await page.waitForSelector(`[data-testid=map][data-chapter=${ch}]`)
-      await page.waitForFunction((f) => getComputedStyle(document.querySelector('.adv-scene')).backgroundImage.includes(f), file, { timeout: 5000 }).catch(() => {})
+      await page.waitForFunction((f) => getComputedStyle(document.querySelector('.adv-scene') ?? document.body).backgroundImage.includes(f), file, { timeout: 5000 }).catch(() => {})
       await page.waitForTimeout(200)
       const bg = await page.locator('.adv-scene').evaluate((el) => getComputedStyle(el).backgroundImage)
       const vis = await page.evaluate(() => {

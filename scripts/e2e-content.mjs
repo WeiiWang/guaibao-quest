@@ -234,7 +234,7 @@ try {
       const cls = await page.locator('.room-backdrop').getAttribute('class')
       check(`背景 ${tod}：class 帶時段與主題，窗景元素存在`, cls.includes(`tod-${tod}`) && cls.includes('wall-stars') && cls.includes('floor-grass') && (await page.locator('.rb-window').count()) === 2, cls)
     }
-    check('夜晚有星星與燈光暈', (await page.locator('.rb-stars').count()) === 4 && (await page.locator('.rb-glow').count()) === 1)
+    check('夜晚有星星與燈光暈', (await page.locator('.rb-stars').count()) === 6 && (await page.locator('.rb-glow').count()) === 1)
     await toHash(page, 'backdrop/day/wall-cream/floor-wood')
     await page.waitForSelector('.rb-cloud')
     check('白天有雲、沒有星星與月亮', (await page.locator('.rb-stars, .rb-moon').count()) === 0)

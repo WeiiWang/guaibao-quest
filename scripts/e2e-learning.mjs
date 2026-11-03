@@ -221,6 +221,7 @@ try {
   check('數數：畫面也顯示「一共 N 個」', (await page.getByTestId('count-total').innerText()).includes(String(n)))
   await shot(page, 'hint-count')
   await clickChoice(page, cnt.answer)
+  await next(page) // v8：自動前進在 e2e 預設關閉（feelFlags），最後一題也要按
   await page.waitForSelector('[data-testid=station-result]')
   const ats = await attempts(page)
   const sessAts = ats.filter((a) => a.sessionId.startsWith('e2e-1-'))
