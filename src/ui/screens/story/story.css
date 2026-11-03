@@ -1,0 +1,222 @@
+/* v8.1 線 P：有聲繪本與故事書架。動態只動 transform / opacity（小星的光暈才用 filter，範圍很小）。 */
+
+/* ---------- 播放器 ---------- */
+.sb {
+  position: fixed; inset: 0; z-index: 900; overflow: hidden;
+  background: #10142e; color: #3a2a1a;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  touch-action: manipulation; cursor: pointer;
+  --cast: clamp(132px, 27dvh, 250px);
+  animation: sb-in 0.5s ease-out both;
+}
+.sb.leaving { animation: sb-out 0.38s ease-in both; pointer-events: none; }
+@keyframes sb-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sb-out { to { opacity: 0; } }
+
+.sb-bgs, .sb-layer, .sb-kb { position: absolute; inset: 0; }
+.sb-layer { opacity: 0; transition: opacity 0.9s ease; overflow: hidden; }
+.sb-layer[data-ready] { opacity: 1; }
+.sb-kb { will-change: transform; animation: 26s ease-in-out both; }
+.sb-art { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focus, 50%) 50%; display: block; }
+.sb-mirror { display: none; }
+.sb-vignette { position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 40%, transparent 62%, rgba(20, 18, 50, 0.22)); pointer-events: none; }
+
+/* Ken Burns：四種方向輪替 */
+.kb-1 { animation-name: sb-kb-1; transform-origin: 30% 40%; }
+.kb-2 { animation-name: sb-kb-2; transform-origin: 70% 35%; }
+.kb-3 { animation-name: sb-kb-3; transform-origin: 50% 30%; }
+.kb-4 { animation-name: sb-kb-4; transform-origin: 40% 45%; }
+@keyframes sb-kb-1 { from { transform: scale(1.02) translate3d(-0.8%, 0.4%, 0); } to { transform: scale(1.13) translate3d(1.2%, -0.6%, 0); } }
+@keyframes sb-kb-2 { from { transform: scale(1.13) translate3d(1.2%, 0, 0); } to { transform: scale(1.03) translate3d(-0.8%, 0.4%, 0); } }
+@keyframes sb-kb-3 { from { transform: scale(1.03) translate3d(0, 0.8%, 0); } to { transform: scale(1.14) translate3d(0, -0.8%, 0); } }
+@keyframes sb-kb-4 { from { transform: scale(1.1) translate3d(-1.4%, -0.4%, 0); } to { transform: scale(1.03) translate3d(1.4%, 0.4%, 0); } }
+
+/* 直向：原圖是 16:9，整張 cover 會只剩中間一小條。圖只鋪 76% 高（裁得少），
+   從 68% 起蓋上同一張的鏡像（只用圖底部素面地面的那一段，拉長 2.6 倍），鏡像軸在圖的 89.5%：避開圖最下緣的暗角，接起來看不出縫。
+   translateY(233%) = 2.6 × 89.5%：把圖的第 89.5% 列對到鏡像元素的上緣 */
+@media (max-aspect-ratio: 1/1) {
+  .sb-art { height: 76%; object-position: var(--focus, 50%) 0; }
+  .sb-mirror { display: block; top: 68%; transform-origin: 0 0; clip-path: inset(0 0 10.5% 0); transform: translateY(232.7%) scaleY(-2.6); }
+  .sb-kb { transform-origin: 50% 36% !important; }
+  .sb { --cast: clamp(120px, min(26dvh, 46vw), 320px); }
+}
+
+/* 前景：上面一列放角色（貼齊列底），下面一列放字幕，兩者用排版隔開，字幕幾行都壓不到角色 */
+.sb-front {
+  position: absolute; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; justify-items: center;
+  padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  pointer-events: none;
+}
+.sb-cast { position: relative; align-self: end; width: min(100%, 900px); height: var(--cast); margin-bottom: 6px; }
+
+.sb-pet { position: absolute; left: 50%; bottom: 0; width: var(--cast); height: var(--cast); margin-left: calc(var(--cast) * -0.92); animation: sb-pet-in 0.55s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+.sb-pet::after { content: ''; position: absolute; left: 14%; right: 14%; bottom: 1%; height: 11%; border-radius: 50%; background: radial-gradient(closest-side, rgba(30, 30, 50, 0.3), transparent); z-index: -1; }
+.sb-pet-bob { width: 100%; height: 100%; animation: sb-bob 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+.sb-pet.pose-cheer .sb-pet-bob, .sb-pet.pose-dance .sb-pet-bob, .sb-pet.pose-laugh .sb-pet-bob { animation: sb-hop 1.5s ease-in-out infinite; }
+.sb-pet-img { width: 100%; height: 100%; object-fit: contain; display: flex; align-items: center; justify-content: center; }
+.sb-pet-emoji { font-size: calc(var(--cast) * 0.6); line-height: 1; }
+@keyframes sb-pet-in { from { transform: translateY(14%) scale(0.86); opacity: 0.2; } to { transform: none; opacity: 1; } }
+@keyframes sb-bob { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.975) translateY(1%); } }
+@keyframes sb-hop { 0%, 55%, 100% { transform: none; } 28% { transform: translateY(-9%) scaleY(1.02); } 58% { transform: scaleY(0.96); } }
+
+/* 小星：位置（會飛）、漂浮、圖片（光暈）三層分開，換頁時光暈才能自己動畫 */
+.sb-star-pos { --star: calc(var(--cast) * 0.56); position: absolute; left: 50%; bottom: 34%; width: var(--star); height: var(--star); margin-left: calc(var(--cast) * 0.14); transition: margin 0.9s ease, bottom 0.9s ease; }
+.sb-star-pos.alone { margin-left: calc(var(--star) * -0.5); bottom: 12%; --star: calc(var(--cast) * 0.66); }
+.sb-star-float { position: relative; width: 100%; height: 100%; animation: sb-float 4.6s ease-in-out infinite; }
+.sb-star-img { position: relative; width: 100%; height: 100%; object-fit: contain; transition: filter 1.4s ease; }
+.look-dim { filter: grayscale(0.82) brightness(0.8) drop-shadow(0 0 6px rgba(190, 200, 235, 0.6)); }
+.look-hint { filter: grayscale(0.55) brightness(0.9) drop-shadow(0 0 12px var(--glow)); }
+.look-lit { animation: sb-lit 2.6s ease-out both; }
+.look-bright { filter: brightness(1.12) drop-shadow(0 0 20px var(--glow)) drop-shadow(0 0 42px var(--glow)); }
+.look-five { animation: sb-five 6s linear infinite; }
+@keyframes sb-float { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-10%) rotate(5deg); } }
+@keyframes sb-lit {
+  from { filter: grayscale(0.55) brightness(0.9) drop-shadow(0 0 12px var(--glow)); }
+  to { filter: grayscale(0) brightness(1.06) drop-shadow(0 0 16px var(--glow)) drop-shadow(0 0 32px var(--glow)); }
+}
+@keyframes sb-five {
+  0%, 100% { filter: brightness(1.15) drop-shadow(0 0 18px #ff86bd) drop-shadow(0 0 40px #ff86bd); }
+  20% { filter: brightness(1.15) drop-shadow(0 0 18px #62bdff) drop-shadow(0 0 40px #62bdff); }
+  40% { filter: brightness(1.15) drop-shadow(0 0 18px #ffd94f) drop-shadow(0 0 40px #ffd94f); }
+  60% { filter: brightness(1.15) drop-shadow(0 0 18px #ff9d42) drop-shadow(0 0 40px #ff9d42); }
+  80% { filter: brightness(1.15) drop-shadow(0 0 18px #73e07c) drop-shadow(0 0 40px #73e07c); }
+}
+.sb-halo { position: absolute; left: 50%; top: 50%; width: 240%; height: 240%; margin: -120% 0 0 -120%; border-radius: 50%; background: radial-gradient(closest-side, var(--glow), transparent); opacity: 0.1; animation: sb-pulse 3.6s ease-in-out infinite; pointer-events: none; }
+.sb-halo[data-look='hint'] { opacity: 0.22; }
+.sb-halo[data-look='lit'] { opacity: 0.5; }
+.sb-halo[data-look='bright'] { opacity: 0.66; }
+.sb-halo[data-look='five'] { opacity: 0.6; background: radial-gradient(closest-side, #fff7cf, transparent); }
+@keyframes sb-pulse { 0%, 100% { transform: scale(0.94); } 50% { transform: scale(1.08); } }
+/* 終章：五色的光繞著小星轉 */
+.sb-orbit { position: absolute; inset: 0; animation: sb-orbit 9s linear infinite; pointer-events: none; }
+.sb-orbit i { position: absolute; left: 50%; top: 50%; width: 34%; height: 34%; margin: -17% 0 0 -17%; border-radius: 50%; transform: rotate(var(--a)) translateX(205%); }
+@keyframes sb-orbit { to { transform: rotate(360deg); } }
+/* 序章：從天上掉下來；終章：飛回天上，停在高處 */
+.sb-star-pos.move-fall { animation: sb-fall 2.6s cubic-bezier(0.45, 0, 0.7, 1) 0.4s both; }
+@keyframes sb-fall {
+  0% { transform: translateY(-78dvh) rotate(-50deg) scale(0.6); }
+  78% { transform: translateY(0) rotate(8deg) scale(1); }
+  88% { transform: translateY(-9%) rotate(-4deg) scale(1); }
+  100% { transform: none; }
+}
+.sb-star-pos.move-rise { animation: sb-rise 5.5s ease-in-out 0.9s both; }
+/* 目的地是背景圖裡那顆最亮的星（圖的正上方）：--rise-x/y 由 StoryPlayer 依小星目前位置算好；飛到之後融進去 */
+@keyframes sb-rise {
+  0% { transform: none; opacity: 1; }
+  86% { transform: translate(var(--rise-x, 0), var(--rise-y, -46dvh)) scale(0.4); opacity: 1; }
+  100% { transform: translate(var(--rise-x, 0), var(--rise-y, -46dvh)) scale(0.2); opacity: 0; }
+}
+
+/* 字幕：給家長共讀，白底深字、夠大 */
+.sb-caption {
+  margin: 0; max-width: min(100%, 820px); padding: clamp(10px, 1.7vmin, 16px) clamp(16px, 3vmin, 30px);
+  border-radius: 20px; background: rgba(255, 251, 240, 0.94); color: #3b2a1c;
+  box-shadow: 0 6px 20px rgba(20, 16, 40, 0.24);
+  font-size: clamp(19px, 3.3vmin, 31px); font-weight: 700; line-height: 1.5; letter-spacing: 0.03em; text-align: center;
+  text-wrap: balance;
+  animation: sb-cap-in 0.5s ease-out both;
+}
+@keyframes sb-cap-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.sb-skip {
+  position: absolute; top: max(10px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); z-index: 2;
+  min-width: 64px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62); color: #4a3c56; font: inherit; font-size: 16px; font-weight: 700;
+  cursor: pointer; pointer-events: auto;
+}
+
+/* 環境動態 */
+.sb-fx { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.sb-fx i { position: absolute; display: block; animation-timing-function: ease-in-out; animation-iteration-count: infinite; will-change: transform, opacity; }
+.fx-stars i { width: 5px; height: 5px; border-radius: 50%; background: #fff; box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.8); transform: scale(var(--s)); animation-name: sb-twinkle; }
+.fx-stars i:nth-child(n + 9) { top: 4% !important; margin-top: calc(var(--s) * 22vh); }
+@keyframes sb-twinkle { 0%, 100% { opacity: 0.18; } 50% { opacity: 1; } }
+.fx-motes i, .fx-sparkle i { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle, #fff, var(--glow) 55%, transparent 72%); animation-name: sb-mote; }
+.fx-sparkle i { width: 14px; height: 14px; animation-name: sb-sparkle; }
+@keyframes sb-mote {
+  0% { opacity: 0; transform: translate3d(0, 24px, 0) scale(var(--s)); }
+  30% { opacity: 0.85; }
+  70% { opacity: 0.7; }
+  100% { opacity: 0; transform: translate3d(22px, -70px, 0) scale(var(--s)); }
+}
+@keyframes sb-sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(calc(var(--s) * 1.2)) rotate(45deg); }
+}
+.fx-petals i { top: -6% !important; width: 16px; height: 12px; border-radius: 70% 0 70% 0; background: linear-gradient(135deg, #ffe2ee, #ff9fc8); animation-name: sb-petal; animation-timing-function: linear; }
+@keyframes sb-petal {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(0) scale(var(--s)); }
+  8% { opacity: 1; }
+  50% { transform: translate3d(36px, 52dvh, 0) rotate(200deg) scale(var(--s)); }
+  92% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate3d(-14px, 104dvh, 0) rotate(380deg) scale(var(--s)); }
+}
+.fx-drops i { top: -4% !important; width: 7px; height: 12px; border-radius: 50% 50% 50% 50% / 62% 62% 40% 40%; background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), var(--glow)); animation-name: sb-drop; animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6); }
+@keyframes sb-drop {
+  0%, 30% { opacity: 0; transform: translate3d(0, 0, 0) scale(var(--s)); }
+  36% { opacity: 0.85; }
+  92% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate3d(0, 76dvh, 0) scale(var(--s)); }
+}
+.fx-fireflies i { width: 11px; height: 11px; border-radius: 50%; background: radial-gradient(circle, #fff9c9, var(--glow) 50%, transparent 72%); animation-name: sb-firefly; }
+@keyframes sb-firefly {
+  0%, 100% { opacity: 0.1; transform: translate3d(0, 0, 0) scale(var(--s)); }
+  25% { opacity: 1; transform: translate3d(26px, -22px, 0) scale(var(--s)); }
+  50% { opacity: 0.25; transform: translate3d(-14px, -44px, 0) scale(var(--s)); }
+  75% { opacity: 1; transform: translate3d(18px, -14px, 0) scale(var(--s)); }
+}
+.fx-confetti i { top: -5% !important; width: 12px; height: 12px; border-radius: 3px; background: var(--c); animation-name: sb-petal; animation-timing-function: linear; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sb, .sb.leaving, .sb-kb, .sb-pet, .sb-pet-bob, .sb-star-float, .sb-halo, .sb-orbit, .sb-caption, .look-lit, .look-five,
+  .sb-star-pos.move-fall { animation: none !important; }
+  .sb-layer { transition: none; }
+  .sb-star-img { transition: none; }
+  .look-lit { filter: brightness(1.06) drop-shadow(0 0 16px var(--glow)) drop-shadow(0 0 32px var(--glow)); }
+  .look-five { filter: brightness(1.15) drop-shadow(0 0 18px #ffd94f) drop-shadow(0 0 40px #ff86bd); }
+  .sb-star-pos.move-rise { animation: none !important; transform: translate(var(--rise-x, 0), var(--rise-y, -46dvh)) scale(0.4); }
+  .sb-fx { display: none; }
+}
+
+/* ---------- 書架 ---------- */
+main.ss.screen { background: linear-gradient(180deg, #1c2252 0%, #33387a 62%, #4a4a8f 100%) fixed; color: #fff; }
+.ss .screen-header h1 { color: #fff; }
+.ss-shelves { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px clamp(16px, 3vw, 34px); padding: 12px clamp(12px, 3vw, 32px) 40px; }
+.ss-shelf { position: relative; display: flex; flex-direction: column; align-items: center; }
+.ss-books { display: flex; gap: clamp(8px, 1.4vw, 14px); padding: 0 8px; }
+.ss-plank { display: block; align-self: stretch; height: 12px; margin-top: 0; border-radius: 4px; background: linear-gradient(180deg, #d7a56c, #a4733f); box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3); }
+.ss-book {
+  --w: clamp(140px, 24vmin, 240px);
+  position: relative; width: var(--w); aspect-ratio: 4 / 3; padding: 0; border: 3px solid rgba(255, 255, 255, 0.85); border-bottom-width: 0;
+  border-radius: 12px 12px 0 0; overflow: hidden; cursor: pointer; color: #fff; font: inherit;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.25);
+}
+.ss-book.locked { border-color: rgba(255, 255, 255, 0.18); filter: saturate(0.25) brightness(0.55); cursor: default; }
+.ss-book.wobble { animation: ss-wobble 0.45s ease; }
+@keyframes ss-wobble { 25% { transform: rotate(-2.5deg); } 75% { transform: rotate(2.5deg); } }
+.ss-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ss-label { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 4px 4px; background: linear-gradient(transparent, rgba(16, 14, 40, 0.68)); font-size: 14px; font-weight: 700; text-align: center; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+.ss-book.locked .ss-label { display: none; }
+.ss-silhouette { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.ss-star-shape { width: 52%; height: 70%; object-fit: contain; filter: brightness(0); opacity: 0.45; }
+.ss-lock { position: absolute; right: 8px; bottom: 8px; width: 26px; height: 26px; opacity: 0.8; }
+.ss-new { position: absolute; right: 8px; top: 8px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, #fff, #ffd94f 60%); box-shadow: 0 0 10px #ffd94f; }
+
+.ss-entry {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 48px; padding: 2px 14px 2px 6px; margin-right: 8px; border: 0; border-radius: 999px;
+  background: #2b3170; color: #fff; font: inherit; font-size: 1.02rem; font-weight: 800; cursor: pointer; white-space: nowrap;
+  box-shadow: 0 4px 0 rgba(20, 24, 70, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.18);
+}
+.ss-entry-star { width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255, 217, 79, 0.85)); animation: sb-float 4.6s ease-in-out infinite; }
+/* 手機標題列放不下：不識字的孩子本來就不看「冒險地圖」四個字，讓位給小星 */
+@media (max-width: 480px) {
+  .ss-entry { padding: 2px 6px; margin-right: 4px; min-height: 44px; }
+  .ss-entry span { display: none; }
+  .screen-header:has(.ss-entry) { gap: 6px; }
+  .screen-header:has(.ss-entry) h1 { flex: 0 0 0; width: 0; overflow: hidden; }
+  .screen-header:has(.ss-entry) .header-right { flex: 1; }
+  .screen-header:has(.ss-entry) .back { white-space: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-entry-star, .ss-book.wobble { animation: none; }
+}

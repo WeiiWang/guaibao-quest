@@ -1,4 +1,5 @@
 import './roomBackdrop.css'
+import { WishStar } from './WishStar'
 export type TimeOfDay = 'day' | 'dusk' | 'night'
 
 export interface RoomTheme {
@@ -36,7 +37,7 @@ const DUST = Array.from({ length: 10 }, (_, i) => {
   }
 })
 
-function WindowScene({ tod }: { tod: TimeOfDay }) {
+function WindowScene({ tod, wish }: { tod: TimeOfDay; wish?: boolean }) {
   return (
     <div className="rb-scene" data-scene={tod}>
       <div className="rb-sky" />
@@ -46,6 +47,7 @@ function WindowScene({ tod }: { tod: TimeOfDay }) {
           <div className="rb-stars rb-stars-b" />
           <div className="rb-stars rb-stars-c" />
           <div className="rb-moon" />
+          {wish && <WishStar />}
         </>
       )}
       {tod === 'dusk' && <div className="rb-sun" />}
@@ -95,7 +97,7 @@ export function RoomBackdrop({ timeOfDay, theme, glows }: Props) {
           {/* v8：窗口往下的斜光柱（透明度慢慢呼吸）；顏色跟著時段 */}
           <i className="rb-shaft" style={{ animationDelay: `${-i * 4}s` }} />
           <div className="rb-window">
-            <WindowScene tod={timeOfDay} />
+            <WindowScene tod={timeOfDay} wish={i === 0} />
             <i className="rb-bar" />
           </div>
           <div className="rb-sill" />

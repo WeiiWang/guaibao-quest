@@ -73,6 +73,15 @@
       "loopSeconds": 43.636354,
       "bpm": 88,
       "bars": 16
+    },
+    "story": {
+      "file": "music-story.m4a",
+      "v": "015f9890",
+      "loopStart": 0.341333,
+      "loopEnd": 58.523146,
+      "loopSeconds": 58.181812,
+      "bpm": 66,
+      "bars": 16
     }
   },
   "sfx": {

@@ -243,6 +243,8 @@ export interface Settings {
   dailyGiftSeq?: number
   /** v7.4：今天掉落過幾個食物（固定輪替用；date 不是今天就從 0 開始）。沒有這欄 = 今天還沒掉過 */
   foodDrop?: { date: string; n: number }
+  /** v8.1 線 P：看過的故事（序章、各章開場與結尾、終章；id 見 src/learning/story.ts）。舊存檔沒有這欄 = 都沒看過（不升 Dexie 版本） */
+  storySeen?: string[]
   /** v7.4：新玩法（朋友來作客、阿悟的小願望）的狀態。舊存檔沒有這欄 = 都還沒開始（不升 Dexie 版本） */
   play?: PlayState
 }

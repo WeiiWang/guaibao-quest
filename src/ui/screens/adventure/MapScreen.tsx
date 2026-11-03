@@ -27,6 +27,8 @@ import './adventure-h74.css'
 import { Placement } from './Placement'
 import { readChapter, readSubject, writeChapter, writeSubject } from './subjectPref'
 import { usePetText } from '../../species'
+import { storyOn } from '../../feelFlags'
+import { StoryEntry } from '../story/StoryShelf'
 
 function emptyProgress(ch: ChapterDef): Progress {
   return {
@@ -188,7 +190,20 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
 
   return (
     <main className={`screen adv adv-map theme-${subject.theme} subject-${subject.id} chapter-${ch.id}`} data-testid="map" data-subject={subject.id} data-chapter={ch.id}>
-      <ScreenHeader title="冒險地圖" onBack={onBack} right={<MaterialsChip />} />
+      <ScreenHeader
+        title="冒險地圖"
+        onBack={onBack}
+        right={
+          storyOn() ? (
+            <>
+              <StoryEntry onOpen={() => go({ name: 'stories' })} />
+              <MaterialsChip />
+            </>
+          ) : (
+            <MaterialsChip />
+          )
+        }
+      />
 
       <nav className="adv-subjects" role="tablist" aria-label="科目">
         {SUBJECTS.map((s) => (

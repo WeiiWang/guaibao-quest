@@ -14,12 +14,18 @@ import { MaterialsChip } from '../../components/MaterialsChip'
 import { useLearningSettings } from '../../learningHooks'
 import { writeChapter } from './subjectPref'
 import type { Screen } from '../../App'
+import { storiesAfterChest, type StoryId } from '../../../learning/story'
+import { storyOn } from '../../feelFlags'
+import type { PlayStory } from '../story/useStoryDirector'
 import { Companion } from './Companion'
 import './adventure.css'
 import './adventure-v7.css'
 
+/** 寶箱打開後，獎勵與「通關」語音先走完，再演故事 */
+const STORY_AFTER_CHEST_MS = 4200
+
 /** 章末儀式：寶箱搖晃閃光約 1 秒 → 打開 → 阿悟歡呼 → 額外材料 → 「<章名>通關！」（chapterId 是哪一章的寶箱，沒給就是花果山） */
-export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: () => void; go: (s: Screen) => void }) {
+export function Ceremony({ chapterId, onMap, go, playStory }: { chapterId?: string; onMap: () => void; go: (s: Screen) => void; playStory?: PlayStory }) {
   const ch = (chapterId && getChapter(chapterId)) || HUAGUOSHAN
   // 通關後會開放的下一章（花果山 → 水簾洞）
   const next = nextChapterOf(ch.id)
@@ -32,6 +38,26 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
   const busy = useRef(false)
   const shakeTimer = useRef<number | undefined>(undefined)
   useEffect(() => () => window.clearTimeout(shakeTimer.current), [])
+
+  // v8.1 線 P：寶箱開完先看一下獎勵，再演這章的結尾（五章全破接終章）。還沒演就按了離開的按鈕：先演完再走
+  const pendingStory = useRef<StoryId[] | null>(null)
+  const storyTimer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(storyTimer.current), [])
+  const startPendingStory = (after?: () => void) => {
+    window.clearTimeout(storyTimer.current)
+    const ids = pendingStory.current
+    pendingStory.current = null
+    if (ids && playStory) playStory(ids, after)
+    else after?.()
+  }
+  const queueStory = async () => {
+    if (!playStory || !storyOn()) return
+    const [settings, progs] = await Promise.all([repo.getSettings(), db.progress.toArray()])
+    const ids = storiesAfterChest(ch.id, settings?.storySeen ?? [], progs)
+    if (ids.length === 0) return
+    pendingStory.current = ids
+    storyTimer.current = window.setTimeout(() => startPendingStory(), STORY_AFTER_CHEST_MS)
+  }
 
   // 這輪的寶箱已經開過（重新進來）：直接顯示結尾畫面
   const alreadyOpened = !!prog?.chestClaimed && !rewards
@@ -55,6 +81,7 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
       return
     }
     setRewards(r.rewards)
+    void queueStory()
   }
 
   const opened = !!rewards
@@ -120,15 +147,15 @@ export function Ceremony({ chapterId, onMap, go }: { chapterId?: string; onMap: 
                 onClick={() => {
                   const subject = subjectOfChapter(ch.id)
                   if (subject) writeChapter(subject.id, next.id)
-                  onMap()
+                  startPendingStory(onMap)
                 }}
                 data-testid="to-next-chapter"
               >
                 去{next.name}
               </button>
             )}
-            <button className={`adv-btn ${next ? '' : 'primary'}`} onClick={() => go({ name: 'workshop' })} data-testid="to-workshop">去工坊做家具</button>
-            <button className="adv-btn" onClick={onMap} data-testid="back-to-map">回地圖</button>
+            <button className={`adv-btn ${next ? '' : 'primary'}`} onClick={() => startPendingStory(() => go({ name: 'workshop' }))} data-testid="to-workshop">去工坊做家具</button>
+            <button className="adv-btn" onClick={() => startPendingStory(onMap)} data-testid="back-to-map">回地圖</button>
           </div>
         </>
       )}

@@ -797,6 +797,15 @@ export class Repo {
     })
   }
 
+  /** v8.1 線 P：記下看過（或跳過）的故事；已有的不重複 */
+  async markStoriesSeen(ids: readonly string[]): Promise<void> {
+    await this.db.transaction('rw', this.db.settings, async () => {
+      const cur = (await this.db.settings.get(SETTINGS_ID))?.storySeen ?? []
+      const add = ids.filter((id) => !cur.includes(id))
+      if (add.length) await this.db.settings.update(SETTINGS_ID, { storySeen: [...cur, ...add] })
+    })
+  }
+
   async clearStageDraft(): Promise<void> {
     await this.db.settings.update(SETTINGS_ID, { stageDraft: undefined })
   }

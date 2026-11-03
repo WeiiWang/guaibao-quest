@@ -33324,6 +33324,156 @@
   "text": "虎虎正在準備題目。",
   "voice": "mama|"
  },
+ "story.english.close.1": {
+  "file": "66c040d436b6293b.m4a",
+  "text": "燈塔亮了！小船都平平安安回家了。",
+  "voice": "mama|"
+ },
+ "story.english.close.2": {
+  "file": "31626e5f6237e80a.m4a",
+  "text": "小星又亮了一點點，海鷗也開心得轉圈圈。",
+  "voice": "mama|"
+ },
+ "story.english.open.1": {
+  "file": "f1cdb347390429ef.m4a",
+  "text": "海上漂來好多瓶子，瓶子裡的字，大家都看不懂。",
+  "voice": "mama|"
+ },
+ "story.english.open.2": {
+  "file": "abb1947bea5b3932.m4a",
+  "text": "小星的黃色光，就在燈塔裡。學會這些英文，就能把燈塔點亮！",
+  "voice": "mama|"
+ },
+ "story.finale.1": {
+  "file": "71bb6974c20f11cf.m4a",
+  "text": "粉紅、藍色、黃色、橘色、綠色，小星的光全部回來了！",
+  "voice": "mama|"
+ },
+ "story.finale.2": {
+  "file": "4e38397326352994.m4a",
+  "text": "小星飛回天上，變成最亮的那一顆。每天晚上，她都會對阿悟眨眨眼。",
+  "voice": "mama|"
+ },
+ "story.finale.2@rabbit": {
+  "file": "ed5780dff0d26d3f.m4a",
+  "text": "小星飛回天上，變成最亮的那一顆。每天晚上，她都會對兔兔眨眨眼。",
+  "voice": "mama|"
+ },
+ "story.finale.2@tiger": {
+  "file": "e5f89db1da129abd.m4a",
+  "text": "小星飛回天上，變成最亮的那一顆。每天晚上，她都會對虎虎眨眨眼。",
+  "voice": "mama|"
+ },
+ "story.huaguoshan.close.1": {
+  "file": "31aaae132f1ecfef.m4a",
+  "text": "找到了！粉紅色的光回來了，桃花一朵一朵開了。",
+  "voice": "mama|"
+ },
+ "story.huaguoshan.close.2": {
+  "file": "1bd480e90d4862eb.m4a",
+  "text": "小星亮了一點點。花果山的大家都說：謝謝你們！",
+  "voice": "mama|"
+ },
+ "story.huaguoshan.open.1": {
+  "file": "9a0461574b78fcac.m4a",
+  "text": "花果山的桃樹都睡著了，一朵花也沒開。",
+  "voice": "mama|"
+ },
+ "story.huaguoshan.open.2": {
+  "file": "1337a367c1455d79.m4a",
+  "text": "小星的粉紅色光，就藏在山路上。我們一站一站去找！",
+  "voice": "mama|"
+ },
+ "story.life.close.1": {
+  "file": "3a5aeb1b9e7cfb1f.m4a",
+  "text": "廣場乾乾淨淨，大家排隊、洗手、說謝謝。",
+  "voice": "mama|"
+ },
+ "story.life.close.2": {
+  "file": "5fd54f1cee8f9792.m4a",
+  "text": "橘色的光回來了。小鎮的每一扇窗都亮起來了。",
+  "voice": "mama|"
+ },
+ "story.life.open.1": {
+  "file": "d8fecc9654b8b4f7.m4a",
+  "text": "生活小鎮今天亂糟糟，大家都忘了好習慣。",
+  "voice": "mama|"
+ },
+ "story.life.open.2": {
+  "file": "08c03733b3de9820.m4a",
+  "text": "小星的橘色光，躲在小鎮裡。我們幫大家想起來吧！",
+  "voice": "mama|"
+ },
+ "story.nature.close.1": {
+  "file": "b55aab56b5f86b5b.m4a",
+  "text": "小鳥唱歌，小鹿跑跑跳跳，森林醒過來了！",
+  "voice": "mama|"
+ },
+ "story.nature.close.2": {
+  "file": "8746087185015c36.m4a",
+  "text": "綠色的光回來了。小星又亮了一點點！",
+  "voice": "mama|"
+ },
+ "story.nature.open.1": {
+  "file": "7dfa1aeb49e24360.m4a",
+  "text": "森林裡好安靜，小動物都躲起來了。",
+  "voice": "mama|"
+ },
+ "story.nature.open.2": {
+  "file": "26be0eb52c085ae2.m4a",
+  "text": "綠色的光像螢火蟲，飛進了森林深處。我們去認識森林的朋友！",
+  "voice": "mama|"
+ },
+ "story.prologue.1": {
+  "file": "12c71c5c500153a0.m4a",
+  "text": "有一天晚上，一顆小星星從天上掉了下來。",
+  "voice": "mama|"
+ },
+ "story.prologue.2": {
+  "file": "8a942e954dabcb41.m4a",
+  "text": "她叫小星。小星的光不見了，回不了家。阿悟說：別怕，我陪你找回來！",
+  "voice": "mama|"
+ },
+ "story.prologue.2@rabbit": {
+  "file": "42c109f94b0a1803.m4a",
+  "text": "她叫小星。小星的光不見了，回不了家。兔兔說：別怕，我陪你找回來！",
+  "voice": "mama|"
+ },
+ "story.prologue.2@tiger": {
+  "file": "82cefa21c1dfbdb5.m4a",
+  "text": "她叫小星。小星的光不見了，回不了家。虎虎說：別怕，我陪你找回來！",
+  "voice": "mama|"
+ },
+ "story.shuiliandong.close.1": {
+  "file": "d8153c1d2e16d802.m4a",
+  "text": "藍色的光回來了，整個山洞都亮晶晶。",
+  "voice": "mama|"
+ },
+ "story.shuiliandong.close.2": {
+  "file": "98717d338fc45134.m4a",
+  "text": "原來山洞一點也不可怕。小星又亮了一點點！",
+  "voice": "mama|"
+ },
+ "story.shuiliandong.open.1": {
+  "file": "8a10abb0e36a9792.m4a",
+  "text": "瀑布後面有一個山洞，裡面黑黑的，大家都不敢進去。",
+  "voice": "mama|"
+ },
+ "story.shuiliandong.open.2": {
+  "file": "0b1fd5429276e178.m4a",
+  "text": "水滴裡有藍色的光在閃。阿悟牽著小星，勇敢走進去。",
+  "voice": "mama|"
+ },
+ "story.shuiliandong.open.2@rabbit": {
+  "file": "f21f88c7328783c2.m4a",
+  "text": "水滴裡有藍色的光在閃。兔兔牽著小星，勇敢走進去。",
+  "voice": "mama|"
+ },
+ "story.shuiliandong.open.2@tiger": {
+  "file": "ce8d64d7c53732c9.m4a",
+  "text": "水滴裡有藍色的光在閃。虎虎牽著小星，勇敢走進去。",
+  "voice": "mama|"
+ },
  "tutorial.again": {
   "file": "cd52deb7cdd69549.m4a",
   "text": "換你試試看！",
