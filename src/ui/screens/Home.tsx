@@ -9,10 +9,16 @@ import { favoriteFoodOf } from '../../domain/favorite'
 import { balanceOf } from '../../domain/points'
 import { flyStars } from '../fly'
 import { SHOP_ITEMS } from '../../domain/constants'
-import { moodAt } from '../../domain/pet'
+import { currentHunger, moodAt } from '../../domain/pet'
+import { homeGuideTarget } from '../../domain/homeGuide'
+import { stageSceneKey } from '../../learning/stageScene'
 import { visibleToday } from '../../domain/tasks'
 import { Art } from '../components/Art'
 import { Icon } from '../components/Icon'
+import { DownArrowIcon } from '../components/DrawnIcons'
+import { sceneUrl, useSceneStatus } from '../sceneArt'
+import { usePetText } from '../species'
+import { useNextStop } from './useNextStop'
 import { RoomView } from '../components/RoomView'
 import { TrickCelebrate } from '../components/TrickCelebrate'
 import { MoreTray, type MoreItem } from '../components/MoreTray'
@@ -25,6 +31,7 @@ import { freshCards } from '../../domain/album'
 import { HAT_IDS, hatEggLine, hatOf, hatOffLine, hatWearLine } from '../../domain/hats'
 import { isTrickId, type TrickId } from '../../domain/tricks'
 import '../meta.css'
+import '../home-o8.css'
 import { usePetFace } from '../components/PetSprite'
 import { speciesEmoji } from '../../domain/species'
 import { useBalance, useCelebrate, useToast } from '../hooks'
@@ -155,8 +162,18 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
   const nextCard = freshCards(settings?.album)[0]
   const showMemory = !!nextCard && !!pet && !play.editing && !showTrick && !celebrationOpen && !wardrobeOpen
 
-  // 首次進首頁的引導：冒險地圖按鈕亮起、手指指著它，語音「我們去冒險吧」（只出現一次）
-  const showGuide = !!settings && !settings.homeGuideShown && !initialEdit
+  // v8 線 O：引導一次只指一件事。有食物而且飽足偏低（或新手剛拿到第一份食物）才指食物，否則只指冒險地圖
+  const foodRows = shopItems && inventory ? shopItems.filter((i) => i.kind === 'food') : []
+  const hasFood = !!inventory && foodRows.some((f) => (inventory.find((v) => v.itemId === f.id)?.qty ?? 0) > 0)
+  const guide = homeGuideTarget({ hasFood, hunger: pet ? currentHunger(pet, now) : 100, firstFood: !!settings && !settings.feedHintShown })
+  const guideFood = guide === 'food' && !initialEdit
+  const nextStop = useNextStop()
+  const pt = usePetText()
+  const nextKey = nextStop ? stageSceneKey(nextStop.chapterId) : null
+  const nextScene = useSceneStatus(nextKey) === 'ok' && nextKey ? nextKey : null
+
+  // 首次進首頁的引導：冒險地圖按鈕亮起、箭頭指著它，語音「我們去冒險吧」（只出現一次；這時食物沒有搶著被指的話才出現）
+  const showGuide = !!settings && !settings.homeGuideShown && !initialEdit && guide === 'adventure'
   const guideVoiceOn = learningSettingsOf(settings).voiceOn
   useEffect(() => {
     if (!showGuide) return
@@ -257,6 +274,7 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
         decorQty={Object.fromEntries(inventory.map((v) => [v.itemId, v.qty]))}
         gifts={pendingGifts}
         perform={perform}
+        guideFood={guideFood}
         {...play.roomProps}
       />
       {play.overlay}
@@ -300,22 +318,48 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
         />
       )}
 
-      <nav className="main-nav" aria-label="主選單">
-        <button className={`candy mint ${showGuide ? 'guide' : ''}`} onClick={() => nav('map')} data-testid="candy-map">
-          <Icon name="ui-map" emoji="🗺️" className="candy-icon" />
-          <span className="candy-label">冒險地圖</span>
-          {showGuide && <span className="guide-hand" data-testid="home-guide" aria-hidden>👇</span>}
+      <nav className="main-nav o8-nav" aria-label="主選單">
+        <button
+          className={`candy mint o8-primary ${showGuide ? 'guide' : ''} ${guide === 'adventure' ? 'o8-nudge' : ''}`}
+          onClick={() => nav('map')}
+          data-testid="candy-map"
+          data-guide-target={guide === 'adventure' && !initialEdit ? 'adventure' : undefined}
+        >
+          <Icon name="ui-map" emoji="🗺️" className="candy-icon o8-primary-icon" />
+          <span className="o8-primary-text">
+            <span className="candy-label">冒險地圖</span>
+            {nextStop && (
+              <span className="o8-next" data-testid="next-stop">
+                <i
+                  className={`o8-next-pic ${nextScene ? 'has-scene' : ''}`}
+                  style={nextScene ? { backgroundImage: `url("${sceneUrl(nextScene)}")` } : undefined}
+                  aria-hidden
+                >
+                  {!nextScene && (nextStop.kind === 'station' ? nextStop.index : '★')}
+                </i>
+                <span className="o8-next-label">
+                  <small>{nextStop.kind === 'station' ? '下一站' : nextStop.kind === 'chest' ? '寶箱等你' : '再玩一輪'}</small>
+                  <b>{nextStop.kind === 'station' ? pt(nextStop.stationName ?? '') : nextStop.chapterName}</b>
+                </span>
+              </span>
+            )}
+          </span>
+          {showGuide && (
+            <span className="guide-hand o8-guide-hand" data-testid="home-guide" aria-hidden>
+              <DownArrowIcon size={52} />
+            </span>
+          )}
         </button>
-        <button className="candy butter" onClick={() => nav('tasks')}>
+        <button className="candy butter o8-sub" onClick={() => nav('tasks')}>
           <Icon name="ui-tasks" emoji="📝" className="candy-icon" />
           <span className="candy-label">今日任務</span>
           {todo > 0 && <b className="badge">{todo}</b>}
         </button>
-        <button className="candy peach" onClick={() => nav('shop')}>
+        <button className="candy peach o8-sub" onClick={() => nav('shop')}>
           <Icon name="ui-shop" emoji="🛒" className="candy-icon" />
           <span className="candy-label">商店</span>
         </button>
-        <button className="candy lavender" onClick={() => nav('coloring')}>
+        <button className="candy lavender o8-sub" onClick={() => nav('coloring')}>
           <Icon name="ui-coloring" emoji="🎨" className="candy-icon" />
           <span className="candy-label">著色本</span>
         </button>

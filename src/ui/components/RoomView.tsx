@@ -22,6 +22,7 @@ import {
 import type { Gift, Pet, Placement, ShopItem } from '../../domain/types'
 import { Art } from './Art'
 import { Icon } from './Icon'
+import { ChevronIcon, DownArrowIcon } from './DrawnIcons'
 import { PetSprite } from './PetSprite'
 import { useCelebrate, useToast } from '../hooks'
 import { useCelebrateSmall } from '../feedback'
@@ -75,6 +76,8 @@ interface Props {
   guest?: GuestView | null
   /** v7.4 K2：阿悟現在的小願望泡泡（沒給 = 沒有） */
   wish?: WishView | null
+  /** v8：首頁現在引導要指的是食物（有食物而且飽足偏低，或新手剛拿到第一份食物）；只有這時那一個食物會發光 */
+  guideFood?: boolean
 }
 
 type DragKind = 'food' | 'new' | 'move'
@@ -117,7 +120,7 @@ const toRect = (r: DOMRect): Rect => ({ left: r.left, top: r.top, right: r.right
 /** 由 id 算一個固定的小數，讓每坨便便的位置、蒼蠅有點不同 */
 const hashOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
 
-export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, goWorkshop, decorQty, childName = '', favoriteFoodId = null, gifts, perform, guest = null, wish = null }: Props) {
+export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShown, initialEdit, goShop, goWorkshop, decorQty, childName = '', favoriteFoodId = null, gifts, perform, guest = null, wish = null, guideFood = false }: Props) {
   const toast = useToast()
   const celebrate = useCelebrate()
   const { soundOn, voiceOn } = useLearningSettings()
@@ -422,6 +425,89 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
     if (dragging || edit) life.cancelIdle()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragging, edit])
+  // ---------- v8：寵物身體跟著手指／滑鼠小幅傾斜（CSS 3D，±10 度內），放開、停下來或離開房間就回正 ----------
+  // 全程直接改 CSS 變數、不經過 React 重繪；只聽 window 的 pointer 事件（被動、不攔截），拖曳餵食時一樣有效
+  const lookRef = useRef<HTMLDivElement>(null)
+  const roomReady = roomH > 0
+  const lookOff = useRef(false)
+  lookOff.current = reducedMotion || edit || life.asleep
+  useEffect(() => {
+    if (reducedMotion) return
+    const look = lookRef.current
+    if (!look) return
+    let raf = 0
+    let idle = 0
+    let last: { x: number; y: number; down: boolean } | null = null
+    const set = (rx: number, ry: number, tx: number) => {
+      look.style.setProperty('--look-rx', `${rx.toFixed(2)}deg`)
+      look.style.setProperty('--look-ry', `${ry.toFixed(2)}deg`)
+      look.style.setProperty('--look-tx', `${tx.toFixed(2)}%`)
+      look.dataset.look = rx === 0 && ry === 0 ? '' : 'on'
+    }
+    const center = () => {
+      last = null
+      window.clearTimeout(idle)
+      set(0, 0, 0)
+    }
+    const apply = () => {
+      raf = 0
+      const slot = slotRef.current
+      const sc = scrollerRef.current
+      if (!last || !slot || !sc || lookOff.current) return set(0, 0, 0)
+      const r = sc.getBoundingClientRect()
+      const draggingFood = press.current?.kind === 'food' && press.current.started
+      const inRoom = last.x >= r.left && last.x <= r.right && last.y >= r.top && last.y <= r.bottom
+      if (!inRoom && !draggingFood) return set(0, 0, 0)
+      const pr = slot.getBoundingClientRect()
+      const dx = Math.max(-1, Math.min(1, (last.x - (pr.left + pr.width / 2)) / Math.max(220, r.width * 0.36)))
+      const dy = Math.max(-1, Math.min(1, (pr.top + pr.height * 0.4 - last.y) / Math.max(180, r.height * 0.5)))
+      set(dy * 6, dx * 10, dx * 1.5)
+    }
+    const track = (e: PointerEvent) => {
+      if (lookOff.current) return
+      last = { x: e.clientX, y: e.clientY, down: e.buttons > 0 || e.type === 'pointerdown' }
+      if (!raf) raf = requestAnimationFrame(apply)
+      window.clearTimeout(idle)
+      // 手沒有按著（滑鼠只是經過）：停下來一下就回正；按著（手指、拖曳）就一直看著
+      if (!last.down) idle = window.setTimeout(center, 1300)
+    }
+    const release = (e: PointerEvent) => {
+      if (e.type === 'pointercancel' || e.pointerType !== 'mouse') center()
+      else if (last) {
+        last.down = false
+        window.clearTimeout(idle)
+        idle = window.setTimeout(center, 450)
+      }
+    }
+    window.addEventListener('pointermove', track, { passive: true, capture: true })
+    window.addEventListener('pointerdown', track, { passive: true, capture: true })
+    window.addEventListener('pointerup', release, { passive: true, capture: true })
+    window.addEventListener('pointercancel', release, { passive: true, capture: true })
+    window.addEventListener('blur', center)
+    document.addEventListener('pointerleave', center)
+    return () => {
+      window.removeEventListener('pointermove', track, { capture: true })
+      window.removeEventListener('pointerdown', track, { capture: true })
+      window.removeEventListener('pointerup', release, { capture: true })
+      window.removeEventListener('pointercancel', release, { capture: true })
+      window.removeEventListener('blur', center)
+      document.removeEventListener('pointerleave', center)
+      cancelAnimationFrame(raf)
+      window.clearTimeout(idle)
+    }
+    // 寵物要等房間量到高度才會出現，所以 roomH > 0 也是條件
+  }, [reducedMotion, roomReady])
+  // 睡著、進佈置模式時馬上回正
+  useEffect(() => {
+    if (!(edit || life.asleep)) return
+    const look = lookRef.current
+    if (!look) return
+    look.style.setProperty('--look-rx', '0deg')
+    look.style.setProperty('--look-ry', '0deg')
+    look.style.setProperty('--look-tx', '0%')
+    look.dataset.look = ''
+  }, [edit, life.asleep])
+
   // ---------- v7：禮物袋（點一次全部收下；孩子正在餵食或拖曳時不晃動）----------
   const giftList = gifts ?? []
   const [bagBusy, setBagBusy] = useState(false)
@@ -737,6 +823,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
   const gotFoodId = [...giftList].reverse().find((g) => g.foodId && (foods.find((f) => f.item.id === g.foodId)?.qty ?? 0) > 0)?.foodId
   const hintFood = (gotFoodId ? foods.find((f) => f.item.id === gotFoodId)?.item : undefined) ?? foods.find((f) => f.qty > 0)?.item
 
+  // v8：引導指向的那一個食物（有提示條就是提示條說的那個，否則是第一個有的）；引導不指食物時一個都不發光
+  const guideFoodId = guideFood && !edit ? (hintFood ?? foods.find((f) => f.qty > 0)?.item)?.id : undefined
+
   const ghostItem = drag ? (drag.kind === 'food' ? foods.find((f) => f.item.id === drag.itemId)?.item : itemById.get(baseIdOf(drag.itemId))) : undefined
   const ghostSize = ghostItem && drag && drag.kind !== 'food' ? sizeOf(ghostItem, placements.find((p) => p.itemId === drag.itemId)?.scale) : { w: 56, h: 56 }
 
@@ -826,15 +915,18 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                           disabled={edit}
                           aria-label={`摸摸${pet.name}`}
                         >
-                          <div className={`pf-flip ${pv.flip ? 'on' : ''}`}>
-                            <PetSprite
-                              pet={pet}
-                              mood={mood}
-                              eating={hovering}
-                              pose={pv.pose ?? (life.asleep ? 'sleep' : undefined)}
-                              hat={pet.hat}
-                              className={pv.anim || life.asleep ? '' : `idle ${mood === 'low' ? 'idle-slow' : ''}`}
-                            />
+                          {/* v8：視線容器只負責跟著手指做 3D 傾斜；裡面的 pf-flip（翻面）與 pf-a-*（動畫）完全不碰 */}
+                          <div className="pf-look" ref={lookRef} data-testid="pet-look">
+                            <div className={`pf-flip ${pv.flip ? 'on' : ''}`}>
+                              <PetSprite
+                                pet={pet}
+                                mood={mood}
+                                eating={hovering}
+                                pose={pv.pose ?? (life.asleep ? 'sleep' : undefined)}
+                                hat={pet.hat}
+                                className={pv.anim || life.asleep ? '' : `idle ${mood === 'low' ? 'idle-slow' : ''}`}
+                              />
+                            </div>
                           </div>
                         </button>
                         {hearts.map((id) => (
@@ -949,16 +1041,16 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
             </div>
           </div>
 
-          {canLeft && <button className="room-arrow left" onClick={() => scrollBy(-1)} aria-label="往左看房間" data-testid="room-left"><span aria-hidden>👈</span></button>}
+          {canLeft && <button className="room-arrow left o8-arrow" onClick={() => scrollBy(-1)} aria-label="往左看房間" data-testid="room-left"><span aria-hidden><ChevronIcon dir="left" /></span></button>}
           {!edit && <GiftBag gifts={giftList} calm={dragging || !!pv.food || bagBusy} onTake={(el) => void takeAllGifts(el)} />}
-          {canRight && <button className="room-arrow right" onClick={() => scrollBy(1)} aria-label="往右看房間" data-testid="room-right"><span aria-hidden>👉</span></button>}
+          {canRight && <button className="room-arrow right o8-arrow" onClick={() => scrollBy(1)} aria-label="往右看房間" data-testid="room-right"><span aria-hidden><ChevronIcon dir="right" /></span></button>}
         </div>
       </section>
 
       <section className={`dock-row ${edit ? 'editing' : ''}`}>
         {showHint && hintFood && (
           <button className="feed-hint" onClick={dismissHint} data-testid="feed-hint">
-            把{hintFood.name}拖給{pet.name}吃吧 👇
+            把{hintFood.name}拖給{pet.name}吃吧 <DownArrowIcon className="o8-hint-arrow" size={22} />
           </button>
         )}
         <div className="dock-wrap">
@@ -987,8 +1079,9 @@ export function RoomView({ pet, now, foods, ownedDecor, placements, feedHintShow
                   key={item.id}
                   role="button"
                   tabIndex={0}
-                  className={`dock-item food ${drag?.itemId === item.id && drag.kind === 'food' ? 'lifted' : ''} ${nopeId === item.id ? 'nope' : ''}`}
+                  className={`dock-item food ${drag?.itemId === item.id && drag.kind === 'food' ? 'lifted' : ''} ${nopeId === item.id ? 'nope' : ''} ${guideFoodId === item.id ? 'o8-food-guide' : ''}`}
                   data-dock-item={item.id}
+                  data-guide-target={guideFoodId === item.id ? 'food' : undefined}
                   aria-label={`餵${item.name}，剩 ${qty} 個，可拖到${pet.name}身上`}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {

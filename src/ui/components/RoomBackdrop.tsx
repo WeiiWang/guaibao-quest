@@ -24,13 +24,17 @@ interface Props {
 const WINDOWS = ['22%', '70%']
 
 /** 灰塵光點：固定位置與節奏（不用亂數，畫面穩定） */
-const DUST = Array.from({ length: 18 }, (_, i) => ({
-  left: `${(i * 37 + 11) % 97}%`,
-  top: `${14 + ((i * 53) % 62)}%`,
-  size: 3 + (i % 3),
-  dur: 14 + (i % 5) * 4,
-  delay: -((i * 7) % 20),
-}))
+/** v8 線 O：最多 10 顆（以前 18 顆）；位置集中在兩扇窗的光柱附近，看起來像光裡的灰塵，不是滿屋子亂飄 */
+const DUST = Array.from({ length: 10 }, (_, i) => {
+  const win = i % 2 === 0 ? 22 : 70
+  return {
+    left: `${win + ((i * 37 + 5) % 21) - 4}%`,
+    top: `${34 + ((i * 53) % 44)}%`,
+    size: 3 + (i % 3),
+    dur: 14 + (i % 5) * 4,
+    delay: -((i * 7) % 20),
+  }
+})
 
 function WindowScene({ tod }: { tod: TimeOfDay }) {
   return (
@@ -40,11 +44,17 @@ function WindowScene({ tod }: { tod: TimeOfDay }) {
         <>
           <div className="rb-stars rb-stars-a" />
           <div className="rb-stars rb-stars-b" />
+          <div className="rb-stars rb-stars-c" />
           <div className="rb-moon" />
         </>
       )}
       {tod === 'dusk' && <div className="rb-sun" />}
       {tod === 'day' && <div className="rb-daysun" />}
+      {tod === 'day' && (
+        <svg className="rb-bird" viewBox="0 0 24 12" aria-hidden>
+          <path d="M1 8 Q6 0 12 7 Q18 0 23 8 Q18 5 12 10 Q6 5 1 8 Z" />
+        </svg>
+      )}
       {tod !== 'night' && (
         <>
           <i className="rb-cloud c1" />
@@ -80,8 +90,10 @@ export function RoomBackdrop({ timeOfDay, theme, glows }: Props) {
       <div className="rb-wall-light" />
       <div className="rb-ceiling" />
       <div className="rb-wainscot" />
-      {WINDOWS.map((left) => (
+      {WINDOWS.map((left, i) => (
         <div key={left} className="rb-window-set" style={{ left }}>
+          {/* v8：窗口往下的斜光柱（透明度慢慢呼吸）；顏色跟著時段 */}
+          <i className="rb-shaft" style={{ animationDelay: `${-i * 4}s` }} />
           <div className="rb-window">
             <WindowScene tod={timeOfDay} />
             <i className="rb-bar" />
@@ -95,6 +107,7 @@ export function RoomBackdrop({ timeOfDay, theme, glows }: Props) {
       {WINDOWS.map((left) => (
         <div key={left} className="rb-beam" style={{ left }} />
       ))}
+
       <div className="rb-baseboard" />
       <div className="rb-tint" />
       {timeOfDay === 'night' &&

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
@@ -40,11 +40,22 @@ import './adventure-v4.css'
 import './adventure-v5.css'
 import './adventure-v7.css'
 import './adventure-h74.css'
+import './adventure-o8.css'
 import { forSpecies } from '../../../learning/speciesLines'
 import { nameText, speciesName } from '../../../domain/species'
 import { useSpecies } from '../../species'
+import { stageSceneKey } from '../../../learning/stageScene'
+import { sceneUrl, useSceneStatus } from '../../sceneArt'
+import { autoAdvanceOn, choreoOn } from '../../feelFlags'
+import { useReducedMotion } from '../../pet/hooks'
+import { CountUp } from './CountUp'
 
-const AUTO_NEXT_MS = 1600
+/** v8：答對後自動前進。至少停這麼久（讓答對的動畫與鼓勵語音播完）、最多等這麼久（語音失敗、沒有語音也照樣前進） */
+const AUTO_MIN_MS = 1100
+const AUTO_CAP_MS = 2200
+/** 答錯才答對（有看過教學提示）：多停一下，讓孩子看清楚正確答案 */
+const AUTO_HINTED_MIN_MS = 2400
+const AUTO_HINTED_CAP_MS = 3600
 /** 食物 id 對應 lines.ts 的 ui.gift.food 句子順序（和 domain/giftLines.ts 的 GIFT_FOOD_PHRASE 同順序） */
 const FOOD_LINE_ORDER = ['carrot', 'cookie', 'banana', 'apple', 'grape', 'milk', 'peach', 'riceball', 'watermelon']
 
@@ -83,6 +94,18 @@ interface Props {
   onExit: () => void
   onNextStation: (station: number) => void
   onCeremony: () => void
+}
+
+/** 結算編排演完（after 秒後）通知一次：主按鈕才變明顯。不渲染任何東西 */
+function ResultReady({ enabled, after, onReady }: { enabled: boolean; after: number; onReady: () => void }) {
+  useEffect(() => {
+    if (!enabled) return
+    const id = window.setTimeout(onReady, after * 1000)
+    return () => window.clearTimeout(id)
+    // onReady 只是 setState
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, after])
+  return null
 }
 
 /** 關卡答題畫面：一站 5 題，混合三種技能 */
@@ -131,6 +154,15 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   const startedAt = useRef(Date.now())
   const solvedRef = useRef(false)
   const nextTimer = useRef<number | undefined>(undefined)
+  /** 自動前進的最短停留計時器（最長的那個在 nextTimer） */
+  const minTimer = useRef<number | undefined>(undefined)
+  const reducedMotion = useReducedMotion()
+  // v8：場景背景（圖載入成功才套用；缺圖或載入失敗就是原本的漸層）
+  const sceneKey = stageSceneKey(chapterId)
+  const sceneOk = useSceneStatus(sceneKey) === 'ok'
+  // 結算編排：依序飛入、數字跳動；點一下略過
+  const [choreoSkipped, setChoreoSkipped] = useState(false)
+  const [choreoReady, setChoreoReady] = useState(false)
   const finishing = useRef(false)
   const writes = useRef<Promise<unknown>[]>([])
   const advancing = useRef(false)
@@ -161,6 +193,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   useEffect(
     () => () => {
       window.clearTimeout(nextTimer.current)
+      window.clearTimeout(minTimer.current)
       cancelSpeech()
     },
     [],
@@ -252,6 +285,7 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
 
   const advance = useCallback(async () => {
     window.clearTimeout(nextTimer.current)
+    window.clearTimeout(minTimer.current)
     if (!plan || advancing.current) return
     advancing.current = true
     try {
@@ -295,7 +329,32 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
           : forSpecies(pickLine(profile.gentle ? 'praise.gentle' : 'praise', rnd), species)
     setPraise(l.text)
     playSfx('correct', soundOn)
-    say(l.key, l.text, { enabled: voiceOn })
+    // 自動前進：鼓勵語音唸完（或沒有語音）+ 最短停留 都到了就走；語音失敗或沒回報結束就靠上限時間照樣走，不會卡住
+    const auto = autoAdvanceOn()
+    const hinted = wrongs.current > 0
+    const minMs = hinted ? AUTO_HINTED_MIN_MS : AUTO_MIN_MS
+    const capMs = hinted ? AUTO_HINTED_CAP_MS : AUTO_CAP_MS
+    let speechDone = !voiceOn
+    let minDone = false
+    const fire = () => void advance()
+    const tryGo = () => {
+      if (auto && speechDone && minDone) fire()
+    }
+    const started = say(l.key, l.text, {
+      enabled: voiceOn,
+      onEnd: () => {
+        speechDone = true
+        tryGo()
+      },
+    })
+    if (!started) speechDone = true
+    if (auto) {
+      minTimer.current = window.setTimeout(() => {
+        minDone = true
+        tryGo()
+      }, minMs)
+      nextTimer.current = window.setTimeout(fire, capMs)
+    }
     const w = repo.recordAttempt({
       sessionId: sessionId.current,
       questionId: q.id,
@@ -307,7 +366,6 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
       interaction: q.interaction ?? 'pick',
     })
     writes.current.push(w)
-    nextTimer.current = window.setTimeout(() => void advance(), AUTO_NEXT_MS)
   }
 
   /**
@@ -410,6 +468,13 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
     cancelSpeech()
   }
 
+  /** 答對之後點畫面的空白處：不用等，馬上前進（按鈕、卡片自己的點擊不算）。自動前進關閉時（自動化測試）也不作用 */
+  const skipAuto = (e: ReactPointerEvent<HTMLElement>) => {
+    if (!solved || !autoAdvanceOn() || advancing.current || leaving) return
+    if ((e.target as HTMLElement).closest('button, a, input, [role=button], [role=dialog]')) return
+    void advance()
+  }
+
   if (!info || !def) {
     return (
       <main className="adv adv-stage">
@@ -421,18 +486,31 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
 
   if (result) {
     const together = result.total - result.independent
-    // 食物（可能 2 個，可能同一種）：依序彈出；材料接在食物後面
-    const foodDelay = 0.25
-    const matDelay = foodDelay + result.foods.length * 0.45 + 0.35
+    // 結算編排（v8）：寵物慶祝 → 食物一個一個飛進來 → 材料接著飛進來 → 底下的話 → 主按鈕變明顯。
+    // 點一下畫面就全部直接顯示；減少動態效果、自動化測試（沒開旗標）也直接顯示。主按鈕一開始就能按
+    const choreo = choreoOn() && !reducedMotion && !choreoSkipped
+    const foodDelay = 0.55
+    const matDelay = foodDelay + result.foods.length * 0.5 + 0.3
+    const endAt = (result.qty > 0 ? matDelay + result.qty * 0.2 : matDelay) + 0.5
     // v7.4 H4：同一種食物合併（「蘋果 ×2」），說明那一句也只出現一次
     const foodGroups = groupFoods(result.foods)
     const foodSummary = foodGroups.map((g) => (g.n > 1 ? `${foodName(g.id)} ×${g.n}` : foodName(g.id))).join('、')
+    const ready = !choreo || choreoReady
     return (
-      <main className="adv adv-stage adv-result" data-testid="station-result">
+      <main
+        className="adv adv-stage adv-result o8-result"
+        data-testid="station-result"
+        data-choreo={choreo ? 'on' : 'off'}
+        data-ready={ready ? 'true' : 'false'}
+        onPointerDown={(e) => {
+          if (choreo && !(e.target as HTMLElement).closest('button')) setChoreoSkipped(true)
+        }}
+      >
         <header className="adv-top">
           <span />
           <MaterialsChip />
         </header>
+        <ResultReady enabled={choreo} after={endAt} onReady={() => setChoreoReady(true)} />
         <div className="adv-result-card q7-result" ref={cardRef}>
           {def.kind === 'boss' && (
             <div className="adv-confetti" aria-hidden>
@@ -441,15 +519,25 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
               ))}
             </div>
           )}
-          <Companion pose={pose} size="clamp(92px, 15dvh, 140px)" className="adv-result-pet" />
+          <div className="o8-celebrate" data-testid="celebrate">
+            <Companion pose={pose} size="clamp(92px, 15dvh, 140px)" className="adv-result-pet" />
+            <span className="o8-burst" aria-hidden>
+              {Array.from({ length: 8 }, (_, i) => (
+                <i key={i} style={{ ['--a' as string]: `${i * 45}deg`, animationDelay: `${0.1 + (i % 3) * 0.08}s` }} />
+              ))}
+            </span>
+          </div>
           <h1>{challenge ? '挑戰完成了！' : daily ? '今日冒險完成了！' : isReplay ? `第 ${station} 站，再玩一次完成了！` : `第 ${station} 站過關了！`}</h1>
           <p className="adv-sub">{challenge ? `${info.chapterName}・挑戰站` : daily ? `${info.chapterName}・5 題新題目` : isReplay ? `${info.chapterName}・${nameText(def.name, species)}・換新的題目` : `${info.chapterName}・${nameText(def.name, species)}`}</p>
           <p className="adv-sub adv-wrapup" data-testid="wrapup">{pickLine(def.kind === 'boss' ? 'companion.boss.done' : 'companion.wrapup', station).text}</p>
           <div className={`q7-loot ${result.qty > 0 ? '' : 'h74-solo'}`}>
             <section className="q7-loot-col" aria-label={`${petName}撿到${foodSummary}`} data-testid="result-food">
+              <span className="o8-pill" aria-hidden>
+                食物 +<CountUp to={result.foods.length} delay={foodDelay * 1000} ms={result.foods.length * 500} run={choreo} />
+              </span>
               <div className="q7-loot-icons q7-food-icons">
                 {result.foods.map((f, i) => (
-                  <span key={i} className="q7-food" data-testid="result-food-item" data-food={f} style={{ animationDelay: `${foodDelay + i * 0.45}s` }}>
+                  <span key={i} className="q7-food" data-testid="result-food-item" data-food={f} style={{ animationDelay: `${foodDelay + i * 0.5}s`, ['--fx' as string]: `${(i % 2 ? 1 : -1) * 36}px` }}>
                     <Icon name={`food-${f}`} emoji={FOOD_EMOJI[f]} alt={foodName(f)} size={84} />
                   </span>
                 ))}
@@ -460,15 +548,18 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
             </section>
             {result.qty > 0 && (
               <section className="q7-loot-col" aria-label={`獲得${MATERIAL_NAMES[result.material]} ${result.qty} 個`} data-testid="result-materials">
+                <span className="o8-pill" aria-hidden>
+                  {MATERIAL_NAMES[result.material]} +<CountUp to={result.qty} delay={matDelay * 1000} ms={result.qty * 220} run={choreo} />
+                </span>
                 <div className="q7-loot-icons adv-reward">
                   {Array.from({ length: result.qty }, (_, i) => (
-                    <span key={i} className="q7-mat" data-reward style={{ animationDelay: `${matDelay + i * 0.18}s` }}>
+                    <span key={i} className="q7-mat" data-reward style={{ animationDelay: `${matDelay + i * 0.2}s`, ['--fx' as string]: `${(i % 2 ? 1 : -1) * 30}px` }}>
                       <Icon name={`mat-${result.material}`} emoji={MAT_EMOJI[result.material]} alt={MATERIAL_NAMES[result.material]} size={result.qty > 3 ? 60 : 72} />
                     </span>
                   ))}
                 </div>
                 <p className="q7-loot-text adv-reward-text" data-testid="reward-text">
-                  獲得{MATERIAL_NAMES[result.material]} × {result.qty}
+                  獲得{MATERIAL_NAMES[result.material]} × <CountUp to={result.qty} delay={matDelay * 1000} ms={result.qty * 220} run={choreo} />
                 </p>
               </section>
             )}
@@ -496,11 +587,11 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
           )}
           <div className="adv-actions">
             {daily || challenge || isReplay ? (
-              <button className="adv-btn primary" onClick={onExit} data-testid="back-to-map">回地圖</button>
+              <button className="adv-btn primary o8-main-btn" onClick={onExit} data-testid="back-to-map">回地圖</button>
             ) : result.chapterDone ? (
-              <button className="adv-btn primary" onClick={onCeremony} data-testid="open-chest">去開寶箱</button>
+              <button className="adv-btn primary o8-main-btn" onClick={onCeremony} data-testid="open-chest">去開寶箱</button>
             ) : (
-              <button className="adv-btn primary" onClick={() => onNextStation(station + 1)} data-testid="next-station">下一站</button>
+              <button className="adv-btn primary o8-main-btn" onClick={() => onNextStation(station + 1)} data-testid="next-station">下一站</button>
             )}
             {!daily && !challenge && !isReplay && <button className="adv-btn" onClick={onExit} data-testid="back-to-map">回地圖</button>}
           </div>
@@ -510,7 +601,13 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
   }
 
   return (
-    <main className={`adv adv-stage ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`} data-testid="stage" data-kind={def.kind} data-station={station} data-daily={daily ? 'true' : undefined} data-challenge={challenge ? 'true' : undefined} data-replay={isReplay ? 'true' : undefined} data-subject={info.subject} data-gentle={profile.gentle ? 'true' : undefined}>
+    <main
+      className={`adv adv-stage o8-stage ${sceneOk ? 'o8-scene' : ''} ${profile.gentle ? 'gentle' : ''} ${def.kind === 'boss' ? 'boss' : ''}`}
+      style={sceneOk && sceneKey ? ({ ['--o8-scene' as string]: `url("${sceneUrl(sceneKey)}")` } as CSSProperties) : undefined}
+      data-scene={sceneKey ?? undefined}
+      data-scene-state={sceneOk ? 'on' : 'off'}
+      onPointerDown={skipAuto}
+      data-testid="stage" data-kind={def.kind} data-station={station} data-daily={daily ? 'true' : undefined} data-challenge={challenge ? 'true' : undefined} data-replay={isReplay ? 'true' : undefined} data-subject={info.subject} data-gentle={profile.gentle ? 'true' : undefined}>
       <header className="adv-top">
         <button className="adv-btn small" onClick={askLeave} aria-label="離開關卡" data-testid="leave">←<span className="adv-leave-label"> 離開</span></button>
         {def.kind === 'boss' ? (
@@ -550,7 +647,10 @@ export function StageScreen({ chapterId, station, onExit, onNextStation, onCerem
               {pickLine(combo === 5 ? 'companion.combo5' : 'companion.combo3', 0).text}
             </p>
           )}
-          <Companion pose={pose} size="var(--pet)" className="adv-say-pet" />
+          <div className="o8-pet-stand">
+            <Companion pose={pose} size="var(--pet)" className="adv-say-pet" />
+            <i className="o8-pet-shadow" aria-hidden />
+          </div>
           <div className={`adv-bubble ${hintStage > 0 && !solved ? 'hint' : ''} ${solved ? 'ok' : ''}`} aria-live="polite">
             <div className="adv-bubble-body">
               {opener && (
