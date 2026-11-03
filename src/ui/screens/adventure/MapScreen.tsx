@@ -152,7 +152,8 @@ export function MapScreen({ onBack, go }: { onBack: () => void; go: (s: Screen) 
     const sc = scrollRef.current
     const scene = sceneRef.current
     if (!sc || !scene) return
-    const fit = () => setCanScroll(scene.scrollWidth > sc.clientWidth + 4)
+    // offsetWidth：scrollWidth 會把突出場景的站點標籤算進去，整張放得下時也誤報可滑動
+    const fit = () => setCanScroll(scene.offsetWidth > sc.clientWidth + 4)
     fit()
     const idx = doneN === undefined ? 0 : doneN >= ch.stations.length ? ch.stations.length : doneN
     const x = (points[idx][0] / 100) * scene.scrollWidth
