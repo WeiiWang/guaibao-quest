@@ -19,7 +19,7 @@ while IFS= read -r line || [ -n "$line" ]; do
 from PIL import Image,ImageOps
 im=Image.open('$ROOT/design/raw/$name.png').convert('RGB')
 ImageOps.fit(im,(1600,900),Image.LANCZOS).save('$ROOT/public/art/$name.jpg',quality=82,optimize=True)" && echo "JPG $name" ;;
-    ui-*) uv run --with pillow python -I cutout_white.py "$ROOT/design/raw/$name.png" "$ROOT/public/art/$name.png" && echo "CUT $name" ;;
+    ui-*|decor-*) uv run --with pillow python -I cutout_white.py "$ROOT/design/raw/$name.png" "$ROOT/public/art/$name.png" && echo "CUT $name" ;;
   esac
 done < "$LIST"
 echo ALLDONE
