@@ -11,22 +11,24 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['apple-touch-icon.png'],
       manifest: {
         name: '乖寶任務',
         short_name: '乖寶任務',
         description: '完成任務、照顧小猴子',
         lang: 'zh-Hant',
-        theme_color: '#f3e3c3',
-        background_color: '#f3e3c3',
+        // 啟動底色 = 開場畫面的天空藍（跟 index.html 的 theme-color、src/ui/shell.css 的 --gq-sky 同一個色）
+        theme_color: '#67b2fd',
+        background_color: '#67b2fd',
         display: 'standalone',
         orientation: 'any',
         start_url: base,
         scope: base,
         icons: [
-          { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          // 圖示由 design/tools/make_icons.py 從 design/raw/app-icon.png 切出；maskable 另外一張（內縮到安全區，不被圓形遮罩切到）
+          { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: 'icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {

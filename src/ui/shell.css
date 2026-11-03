@@ -1,0 +1,77 @@
+/* ============ v8 線 N：外殼共用（雲、按鈕手感、品牌載入畫面） ============
+   新規則一律 gq- 前綴；這個檔只放外殼共用的東西，各畫面自己的樣式在 title.css / transition.css / errorBoundary.css */
+
+:root {
+  /* 開場畫面的天空藍：index.html 啟動畫面、manifest background_color 都用同一個 */
+  --gq-sky: #67b2fd;
+  --gq-sky-soft: #a1d4fe;
+}
+
+/* ---------- 雲（開場畫面飄的雲、換畫面蓋上來的雲共用）：圓潤、上白下淡藍紫 ---------- */
+.gq-cloud {
+  display: block;
+  aspect-ratio: 240 / 140;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 140'><defs><linearGradient id='g' gradientUnits='userSpaceOnUse' x1='0' y1='14' x2='0' y2='126'><stop offset='0' stop-color='%23ffffff'/><stop offset='.55' stop-color='%23fffdfb'/><stop offset='1' stop-color='%23d6e4ff'/></linearGradient></defs><g fill='url(%23g)'><rect x='12' y='66' width='216' height='60' rx='30'/><circle cx='64' cy='78' r='38'/><circle cx='118' cy='56' r='50'/><circle cx='172' cy='74' r='40'/><circle cx='205' cy='94' r='26'/><circle cx='36' cy='98' r='24'/></g></svg>") center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+/* ---------- 全域按鈕手感 ----------
+   只用獨立的 scale 屬性，不碰 transform：元件自己的位移 / 縮放（.btn:active 的 translateY 等）照舊疊在上面。
+   放開時的彈回由 src/ui/pressFeel.ts 用 Web Animations 補（純 CSS 做不到「放開才彈」）。 */
+button:not(:disabled):active,
+[role='button']:active {
+  scale: 0.95;
+}
+@media (prefers-reduced-motion: reduce) {
+  button:not(:disabled):active,
+  [role='button']:active { scale: none; }
+}
+
+/* ---------- 品牌載入畫面（取代「載入中…」）---------- */
+.splash,
+.gq-loading {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  min-height: 100dvh;
+  background: linear-gradient(180deg, var(--gq-sky) 0%, var(--gq-sky-soft) 62%, #e9f6ff 100%);
+  color: #fff;
+  font-weight: 900;
+  text-shadow: 0 2px 0 rgba(40, 90, 170, 0.35);
+}
+.gq-loading-egg {
+  position: relative;
+  display: block;
+  width: min(34vmin, 180px);
+  aspect-ratio: 1;
+  animation: gq-egg-bounce 0.9s cubic-bezier(0.3, 0, 0.6, 1) infinite;
+  transform-origin: 50% 100%;
+}
+.gq-loading-egg img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(20, 70, 140, 0.28)); }
+/* 蛋圖還沒到、或沒有圖時的備援蛋：純 CSS */
+.gq-loading-egg .gq-css-egg {
+  display: block; width: 62%; height: 78%; margin: 12% auto 0;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 36% 30%, #fffdf2 0 10%, #ffeab8 38%, #f3c46a 100%);
+  box-shadow: inset -8px -10px 0 rgba(200, 130, 40, 0.25), 0 8px 6px rgba(20, 70, 140, 0.25);
+}
+.gq-loading-shadow {
+  display: block; width: min(20vmin, 100px); height: 12px; margin-top: -4px; border-radius: 50%;
+  background: rgba(20, 70, 140, 0.28); animation: gq-egg-shadow 0.9s cubic-bezier(0.3, 0, 0.6, 1) infinite;
+}
+@keyframes gq-egg-bounce {
+  0% { transform: translateY(0) scale(1.08, 0.9); }
+  18% { transform: translateY(0) scale(0.96, 1.05); }
+  50% { transform: translateY(-34%) scale(0.98, 1.04); }
+  82% { transform: translateY(0) scale(0.98, 1.03); }
+  100% { transform: translateY(0) scale(1.08, 0.9); }
+}
+@keyframes gq-egg-shadow {
+  0%, 100% { transform: scaleX(1.1); opacity: 0.9; }
+  50% { transform: scaleX(0.6); opacity: 0.5; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gq-loading-egg { animation: none; }
+  .gq-loading-shadow { animation: none; }
+}

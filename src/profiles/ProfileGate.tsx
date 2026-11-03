@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { setActiveDb } from '../db/db'
 import { Onboarding } from '../ui/screens/Onboarding'
+import { Loading } from '../ui/components/Loading'
 import { ChildPicker } from './ChildPicker'
 import { ProfileContext } from './context'
 import { profiles } from './manager'
@@ -23,7 +24,7 @@ export function ProfileGate({ children: renderChild }: { children: (child: Child
       off = true
     }
   }, [])
-  if (!booted) return <div className="splash">載入中…</div>
+  if (!booted) return <Loading />
   return <ProfileRouter renderChild={renderChild} />
 }
 
@@ -76,7 +77,7 @@ function ProfileRouter({ renderChild }: { renderChild: (child: ChildProfile) => 
     [],
   )
 
-  if (!list) return <div className="splash">載入中…</div>
+  if (!list) return <Loading />
   if (list.length === 0) {
     return (
       <Onboarding
@@ -104,5 +105,5 @@ function ProfileRouter({ renderChild }: { renderChild: (child: ChildProfile) => 
       />
     )
   }
-  return <div className="splash">載入中…</div>
+  return <Loading />
 }

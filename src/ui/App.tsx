@@ -27,6 +27,13 @@ import { GalleryScreen } from './screens/Gallery'
 import { FriendsScreen } from './screens/Friends'
 import { AlbumScreen } from './screens/Album'
 import { HatPreview } from './screens/HatPreview'
+import { Title } from './screens/Title'
+import { CrashProbe } from './screens/CrashProbe'
+import { Loading } from './components/Loading'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { ScreenTransition, screenTransitionKey } from './components/ScreenTransition'
+import { readTitleEnv, shouldShowTitle } from './titleGate'
+import { requestPersistentStorage } from './persist'
 import { normSpecies, speciesOf, type Species } from '../domain/species'
 import { setVoiceSpecies } from '../learning/speech'
 import { SpeciesContext } from './species'
@@ -53,6 +60,7 @@ export type Screen =
   | { name: 'album' }
   | { name: 'hatpreview'; hat: string; species?: Species }
   | { name: 'backdrop'; hash: string }
+  | { name: 'crash' }
 
 /** 兒童端畫面中，時間到會被鎖住的（學習與餵食）；任務、著色、家長區不鎖 */
 const LOCKABLE: Screen['name'][] = ['home', 'map', 'stage', 'workshop']
@@ -67,6 +75,7 @@ function screenFromHash(): Screen {
   if (h === 'album') return { name: 'album' }
   if (h.startsWith('hatpreview')) return { name: 'hatpreview', hat: `hat-${h.split('/')[1] ?? 'crown'}`, species: normSpecies(h.split('/')[2]) }
   if (h.startsWith('backdrop')) return { name: 'backdrop', hash: h }
+  if (h === 'crash') return { name: 'crash' } // 開發與 e2e：驗證錯誤邊界
   return { name: 'home' }
 }
 
@@ -74,6 +83,8 @@ export function App() {
   const [toastMsg, setToastMsg] = useState<{ text: string; tone: ToastTone; id: number } | null>(null)
   const [celebration, setCelebration] = useState<CelebrateInfo | null>(null)
   const toastTimer = useRef<number | undefined>(undefined)
+  // v8 線 N：每次冷啟動先看開場畫面（e2e 與 hash 直達頁跳過，見 titleGate.ts）；按下開始之後才進 ProfileGate（PIN 設定 / 選孩子 / 首頁）
+  const [titleOpen, setTitleOpen] = useState(() => shouldShowTitle(readTitleEnv()))
 
   const toast: ToastFn = useCallback((text, tone = 'info') => {
     window.clearTimeout(toastTimer.current)
@@ -84,7 +95,19 @@ export function App() {
   return (
     <ToastContext.Provider value={toast}>
       <CelebrateContext.Provider value={setCelebration}>
-        <ProfileGate>{(child) => <ChildApp key={child.id} child={child} />}</ProfileGate>
+        <ErrorBoundary where="app">
+          {titleOpen ? (
+            <Title
+              onStart={() => {
+                setTitleOpen(false)
+                requestPersistentStorage()
+              }}
+            />
+          ) : (
+            <ProfileGate>{(child) => <ChildApp key={child.id} child={child} />}</ProfileGate>
+          )}
+        </ErrorBoundary>
+        <ScreenTransition screenKey={titleOpen ? 'title' : 'app'} />
       </CelebrateContext.Provider>
       {celebration && <Celebration info={celebration} onClose={() => setCelebration(null)} />}
       {toastMsg && (
@@ -103,7 +126,7 @@ function ChildApp({ child }: { child: ChildProfile }) {
   const species = useLiveQuery(async () => speciesOf(await db.pets.get('pet')), [])
   // 語音挑檔在 render 時就設定：子元件 mount 時說的第一句也要用對的聲音
   setVoiceSpecies(species)
-  if (!settings || !species) return <div className="splash">載入中…</div>
+  if (!settings || !species) return <Loading />
   if (!settings.value?.onboarded) {
     return (
       <Onboarding
@@ -210,6 +233,9 @@ function Main({ childName }: { childName: string }) {
       case 'hatpreview':
         body = <HatPreview hat={screen.hat} species={screen.species} />
         break
+      case 'crash':
+        body = <CrashProbe />
+        break
       case 'backdrop': {
         const p = parseBackdropHash(screen.hash)
         body = p ? <BackdropPreview {...p} /> : null
@@ -221,7 +247,10 @@ function Main({ childName }: { childName: string }) {
   return (
     <>
       <PlayTimeWatcher counting={screen.name !== 'parent' && !locked} onLocked={setLocked} />
-      {body}
+      <ErrorBoundary where={screen.name === 'parent' ? 'parent' : 'child'} resetKey={screen.name} onHome={home}>
+        {body}
+      </ErrorBoundary>
+      <ScreenTransition screenKey={screenTransitionKey(screen)} />
     </>
   )
 }

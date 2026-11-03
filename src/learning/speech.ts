@@ -187,6 +187,11 @@ export function sayRecorded(prefix: string, text: string, opts: SpeakOptions = {
   return key ? say(key, text, opts) : false
 }
 
+/** 這句話有沒有預錄音檔（原文找得到）。外殼的招呼語用：沒有錄的就不播，不要用機器語音硬唸 */
+export function hasRecordedText(text: string): boolean {
+  return textKeys.has(text)
+}
+
 /** 沒有 key 的句子：用原文找預錄音檔，找不到就用 Web Speech */
 export function sayText(text: string, opts: SpeakOptions = {}): boolean {
   const key = textKeys.get(text)?.[0]

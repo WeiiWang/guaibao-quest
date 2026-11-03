@@ -4,6 +4,9 @@ import { registerSW } from 'virtual:pwa-register'
 import { App } from './ui/App'
 import './ui/styles.css'
 import { installAudioUnlock, loadVoicePack } from './learning/voicePack'
+import { installGlobalErrorHandlers } from './ui/errorLog'
+import { installPressFeel } from './ui/pressFeel'
+import { requestPersistentStorage } from './ui/persist'
 
 if (import.meta.env.DEV) {
   void import('./debug').then((m) => m.installDebug())
@@ -11,6 +14,9 @@ if (import.meta.env.DEV) {
   registerSW({ immediate: true })
 }
 
+installGlobalErrorHandlers()
+installPressFeel()
+requestPersistentStorage()
 installAudioUnlock()
 void loadVoicePack()
 
