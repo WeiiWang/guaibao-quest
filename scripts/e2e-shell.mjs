@@ -183,6 +183,8 @@ try {
           map: !!document.querySelector('.adv-map, [data-testid=map], .map-screen') || !!document.querySelector('h1')?.textContent?.includes('冒險'),
         }
       }, sel)
+    // 分塊載入之後：畫面的 chunk 載好才是同一幀切換（正式環境由 preloadCommonScreens 在首頁閒下來時先載好）。這裡等它載好，測的是載好之後的行為
+    await page.waitForTimeout(2600)
     const r1 = await syncSwitch('[data-testid=candy-map]')
     check('首頁 → 冒險地圖：遮罩與新畫面同一幀出現，舊畫面已拿掉（邏輯不延遲）', r1.overlay && !r1.home, JSON.stringify(r1))
     await page.waitForTimeout(80)

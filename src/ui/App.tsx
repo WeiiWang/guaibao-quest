@@ -1,39 +1,47 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db/db'
 import { repo } from '../db/repo'
 import { localDateStr } from '../domain/date'
 import { CelebrateContext, ToastContext, useNow, type CelebrateInfo, type ToastFn, type ToastTone } from './hooks'
 import { Celebration } from './components/Celebration'
-import { Onboarding } from './screens/Onboarding'
 import { Home } from './screens/Home'
-import { TasksScreen } from './screens/Tasks'
-import { ShopScreen } from './screens/Shop'
-import { BagScreen } from './screens/Bag'
-import { ColoringListScreen, ColoringPlayScreen } from './screens/Coloring'
-import { DotsPlayScreen } from './screens/Dots'
+import {
+  AlbumScreen,
+  BackdropPreview,
+  BagScreen,
+  Ceremony,
+  ColoringListScreen,
+  ColoringPlayScreen,
+  CrashProbe,
+  DotsPlayScreen,
+  FriendsScreen,
+  GalleryScreen,
+  HatPreview,
+  MapScreen,
+  Onboarding,
+  ParentArea,
+  preloadCommonScreens,
+  ShopScreen,
+  StageScreen,
+  TasksScreen,
+  WorkshopScreen,
+} from './lazyScreens'
 import { isDotsPageId } from '../art/dots/dots'
-import { ParentArea } from './screens/parent/ParentArea'
-import { MapScreen } from './screens/adventure/MapScreen'
-import { StageScreen } from './screens/adventure/StageScreen'
-import { Ceremony } from './screens/adventure/Ceremony'
-import { WorkshopScreen } from './screens/Workshop'
 import { LockScreen, PlayTimeWatcher } from './components/PlayTime'
 import { ProfileGate } from '../profiles/ProfileGate'
 import { profiles } from '../profiles/manager'
 import type { ChildProfile } from '../profiles/registry'
-import { BackdropPreview, parseBackdropHash } from './screens/BackdropPreview'
-import { GalleryScreen } from './screens/Gallery'
-import { FriendsScreen } from './screens/Friends'
-import { AlbumScreen } from './screens/Album'
-import { HatPreview } from './screens/HatPreview'
-import { Title } from './screens/Title'
-import { CrashProbe } from './screens/CrashProbe'
+import { parseBackdropHash } from './screens/backdropHash'
+import { APP_THEME, Title } from './screens/Title'
 import { Loading } from './components/Loading'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { ScreenTransition, screenTransitionKey } from './components/ScreenTransition'
 import { readTitleEnv, shouldShowTitle } from './titleGate'
 import { requestPersistentStorage } from './persist'
+import { appUpdate } from './updateController'
+import { isCelebrating } from './celebrating'
+import { RESTORED_FLAG } from './screens/parent/restoredFlag'
 import { normSpecies, speciesOf, type Species } from '../domain/species'
 import { setVoiceSpecies } from '../learning/speech'
 import { playSound, setMusicEnabled, setMusicScene, setSfxEnabled } from '../learning/audioEngine'
@@ -87,19 +95,41 @@ export function App() {
   const [toastMsg, setToastMsg] = useState<{ text: string; tone: ToastTone; id: number } | null>(null)
   const [celebration, setCelebration] = useState<CelebrateInfo | null>(null)
   const toastTimer = useRef<number | undefined>(undefined)
+  const toast: ToastFn = useCallback((text, tone = 'info') => {
+    window.clearTimeout(toastTimer.current)
+    setToastMsg({ text, tone, id: Date.now() })
+    toastTimer.current = window.setTimeout(() => setToastMsg(null), 2800)
+  }, [])
+
   // v8 線 N：每次冷啟動先看開場畫面（e2e 與 hash 直達頁跳過，見 titleGate.ts）；按下開始之後才進 ProfileGate（PIN 設定 / 選孩子 / 首頁）
-  const [titleOpen, setTitleOpen] = useState(() => shouldShowTitle(readTitleEnv()))
+  // 從首頁套用新版本後的重新整理不算冷啟動：不再看一次開場，直接回到孩子的首頁
+  const [titleOpen, setTitleOpen] = useState(() => shouldShowTitle(readTitleEnv()) && !appUpdate.resumeInfo())
+
+  // 跳過開場直接回首頁時，狀態列顏色要自己換回其他畫面的米色（平常是開場畫面離開時換的）
+  useEffect(() => {
+    if (appUpdate.resumeInfo()) document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', APP_THEME)
+  }, [])
+
+  // 開場畫面開著 = 孩子還沒開始玩，是套用新版本的安全時機
+  useEffect(() => appUpdate.setTitleOpen(titleOpen), [titleOpen])
+
+  // 還原備份後頁面會重新載入：告訴家長完成了
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(RESTORED_FLAG)) {
+        sessionStorage.removeItem(RESTORED_FLAG)
+        toast('已從備份還原', 'ok')
+      }
+    } catch {
+      /* 頂多少一句提示 */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // 開場到進首頁之前（PIN、選孩子、建立孩子）都放開場音樂；iOS 要等按下開始才出聲，所以這段就是實際聽得到的時候
   useEffect(() => {
     if (titleOpen) setMusicScene('title')
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const toast: ToastFn = useCallback((text, tone = 'info') => {
-    window.clearTimeout(toastTimer.current)
-    setToastMsg({ text, tone, id: Date.now() })
-    toastTimer.current = window.setTimeout(() => setToastMsg(null), 2800)
   }, [])
 
   return (
@@ -140,22 +170,24 @@ function ChildApp({ child }: { child: ChildProfile }) {
   if (!settings || !species) return <Loading />
   if (!settings.value?.onboarded) {
     return (
-      <Onboarding
-        withPin={false}
-        defaultName={child.name}
-        defaultAge={child.ageBand}
-        onFinish={(i) => profiles.onboardExisting(child.id, { childName: i.childName, species: i.species, ageBand: i.ageBand })}
-      />
+      <Suspense fallback={<Loading />}>
+        <Onboarding
+          withPin={false}
+          defaultName={child.name}
+          defaultAge={child.ageBand}
+          onFinish={(i) => profiles.onboardExisting(child.id, { childName: i.childName, species: i.species, ageBand: i.ageBand })}
+        />
+      </Suspense>
     )
   }
   return (
     <SpeciesContext.Provider value={species}>
-      <Main childName={settings.value.childName} />
+      <Main childName={settings.value.childName} childId={child.id} />
     </SpeciesContext.Provider>
   )
 }
 
-function Main({ childName }: { childName: string }) {
+function Main({ childName, childId }: { childName: string; childId: string }) {
   const [screen, setScreen] = useState<Screen>(screenFromHash)
   const [locked, setLocked] = useState(false)
   const now = useNow()
@@ -183,6 +215,28 @@ function Main({ childName }: { childName: string }) {
     void repo.ensureDailyTasks(now)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [today])
+
+  // 更新不打斷：回到首頁（關卡、著色的進度都已經存好）才套用新版本；從背景回來時正停在首頁也算
+  // 帶著任務回首頁（佈置模式、衣櫃）不算：孩子正要做事，重新整理會把模式弄丟
+  const atPlainHome = screen.name === 'home' && !screen.edit && !screen.wardrobe
+  const lastScreen = useRef(screen.name)
+  useEffect(() => {
+    const cameBack = screen.name === 'home' && lastScreen.current !== 'home'
+    lastScreen.current = screen.name
+    if (!atPlainHome) return
+    const applyIfSafe = () => {
+      if (!isCelebrating()) appUpdate.arrivedHome(childId)
+    }
+    if (cameBack) applyIfSafe()
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') applyIfSafe()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [screen.name, atPlainHome, childId])
+
+  // 首頁畫好、閒下來之後，先把孩子最常去的畫面載好，點下去才不會看到載入畫面
+  useEffect(() => preloadCommonScreens(), [])
 
   useEffect(() => {
     const onHash = () => setScreen(screenFromHash())
@@ -277,7 +331,8 @@ function Main({ childName }: { childName: string }) {
     <>
       <PlayTimeWatcher counting={screen.name !== 'parent' && !locked} onLocked={setLocked} />
       <ErrorBoundary where={screen.name === 'parent' ? 'parent' : 'child'} resetKey={screen.name} onHome={home}>
-        {body}
+        {/* 分塊載入的畫面還沒到時顯示品牌載入畫面（藍天 + 蛋，不閃白）；載入失敗由外面的錯誤邊界接 */}
+        <Suspense fallback={<Loading />}>{body}</Suspense>
       </ErrorBoundary>
       <ScreenTransition screenKey={screenTransitionKey(screen)} />
     </>

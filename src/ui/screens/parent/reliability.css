@@ -1,0 +1,25 @@
+/* v8 線 R：家長區的備份、離線內容包、安裝圖解、關於與隱私。前綴 rl- */
+.rl h3 { margin: 16px 0 4px; font-size: 1.02rem; }
+.rl code { font-size: 0.95rem; padding: 2px 8px; border-radius: 8px; background: rgba(74, 59, 53, 0.08); }
+.rl-list { margin: 6px 0; padding-left: 1.3em; line-height: 1.6; list-style: disc; }
+.rl-list li + li { margin-top: 4px; }
+.rl-actions { justify-content: flex-start; }
+
+.rl-bar { height: 16px; margin: 8px 0 4px; overflow: hidden; border-radius: 999px; background: rgba(74, 59, 53, 0.12); }
+.rl-bar i { display: block; height: 100%; min-width: 0; border-radius: inherit; background: var(--mint-deep, #3fae86); transition: width 0.25s ease; }
+
+.rl-guide { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 12px 0; padding: 0; list-style: none; }
+.rl-guide p { margin: 8px 0 0; line-height: 1.5; font-size: 0.95rem; }
+.rl-guide-art { display: block; width: 100%; height: auto; }
+.rl-guide-art text { font-family: inherit; }
+@media (max-width: 720px) {
+  .rl-guide { grid-template-columns: minmax(0, 1fr); }
+  .rl-guide-art { max-width: 320px; }
+}
+
+.rl-hint { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 0 0 12px; }
+.rl-hint p { flex: 1 1 260px; margin: 0; line-height: 1.5; }
+.rl-hint-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.ob-restore { display: flex; justify-content: center; margin-top: 14px; }
+.ob-restore .btn { font-size: 0.95rem; }

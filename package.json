@@ -41,7 +41,10 @@
     "e2e:play74": "node scripts/e2e-play74.mjs",
     "e2e:quest74": "node scripts/e2e-quest74.mjs",
     "e2e:pets75": "node scripts/e2e-pets75.mjs",
-    "e2e:shell": "node scripts/e2e-shell.mjs"
+    "e2e:shell": "node scripts/e2e-shell.mjs",
+    "e2e:reliability": "node scripts/e2e-reliability.mjs",
+    "measure:tti": "node scripts/measure-tti.mjs",
+    "gen:startup": "uv run --with pillow python -I design/tools/make_startup_images.py"
   },
   "dependencies": {
     "dexie": "^4.4.6",

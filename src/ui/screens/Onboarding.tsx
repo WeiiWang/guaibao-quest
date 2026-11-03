@@ -11,6 +11,8 @@ import { RoomBackdrop } from '../components/RoomBackdrop'
 import { skipShellMotion } from '../titleGate'
 import { playSound } from '../../learning/audioEngine'
 import { prefersReducedMotion } from '../components/ScreenTransition'
+import { RestoreFlow } from './parent/RestoreFlow'
+import './parent/reliability.css'
 import '../j74.css'
 import '../onboarding.css'
 
@@ -118,6 +120,12 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
                 setStep('pin2')
               }}
             />
+            {/* 全新裝置（包括 iPad 從 Safari 搬到主畫面版）：直接用備份檔，不用先建一個假的孩子 */}
+            {withPin && (
+              <div className="ob-restore">
+                <RestoreFlow requirePin={false} label="有備份檔？從備份還原" />
+              </div>
+            )}
           </>
         )}
         {step === 'pin2' && (
