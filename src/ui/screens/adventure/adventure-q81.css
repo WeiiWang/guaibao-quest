@@ -1,10 +1,10 @@
 /* v8.1 線 Q：地圖整頁鋪同一張場景的柔焦背景，iPad 兩側不再留白。 */
 .adv.adv-map { position: relative; isolation: isolate; }
+/* 外層裁切：畫面轉場時祖先有 transform，fixed 會變成相對祖先，外擴的 48px 就會撐出橫向捲動 */
+.adv-bgblur-clip { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 .adv-bgblur {
-  position: fixed;
+  position: absolute;
   inset: -48px;
-  z-index: -1;
-  pointer-events: none;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -50,6 +50,10 @@
   /* 這一輪完成了：那張卡排成一列，地圖讓出它的高度，今日冒險才不會掉出畫面 */
   .adv.adv-map:has(> .adv-again) { --map-w: min(calc(100vw - 48px), calc((100dvh - 356px) * 16 / 9)); }
   .adv.adv-map .adv-upcoming { flex-wrap: nowrap; }
+  /* 6–7 歲多一顆挑戰站：底列放寬，章節名和挑戰站同一列、預告排第二列；地圖讓出多的高度，一屏還是放得下 */
+  .adv.adv-map:has(.q7-challenge) { --map-w: min(calc(100vw - 48px), calc((100dvh - 302px) * 16 / 9)); --row-w: calc(100vw - 48px); }
+  .adv.adv-map:has(> .adv-again):has(.q7-challenge) { --map-w: min(calc(100vw - 48px), calc((100dvh - 372px) * 16 / 9)); }
+  .adv.adv-map:has(.q7-challenge) .adv-upcoming { order: 1; }
   .adv.adv-map > .adv-again { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 6px 16px; }
   .adv.adv-map > .adv-again p { margin: 0; }
   .adv.adv-map > .adv-again .adv-btn { min-height: 56px; margin: 0; }

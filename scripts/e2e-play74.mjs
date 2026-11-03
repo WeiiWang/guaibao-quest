@@ -436,10 +436,11 @@ try {
     // 舊存檔：球與小盆栽早就擺好了 → 願望直接從時鐘開始，沒有回憶卡
     const r = await app(browser, SIZES.land, [], { stage: 'adult' })
     const { page } = r
-    await patchSettings(page, { play: undefined, album: undefined, albumInit: false }) // 像舊存檔：還沒有任何小願望的紀錄
     await putRows(page, 'inventory', [{ id: 'decor-ball', itemId: 'decor-ball', qty: 1 }, { id: 'decor-plant', itemId: 'decor-plant', qty: 1 }])
     await placeAt(page, 'decor-ball', 0.5, 0.82)
     await placeAt(page, 'decor-plant', 0.35, 0.8)
+    // 最後才清紀錄（像舊存檔：還沒有任何小願望的紀錄）：先清的話 App 還開著，可能在家具擺好前就把皮球設成當前願望
+    await patchSettings(page, { play: undefined, album: undefined, albumInit: false })
     await reload(page)
     await page.waitForSelector('[data-testid=wish-bubble]')
     check('舊存檔：已經擺好的家具直接略過（不演、不送卡），願望從時鐘開始', (await page.locator('[data-testid=wish-bubble]').getAttribute('data-wish')) === 'w-clock' && (await settingsOf(page)).album?.some((c) => c.kind === 'wish') !== true)
