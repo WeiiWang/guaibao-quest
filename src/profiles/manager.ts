@@ -8,6 +8,7 @@ import { AGE_BANDS } from '../learning/profile'
 import { DEFAULT_DB_NAME, deleteDb, getDb, type GuaibaoDB } from '../db/db'
 import { newId, Repo, type Result } from '../db/repo'
 import { registry as defaultRegistry, type ChildProfile, type Registry } from './registry'
+import { runPendingDbDeletes } from './backup'
 
 /** 備用頭像（沒有寵物圖時用），依加入順序輪流 */
 // v7.5：輪流的頭像不放兔子、老虎：那兩個代表「養兔兔 / 虎虎的孩子」，養阿悟的孩子不能拿到
@@ -62,6 +63,7 @@ export class ProfileManager {
    * 可重複呼叫、並行呼叫也只會建立一個孩子。
    */
   async bootstrap(): Promise<ChildProfile[]> {
+    await runPendingDbDeletes(this.reg, this.deps.removeDb).catch(() => undefined) // 上次還原備份換下來的舊資料庫
     const existing = await this.reg.list()
     if (existing.length) return existing
     const legacy = this.deps.openDb(this.deps.legacyDbName)

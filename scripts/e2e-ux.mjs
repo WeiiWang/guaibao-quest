@@ -730,7 +730,7 @@ async function misc(browser) {
     })
     await page.waitForSelector('[data-testid=parent-tabs]')
     const tabs = await page.locator('[data-testid=parent-tabs] .tab').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { name: e.textContent, x: r.x, y: Math.round(r.y), w: r.width, h: r.height } }))
-    check(`[${size}] 家長分頁 11 個全部存在（含 v6「本週」）`, tabs.length === 11 && tabs.some((t) => t.name === '本週'), String(tabs.length))
+    check(`[${size}] 家長分頁 13 個全部存在（含 v6「本週」、v8「備份與離線」「關於與隱私」）`, tabs.length === 13 && ['本週', '備份與離線', '關於與隱私'].every((n) => tabs.some((t) => t.name === n)), String(tabs.length))
     const rows = new Set(tabs.map((t) => t.y)).size
     check(`[${size}] v7：家長分頁單列（可橫向捲動），視覺順序 = DOM 順序`, rows === 1 && tabs.every((t, i) => i === 0 || t.x > tabs[i - 1].x), String(rows))
     check(`[${size}] v7：「PM 預覽」排在最後`, tabs.at(-1).name === 'PM 預覽')

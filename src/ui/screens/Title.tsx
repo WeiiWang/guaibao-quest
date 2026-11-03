@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { profiles } from '../../profiles/manager'
+import { loadBank } from '../../learning/bank'
 import '../shell.css'
 import '../title.css'
 
 /** 這一頁的天空色（跟 index.html 的啟動畫面、manifest 的 background_color 同一個藍） */
 const TITLE_SKY = '#67b2fd'
 /** 離開開場之後其他畫面的狀態列顏色（米色，跟以前的 theme-color 一樣） */
-const APP_THEME = '#f3e3c3'
+export const APP_THEME = '#f3e3c3'
 
 /** 飄的雲：位置（%）、寬度（vmin）、速度（秒）、起始延遲（負值 = 一開始就在途中）、透明度 */
 const CLOUDS: { top: number; w: number; dur: number; delay: number; o: number }[] = [
@@ -30,6 +31,7 @@ type LogoState = 'wait' | 'img' | 'text'
 /** 預先暖機：資料庫與名冊先開好、第一個畫面要用的圖先載（按下開始之後立刻有東西看） */
 function warmUp(): void {
   void profiles.bootstrap().catch(() => undefined)
+  void loadBank().catch(() => undefined) // 按下開始之前就把題庫載好；失敗的話 ProfileGate 會再試一次
   const base = import.meta.env.BASE_URL
   for (const n of ['pet-egg', 'pet-baby-happy', 'pet-rabbit-baby-happy', 'pet-tiger-baby-happy']) {
     const im = new Image()

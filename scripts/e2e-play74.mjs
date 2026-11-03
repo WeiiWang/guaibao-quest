@@ -29,6 +29,7 @@ const DAY = 24 * 60 * 60 * 1000
 // ---------- 題庫：讓孩子「認識」指定的朋友 ----------
 const vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
 const bank = await vite.ssrLoadModule('/src/learning/bank.ts')
+await bank.loadBank()
 const friends = await vite.ssrLoadModule('/src/domain/friends.ts')
 const play = await vite.ssrLoadModule('/src/domain/play74.ts')
 await vite.close()

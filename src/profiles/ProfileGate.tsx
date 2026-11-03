@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { setActiveDb } from '../db/db'
-import { Onboarding } from '../ui/screens/Onboarding'
+import { loadBank } from '../learning/bank'
+import { Onboarding } from '../ui/lazyScreens'
 import { Loading } from '../ui/components/Loading'
 import { ChildPicker } from './ChildPicker'
 import { ProfileContext } from './context'
 import { profiles } from './manager'
 import { registry, type ChildProfile } from './registry'
+import { appUpdate } from '../ui/updateController'
 
 /**
  * 啟動閘門：先升級名冊（舊玩家 → 第一個孩子），再決定要顯示什麼：
@@ -17,20 +19,28 @@ import { registry, type ChildProfile } from './registry'
  */
 export function ProfileGate({ children: renderChild }: { children: (child: ChildProfile) => ReactNode }) {
   const [booted, setBooted] = useState(false)
+  const [failed, setFailed] = useState<unknown>(null)
   useEffect(() => {
     let off = false
-    void profiles.bootstrap().then(() => !off && setBooted(true))
+    // 題庫是獨立的 chunk：放行之後所有畫面都可以直接用 QUESTIONS、getQuestion
+    Promise.all([profiles.bootstrap(), loadBank()]).then(
+      () => !off && setBooted(true),
+      (e: unknown) => !off && setFailed(e ?? new Error('啟動失敗')),
+    )
     return () => {
       off = true
     }
   }, [])
+  // 題庫 chunk 載不到（例如剛好換版）：丟給外層的錯誤邊界處理（自動重新整理一次，不會白屏）
+  if (failed) throw failed
   if (!booted) return <Loading />
   return <ProfileRouter renderChild={renderChild} />
 }
 
 function ProfileRouter({ renderChild }: { renderChild: (child: ChildProfile) => ReactNode }) {
   const list = useLiveQuery(() => registry.list(), [])
-  const [pickedId, setPickedId] = useState<string | null>(null)
+  // 從首頁套用新版本後的重新整理：直接回到剛才那個孩子，不用再選一次
+  const [pickedId, setPickedId] = useState<string | null>(() => appUpdate.resumeInfo()?.childId ?? null)
   const [mountedId, setMountedId] = useState<string | null>(null)
   const waiters = useRef<(() => void)[]>([])
   const mountedRef = useRef<string | null>(null)
@@ -80,10 +90,12 @@ function ProfileRouter({ renderChild }: { renderChild: (child: ChildProfile) => 
   if (!list) return <Loading />
   if (list.length === 0) {
     return (
-      <Onboarding
-        withPin
-        onFinish={(i) => profiles.setupFirstChild({ pin: i.pin ?? '', childName: i.childName, species: i.species, ageBand: i.ageBand })}
-      />
+      <Suspense fallback={<Loading />}>
+        <Onboarding
+          withPin
+          onFinish={(i) => profiles.setupFirstChild({ pin: i.pin ?? '', childName: i.childName, species: i.species, ageBand: i.ageBand })}
+        />
+      </Suspense>
     )
   }
   const mounted = list.find((c) => c.id === mountedId)

@@ -20,4 +20,7 @@ const subscribe = (cb: () => void) => {
   }
 }
 
+/** 不是 hook 的版本（事件處理與 effect 裡用） */
+export const isCelebrating = (): boolean => open > 0
+
 export const useCelebrationOpen = (): boolean => useSyncExternalStore(subscribe, () => open > 0)

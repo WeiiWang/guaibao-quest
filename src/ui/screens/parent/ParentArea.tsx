@@ -24,8 +24,12 @@ import { PmTab } from './PmTab'
 import { WeeklyTab } from './WeeklyTab'
 import { DailyTip } from './DailyTip'
 import { PM_TOOLS_ENABLED } from '../../../db/pm'
+import { DataTab } from './DataTab'
+import { AboutTab } from './AboutTab'
+import { markInstallHintSeen, shouldShowInstallHint } from '../../install'
+import './reliability.css'
 
-type Tab = 'review' | 'weekly' | 'points' | 'tasks' | 'ledger' | 'learning' | 'playtime' | 'audio' | 'plan' | 'settings' | 'pm'
+type Tab = 'review' | 'weekly' | 'points' | 'tasks' | 'ledger' | 'learning' | 'playtime' | 'audio' | 'plan' | 'settings' | 'data' | 'about' | 'pm'
 const TABS: { id: Tab; label: string }[] = [
   { id: 'review', label: '審核' },
   { id: 'weekly', label: '本週' },
@@ -37,6 +41,8 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'audio', label: '音效/語音' },
   { id: 'plan', label: '訂閱方案' },
   { id: 'settings', label: '設定' },
+  { id: 'data', label: '備份與離線' },
+  { id: 'about', label: '關於與隱私' },
   ...(PM_TOOLS_ENABLED ? [{ id: 'pm' as const, label: 'PM 預覽' }] : []),
 ]
 
@@ -94,6 +100,12 @@ export function ParentArea({ onExit: onExitRaw }: { onExit: () => void }) {
   const [tab, setTab] = useState<Tab>('review')
   const [lockMsg, setLockMsg] = useState('')
   const idleTimer = useRef<number | undefined>(undefined)
+  // 沒加到主畫面時，第一次進家長區提示一次（孩子看不到家長區，不會打擾孩子）；顯示過就記下來
+  const [installHint, setInstallHint] = useState(shouldShowInstallHint)
+
+  useEffect(() => {
+    if (unlocked && installHint) markInstallHintSeen()
+  }, [unlocked, installHint])
 
   // 家長模式 5 分鐘無操作自動回小孩端
   useEffect(() => {
@@ -155,6 +167,25 @@ export function ParentArea({ onExit: onExitRaw }: { onExit: () => void }) {
         <h1>家長專區</h1>
         <div className="header-right" />
       </header>
+      {installHint && (
+        <div className="card rl-hint" data-testid="install-hint">
+          <p>建議把乖寶任務加到 iPad 的主畫面：全螢幕、可以離線玩，資料也比較不會被瀏覽器清掉。</p>
+          <div className="rl-hint-actions">
+            <button
+              className="btn primary"
+              data-testid="install-hint-show"
+              onClick={() => {
+                setInstallHint(false)
+                setTab('data')
+                window.setTimeout(() => document.getElementById('rl-install-guide')?.scrollIntoView({ behavior: 'smooth' }), 80)
+              }}
+            >
+              看怎麼做
+            </button>
+            <button className="btn" data-testid="install-hint-close" onClick={() => setInstallHint(false)}>知道了</button>
+          </div>
+        </div>
+      )}
       <DailyTip key={`tip-${viewId ?? 'me'}`} />
       <ChildChips list={list ?? []} viewId={viewId} onPick={pickChild} />
       <div className="tabs parent-tabs h7-ptabs" role="tablist" data-testid="parent-tabs">
@@ -181,6 +212,8 @@ export function ParentArea({ onExit: onExitRaw }: { onExit: () => void }) {
       {tab === 'audio' && <AudioTab />}
       {tab === 'plan' && <SubscriptionTab />}
       {tab === 'settings' && <SettingsTab onReset={onExit} />}
+      {tab === 'data' && <DataTab />}
+      {tab === 'about' && <AboutTab />}
       {tab === 'pm' && <PmTab onExit={onExit} />}
       </div>
     </main>

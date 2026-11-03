@@ -1,28 +1,29 @@
-import numberJson from './content/number.json'
-import classifyJson from './content/classify.json'
-import patternJson from './content/pattern.json'
-import measureJson from './content/measure.json'
-import spaceJson from './content/space.json'
-import observeJson from './content/observe.json'
-import englishJson from './content/english.json'
-import lifeJson from './content/life.json'
-import natureJson from './content/nature.json'
 import type { Difficulty, Question, SkillId } from './types'
 
-/** 題庫（固定 JSON，由 scripts/gen-questions.mjs 產生後人工審閱） */
-export const QUESTIONS: Question[] = [
-  ...(numberJson as unknown as Question[]),
-  ...(classifyJson as unknown as Question[]),
-  ...(patternJson as unknown as Question[]),
-  ...(measureJson as unknown as Question[]),
-  ...(spaceJson as unknown as Question[]),
-  ...(observeJson as unknown as Question[]),
-  ...(englishJson as unknown as Question[]),
-  ...(lifeJson as unknown as Question[]),
-  ...(natureJson as unknown as Question[]),
-]
+/**
+ * 題庫（固定 JSON，由 scripts/gen-questions.mjs 產生後人工審閱）。
+ * 這些 JSON 佔了快一半的 JS，所以獨立成一塊（./bankData），啟動後才載入。
+ * 所有用到題庫的畫面都在 ProfileGate 之後，ProfileGate 會等 loadBank() 完成才放行，
+ * 所以 QUESTIONS、getQuestion 在畫面裡一定是載入好的（live binding，載入後這裡的值就換了）。
+ */
+export let QUESTIONS: Question[] = []
+let BY_ID = new Map<string, Question>()
+let loading: Promise<void> | null = null
 
-const BY_ID = new Map(QUESTIONS.map((q) => [q.id, q]))
+/** 載入題庫（可重複呼叫）。載入失敗會丟錯，下次呼叫會重試 */
+export function loadBank(): Promise<void> {
+  loading ??= import('./bankData')
+    .then((m) => {
+      if (!m) throw new Error('ChunkLoadError: 題庫載入失敗') // Vite 的預載失敗被接走時 import() 會回 undefined
+      QUESTIONS = m.ALL_QUESTIONS
+      BY_ID = new Map(QUESTIONS.map((q) => [q.id, q]))
+    })
+    .catch((e: unknown) => {
+      loading = null
+      throw e
+    })
+  return loading
+}
 
 export function getQuestion(id: string): Question | undefined {
   return BY_ID.get(id)
