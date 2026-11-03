@@ -16,8 +16,8 @@ import '../onboarding.css'
 
 /** 落蛋編排的總長（毫秒）：蛋從天上落下、彈兩下、停穩。要小於 1.5 秒，點一下可以跳過 */
 export const EGG_DROP_MS = 1450
-/** 蛋第一次碰到地板的時間（title.css / shell.css 的落下動畫），這時候響落地音 */
-const EGG_LAND_MS = 620
+/** 蛋第一次碰到地板的時間（onboarding.css 的 egg-fall），這時候響落地音 */
+const EGG_LAND_MS = 550
 
 type Step = 'pin1' | 'pin2' | 'child' | 'age' | 'pet' | 'egg'
 
