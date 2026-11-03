@@ -878,7 +878,27 @@ def song_paint() -> Song:
     return s
 
 
+def song_story() -> Song:
+    """有聲繪本（線 P）：說故事的背景。D 大調 66 BPM。音都在人聲之上或之下、旋律很疏：豎琴分解和弦、音樂盒長音、很輕的長音墊底，沒有打擊。"""
+    s = Song("story", 66, 4, 16, seed=97, rt60=2.8, wet=0.34, damp=1.2)
+    ch = ["Dmaj7", "Bm7", "Gmaj7", "A7sus", "Dmaj7", "F#m7", "Gmaj7", "A7",
+          "Bm7", "F#m7", "Gmaj7", "Dadd9", "Em7", "A7", "Gmaj7", "A7sus"]
+    mel = (
+        "F#5:2 A5:2 | B5:3 r:1 | D6:1.5 B5:0.5 A5:2 | E5:3 r:1 |"
+        " F#5:2 A5:2 | C#6:3 r:1 | D6:1 B5:1 G5:2 | A5:3 r:1 |"
+        " B5:2 D6:2 | C#6:1.5 A5:0.5 F#5:2 | G5:1 B5:1 D6:2 | A5:3 r:1 |"
+        " G5:1.5 B5:0.5 E6:2 | C#6:2 A5:2 | B5:1 G5:1 D5:2 | E5:2 A5:1 r:1"
+    )
+    s.melody("musicbox", mel, vel=0.62, pan=0.08, level=0.85, jit=0.012, accent=0.05)
+    s.melody("glock", mel, start_bar=8, vel=0.24, pan=-0.2, octave=1, level=0.32, jit=0.014)
+    s.arp("pluck", ch, [(0, 0, 1.5), (1, 2, 1.5), (2, 3, 1.5), (3, 2, 1.5)], low=43, vel=0.32, pan=-0.28, level=0.75, bright=0.55, tau1=1.7, jit=0.01)
+    s.pad(ch, per=1, vel=0.46, level=0.5, center=54, send=0.6, attack=0.9, release=1.6, count=3, overlap=0.5)
+    s.bassline(ch, [(0, "r", 3.4)], octave_low=34, vel=0.4, level=0.75, tau=0.9)
+    return s
+
+
 SONGS = {
+    "story": song_story,
     "title": song_title,
     "home-day": song_home_day,
     "home-night": song_home_night,

@@ -17,3 +17,6 @@ export const autoAdvanceOn = (): boolean => !automated() || flag('gq-autoadvance
 
 /** 結算編排（數字跳動、依序出現）。自動化瀏覽器除非設了 gq-choreo-test 否則直接顯示最後的樣子 */
 export const choreoOn = (): boolean => !automated() || flag('gq-choreo-test')
+
+/** v8.1 線 P 有聲繪本（自動演出與地圖上的故事入口）。自動化瀏覽器除非設了 gq-story-test 否則不演，既有 e2e 不受影響 */
+export const storyOn = (): boolean => !automated() || flag('gq-story-test')

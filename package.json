@@ -41,7 +41,8 @@
     "e2e:play74": "node scripts/e2e-play74.mjs",
     "e2e:quest74": "node scripts/e2e-quest74.mjs",
     "e2e:pets75": "node scripts/e2e-pets75.mjs",
-    "e2e:shell": "node scripts/e2e-shell.mjs"
+    "e2e:shell": "node scripts/e2e-shell.mjs",
+    "e2e:story": "node scripts/e2e-story.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",

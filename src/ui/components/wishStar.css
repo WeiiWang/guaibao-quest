@@ -1,0 +1,11 @@
+/* 窗外眨眼的小星：大部分時間靜靜亮著，每隔幾秒眨一下 */
+.rb-wish { position: absolute; left: 24%; top: 14%; width: 24%; aspect-ratio: 1; display: block; z-index: 1; filter: drop-shadow(0 0 5px #ffe98a); animation: rb-wish-blink 4.5s ease-in-out infinite; transform-origin: 50% 50%; }
+.rb-wish-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+@keyframes rb-wish-blink {
+  0%, 82%, 100% { opacity: 1; transform: scale(1); }
+  88% { opacity: 0.25; transform: scale(0.72); }
+  94% { opacity: 1; transform: scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rb-wish { animation: none; }
+}

@@ -10,8 +10,8 @@
  *   要測音檔本身時在 localStorage 設 gq-audio-test=1。
  */
 
-export type MusicScene = 'title' | 'home-day' | 'home-night' | 'map' | 'stage' | 'boss' | 'ceremony' | 'paint'
-export const MUSIC_SCENES: readonly MusicScene[] = ['title', 'home-day', 'home-night', 'map', 'stage', 'boss', 'ceremony', 'paint']
+export type MusicScene = 'title' | 'home-day' | 'home-night' | 'map' | 'stage' | 'boss' | 'ceremony' | 'paint' | 'story'
+export const MUSIC_SCENES: readonly MusicScene[] = ['title', 'home-day', 'home-night', 'map', 'stage', 'boss', 'ceremony', 'paint', 'story']
 
 export type SoundName = 'tap' | 'pop' | 'correct' | 'wrong' | 'reward' | 'coin' | 'whoosh' | 'page' | 'unlock' | 'hatch' | 'drop' | 'sparkle'
 export const SOUND_NAMES: readonly SoundName[] = ['tap', 'pop', 'correct', 'wrong', 'reward', 'coin', 'whoosh', 'page', 'unlock', 'hatch', 'drop', 'sparkle']

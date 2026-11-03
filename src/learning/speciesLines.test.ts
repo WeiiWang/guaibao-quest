@@ -48,7 +48,7 @@ describe('v7.5 語音：物種後綴的 key', () => {
     expect(named).toContain('ui.album.card.1')
     expect(named).not.toContain('pet.dots.done.12') // 寵物自己說的（連連看「阿悟」那一頁），文字不變
     expect(named.every((k) => !k.startsWith('q.') && !k.startsWith('fb.'))).toBe(true)
-    expect(named).toHaveLength(30)
+    expect(named).toHaveLength(33)
     expect(isNamedLineKey('praise.gentle.3@rabbit')).toBe(true)
     expect(isNamedLineKey('praise.gentle.1')).toBe(false)
   })
@@ -72,7 +72,7 @@ describe('v7.5 語音：物種後綴的 key', () => {
     // 生活題（圖裡畫的就是阿悟）、阿悟著色頁的商店句不另錄
     expect(Object.keys(extra).some((k) => k.startsWith('q.') || k.startsWith('word.') || k.startsWith('fb.'))).toBe(false)
     expect(extra[speciesNameKey('rabbit')]).toBe('兔兔')
-    expect(Object.keys(extra)).toHaveLength(pet.length * 2 + 30 * 2 + 3)
+    expect(Object.keys(extra)).toHaveLength(pet.length * 2 + 33 * 2 + 3)
   })
   it('畫面用 forSpecies：名字句換成兔兔的 key 與文字；猴子、不提名字的原樣', () => {
     const l = pickLine('praise.gentle', 2)

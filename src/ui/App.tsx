@@ -39,6 +39,9 @@ import { setVoiceSpecies } from '../learning/speech'
 import { playSound, setMusicEnabled, setMusicScene, setSfxEnabled } from '../learning/audioEngine'
 import { musicSceneFor } from '../learning/musicScene'
 import { learningSettingsOf } from '../learning/playtime'
+import { StoryPlayer } from './screens/story/StoryPlayer'
+import { StoryShelf } from './screens/story/StoryShelf'
+import { useStoryDirector } from './screens/story/useStoryDirector'
 import { useTodMode } from './pet/hooks'
 import { SpeciesContext } from './species'
 import './ux.css'
@@ -65,9 +68,10 @@ export type Screen =
   | { name: 'hatpreview'; hat: string; species?: Species }
   | { name: 'backdrop'; hash: string }
   | { name: 'crash' }
+  | { name: 'stories' }
 
 /** 兒童端畫面中，時間到會被鎖住的（學習與餵食）；任務、著色、家長區不鎖 */
-const LOCKABLE: Screen['name'][] = ['home', 'map', 'stage', 'workshop']
+const LOCKABLE: Screen['name'][] = ['home', 'map', 'stage', 'workshop', 'stories']
 
 /** 網址 hash 直達畫面（#map、#workshop），開發與 e2e 用；首頁入口由首頁自己提供 */
 function screenFromHash(): Screen {
@@ -77,6 +81,7 @@ function screenFromHash(): Screen {
   if (h === 'gallery') return { name: 'gallery' }
   if (h === 'friends') return { name: 'friends' }
   if (h === 'album') return { name: 'album' }
+  if (h === 'stories') return { name: 'stories' }
   if (h.startsWith('hatpreview')) return { name: 'hatpreview', hat: `hat-${h.split('/')[1] ?? 'crown'}`, species: normSpecies(h.split('/')[2]) }
   if (h.startsWith('backdrop')) return { name: 'backdrop', hash: h }
   if (h === 'crash') return { name: 'crash' } // 開發與 e2e：驗證錯誤邊界
@@ -190,14 +195,19 @@ function Main({ childName }: { childName: string }) {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
+  // v8.1 線 P：有聲繪本蓋在目前畫面上（寶箱畫面不會被重置）；第一次進某章第一站要先演開場
+  const story = useStoryDirector()
   const go = (s: Screen['name'] | Screen) => {
     if (location.hash) history.replaceState(null, '', location.pathname + location.search)
-    setScreen(typeof s === 'string' ? ({ name: s } as Screen) : s)
+    const target = typeof s === 'string' ? ({ name: s } as Screen) : s
+    const enter = () => setScreen(target)
+    if (target.name === 'stage' && !target.ceremony && story.beforeStage(target.chapterId, target.station, enter)) return
+    enter()
   }
   const home = () => go('home')
 
-  // v8 線 M：背景音樂場景跟著畫面走（undefined = 維持目前那首；時間到被鎖住時安靜）
-  const scene = musicSceneFor(screen, { locked, lockable: LOCKABLE, now, todMode })
+  // v8 線 M：背景音樂場景跟著畫面走（undefined = 維持目前那首；時間到被鎖住時安靜）；演故事時放故事曲
+  const scene = story.play ? 'story' : musicSceneFor(screen, { locked, lockable: LOCKABLE, now, todMode })
   useEffect(() => {
     if (scene !== undefined) setMusicScene(scene)
   }, [scene])
@@ -235,7 +245,7 @@ function Main({ childName }: { childName: string }) {
         break
       case 'stage':
         body = screen.ceremony ? (
-          <Ceremony chapterId={screen.chapterId} onMap={() => go('map')} go={go} />
+          <Ceremony chapterId={screen.chapterId} onMap={() => go('map')} go={go} playStory={story.start} />
         ) : (
           <StageScreen
             key={`${screen.chapterId}-${screen.station}`}
@@ -259,6 +269,9 @@ function Main({ childName }: { childName: string }) {
       case 'album':
         body = <AlbumScreen onBack={home} go={go} />
         break
+      case 'stories':
+        body = <StoryShelf onBack={() => go('map')} play={story.start} />
+        break
       case 'hatpreview':
         body = <HatPreview hat={screen.hat} species={screen.species} />
         break
@@ -279,6 +292,11 @@ function Main({ childName }: { childName: string }) {
       <ErrorBoundary where={screen.name === 'parent' ? 'parent' : 'child'} resetKey={screen.name} onHome={home}>
         {body}
       </ErrorBoundary>
+      {story.play && (
+        <ErrorBoundary where="story" onHome={story.close}>
+          <StoryPlayer key={story.play.ids.join()} ids={story.play.ids} onClose={story.close} />
+        </ErrorBoundary>
+      )}
       <ScreenTransition screenKey={screenTransitionKey(screen)} />
     </>
   )
