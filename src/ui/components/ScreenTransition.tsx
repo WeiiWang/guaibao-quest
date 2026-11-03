@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react'
+import { playSound } from '../../learning/audioEngine'
 import '../shell.css'
 import './transition.css'
 
@@ -76,6 +77,10 @@ export function ScreenTransition({ screenKey }: { screenKey: string | null }) {
     setSt({ last: screenKey, run: prefersReducedMotion() ? st.run : st.run + 1, done: st.done })
   }
   const playing = st.run > st.done
+
+  useEffect(() => {
+    if (st.run > 0) playSound('whoosh')
+  }, [st.run])
 
   useEffect(() => {
     if (!playing) return

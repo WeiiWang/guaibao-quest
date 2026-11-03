@@ -36,7 +36,7 @@ import { readTitleEnv, shouldShowTitle } from './titleGate'
 import { requestPersistentStorage } from './persist'
 import { normSpecies, speciesOf, type Species } from '../domain/species'
 import { setVoiceSpecies } from '../learning/speech'
-import { setMusicEnabled, setMusicScene, setSfxEnabled } from '../learning/audioEngine'
+import { playSound, setMusicEnabled, setMusicScene, setSfxEnabled } from '../learning/audioEngine'
 import { musicSceneFor } from '../learning/musicScene'
 import { learningSettingsOf } from '../learning/playtime'
 import { useTodMode } from './pet/hooks'
@@ -90,6 +90,12 @@ export function App() {
   // v8 線 N：每次冷啟動先看開場畫面（e2e 與 hash 直達頁跳過，見 titleGate.ts）；按下開始之後才進 ProfileGate（PIN 設定 / 選孩子 / 首頁）
   const [titleOpen, setTitleOpen] = useState(() => shouldShowTitle(readTitleEnv()))
 
+  // 開場到進首頁之前（PIN、選孩子、建立孩子）都放開場音樂；iOS 要等按下開始才出聲，所以這段就是實際聽得到的時候
+  useEffect(() => {
+    if (titleOpen) setMusicScene('title')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const toast: ToastFn = useCallback((text, tone = 'info') => {
     window.clearTimeout(toastTimer.current)
     setToastMsg({ text, tone, id: Date.now() })
@@ -103,6 +109,7 @@ export function App() {
           {titleOpen ? (
             <Title
               onStart={() => {
+                playSound('sparkle')
                 setTitleOpen(false)
                 requestPersistentStorage()
               }}

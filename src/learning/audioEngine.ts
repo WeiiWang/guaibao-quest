@@ -95,7 +95,14 @@ let env: AudioEnv = defaultEnv()
 let ctx: AudioContext | null = null
 let musicOut: GainNode | null = null
 let sfxOut: GainNode | null = null
-let musicEnabled = true
+/** 每個孩子的設定載入之前（開場、PIN、選孩子）就要知道音樂開不開：記著最後一次的選擇 */
+let musicEnabled = (() => {
+  try {
+    return localStorage.getItem('gq-music-on') !== '0'
+  } catch {
+    return true
+  }
+})()
 let sfxEnabled = true
 let wantedScene: MusicScene | null = null
 let ducked = false
@@ -362,6 +369,11 @@ export function setMusicScene(scene: MusicScene | null): void {
 export function setMusicEnabled(on: boolean): void {
   try {
     musicEnabled = on
+    try {
+      localStorage.setItem('gq-music-on', on ? '1' : '0')
+    } catch {
+      /* 存不了就只影響開場那段 */
+    }
     reconcile()
   } catch {
     /* ignore */

@@ -9,12 +9,15 @@ import { PinPad } from '../components/PinPad'
 import { SpeciesPicker } from '../components/SpeciesPicker'
 import { RoomBackdrop } from '../components/RoomBackdrop'
 import { skipShellMotion } from '../titleGate'
+import { playSound } from '../../learning/audioEngine'
 import { prefersReducedMotion } from '../components/ScreenTransition'
 import '../j74.css'
 import '../onboarding.css'
 
 /** 落蛋編排的總長（毫秒）：蛋從天上落下、彈兩下、停穩。要小於 1.5 秒，點一下可以跳過 */
 export const EGG_DROP_MS = 1450
+/** 蛋第一次碰到地板的時間（title.css / shell.css 的落下動畫），這時候響落地音 */
+const EGG_LAND_MS = 620
 
 type Step = 'pin1' | 'pin2' | 'child' | 'age' | 'pet' | 'egg'
 
@@ -42,6 +45,7 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
   // v8：按「開始冒險」後先播落蛋（蛋從天上落到房間地板、彈兩下），再真的建立孩子、進首頁
   const [drop, setDrop] = useState(false)
   const dropTimer = useRef<number | undefined>(undefined)
+  const landTimer = useRef<number | undefined>(undefined)
   const finishing = useRef(false)
 
   const finish = async () => {
@@ -70,6 +74,7 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
       return
     }
     setDrop(true)
+    landTimer.current = window.setTimeout(() => playSound('drop'), EGG_LAND_MS)
     dropTimer.current = window.setTimeout(() => void finish(), prefersReducedMotion() ? 400 : EGG_DROP_MS)
   }
 
@@ -77,6 +82,7 @@ export function Onboarding({ withPin, defaultName = '', defaultAge, onFinish }: 
     () => () => {
       window.clearTimeout(advance.current)
       window.clearTimeout(dropTimer.current)
+      window.clearTimeout(landTimer.current)
     },
     [],
   )
