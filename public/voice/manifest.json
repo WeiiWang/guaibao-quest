@@ -105,7 +105,7 @@
   "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "companion.combo2.1": {
-  "file": "60ee44a8cf5fe297.m4a",
+  "file": "012a41ec67b6b5b2.m4a",
   "text": "連續答對了！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -2829,6 +2829,81 @@
   "text": "還沒有貼紙，去畫畫、收小禮物就會有喔",
   "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
+ "pet.fest.children": {
+  "file": "64621003c09724b8.m4a",
+  "text": "兒童節快樂！我們一起玩！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.children@rabbit": {
+  "file": "72f0a28a1df78ea6.m4a",
+  "text": "兒童節快樂！我們一起玩！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.children@tiger": {
+  "file": "b647a450b56e7d75.m4a",
+  "text": "兒童節快樂！我們一起玩！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.cny": {
+  "file": "5145509168459538.m4a",
+  "text": "新年快樂！紅燈籠好漂亮！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.cny@rabbit": {
+  "file": "bbf2eec88bb0c262.m4a",
+  "text": "新年快樂！紅燈籠好漂亮！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.cny@tiger": {
+  "file": "f746acbc1897948c.m4a",
+  "text": "新年快樂！紅燈籠好漂亮！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.dragon": {
+  "file": "3f4ca211d679f2d0.m4a",
+  "text": "端午節到了！粽子香香的！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.dragon@rabbit": {
+  "file": "080647b377f2248a.m4a",
+  "text": "端午節到了！粽子香香的！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.dragon@tiger": {
+  "file": "3c2524405e0b65e2.m4a",
+  "text": "端午節到了！粽子香香的！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.moon": {
+  "file": "80c2fad625bb535c.m4a",
+  "text": "中秋節到了！月亮圓圓的！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.moon@rabbit": {
+  "file": "5720cb74cd7e55ea.m4a",
+  "text": "中秋節到了！月亮圓圓的！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.moon@tiger": {
+  "file": "18720c444a590bb4.m4a",
+  "text": "中秋節到了！月亮圓圓的！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.xmas": {
+  "file": "f175480fa580e26f.m4a",
+  "text": "聖誕節到了！鈴鐺叮叮噹！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.xmas@rabbit": {
+  "file": "87268316c005462e.m4a",
+  "text": "聖誕節到了！鈴鐺叮叮噹！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.fest.xmas@tiger": {
+  "file": "88db78151ead5f43.m4a",
+  "text": "聖誕節到了！鈴鐺叮叮噹！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
  "pet.gallery.empty": {
   "file": "0bd66f304fb938ea.m4a",
   "text": "還沒有畫畫喔，我們去畫一張吧",
@@ -2920,12 +2995,12 @@
   "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.paint.full": {
-  "file": "7f971ee4c33b207b.m4a",
+  "file": "9b8b983d0bfbb123.m4a",
   "text": "全部塗滿了！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.paint.full@rabbit": {
-  "file": "50b2384d4d2c7d04.m4a",
+  "file": "6fefbfef0763144e.m4a",
   "text": "全部塗滿了！",
   "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
@@ -3467,6 +3542,31 @@
  "placement.done@tiger": {
   "file": "07dd174022355401.m4a",
   "text": "虎虎知道了，我們出發吧！",
+  "voice": "mama|"
+ },
+ "play.fest.card.children": {
+  "file": "0587c800ae88e83d.m4a",
+  "text": "我們一起過兒童節，收到一束氣球！",
+  "voice": "mama|"
+ },
+ "play.fest.card.cny": {
+  "file": "ba339cc9b6bebcb5.m4a",
+  "text": "我們一起過春節，收到小舞獅！",
+  "voice": "mama|"
+ },
+ "play.fest.card.dragon": {
+  "file": "891bb02a46356aa5.m4a",
+  "text": "我們一起過端午節，收到小龍舟！",
+  "voice": "mama|"
+ },
+ "play.fest.card.moon": {
+  "file": "32f02cd88cb1f5e8.m4a",
+  "text": "我們一起過中秋節，收到兔子燈！",
+  "voice": "mama|"
+ },
+ "play.fest.card.xmas": {
+  "file": "b011c4c7ddca1f49.m4a",
+  "text": "我們一起過聖誕節，收到聖誕樹！",
   "voice": "mama|"
  },
  "play.guest.arrive.decor-ball": {
@@ -34125,7 +34225,7 @@
   "voice": "mama|"
  },
  "ui.gift.bag": {
-  "file": "d56f668163809886.m4a",
+  "file": "e23cedaf3d750290.m4a",
   "text": "禮物都收下囉！",
   "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
