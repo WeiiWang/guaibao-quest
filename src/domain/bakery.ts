@@ -34,14 +34,14 @@ interface Ellipse {
   ry: number
 }
 
-/** 每種底座大概的形狀（對齊圖裡點心的輪廓，不必很準）。冰淇淋是上面一球 + 下面的甜筒 */
+/** 每種底座大概的形狀（對齊 public/art/ui-base-*.png 裡點心的輪廓，不含盤子）。冰淇淋是上面一球 + 下面的甜筒 */
 const SHAPES: Record<BakeryBaseId, readonly Ellipse[]> = {
-  cake: [{ cx: 50, cy: 52, rx: 46, ry: 38 }],
+  cake: [{ cx: 50, cy: 42, rx: 40, ry: 33 }],
   icecream: [
-    { cx: 50, cy: 34, rx: 38, ry: 32 },
-    { cx: 50, cy: 70, rx: 22, ry: 28 },
+    { cx: 50, cy: 28, rx: 33, ry: 27 },
+    { cx: 50, cy: 72, rx: 13, ry: 25 },
   ],
-  pancake: [{ cx: 50, cy: 54, rx: 46, ry: 36 }],
+  pancake: [{ cx: 50, cy: 40, rx: 34, ry: 33 }],
 }
 
 /** 放得有點偏也算（手指比目標大）：在輪廓外這個倍數以內的，會吸回輪廓上 */

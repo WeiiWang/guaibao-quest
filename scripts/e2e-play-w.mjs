@@ -314,6 +314,7 @@ for (const [name, size] of Object.entries(SIZES)) {
   const afterFirst = await foodTotal(page)
   const delta = (a, b) => Object.keys(a).filter((k) => k !== '__daily').reduce((n, k) => n + (a[k] - (b[k] ?? 0)), 0)
   check('hide 禮物：多了 1 份', delta(afterFirst, before) === 1, JSON.stringify(afterFirst))
+  await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
   await page.locator('[data-testid=play-gift]').click()
   await page.waitForSelector('[data-testid=pg-hide-again]')
   const b = await page.locator('[data-testid=pg-hide-again]').boundingBox()
@@ -573,6 +574,7 @@ for (const age of ['3', '4-5']) {
   await page.waitForSelector('[data-testid=play-gift]', { timeout: 4000 })
   const afterSong = await foodTotal(page)
   check(`music ${age} 歲：彈完送禮物`, afterSong.__daily?.done?.includes('music') && !before.__daily?.done?.includes('music'))
+  await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
   await page.locator('[data-testid=play-gift]').click()
   await page.waitForSelector(`${MUS}[data-mode=free]`, { timeout: 5000 })
   check(`music ${age} 歲：慶祝完回自由彈`, true)
@@ -633,11 +635,25 @@ for (const age of ['3', '4-5']) {
   for (let i = 0; i < 29; i++) await app.finger([c])
   await page.waitForTimeout(1200)
   check('music 自由彈 29 下：還沒送', (await page.locator('[data-testid=play-gift]').count()) === 0)
+  // 禮物一出現就有手指按下去（孩子還在敲）：不能把它點掉
+  await page.evaluate(() => {
+    new MutationObserver((_, ob) => {
+      const g = document.querySelector('[data-testid=play-gift]')
+      if (!g) return
+      ob.disconnect()
+      g.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+      g.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
+      g.click()
+    }).observe(document.body, { childList: true, subtree: true })
+  })
   await app.finger([await centerOf(page, '[data-testid=pg-mus-drum-low]')])
   await page.waitForSelector('[data-testid=play-gift]', { timeout: 3000 })
+  await page.waitForTimeout(150)
+  check('music 禮物剛跳出來就被按到：不會被點掉', (await page.locator('[data-testid=play-gift]').count()) === 1)
   check('music 自由彈第 30 下（含鼓）：停下來後送禮物', (await musAttr(page, 'data-free')) === '30')
   const a1 = await foodTotal(page)
   check('music 自由彈：多 1 份', delta(a1, before) === 1)
+  await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
   await page.locator('[data-testid=play-gift]').click()
   check('music 禮物：收下後就不在了', (await page.locator('[data-testid=play-gift]').count()) === 0)
   for (let i = 0; i < 10; i++) await app.finger([c])

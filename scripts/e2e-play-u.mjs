@@ -67,7 +67,10 @@ const backOk = (page) =>
   })
 const closeGift = async (page) => {
   const g = page.getByTestId('play-gift')
-  if (await g.count()) await g.click()
+  if (await g.count()) {
+    await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
+    await g.click()
+  }
 }
 
 // ---------- 泡泡 ----------

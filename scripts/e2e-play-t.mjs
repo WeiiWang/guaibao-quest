@@ -200,6 +200,7 @@ async function testBath(b, tag, vp) {
   check(`[${tag}] 今天記了洗澎澎`, (await settings(page)).playDaily?.done.includes('bath'))
   const giftImg = await page.locator('[data-testid=play-gift] img.art').last().getAttribute('src').catch(() => '')
   check(`[${tag}] 禮物顯示食物的圖`, /food-/.test(giftImg ?? ''), giftImg ?? '')
+  await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
   await page.getByTestId('play-gift').click()
 
   // 再洗一次：可以再玩、今天不再送

@@ -245,6 +245,7 @@ async function testBakery(b, name, vp, baseId) {
   check(`${tag} 只多 1 個食物（沒有消耗背包）`, sum(inv1) === sum(inv0) + 1 && Object.entries(inv0).every(([k, v]) => (inv1[k] ?? 0) >= v), `${sum(inv0)}→${sum(inv1)}`)
   const pet1 = await getPet(page)
   check(`${tag} 不增加成長`, pet1.feedCount === pet0.feedCount && pet1.stage === pet0.stage && pet1.hunger === pet0.hunger)
+  await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
   await page.getByTestId('play-gift').tap()
   check(`${tag} 不橫向溢出（吃完）`, await noOverflowX(page))
 
@@ -646,6 +647,7 @@ async function testTimers(b) {
   await page.getByTestId('bake-treat').tap()
   await page.waitForSelector('[data-testid=play-gift]', { timeout: 6000 })
   check('點心：再玩一次拿得到', true)
+  await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
   await page.getByTestId('play-gift').tap()
   await page.getByTestId('game-back').tap()
   await page.waitForSelector('[data-testid=playground-grid]')
@@ -728,6 +730,7 @@ async function testLines(b) {
   await page.waitForSelector('[data-testid=play-gift]', { timeout: 7000 })
   await sleep(page, 80)
   check('台詞：吃完先說好吃、再說送你', (await lines()).join() === 'bakery.yum,reward', (await lines()).join())
+  await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
   await page.getByTestId('play-gift').tap()
   await page.getByTestId('game-back').tap()
   await page.waitForSelector('[data-testid=playground-grid]')
