@@ -1,0 +1,108 @@
+/* v8.3 小小音樂會。背景圖還沒生好時退回舞台的漸層 */
+[data-testid='play-music'] .place-backdrop { background: linear-gradient(#e4d6f7 0 74%, #e6c595 74% 100%); }
+
+/* 由上而下：歌卡、進度、舞台（寵物與鼓）、木琴 */
+.pg-mus {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) min(38vh, 400px);
+  gap: clamp(6px, 1.4vmin, 14px);
+  padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  -webkit-touch-callout: none;
+}
+
+/* 歌卡：左邊讓開回去鍵 */
+.pg-mus-cards { display: flex; justify-content: center; gap: clamp(8px, 2vmin, 20px); padding: 0 66px; min-width: 0; }
+.pg-mus-card { flex: 0 1 300px; min-width: 0; min-height: 60px; display: flex; align-items: center; justify-content: center; gap: clamp(4px, 1.2vmin, 12px); padding: clamp(4px, 1vmin, 10px) clamp(6px, 1.6vmin, 18px); border: 0; border-radius: 24px; background: rgb(255 255 255 / 0.92); color: #5a4a3f; font: inherit; font-weight: 900; font-size: clamp(15px, 2.8vmin, 26px); box-shadow: 0 5px 0 rgb(0 0 0 / 0.1), 0 8px 18px rgb(60 40 90 / 0.16); }
+.pg-mus-card-art { flex: none; width: clamp(38px, 8vmin, 72px); aspect-ratio: 1; }
+.pg-mus-card-title { white-space: nowrap; }
+.pg-mus-card.is-on { background: #fff3c4; box-shadow: 0 0 0 4px #ffb13d, 0 5px 0 rgb(0 0 0 / 0.1), 0 10px 22px rgb(120 80 10 / 0.26); }
+
+/* 進度：一串小音符點，空的時候也佔住高度，選歌不會擠動版面 */
+.pg-mus-progress { display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 3px 4px; min-height: clamp(14px, 2.4vmin, 22px); }
+.pg-mus-progress i { width: clamp(8px, 1.3vmin, 12px); aspect-ratio: 1; border-radius: 50%; background: rgb(255 255 255 / 0.7); box-shadow: inset 0 0 0 1.5px rgb(90 74 63 / 0.25); }
+.pg-mus-progress i.is-done { background: var(--c); box-shadow: 0 1px 2px rgb(0 0 0 / 0.2); }
+.pg-mus-progress i.is-next { background: #fff; box-shadow: 0 0 0 2.5px var(--c); }
+
+/* 舞台：鼓在兩邊，寵物在中間 */
+.pg-mus-stage { min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: clamp(8px, 4vmin, 48px); }
+.pg-mus-pet { flex: none; height: min(100%, 46vmin); aspect-ratio: 1; transform-origin: 50% 100%; }
+.pg-mus-pet .companion { display: block; }
+.pg-mus-pet.is-big { animation: pg-mus-big 0.7s ease-in-out infinite; }
+@keyframes pg-mus-big { 0%, 100% { transform: rotate(-7deg) translateY(0) scale(1.08); } 50% { transform: rotate(7deg) translateY(-11%) scale(1.14); } }
+
+.pg-mus-drum { flex: none; padding: 0; border: 0; background: transparent; touch-action: none; -webkit-tap-highlight-color: transparent; aspect-ratio: 1; height: min(62%, 190px); min-height: 72px; display: grid; place-items: end center; }
+.pg-mus-drum:active { scale: 1; }
+.pg-mus-drum.is-high { height: min(50%, 150px); }
+.pg-mus-drum-body { position: relative; display: block; width: 100%; height: 76%; border-radius: 12% 12% 22% 22% / 16% 16% 24% 24%; background: repeating-linear-gradient(115deg, #e8743b 0 16%, #f6b24d 16% 32%); box-shadow: inset 0 -10px 0 rgb(0 0 0 / 0.14), 0 7px 12px rgb(60 30 60 / 0.25); }
+.pg-mus-drum.is-high .pg-mus-drum-body { background: repeating-linear-gradient(115deg, #3f9fe6 0 16%, #8fd6ff 16% 32%); }
+.pg-mus-drum-head { position: absolute; left: -3%; right: -3%; top: -19%; height: 40%; border-radius: 50%; background: radial-gradient(closest-side, #fffdf6, #f3e6cd); box-shadow: 0 3px 0 #b98f5d, 0 5px 6px rgb(0 0 0 / 0.14); }
+
+/* 木琴 */
+.pg-mus-xylo { position: relative; min-height: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: clamp(3px, 0.9vmin, 9px); }
+.pg-mus-rail { position: absolute; left: 1%; right: 1%; height: 3.5%; border-radius: 99px; background: #8a6a48; box-shadow: 0 2px 3px rgb(0 0 0 / 0.2); }
+.pg-mus-rail.is-a { top: 24%; }
+.pg-mus-rail.is-b { top: 74%; }
+.pg-mus-key { position: relative; min-width: 0; min-height: 56px; padding: 0; border: 0; background: transparent; display: grid; place-items: center; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.pg-mus-key:active { scale: 1; }
+.pg-mus-key:focus { outline: none; }
+.pg-mus-key:focus-visible .pg-mus-bar, .pg-mus-drum:focus-visible .pg-mus-drum-body { outline: 4px solid #fff; }
+.pg-mus-bar { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 16% 0; width: 100%; height: var(--len); border-radius: 16px; background: linear-gradient(90deg, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 40%, rgb(0 0 0 / 0.08)), var(--c); box-shadow: inset 0 -6px 0 rgb(0 0 0 / 0.16), 0 5px 10px rgb(50 30 60 / 0.25); }
+.pg-mus-peg { flex: none; width: clamp(8px, 1.6vmin, 14px); aspect-ratio: 1; border-radius: 50%; background: rgb(255 255 255 / 0.75); box-shadow: 0 1px 2px rgb(0 0 0 / 0.3); }
+
+/* 敲下去閃一下白光（疊一層白，只動畫 opacity） */
+.pg-mus-flash { position: absolute; inset: 0; border-radius: inherit; background: #fff; opacity: 0; pointer-events: none; z-index: 1; }
+
+/* 魔法演奏：其他鍵淡一點，下一個音的鍵亮起來 */
+.pg-mus.is-song .pg-mus-key:not(.is-lit) .pg-mus-bar::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: rgb(255 255 255 / 0.4); pointer-events: none; }
+.pg-mus-key.is-lit .pg-mus-bar { box-shadow: 0 0 0 4px #fff, 0 0 24px 8px rgb(255 240 150 / 0.95), inset 0 -6px 0 rgb(0 0 0 / 0.16); animation: pg-mus-lit 0.9s ease-in-out infinite; }
+@keyframes pg-mus-lit { 50% { box-shadow: 0 0 0 6px #fff, 0 0 34px 14px rgb(255 240 150 / 1), inset 0 -6px 0 rgb(0 0 0 / 0.16); } }
+
+/* 飄音符：一定有動畫（animationend 才移除） */
+.pg-mus-fx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }
+.pg-mus-note { position: absolute; width: clamp(28px, 5.4vmin, 48px); aspect-ratio: 40 / 48; margin: -24px 0 0 -20px; filter: drop-shadow(0 2px 2px rgb(255 255 255 / 0.9)); animation: pg-mus-float 0.95s ease-out forwards; }
+.pg-mus-note:nth-child(even) { --side: 26px; }
+.pg-mus-note:nth-child(odd) { --side: -22px; }
+@keyframes pg-mus-float { 0% { transform: translateY(0) scale(0.6); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(var(--side), -180px) scale(1.15); opacity: 0; } }
+@keyframes pg-mus-fade { 0%, 100% { opacity: 0; } 30% { opacity: 1; } }
+
+/* 手機直向：木琴改直排在左（每鍵夠寬也夠高），寵物與鼓在右 */
+@media (max-width: 600px) and (orientation: portrait) {
+  .pg-mus { grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr); }
+  .pg-mus-cards, .pg-mus-progress { grid-column: 1 / -1; }
+  .pg-mus-cards { padding: 0 0 0 66px; }
+  .pg-mus-xylo { grid-column: 1; grid-row: 3; grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(8, minmax(56px, 1fr)); }
+  .pg-mus-stage { grid-column: 2; grid-row: 3; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; }
+  .pg-mus-pet { height: auto; width: 100%; order: -1; margin-bottom: auto; }
+  .pg-mus-drum, .pg-mus-drum.is-high { width: 88%; height: auto; }
+  .pg-mus-drum.is-high { width: 72%; }
+  .pg-mus-rail { top: 0; bottom: 0; left: auto; right: auto; width: 3.5%; height: auto; }
+  .pg-mus-rail.is-a { top: 0; left: 18%; }
+  .pg-mus-rail.is-b { top: 0; left: 78%; }
+  .pg-mus-bar { flex-direction: row; padding: 0 9%; width: var(--len); height: 100%; background: linear-gradient(180deg, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 40%, rgb(0 0 0 / 0.08)), var(--c); }
+  .pg-mus-note { --side: 0; }
+}
+
+/* 手機橫向：高度不夠，寵物與鼓擺到左欄，木琴在右 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .pg-mus { grid-template-columns: minmax(150px, 22vw) minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr); gap: 6px; padding-top: 8px; padding-bottom: 8px; }
+  .pg-mus-cards, .pg-mus-progress { grid-column: 1 / -1; }
+  .pg-mus-card { min-height: 56px; padding-block: 2px; }
+  .pg-mus-card-art { width: 40px; }
+  .pg-mus-progress { min-height: 10px; }
+  .pg-mus-progress i { width: 7px; }
+  .pg-mus-stage { grid-column: 1; grid-row: 3; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) auto; align-items: end; justify-items: center; gap: 4px; }
+  .pg-mus-pet { grid-column: 1 / -1; grid-row: 1; height: 100%; min-height: 0; }
+  .pg-mus-drum, .pg-mus-drum.is-high { grid-row: 2; height: 72px; min-height: 72px; }
+  .pg-mus-xylo { grid-column: 2; grid-row: 3; grid-template-columns: repeat(8, minmax(56px, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-mus-pet.is-big, .pg-mus-key.is-lit .pg-mus-bar { animation: none; }
+  /* styles.css 在這個模式把所有動畫壓成 0.001 秒，要 !important 音符才看得到 */
+  .pg-mus-note { animation: pg-mus-fade 0.8s linear forwards !important; }
+}

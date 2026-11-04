@@ -1,0 +1,116 @@
+/* v8.3 捉迷藏。背景圖還沒生好時退回天空與草地的漸層 */
+[data-testid='play-hide'] .place-backdrop { background: linear-gradient(#bfe7ff 0 34%, #d8f2c8 34% 38%, #a6dc86 38% 100%); }
+
+/* 自成一層：裡面的 z-index 不會蓋過殼的禮物浮層 */
+.pg-hide { position: absolute; inset: 0; isolation: isolate; z-index: 1; }
+/* 草地：頂端讓開回去鍵；物件都在這個框裡排 */
+.pg-hide-field { position: absolute; left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); top: clamp(76px, 15vh, 170px); bottom: max(12px, env(safe-area-inset-bottom)); }
+
+.pg-hide-spot { position: absolute; padding: 0; margin: 0; border: 0; background: transparent; touch-action: none; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; cursor: pointer; overflow: visible; }
+.pg-hide-spot:focus { outline: none; }
+.pg-hide-spot:focus-visible { outline: 4px solid rgb(255 255 255 / 0.9); outline-offset: 2px; border-radius: 20px; }
+/* 全域的按下縮小會讓躲在後面的寵物跟著動，這裡不要 */
+.pg-hide-spot:active { scale: 1; }
+.pg-hide-ground { position: absolute; left: 12%; right: 12%; bottom: 0; height: 12%; border-radius: 50%; background: radial-gradient(closest-side, rgb(50 90 30 / 0.34), rgb(50 90 30 / 0)); }
+.pg-hide-obj { position: absolute; inset: 0; display: block; transform-origin: 50% 100%; pointer-events: none; }
+.pg-hide-obj-img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%; filter: drop-shadow(0 6px 6px rgb(60 60 20 / 0.18)); }
+.pg-hide-obj .art-emoji { display: grid; place-items: end center; font-size: 0; }
+.pg-hide-obj .art-emoji-glyph { font-size: 84cqmin; line-height: 1; }
+.pg-hide-spot { container-type: size; }
+
+.pg-hide-spot.is-wiggle .pg-hide-obj { animation: pg-hide-wiggle 2.4s ease-in-out infinite; }
+@keyframes pg-hide-wiggle {
+  0%, 62%, 100% { rotate: 0deg; }
+  68% { rotate: -2.6deg; }
+  75% { rotate: 2.4deg; }
+  82% { rotate: -1.8deg; }
+  89% { rotate: 1.2deg; }
+}
+.pg-hide-spot.is-found .pg-hide-obj { animation: pg-hide-found-obj 0.5s ease-out 1; }
+@keyframes pg-hide-found-obj { 30% { transform: scale(1.06, 0.92); } 60% { transform: scale(0.97, 1.03); } }
+
+/* 躲著的寵物：只切底部（身體不會從物件底下跑出來），上面與兩側自由露出 */
+.pg-hide-peek { position: absolute; inset: 0; clip-path: inset(-100% -100% 0 -100%); pointer-events: none; }
+.pg-hide-peek-pet { position: absolute; transition: left 0.6s ease-out, top 0.6s ease-out; }
+.pg-hide-peek-img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 0; }
+.pg-hide-peek-emoji { display: grid; place-items: start center; width: 100%; height: 100%; font-size: 44cqmin; line-height: 1; }
+
+/* 開場與數數：寵物站中央，在物件前面 */
+.pg-hide-pet { position: absolute; z-index: 2000; pointer-events: none; transform-origin: 50% 100%; }
+.pg-hide-pet .companion { pointer-events: none; display: block; }
+.pg-hide-pet.is-intro, .pg-hide-pet.is-count { animation: pg-hide-pet-in 0.3s ease-out 1; }
+@keyframes pg-hide-pet-in { from { opacity: 0; transform: scale(0.8); } }
+/* 跑到畫面外，不朝躲藏的地方跑（不然就不用找了） */
+.pg-hide-pet.is-run.to-right { animation: pg-hide-run-r 0.65s ease-in forwards; }
+.pg-hide-pet.is-run.to-left { animation: pg-hide-run-l 0.65s ease-in forwards; }
+@keyframes pg-hide-run-r { 20% { transform: translate(-6%, 2%) rotate(-5deg); } 100% { transform: translate(110vw, -6%) rotate(8deg) scale(0.7); opacity: 0.8; } }
+@keyframes pg-hide-run-l { 20% { transform: translate(6%, 2%) rotate(5deg); } 100% { transform: translate(-110vw, -6%) rotate(-8deg) scale(0.7); opacity: 0.8; } }
+.pg-hide-pet.is-found { animation: pg-hide-jump 0.7s cubic-bezier(0.2, 1.3, 0.4, 1) 1; }
+@keyframes pg-hide-jump { 0% { transform: translateY(35%) scale(0.5); opacity: 0; } 25% { opacity: 1; } 55% { transform: translateY(-26%) scale(1.06); } 100% { transform: none; } }
+
+.pg-hide-hearts { position: absolute; inset: 0; pointer-events: none; }
+.pg-hide-hearts i { position: absolute; left: 50%; top: -2%; width: 15%; aspect-ratio: 1; background: #ff7aa8; clip-path: polygon(50% 100%, 6% 52%, 2% 26%, 14% 8%, 34% 6%, 50% 24%, 66% 6%, 86% 8%, 98% 26%, 94% 52%); animation: pg-hide-heart 1.1s ease-out 0.15s both; }
+.pg-hide-hearts i:nth-child(1) { --dx: -130%; --dy: -180%; }
+.pg-hide-hearts i:nth-child(2) { --dx: 0%; --dy: -260%; background: #ffb13d; animation-delay: 0.25s; }
+.pg-hide-hearts i:nth-child(3) { --dx: 130%; --dy: -180%; animation-delay: 0.35s; }
+@keyframes pg-hide-heart { from { transform: translate(-50%, 0) scale(0.4); opacity: 0; } 25% { opacity: 1; } to { transform: translate(calc(-50% + var(--dx)), var(--dy)) scale(1.1); opacity: 0; } }
+
+/* 一、二、三：大數字依序跳出來 */
+.pg-hide-count { position: absolute; z-index: 2100; left: 50%; top: 2%; transform: translateX(-50%); display: flex; gap: clamp(10px, 3vmin, 28px); pointer-events: none; }
+.pg-hide-count span { display: grid; place-items: center; width: clamp(56px, 11vmin, 96px); aspect-ratio: 1; border-radius: 50%; background: #fff8ec; color: #e8743b; font-size: clamp(30px, 6.4vmin, 56px); font-weight: 900; box-shadow: 0 6px 0 rgb(0 0 0 / 0.08), 0 8px 18px rgb(60 40 90 / 0.2); animation: pg-hide-num 0.42s cubic-bezier(0.2, 1.5, 0.4, 1) both; }
+.pg-hide-count span:nth-child(1) { animation-delay: 0.1s; }
+.pg-hide-count span:nth-child(2) { animation-delay: 0.8s; }
+.pg-hide-count span:nth-child(3) { animation-delay: 1.5s; }
+@keyframes pg-hide-num { from { transform: scale(0); opacity: 0; } }
+
+/* 大按鈕：再玩一次 */
+.pg-hide-again { position: absolute; z-index: 2200; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: inline-flex; align-items: center; gap: 10px; min-height: 84px; padding: 0 clamp(24px, 5vmin, 44px); border: 0; border-radius: 42px; background: #ff9b45; color: #fff; font: inherit; font-size: clamp(24px, 4.4vmin, 36px); font-weight: 900; white-space: nowrap; box-shadow: 0 8px 0 #d97a2a, 0 14px 26px rgb(70 40 10 / 0.3); animation: pg-hide-num 0.42s cubic-bezier(0.2, 1.5, 0.4, 1) both; }
+.pg-hide-again:active { transform: translateX(-50%) translateY(5px); box-shadow: 0 3px 0 #d97a2a; }
+
+/* 驚喜：外層決定壽命（animationend 就移除），一定要有動畫（減少動態時是淡入淡出） */
+.pg-hide-sur { position: absolute; inset: 0; pointer-events: none; z-index: 3; animation: pg-hide-life 1.5s linear both; }
+@keyframes pg-hide-life { 0%, 100% { opacity: 1; } 99% { opacity: 1; } }
+.pg-hide-sur svg { position: absolute; display: block; width: 34%; height: 34%; left: 33%; top: 30%; overflow: visible; }
+
+.pg-hide-sur-bird svg { animation: pg-hide-bird 1.4s ease-in both; }
+@keyframes pg-hide-bird { 0% { transform: translate(0, 30%) scale(0.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(150%, -260%) scale(1); opacity: 0; } }
+.pg-hide-wing { transform-origin: 30px 34px; animation: pg-hide-flap 0.18s ease-in-out infinite alternate; }
+@keyframes pg-hide-flap { to { transform: scaleY(0.25); } }
+
+.pg-hide-sur-butterfly svg { animation: pg-hide-butterfly 1.5s ease-in-out both; }
+@keyframes pg-hide-butterfly { 0% { transform: translate(0, 40%) scale(0.4); opacity: 0; } 15% { opacity: 1; } 40% { transform: translate(-60%, -60%); } 70% { transform: translate(50%, -130%); opacity: 1; } 100% { transform: translate(-30%, -240%); opacity: 0; } }
+.pg-hide-flap { transform-origin: 32px 32px; animation: pg-hide-flapx 0.2s ease-in-out infinite alternate; }
+@keyframes pg-hide-flapx { to { transform: scaleX(0.45); } }
+
+.pg-hide-sur-frog svg { top: 56%; animation: pg-hide-frog 1.4s ease-out both; }
+@keyframes pg-hide-frog { 0% { transform: translate(0, 20%) scale(0.5); opacity: 0; } 12% { opacity: 1; } 28% { transform: translate(40%, -80%); } 44% { transform: translate(80%, 10%); } 62% { transform: translate(120%, -60%); } 78% { transform: translate(160%, 10%); opacity: 1; } 100% { transform: translate(190%, 10%); opacity: 0; } }
+
+.pg-hide-sur-ball svg { top: 62%; animation: pg-hide-ball 1.4s ease-out both; }
+@keyframes pg-hide-ball { 0% { transform: translate(0, 0) rotate(0deg) scale(0.5); opacity: 0; } 12% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translate(-200%, 0) rotate(-720deg); opacity: 0; } }
+
+.pg-hide-sur-stars svg { width: 26%; height: 26%; left: 37%; top: 26%; animation: pg-hide-star 1.1s ease-out both; }
+.pg-hide-sur-stars svg:nth-child(1) { --dx: -110%; --dy: -150%; }
+.pg-hide-sur-stars svg:nth-child(2) { --dx: 0%; --dy: -210%; animation-delay: 0.1s; }
+.pg-hide-sur-stars svg:nth-child(3) { --dx: 110%; --dy: -150%; animation-delay: 0.2s; }
+@keyframes pg-hide-star { 0% { transform: scale(0.2); opacity: 0; } 25% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(120deg); opacity: 0; } }
+
+.pg-hide-sur-flowers svg { width: 22%; height: 22%; top: 4%; animation: pg-hide-fall 1.3s ease-in both; }
+.pg-hide-sur-flowers svg:nth-child(1) { left: 16%; }
+.pg-hide-sur-flowers svg:nth-child(2) { left: 42%; animation-delay: 0.14s; }
+.pg-hide-sur-flowers svg:nth-child(3) { left: 66%; animation-delay: 0.05s; }
+@keyframes pg-hide-fall { 0% { transform: translateY(-20%) rotate(0deg); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(330%) rotate(200deg); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-hide-spot.is-wiggle .pg-hide-obj, .pg-hide-spot.is-found .pg-hide-obj, .pg-hide-pet.is-intro, .pg-hide-pet.is-count, .pg-hide-pet.is-found, .pg-hide-count span, .pg-hide-again { animation: none; }
+  .pg-hide-pet.is-run.to-right, .pg-hide-pet.is-run.to-left { animation: pg-hide-fade 0.3s linear forwards; }
+  .pg-hide-peek-pet { transition: none; }
+  .pg-hide-sur svg, .pg-hide-wing, .pg-hide-flap, .pg-hide-hearts i { animation: none; }
+  .pg-hide-hearts { display: none; }
+  /* 驚喜不飛，原地淡入淡出（外層的動畫留著，演完才移除）。styles.css 在這個模式把所有動畫壓成 0.001 秒，要 !important 才留得住，不然一閃就沒了 */
+  .pg-hide-sur { animation: pg-hide-fade-inout 1.2s linear both !important; }
+  .pg-hide-sur svg { top: 30%; }
+  .pg-hide-sur-stars svg:nth-child(1) { left: 8%; }
+  .pg-hide-sur-stars svg:nth-child(3) { left: 66%; }
+}
+@keyframes pg-hide-fade { to { opacity: 0; } }
+@keyframes pg-hide-fade-inout { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }

@@ -59,12 +59,23 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
       </button>
       {children({ onExit, finish, say })}
       {gift && (
-        <button className="pg-gift" onClick={() => setGift(null)} data-testid="play-gift" aria-label="收下禮物">
+        // 裡面的 Companion 本身是 <button>，外層不能再是 <button>
+        <div
+          className="pg-gift"
+          role="button"
+          tabIndex={0}
+          onClick={() => setGift(null)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') setGift(null)
+          }}
+          data-testid="play-gift"
+          aria-label="收下禮物"
+        >
           <span className="pg-gift-card">
             <Companion pose="happy" size="min(30vmin, 180px)" />
             <Icon name={gift} emoji="🎁" size={96} alt="" />
           </span>
-        </button>
+        </div>
       )}
     </main>
   )
