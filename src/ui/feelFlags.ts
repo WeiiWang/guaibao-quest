@@ -23,3 +23,6 @@ export const storyOn = (): boolean => !automated() || flag('gq-story-test')
 
 /** v8.2 線 S 走進地方時的招呼語音。自動化瀏覽器除非設了 gq-place-test 否則不說，既有 e2e 的語音紀錄不受影響 */
 export const placeVoiceOn = (): boolean => !automated() || flag('gq-place-test')
+
+/** 測試用：今天沒有「最喜歡的食物」。最喜歡的食物依日期決定，寫死餵香蕉的 e2e 每 10 天會碰上一次。只在自動化瀏覽器有效 */
+export const noFavoriteForTest = (): boolean => automated() && flag('gq-no-favorite-test')

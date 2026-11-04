@@ -103,7 +103,7 @@ export function makeChecker() {
  */
 export async function freshApp(browser, viewport, opts = {}) {
   // welcome: true = 保留 v7 的歡迎禮物（20 顆星星 + 1 根香蕉 + 禮物袋）；預設拿掉，讓舊測試維持「新孩子 0 星星、沒有禮物」的前提
-  const { rand, tod = 'day', stage = 'adult', fast = false, bananas = 5, ctxOpts = {}, decor = [], welcome = false } = opts
+  const { rand, tod = 'day', stage = 'adult', fast = false, bananas = 5, ctxOpts = {}, decor = [], welcome = false, noFavorite = false } = opts
   const ctx = await browser.newContext({ viewport, ...IPAD_CTX, ...ctxOpts })
   if (IS_WEBKIT) {
     // touchSender 在 WebKit 派發合成的 PointerEvent：對它們 setPointerCapture 會丟 InvalidPointerId，包成不丟錯
@@ -121,13 +121,14 @@ export async function freshApp(browser, viewport, opts = {}) {
     })
   }
   await ctx.addInitScript(
-    ({ rand, tod, fast }) => {
+    ({ rand, tod, fast, noFavorite }) => {
       try {
         if (tod && tod !== 'auto' && !localStorage.getItem('gq-pet-tod-set')) {
           localStorage.setItem('gq-pet-tod', tod)
           localStorage.setItem('gq-pet-tod-set', '1')
         }
         if (fast) localStorage.setItem('gq-pet-fast', '1')
+        if (noFavorite) localStorage.setItem('gq-no-favorite-test', '1')
       } catch {
         /* ignore */
       }
@@ -176,7 +177,7 @@ export async function freshApp(browser, viewport, opts = {}) {
         }
       }
     },
-    { rand, tod, fast },
+    { rand, tod, fast, noFavorite },
   )
   // E2E_VOICE=<檔案>：載入語音包，並把「退回機器語音」的句子附加寫進該檔（找還沒錄到的句子用）
   if (process.env.E2E_VOICE) {

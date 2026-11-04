@@ -36,7 +36,7 @@ const browser = await launch()
 try {
   // ---------- 1) 吃東西動畫完整流程 ----------
   {
-    const { ctx, page, errors } = await freshApp(browser, VP, { rand: 0.9 })
+    const { ctx, page, errors } = await freshApp(browser, VP, { rand: 0.9, noFavorite: true })
     const before = await getPet(page)
     const rows = await feedBanana(page)
     const eatStart = firstIdx(rows, (r) => r.phase === 'fly')
@@ -77,7 +77,7 @@ try {
 
   // ---------- 2) 打嗝（約 1/4 機率；固定亂數驗證內容）、餵食後排定大便 ----------
   {
-    const { ctx, page } = await freshApp(browser, VP, { rand: 0.1 })
+    const { ctx, page } = await freshApp(browser, VP, { rand: 0.1, noFavorite: true })
     const rows = await feedBanana(page, 3600)
     check('打嗝：泡泡「嗝～」', has(rows, (r) => r.bubble === '嗝～'))
     check('打嗝：切到害羞 shy 姿勢', has(rows, (r) => r.pose === 'shy'))

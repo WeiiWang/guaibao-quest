@@ -6,6 +6,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { localDateStr } from '../../domain/date'
 import { favoriteFoodOf } from '../../domain/favorite'
+import { noFavoriteForTest } from '../feelFlags'
 import { balanceOf } from '../../domain/points'
 import { flyStars } from '../fly'
 import { SHOP_ITEMS } from '../../domain/constants'
@@ -272,7 +273,7 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
         feedHintShown={!!settings.feedHintShown}
         initialEdit={edit}
         childName={childName}
-        favoriteFoodId={favoriteFoodOf(localDateStr(now))}
+        favoriteFoodId={noFavoriteForTest() ? null : favoriteFoodOf(localDateStr(now))}
         goShop={() => go('shop')}
         goWorkshop={() => go('workshop')}
         decorQty={Object.fromEntries(inventory.map((v) => [v.itemId, v.qty]))}
