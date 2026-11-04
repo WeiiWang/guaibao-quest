@@ -9,6 +9,7 @@ from collections import deque
 from PIL import Image, ImageFilter
 
 THRESH = 238  # RGB 都高於這個值視為白底
+SHADOW = 178  # 影子：RGB 都高於這個值且接近灰色
 MAX = int(sys.argv[3]) if len(sys.argv) > 3 else 512  # 輸出最長邊
 
 
@@ -21,7 +22,10 @@ def main(src, dst):
 
     def white(x, y):
         r, g, b, _ = px[x, y]
-        return r >= THRESH and g >= THRESH and b >= THRESH
+        if r >= THRESH and g >= THRESH and b >= THRESH:
+            return True
+        # 主體腳下的淡灰影子也算背景（只有從邊緣連過來的才會被去掉）：夠亮、幾乎沒有彩度
+        return min(r, g, b) >= SHADOW and max(r, g, b) - min(r, g, b) <= 18
 
     for x in range(w):
         for y in (0, h - 1):
@@ -41,7 +45,8 @@ def main(src, dst):
             if 0 <= nx < w and 0 <= ny < h and not bg[ny * w + nx] and white(nx, ny):
                 q.append((nx, ny))
 
-    alpha = Image.new('L', (w, h), 255)
+    # 模型有時直接給透明背景：保留原本的透明度，只疊上白底的部分（否則透明會變成黑底）
+    alpha = im.getchannel('A')
     ap = alpha.load()
     for y in range(h):
         for x in range(w):
