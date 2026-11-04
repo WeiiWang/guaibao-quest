@@ -38,6 +38,7 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
   const say = usePetLine()
   const [gift, setGift] = useState<string | null>(null)
   const giftArmed = useRef(false)
+  const giftShownAt = useRef(0)
   useEffect(() => {
     const t = window.setTimeout(() => say(intro), 500)
     return () => window.clearTimeout(t)
@@ -46,6 +47,7 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
     void repo.finishPlayGame(id).then((foodId) => {
       if (!foodId) return
       giftArmed.current = false
+      giftShownAt.current = performance.now()
       setGift(foodId)
       playSound('reward')
       say('pet.play.reward')
@@ -68,7 +70,8 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
           role="button"
           tabIndex={0}
           onPointerDown={() => {
-            giftArmed.current = true
+            // 再多等一下：狂戳泡泡的孩子下一下馬上就來，還沒看到就關掉了
+            giftArmed.current = performance.now() - giftShownAt.current > 500
           }}
           onClick={() => {
             if (giftArmed.current) setGift(null)
