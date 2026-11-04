@@ -76,6 +76,11 @@
   .home .room-frame .room-arrow.o8-arrow { top: calc(50% + 110px); }
 }
 
+/* v8.3：較矮的直向 iPad（例如 768×1024）右側欄有 5 顆到 y≈484：箭頭放在右側欄和禮物袋之間 */
+@media (min-width: 561px) and (orientation: portrait) and (max-height: 1100px) {
+  .home .room-frame .room-arrow.o8-arrow { top: 522px; }
+}
+
 /* ---------- 右側的工坊、背包、朋友、更多：退後一點（白底軟膠，保留 3D 圖示），讓冒險地圖當主角 ---------- */
 .home .side-tools > .mini-candy, .home .side-tools .more-wrap > .more-btn {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 246, 232, 0.92));

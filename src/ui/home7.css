@@ -7,6 +7,10 @@
   position: absolute; right: 18px; bottom: 22px; z-index: 24; width: 104px; height: 104px; padding: 0; border: 0; background: none;
   display: grid; place-items: center; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
+/* v8.3：iPad 橫向右側欄有 5 顆，到 y≈484，會蓋到禮物袋：往左讓開（右側欄 72px + 邊距） */
+@media (min-width: 561px) and (max-height: 900px) {
+  .h7-bag { right: 100px; }
+}
 .h7-bag-sway { position: relative; display: grid; place-items: center; width: 100%; height: 100%; transform-origin: 50% 90%; animation: h7-bag-sway 3.2s ease-in-out infinite; }
 .h7-bag.calm .h7-bag-sway { animation: none; }
 .h7-bag:active .h7-bag-sway { transform: scale(0.94); }
