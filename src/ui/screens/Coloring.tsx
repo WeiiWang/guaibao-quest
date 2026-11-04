@@ -37,6 +37,8 @@ import { PageThumb } from '../components/ColoringThumb'
 import { ScreenHeader } from '../components/Header'
 import { Modal } from '../components/Modal'
 import { Icon } from '../components/Icon'
+import { PlaceBackdrop, usePlaceGreeting } from '../components/Place'
+import { Places2Pet } from './Places2Pet'
 import { useToast } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
 import { say, sayChain, sayText } from '../../learning/speech'
@@ -179,6 +181,7 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
   const section = (tier: 'easy' | 'hard') => orderForList(COLORING_PAGES.filter((p) => (p.tier ?? 'easy') === tier), unlocked)
   const easy = section('easy')
   const hard = section('hard')
+  usePlaceGreeting('art')
 
   // 點鎖頭：卡片晃一下 + 語音說明 + 大大的「去商店」按鈕（不識字的小孩不會卡在死路）
   const tapLocked = (id: string, name: string) => {
@@ -210,7 +213,8 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
   )
 
   return (
-    <main className="screen theme-lavender">
+    <main className="screen place pm-wide pm-art theme-lavender">
+      <PlaceBackdrop place="art" />
       <ScreenHeader
         title="著色本"
         onBack={onBack}
@@ -222,30 +226,41 @@ export function ColoringListScreen({ onBack, onOpen, onGallery, onShop }: { onBa
           )
         }
       />
-      <ul className="shop-grid pb-free-row">
-        <li className="card shop-item art-card pb-free-card" data-testid="free-card">
-          <div className="pb-free-title">空白畫紙</div>
-          <div className="pb-free-slots">
-            {FREE_PAGE_IDS.map((id, i) => (
-              <button key={id} className="pb-free-slot" onClick={() => onOpen(id)} aria-label={`空白畫紙第${i + 1}張`} data-testid={`free-${i + 1}`}>
-                <FreeThumb pr={progress.find((x) => x.pageId === id)} />
-                <span className="pb-free-n">{i + 1}</span>
-              </button>
-            ))}
-          </div>
-          <div className="pb-free-hint">自己畫，沒有線稿</div>
-        </li>
-      
-      </ul>
-      <DotsShelf onOpen={onOpen} />
-      <h2 className="pb-tier-title" data-testid="tier-easy">簡單</h2>
-      {grid(easy, 'easy')}
-      {hard.length > 0 && (
-        <>
-          <h2 className="pb-tier-title" data-testid="tier-hard">挑戰</h2>
-          {grid(hard, 'hard')}
-        </>
-      )}
+      {/* v8.2 線 S：畫室裡的一疊畫冊，每一區是一本（封面色不同、上面有線圈） */}
+      <div className="pm-content pm-sketches">
+        <div className="pm-ledge pm-art-pet">
+          <Places2Pet />
+        </div>
+        <section className="pm-sketch pm-sketch-free" aria-label="空白畫紙">
+          <h2 className="pb-tier-title pm-sketch-tab">空白畫紙</h2>
+          <ul className="shop-grid pb-free-row">
+            <li className="pb-free-card" data-testid="free-card">
+              <div className="pb-free-slots">
+                {FREE_PAGE_IDS.map((id, i) => (
+                  <button key={id} className="pb-free-slot" onClick={() => onOpen(id)} aria-label={`空白畫紙第${i + 1}張`} data-testid={`free-${i + 1}`}>
+                    <FreeThumb pr={progress.find((x) => x.pageId === id)} />
+                    <span className="pb-free-n">{i + 1}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="pb-free-hint">自己畫，沒有線稿</div>
+            </li>
+          </ul>
+        </section>
+        <div className="pm-sketch pm-sketch-dots">
+          <DotsShelf onOpen={onOpen} />
+        </div>
+        <section className="pm-sketch pm-sketch-easy" aria-label="簡單">
+          <h2 className="pb-tier-title pm-sketch-tab" data-testid="tier-easy">簡單</h2>
+          {grid(easy, 'easy')}
+        </section>
+        {hard.length > 0 && (
+          <section className="pm-sketch pm-sketch-hard" aria-label="挑戰">
+            <h2 className="pb-tier-title pm-sketch-tab" data-testid="tier-hard">挑戰</h2>
+            {grid(hard, 'hard')}
+          </section>
+        )}
+      </div>
       {guide && (
         <div className="modal-back" role="presentation" onClick={() => setGuide(null)}>
           <div className="modal guide-card" role="dialog" aria-modal="true" aria-label="去商店換著色頁" data-testid="locked-guide" onClick={(e) => e.stopPropagation()}>

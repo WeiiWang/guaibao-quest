@@ -35,13 +35,7 @@
 .i74-finished i { background: #3fae6a; }
 .i74-again { min-height: 48px; width: 100%; margin-top: 6px; font-size: 0.95rem; }
 
-/* ---------- I2：畫廊的空狀態、家長區的作品縮圖 ---------- */
-.i74-empty { display: grid; justify-items: center; gap: 12px; padding: 26px 16px 34px; text-align: center; }
-.i74-empty-pet { width: min(46vw, 220px); aspect-ratio: 1; animation: i74-bob 2.4s ease-in-out infinite; }
-.i74-empty-pet .art, .i74-empty-pet .art-emoji { width: 100%; height: 100%; }
-.i74-empty-text { margin: 0; max-width: 24em; font-weight: 800; font-size: 1.1rem; color: var(--ink-soft); }
-.i74-empty-go { min-height: 64px; padding: 0 30px; font-size: 1.3rem; }
-@keyframes i74-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+/* ---------- I2：家長區的作品縮圖（畫廊的空狀態在 places2.css） ---------- */
 .i74-wk-arts { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 10px; }
 .i74-wk-art { position: relative; display: block; width: 100%; padding: 0; border: 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.16), inset 0 0 0 2px rgba(122, 82, 200, 0.2); }
 .i74-wk-art img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
@@ -74,5 +68,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .i74-new, .i74-empty-pet { animation: none; }
+  .i74-new { animation: none; }
 }

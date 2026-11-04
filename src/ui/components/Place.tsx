@@ -29,15 +29,18 @@ export function firstVisit(place: PlaceId): boolean {
   return true
 }
 
-/** 走進地方時寵物打招呼（一次開啟每個地方一句；只播預錄音檔，沒錄就安靜；等轉場結束才說） */
-export function usePlaceGreeting(place: PlaceId) {
+/**
+ * 走進地方時寵物打招呼（一次開啟每個地方一句；只播預錄音檔，沒錄就安靜；等轉場結束才說）。
+ * skip：這個畫面自己有話要說（空狀態的邀請），這次不打招呼、也不算打過，下次進來才說，兩句才不會互相打斷。
+ */
+export function usePlaceGreeting(place: PlaceId, { skip = false }: { skip?: boolean } = {}) {
   const { voiceOn } = useLearningSettings()
   useEffect(() => {
-    if (!voiceOn || !placeVoiceOn()) return
+    if (skip || !voiceOn || !placeVoiceOn()) return
     const t = window.setTimeout(() => {
       const line = STATIC_LINES[`pet.place.${place}`]
       if (typeof line === 'string' && firstVisit(place)) sayRecorded('pet.', line, { enabled: true })
     }, 500)
     return () => window.clearTimeout(t)
-  }, [place, voiceOn])
+  }, [place, voiceOn, skip])
 }

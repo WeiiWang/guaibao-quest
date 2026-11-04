@@ -21,16 +21,16 @@ export const albumId = {
   festival: (id: string) => `festival:${id}`,
 } as const
 
-/** 畫面上每一類的小標籤與顏色 */
-export const ALBUM_KIND_LABEL: Record<AlbumKind, { label: string; emoji: string }> = {
-  hatch: { label: '孵化', emoji: '🥚' },
-  grow: { label: '長大', emoji: '🌟' },
-  trick: { label: '新本領', emoji: '🎪' },
-  chapter: { label: '通關', emoji: '🗺️' },
-  hat: { label: '第一頂帽子', emoji: '👑' },
-  milestone: { label: '長大一點', emoji: '🎁' },
-  wish: { label: '小願望', emoji: '✨' },
-  festival: { label: '節慶', emoji: '' },
+/** 畫面上每一類的小標籤（v8.2：全部只有字，App 其他地方都已換成 3D 圖，不用 emoji） */
+export const ALBUM_KIND_LABEL: Record<AlbumKind, { label: string }> = {
+  hatch: { label: '孵化' },
+  grow: { label: '長大' },
+  trick: { label: '新本領' },
+  chapter: { label: '通關' },
+  hat: { label: '第一頂帽子' },
+  milestone: { label: '長大一點' },
+  wish: { label: '小願望' },
+  festival: { label: '節慶' },
 }
 
 /** 回憶卡一律先選「開心」的姿勢；每一招各配一個姿勢（用現有的阿悟姿勢圖，不需要新素材） */
