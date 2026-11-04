@@ -71,6 +71,17 @@ export function SettingsTab({ onReset }: { onReset: () => void }) {
         />
       </div>
 
+      <div className="card">
+        <h2>遊樂場</h2>
+        <Switch
+          label="學我說話（使用麥克風）"
+          desc="打開後遊樂場會多一個玩法：孩子說一句話，寵物用變高的聲音學回來。聲音只留在這台裝置的記憶體、播完就丟，不存不傳。第一次玩時瀏覽器會問可不可以用麥克風。"
+          on={settings?.talkOn ?? false}
+          testId="talk-switch"
+          onChange={(v) => void repo.setTalkOn(v)}
+        />
+      </div>
+
       <div className="card form">
         <h2>這個孩子的名字</h2>
         <label className="field">

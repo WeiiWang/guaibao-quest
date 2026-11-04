@@ -22,7 +22,8 @@ export function findChrome() {
  * 需要先 node node_modules/playwright-core/cli.js install webkit。
  */
 export const IS_WEBKIT = process.env.E2E_BROWSER === 'webkit'
-export const launch = () => (IS_WEBKIT ? webkit.launch() : chromium.launch({ executablePath: findChrome() }))
+// args：只有 Chromium 認得的啟動參數（例如假麥克風）；WebKit 不帶
+export const launch = ({ args } = {}) => (IS_WEBKIT ? webkit.launch() : chromium.launch({ executablePath: findChrome(), ...(args ? { args } : {}) }))
 export const IPAD_CTX = IS_WEBKIT
   ? {
       hasTouch: true,
