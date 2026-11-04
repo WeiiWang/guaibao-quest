@@ -1,0 +1,258 @@
+/* v8.2 線 S：著色本、畫廊、圖鑑、相簿變成世界裡的地方。class 一律 pm- 開頭；蓋舊規則時都帶 .screen.pm-<地方>，不靠載入順序。
+   只用靜態的漸層與陰影（iPad Safari 要順），沒有新素材、沒有大面積 filter。 */
+
+/* ---------- 共用：放寬內容、地方的招牌 ---------- */
+.screen.pm-wide { --pm-pet: 84px; --pm-floor: 3dvh; padding-inline: max(14px, calc((100% - 1360px) / 2)); }
+.pm-wide .screen-header { position: relative; z-index: 2; margin-bottom: 14px; }
+.pm-wide .screen-header h1 {
+  flex: 0 1 auto; margin-inline: auto; padding: 6px 24px; border-radius: 18px; font-size: clamp(1.3rem, 3vw, 1.9rem); white-space: nowrap;
+  background: var(--pm-plate, #fffaf0); color: var(--pm-plate-ink, var(--ink));
+  box-shadow: 0 4px 0 var(--pm-plate-edge, rgba(74, 59, 53, 0.22)), 0 8px 14px rgba(74, 59, 53, 0.16);
+}
+.pm-content { min-width: 0; position: relative; }
+
+/* 寵物站的地方：直向與手機是一塊木架（牠和牠說的話站在上面），跟著內容捲；橫向固定在左下角地面（下面的 media query） */
+.pm-ledge {
+  display: flex; align-items: flex-end; gap: 12px; margin: 0 0 16px; padding: 0 12px 11px; border-radius: 0 0 12px 12px;
+  background: linear-gradient(180deg, transparent calc(100% - 11px), #dcae74 calc(100% - 11px), #c8975c);
+}
+.pm-stander { position: relative; flex: none; display: grid; justify-items: center; }
+.pm-stander .companion { position: relative; z-index: 1; }
+.pm-stander-shadow { position: absolute; left: 50%; bottom: -3%; width: 72%; height: 11%; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 45, 20, 0.34), rgba(70, 45, 20, 0)); pointer-events: none; }
+.pm-bubble {
+  position: relative; flex: 0 1 auto; margin: 0 0 6px; padding: 8px 16px; border-radius: 20px; background: #fffdf6; color: var(--ink);
+  font-size: 1.05rem; font-weight: 800; line-height: 1.35; text-wrap: balance; word-break: keep-all; overflow-wrap: anywhere; box-shadow: 0 3px 0 rgba(74, 59, 53, 0.12), 0 6px 12px rgba(74, 59, 53, 0.1);
+}
+.pm-bubble::before { content: ''; position: absolute; left: -7px; bottom: 16px; width: 16px; height: 16px; background: #fffdf6; transform: rotate(45deg); border-radius: 3px; }
+
+@media (min-width: 700px) {
+  .screen.pm-wide { --pm-pet: 104px; padding-inline: max(18px, calc((100% - 1360px) / 2)); }
+}
+/* iPad 橫向：內容讓出左邊一欄，寵物站在那一欄底下的地面上，牠說的話在頭上 */
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .screen.pm-wide { --pm-pet: clamp(124px, 20dvh, 168px); }
+  .pm-wide .pm-content { margin-left: 172px; }
+  .pm-wide .pm-ledge {
+    position: fixed; z-index: 1; left: max(10px, calc(50% - 670px)); bottom: var(--pm-floor); width: 164px; margin: 0; padding: 0; border-radius: 0; background: none;
+    flex-direction: column-reverse; align-items: center; gap: 12px; pointer-events: none;
+  }
+  .pm-wide .pm-ledge > * { pointer-events: auto; }
+  .pm-wide .pm-bubble { margin: 0; padding: 10px 12px; font-size: 1rem; text-align: center; }
+  .pm-wide .pm-bubble::before { left: 50%; bottom: -7px; margin-left: -8px; }
+}
+
+/* ---------- 著色本：畫室裡的一疊畫冊 ---------- */
+.screen.pm-art { --pm-plate-edge: #b79be0; --pm-floor: 4dvh; }
+.pm-sketches { display: grid; gap: 40px; padding: 24px 6px 26px; }
+.pm-sketch {
+  --pm-cover: #d3b8f2; position: relative; min-width: 0; padding: 34px 18px 20px; border-radius: 20px; background: #fffaf0;
+  /* 外圈封面、下面露出幾張紙、最底下封底：看起來是一本有厚度的畫冊 */
+  box-shadow: 0 0 0 5px var(--pm-cover), 0 6px 0 5px #fff4e0, 0 10px 0 5px #eddfc6, 0 16px 0 5px var(--pm-cover), 0 24px 24px rgba(74, 59, 53, 0.16);
+}
+/* 上緣的線圈 */
+.pm-sketch::before {
+  content: ''; position: absolute; left: 22px; right: 22px; top: -15px; height: 36px; pointer-events: none;
+  background:
+    radial-gradient(circle at 17px 29px, rgba(74, 59, 53, 0.5) 0 4.5px, transparent 5px) 0 0 / 34px 36px repeat-x,
+    linear-gradient(90deg, transparent 13px, #a79fb6 13px, #efedf4 16px, #a79fb6 21px, transparent 21px) 0 0 / 34px 29px repeat-x;
+}
+.pm-sketch-free { --pm-cover: #ffc4d3; }
+.pm-sketch-dots { --pm-cover: #ffe08f; }
+.pm-sketch-easy { --pm-cover: #b7e8c1; }
+.pm-sketch-hard { --pm-cover: #ffc7a1; }
+.screen.pm-art .pm-sketch .pb-tier-title {
+  display: inline-block; margin: 0 0 14px !important; padding: 6px 22px; border-radius: 16px; background: var(--pm-cover); color: var(--ink);
+  font-size: clamp(1.35rem, 2.6vw, 1.7rem); font-weight: 900; box-shadow: 0 3px 0 color-mix(in srgb, var(--pm-cover) 70%, #6a4a3a);
+}
+/* 空白畫紙：三張大紙，一看就知道點哪裡 */
+.screen.pm-art .pb-free-row { display: block; margin: 0; }
+.screen.pm-art .pb-free-row .pb-free-card { display: grid; justify-content: stretch; gap: 12px; padding: 0; background: none; }
+.screen.pm-art .pb-free-slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(10px, 2vw, 24px); }
+.screen.pm-art .pb-free-slot { width: 100%; aspect-ratio: 3 / 2; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 0 #e6dcc8, 0 5px 0 #f3ead9, 0 10px 16px rgba(74, 59, 53, 0.18), inset 0 0 0 2px rgba(122, 82, 200, 0.14); }
+.screen.pm-art .pb-free-slot:nth-child(odd) { transform: rotate(-1deg); }
+.screen.pm-art .pb-free-slot:nth-child(even) { transform: rotate(0.8deg); }
+.screen.pm-art .pb-free-slot:active { transform: translateY(2px) scale(0.97); }
+.screen.pm-art .pb-free-blank { background: #fffefb; }
+.screen.pm-art .pb-free-n { right: 8px; bottom: 4px; font-size: 1.15rem; }
+.screen.pm-art .pb-free-hint { font-size: 1rem; text-align: center; }
+/* 畫冊裡的每一頁：不再是白卡片，縮圖就是一張紙 */
+.screen.pm-art .shop-grid:not(.pb-free-row) { grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 22px 18px; }
+.screen.pm-art .art-card, .screen.pm-art .dt-card { padding: 0; border-radius: 0; background: none; box-shadow: none; }
+.screen.pm-art .thumb-btn .shop-thumb, .screen.pm-art .i74-work, .screen.pm-art .dt-thumb { width: 100%; max-width: none; border-radius: 10px; background: #fff; box-shadow: 0 2px 0 #e6dcc8, 0 7px 12px rgba(74, 59, 53, 0.16); }
+.screen.pm-art .shop-name, .screen.pm-art .dt-name { font-size: 1.2rem; }
+.screen.pm-art .pb-tier { font-size: 0.88rem; }
+.screen.pm-art .dt-sub { font-size: 0.95rem; }
+/* 連連看：全部排得下，不用橫滑（原本超出畫面就被切掉） */
+.screen.pm-art .dt-shelf { margin: 0; }
+.screen.pm-art .dt-head { margin: 0 0 14px; align-items: flex-start; }
+.screen.pm-art .dt-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px 16px; padding: 0; overflow: visible; }
+.screen.pm-art .dt-card { flex: none; min-width: 0; }
+.screen.pm-art .pm-art-pet { position: absolute; z-index: 3; right: 22px; top: calc(24px + 86px - var(--pm-pet)); margin: 0; padding: 0; border-radius: 0; background: none; }
+@media (max-width: 699px) {
+  .pm-sketches { gap: 34px; padding-inline: 4px; }
+  .pm-sketch { padding: 30px 12px 16px; }
+  .screen.pm-art .shop-grid:not(.pb-free-row) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+  .screen.pm-art .dt-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 10px; }
+  .screen.pm-art .dt-name { font-size: 1rem; }
+  .screen.pm-art .dt-sub { font-size: 0.82rem; }
+  .screen.pm-art .pb-free-slot { aspect-ratio: 1; }
+  .screen.pm-art .pm-art-pet { top: calc(24px + 76px - var(--pm-pet)); right: 14px; }
+}
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .screen.pm-art .pm-art-pet { position: fixed; top: auto; right: auto; }
+}
+
+/* ---------- 畫廊：牆上的畫框，每幅有一盞投射燈 ---------- */
+.screen.pm-gallery { --pm-plate: linear-gradient(180deg, #f8e7bd, #e7c98a); --pm-plate-ink: #5b3f1c; --pm-plate-edge: #b58c4c; --pm-floor: 2dvh; display: flex; flex-direction: column; }
+.pm-gallery .pm-content { flex: 1; display: flex; flex-direction: column; }
+.screen.pm-gallery .pm-wall { list-style: none; margin: 0; padding: 22px 8px 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px clamp(16px, 3vw, 34px); }
+.pm-wall-slot { position: relative; isolation: isolate; display: grid; gap: 10px; justify-items: center; align-content: start; min-width: 0; }
+/* 投射燈：畫框上方一盞小燈（光暈用陰影畫）+ 打在畫框上緣的一片光（不蓋到畫的中間、點不到）；牆壓暗一點，光才看得出來 */
+.pm-gallery .place-backdrop::after { content: ''; position: absolute; inset: 0; background: rgba(135, 80, 45, 0.1); }
+.pm-wall-slot { --pm-frame: 100%; }
+.pm-wall-slot::before { content: ''; position: absolute; z-index: 1; top: -22px; left: 50%; width: var(--pm-frame); aspect-ratio: 1 / 0.42; transform: translateX(-50%); pointer-events: none; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 246, 214, 0.78), rgba(255, 246, 214, 0.3) 55%, rgba(255, 246, 214, 0) 100%); }
+.pm-wall-slot::after { content: ''; position: absolute; z-index: 2; top: -14px; left: 50%; width: clamp(46px, 24%, 84px); height: 12px; transform: translateX(-50%); border-radius: 8px 8px 14px 14px; pointer-events: none; background: linear-gradient(180deg, #edd19a, #b98f4b); box-shadow: 0 1px 0 #8f6c32, 0 8px 30px 12px rgba(255, 240, 190, 0.8); }
+.screen.pm-gallery .gallery-item { padding: 0; }
+.screen.pm-gallery .gallery-thumb, .pm-wall-blank { position: relative; display: block; width: var(--pm-frame); aspect-ratio: 1; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; transition: transform 0.12s; }
+.pm-wall-blank:active { transform: scale(0.97); }
+.pm-wall-blank .gallery-frame { display: block; position: absolute; inset: 0; }
+.pm-wall-blank .gf-board { display: block; }
+/* 還沒有畫的畫布：奶油色的空白，內圈一條淡淡的虛線，等孩子來畫 */
+.pm-wall-canvas { display: block; width: 100%; height: 100%; border-radius: 3px; background: #fffdf7; box-shadow: inset 0 0 0 3px #fffdf7, inset 0 0 0 5px rgba(201, 141, 79, 0.2); }
+.screen.pm-gallery .gallery-badge { left: 7%; top: 13%; z-index: 2; font-size: 0.9rem; }
+.screen.pm-gallery .gallery-name { max-width: 100%; padding: 4px 14px; border-radius: 8px; text-align: center; font-size: 1.08rem; background: linear-gradient(180deg, #fff9e8, #f2e3c2); box-shadow: 0 2px 0 #cfb582, 0 4px 8px rgba(90, 60, 25, 0.14); }
+.screen.pm-gallery .gallery-name small { font-size: 0.9rem; }
+/* 空的牆：幾個空畫框 + 一顆大按鈕 */
+.pm-wall-empty { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.pm-wall-empty .pm-wall { width: 100%; }
+.pm-wall-waiting .pm-wall-slot:nth-child(n + 5) { display: none; }
+.pm-wall-go { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 68px; min-width: 240px; padding: 0 34px 0 22px; font-size: 1.35rem; }
+.pm-wall-empty .pm-ledge { align-self: flex-start; margin: auto 0 0; padding-bottom: 0; background: none; }
+.i74-empty-pet { display: block; }
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .screen.pm-gallery .pm-wall { grid-template-columns: repeat(3, minmax(0, 1fr)); padding-inline: 4px; }
+  /* 兩排框（加名牌或按鈕）要一屏放得下 */
+  .pm-wall-slot { --pm-frame: min(100%, 33dvh); }
+  .pm-wall-waiting .pm-wall-slot { --pm-frame: min(100%, 32dvh); }
+  .pm-wall-waiting .pm-wall-slot:nth-child(n + 5) { display: grid; }
+  .pm-wall-empty .pm-ledge { margin: 0; }
+}
+
+/* ---------- 圖鑑：樹屋裡的大卡片 ---------- */
+.screen.pm-friends { --pm-plate: linear-gradient(180deg, #edc48a, #d9a667); --pm-plate-ink: #482c10; --pm-plate-edge: #a9753c; --pm-floor: 5dvh; }
+.screen.pm-friends .friends-progress { font-size: 1.1rem; text-align: left; color: var(--ink); }
+.screen.pm-friends .friends-progress small { font-size: 0.92rem; color: #75665c; text-wrap: wrap; }
+.screen.pm-friends .q7-badges { padding: 0; justify-content: flex-start; }
+.screen.pm-friends .q7-ftabs { max-width: none; margin: 0; padding: 2px 0 14px; justify-content: flex-start; flex-wrap: wrap; overflow: visible; }
+.screen.pm-friends .q7-ftab { flex: 1 1 auto; min-height: 64px; padding: 6px 12px; border-radius: 18px; font-size: 1.12rem; background: linear-gradient(180deg, #fff5dd, #f4e0b8); box-shadow: 0 4px 0 #cfa86f, 0 6px 10px rgba(90, 60, 25, 0.12); }
+.screen.pm-friends .q7-ftab small { font-size: 0.88rem; color: #75665c; }
+.screen.pm-friends .q7-ftab[aria-selected='true'] { background: linear-gradient(180deg, #7fb45a, #669a44); color: #fff; box-shadow: 0 4px 0 #4c7a30, 0 6px 10px rgba(50, 80, 30, 0.2); }
+.screen.pm-friends .q7-ftab[aria-selected='true'] small { color: #fff; }
+.screen.pm-friends .friends-grid { max-width: none; margin: 0; padding: 2px 0 24px; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.screen.pm-friends .friend-cell { aspect-ratio: 1 / 1.06; justify-content: space-between; gap: 6px; padding: 10px 8px; border-width: 6px; border-radius: 28px; }
+.screen.pm-friends .friend-cell .friend-img, .screen.pm-friends .friend-cell .art-emoji { width: auto; height: auto; flex: 1 1 0; min-height: 0; max-width: 88%; aspect-ratio: 1; }
+.screen.pm-friends .friend-cell .q7-fswatch, .screen.pm-friends .friend-cell .q7-fdigit { flex: 1 1 0; width: auto; min-height: 0; max-width: 72%; }
+.screen.pm-friends .friend-cell .q7-fdigit { font-size: clamp(2.6rem, 7vw, 4rem); }
+/* 認識的朋友：奶油色紙卡、木頭邊（銀框、金框沿用熟悉度的顏色） */
+.screen.pm-friends .friend-cell.q7-frame-met { border-color: #dfb781; background: linear-gradient(170deg, #fffdf4, #fbf0d9); box-shadow: 0 5px 0 #bd8e54, 0 10px 16px rgba(90, 60, 25, 0.16); }
+.screen.pm-friends .friend-name { flex: none; font-size: 1.28rem; line-height: 1.25; }
+.screen.pm-friends .friends-grid[data-few='1'] .friend-name { font-size: 1.5rem; }
+/* 還沒認識的：只有剪影和一塊空名牌，沒有問號 */
+.screen.pm-friends .friend-cell.unknown { border-color: rgba(190, 165, 120, 0.32); background: rgba(247, 240, 220, 0.78); box-shadow: inset 0 3px 8px rgba(120, 90, 50, 0.1); }
+.pm-dex-noname { display: block; width: 46%; height: 0.72em; margin-block: 0.27em; border-radius: 999px; background: rgba(140, 115, 80, 0.16); }
+.screen.pm-friends .q7-level { left: 8px; top: 7px; padding: 1px 10px; font-size: 0.82rem; }
+@media (min-width: 700px) {
+  .screen.pm-friends .friends-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .screen.pm-friends .friends-grid[data-few='1'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .screen.pm-friends .q7-ftab { min-height: 68px; }
+}
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .screen.pm-friends .friends-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .screen.pm-friends .friends-grid[data-few='1'] { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 18px; }
+  .screen.pm-friends .friends-grid[data-few='1'] .friend-cell { aspect-ratio: auto; height: calc((100dvh - 214px) / 2); min-height: 240px; }
+  .screen.pm-friends .friends-progress { padding-inline: 6px; text-align: center; font-size: 0.95rem; }
+  .screen.pm-friends .friends-progress small { font-size: 0.86rem; }
+}
+
+/* ---------- 相簿：桌上一本打開的相簿（兩頁、中間書溝），一屏一個跨頁 ---------- */
+.screen.pm-album { --pm-plate: #fffaf0; --pm-plate-edge: #c79a62; display: flex; flex-direction: column; height: 100dvh; min-height: 520px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.pm-album .screen-header { flex: none; margin-bottom: 8px; }
+.pm-album .al-progress { flex: none; align-self: center; margin: 0 0 10px; padding: 5px 18px; border-radius: 6px; font-size: 1.05rem; text-align: center; background: #fffaf0; box-shadow: 0 2px 0 #d9c49e, 0 5px 10px rgba(80, 45, 15, 0.2); transform: rotate(-0.6deg); }
+.pm-album .al-progress small { font-size: 0.86rem; color: #75665c; }
+.pm-book-wrap { flex: 1; min-height: 0; display: grid; grid-template: 'book book book' minmax(0, 1fr) 'prev dots next' auto / auto minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.pm-book-wrap:not([data-spreads]) { grid-template: 'book' minmax(0, 1fr) / minmax(0, 1fr); }
+.pm-book { grid-area: book; position: relative; height: 100%; min-width: 0; padding: 10px; border-radius: 18px; background: linear-gradient(180deg, #e88fa6, #d97890); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.28), 0 7px 0 #a9506a, 0 16px 22px rgba(70, 40, 15, 0.34); }
+.pm-book-spreads { display: flex; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; border-radius: 8px; background: #fbf4e4; -webkit-overflow-scrolling: touch; }
+.pm-book-spreads::-webkit-scrollbar { display: none; }
+.pm-book-spread { flex: 0 0 100%; min-width: 0; height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); scroll-snap-align: start; scroll-snap-stop: always; }
+.pm-book-page { list-style: none; margin: 0; padding: 12px 10px; min-width: 0; min-height: 0; display: grid; gap: 10px; background: #fbf4e4; }
+.pm-book-page[data-per='1'] { grid-template-rows: minmax(0, 1fr); }
+.pm-book-page[data-per='2'] { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+.pm-book-page[data-per='4'] { grid-template: repeat(2, minmax(0, 1fr)) / repeat(2, minmax(0, 1fr)); }
+.pm-book-page:first-child { padding-right: 18px; }
+.pm-book-page:last-child { padding-left: 18px; }
+.pm-book-gutter { position: absolute; top: 10px; bottom: 10px; left: 50%; width: clamp(30px, 6%, 64px); transform: translateX(-50%); pointer-events: none; background: linear-gradient(90deg, rgba(110, 75, 35, 0), rgba(110, 75, 35, 0.14) 36%, rgba(90, 55, 25, 0.38) 50%, rgba(110, 75, 35, 0.14) 64%, rgba(110, 75, 35, 0)); }
+.pm-book-slot { container-type: size; min-width: 0; min-height: 0; display: grid; place-items: center; }
+/* 貼在頁面上的相片：白邊、紙膠帶、固定的微傾（--pm-tilt 依序號，見 Album.tsx） */
+.pm-book-slot .al-card { position: relative; width: min(88cqw, 100cqh - 106px); gap: 4px; padding: 7px 7px 9px; border-radius: 4px; transform: rotate(var(--pm-tilt, 0deg)); box-shadow: 0 1px 0 #e8dcc4, 0 6px 10px rgba(80, 50, 20, 0.2); }
+.pm-book-slot .al-card.fresh { box-shadow: 0 0 0 4px var(--butter), 0 6px 10px rgba(80, 50, 20, 0.2); }
+.pm-book-slot .al-card::before { content: ''; position: absolute; z-index: 5; top: -11px; left: 50%; width: clamp(56px, 38%, 96px); height: 24px; transform: translateX(-50%) rotate(-3deg); background: repeating-linear-gradient(45deg, var(--pm-tape) 0 6px, color-mix(in srgb, var(--pm-tape) 70%, white) 6px 12px); box-shadow: 0 1px 2px rgba(80, 50, 20, 0.2); opacity: 0.92; }
+.pm-book-slot[data-tape='0'] { --pm-tape: #ffb3c6; }
+.pm-book-slot[data-tape='1'] { --pm-tape: #a9dfc0; }
+.pm-book-slot[data-tape='2'] { --pm-tape: #ffd98a; }
+.pm-book-slot .al-photo { border-radius: 2px; }
+.pm-book-slot .al-tag { top: 15px; font-size: 0.85rem; }
+.pm-book-slot .al-date { font-size: 0.85rem; }
+.pm-book-slot .al-caption { font-size: clamp(0.92rem, 7cqmin, 1.15rem); line-height: 1.28; }
+/* 還沒有相片的位置：四個相片角，等新的回憶貼上來 */
+.pm-book-mount {
+  --c: rgba(170, 125, 80, 0.3); display: block; width: min(68cqw, 100cqh - 60px); aspect-ratio: 0.82;
+  background:
+    linear-gradient(var(--c), var(--c)) 0 0 / 24px 4px, linear-gradient(var(--c), var(--c)) 0 0 / 4px 24px,
+    linear-gradient(var(--c), var(--c)) 100% 0 / 24px 4px, linear-gradient(var(--c), var(--c)) 100% 0 / 4px 24px,
+    linear-gradient(var(--c), var(--c)) 0 100% / 24px 4px, linear-gradient(var(--c), var(--c)) 0 100% / 4px 24px,
+    linear-gradient(var(--c), var(--c)) 100% 100% / 24px 4px, linear-gradient(var(--c), var(--c)) 100% 100% / 4px 24px;
+  background-repeat: no-repeat;
+}
+.pm-album .al-view + .btn { display: block; min-width: 160px; margin: 0 auto; }
+/* 翻頁 */
+.pm-book-turn { width: 64px; height: 64px; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(180deg, #fffdf6, #f4e8d0); color: #8a5a35; font-size: 2.6rem; font-weight: 900; line-height: 1; box-shadow: 0 4px 0 #b98f5e, 0 8px 12px rgba(70, 40, 15, 0.26); transition: transform 0.12s; }
+.pm-book-turn span { margin-top: -6px; }
+.pm-book-turn:active:not(:disabled) { transform: translateY(3px) scale(0.96); }
+.pm-book-turn:disabled { opacity: 0.4; }
+.pm-book-turn.prev { grid-area: prev; }
+.pm-book-turn.next { grid-area: next; }
+.pm-book-dots { grid-area: dots; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.pm-book-dots i { width: 13px; height: 13px; border-radius: 50%; background: rgba(255, 250, 235, 0.55); box-shadow: 0 1px 2px rgba(70, 40, 15, 0.3); }
+.pm-book-dots i.on { background: #fffdf6; box-shadow: 0 0 0 3px #d97890; }
+/* 空相簿：左頁一張寵物的相片，右頁一句話和按鈕 */
+.pm-book > .j74-empty { height: 100%; grid-template: 1fr auto auto 1fr / minmax(0, 1fr) minmax(0, 1fr); gap: 16px 34px; align-items: center; padding: 12px 18px; border-radius: 8px; background: #fbf4e4; }
+.pm-book > .j74-empty .j74-empty-pet { --pm-tape: #ffb3c6; position: relative; grid-area: 1 / 1 / 5 / 2; align-self: center; width: min(100%, 300px); padding: 8px 8px 20px; border-radius: 4px; background: linear-gradient(160deg, #fff3c9, #ffd9c2) content-box, #fff; box-shadow: 0 1px 0 #e8dcc4, 0 6px 10px rgba(80, 50, 20, 0.2); transform: rotate(-2deg); }
+.pm-book > .j74-empty .j74-empty-pet::before { content: ''; position: absolute; z-index: 5; top: -12px; left: 50%; width: 38%; height: 24px; transform: translateX(-50%) rotate(-3deg); background: repeating-linear-gradient(45deg, var(--pm-tape) 0 6px, color-mix(in srgb, var(--pm-tape) 70%, white) 6px 12px); box-shadow: 0 1px 2px rgba(80, 50, 20, 0.2); opacity: 0.92; }
+.pm-book > .j74-empty .j74-empty-line { grid-area: 2 / 2; margin: 0; }
+.pm-book > .j74-empty .j74-empty-line::before { display: none; }
+.pm-book > .j74-empty .j74-empty-go { grid-area: 3 / 2; width: min(100%, 280px); min-width: 0; padding: 0 12px; }
+@media (max-width: 699px) {
+  .pm-book { padding: 7px; }
+  .pm-book-spreads { border-radius: 5px; }
+  .pm-book-gutter { top: 7px; bottom: 7px; }
+  .pm-book-page { padding: 12px 5px; }
+  .pm-book-page:first-child { padding-right: 11px; }
+  .pm-book-page:last-child { padding-left: 11px; }
+  .pm-book-slot .al-card { width: min(96cqw, 100cqh - 112px); padding: 5px 5px 7px; }
+  .pm-book-slot .al-tag { left: 3px; top: 13px; padding: 1px 7px; font-size: 0.74rem; }
+  .pm-book > .j74-empty { padding: 10px 8px; column-gap: 20px; }
+}
+@media (min-aspect-ratio: 5/4) and (min-width: 760px) {
+  .pm-book-wrap { grid-template: 'prev book next' minmax(0, 1fr) 'dots dots dots' auto / 68px minmax(0, 1fr) 68px; gap: 6px 10px; }
+  /* 卡片少、一頁兩張：左右並排，一高一低才不呆板 */
+  .pm-book-page[data-per='2'] { grid-template: minmax(0, 1fr) / repeat(2, minmax(0, 1fr)); }
+  .pm-book-page[data-per='2'] .pm-book-slot:first-child .al-card { translate: 0 -5cqh; }
+  .pm-book-page[data-per='2'] .pm-book-slot:last-child .al-card { translate: 0 5cqh; }
+  .pm-book-page[data-per='2'] .pm-book-slot .al-card { width: min(92cqw, 100cqh - 130px); }
+  .pm-book-page[data-per='2'] .pm-book-mount { width: min(84cqw, 100cqh - 130px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pm-wall-blank, .pm-book-turn { transition: none; }
+}

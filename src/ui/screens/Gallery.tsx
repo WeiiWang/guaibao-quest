@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { petArt, speciesEmoji, speciesName } from '../../domain/species'
 import { db } from '../../db/db'
 import { repo } from '../../db/repo'
 import { FREE_PAGE_IDS, getColoringPage } from '../../art/coloring/pages'
@@ -13,6 +12,8 @@ import { FRAMES, FRAME_LOCKED_LINE, FRAME_PICK_LINE, framesToGo, isFrameId, isFr
 import { ScreenHeader } from '../components/Header'
 import { GalleryFrameView } from '../components/GalleryFrame'
 import { Modal } from '../components/Modal'
+import { PlaceBackdrop, usePlaceGreeting } from '../components/Place'
+import { Places2Pet } from './Places2Pet'
 import { useToast } from '../hooks'
 import { useLearningSettings } from '../learningHooks'
 import { sayText } from '../../learning/speech'
@@ -20,11 +21,29 @@ import { playPop } from '../sounds'
 import type { Screen } from '../App'
 import './coloring.css'
 import './coloring/i74.css'
+import './places2.css'
+
+/** 牆上至少掛幾個框：作品不夠就補空畫框，iPad 的牆才不會空一大片 */
+const WALL_SLOTS = 6
 
 const dateText = (ms?: number) => {
   if (!ms) return ''
   const d = new Date(ms)
   return `${d.getMonth() + 1}/${d.getDate()}`
+}
+
+/** 牆上的空畫框：跟作品同一套畫框外觀，裡面是一張空白畫布，點了就去畫畫 */
+function BlankFrame({ onClick }: { onClick: () => void }) {
+  return (
+    <button className="pm-wall-blank" onClick={onClick} aria-label="空畫框，去畫畫" data-testid="gallery-blank-frame">
+      <span className="gallery-frame">
+        <i className="gf-string" />
+        <span className="gf-board fr-plain">
+          <span className="pm-wall-canvas" />
+        </span>
+      </span>
+    </button>
+  )
 }
 
 /** 我的畫廊：完成的著色作品。可以放大看、掛到房間、取下、刪除。 */
@@ -38,7 +57,6 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
   const placements = useLiveQuery(() => db.placements.toArray(), [], [])
   const [view, setView] = useState<ColoringProgress | null>(null)
   const [confirmDel, setConfirmDel] = useState<ColoringProgress | null>(null)
-  const pet = useLiveQuery(() => db.pets.get('pet'), [])
 
   // 彈窗裡的作品要跟著資料更新（換畫框後馬上看到），所以每次都從最新的清單找
   const cur = view ? (works.find((w) => w.pageId === view.pageId) ?? view) : null
@@ -86,34 +104,61 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
     if (empty) say('pet.gallery.empty', GALLERY_EMPTY_LINE, { enabled: voiceOn })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empty])
+  // 空的時候寵物已經在邀請孩子畫畫了，不再打招呼（兩句會互相打斷）
+  usePlaceGreeting('gallery', { skip: worksQ === undefined || empty })
+  const goPaint = () => go({ name: 'paint', pageId: FREE_PAGE_IDS[0] })
+  const frameNote = next ? `畫完 ${framesDone} 幅了，再畫 ${next.need - framesDone} 幅就能得到${next.name}` : `畫完 ${framesDone} 幅了，畫框都收集好了！`
 
   return (
-    <main className="screen gallery theme-lavender" data-testid="gallery">
+    <main className="screen place pm-wide pm-gallery gallery theme-lavender" data-testid="gallery">
+      <PlaceBackdrop place="gallery" />
       <ScreenHeader title="我的畫廊" onBack={onBack} backLabel="← 著色本" />
-      {empty && (
-        <div className="i74-empty" data-testid="gallery-empty">
-          <div className="i74-empty-pet" aria-hidden>
-            <Icon name={petArt(pet?.species, pet?.stage ?? 'baby', 'happy')} emoji={pet?.stage === 'egg' ? '🥚' : speciesEmoji(pet?.species)} alt={speciesName(pet?.species)} size="100%" />
-          </div>
-          <p className="i74-empty-text">還沒有完成的畫。畫好一張，按「完成」就會放進來！</p>
-          <button className="btn primary i74-empty-go" onClick={() => go({ name: 'paint', pageId: FREE_PAGE_IDS[0] })} data-testid="gallery-go-paint">
-            <span aria-hidden>🎨</span> 去畫畫
-          </button>
-        </div>
-      )}
-      <ul className="gallery-grid">
-        {works.map((w) => (
-          <li key={w.pageId} className="card gallery-item" data-testid="gallery-item">
-            <button className={`gallery-thumb ${isFrameId(w.frame) ? 'fr-framed' : ''}`} onClick={() => setView(w)} aria-label={`看大圖：${nameOf(w)}`}>
-              {isFrameId(w.frame) ? <GalleryFrameView png={w.png} frame={w.frame} className="fr-thumb" /> : w.png ? <img src={w.png} alt={nameOf(w)} /> : <span>🖼️</span>}
-              {hung(w) && <b className="gallery-badge">掛在房間</b>}
+      <div className="pm-content">
+        {empty ? (
+          <section className="pm-wall-empty" data-testid="gallery-empty">
+            <ul className="pm-wall pm-wall-waiting">
+              {Array.from({ length: WALL_SLOTS }, (_, i) => (
+                <li key={i} className="pm-wall-slot">
+                  <BlankFrame onClick={goPaint} />
+                </li>
+              ))}
+            </ul>
+            <button className="btn primary pm-wall-go" onClick={goPaint} data-testid="gallery-go-paint">
+              <Icon name="ui-coloring" emoji="🎨" size={40} /> 去畫畫
             </button>
-            <div className="gallery-name">
-              {nameOf(w)} <small>{dateText(w.createdAt)}</small>
+            <div className="pm-ledge">
+              <span className="i74-empty-pet"><Places2Pet /></span>
+              <p className="pm-bubble">還沒有完成的畫。<wbr />畫好一張，<wbr />按「完成」就會放進來！</p>
             </div>
-          </li>
-        ))}
-      </ul>
+          </section>
+        ) : (
+          <>
+            <div className="pm-ledge">
+              <Places2Pet />
+              <p className="pm-bubble">{frameNote}</p>
+            </div>
+            <ul className="gallery-grid pm-wall">
+              {works.map((w) => (
+                <li key={w.pageId} className="gallery-item pm-wall-slot" data-testid="gallery-item">
+                  <button className="gallery-thumb fr-framed" onClick={() => setView(w)} aria-label={`看大圖：${nameOf(w)}`}>
+                    <GalleryFrameView png={w.png} frame={w.frame} className="fr-thumb" />
+                    {hung(w) && <b className="gallery-badge">掛在房間</b>}
+                  </button>
+                  <div className="gallery-name">
+                    {nameOf(w)} <small>{dateText(w.createdAt)}</small>
+                  </div>
+                </li>
+              ))}
+              {worksQ !== undefined &&
+                Array.from({ length: Math.max(0, WALL_SLOTS - works.length) }, (_, i) => (
+                  <li key={i} className="pm-wall-slot">
+                    <BlankFrame onClick={goPaint} />
+                  </li>
+                ))}
+            </ul>
+          </>
+        )}
+      </div>
       {view && cur && (
         <Modal title={nameOf(cur)} onClose={() => setView(null)}>
           <div className="fr-big" data-testid="gallery-view">
@@ -146,7 +191,7 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
                 )
               })}
             </div>
-            <p className="fr-progress" data-testid="frame-progress">{next ? `畫完 ${framesDone} 幅了，再畫 ${next.need - framesDone} 幅就能得到${next.name}` : `畫完 ${framesDone} 幅了，畫框都收集好了！`}</p>
+            <p className="fr-progress" data-testid="frame-progress">{frameNote}</p>
           </div>
           <div className="row-actions">
             {hung(cur) ? (

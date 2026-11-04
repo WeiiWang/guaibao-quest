@@ -46,7 +46,8 @@
     "measure:tti": "node scripts/measure-tti.mjs",
     "gen:startup": "uv run --with pillow python -I design/tools/make_startup_images.py",
     "e2e:story": "node scripts/e2e-story.mjs",
-    "e2e:season": "node scripts/e2e-season.mjs"
+    "e2e:season": "node scripts/e2e-season.mjs",
+    "e2e:places2": "node scripts/e2e-places2.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",

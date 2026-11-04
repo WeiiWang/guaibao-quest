@@ -20,9 +20,12 @@ import { useLearningSettings } from '../learningHooks'
 import { Icon } from '../components/Icon'
 import { ScreenHeader } from '../components/Header'
 import { Modal } from '../components/Modal'
+import { PlaceBackdrop, usePlaceGreeting } from '../components/Place'
 import { artEmoji } from './adventure/EnglishView'
+import { Places2Pet } from './Places2Pet'
 import '../meta.css'
 import './adventure/adventure-v7.css'
+import './places2.css'
 import { useSpeciesName } from '../species'
 
 /** 沒有素材時的備援 emoji（朋友 id → emoji）；沒有的再退回 artEmoji（obj-*、food-*、decor-*） */
@@ -75,7 +78,8 @@ export function FriendsScreen({ onBack }: { onBack: () => void }) {
   const badges = useLiveQuery(() => repo.listChapterBadges(), [], [])
   const [tab, setTab] = useState<FriendTab>('animal')
   const [view, setView] = useState<Friend | null>(null)
-  if (!stats) return <main className="screen theme-lavender" data-testid="friends"><ScreenHeader title="我認識的朋友" onBack={onBack} /></main>
+  usePlaceGreeting('friends')
+  if (!stats) return <main className="screen place pm-wide pm-friends theme-lavender" data-testid="friends"><PlaceBackdrop place="friends" /><ScreenHeader title="我認識的朋友" onBack={onBack} /></main>
 
   const levelOf = (f: Friend) => familiarityOf(stats[f.id])
   const known = FRIENDS.filter((f) => levelOf(f) > 0)
@@ -90,59 +94,66 @@ export function FriendsScreen({ onBack }: { onBack: () => void }) {
   }
   const shown = FRIENDS.filter((f) => f.tab === tab)
   return (
-    <main className="screen friends theme-lavender" data-testid="friends">
+    <main className="screen place pm-wide pm-friends friends theme-lavender" data-testid="friends">
+      <PlaceBackdrop place="friends" />
       <ScreenHeader title="我認識的朋友" onBack={onBack} />
-      <p className="friends-progress" data-testid="friends-progress">
-        認識 {n} / {FRIENDS.length} 個朋友
-        <small>{n >= FRIENDS.length ? '全部都認識了！' : `再認識 ${toNext} 個新朋友，${petName}就送你禮物`}</small>
-      </p>
-      {badges.length > 0 && (
-        <ul className="q7-badges" data-testid="chapter-badges" aria-label="章節徽章">
-          {badges.map((b) => (
-            <li key={b.chapterId} className="q7-badge" data-chapter={b.chapterId}>
-              <span aria-hidden>🏅</span>
-              <b>{getChapter(b.chapterId)?.name ?? b.chapterId}</b>
-              <small>挑戰徽章</small>
-            </li>
-          ))}
-        </ul>
-      )}
-      <nav className="q7-ftabs" role="tablist" aria-label="圖鑑分頁">
-        {FRIEND_TABS.map((t) => {
-          const all = FRIENDS.filter((f) => f.tab === t.id)
-          const got = all.filter((f) => levelOf(f) > 0).length
-          return (
-            <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} className="q7-ftab" onClick={() => setTab(t.id)} data-testid={`friend-tab-${t.id}`}>
-              <span>{t.name}</span>
-              <small>{got}/{all.length}</small>
-            </button>
-          )
-        })}
-      </nav>
-      <ul className="friends-grid" data-testid="friends-grid" data-tab={tab}>
-        {shown.map((f) => {
-          const level = levelOf(f)
-          const isKnown = level > 0
-          return (
-            <li key={f.id}>
-              <button
-                className={`friend-cell q7-frame-${FRAME[level]} ${isKnown ? 'known' : 'unknown'}`}
-                data-testid="friend"
-                data-friend={f.id}
-                data-known={isKnown}
-                data-level={level}
-                onClick={() => open(f)}
-                aria-label={isKnown ? `${f.name}，${FAMILIARITY_NAMES[level]}，點一下聽名字` : '還沒認識的朋友'}
-              >
-                {level === 3 && <span className="q7-sparkle" aria-hidden>✦</span>}
-                <FriendPic f={f} className="friend-img" />
-                <span className="friend-name">{isKnown ? (f.tab === 'english' ? f.en : f.name) : '？'}</span>
-                {level >= 2 && <span className="q7-level" aria-hidden>{level === 3 ? '超級好朋友' : '好朋友'}</span>}
+      <div className="pm-content">
+        <div className="pm-ledge">
+          <Places2Pet />
+          <p className="friends-progress pm-bubble" data-testid="friends-progress">
+            認識 {n} / {FRIENDS.length} 個朋友
+            <small>{n >= FRIENDS.length ? '全部都認識了！' : <>再認識 {toNext} 個新朋友，<wbr />{petName}就送你禮物</>}</small>
+          </p>
+        </div>
+        {badges.length > 0 && (
+          <ul className="q7-badges" data-testid="chapter-badges" aria-label="章節徽章">
+            {badges.map((b) => (
+              <li key={b.chapterId} className="q7-badge" data-chapter={b.chapterId}>
+                <span aria-hidden>🏅</span>
+                <b>{getChapter(b.chapterId)?.name ?? b.chapterId}</b>
+                <small>挑戰徽章</small>
+              </li>
+            ))}
+          </ul>
+        )}
+        <nav className="q7-ftabs" role="tablist" aria-label="圖鑑分頁">
+          {FRIEND_TABS.map((t) => {
+            const all = FRIENDS.filter((f) => f.tab === t.id)
+            const got = all.filter((f) => levelOf(f) > 0).length
+            return (
+              <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} className="q7-ftab" onClick={() => setTab(t.id)} data-testid={`friend-tab-${t.id}`}>
+                <span>{t.name}</span>
+                <small>{got}/{all.length}</small>
               </button>
-            </li>
-          )
-        })}
-      </ul>
+            )
+          })}
+        </nav>
+        <ul className="friends-grid" data-testid="friends-grid" data-tab={tab} data-few={shown.length <= 6 ? '1' : '0'}>
+          {shown.map((f) => {
+            const level = levelOf(f)
+            const isKnown = level > 0
+            return (
+              <li key={f.id}>
+                <button
+                  className={`friend-cell q7-frame-${FRAME[level]} ${isKnown ? 'known' : 'unknown'}`}
+                  data-testid="friend"
+                  data-friend={f.id}
+                  data-known={isKnown}
+                  data-level={level}
+                  onClick={() => open(f)}
+                  aria-label={isKnown ? `${f.name}，${FAMILIARITY_NAMES[level]}，點一下聽名字` : '還沒認識的朋友'}
+                >
+                  {level === 3 && <span className="q7-sparkle" aria-hidden>✦</span>}
+                  <FriendPic f={f} className="friend-img" />
+                  {/* v8.2：還沒認識的不寫問號，留一塊空名牌就好 */}
+                  <span className={`friend-name ${isKnown ? '' : 'pm-dex-noname'}`}>{isKnown ? (f.tab === 'english' ? f.en : f.name) : ''}</span>
+                  {level >= 2 && <span className="q7-level" aria-hidden>{level === 3 ? '超級好朋友' : '好朋友'}</span>}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
       {view && (
         <Modal title={view.name} onClose={() => setView(null)}>
           <div className="friend-view" data-testid="friend-view" data-level={levelOf(view)}>

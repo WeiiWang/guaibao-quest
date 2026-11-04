@@ -243,7 +243,10 @@ async function testFestivals(b) {
   await page.getByTestId('album-btn').click()
   await page.waitForSelector(`[data-card="festival:cny"]`)
   const tag = await page.locator(`[data-card="festival:cny"] .al-tag`).innerText()
-  check('相簿：節慶卡標籤沒有 emoji', tag.trim() === '節慶', tag)
+  check('相簿：節慶卡標籤只有字', tag.trim() === '節慶', tag)
+  // v8.2：全部類別的標籤都不用 emoji（App 其他地方都已換成 3D 圖）
+  const tags = await page.locator('[data-testid=album-card] .al-tag').allInnerTexts()
+  check('相簿：所有回憶卡標籤都沒有 emoji', tags.length > 0 && tags.every((t) => !/\p{Extended_Pictographic}/u.test(t)), tags.join(','))
   check('相簿：節慶卡有紀念家具的小圖', (await page.locator(`[data-card="festival:cny"] [data-reward=decor-fest-lion]`).count()) === 1)
   await page.waitForTimeout(700)
   await shot(page, 'fest-album')
