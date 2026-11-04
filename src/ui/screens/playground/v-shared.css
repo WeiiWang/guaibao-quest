@@ -1,0 +1,11 @@
+/* 線 V 共用：手勢示範的指尖 */
+.pg-gard-hint { position: fixed; z-index: 18; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; background: rgb(255 255 255 / 0.72); border: 4px solid rgb(255 255 255 / 0.95); box-shadow: 0 4px 16px rgb(60 40 90 / 0.3); pointer-events: none; animation: pg-gard-hint-go 2.2s ease-in-out infinite; }
+@keyframes pg-gard-hint-go {
+  0% { transform: translate(0, 0) scale(1.15); opacity: 0; }
+  14% { transform: translate(0, 0) scale(0.92); opacity: 1; }
+  72% { transform: translate(var(--pg-hint-dx, 0), var(--pg-hint-dy, 0)) scale(0.92); opacity: 1; }
+  90%, 100% { transform: translate(var(--pg-hint-dx, 0), var(--pg-hint-dy, 0)) scale(1.2); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pg-gard-hint { animation: none; transform: translate(var(--pg-hint-dx, 0), var(--pg-hint-dy, 0)); }
+}

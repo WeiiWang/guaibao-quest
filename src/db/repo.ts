@@ -20,6 +20,7 @@ import { checkPin, hashPin, isValidPin } from '../domain/pin'
 import { registry, type PinStore } from '../profiles/registry'
 import { balanceOf, checkPenalty, grantPoints } from '../domain/points'
 import { settlePlayGame, type PlayGameId } from '../domain/playground'
+import { harvestPlot, plantSeed, waterPlot, type WaterOutcome } from '../domain/garden'
 import { canBuy } from '../domain/shop'
 import { clampTaskPoints, instancesToCreate, transition } from '../domain/tasks'
 import type {
@@ -458,6 +459,46 @@ export class Repo {
     if (prev !== undefined && value <= prev) return false
     await this.db.settings.update(SETTINGS_ID, { playBest: { ...s.playBest, [gameId]: value } })
     return prev !== undefined
+  }
+
+  /** v8.3 小菜園：種下（種子免費）。田上已經有東西、不是種子就不動，回傳 false */
+  async gardenPlant(index: number, crop: string): Promise<boolean> {
+    const d = this.db
+    return d.transaction('rw', d.settings, async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s) return false
+      const garden = plantSeed(s.garden, index, crop)
+      if (!garden) return false
+      await d.settings.update(SETTINGS_ID, { garden })
+      return true
+    })
+  }
+
+  /** v8.3 小菜園：澆水。一天只長一階，今天長過或還沒種都只回傳結果，不改資料 */
+  async gardenWater(index: number, now = this.clock()): Promise<WaterOutcome> {
+    const d = this.db
+    return d.transaction('rw', d.settings, async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s) return 'empty'
+      const r = waterPlot(s.garden, index, localDateStr(now))
+      if (r.outcome === 'grew') await d.settings.update(SETTINGS_ID, { garden: r.garden })
+      return r.outcome
+    })
+  }
+
+  /** v8.3 小菜園：收成。田變空、食物進背包（同一個交易）；沒長好回傳 null */
+  async gardenHarvest(index: number): Promise<{ crop: string; qty: number } | null> {
+    const d = this.db
+    return d.transaction('rw', [d.settings, d.inventory], async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s) return null
+      const r = harvestPlot(s.garden, index)
+      if (!r) return null
+      await d.settings.update(SETTINGS_ID, { garden: r.garden })
+      const inv = await d.inventory.get(r.crop)
+      await d.inventory.put({ id: r.crop, itemId: r.crop, qty: (inv?.qty ?? 0) + r.qty })
+      return { crop: r.crop, qty: r.qty }
+    })
   }
 
   async feedPet(foodId: string, now = this.clock()): Promise<Result<{ pet: Pet; evolvedTo: Stage | null; full: boolean }>> {

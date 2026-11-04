@@ -6,6 +6,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../db/db'
 import { localDateStr } from '../../domain/date'
 import { favoriteFoodOf } from '../../domain/favorite'
+import { hasReadyCrop } from '../../domain/garden'
 import { noFavoriteForTest } from '../feelFlags'
 import { balanceOf } from '../../domain/points'
 import { flyStars } from '../fly'
@@ -259,7 +260,7 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
       </header>
 
       <div className="side-tools">
-        <button className="mini-candy mint" onClick={() => go('playground')} data-testid="playground-btn" aria-label="遊樂場">
+        <button className={`mini-candy mint${hasReadyCrop(settings?.garden) ? ' pg-gard-ready-hint' : ''}`} onClick={() => go('playground')} data-testid="playground-btn" aria-label="遊樂場">
           <Icon name="ui-playground" emoji="🎠" size={34} />
           <span>遊樂場</span>
         </button>

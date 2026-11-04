@@ -1,0 +1,5 @@
+/* 小菜園有長好的作物：首頁的遊樂場鍵、遊樂場裡的小菜園那格多一個小閃光 */
+.pg-gard-ready-hint { position: relative; }
+.pg-gard-ready-hint::after { content: '✦'; position: absolute; top: 2px; right: 4px; font-size: 20px; line-height: 1; color: #ffc93c; -webkit-text-stroke: 0; text-shadow: 0 0 6px rgb(255 200 60 / 0.9); pointer-events: none; animation: pg-gard-hint-twinkle 1.4s ease-in-out infinite; }
+@keyframes pg-gard-hint-twinkle { 50% { transform: scale(0.6); opacity: 0.5; } }
+@media (prefers-reduced-motion: reduce) { .pg-gard-ready-hint::after { animation: none; } }
