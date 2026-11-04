@@ -564,6 +564,10 @@ export class Repo {
   async setFestivalOn(on: boolean): Promise<void> {
     await this.db.settings.update(SETTINGS_ID, { festivalOn: on })
   }
+  /** v8.3 學我說話：家長開了遊樂場才有這一格、才會用麥克風 */
+  async setTalkOn(on: boolean): Promise<void> {
+    await this.db.settings.update(SETTINGS_ID, { talkOn: on })
+  }
   greetFestival(f: FestivalNow, now = this.clock()) {
     return festival.greetFestival(this.db, f, now)
   }

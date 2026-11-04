@@ -1,0 +1,38 @@
+/* v8.3 學我說話。--lvl 是引擎寫進來的音量（0..1），音波跟著動 */
+.pg-talk { position: absolute; inset: 0; --lvl: 0; --pet: min(58vmin, 60vh); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 12px; padding: 76px 16px 11vh; }
+@media (orientation: portrait) { .pg-talk { --pet: min(80vw, 50vh); } }
+.pg-talk-stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: clamp(6px, 2vmin, 18px); }
+
+.pg-talk-pet { position: relative; width: var(--pet); height: var(--pet); }
+.pg-talk-pose { position: absolute; inset: 0; }
+.pg-talk-pose .companion { display: block; }
+.pg-talk-pose.open { opacity: 0; pointer-events: none; }
+.mouth-open .pg-talk-pose.open { opacity: 1; }
+.mouth-open .pg-talk-pose.closed { opacity: 0; }
+
+/* 播回時整隻輕輕晃（蛋沒有張嘴的圖，也看得出來在學） */
+[data-phase='playing'] .pg-talk-pet, [data-phase='speaking'] .pg-talk-pet { animation: pg-talk-wobble 0.34s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes pg-talk-wobble { 0%, 100% { transform: scale(1) rotate(-1.5deg); } 50% { transform: scale(1.03, 0.98) rotate(1.5deg); } }
+
+/* 寵物說預錄台詞時：沒有音量可以跟，固定節奏開合 */
+[data-phase='intro'] .pg-talk-pose.open, [data-phase='speaking'] .pg-talk-pose.open { animation: pg-talk-mouth 0.36s steps(1) infinite; }
+[data-phase='intro'] .pg-talk-pose.closed, [data-phase='speaking'] .pg-talk-pose.closed { animation: pg-talk-mouth 0.36s steps(1) infinite reverse; }
+@keyframes pg-talk-mouth { 0% { opacity: 1; } 50% { opacity: 0; } }
+
+/* 音波：寵物在聽的時候才出現，跟著音量動 */
+.pg-talk-wave { display: flex; align-items: center; justify-content: center; gap: clamp(6px, 1.2vmin, 12px); height: clamp(56px, 12vmin, 96px); padding: 0 clamp(14px, 3vmin, 26px); border-radius: 999px; background: rgb(255 255 255 / 0.78); box-shadow: 0 6px 16px rgb(60 40 90 / 0.14); opacity: 0; transform: scale(0.8); transition: opacity 0.2s, transform 0.2s; }
+.pg-talk-wave.on { opacity: 1; transform: scale(1); }
+.pg-talk-wave i { display: block; width: clamp(8px, 1.5vmin, 14px); height: 100%; border-radius: 99px; background: linear-gradient(#b48cf2, #7ec8f5); transform: scaleY(calc(0.14 + var(--lvl) * var(--f, 1) * 0.72)); transition: transform 0.07s linear; }
+[data-phase='hearing'] .pg-talk-wave { box-shadow: 0 0 0 5px rgb(180 140 242 / 0.4), 0 6px 16px rgb(60 40 90 / 0.14); }
+
+.pg-talk-blocked { display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: min(92vw, 560px); }
+.pg-talk-mic { width: clamp(60px, 11vmin, 92px); height: clamp(60px, 11vmin, 92px); opacity: 0.75; filter: grayscale(0.5); container-type: size; }
+.pg-talk-note { margin: 0; padding: 8px 14px; border-radius: 14px; background: rgb(255 255 255 / 0.86); color: #6a5a4e; font-size: 14px; line-height: 1.45; text-align: center; text-wrap: balance; }
+.pg-talk[data-phase='blocked'] { --pet: min(44vmin, 40vh); justify-content: center; padding-bottom: 20px; }
+[data-phase='blocked'] .pg-talk-wave { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-phase='playing'] .pg-talk-pet, [data-phase='speaking'] .pg-talk-pet { animation: none; }
+  [data-phase='intro'] .pg-talk-pose, [data-phase='speaking'] .pg-talk-pose { animation: none !important; }
+  .pg-talk-wave, .pg-talk-wave i { transition: none; }
+}
