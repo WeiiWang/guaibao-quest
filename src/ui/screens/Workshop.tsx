@@ -13,6 +13,8 @@ import type { ShopItem, ThemeSlot } from '../../domain/types'
 import { Icon } from '../components/Icon'
 import { ScreenHeader } from '../components/Header'
 import { MaterialsChip } from '../components/MaterialsChip'
+import { PlaceBackdrop } from '../components/Place'
+import { PlaceGreeting, PlaceStand } from '../components/PlaceStand'
 import { useToast } from '../hooks'
 import { useLearningSettings, useMaterials } from '../learningHooks'
 import { useCelebrateSmall } from '../feedback'
@@ -212,57 +214,65 @@ export function WorkshopScreen({ onBack, go, wish }: { onBack: () => void; go: (
   }
 
   return (
-    <main className="screen workshop theme-butter" data-testid="workshop">
+    <main className="screen place pl-spot pl-ws workshop theme-butter" data-testid="workshop">
+      <PlaceBackdrop place="workshop" />
+      {/* 從願望泡泡進來時食譜會唸那個願望，招呼語不要在 0.5 秒後蓋掉它 */}
+      {!wish && <PlaceGreeting place="workshop" />}
       <ScreenHeader title="工坊" onBack={onBack} right={<MaterialsChip />} />
-      <p className="ws-lead">用冒險拿到的木材、石頭和花朵，做出可愛的家具、壁紙和地板。</p>
-      {/* v7.4 K2：從阿悟的願望泡泡進來時，最上面亮出這個願望的食譜 */}
-      {wish && <WishRecipe wishId={wish} bal={bal} inventory={inventory} placements={placements} voiceOn={voiceOn} onCraft={(id, name, card) => void craft(id, name, null, card)} onPlace={() => go({ name: 'home', edit: true })} />}
-      <div className="tabs" role="tablist">
-        {TABS.map((t) => (
-          <button key={t.id} role="tab" aria-selected={tab === t.id} className={`tab ${tab === t.id ? 'on' : ''}`} onClick={() => setTab(t.id)} data-testid={`ws-tab-${t.id}`}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-      <ul className="ws-grid">
-        {tab === 'decor'
-          ? craftableOf('decor').map(decorCard)
-          : sortThemesByCost(themesOf(tab)).map((t) => themeCard(tab, t.id))}
-      </ul>
-      {done && (
-        <div className="modal-back craft-done" role="presentation" data-testid="craft-done">
-          <div className="modal craft-done-card" role="dialog" aria-modal="true" aria-label={`${done.name}做好了`}>
-            <div className="cd-rays" aria-hidden />
-            <h2 className="cd-title">做好了！</h2>
-            <div className="cd-art" data-testid="craft-done-art">
-              {done.theme ? <Swatch id={done.id} slot={done.theme} /> : <Icon name={done.id} emoji={DECOR_EMOJI[done.id.replace('decor-', '')]} alt={done.name} size="100%" />}
-            </div>
-            <div className="cd-name">{done.name}</div>
-            {done.theme ? (
-              <button
-                className="btn primary cd-go"
-                onClick={async () => {
-                  await apply(done.id, done.name)
-                  setDone(null)
-                }}
-                data-testid="craft-done-go"
-              >
-                ✓ 套用
+      <div className="pl-spot-body">
+        <p className="ws-lead">用冒險拿到的木材、石頭和花朵，做出可愛的家具、壁紙和地板。</p>
+        {/* v7.4 K2：從阿悟的願望泡泡進來時，最上面亮出這個願望的食譜 */}
+        {wish && <WishRecipe wishId={wish} bal={bal} inventory={inventory} placements={placements} voiceOn={voiceOn} onCraft={(id, name, card) => void craft(id, name, null, card)} onPlace={() => go({ name: 'home', edit: true })} />}
+        <div className="pl-spot-bar">
+          <PlaceStand />
+          <div className="tabs" role="tablist">
+            {TABS.map((t) => (
+              <button key={t.id} role="tab" aria-selected={tab === t.id} className={`tab ${tab === t.id ? 'on' : ''}`} onClick={() => setTab(t.id)} data-testid={`ws-tab-${t.id}`}>
+                {t.label}
               </button>
-            ) : (
-              <button className="btn primary cd-go" onClick={() => go({ name: 'home', edit: true })} data-testid="craft-done-go">
-                <Icon name="ui-bag" emoji="🪑" size={44} /> 去擺放
-              </button>
-            )}
-            <button className="btn" onClick={() => setDone(null)} data-testid="craft-done-close">
-              繼續做
-            </button>
+            ))}
           </div>
         </div>
-      )}
-      <p className="ws-foot">
-        還沒有材料？<button className="ws-link" onClick={() => go('map')}>去冒險地圖</button>
-      </p>
+        <ul className="ws-grid">
+          {tab === 'decor'
+            ? craftableOf('decor').map(decorCard)
+            : sortThemesByCost(themesOf(tab)).map((t) => themeCard(tab, t.id))}
+        </ul>
+        {done && (
+          <div className="modal-back craft-done" role="presentation" data-testid="craft-done">
+            <div className="modal craft-done-card" role="dialog" aria-modal="true" aria-label={`${done.name}做好了`}>
+              <div className="cd-rays" aria-hidden />
+              <h2 className="cd-title">做好了！</h2>
+              <div className="cd-art" data-testid="craft-done-art">
+                {done.theme ? <Swatch id={done.id} slot={done.theme} /> : <Icon name={done.id} emoji={DECOR_EMOJI[done.id.replace('decor-', '')]} alt={done.name} size="100%" />}
+              </div>
+              <div className="cd-name">{done.name}</div>
+              {done.theme ? (
+                <button
+                  className="btn primary cd-go"
+                  onClick={async () => {
+                    await apply(done.id, done.name)
+                    setDone(null)
+                  }}
+                  data-testid="craft-done-go"
+                >
+                  ✓ 套用
+                </button>
+              ) : (
+                <button className="btn primary cd-go" onClick={() => go({ name: 'home', edit: true })} data-testid="craft-done-go">
+                  <Icon name="ui-bag" emoji="🪑" size={44} /> 去擺放
+                </button>
+              )}
+              <button className="btn" onClick={() => setDone(null)} data-testid="craft-done-close">
+                繼續做
+              </button>
+            </div>
+          </div>
+        )}
+        <p className="ws-foot">
+          還沒有材料？<button className="ws-link" onClick={() => go('map')}>去冒險地圖</button>
+        </p>
+      </div>
     </main>
   )
 }

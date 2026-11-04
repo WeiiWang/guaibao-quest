@@ -1,0 +1,84 @@
+/* v8.2 線 S：任務 = 軟木佈告板上釘著的紙。前綴 pl-task-。規則都帶 .screen.place.pl-tasks（.task 家長區也在用，不能動全域）。 */
+.screen.place.pl-tasks .pl-task-list {
+  list-style: none; margin: 0; padding: clamp(10px, 2.4vmin, 24px) 4px 20px; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: clamp(20px, 3.4vmin, 34px) clamp(14px, 2.6vmin, 26px);
+}
+
+/* 紙：米色、貼著板子的陰影、每張固定一個小角度（不用亂數，每次打開都一樣） */
+.screen.place.pl-tasks .task {
+  --tilt: -1.4deg;
+  position: relative; flex-direction: column; justify-content: flex-start; text-align: center; gap: 8px;
+  padding: clamp(26px, 4vmin, 38px) clamp(14px, 2.4vmin, 22px) clamp(16px, 2.6vmin, 24px); border-radius: 8px;
+  flex: 0 1 clamp(226px, 31%, 340px); min-height: clamp(210px, 34dvh, 290px);
+  background: linear-gradient(180deg, #fffdf6, var(--pl-paper) 70%, #fbf0dc);
+  box-shadow: 0 2px 0 rgba(120, 80, 40, 0.18), 3px 10px 14px rgba(90, 55, 20, 0.28);
+  transform: rotate(var(--tilt));
+}
+.screen.place.pl-tasks .task:nth-child(5n + 2) { --tilt: 1.2deg; }
+.screen.place.pl-tasks .task:nth-child(5n + 3) { --tilt: -0.7deg; }
+.screen.place.pl-tasks .task:nth-child(5n + 4) { --tilt: 1.7deg; }
+.screen.place.pl-tasks .task:nth-child(5n + 5) { --tilt: -1deg; }
+
+/* 圖釘 */
+.screen.place.pl-tasks .task::before, .pl-task-empty::before {
+  content: ''; position: absolute; left: 50%; top: -10px; width: 26px; height: 26px; margin-left: -13px; border-radius: 50%; z-index: 2;
+  background: radial-gradient(circle at 36% 30%, #fff 0 8%, var(--pl-pin, #f28a7a) 34%, color-mix(in srgb, var(--pl-pin, #f28a7a) 72%, #5a2a10) 100%);
+  box-shadow: 1px 5px 4px rgba(70, 40, 10, 0.4);
+}
+.screen.place.pl-tasks .task:nth-child(3n + 2) { --pl-pin: #6db8e8; }
+.screen.place.pl-tasks .task:nth-child(3n + 3) { --pl-pin: #f4c34f; }
+
+.screen.place.pl-tasks .task-emoji { width: auto; height: auto; background: none; box-shadow: none; font-size: clamp(3.2rem, 8vmin, 4.6rem); line-height: 1.1; }
+.screen.place.pl-tasks .task-main { flex: 1 1 auto; display: grid; gap: 4px; align-content: start; justify-items: center; }
+.screen.place.pl-tasks .task-title { font-size: clamp(1.25rem, 3vmin, 1.6rem); line-height: 1.3; }
+.screen.place.pl-tasks .task-points { font-size: clamp(1rem, 2.3vmin, 1.2rem); color: var(--ink-soft); }
+.screen.place.pl-tasks .task-note { color: #8a6236; font-size: clamp(1rem, 2.2vmin, 1.15rem); }
+.screen.place.pl-tasks .task > .btn { width: 100%; margin: 0; min-height: clamp(56px, 8vmin, 70px); font-size: clamp(1.15rem, 2.7vmin, 1.4rem); }
+.screen.place.pl-tasks .task-pending { width: 100%; margin: 0; flex-direction: column; align-items: stretch; gap: 8px; }
+.screen.place.pl-tasks .task-pending .status-pill { justify-content: center; }
+.screen.place.pl-tasks .task-pending .task-undo { display: inline-flex; align-items: center; justify-content: center; gap: 2px; }
+
+/* 做完：紙上蓋一個章。字還在（報讀與測試用），外觀是綠色的圓章，站在按鈕原本的位置（靠右下、不壓字） */
+.screen.place.pl-tasks .task.approved { background: linear-gradient(180deg, #fbfff7, #f2faea 70%, #e9f5df); }
+.screen.place.pl-tasks .task.approved .status-pill.done {
+  flex: none; align-self: flex-end; margin: auto -2px -4px 0; width: clamp(92px, 13.5vmin, 118px); height: clamp(92px, 13.5vmin, 118px); min-height: 0; padding: 8px; justify-content: center; text-align: center;
+  border-radius: 50%; background: rgba(255, 255, 255, 0.42); color: #2c8c69; font-size: clamp(1.1rem, 2.7vmin, 1.4rem); line-height: 1.1; white-space: normal;
+  border: 4px solid #41a884; outline: 2px solid #41a884; outline-offset: -11px; box-shadow: none; transform: rotate(-13deg);
+  animation: pl-task-stamp 0.42s cubic-bezier(0.25, 1.2, 0.4, 1);
+}
+@keyframes pl-task-stamp { 0% { transform: rotate(-13deg) scale(1.9); opacity: 0; } 62% { transform: rotate(-13deg) scale(0.94); opacity: 1; } 100% { transform: rotate(-13deg) scale(1); } }
+
+/* 今天沒有任務：也是一張釘在板上的紙 */
+.pl-task-empty.empty {
+  position: relative; max-width: 440px; padding: 44px 34px 40px; border-radius: 8px; color: var(--ink); font-size: clamp(1.3rem, 3.2vmin, 1.7rem); line-height: 1.45;
+  background: linear-gradient(180deg, #fffdf6, var(--pl-paper) 70%, #fbf0dc); box-shadow: 0 2px 0 rgba(120, 80, 40, 0.18), 3px 10px 14px rgba(90, 55, 20, 0.28); transform: rotate(-1.2deg);
+}
+
+/* 沒有任務：紙釘在板子正中間 */
+.screen.place.pl-tasks .pl-task-list:has(> .pl-task-empty) { align-content: center; min-height: min(62dvh, 560px); }
+
+/* iPad 直向：一排兩張大一點，填滿板子 */
+@media (min-width: 700px) and (max-aspect-ratio: 1 / 1) {
+  .screen.place.pl-tasks .pl-task-list { padding-bottom: 8px; gap: 26px 22px; }
+  .screen.place.pl-tasks .task { flex-basis: 46%; min-height: clamp(230px, 22dvh, 280px); }
+  .screen.place.pl-tasks .task-pending { flex-direction: row; }
+  .screen.place.pl-tasks .task-pending > * { flex: 1 1 0; justify-content: center; }
+}
+
+/* 手機：紙改成橫的（圖在左、字在右、按鈕在下），一屏放得下比較多張 */
+@media (max-width: 560px) {
+  .screen.place.pl-tasks .pl-task-list { padding: 14px 4px 10px; gap: 20px; }
+  .screen.place.pl-tasks .task { flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; align-items: center; text-align: left; min-height: 0; padding: 18px 12px 12px; gap: 6px 10px; }
+  .screen.place.pl-tasks .task-main { flex: 1 1 0; min-width: 0; justify-items: start; }
+  .screen.place.pl-tasks .task-title { font-size: 1.15rem; }
+  .screen.place.pl-tasks .task-emoji { font-size: 2.7rem; }
+  /* 按鈕放右邊，一張紙只佔一排，預設 5 件事加上寵物一屏放得下 */
+  .screen.place.pl-tasks .task > .btn { flex: none; width: auto; padding: 0 14px; font-size: 1.05rem; }
+  .screen.place.pl-tasks .task-pending { flex: 1 1 100%; flex-direction: row; }
+  .screen.place.pl-tasks .task-pending > * { flex: 1 1 0; }
+  /* 蓋章：不壓在字上，放到紙的右邊 */
+  .screen.place.pl-tasks .task.approved .status-pill.done { align-self: center; margin: -6px -2px -6px 0; width: 84px; height: 84px; font-size: 1rem; outline-offset: -9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen.place.pl-tasks .task.approved .status-pill.done { animation: none; }
+}

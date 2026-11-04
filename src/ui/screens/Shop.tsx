@@ -14,6 +14,8 @@ import { sayText } from '../../learning/speech'
 import { useLearningSettings } from '../learningHooks'
 import type { ShopItem, ShopKind } from '../../domain/types'
 import { PageThumb } from '../components/ColoringThumb'
+import { PlaceBackdrop, usePlaceGreeting } from '../components/Place'
+import { PlaceStand } from '../components/PlaceStand'
 import { Icon } from '../components/Icon'
 import { PointsChip, ScreenHeader } from '../components/Header'
 import { UndoPill } from '../components/UndoPill'
@@ -26,6 +28,8 @@ import { speciesName } from '../../domain/species'
 
 /** 同一顆按鈕在這段時間內只算一次（4–7 歲的孩子會連點） */
 export const BUY_LOCK_MS = 600
+/** 點商品時，寵物頭上的泡泡留多久 */
+const PEEK_MS = 2400
 
 /** 家具改由工坊用材料製作，商店只賣飼料與著色頁 */
 const TABS: { kind: ShopKind; label: string }[] = [
@@ -65,7 +69,18 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
   const undoTimer = useRef<number | undefined>(undefined)
   const locks = useRef(new Map<string, number>())
   const busy = useRef(false)
-  useEffect(() => () => window.clearTimeout(undoTimer.current), [])
+  // v8.2 線 S：點商品（不是買）：寵物頭上出現那個東西、換開心；今天最喜歡的食物還會跳一下
+  const [peek, setPeek] = useState<{ item: ShopItem; key: number } | null>(null)
+  const [hop, setHop] = useState(0)
+  const peekTimer = useRef<number | undefined>(undefined)
+  usePlaceGreeting('shop')
+  useEffect(
+    () => () => {
+      window.clearTimeout(undoTimer.current)
+      window.clearTimeout(peekTimer.current)
+    },
+    [],
+  )
   const balance = useBalance()
   const today = localDateStr(useNow())
   const items = useLiveQuery(async () => {
@@ -103,6 +118,12 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
       busy.current = false
     }
   }
+  const look = (item: ShopItem, fav: boolean) => {
+    window.clearTimeout(peekTimer.current)
+    setPeek({ item, key: Date.now() })
+    if (fav) setHop((n) => n + 1)
+    peekTimer.current = window.setTimeout(() => setPeek(null), PEEK_MS)
+  }
   /** 衣櫃：已經擁有的帽子，在這裡直接戴上或拿下 */
   const wear = async (item: ShopItem) => {
     const off = pet?.hat === item.id
@@ -127,7 +148,8 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
   }
 
   return (
-    <main className="screen theme-peach">
+    <main className="screen place pl-spot pl-shop theme-peach">
+      <PlaceBackdrop place="shop" />
       <ScreenHeader
         title="商店"
         onBack={onBack}
@@ -140,60 +162,81 @@ export function ShopScreen({ onBack, initialTab = 'food' }: { onBack: () => void
           </div>
         }
       />
-      <div className="tabs" role="tablist">
-        {TABS.map((t) => (
-          <button key={t.kind} role="tab" aria-selected={tab === t.kind} className={`tab ${tab === t.kind ? 'on' : ''}`} onClick={() => setTab(t.kind)}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-      {tab === 'hat' && (
-        <p className="wd-shop-note" data-testid="hat-note">
-          用星星買帽子給{pet?.name ?? speciesName(pet?.species)}戴！買好之後在這裡按「戴上」，或回首頁點「更多」裡的衣櫃。
-        </p>
-      )}
-      <ul className={`shop-grid ${tab === 'food' ? 'food-grid' : ''}`} data-testid={`shop-grid-${tab}`}>
-        {items.map((item) => {
-          const owned = inventory.find((v) => v.itemId === item.id)?.qty ?? 0
-          const check = canBuy(balance, owned, item)
-          const fav = item.kind === 'food' && isFavoriteFood(item.id, today)
-          return (
-            <li key={item.id} className={`card shop-item art-card ${fav ? 'favorite' : ''}`} data-testid={`shop-${item.id}`}>
-              {fav && <span className="fav-badge" data-testid="fav-badge">今天最喜歡</span>}
-              <div className="shop-art">
-                {item.kind === 'coloring' ? (
-                  <PageThumb pageId={item.asset} className="shop-thumb" />
-                ) : (
-                  <Icon name={artName(item)} emoji={emojiOf(item)} alt={item.name} className="shop-sprite" />
-                )}
-              </div>
-              <div className="shop-name">{item.name}</div>
-              {item.kind === 'food' && <Hearts n={foodHearts(item.id)} hunger={FOOD_EFFECTS[item.id]?.hunger} />}
-              <div className="shop-price">
-                <Icon name="ui-star" emoji="⭐" size={20} /> {item.price}
-                {item.kind === 'food' && owned > 0 ? <small>背包 {owned}</small> : null}
-              </div>
-              {item.kind === 'hat' && owned > 0 ? (
-                <button className={`btn buy-btn ${pet?.hat === item.id ? '' : 'primary'}`} onClick={() => void wear(item)} data-testid="wear-btn" aria-pressed={pet?.hat === item.id}>
-                  {pet?.hat === item.id ? '拿下' : '戴上'}
-                </button>
-              ) : (
-              <button className="btn primary buy-btn" disabled={!check.ok} onClick={(e) => buy(item, e.currentTarget)} data-testid="buy-btn">
-                {check.ok ? (
-                  <>
-                    <Icon name="ui-shop" emoji="🛒" size={26} /> 買
-                  </>
-                ) : check.reason === 'owned' ? (
-                  '已擁有'
-                ) : (
-                  `還差 ${check.shortBy} 點`
-                )}
+      <div className="pl-spot-body">
+        <div className="pl-spot-bar">
+          <PlaceStand pose={peek ? 'happy' : 'idle'} hop={hop} look={!!peek}>
+            {peek && (
+              <span key={peek.key} className="pl-spot-bubble" data-testid="pet-bubble" data-item={peek.item.id} aria-hidden>
+                {peek.item.kind === 'coloring' ? <PageThumb pageId={peek.item.asset} className="shop-thumb" /> : <Icon name={artName(peek.item)} emoji={emojiOf(peek.item)} />}
+              </span>
+            )}
+          </PlaceStand>
+          <div className="tabs" role="tablist">
+            {TABS.map((t) => (
+              <button key={t.kind} role="tab" aria-selected={tab === t.kind} className={`tab ${tab === t.kind ? 'on' : ''}`} onClick={() => { setTab(t.kind); setPeek(null) }}>
+                {t.label}
               </button>
-              )}
-            </li>
-          )
-        })}
-      </ul>
+            ))}
+          </div>
+        </div>
+        {tab === 'hat' && (
+          <p className="wd-shop-note" data-testid="hat-note">
+            用星星買帽子給{pet?.name ?? speciesName(pet?.species)}戴！買好之後在這裡按「戴上」，或回首頁點「更多」裡的衣櫃。
+          </p>
+        )}
+        <ul className={`shop-grid ${tab === 'food' ? 'food-grid' : ''}`} data-testid={`shop-grid-${tab}`}>
+          {items.map((item) => {
+            const owned = inventory.find((v) => v.itemId === item.id)?.qty ?? 0
+            const check = canBuy(balance, owned, item)
+            const fav = item.kind === 'food' && isFavoriteFood(item.id, today)
+            return (
+              <li
+                key={item.id}
+                className={`card shop-item art-card ${fav ? 'favorite' : ''}`}
+                data-testid={`shop-${item.id}`}
+                onClick={(e) => {
+                  // 點卡片的任何地方都算「看看這個」，只有買 / 戴上的按鈕不算
+                  if (!(e.target as Element).closest('.btn')) look(item, fav)
+                }}
+              >
+                {fav && <span className="fav-badge" data-testid="fav-badge">今天最喜歡</span>}
+                <button type="button" className="shop-art pl-shop-shelf" aria-label={`看看${item.name}`} data-testid="shop-look">
+                  {item.kind === 'coloring' ? (
+                    <PageThumb pageId={item.asset} className="shop-thumb" />
+                  ) : (
+                    <Icon name={artName(item)} emoji={emojiOf(item)} alt={item.name} className="shop-sprite" />
+                  )}
+                </button>
+                <div className="pl-shop-tag">
+                  <div className="shop-name">{item.name}</div>
+                  {item.kind === 'food' && <Hearts n={foodHearts(item.id)} hunger={FOOD_EFFECTS[item.id]?.hunger} />}
+                  <div className="shop-price">
+                    <Icon name="ui-star" emoji="⭐" size={20} /> {item.price}
+                    {item.kind === 'food' && owned > 0 ? <small>背包 {owned}</small> : null}
+                  </div>
+                </div>
+                {item.kind === 'hat' && owned > 0 ? (
+                  <button className={`btn buy-btn ${pet?.hat === item.id ? '' : 'primary'}`} onClick={() => void wear(item)} data-testid="wear-btn" aria-pressed={pet?.hat === item.id}>
+                    {pet?.hat === item.id ? '拿下' : '戴上'}
+                  </button>
+                ) : (
+                <button className="btn primary buy-btn" disabled={!check.ok} onClick={(e) => buy(item, e.currentTarget)} data-testid="buy-btn">
+                  {check.ok ? (
+                    <>
+                      <Icon name="ui-shop" emoji="🛒" size={26} /> 買
+                    </>
+                  ) : check.reason === 'owned' ? (
+                    '已擁有'
+                  ) : (
+                    `還差 ${check.shortBy} 點`
+                  )}
+                </button>
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      </div>
       {undo && (
         <UndoPill key={undo.key} ms={PURCHASE_UNDO_MS} label={`退回${undo.item.name.replace('著色頁：', '')}`} onUndo={doUndo} testId="undo-buy">
           <Icon name={iconOf(undo.item).name} emoji={iconOf(undo.item).emoji} size={34} />

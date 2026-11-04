@@ -18,3 +18,49 @@
   padding: 3px 12px; border-radius: 999px; font-size: 0.85rem; font-weight: 900; color: var(--ink);
   background: var(--butter); box-shadow: 0 3px 0 var(--butter-deep);
 }
+
+/* ---------- v8.2 線 S：商品放在貨架上。前綴 pl-shop-；規則都帶 .screen.place.pl-shop，不靠載入順序也蓋得過舊規則 ---------- */
+.screen.place.pl-shop { --pl-bar: rgba(251, 224, 203, 0.96); --pl-art: clamp(100px, 15.5dvh, 158px); }
+.screen.place.pl-shop .tabs { padding-bottom: 12px; }
+.screen.place.pl-shop .tab { font-size: clamp(1.05rem, 2.4vmin, 1.25rem); }
+/* 橫向不留縫：同一排的層板接成一塊 */
+.screen.place.pl-shop .shop-grid { gap: clamp(10px, 1.8vmin, 18px) 0; grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 19vmin, 172px), 1fr)); }
+.screen.place.pl-shop .shop-item, .screen.place.pl-shop .shop-item.favorite { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0; padding: 10px clamp(6px, 1vmin, 10px) 0; border-radius: 0; background: none; box-shadow: none; cursor: pointer; }
+/* 商品站在層板上：.shop-art 也是「看看這個」的按鈕，所以要把按鈕的外觀拿掉 */
+.screen.place.pl-shop .shop-art { position: relative; flex: none; display: grid; place-items: end center; width: 100%; height: var(--pl-art); padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; cursor: pointer; transition: transform 0.14s; }
+.screen.place.pl-shop .shop-art:active { transform: translateY(2px) scale(0.97); }
+.screen.place.pl-shop .shop-sprite { position: relative; z-index: 1; width: 92%; max-width: 150px; height: calc(var(--pl-art) - 4px); }
+.screen.place.pl-shop .shop-sprite img, .screen.place.pl-shop img.shop-sprite { object-fit: contain; object-position: 50% 100%; }
+.screen.place.pl-shop .shop-thumb { position: relative; z-index: 1; max-height: calc(var(--pl-art) - 8px); width: auto; max-width: 92%; margin-bottom: 3px; border-radius: 6px; box-shadow: 0 2px 0 rgba(120, 80, 40, 0.2), 0 6px 8px rgba(90, 55, 20, 0.22); transform: rotate(-1.5deg); }
+/* 接觸陰影 */
+.screen.place.pl-shop .shop-art::before { content: ''; position: absolute; left: 16%; right: 16%; bottom: -3px; height: 13px; border-radius: 50%; background: radial-gradient(closest-side, rgba(80, 45, 15, 0.34), rgba(80, 45, 15, 0)); }
+/* 層板：比卡片各寬出 padding，和隔壁接起來 */
+.screen.place.pl-shop .shop-art::after {
+  content: ''; position: absolute; left: calc(-1 * clamp(6px, 1vmin, 10px)); right: calc(-1 * clamp(6px, 1vmin, 10px)); top: 100%; height: 15px;
+  background: var(--pl-grain), linear-gradient(180deg, var(--pl-wood-lt) 0, var(--pl-wood) 46%, var(--pl-wood-dk) 100%);
+  box-shadow: 0 5px 7px rgba(90, 55, 20, 0.24);
+}
+/* 今天最喜歡：後面亮亮的光，旗子放在商品上方 */
+.screen.place.pl-shop .shop-item.favorite .shop-art { background: radial-gradient(closest-side at 50% 58%, rgba(255, 226, 130, 0.95), rgba(255, 226, 130, 0)); }
+.screen.place.pl-shop .fav-badge { top: 2px; font-size: clamp(0.85rem, 1.9vmin, 1rem); }
+/* 綁在層板下的紙標籤：名字、飽足、價錢 */
+.pl-shop-tag { position: relative; flex: 1 0 auto; display: grid; align-content: center; justify-items: center; gap: 2px; width: min(100%, 158px); margin-top: 24px; padding: 4px 6px 6px; border-radius: 12px; background: var(--pl-paper, #fff8ea); box-shadow: 0 3px 0 rgba(120, 80, 40, 0.18), 0 6px 8px rgba(90, 55, 20, 0.14); }
+.pl-shop-tag::before, .pl-shop-tag::after { content: ''; position: absolute; top: -11px; width: 3px; height: 12px; border-radius: 2px; background: #b98a55; }
+.pl-shop-tag::before { left: 28%; }
+.pl-shop-tag::after { right: 28%; }
+.screen.place.pl-shop .shop-item:nth-child(even) .pl-shop-tag { transform: rotate(0.8deg); }
+.screen.place.pl-shop .shop-item:nth-child(odd) .pl-shop-tag { transform: rotate(-0.7deg); }
+.screen.place.pl-shop .shop-name { font-size: clamp(1.05rem, 2.3vmin, 1.25rem); line-height: 1.25; text-align: center; }
+.screen.place.pl-shop .shop-price { color: var(--ink); font-size: clamp(1rem, 2.1vmin, 1.15rem); }
+.screen.place.pl-shop .shop-price small { margin-left: 2px; padding: 0 8px; background: #f6e8d2; font-size: 0.78rem; }
+.screen.place.pl-shop .shop-item .btn { width: 100%; max-width: 158px; margin-top: 8px; font-size: clamp(1.05rem, 2.3vmin, 1.25rem); }
+/* 錢不夠、已擁有：溫和的灰（不用粉紅，也不再半透明，字才讀得清楚） */
+.screen.place.pl-shop .shop-item .buy-btn:disabled { --b: var(--pl-gentle); --bd: rgba(74, 59, 53, 0.14); color: var(--pl-gentle-ink); opacity: 1; filter: none; font-size: clamp(0.98rem, 2vmin, 1.1rem); font-weight: 800; box-shadow: 0 3px 0 var(--bd); }
+.screen.place.pl-shop .wd-shop-note { background: var(--pl-paper); box-shadow: 0 3px 0 rgba(120, 80, 40, 0.16); }
+/* 泡泡裡的東西 */
+.screen.place.pl-shop .pl-spot-bubble .shop-thumb { width: 74%; height: 74%; max-width: none; max-height: none; margin: 0; box-shadow: none; transform: none; }
+/* iPad 直向：飼料 4 欄 3 排剛好一屏放得下 */
+@media (min-width: 700px) and (max-aspect-ratio: 1 / 1) {
+  .screen.place.pl-shop { --pl-pet: clamp(76px, 14.6vw, 120px); --pl-art: clamp(100px, 9.6dvh, 158px); padding-bottom: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .screen.place.pl-shop .shop-art { transition: none; } }

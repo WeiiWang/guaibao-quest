@@ -1,0 +1,82 @@
+/* v8.2 線 S：商店、工坊、背包、任務共用的版面（寵物站位、內容區、木頭材質）。前綴 pl-spot-。
+   規則都帶 .screen.place.pl-spot，不靠載入順序也蓋得過舊規則（這些畫面是延遲載入，css 順序不固定）。 */
+.screen.place.pl-spot {
+  --pl-pad: clamp(12px, 3vw, 24px);
+  --pl-pet: clamp(76px, 17vw, 140px);
+  --pl-wood-lt: #f6dcb3;
+  --pl-wood: #e9c08a;
+  --pl-wood-dk: #c08c50;
+  --pl-wood-edge: #a0723c;
+  --pl-grain: repeating-linear-gradient(92deg, rgba(150, 100, 50, 0) 0 26px, rgba(150, 100, 50, 0.07) 26px 28px, rgba(150, 100, 50, 0) 28px 61px, rgba(150, 100, 50, 0.05) 61px 62px);
+  --pl-paper: #fff8ea;
+  --pl-gentle: #ece6dd; /* 不夠的時候：溫和的灰，不用粉紅 */
+  --pl-gentle-ink: #6f5f56;
+  padding-left: max(var(--pl-pad), env(safe-area-inset-left));
+  padding-right: max(var(--pl-pad), env(safe-area-inset-right));
+}
+
+/* 標題是掛在這個地方的木牌 */
+.screen.place.pl-spot .screen-header { position: relative; z-index: 3; margin-bottom: 12px; }
+.screen.place.pl-spot .screen-header h1 {
+  flex: 0 1 auto; margin: 0 auto; padding: 5px clamp(14px, 3vw, 28px) 7px; border-radius: 16px; white-space: nowrap;
+  font-size: clamp(1.2rem, 3.2vmin, 1.9rem); color: #5b3f26;
+  background: var(--pl-grain), linear-gradient(180deg, var(--pl-wood-lt), var(--pl-wood));
+  box-shadow: 0 4px 0 var(--pl-wood-edge), 0 8px 12px rgba(90, 60, 30, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* 寵物：外層定位，內層跳；影子不跟著跳太遠所以很淡 */
+.pl-spot-pet { position: relative; flex: none; width: var(--pl-pet); height: var(--pl-pet); z-index: 2; }
+.pl-spot-pet-in { position: relative; width: 100%; height: 100%; transform-origin: 50% 100%; transition: transform 0.22s ease-out; }
+.pl-spot-pet .companion { position: relative; z-index: 1; display: block; }
+.pl-spot-shadow { position: absolute; left: 50%; bottom: -2%; width: 74%; height: 11%; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(70, 45, 20, 0.34), rgba(70, 45, 20, 0.14) 62%, rgba(70, 45, 20, 0)); pointer-events: none; }
+.pl-spot-look { transform: rotate(3deg); }
+/* 兩個一樣的動畫輪流用：換名字瀏覽器才會重播 */
+.pl-spot-hop0 { animation: pl-spot-hop-a 0.62s cubic-bezier(0.3, 0.1, 0.4, 1) 1; }
+.pl-spot-hop1 { animation: pl-spot-hop-b 0.62s cubic-bezier(0.3, 0.1, 0.4, 1) 1; }
+@keyframes pl-spot-hop-a { 0%, 100% { transform: translateY(0); } 18% { transform: scale(1.05, 0.94); } 50% { transform: translateY(-30px) scale(0.97, 1.05); } }
+@keyframes pl-spot-hop-b { 0%, 100% { transform: translateY(0); } 18% { transform: scale(1.05, 0.94); } 50% { transform: translateY(-30px) scale(0.97, 1.05); } }
+
+/* 頭上的泡泡（不擋點擊：只出現兩秒多） */
+.pl-spot-bubble {
+  --s: clamp(72px, 11vmin, 124px);
+  position: absolute; left: 50%; bottom: calc(100% + 8px); width: var(--s); height: var(--s); margin-left: calc(var(--s) / -2); z-index: 3; pointer-events: none;
+  border-radius: 50%; background: #fff;
+  box-shadow: 0 5px 0 rgba(74, 59, 53, 0.1), 0 12px 20px rgba(74, 59, 53, 0.2);
+  animation: pl-spot-pop 0.28s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.pl-spot-bubble::after { content: ''; position: absolute; left: 50%; bottom: -8px; width: 18px; height: 18px; margin-left: -9px; border-radius: 4px; background: #fff; transform: rotate(45deg); }
+.pl-spot-bubble > * { position: absolute; left: 13%; top: 13%; z-index: 1; width: 74%; height: 74%; }
+@keyframes pl-spot-pop { from { transform: scale(0.4); opacity: 0; } }
+
+/* ---------- iPad 橫向：寵物站在左下角地上，內容靠右（同關卡） ---------- */
+@media (min-aspect-ratio: 1 / 1) and (min-width: 700px) {
+  .screen.place.pl-spot { --pl-pad: 18px; --pl-pet: clamp(130px, min(22vw, 34dvh), 270px); padding-bottom: 20px; }
+  .pl-spot-body { margin-left: calc(var(--pl-pet) + 10px); }
+  .pl-spot-pet { position: fixed; left: max(14px, env(safe-area-inset-left)); bottom: max(10px, env(safe-area-inset-bottom)); }
+}
+
+/* ---------- 直向、手機：寵物小一點 ---------- */
+@media not all and (min-aspect-ratio: 1 / 1) and (min-width: 700px) {
+  /* 有分頁的畫面：寵物和分頁站在同一塊木板上，貼在畫面頂端（捲動時寵物還在、內容從木板後面過去，不會被蓋住又按不到） */
+  .pl-spot-bar {
+    position: sticky; top: 0; z-index: 4; display: flex; align-items: flex-end; gap: 8px;
+    margin: 0 calc(-1 * var(--pl-pad)) 14px; padding: 4px var(--pl-pad) 8px;
+    background: var(--pl-bar, rgba(255, 244, 228, 0.96));
+    border-bottom: 7px solid var(--pl-wood-dk);
+    box-shadow: 0 5px 8px rgba(90, 60, 30, 0.16);
+  }
+  .pl-spot-bar .tabs { flex: 1; min-width: 0; padding: 0 0 2px; gap: 6px; }
+  .pl-spot-bar .tab { flex: 1 1 0; padding: 0 8px; }
+  /* 泡泡放寵物右邊（頭上是畫面頂端，會被切掉）；只出現一下，也不擋分頁的點擊 */
+  .pl-spot-bar .pl-spot-bubble { left: calc(100% + 6px); bottom: 10px; margin-left: 0; }
+  .pl-spot-bar .pl-spot-bubble::after { left: -4px; bottom: 34%; margin-left: 0; }
+  /* 沒有分頁的畫面：站在內容之後的地上；內容少就在畫面最下面，內容多就往下推，永遠不蓋內容 */
+  .screen.place.pl-spot:has(> .pl-spot-floor) { display: flex; flex-direction: column; padding-bottom: 6px; }
+  .pl-spot-floor { margin-top: auto; }
+  .pl-spot-body:has(+ .pl-spot-floor) { padding-bottom: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-spot-hop0, .pl-spot-hop1, .pl-spot-bubble { animation: none; }
+  .pl-spot-pet-in { transition: none; }
+}

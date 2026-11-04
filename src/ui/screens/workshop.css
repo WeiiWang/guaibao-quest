@@ -58,3 +58,48 @@
   .ws-cost-item { padding-right: 8px; }
   .ws-btn { font-size: 1rem; min-height: 52px; }
 }
+
+/* ---------- v8.2 線 S：工作檯。前綴 pl-ws-；規則都帶 .screen.place.pl-ws（ux.css 的 .workshop .ws-card… 載入順序不固定，靠權重蓋過） ---------- */
+.screen.place.pl-ws { --pl-bar: rgba(245, 221, 170, 0.96); }
+.screen.place.pl-ws .ws-lead { width: fit-content; max-width: 100%; margin: 0 auto 12px; padding: 7px 18px; border-radius: 10px; background: var(--pl-paper); box-shadow: 0 2px 0 rgba(120, 80, 40, 0.18), 0 6px 10px rgba(90, 55, 20, 0.16); font-size: clamp(1.02rem, 2.3vmin, 1.25rem); transform: rotate(-0.4deg); }
+.screen.place.pl-ws .tabs { padding-bottom: 12px; }
+.screen.place.pl-ws .tab { font-size: clamp(1.05rem, 2.4vmin, 1.25rem); }
+.screen.place.pl-ws .ws-grid { gap: clamp(12px, 2vmin, 20px); grid-template-columns: repeat(auto-fill, minmax(clamp(150px, 21vmin, 190px), 1fr)); }
+/* 每張卡是一小塊木頭檯面：有木紋、前緣比較厚；東西放在檯面上的墊紙上 */
+.screen.place.pl-ws .ws-card {
+  padding: clamp(10px, 1.6vmin, 14px) clamp(8px, 1.4vmin, 12px) clamp(12px, 1.8vmin, 16px); border-radius: 20px;
+  background: var(--pl-grain), linear-gradient(180deg, var(--pl-wood-lt), #eecb99);
+  box-shadow: 0 7px 0 var(--pl-wood-dk), 0 14px 18px rgba(90, 60, 30, 0.22), inset 0 2px 0 rgba(255, 255, 255, 0.55);
+}
+.screen.place.pl-ws .ws-card.owned { background: var(--pl-grain), linear-gradient(180deg, #e7f0cf, #dfe3b4); box-shadow: 0 7px 0 #a9ad6c, 0 14px 18px rgba(90, 60, 30, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.6); }
+.screen.place.pl-ws .ws-card.active { box-shadow: 0 0 0 4px #e0a52c, 0 7px 0 var(--pl-wood-dk), 0 14px 18px rgba(90, 60, 30, 0.2); }
+/* 做得起：同舊規則發光（e2e 檢查這個光暈），只是底下換成木頭 */
+.screen.place.pl-ws .ws-card.can { background: var(--pl-grain), linear-gradient(180deg, #fff0bf, #f7dc9c); box-shadow: 0 0 0 4px var(--butter), 0 0 22px 4px rgba(255, 214, 107, 0.75), 0 7px 0 var(--pl-wood-dk); }
+.screen.place.pl-ws .ws-card.k74-hl { box-shadow: 0 0 0 10px rgba(255, 184, 77, 0.25), 0 7px 0 var(--pl-wood-dk); }
+.screen.place.pl-ws .ws-art, .screen.place.pl-ws .ws-card.can .ws-art { width: clamp(92px, 16vmin, 138px); height: clamp(92px, 16vmin, 138px); border-radius: 12px; background: var(--pl-paper); box-shadow: 0 2px 0 rgba(120, 80, 40, 0.22), 0 4px 7px rgba(90, 55, 20, 0.18); }
+.screen.place.pl-ws .ws-art-theme { background: #fff; }
+.screen.place.pl-ws .ws-name { font-size: clamp(1.05rem, 2.4vmin, 1.3rem); color: var(--ink); text-align: center; line-height: 1.25; }
+.screen.place.pl-ws .ws-card.cant .ws-name { color: var(--ink); }
+.screen.place.pl-ws .ws-cost { gap: 6px; }
+.screen.place.pl-ws .ws-cost-item { background: rgba(255, 250, 238, 0.86); box-shadow: 0 1px 0 rgba(120, 80, 40, 0.2); }
+/* 材料不夠：溫和的灰，不用粉紅 */
+.screen.place.pl-ws .ws-cost-item.short { background: var(--pl-gentle); color: var(--pl-gentle-ink); }
+.screen.place.pl-ws .ws-card .ws-btn.gap { background: var(--pl-gentle); --bd: rgba(74, 59, 53, 0.14); }
+.screen.place.pl-ws .ws-gap-item { background: #f6f2ec; box-shadow: 0 0 0 2px rgba(120, 105, 92, 0.22); }
+.screen.place.pl-ws .ws-gap-item b { color: var(--pl-gentle-ink); }
+.screen.place.pl-ws .ws-btn:disabled { opacity: 1; background: var(--pl-gentle); color: var(--pl-gentle-ink); }
+.screen.place.pl-ws .ws-free { color: var(--pl-gentle-ink); }
+.screen.place.pl-ws .h7-ws-max { color: var(--pl-gentle-ink); }
+.screen.place.pl-ws .ws-foot { width: fit-content; margin: 18px auto 0; padding: 0 16px; border-radius: 12px; background: var(--pl-paper); box-shadow: 0 2px 0 rgba(120, 80, 40, 0.18); }
+/* 小願望食譜：釘在牆上的紙 */
+.screen.place.pl-ws .k74-recipe { border-radius: 12px; background: var(--pl-paper); box-shadow: 0 2px 0 rgba(120, 80, 40, 0.18), 0 8px 14px rgba(90, 55, 20, 0.2); }
+.screen.place.pl-ws .k74-recipe-item { background: #fbf0dc; }
+.screen.place.pl-ws .k74-ri-gap span { color: var(--pl-gentle-ink); }
+.screen.place.pl-ws .k74-ri-state.go { color: #8a6236; }
+/* 手機：缺的材料排成一行，按鈕不要變兩層 */
+@media (max-width: 560px) {
+  .screen.place.pl-ws .ws-card .ws-btn.gap { padding: 4px 2px; }
+  .screen.place.pl-ws .ws-gap { gap: 4px; }
+  .screen.place.pl-ws .ws-gap-item { padding-right: 7px; }
+  .screen.place.pl-ws .ws-gap-item b { font-size: 1.15rem; }
+}

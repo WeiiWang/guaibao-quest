@@ -1,0 +1,75 @@
+/* v8.2 線 S：背包 = 閣樓裡的木箱格子。前綴 pl-bag-。規則都帶 .screen.place.pl-bag，不靠載入順序。 */
+
+/* 木箱：外框是木頭，每一格往內凹 */
+.screen.place.pl-bag .pl-bag-crate {
+  list-style: none; margin: 0; padding: clamp(10px, 1.6vmin, 16px); gap: clamp(8px, 1.4vmin, 14px);
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(146px, 21vmin, 200px), 1fr));
+  border-radius: 24px; background: var(--pl-grain), linear-gradient(180deg, var(--pl-wood-lt), var(--pl-wood));
+  box-shadow: 0 8px 0 var(--pl-wood-edge), 0 18px 26px rgba(90, 60, 30, 0.22), inset 0 3px 0 rgba(255, 255, 255, 0.5);
+}
+.screen.place.pl-bag .pl-bag-crate > li {
+  position: relative; border-radius: 14px; min-height: clamp(200px, 32dvh, 280px);
+  background: linear-gradient(180deg, #c99a62 0, #d9b07a 42%, #e2bd8c 100%);
+  box-shadow: inset 0 9px 12px rgba(90, 55, 20, 0.34), inset 0 -3px 0 rgba(255, 240, 215, 0.5), inset 4px 0 6px rgba(90, 55, 20, 0.12), inset -4px 0 6px rgba(90, 55, 20, 0.12);
+}
+.pl-bag-slot { list-style: none; }
+
+/* 格子裡的東西：圖站在格子下半，字在小紙條上，按鈕在最下面 */
+.screen.place.pl-bag .pl-bag-crate .shop-item { padding: 12px 10px; gap: 6px; align-content: end; grid-template-rows: 1fr auto auto auto; color: var(--ink); }
+.screen.place.pl-bag .pl-bag-crate .shop-art { flex: 1; height: auto; min-height: 92px; align-self: stretch; background: none; box-shadow: none; border-radius: 0; place-items: end center; }
+.screen.place.pl-bag .pl-bag-crate .shop-sprite { width: clamp(84px, 14vmin, 128px); height: clamp(88px, 15vmin, 134px); filter: drop-shadow(0 4px 2px rgba(70, 40, 10, 0.3)); }
+.screen.place.pl-bag .pl-bag-crate .shop-name,
+.screen.place.pl-bag .pl-bag-crate .shop-price { justify-self: center; padding: 1px 12px; border-radius: 10px; background: var(--pl-paper); box-shadow: 0 2px 0 rgba(90, 55, 20, 0.22); color: var(--ink); }
+.screen.place.pl-bag .pl-bag-crate .shop-name { font-size: clamp(1.05rem, 2.4vmin, 1.3rem); }
+.screen.place.pl-bag .pl-bag-crate .shop-price { font-size: clamp(0.98rem, 2.1vmin, 1.15rem); }
+.screen.place.pl-bag .pl-bag-crate .btn { font-size: clamp(1.05rem, 2.2vmin, 1.2rem); }
+
+/* 貼紙：一樣放在格子裡（下面還有一顆「去畫畫」，格子矮一點） */
+.screen.place.pl-bag .pl-bag-stickers > li { min-height: clamp(120px, 22dvh, 260px); }
+.screen.place.pl-bag .pl-bag-stickers .j74-sticker { padding: 12px 6px 10px; font-size: clamp(1rem, 2.3vmin, 1.2rem); gap: 6px; align-content: end; }
+.screen.place.pl-bag .pl-bag-stickers .j74-sticker > span:last-child { padding: 1px 8px; border-radius: 9px; background: var(--pl-paper); box-shadow: 0 2px 0 rgba(90, 55, 20, 0.22); }
+.screen.place.pl-bag .pl-bag-stickers .j74-sticker-img { width: clamp(64px, 14vmin, 128px); height: clamp(64px, 14vmin, 128px); filter: drop-shadow(0 3px 2px rgba(70, 40, 10, 0.3)); }
+.screen.place.pl-bag .j74-bag-cta { margin-top: 18px; }
+
+/* 分頁 */
+.screen.place.pl-bag .j74-bag-tabs { padding-bottom: 10px; }
+.screen.place.pl-bag .tab.j74-bag-tab { flex: 1 1 auto; min-height: clamp(56px, 8vmin, 66px); font-size: clamp(1rem, 2.3vmin, 1.2rem); }
+
+/* ---------- 空狀態：空木箱還在，寵物說一句話、大按鈕放在木箱前面 ---------- */
+.pl-bag-emptyroom { position: relative; display: grid; }
+.pl-bag-emptyroom > * { grid-area: 1 / 1; }
+.screen.place.pl-bag .pl-bag-emptyroom .j74-empty { position: relative; z-index: 1; align-content: center; padding: 20px 12px; }
+.screen.place.pl-bag .pl-bag-emptyroom .j74-empty-line { font-size: clamp(1.25rem, 3vmin, 1.7rem); max-width: min(94%, 560px); padding: 16px 26px; box-shadow: 0 5px 0 rgba(90, 55, 20, 0.2), 0 12px 20px rgba(90, 55, 20, 0.22); }
+.screen.place.pl-bag .pl-bag-emptyroom .j74-empty-go { min-height: clamp(64px, 9vmin, 78px); font-size: clamp(1.25rem, 3vmin, 1.6rem); padding: 0 clamp(26px, 5vmin, 44px); }
+
+/* 橫向：寵物和有東西的時候站同一個位置（換分頁不會跳來跳去），泡泡尾巴指向牠 */
+@media (min-aspect-ratio: 1 / 1) and (min-width: 700px) {
+  .screen.place.pl-bag .pl-bag-crate > li { min-height: clamp(180px, calc((100dvh - 224px) / 2), 320px); }
+  .screen.place.pl-bag .pl-bag-stickers > li { min-height: clamp(120px, calc((100dvh - 320px) / 2), 280px); }
+  .screen.place.pl-bag .j74-empty-pet {
+    position: fixed; left: max(14px, env(safe-area-inset-left)); bottom: max(10px, env(safe-area-inset-bottom)); z-index: 2;
+    width: calc(var(--pl-pet) * 0.8);
+  }
+  .screen.place.pl-bag .pl-bag-emptyroom .j74-empty-line::before { left: -8px; top: 50%; transform: translateY(-50%) rotate(45deg); }
+}
+
+/* iPad 直向：格子拉高、圖放大，箱子佔滿上半部；東西超過兩排才縮回去 */
+@media (min-width: 700px) and (max-aspect-ratio: 1 / 1) {
+  .screen.place.pl-bag .pl-bag-crate > li { min-height: clamp(240px, 32dvh, 400px); }
+  .screen.place.pl-bag .pl-bag-crate:has(> li:nth-child(9)) > li { min-height: clamp(200px, 25dvh, 300px); }
+  .screen.place.pl-bag .pl-bag-crate .shop-sprite { width: clamp(100px, 19vmin, 160px); height: clamp(104px, 20vmin, 168px); }
+  .screen.place.pl-bag .pl-bag-crate:has(> li:nth-child(9)) .shop-sprite { width: 118px; height: 122px; }
+  .screen.place.pl-bag .pl-bag-stickers > li { min-height: clamp(180px, 24dvh, 300px); }
+}
+
+/* 手機：箱子兩格一排、空格子只留一點，不把頁面撐長（奇數個時補一格，排面才整齊） */
+@media (max-width: 560px) {
+  .screen.place.pl-bag .pl-bag-crate { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .screen.place.pl-bag .pl-bag-stickers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .screen.place.pl-bag .pl-bag-stickers .pl-bag-slot { display: none; }
+  .screen.place.pl-bag .pl-bag-stickers > li { min-height: 0; }
+  .screen.place.pl-bag .pl-bag-crate .pl-bag-slot:nth-child(2n + 5),
+  .screen.place.pl-bag .pl-bag-crate .pl-bag-slot + .pl-bag-slot:nth-child(n + 5) { display: none; }
+  .screen.place.pl-bag .pl-bag-emptyroom .j74-empty { padding: 10px 8px; gap: 10px; }
+  .screen.place.pl-bag .j74-empty-pet { width: 118px; }
+}
