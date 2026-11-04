@@ -1,0 +1,19 @@
+/* v8.3 遊樂場 */
+.pg-hub-body { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 16px 24px; }
+.pg-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(10px, 2vmin, 20px); width: min(100%, 860px); }
+.pg-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 56px; padding: clamp(8px, 1.6vmin, 16px); border: 0; border-radius: 26px; background: rgb(255 255 255 / 0.88); box-shadow: 0 6px 0 rgb(0 0 0 / 0.08), 0 10px 22px rgb(60 40 90 / 0.14); font: inherit; font-weight: 800; font-size: clamp(16px, 2.4vmin, 22px); color: #5a4a3f; }
+.pg-tile:active { transform: translateY(3px); box-shadow: 0 3px 0 rgb(0 0 0 / 0.08); }
+.pg-tile img, .pg-tile .art-emoji { width: clamp(64px, 14vmin, 120px) !important; height: clamp(64px, 14vmin, 120px) !important; object-fit: contain; }
+.pg-tile.tone-mint { background: rgb(226 248 233 / 0.92); }
+.pg-tile.tone-lavender { background: rgb(238 230 252 / 0.92); }
+.pg-tile.tone-bubblegum { background: rgb(255 228 238 / 0.92); }
+.pg-tile.tone-butter { background: rgb(255 243 208 / 0.92); }
+.pg-tile.tone-sky { background: rgb(222 241 255 / 0.92); }
+
+/* 玩法的共用殼：滿版、不捲動 */
+.pg-game { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; padding: 0; }
+.pg-back { position: absolute; z-index: 20; top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); width: 60px; height: 60px; border: 0; border-radius: 50%; background: rgb(255 255 255 / 0.92); box-shadow: 0 4px 12px rgb(0 0 0 / 0.16); font-size: 38px; line-height: 1; font-weight: 800; color: #6a5a4e; }
+.pg-gift { position: absolute; inset: 0; z-index: 30; display: grid; place-items: center; border: 0; background: rgb(40 30 60 / 0.36); }
+.pg-gift-card { display: flex; align-items: center; gap: 16px; padding: 20px 28px; border-radius: 32px; background: #fff8ec; box-shadow: 0 16px 40px rgb(0 0 0 / 0.24); animation: pg-pop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1); }
+@keyframes pg-pop { from { transform: scale(0.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pg-gift-card { animation: none; } }

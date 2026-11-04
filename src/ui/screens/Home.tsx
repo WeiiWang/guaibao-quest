@@ -248,6 +248,10 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
       </header>
 
       <div className="side-tools">
+        <button className="mini-candy mint" onClick={() => go('playground')} data-testid="playground-btn" aria-label="遊樂場">
+          <Icon name="ui-playground" emoji="🎠" size={34} />
+          <span>遊樂場</span>
+        </button>
         <button className="mini-candy butter" onClick={() => go('workshop')} data-gift-target="material">
           <Icon name="ui-workshop" emoji="🔨" size={34} />
           <span>工坊</span>

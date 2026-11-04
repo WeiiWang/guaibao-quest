@@ -8,6 +8,8 @@ export interface SceneScreen {
   chapterId?: string
   station?: number
   ceremony?: boolean
+  /** v8.3 遊樂場的玩法 id */
+  id?: string
 }
 
 /**
@@ -32,6 +34,9 @@ export function musicSceneFor(screen: SceneScreen, opts: { locked: boolean; lock
     case 'paint':
     case 'dots':
       return 'paint'
+    case 'game':
+      // 音樂會和學我說話要聽得清楚自己的聲音，其他玩法維持目前那首
+      return screen.id === 'music' || screen.id === 'talk' ? null : undefined
     default:
       return undefined
   }

@@ -215,6 +215,14 @@ export interface Settings {
   seenIntros?: string[]
   /** v5：待展示的禮物（依序展示，收下後移除） */
   pendingGifts?: Gift[]
+  /** v8.3 遊樂場：今天玩完送過禮物的玩法（換日就重算） */
+  playDaily?: { date: string; done: string[] }
+  /** v8.3 遊樂場：個人紀錄（玩法 id → 最多）；只跟自己比，不排名 */
+  playBest?: Record<string, number>
+  /** v8.3 學我說話：家長開了才有，未設定視為關 */
+  talkOn?: boolean
+  /** v8.3 小菜園：6 塊田，沒種的是 null */
+  garden?: (GardenPlot | null)[]
   /** v5：上一次送今日小禮物的日期（YYYY-MM-DD） */
   lastGiftDate?: string
   /** v5：收到的貼紙（public/art 素材名，不重複） */
@@ -323,4 +331,11 @@ export interface StageDraft {
   /** 這一站的題目（題目 id；review/followUp 標記） */
   plan: { id: string; review: boolean; followUp: boolean }[]
   savedAt: number
+}
+
+/** v8.3 小菜園的一塊田。stage：0 小芽、1 葉子、2 長好。grewOn：最後一次長大的本地日期（一天最多長一階） */
+export interface GardenPlot {
+  crop: string
+  stage: 0 | 1 | 2
+  grewOn: string
 }

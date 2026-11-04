@@ -8,7 +8,7 @@ import './place.css'
 // v8.2 線 S：選單畫面不再是粉彩底加白卡片，每個畫面都是世界裡的一個地方：
 // 一張場景背景（鋪滿整頁、沒圖時退回原本的主題色）+ 走進去時寵物說一句話。
 
-export type PlaceId = 'shop' | 'workshop' | 'bag' | 'tasks' | 'art' | 'gallery' | 'friends' | 'album'
+export type PlaceId = 'shop' | 'workshop' | 'bag' | 'tasks' | 'art' | 'gallery' | 'friends' | 'album' | 'playground'
 
 /** 整頁場景背景。放在 <main className="screen place"> 裡第一個；外層裁切同地圖的柔焦背景，轉場時不會撐出捲動 */
 export function PlaceBackdrop({ place }: { place: PlaceId }) {

@@ -19,6 +19,7 @@ import { planFeedPoop, POOP_CAP, resolveDuePoops, type PoopSpread } from '../pet
 import { checkPin, hashPin, isValidPin } from '../domain/pin'
 import { registry, type PinStore } from '../profiles/registry'
 import { balanceOf, checkPenalty, grantPoints } from '../domain/points'
+import { settlePlayGame, type PlayGameId } from '../domain/playground'
 import { canBuy } from '../domain/shop'
 import { clampTaskPoints, instancesToCreate, transition } from '../domain/tasks'
 import type {
@@ -433,6 +434,32 @@ export class Repo {
    * 餵食。v7.3：吃飽了（飽足 ≥ FULL_HUNGER）仍然可以餵——食物照扣、成長 +1、飽足維持在上限（full: true）；
    * 只有今天靠餵食得到的成長到了上限（DAILY_GROWTH_CAP）才拒絕（reason: 'capped'），食物不扣、不增加餵食次數。
    */
+  /** v8.3 遊樂場：玩完一個玩法。今天第一次玩完（且今天還沒送滿）送 1 個固定輪替的食物，回傳食物 id；沒送回傳 null */
+  async finishPlayGame(gameId: PlayGameId, now = this.clock()): Promise<string | null> {
+    const d = this.db
+    return d.transaction('rw', [d.settings, d.inventory], async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s) return null
+      const date = localDateStr(now)
+      const r = settlePlayGame(s.playDaily, date, gameId)
+      if (!r.foodId) return null
+      await d.settings.update(SETTINGS_ID, { playDaily: r.daily })
+      const inv = await d.inventory.get(r.foodId)
+      await d.inventory.put({ id: r.foodId, itemId: r.foodId, qty: (inv?.qty ?? 0) + 1 })
+      return r.foodId
+    })
+  }
+
+  /** v8.3 遊樂場：更新個人紀錄。回傳這次有沒有破紀錄（第一次玩不算破，沒有比較對象） */
+  async recordPlayBest(gameId: PlayGameId, value: number): Promise<boolean> {
+    const s = await this.db.settings.get(SETTINGS_ID)
+    if (!s) return false
+    const prev = s.playBest?.[gameId]
+    if (prev !== undefined && value <= prev) return false
+    await this.db.settings.update(SETTINGS_ID, { playBest: { ...s.playBest, [gameId]: value } })
+    return prev !== undefined
+  }
+
   async feedPet(foodId: string, now = this.clock()): Promise<Result<{ pet: Pet; evolvedTo: Stage | null; full: boolean }>> {
     const d = this.db
     const effect = FOOD_EFFECTS[foodId]
