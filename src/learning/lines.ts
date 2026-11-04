@@ -203,6 +203,15 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'pet.empty.material': '還沒有材料，我們去冒險找材料吧！',
   'pet.empty.sticker': '還沒有貼紙，去畫畫、收小禮物就會有喔',
   'pet.empty.album': '我們一起去冒險，回憶卡就會出現囉',
+  // v8.2 線 S：走進每個地方時寵物說的第一句（一次開啟每個地方只說一次，見 src/ui/components/Place.tsx）
+  'pet.place.shop': '歡迎光臨！今天想吃什麼呢？',
+  'pet.place.workshop': '叮叮咚咚，我們來做東西！',
+  'pet.place.bag': '來看看我們有什麼寶貝！',
+  'pet.place.tasks': '今天要做哪一件事呢？',
+  'pet.place.art': '拿起畫筆，我們來畫畫！',
+  'pet.place.gallery': '這裡是你的美術館喔！',
+  'pet.place.friends': '這些都是我們認識的朋友！',
+  'pet.place.album': '這是我們的回憶喔！',
   'pet.paint.free': '再多畫幾筆，或貼一張貼紙吧',
   'pet.gallery.empty': '還沒有畫畫喔，我們去畫一張吧',
   // v6 成長相簿：回憶卡上的一句話（句型見 src/domain/album.ts；學會新招那張和 ui.trick.learn 同一句，不重複列）

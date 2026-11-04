@@ -202,7 +202,6 @@ main.ss.screen { background: linear-gradient(180deg, #1c2252 0%, #33387a 62%, #4
 .ss-book.locked .ss-label { display: none; }
 .ss-silhouette { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .ss-star-shape { width: 52%; height: 70%; object-fit: contain; filter: brightness(0); opacity: 0.45; }
-.ss-lock { position: absolute; right: 8px; bottom: 8px; width: 26px; height: 26px; opacity: 0.8; }
 .ss-new { position: absolute; right: 8px; top: 8px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, #fff, #ffd94f 60%); box-shadow: 0 0 10px #ffd94f; }
 
 .ss-entry {

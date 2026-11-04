@@ -1,0 +1,4 @@
+/* v8.2 線 S：地方的場景背景。.screen 自己的主題漸層留著當沒圖時的底色；isolation 讓 z-index: -1 落在 .screen 的背景之上 */
+.screen.place { position: relative; isolation: isolate; }
+.place-backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.place-backdrop > div { position: absolute; inset: 0; background-position: center; background-size: cover; background-repeat: no-repeat; }

@@ -3039,6 +3039,126 @@
   "text": "得到五顆星星囉！",
   "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
+ "pet.place.album": {
+  "file": "3b6e9728647bfa27.m4a",
+  "text": "這是我們的回憶喔！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.album@rabbit": {
+  "file": "71024a9694668640.m4a",
+  "text": "這是我們的回憶喔！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.album@tiger": {
+  "file": "3f02d89c101be4af.m4a",
+  "text": "這是我們的回憶喔！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.art": {
+  "file": "37cac4ee89037531.m4a",
+  "text": "拿起畫筆，我們來畫畫！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.art@rabbit": {
+  "file": "082cf2b43abfab6d.m4a",
+  "text": "拿起畫筆，我們來畫畫！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.art@tiger": {
+  "file": "bef2c43f237c0fa1.m4a",
+  "text": "拿起畫筆，我們來畫畫！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.bag": {
+  "file": "b21bcba6963691ef.m4a",
+  "text": "來看看我們有什麼寶貝！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.bag@rabbit": {
+  "file": "a14a77242f48fa89.m4a",
+  "text": "來看看我們有什麼寶貝！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.bag@tiger": {
+  "file": "33d925e5301f6120.m4a",
+  "text": "來看看我們有什麼寶貝！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.friends": {
+  "file": "5cbca7e9478b2c95.m4a",
+  "text": "這些都是我們認識的朋友！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.friends@rabbit": {
+  "file": "743c6d2a2fc30381.m4a",
+  "text": "這些都是我們認識的朋友！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.friends@tiger": {
+  "file": "cccf1ae7a3b4bd4e.m4a",
+  "text": "這些都是我們認識的朋友！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.gallery": {
+  "file": "b976cd6cb5b7169b.m4a",
+  "text": "這裡是你的美術館喔！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.gallery@rabbit": {
+  "file": "f2d3da314a82c18e.m4a",
+  "text": "這裡是你的美術館喔！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.gallery@tiger": {
+  "file": "f045be0a7370268e.m4a",
+  "text": "這裡是你的美術館喔！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.shop": {
+  "file": "f2bb68b7342aec28.m4a",
+  "text": "歡迎光臨！今天想吃什麼呢？",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.shop@rabbit": {
+  "file": "074ebbd0e5968160.m4a",
+  "text": "歡迎光臨！今天想吃什麼呢？",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.shop@tiger": {
+  "file": "43839f4a74380ffa.m4a",
+  "text": "歡迎光臨！今天想吃什麼呢？",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.tasks": {
+  "file": "c69e45e52a46b0ec.m4a",
+  "text": "今天要做哪一件事呢？",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.tasks@rabbit": {
+  "file": "3b26586bd0ee63ac.m4a",
+  "text": "今天要做哪一件事呢？",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.tasks@tiger": {
+  "file": "0d027837a1cc914b.m4a",
+  "text": "今天要做哪一件事呢？",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.workshop": {
+  "file": "80309ddaddb52262.m4a",
+  "text": "叮叮咚咚，我們來做東西！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.workshop@rabbit": {
+  "file": "6d0a18db7d5452e9.m4a",
+  "text": "叮叮咚咚，我們來做東西！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.workshop@tiger": {
+  "file": "19be9b33222668ab.m4a",
+  "text": "叮叮咚咚，我們來做東西！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
  "pet.welcome": {
   "file": "b666d893be9f401b.m4a",
   "text": "歡迎你！這是給你的禮物！",

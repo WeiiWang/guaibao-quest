@@ -6,7 +6,6 @@ import { STORIES, STORY_CHAPTERS, storyLabel, storyUnlocked, withPrologue, close
 import { playSound } from '../../../learning/audioEngine'
 import { Art } from '../../components/Art'
 import { ScreenHeader } from '../../components/Header'
-import { Icon } from '../../components/Icon'
 import { Loading } from '../../components/Loading'
 import type { PlayStory } from './useStoryDirector'
 import './story.css'
@@ -60,9 +59,6 @@ export function StoryShelf({ onBack, play }: { onBack: () => void; play: PlaySto
                     ) : (
                       <span className="ss-silhouette" aria-hidden>
                         <Art name="ui-xiaoxing" alt="" className="ss-star-shape" />
-                        <span className="ss-lock">
-                          <Icon name="ui-lock" emoji="🔒" size="100%" />
-                        </span>
                       </span>
                     )}
                     {fresh && <i className="ss-new" aria-hidden />}
