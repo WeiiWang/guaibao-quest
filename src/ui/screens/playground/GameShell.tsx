@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { repo } from '../../../db/repo'
 import { playSound } from '../../../learning/audioEngine'
 import { STATIC_LINES } from '../../../learning/lines'
@@ -37,6 +37,7 @@ export interface GameProps {
 export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGameId; scene: string; intro: string; onExit: () => void; children: (p: GameProps) => ReactNode }) {
   const say = usePetLine()
   const [gift, setGift] = useState<string | null>(null)
+  const giftArmed = useRef(false)
   useEffect(() => {
     const t = window.setTimeout(() => say(intro), 500)
     return () => window.clearTimeout(t)
@@ -44,6 +45,7 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
   const finish = useCallback(() => {
     void repo.finishPlayGame(id).then((foodId) => {
       if (!foodId) return
+      giftArmed.current = false
       setGift(foodId)
       playSound('reward')
       say('pet.play.reward')
@@ -59,8 +61,24 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
       </button>
       {children({ onExit, finish, say })}
       {gift && (
-        // Companion 本身是 button，外層不能再是 button
-        <div className="pg-gift" role="button" tabIndex={0} onClick={() => setGift(null)} onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setGift(null)} data-testid="play-gift" aria-label="收下禮物">
+        // Companion 本身是 button，外層不能再是 button。
+        // 只有禮物出現之後才按下的手指算數：連續點擊的玩法，放開手指那一下不會把剛跳出來的禮物點掉
+        <div
+          className="pg-gift"
+          role="button"
+          tabIndex={0}
+          onPointerDown={() => {
+            giftArmed.current = true
+          }}
+          onClick={() => {
+            if (giftArmed.current) setGift(null)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') setGift(null)
+          }}
+          data-testid="play-gift"
+          aria-label="收下禮物"
+        >
           <span className="pg-gift-card">
             <Companion pose="happy" size="min(30vmin, 180px)" />
             <Icon name={`food-${gift}`} emoji="🎁" size={96} alt="" />

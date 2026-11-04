@@ -1,11 +1,367 @@
-import { GameShell } from './GameShell'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { unlockAudio } from '../../../learning/audioEngine'
+import { playDrum, playXylophone, type DrumKind } from '../../../learning/instruments'
+import { FREE_PLAY_GOAL, MUSIC_NOTES, NOTE_COLOR, NOTE_FREQ, SONGS, anyKeyAdvances, nextNote, songStep, type MusicNote, type Song, type SongId } from '../../../domain/music'
+import { useLearnerProfile, useLearningSettings } from '../../learningHooks'
+import { Companion, type Pose } from '../adventure/Companion'
+import { GameShell, type GameProps } from './GameShell'
 import type { GameRootProps } from './GameScreen'
+import { TapHint, useReducedMotion, useTimers } from './wHelpers'
+import './pg-music.css'
 
-// 骨架：由對應的線補上玩法
 export default function Music({ onExit }: GameRootProps) {
   return (
     <GameShell id="music" scene="scene-play-music" intro="pet.play.music.intro" onExit={onExit}>
-      {() => null}
+      {(p) => <MusicGame {...p} />}
     </GameShell>
   )
 }
+
+const DANCE_MS = 900
+const FINISH_DELAY_MS = 1800
+/**
+ * 玩完了但手還在敲：等停下來這麼久才跳禮物。禮物是整片可點的浮層，
+ * 敲到一半跳出來會被下一下（甚至這一下放開的手指）直接點掉，孩子根本沒看到；也不該打斷演奏。
+ */
+const FINISH_QUIET_MS = 900
+const BIG_DANCE_MS = 3400
+const HAND_AFTER_MS = 4000
+/** 魔法演奏（任何鍵都前進）時，幾乎同時按下的多根手指或手掌只算一下：旋律不會被一掌跳過好幾個音 */
+const SAME_PRESS_MS = 45
+const MAX_NOTES = 14
+
+interface Fly {
+  id: number
+  x: number
+  y: number
+  color: string
+}
+
+function MusicGame({ finish, say }: GameProps) {
+  const { ageBand } = useLearnerProfile()
+  const { soundOn } = useLearningSettings()
+  const reduced = useReducedMotion()
+  const { after, cancel } = useTimers()
+
+  const [song, setSong] = useState<Song | null>(null)
+  const [index, setIndex] = useState(0)
+  const [dancing, setDancing] = useState(false)
+  const [big, setBig] = useState(false)
+  const [fly, setFly] = useState<Fly[]>([])
+  const [hint, setHint] = useState(false)
+  const [last, setLast] = useState<string>('')
+  const [free, setFree] = useState(0)
+
+  const rootRef = useRef<HTMLDivElement>(null)
+  const petRef = useRef<HTMLDivElement>(null)
+  const keyRefs = useRef(new Map<string, HTMLElement>())
+  // 同一個 tick 裡的多指不等重畫，所以聲音與進度的判斷都看這包 ref
+  const live = useRef({
+    cur: null as { song: Song; index: number } | null,
+    soundOn: true,
+    band: ageBand,
+    free: 0,
+    freeDone: false,
+    lastAdvanceAt: -Infinity,
+    nextFly: 1,
+    danceTimer: null as number | null,
+    hintTimer: null as number | null,
+    celebrate: [] as number[],
+    pendingFinish: null as number | null,
+  })
+  const finishRef = useRef(finish)
+  useEffect(() => {
+    live.current.soundOn = soundOn
+    live.current.band = ageBand
+    finishRef.current = finish
+  }, [soundOn, ageBand, finish])
+
+  // 這麼久沒敲就示範一下：自由彈指中間的鍵，魔法演奏指下一個音
+  useEffect(() => {
+    const id = after(HAND_AFTER_MS, () => setHint(true))
+    const s = live.current
+    s.hintTimer = id
+    return () => {
+      cancel(id)
+      s.hintTimer = null
+    }
+  }, [song, after, cancel])
+
+  // 離開時還沒送出的禮物照送：隨時可以離開，不會損失東西
+  useEffect(() => {
+    const s = live.current
+    return () => {
+      if (s.pendingFinish !== null) {
+        s.pendingFinish = null
+        finishRef.current()
+      }
+    }
+  }, [])
+
+  const flash = (name: string, color: string) => {
+    const el = keyRefs.current.get(name)
+    const bar = el?.querySelector<HTMLElement>('[data-bar]')
+    if (!el || !bar) return
+    // 只動 opacity 與 transform。不要動畫 filter：WebKit 動畫 filter 會讓整個 App 閃退（CAPresentationModifier，實測重現過）
+    el.querySelector<HTMLElement>('[data-flash]')?.animate?.([{ opacity: 0.6 }, { opacity: 0 }], { duration: 220, easing: 'ease-out' })
+    if (!reduced) bar.animate?.([{ transform: 'translateY(4px) scale(0.97)' }, { transform: 'none' }], { duration: 200, easing: 'ease-out' })
+    const root = rootRef.current
+    if (!root) return
+    const r = el.getBoundingClientRect()
+    const o = root.getBoundingClientRect()
+    const s = live.current
+    const item: Fly = { id: s.nextFly++, x: r.left - o.left + r.width / 2, y: r.top - o.top + r.height * 0.3, color }
+    setFly((list) => [...list.slice(-(MAX_NOTES - 1)), item])
+  }
+
+  const dance = () => {
+    const s = live.current
+    cancel(s.danceTimer)
+    setDancing(true)
+    s.danceTimer = after(DANCE_MS, () => setDancing(false))
+    if (!reduced) petRef.current?.animate?.([{ transform: 'none' }, { transform: 'translateY(-9%) rotate(-3deg)' }, { transform: 'none' }], { duration: 240, easing: 'ease-out' })
+  }
+
+  const armFinish = (ms: number) => {
+    const s = live.current
+    cancel(s.pendingFinish)
+    s.pendingFinish = after(ms, () => {
+      s.pendingFinish = null
+      finishRef.current()
+    })
+  }
+
+  const countFree = () => {
+    const s = live.current
+    s.free++
+    setFree(s.free)
+    if (!s.freeDone && s.free >= FREE_PLAY_GOAL) {
+      s.freeDone = true
+      armFinish(FINISH_QUIET_MS)
+    }
+  }
+
+  const touched = () => {
+    const s = live.current
+    cancel(s.hintTimer)
+    s.hintTimer = null
+    setHint(false)
+    unlockAudio()
+    if (s.pendingFinish !== null) armFinish(FINISH_QUIET_MS)
+  }
+
+  const celebrate = () => {
+    const s = live.current
+    s.cur = null
+    setBig(true)
+    say('pet.play.music.song')
+    armFinish(FINISH_DELAY_MS)
+    s.celebrate.push(
+      after(BIG_DANCE_MS, () => {
+        setBig(false)
+        setSong(null)
+        setIndex(0)
+      }),
+    )
+  }
+
+  const pressKey = (pressed: MusicNote) => {
+    touched()
+    const s = live.current
+    const cur = s.cur
+    if (cur) {
+      if (anyKeyAdvances(s.band) && performance.now() - s.lastAdvanceAt < SAME_PRESS_MS) return
+      const r = songStep(cur.song, cur.index, pressed, s.band)
+      if (s.soundOn) playXylophone(NOTE_FREQ[r.play])
+      setLast(r.play)
+      if (r.advanced) {
+        s.lastAdvanceAt = performance.now()
+        cur.index = r.index
+        setIndex(r.index)
+      }
+      flash(r.play, NOTE_COLOR[r.play])
+      dance()
+      if (r.done) celebrate()
+      return
+    }
+    if (s.soundOn) playXylophone(NOTE_FREQ[pressed])
+    setLast(pressed)
+    flash(pressed, NOTE_COLOR[pressed])
+    dance()
+    countFree()
+  }
+
+  const pressDrum = (kind: DrumKind) => {
+    touched()
+    const s = live.current
+    if (s.soundOn) playDrum(kind)
+    setLast(`drum-${kind}`)
+    flash(`drum-${kind}`, kind === 'low' ? '#e8743b' : '#3f9fe6')
+    dance()
+    if (!s.cur) countFree()
+  }
+
+  const pickSong = (id: SongId) => {
+    const s = live.current
+    // 正在演彈完的慶祝：把排好的收場取消，禮物照送
+    s.celebrate.forEach(cancel)
+    s.celebrate = []
+    setBig(false)
+    if (s.cur?.song.id === id) {
+      // 再點一次選中的歌卡 = 回到自由彈
+      s.cur = null
+      setSong(null)
+      setIndex(0)
+      return
+    }
+    const next = SONGS.find((x) => x.id === id) ?? null
+    s.cur = next ? { song: next, index: 0 } : null
+    s.lastAdvanceAt = -Infinity
+    setSong(next)
+    setIndex(0)
+  }
+
+  const lit = song && !big ? nextNote(song, index) : null
+  const hintKey: MusicNote = lit ?? 'F5'
+  const pose: Pose = big || dancing ? 'dance' : 'happy'
+
+  return (
+    <div
+      className={`pg-mus ${song && !big ? 'is-song' : ''}`}
+      ref={rootRef}
+      data-testid="pg-mus"
+      data-mode={song ? song.id : 'free'}
+      data-index={index}
+      data-total={song ? song.notes.length : 0}
+      data-next={lit ?? ''}
+      data-last={last}
+      data-free={free}
+      data-big={big ? '1' : undefined}
+      data-age={ageBand}
+      onPointerUp={unlockAudio}
+      onContextMenu={(e) => e.preventDefault()}
+    >
+      <div className="pg-mus-cards">
+        {SONGS.map((x) => (
+          <button key={x.id} type="button" className={`pg-mus-card ${song?.id === x.id ? 'is-on' : ''}`} onClick={() => pickSong(x.id)} aria-pressed={song?.id === x.id} data-testid={`pg-mus-song-${x.id}`}>
+            <span className="pg-mus-card-art" aria-hidden>
+              {x.id === 'twinkle' ? <StarArt /> : <TigerArt />}
+            </span>
+            <span className="pg-mus-card-title">{x.title}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="pg-mus-progress" data-testid="pg-mus-progress" aria-hidden>
+        {song?.notes.map((note, i) => (
+          <i key={i} className={i < index ? 'is-done' : i === index ? 'is-next' : ''} style={{ '--c': NOTE_COLOR[note] } as CSSProperties} />
+        ))}
+      </div>
+
+      <div className="pg-mus-stage">
+        <Drum kind="low" onPress={pressDrum} keyRefs={keyRefs.current} />
+        <div className={`pg-mus-pet ${big ? 'is-big' : ''}`} ref={petRef}>
+          <Companion pose={pose} size="100%" />
+        </div>
+        <Drum kind="high" onPress={pressDrum} keyRefs={keyRefs.current} />
+      </div>
+
+      <div className="pg-mus-xylo" data-testid="pg-mus-xylo">
+        <span className="pg-mus-rail is-a" aria-hidden />
+        <span className="pg-mus-rail is-b" aria-hidden />
+        {MUSIC_NOTES.map((note, i) => (
+          <button
+            key={note}
+            type="button"
+            ref={(el) => {
+              if (el) keyRefs.current.set(note, el)
+              else keyRefs.current.delete(note)
+            }}
+            className={`pg-mus-key ${lit === note ? 'is-lit' : ''}`}
+            style={{ '--c': NOTE_COLOR[note], '--len': `${100 - i * 3.6}%` } as CSSProperties}
+            onPointerDown={(e) => {
+              if (e.button === 0) pressKey(note)
+            }}
+            onClick={(e) => {
+              // 鍵盤（detail 0）；手指與滑鼠在 pointerdown 就發聲了
+              if (e.detail === 0) pressKey(note)
+            }}
+            aria-label={`木琴第 ${i + 1} 鍵`}
+            data-no-tap
+            data-testid={`pg-mus-key-${note}`}
+            data-lit={lit === note ? '1' : undefined}
+          >
+            <span className="pg-mus-bar" data-bar>
+              <span className="pg-mus-flash" data-flash />
+              <span className="pg-mus-peg" />
+              <span className="pg-mus-peg" />
+            </span>
+            {hint && note === hintKey && <TapHint />}
+          </button>
+        ))}
+      </div>
+
+      <div className="pg-mus-fx" aria-hidden>
+        {fly.map((f) => (
+          <span key={f.id} className="pg-mus-note" style={{ left: f.x, top: f.y, color: f.color }} data-testid="pg-mus-note" onAnimationEnd={() => setFly((list) => list.filter((x) => x.id !== f.id))}>
+            <svg viewBox="0 0 40 48" width="100%" height="100%">
+              <ellipse cx="13" cy="39" rx="11" ry="8" fill="currentColor" transform="rotate(-18 13 39)" />
+              <path d="M22 37V6c6 5 14 6 14 16" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+            </svg>
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Drum({ kind, onPress, keyRefs }: { kind: DrumKind; onPress: (k: DrumKind) => void; keyRefs: Map<string, HTMLElement> }) {
+  return (
+    <button
+      type="button"
+      className={`pg-mus-drum is-${kind}`}
+      ref={(el) => {
+        if (el) keyRefs.set(`drum-${kind}`, el)
+        else keyRefs.delete(`drum-${kind}`)
+      }}
+      onPointerDown={(e) => {
+        if (e.button === 0) onPress(kind)
+      }}
+      onClick={(e) => {
+        if (e.detail === 0) onPress(kind)
+      }}
+      aria-label={kind === 'low' ? '大鼓' : '小鼓'}
+      data-no-tap
+      data-testid={`pg-mus-drum-${kind}`}
+    >
+      <span className="pg-mus-drum-body" data-bar>
+        <span className="pg-mus-drum-head">
+          <span className="pg-mus-flash" data-flash />
+        </span>
+      </span>
+    </button>
+  )
+}
+
+const StarArt = () => (
+  <svg viewBox="0 0 64 64" width="100%" height="100%">
+    <path d="M32 5l8.5 17.500L60 25 46 39l3.5 19.500L32 49l-17.5 9.500L18 39 4 25l19.5-2.500z" fill="#ffd34d" stroke="#e8a92a" strokeWidth="3" strokeLinejoin="round" />
+    <circle cx="25" cy="30" r="2.8" fill="#5a4a3f" />
+    <circle cx="39" cy="30" r="2.8" fill="#5a4a3f" />
+    <path d="M26 38q6 5 12 0" fill="none" stroke="#5a4a3f" strokeWidth="3" strokeLinecap="round" />
+  </svg>
+)
+
+const TigerArt = () => (
+  <svg viewBox="0 0 64 64" width="100%" height="100%">
+    <circle cx="14" cy="16" r="9" fill="#f59a3c" />
+    <circle cx="50" cy="16" r="9" fill="#f59a3c" />
+    <circle cx="32" cy="34" r="25" fill="#f59a3c" />
+    <ellipse cx="32" cy="44" rx="14" ry="11" fill="#fff3df" />
+    <path d="M32 10v9M24 12l2 8M40 12l-2 8M8 34h8M48 34h8M10 42l7-2M54 42l-7-2" stroke="#5a3a1f" strokeWidth="3.5" strokeLinecap="round" />
+    <circle cx="23" cy="31" r="3" fill="#3a2a1f" />
+    <circle cx="41" cy="31" r="3" fill="#3a2a1f" />
+    <ellipse cx="32" cy="40" rx="3.5" ry="2.5" fill="#3a2a1f" />
+    <path d="M26 46q6 4 12 0" fill="none" stroke="#3a2a1f" strokeWidth="2.5" strokeLinecap="round" />
+  </svg>
+)
