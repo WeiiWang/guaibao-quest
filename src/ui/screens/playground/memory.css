@@ -1,0 +1,50 @@
+/* v8.3 翻翻配對。版面：牌桌占滿，寵物橫向站左邊、直向站下面；卡片大小由 domain/playU.ts 的 memoryLayout 算 */
+main[data-testid='play-memory'] { background: linear-gradient(180deg, #ffeadf 0%, #fff6e6 100%); }
+.pg-mem { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; touch-action: none; -webkit-touch-callout: none; padding: max(78px, calc(env(safe-area-inset-top) + 66px)) max(10px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); gap: 6px; }
+.pg-mem-board { position: relative; order: 1; flex: 1 1 0; min-width: 0; min-height: 0; display: grid; place-items: center; }
+.pg-mem-pet { order: 2; flex: none; align-self: flex-end; width: min(19vmin, 120px); height: min(19vmin, 120px); transform-origin: 50% 100%; }
+.pg-mem-pet .companion { width: 100%; height: 100%; }
+@media (orientation: landscape) {
+  .pg-mem { flex-direction: row; padding-top: max(10px, env(safe-area-inset-top)); padding-left: max(78px, calc(env(safe-area-inset-left) + 66px)); }
+  .pg-mem-pet { order: 0; position: absolute; left: max(6px, env(safe-area-inset-left)); bottom: max(8px, env(safe-area-inset-bottom)); width: 68px; height: 68px; }
+}
+@media (orientation: landscape) and (min-width: 900px) {
+  .pg-mem { padding-left: min(22vmin, 190px); }
+  .pg-mem-pet { width: min(21vmin, 176px); height: min(21vmin, 176px); }
+}
+
+.pg-mem-grid { display: grid; }
+.pg-mem-card { position: relative; padding: 0; border: 0; background: none; border-radius: clamp(16px, 3vmin, 26px); perspective: 900px; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.pg-mem-inner { position: absolute; inset: 0; display: block; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 0.38s cubic-bezier(0.3, 1.1, 0.5, 1); }
+.pg-mem-card.up .pg-mem-inner { transform: rotateY(180deg); }
+.pg-mem-face { position: absolute; inset: 0; display: grid; place-items: center; border-radius: clamp(16px, 3vmin, 26px); backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 5px 0 rgb(0 0 0 / 0.08), 0 8px 16px rgb(90 50 60 / 0.18); }
+.pg-mem-back { background: radial-gradient(circle at 30% 22%, #ffb3cb, #f76d9a 72%); box-shadow: inset 0 0 0 clamp(4px, 0.8vmin, 7px) rgb(255 255 255 / 0.7), 0 5px 0 #d65482, 0 8px 16px rgb(90 50 60 / 0.2); }
+.pg-mem-star { width: 54%; height: 54%; filter: drop-shadow(0 3px 2px rgb(170 40 90 / 0.3)); }
+.pg-mem-front { transform: rotateY(180deg); background: #fffdf6; overflow: hidden; }
+/* 只靠 backface-visibility 不夠：WebKit 裡牌面的圖片有自己的合成層，蓋著也透出來，等於答案全露。
+   所以轉到一半（側面、看不到的那一瞬間）直接切換兩面的 visibility，蓋著的牌面一定不會畫 */
+.pg-mem-front { visibility: hidden; transition: visibility 0s linear 0.19s; }
+.pg-mem-back { visibility: visible; transition: visibility 0s linear 0.19s; }
+.pg-mem-card.up .pg-mem-front { visibility: visible; }
+.pg-mem-card.up .pg-mem-back { visibility: hidden; }
+/* 圖放在固定比例的框裡，不管圖多高都不會撐出卡片 */
+.pg-mem-pic { position: absolute; inset: 8%; display: block; container-type: size; }
+.pg-mem-art { display: block; width: 100%; height: 100%; object-fit: contain; }
+.pg-mem-petmoji { font-size: 60cqmin; line-height: 1; }
+
+/* 配對成功：亮一下，然後安靜地留著 */
+.pg-mem-card.matched .pg-mem-front { box-shadow: 0 0 0 clamp(3px, 0.6vmin, 5px) #ffd76a, 0 8px 16px rgb(190 140 30 / 0.24); }
+.pg-mem-card.matched { animation: pg-mem-glow 0.7s ease-out 0.28s 1 both; }
+@keyframes pg-mem-glow { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.06); } }
+/* 亮光用牌面裡的一層，不用 filter：WebKit 裡 filter 會把圓角壓平成方角 */
+.pg-mem-card.matched .pg-mem-front::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, rgb(255 236 150 / 0.8), rgb(255 236 150 / 0) 72%); opacity: 0; pointer-events: none; animation: pg-mem-shine 0.7s ease-out 0.28s 1; }
+@keyframes pg-mem-shine { 40% { opacity: 1; } }
+
+.pg-mem-hand { left: 50%; top: 50%; margin: -30px 0 0 -40px; }
+.pg-mem-again { position: absolute; z-index: 10; left: 0; right: 0; bottom: max(18px, env(safe-area-inset-bottom)); display: flex; justify-content: center; pointer-events: none; animation: pg-pop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1); }
+.pg-mem-again > * { pointer-events: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-mem-inner, .pg-mem-front, .pg-mem-back { transition: none; }
+  .pg-mem-card.matched, .pg-mem-card.matched .pg-mem-front::after, .pg-mem-again { animation: none; }
+}

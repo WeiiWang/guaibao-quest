@@ -1,0 +1,36 @@
+/* v8.3 接水果。水果和籃子的位置由 Catch.tsx 每步直接寫 transform，不經過 React */
+main[data-testid='play-catch'] { background: linear-gradient(180deg, #bfe7ff 0%, #e8f7e2 58%, #a9dd95 100%); }
+.pg-catch { position: absolute; inset: 0; overflow: hidden; touch-action: none; -webkit-touch-callout: none; }
+
+.pg-catch-fruit { display: none; position: absolute; left: 0; top: 0; z-index: 4; width: var(--pg-catch-f, 80px); height: var(--pg-catch-f, 80px); container-type: size; will-change: transform; pointer-events: none; }
+
+.pg-catch-basket { position: absolute; left: 0; z-index: 5; bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)); width: var(--pg-catch-w); aspect-ratio: 1 / 0.86; container-type: size; will-change: transform; pointer-events: none; }
+.pg-catch-basket[hidden] { display: none; }
+.pg-catch-basket-img { position: relative; z-index: 2; display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%; filter: drop-shadow(0 8px 8px rgb(70 50 20 / 0.26)); }
+.pg-catch-pile { position: absolute; z-index: 1; left: 14%; right: 14%; top: 0; height: 40%; }
+.pg-catch-pile-one { position: absolute; width: 34%; aspect-ratio: 1; container-type: size; left: calc(var(--i) * 13%); bottom: calc(var(--up) * 18%); animation: pg-catch-in 0.26s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+@keyframes pg-catch-in { from { transform: translateY(-40%) scale(0.7); } }
+.pg-catch-hand { left: 50%; top: -6%; margin-left: -36px; }
+
+.pg-catch-pet { position: absolute; z-index: 2; left: max(10px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom)); width: min(24vmin, 180px); height: min(24vmin, 180px); transform-origin: 50% 100%; }
+.pg-catch-pet .companion { width: 100%; height: 100%; }
+
+.pg-catch-count { position: absolute; z-index: 8; top: max(16px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); display: flex; align-items: center; gap: 6px; padding: 6px 18px 6px 10px; min-height: 52px; border-radius: 28px; background: rgb(255 255 255 / 0.9); box-shadow: 0 4px 12px rgb(0 0 0 / 0.12); font-size: clamp(24px, 4vmin, 34px); color: #6a5a4e; pointer-events: none; }
+.pg-catch-count b { font-weight: 900; min-width: 1.2em; text-align: center; }
+
+/* 一回結束：水果堆在卡片裡，看圖也看數字 */
+.pg-catch-end { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; padding: 76px 14px 14px; }
+.pg-catch-end-card { display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.6vmin, 16px); width: min(94vw, 620px); max-height: 100%; padding: clamp(14px, 2.6vmin, 28px); border-radius: 36px; background: rgb(255 248 236 / 0.96); box-shadow: 0 16px 40px rgb(70 50 20 / 0.24); animation: pg-pop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1); }
+/* 水果在後面、籃子在前面蓋住一點，看起來就是堆在籃子裡 */
+.pg-catch-end-pile { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.pg-catch-end-fruits { display: flex; flex-wrap: wrap-reverse; justify-content: center; align-content: flex-start; width: min(100%, 460px); min-height: 8vmin; padding: 0 4%; }
+.pg-catch-end-fruits > span { width: clamp(38px, 7.6vmin, 66px); height: clamp(38px, 7.6vmin, 66px); margin: -3px; container-type: size; }
+.pg-catch-end-basket { position: relative; z-index: 1; width: clamp(150px, 30vmin, 250px); aspect-ratio: 1 / 0.8; margin-top: calc(clamp(150px, 30vmin, 250px) * -0.26); container-type: size; }
+.pg-catch-end-num { display: flex; align-items: center; gap: 8px; color: #e8748f; line-height: 1; font-size: clamp(50px, 9vmin, 76px); }
+.pg-catch-end-num b { font-weight: 900; }
+.pg-catch-more { padding: 6px 20px; border-radius: 22px; background: #fff0b8; color: #a0701a; font-weight: 900; font-size: clamp(20px, 3.4vmin, 28px); animation: pg-pop 0.5s 0.2s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+.pg-catch-best { color: #8a7a6e; font-weight: 800; font-size: clamp(16px, 2.6vmin, 22px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-catch-pile-one, .pg-catch-end-card, .pg-catch-more { animation: none; }
+}
