@@ -21,7 +21,9 @@ def main(src, dst):
     q = deque()
 
     def white(x, y):
-        r, g, b, _ = px[x, y]
+        r, g, b, a = px[x, y]
+        if a < 16:  # 原圖就透明的地方：當背景往內長，才碰得到貼著主體的白影
+            return True
         if r >= THRESH and g >= THRESH and b >= THRESH:
             return True
         # 主體腳下的淡灰影子也算背景（只有從邊緣連過來的才會被去掉）：夠亮、幾乎沒有彩度
