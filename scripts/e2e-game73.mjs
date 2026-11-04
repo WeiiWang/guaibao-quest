@@ -74,14 +74,17 @@ try {
       const arrowHit = !!arrow && kids.some((k) => { const b = k.getBoundingClientRect(); return !(b.right <= arrow.left || b.left >= arrow.right || b.bottom <= arrow.top || b.top >= arrow.bottom) })
       return { labels, w: f?.width, h: f?.height, right: f?.right, vw: innerWidth, bottom: last.bottom, dockTop: dock?.top ?? 0, overflow: document.documentElement.scrollWidth > innerWidth + 2, arrow: !!arrow, arrowHit }
     })
-    check(`[${tag}] 右側欄：工坊、背包、朋友、更多（朋友與工坊、背包並列）`, ['工坊', '背包', '朋友', '更多'].every((n, i) => info.labels[i]?.endsWith(n)) && info.labels.length === 4, info.labels.join('|'))
-    check(`[${tag}] 朋友按鈕 >= 56px、在畫面內、右側欄沒壓到食物欄`, info.w >= 56 && info.h >= 56 && info.right <= info.vw && info.bottom < info.dockTop, JSON.stringify(info))
+    // v8.3：多了遊樂場；手機放不下第 5 顆，朋友收進「更多」
+    const railWant = tag === 'phone' ? ['遊樂場', '工坊', '背包', '更多'] : ['遊樂場', '工坊', '背包', '朋友', '更多']
+    check(`[${tag}] 右側欄：${railWant.join('、')}`, railWant.every((n, i) => info.labels[i]?.endsWith(n)) && info.labels.length === railWant.length, info.labels.join('|'))
+    check(`[${tag}] 右側欄在畫面內、沒壓到食物欄${tag === 'phone' ? '' : '、朋友按鈕 >= 56px'}`, (tag === 'phone' || (info.w >= 56 && info.h >= 56 && info.right <= info.vw)) && info.bottom < info.dockTop, JSON.stringify(info))
     check(`[${tag}] 首頁不橫向溢出`, !info.overflow)
     check(`[${tag}] 往右看房間的箭頭沒有被右側欄蓋住`, info.arrow && !info.arrowHit, JSON.stringify({ arrow: info.arrow, hit: info.arrowHit }))
     await page.getByTestId('more-btn').click()
     const tray = await page.locator('[data-testid=more-tray] .mini-candy span:last-child').allInnerTexts()
-    check(`[${tag}] 「更多」托盤裡沒有朋友了`, !tray.includes('朋友'), tray.join('|'))
+    check(`[${tag}] 朋友在${tag === 'phone' ? '「更多」托盤裡' : '右側欄、不在托盤裡'}`, tray.includes('朋友') === (tag === 'phone'), tray.join('|'))
     await page.keyboard.press('Escape')
+    if (tag === 'phone') await page.getByTestId('more-btn').click()
     await page.getByTestId('friends-btn').click()
     check(`[${tag}] 點朋友一下就進圖鑑`, await page.waitForSelector('[data-testid=friends]', { timeout: 4000 }).then(() => true, () => false))
     check(`[${tag}] 無 console 錯誤`, errors.length === 0, errors.join('|'))

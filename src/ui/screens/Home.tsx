@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { repo } from '../../db/repo'
 import { learningSettingsOf } from '../../learning/playtime'
 import { sayText } from '../../learning/speech'
@@ -76,7 +76,16 @@ function NameCapsule({ childName, pet, now }: { childName: string; pet: Pet; now
   )
 }
 
+const NARROW_QUERY = '(max-width: 560px)'
+const subscribeNarrow = (cb: () => void) => {
+  const m = window.matchMedia(NARROW_QUERY)
+  m.addEventListener('change', cb)
+  return () => m.removeEventListener('change', cb)
+}
+const useNarrowPhone = () => useSyncExternalStore(subscribeNarrow, () => window.matchMedia(NARROW_QUERY).matches)
+
 export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props) {
+  const narrow = useNarrowPhone()
   const pet = useLiveQuery(() => db.pets.get('pet'), [])
   const inventory = useLiveQuery(() => db.inventory.toArray(), [])
   const shopItems = useLiveQuery(() => db.shopItems.toArray(), [])
@@ -228,6 +237,8 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
   }
   const moreItems: MoreItem[] = [
     ...(canPerform ? [{ id: 'perform', label: '表演', emoji: '🎪', icon: 'ui-perform', tone: 'mint' as const, onClick: () => askPerform('random'), testId: 'perform-btn', aria: `表演：叫${pet.name}表演一招` }] : []),
+    // 手機右側欄放不下第 5 顆（會壓到看房間的箭頭）：朋友收進「更多」
+    ...(narrow ? [{ id: 'friends', label: '朋友', emoji: '📖', icon: 'ui-friends', tone: 'lavender' as const, onClick: () => go('friends'), testId: 'friends-btn', aria: '朋友圖鑑' }] : []),
     { id: 'album', label: '相簿', emoji: '📷', icon: 'ui-album', tone: 'bubblegum', onClick: () => go('album'), testId: 'album-btn', aria: '成長相簿' },
     { id: 'wardrobe', label: '衣櫃', emoji: '👒', icon: 'ui-wardrobe', tone: 'butter', onClick: openWardrobe, testId: 'wardrobe-btn', aria: `${pet.name}的衣櫃` },
   ]
@@ -261,10 +272,12 @@ export function Home({ childName, now, go, initialEdit, initialWardrobe }: Props
           <span>背包</span>
         </button>
         {/* v7.3（試玩審查 2-6）：朋友圖鑑從「更多」提到右側欄，和工坊、背包並列 */}
-        <button className="mini-candy lavender" onClick={() => go('friends')} data-testid="friends-btn" aria-label="朋友圖鑑">
-          <Icon name="ui-friends" emoji="📖" size={34} />
-          <span>朋友</span>
-        </button>
+        {!narrow && (
+          <button className="mini-candy lavender" onClick={() => go('friends')} data-testid="friends-btn" aria-label="朋友圖鑑">
+            <Icon name="ui-friends" emoji="📖" size={34} />
+            <span>朋友</span>
+          </button>
+        )}
         <MoreTray items={moreItems} />
       </div>
 

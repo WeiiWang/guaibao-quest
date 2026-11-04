@@ -3114,6 +3114,21 @@
   "text": "這裡是你的美術館喔！",
   "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
+ "pet.place.playground": {
+  "file": "f8e7dd652e5385d0.m4a",
+  "text": "哇，遊樂場！你想玩什麼呢？",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.playground@rabbit": {
+  "file": "8089e894d1554249.m4a",
+  "text": "哇，遊樂場！你想玩什麼呢？",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.place.playground@tiger": {
+  "file": "668b33e2e06fbc3e.m4a",
+  "text": "哇，遊樂場！你想玩什麼呢？",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
  "pet.place.shop": {
   "file": "f2bb68b7342aec28.m4a",
   "text": "歡迎光臨！今天想吃什麼呢？",
@@ -3157,6 +3172,516 @@
  "pet.place.workshop@tiger": {
   "file": "19be9b33222668ab.m4a",
   "text": "叮叮咚咚，我們來做東西！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.decorate": {
+  "file": "f21c2a2e200abca6.m4a",
+  "text": "放上你喜歡的東西！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.decorate@rabbit": {
+  "file": "898a7a90736a3390.m4a",
+  "text": "放上你喜歡的東西！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.decorate@tiger": {
+  "file": "1e0776f3b87feca6.m4a",
+  "text": "放上你喜歡的東西！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.give": {
+  "file": "006c32d35cedeb27.m4a",
+  "text": "做好了嗎？送給我吃！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.give@rabbit": {
+  "file": "2c3cb9d6e00a336a.m4a",
+  "text": "做好了嗎？送給我吃！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.give@tiger": {
+  "file": "3b8fba2a20c2df6a.m4a",
+  "text": "做好了嗎？送給我吃！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.intro": {
+  "file": "62d999e33dbdf96e.m4a",
+  "text": "我們來做點心！先選一個！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.intro@rabbit": {
+  "file": "2227ec512b38dc0e.m4a",
+  "text": "我們來做點心！先選一個！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.intro@tiger": {
+  "file": "6faf7c820632ff60.m4a",
+  "text": "我們來做點心！先選一個！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.yum": {
+  "file": "6566571d37923455.m4a",
+  "text": "哇，這是我吃過最好吃的！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.yum@rabbit": {
+  "file": "2086928b7e479b5c.m4a",
+  "text": "哇，這是我吃過最好吃的！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bakery.yum@tiger": {
+  "file": "5b8fad3513595fe9.m4a",
+  "text": "哇，這是我吃過最好吃的！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.done": {
+  "file": "2de0a7ced97d29f4.m4a",
+  "text": "我變得香香的了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.done@rabbit": {
+  "file": "1a9b493a8262210e.m4a",
+  "text": "我變得香香的了！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.done@tiger": {
+  "file": "cdb6bf7ae6b464fa.m4a",
+  "text": "我變得香香的了！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.dry": {
+  "file": "0fe15c019ffb60ae.m4a",
+  "text": "幫我擦乾乾！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.dry@rabbit": {
+  "file": "b63f01283ff815a9.m4a",
+  "text": "幫我擦乾乾！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.dry@tiger": {
+  "file": "86e8225ec05ea800.m4a",
+  "text": "幫我擦乾乾！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.intro": {
+  "file": "8ff27e3090e83337.m4a",
+  "text": "我要洗澎澎！幫我抹泡泡！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.intro@rabbit": {
+  "file": "70e700478629c72e.m4a",
+  "text": "我要洗澎澎！幫我抹泡泡！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.intro@tiger": {
+  "file": "b3e974ec32f83812.m4a",
+  "text": "我要洗澎澎！幫我抹泡泡！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.rinse": {
+  "file": "40f0eb2ec3ffc783.m4a",
+  "text": "好舒服！現在沖沖水！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.rinse@rabbit": {
+  "file": "fcc885b57f46fa9a.m4a",
+  "text": "好舒服！現在沖沖水！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bath.rinse@tiger": {
+  "file": "4ad80263256428a5.m4a",
+  "text": "好舒服！現在沖沖水！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.big": {
+  "file": "f2a2d7708cc9eafe.m4a",
+  "text": "哇，好大的彩虹泡泡！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.big@rabbit": {
+  "file": "2b65f860b4c6bb5f.m4a",
+  "text": "哇，好大的彩虹泡泡！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.big@tiger": {
+  "file": "62f0ff9b0c23d754.m4a",
+  "text": "哇，好大的彩虹泡泡！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.done": {
+  "file": "128e4ba98105df09.m4a",
+  "text": "泡泡派對好好玩！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.done@rabbit": {
+  "file": "3595e5d120baa122.m4a",
+  "text": "泡泡派對好好玩！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.done@tiger": {
+  "file": "678762e3a1990352.m4a",
+  "text": "泡泡派對好好玩！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.intro": {
+  "file": "b19be2f621082b9a.m4a",
+  "text": "戳戳泡泡，看看裡面有什麼！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.intro@rabbit": {
+  "file": "50423bdb7e9bf173.m4a",
+  "text": "戳戳泡泡，看看裡面有什麼！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.bubbles.intro@tiger": {
+  "file": "34042910592d8af2.m4a",
+  "text": "戳戳泡泡，看看裡面有什麼！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.done": {
+  "file": "02cc835e2871bd21.m4a",
+  "text": "哇，接到好多水果！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.done@rabbit": {
+  "file": "2a3ad947752c67a2.m4a",
+  "text": "哇，接到好多水果！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.done@tiger": {
+  "file": "4ef27eb284cca8f0.m4a",
+  "text": "哇，接到好多水果！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.intro": {
+  "file": "0484a4a09bcda4c6.m4a",
+  "text": "幫我把水果接住！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.intro@rabbit": {
+  "file": "57a385278e74ddc0.m4a",
+  "text": "幫我把水果接住！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.intro@tiger": {
+  "file": "f39ae560a2836c65.m4a",
+  "text": "幫我把水果接住！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.more": {
+  "file": "5d280107a5298a36.m4a",
+  "text": "比上次接到更多耶！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.more@rabbit": {
+  "file": "180c4880c54e4720.m4a",
+  "text": "比上次接到更多耶！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.catch.more@tiger": {
+  "file": "4a039d012d7e2c7e.m4a",
+  "text": "比上次接到更多耶！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.grow": {
+  "file": "45af59a8ebf30176.m4a",
+  "text": "它長大了一點點！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.grow@rabbit": {
+  "file": "0852a86400fe5069.m4a",
+  "text": "它長大了一點點！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.grow@tiger": {
+  "file": "78d47dcd0c416821.m4a",
+  "text": "它長大了一點點！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.harvest": {
+  "file": "09d5fe5312a5ef83.m4a",
+  "text": "好棒，收到背包了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.harvest@rabbit": {
+  "file": "929f74bdd58d8504.m4a",
+  "text": "好棒，收到背包了！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.harvest@tiger": {
+  "file": "b3b8b5977655ddd5.m4a",
+  "text": "好棒，收到背包了！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.intro": {
+  "file": "111da1cdf5d02a8b.m4a",
+  "text": "我們來種東西！選一種種子！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.intro@rabbit": {
+  "file": "078bd6d26eb98829.m4a",
+  "text": "我們來種東西！選一種種子！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.intro@tiger": {
+  "file": "cbbc5e8b3926e95c.m4a",
+  "text": "我們來種東西！選一種種子！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.ready": {
+  "file": "eb5007826267290c.m4a",
+  "text": "可以採收囉！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.ready@rabbit": {
+  "file": "4335f49210f1cf00.m4a",
+  "text": "可以採收囉！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.ready@tiger": {
+  "file": "28ff8d03a0ae01ae.m4a",
+  "text": "可以採收囉！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.tomorrow": {
+  "file": "badbe5c6d406c1e7.m4a",
+  "text": "它要睡覺了，明天再來看它！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.tomorrow@rabbit": {
+  "file": "77cb3dc487e1c302.m4a",
+  "text": "它要睡覺了，明天再來看它！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.tomorrow@tiger": {
+  "file": "98d99eb25c3bd6b8.m4a",
+  "text": "它要睡覺了，明天再來看它！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.water": {
+  "file": "97ee33c72aca1a33.m4a",
+  "text": "幫它澆澆水！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.water@rabbit": {
+  "file": "ab718d97057e52fd.m4a",
+  "text": "幫它澆澆水！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.garden.water@tiger": {
+  "file": "981a26d23832306f.m4a",
+  "text": "幫它澆澆水！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.again": {
+  "file": "7ca6b710c2ae2f55.m4a",
+  "text": "再玩一次！我要換地方躲囉！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.again@rabbit": {
+  "file": "617681a70cc79ed1.m4a",
+  "text": "再玩一次！我要換地方躲囉！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.again@tiger": {
+  "file": "6a2c42bda26ee64b.m4a",
+  "text": "再玩一次！我要換地方躲囉！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.count": {
+  "file": "134c478f2244946b.m4a",
+  "text": "一，二，三，來找我！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.count@rabbit": {
+  "file": "fa65640c7573fa2d.m4a",
+  "text": "一，二，三，來找我！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.count@tiger": {
+  "file": "528bce0c80fa25f6.m4a",
+  "text": "一，二，三，來找我！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.empty": {
+  "file": "eab24c715b790118.m4a",
+  "text": "不在這裡喔，再找找看！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.empty@rabbit": {
+  "file": "f5b9c234c3bece32.m4a",
+  "text": "不在這裡喔，再找找看！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.empty@tiger": {
+  "file": "86165af3a5a768e3.m4a",
+  "text": "不在這裡喔，再找找看！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.found": {
+  "file": "be5abe61119bb056.m4a",
+  "text": "被你找到了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.found@rabbit": {
+  "file": "041baf606741be8b.m4a",
+  "text": "被你找到了！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.found@tiger": {
+  "file": "696718c2f54e12dc.m4a",
+  "text": "被你找到了！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.intro": {
+  "file": "ac252d2935f0870a.m4a",
+  "text": "我要躲起來囉，快來找我！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.intro@rabbit": {
+  "file": "2f31d8b62e420ea4.m4a",
+  "text": "我要躲起來囉，快來找我！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.hide.intro@tiger": {
+  "file": "2be14647ed1b2046.m4a",
+  "text": "我要躲起來囉，快來找我！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.done": {
+  "file": "40592d6b8c190592.m4a",
+  "text": "全部都找到了！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.done@rabbit": {
+  "file": "d615082a923c9192.m4a",
+  "text": "全部都找到了！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.done@tiger": {
+  "file": "3dfc120761d60a6d.m4a",
+  "text": "全部都找到了！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.intro": {
+  "file": "fd18b40a2e046aff.m4a",
+  "text": "翻翻看，找出一樣的！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.intro@rabbit": {
+  "file": "93b3ee59ec244e05.m4a",
+  "text": "翻翻看，找出一樣的！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.intro@tiger": {
+  "file": "5731db700dcbcdb3.m4a",
+  "text": "翻翻看，找出一樣的！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.match": {
+  "file": "29ce6a756810e00a.m4a",
+  "text": "一樣的！你好厲害！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.match@rabbit": {
+  "file": "5f2da6fa4a3133db.m4a",
+  "text": "一樣的！你好厲害！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.match@tiger": {
+  "file": "6bf16af8b5646c3a.m4a",
+  "text": "一樣的！你好厲害！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.miss": {
+  "file": "d91ffbb7f8cb5108.m4a",
+  "text": "不一樣耶，再看一次喔。",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.miss@rabbit": {
+  "file": "c6da3ebe1b677bde.m4a",
+  "text": "不一樣耶，再看一次喔。",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.memory.miss@tiger": {
+  "file": "30c39c05ab5b3bb7.m4a",
+  "text": "不一樣耶，再看一次喔。",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.music.intro": {
+  "file": "51e6a0a58a587f7c.m4a",
+  "text": "按按看，我來跳舞！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.music.intro@rabbit": {
+  "file": "340fa7b4d6c95e51.m4a",
+  "text": "按按看，我來跳舞！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.music.intro@tiger": {
+  "file": "09e3d4c39a070465.m4a",
+  "text": "按按看，我來跳舞！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.music.song": {
+  "file": "454c8492d02da47f.m4a",
+  "text": "這首歌好好聽！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.music.song@rabbit": {
+  "file": "51fe01eb451d8866.m4a",
+  "text": "這首歌好好聽！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.music.song@tiger": {
+  "file": "56ca9604a656bd98.m4a",
+  "text": "這首歌好好聽！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.reward": {
+  "file": "f4843fdc145b2d60.m4a",
+  "text": "這個送給你，謝謝你陪我玩！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.reward@rabbit": {
+  "file": "7b511510670a907c.m4a",
+  "text": "這個送給你，謝謝你陪我玩！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.reward@tiger": {
+  "file": "6500842cc7f85b65.m4a",
+  "text": "這個送給你，謝謝你陪我玩！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.talk.again": {
+  "file": "88061c21934df20a.m4a",
+  "text": "再跟我說一句！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.talk.again@rabbit": {
+  "file": "258223d0d8f503b9.m4a",
+  "text": "再跟我說一句！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.talk.again@tiger": {
+  "file": "4caa3e8b94b721b7.m4a",
+  "text": "再跟我說一句！",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.talk.intro": {
+  "file": "86d25239fda835a7.m4a",
+  "text": "跟我說話，我會學你喔！",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.talk.intro@rabbit": {
+  "file": "d654e8aae3293293.m4a",
+  "text": "跟我說話，我會學你喔！",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.talk.intro@tiger": {
+  "file": "4d5e94f7f1568baa.m4a",
+  "text": "跟我說話，我會學你喔！",
   "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
  "pet.welcome": {

@@ -528,7 +528,10 @@ try {
     await reload(page)
     await dismissMemory(page)
     const direct = await page.locator('.side-tools > *').count()
-    check(`[${tag}] 右側只有 4 個（工坊、背包、朋友、更多），不會一直往下堆（v7.3：朋友從「更多」提到右側）`, direct === 4, String(direct))
+    // v8.3：多了遊樂場；手機放不下第 5 顆，朋友收進「更多」
+    const narrow = vp.width <= 560
+    const railN = narrow ? 4 : 5
+    check(`[${tag}] 右側只有 ${railN} 個，不會一直往下堆`, direct === railN, String(direct))
     const col = await page.locator('.side-tools').evaluate((e) => { const r = e.getBoundingClientRect(); return { top: r.top, bottom: r.bottom } })
     const dockTop = await page.locator('.dock-row').first().evaluate((e) => e.getBoundingClientRect().top).catch(() => vp.height * 0.7)
     check(`[${tag}] 右側按鈕列沒有碰到食物欄（底部在食物欄上緣之上）`, col.bottom < dockTop, JSON.stringify({ col, dockTop }))
@@ -537,10 +540,11 @@ try {
     await page.waitForSelector('[data-testid=more-tray]')
     await page.waitForTimeout(450) // 等托盤彈出的動畫結束再量
     const items = await page.locator('[data-testid=more-tray] .mini-candy').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { label: e.querySelector('.more-label').textContent.trim(), w: Math.round(r.width), h: Math.round(r.height), x: r.x, y: r.y } }))
-    check(`[${tag}] 托盤有 表演（學會新招才有）、相簿、衣櫃 3 顆（朋友已經在右側欄）`, items.map((i) => i.label).join() === '表演,相簿,衣櫃', items.map((i) => i.label).join())
+    const trayWant = narrow ? '表演,朋友,相簿,衣櫃' : '表演,相簿,衣櫃'
+    check(`[${tag}] 托盤有 ${trayWant}（表演要學會新招才有）`, items.map((i) => i.label).join() === trayWant, items.map((i) => i.label).join())
     check(`[${tag}] 托盤每顆觸控目標 >= 56px，且都在畫面內`, items.every((i) => i.w >= 56 && i.h >= 56 && i.x >= 0 && i.x + i.w <= vp.width && i.y >= 0 && i.y + i.h <= vp.height), JSON.stringify(items))
     const sideBtns = await page.locator('.side-tools > .mini-candy, .side-tools .more-btn').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)] }))
-    check(`[${tag}] 工坊、背包、朋友、更多也都 >= 56px`, sideBtns.length === 4 && sideBtns.every(([w, h]) => w >= 56 && h >= 56), JSON.stringify(sideBtns))
+    check(`[${tag}] 右側欄每顆也都 >= 56px`, sideBtns.length === railN && sideBtns.every(([w, h]) => w >= 56 && h >= 56), JSON.stringify(sideBtns))
     // 點空白處關閉
     await page.mouse.click(vp.width * 0.2, vp.height * 0.55)
     await page.waitForTimeout(300)
@@ -550,7 +554,8 @@ try {
     await page.keyboard.press('Escape')
     await page.waitForTimeout(200)
     check(`[${tag}] Esc 收起托盤`, (await page.getByTestId('more-tray').count()) === 0)
-    // 朋友在右側欄、相簿在托盤，都進得去
+    // 朋友在右側欄（手機在托盤）、相簿在托盤，都進得去
+    if (narrow) await page.getByTestId('more-btn').click()
     await page.getByTestId('friends-btn').click()
     check(`[${tag}] 右側欄的「朋友」一下就進得去圖鑑（不用先開「更多」）`, (await page.waitForSelector('[data-testid=friends]', { timeout: 4000 }).then(() => true, () => false)))
     await goHome(page)
