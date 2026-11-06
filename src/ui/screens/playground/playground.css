@@ -17,3 +17,13 @@
 .pg-gift-card { display: flex; align-items: center; gap: 16px; padding: 20px 28px; border-radius: 32px; background: #fff8ec; box-shadow: 0 16px 40px rgb(0 0 0 / 0.24); animation: pg-pop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1); }
 @keyframes pg-pop { from { transform: scale(0.6); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .pg-gift-card { animation: none; } }
+
+/* v8.4 公車站：遊樂場下面一整排，搭公車去快樂小街 */
+.pg-bus { display: flex; align-items: center; justify-content: center; gap: 14px; width: min(100%, 860px); min-height: 72px; padding: 8px 20px; border: 0; border-radius: 26px; background: rgb(255 240 196 / 0.94); box-shadow: 0 6px 0 rgb(0 0 0 / 0.08), 0 10px 22px rgb(60 40 90 / 0.14); font: inherit; font-weight: 800; font-size: clamp(17px, 2.4vmin, 22px); color: #6a4a2a; }
+.pg-bus img, .pg-bus .art-emoji { width: clamp(64px, 12vmin, 104px) !important; height: clamp(64px, 12vmin, 104px) !important; object-fit: contain; }
+.pg-bus:active { transform: translateY(3px); box-shadow: 0 3px 0 rgb(0 0 0 / 0.08); }
+.pg-bus.fresh img { animation: pg-bus-bob 1.6s ease-in-out infinite; }
+.pg-bus.leaving img { animation: pg-bus-go 0.7s ease-in forwards; }
+@keyframes pg-bus-bob { 50% { transform: translateY(-5px) rotate(-2deg); } }
+@keyframes pg-bus-go { 20% { transform: translateX(-8px); } to { transform: translateX(110vw); } }
+@media (prefers-reduced-motion: reduce) { .pg-bus.fresh img, .pg-bus.leaving img { animation: none; } }

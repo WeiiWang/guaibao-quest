@@ -3,9 +3,15 @@ import { FOOD_IDS } from './constants'
 // v8.3 遊樂場：玩法清單與「玩完送食物」的規則（純函式）。獎勵固定，不靠機率。
 
 export const PLAY_GAME_IDS = ['bubbles', 'hide', 'catch', 'memory', 'music', 'bath', 'bakery', 'garden', 'talk'] as const
-export type PlayGameId = (typeof PLAY_GAME_IDS)[number]
+/** v8.4 小鎮的 8 個地方：一樣用 GameShell 與同一個每日獎勵上限 */
+export const TOWN_GAME_IDS = ['doctor', 'bedtime', 'market', 'juice', 'blocks', 'puzzle', 'drive', 'photo'] as const
+export type TownGameId = (typeof TOWN_GAME_IDS)[number]
+export type PlayGameId = (typeof PLAY_GAME_IDS)[number] | TownGameId
 
-export const isPlayGameId = (s: string): s is PlayGameId => (PLAY_GAME_IDS as readonly string[]).includes(s)
+const ALL_IDS: readonly string[] = [...PLAY_GAME_IDS, ...TOWN_GAME_IDS]
+
+export const isPlayGameId = (s: string): s is PlayGameId => ALL_IDS.includes(s)
+export const isTownGame = (id: PlayGameId): id is TownGameId => (TOWN_GAME_IDS as readonly string[]).includes(id)
 
 export interface PlayGameMeta {
   id: PlayGameId
@@ -27,6 +33,18 @@ export const PLAY_GAMES: readonly PlayGameMeta[] = [
   { id: 'bakery', label: '點心屋', icon: 'ui-game-bakery', emoji: '🍰', tone: 'bubblegum' },
   { id: 'garden', label: '小菜園', icon: 'ui-game-garden', emoji: '🌱', tone: 'mint' },
   { id: 'talk', label: '學我說話', icon: 'ui-game-talk', emoji: '🎤', tone: 'lavender' },
+]
+
+/** 小鎮街上的 8 棟建築（順序就是街上由左到右） */
+export const TOWN_GAMES: readonly PlayGameMeta[] = [
+  { id: 'doctor', label: '寵物醫院', icon: 'ui-town-doctor', emoji: '🏥', tone: 'mint' },
+  { id: 'market', label: '超市', icon: 'ui-town-market', emoji: '🛒', tone: 'butter' },
+  { id: 'juice', label: '果汁攤', icon: 'ui-town-juice', emoji: '🧃', tone: 'bubblegum' },
+  { id: 'photo', label: '照相館', icon: 'ui-town-photo', emoji: '📷', tone: 'bubblegum' },
+  { id: 'blocks', label: '積木工地', icon: 'ui-town-blocks', emoji: '🧱', tone: 'butter' },
+  { id: 'puzzle', label: '拼圖屋', icon: 'ui-town-puzzle', emoji: '🧩', tone: 'lavender' },
+  { id: 'drive', label: '開車兜風', icon: 'ui-town-drive', emoji: '🚗', tone: 'sky' },
+  { id: 'bedtime', label: '晚安小屋', icon: 'ui-town-bedtime', emoji: '🌙', tone: 'lavender' },
 ]
 
 /** 遊樂場一天最多送幾個食物 */

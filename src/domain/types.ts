@@ -223,6 +223,8 @@ export interface Settings {
   talkOn?: boolean
   /** v8.3 小菜園：6 塊田，沒種的是 null */
   garden?: (GardenPlot | null)[]
+  /** v8.4 去過快樂小街（去過就不再在遊樂場提醒搭公車） */
+  townVisited?: boolean
   /** v5：上一次送今日小禮物的日期（YYYY-MM-DD） */
   lastGiftDate?: string
   /** v5：收到的貼紙（public/art 素材名，不重複） */

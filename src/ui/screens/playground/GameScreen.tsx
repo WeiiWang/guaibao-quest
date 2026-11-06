@@ -18,6 +18,15 @@ const GAMES: Record<PlayGameId, LazyExoticComponent<ComponentType<GameRootProps>
   talk: lazy(() => import('./Talk')),
   bakery: lazy(() => import('./Bakery')),
   garden: lazy(() => import('./Garden')),
+  // v8.4 快樂小街
+  doctor: lazy(() => import('../town/Doctor')),
+  bedtime: lazy(() => import('../town/Bedtime')),
+  market: lazy(() => import('../town/Market')),
+  juice: lazy(() => import('../town/Juice')),
+  blocks: lazy(() => import('../town/Blocks')),
+  puzzle: lazy(() => import('../town/Puzzle')),
+  drive: lazy(() => import('../town/Drive')),
+  photo: lazy(() => import('../town/Photo')),
 }
 
 export function GameScreen({ id, onExit, go }: { id: PlayGameId } & GameRootProps) {

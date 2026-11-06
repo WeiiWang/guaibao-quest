@@ -609,6 +609,10 @@ export class Repo {
   async setTalkOn(on: boolean): Promise<void> {
     await this.db.settings.update(SETTINGS_ID, { talkOn: on })
   }
+  /** v8.4 走進快樂小街：之後遊樂場不再提醒搭公車 */
+  async markTownVisited(): Promise<void> {
+    await this.db.settings.update(SETTINGS_ID, { townVisited: true })
+  }
   greetFestival(f: FestivalNow, now = this.clock()) {
     return festival.greetFestival(this.db, f, now)
   }

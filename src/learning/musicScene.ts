@@ -35,8 +35,8 @@ export function musicSceneFor(screen: SceneScreen, opts: { locked: boolean; lock
     case 'dots':
       return 'paint'
     case 'game':
-      // 音樂會和學我說話要聽得清楚自己的聲音，其他玩法維持目前那首
-      return screen.id === 'music' || screen.id === 'talk' ? null : undefined
+      // 音樂會和學我說話要聽得清楚自己的聲音；晚安小屋要安靜（玩法自己唱搖籃曲）；其他玩法維持目前那首
+      return screen.id === 'music' || screen.id === 'talk' || screen.id === 'bedtime' ? null : undefined
     default:
       return undefined
   }

@@ -1,0 +1,14 @@
+/* v8.4 快樂小街：建築直接站在街上（不用白卡片），名字掛在下面的小牌子上 */
+.town-body { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 16px 24px; }
+.town-street { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(8px, 2vmin, 22px); width: min(100%, 980px); }
+.town-house { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; min-height: 56px; padding: 4px; border: 0; background: none; font: inherit; }
+.town-house img, .town-house .art-emoji { width: clamp(84px, 19vmin, 168px) !important; height: clamp(84px, 19vmin, 168px) !important; object-fit: contain; filter: drop-shadow(0 8px 10px rgb(60 40 30 / 0.22)); transition: transform 0.15s; }
+.town-house:active img { transform: translateY(4px) scale(0.97); }
+.town-house span { padding: 4px 14px; border-radius: 999px; background: rgb(255 255 255 / 0.9); box-shadow: 0 3px 8px rgb(0 0 0 / 0.12); font-weight: 800; font-size: clamp(15px, 2.2vmin, 20px); color: #5a4a3f; white-space: nowrap; }
+.town-house.tone-mint span { background: rgb(226 248 233 / 0.95); }
+.town-house.tone-lavender span { background: rgb(238 230 252 / 0.95); }
+.town-house.tone-bubblegum span { background: rgb(255 228 238 / 0.95); }
+.town-house.tone-butter span { background: rgb(255 243 208 / 0.95); }
+.town-house.tone-sky span { background: rgb(222 241 255 / 0.95); }
+@media (max-width: 560px) { .town-street { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 561px) and (orientation: portrait) { .town-street { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

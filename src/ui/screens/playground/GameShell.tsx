@@ -3,7 +3,7 @@ import { repo } from '../../../db/repo'
 import { playSound } from '../../../learning/audioEngine'
 import { STATIC_LINES } from '../../../learning/lines'
 import { sayRecorded } from '../../../learning/speech'
-import type { PlayGameId } from '../../../domain/playground'
+import { isTownGame, type PlayGameId } from '../../../domain/playground'
 import { Icon } from '../../components/Icon'
 import { Companion } from '../adventure/Companion'
 import { placeVoiceOn } from '../../feelFlags'
@@ -25,7 +25,7 @@ export function usePetLine() {
 
 /** 每個玩法元件拿到的東西 */
 export interface GameProps {
-  /** 回遊樂場 */
+  /** 回遊樂場（小街的地方回小街） */
   onExit: () => void
   /** 這一回玩完了：今天第一次會送禮物（殼負責演）。可以呼叫很多次，同一天不會重複送 */
   finish: () => void
@@ -58,7 +58,7 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
       <div className="place-backdrop" aria-hidden>
         <div style={{ backgroundImage: `url("${import.meta.env.BASE_URL}art/${scene}.jpg")` }} />
       </div>
-      <button className="pg-back" onClick={onExit} aria-label="回遊樂場" data-testid="game-back">
+      <button className="pg-back" onClick={onExit} aria-label={isTownGame(id) ? '回快樂小街' : '回遊樂場'} data-testid="game-back">
         <span aria-hidden>‹</span>
       </button>
       {children({ onExit, finish, say })}

@@ -47,9 +47,10 @@ import { setVoiceSpecies } from '../learning/speech'
 import { playSound, setMusicEnabled, setMusicScene, setSfxEnabled } from '../learning/audioEngine'
 import { musicSceneFor } from '../learning/musicScene'
 import { learningSettingsOf } from '../learning/playtime'
-import { isPlayGameId, type PlayGameId } from '../domain/playground'
+import { isPlayGameId, isTownGame, type PlayGameId } from '../domain/playground'
 import { PlaygroundScreen } from './screens/playground/Playground'
 import { GameScreen } from './screens/playground/GameScreen'
+import { TownScreen } from './screens/town/Town'
 import { StoryPlayer } from './screens/story/StoryPlayer'
 import { StoryShelf } from './screens/story/StoryShelf'
 import { useStoryDirector } from './screens/story/useStoryDirector'
@@ -81,10 +82,11 @@ export type Screen =
   | { name: 'crash' }
   | { name: 'stories' }
   | { name: 'playground' }
+  | { name: 'town' }
   | { name: 'game'; id: PlayGameId }
 
 /** 兒童端畫面中，時間到會被鎖住的（學習與餵食）；任務、著色、家長區不鎖 */
-const LOCKABLE: Screen['name'][] = ['home', 'map', 'stage', 'workshop', 'stories', 'playground', 'game']
+const LOCKABLE: Screen['name'][] = ['home', 'map', 'stage', 'workshop', 'stories', 'playground', 'town', 'game']
 
 /** 網址 hash 直達畫面（#map、#workshop），開發與 e2e 用；首頁入口由首頁自己提供 */
 function screenFromHash(): Screen {
@@ -96,6 +98,7 @@ function screenFromHash(): Screen {
   if (h === 'album') return { name: 'album' }
   if (h === 'stories') return { name: 'stories' }
   if (h === 'playground') return { name: 'playground' }
+  if (h === 'town') return { name: 'town' }
   if (h.startsWith('game/') && isPlayGameId(h.slice(5))) return { name: 'game', id: h.slice(5) as PlayGameId }
   if (h.startsWith('hatpreview')) return { name: 'hatpreview', hat: `hat-${h.split('/')[1] ?? 'crown'}`, species: normSpecies(h.split('/')[2]) }
   if (h.startsWith('backdrop')) return { name: 'backdrop', hash: h }
@@ -334,10 +337,13 @@ function Main({ childName, childId }: { childName: string; childId: string }) {
         body = <StoryShelf onBack={() => go('map')} play={story.start} />
         break
       case 'playground':
-        body = <PlaygroundScreen onBack={home} onOpen={(id) => go({ name: 'game', id })} />
+        body = <PlaygroundScreen onBack={home} onOpen={(id) => go({ name: 'game', id })} onTown={() => go('town')} />
+        break
+      case 'town':
+        body = <TownScreen onBack={() => go('playground')} onOpen={(id) => go({ name: 'game', id })} />
         break
       case 'game':
-        body = <GameScreen key={screen.id} id={screen.id} onExit={() => go('playground')} go={go} />
+        body = <GameScreen key={screen.id} id={screen.id} onExit={() => go(isTownGame(screen.id) ? 'town' : 'playground')} go={go} />
         break
       case 'hatpreview':
         body = <HatPreview hat={screen.hat} species={screen.species} />
