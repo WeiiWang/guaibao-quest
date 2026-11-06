@@ -64,7 +64,7 @@ export function GalleryScreen({ onBack, go }: { onBack: () => void; go: (s: Scre
 
   const gid = (w: ColoringProgress) => w.pageId.slice(2)
   const hung = (w: ColoringProgress) => placements.some((p) => p.itemId === `art-${gid(w)}`)
-  const nameOf = (w: ColoringProgress) => getColoringPage(w.basePageId ?? '')?.name ?? '作品'
+  const nameOf = (w: ColoringProgress) => (w.basePageId === 'photo' ? '照片' : (getColoringPage(w.basePageId ?? '')?.name ?? '作品'))
 
   const hang = async (w: ColoringProgress) => {
     const r = await repo.hangArtwork(gid(w))

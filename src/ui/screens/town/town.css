@@ -12,3 +12,9 @@
 .town-house.tone-sky span { background: rgb(222 241 255 / 0.95); }
 @media (max-width: 560px) { .town-street { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 561px) and (orientation: portrait) { .town-street { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* 橫向：建築往下站到草地上（背景上緣是遠處的房子） */
+@media (min-aspect-ratio: 1/1) and (min-height: 600px) {
+  .town-street { margin-top: clamp(40px, 15vh, 150px); row-gap: clamp(12px, 4vh, 40px); }
+  /* 寵物固定站在左下角：街道整排讓開它的寬度 */
+  .town-body { padding-left: calc(var(--pl-pet, 200px) * 0.85); }
+}
