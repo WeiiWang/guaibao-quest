@@ -1,0 +1,45 @@
+/* v8.4 線 AA 開車兜風：class 都用 drive- 前綴 */
+.drive-root { position: absolute; inset: 0; display: grid; place-items: center; padding: 8px; }
+/* 場景圖還沒生好：自己鋪一層草地 */
+.drive-root[data-scene='none'] { background: radial-gradient(circle at 30% 20%, #d9f2c2, #bfe3a4 70%); }
+.drive-map {
+  position: relative;
+  aspect-ratio: var(--drive-ar);
+  width: min(100%, calc((100dvh - 16px) * var(--drive-arn)));
+  touch-action: none;
+}
+.drive-road { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.drive-sprite { position: absolute; aspect-ratio: 1; transform: translate(-50%, -50%); pointer-events: none; }
+.drive-sprite .aa-art, .drive-sprite .art, .drive-sprite .art-emoji { display: block; width: 100%; height: 100%; object-fit: contain; }
+.drive-light { aspect-ratio: 40 / 100; filter: drop-shadow(0 4px 4px rgb(40 30 60 / 0.25)); }
+.drive-stop { aspect-ratio: 40 / 90; }
+.drive-house { filter: drop-shadow(0 6px 6px rgb(40 30 60 / 0.2)); }
+.drive-pet { pointer-events: auto; }
+.drive-pet .companion { width: 100% !important; height: 100% !important; }
+.drive-car { z-index: 3; }
+.drive-car-body { width: 100%; height: 100%; filter: drop-shadow(0 6px 5px rgb(40 30 60 / 0.3)); }
+.drive-seat { position: absolute; left: 50%; top: 50%; width: 52%; aspect-ratio: 1; transform: translate(-50%, -58%); filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.25)); }
+.drive-seat .art, .drive-seat .art-emoji { width: 100%; height: 100%; }
+/* 6–7 歲：乘客頭上的泡泡，畫想去的房子 */
+.drive-want {
+  position: absolute; left: 50%; bottom: 88%; width: 72%; aspect-ratio: 1; transform: translateX(-50%);
+  padding: 8%; border-radius: 50%; background: #fff; box-shadow: 0 4px 10px rgb(40 30 60 / 0.22);
+  animation: drive-want-bob 1.6s ease-in-out infinite;
+}
+.drive-want::after { content: ''; position: absolute; left: 50%; bottom: -10%; width: 22%; aspect-ratio: 1; transform: translateX(-50%) rotate(45deg); background: #fff; }
+.drive-want .aa-art { position: relative; z-index: 1; display: block; width: 100%; height: 100%; object-fit: contain; }
+@keyframes drive-want-bob { 50% { transform: translateX(-50%) translateY(-6%); } }
+.drive-rider, .drive-crosser { z-index: 2; filter: drop-shadow(0 3px 3px rgb(0 0 0 / 0.2)); }
+.drive-crosser .art, .drive-crosser .art-emoji { animation: drive-hop 0.4s ease-in-out infinite alternate; }
+@keyframes drive-hop { to { transform: translateY(-10%); } }
+.drive-ahead { position: absolute; width: 2px; height: 2px; pointer-events: none; }
+.drive-horn {
+  position: absolute; z-index: 10; right: max(14px, env(safe-area-inset-right)); bottom: max(14px, env(safe-area-inset-bottom));
+  display: grid; place-items: center; width: 88px; height: 88px; border: 0; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff8a7a, #e8534a); box-shadow: 0 6px 0 #b83a33, 0 10px 18px rgb(0 0 0 / 0.2);
+}
+.drive-horn:active { transform: translateY(4px); box-shadow: 0 2px 0 #b83a33, 0 6px 12px rgb(0 0 0 / 0.2); }
+@media (max-width: 560px) { .drive-horn { width: 76px; height: 76px; } }
+@media (prefers-reduced-motion: reduce) {
+  .drive-want, .drive-crosser .art, .drive-crosser .art-emoji { animation: none; }
+}

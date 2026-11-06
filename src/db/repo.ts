@@ -44,6 +44,7 @@ import { DOTS_PRICE, dotsItemId, dotsPoints, isDotsFree, parseDotsId } from '../
 import { checkApplyTheme, resolveTheme } from '../domain/theme'
 import { docOf, type PaintDoc } from '../domain/coloring'
 import { PAINT_REWARD_REASON, PAINT_STARS, paintRewardKey } from '../domain/paintReward'
+import { canSavePhoto, PHOTO_BASE, photoGalleryId } from '../domain/photo'
 import { bestFrame, isFrameId, isFrameUnlocked, newlyUnlocked, type FrameId } from '../domain/frames'
 import { clampPlacement, nextFrontZ, ROOM_CELLS_H } from '../domain/room'
 import { getQuestion } from '../learning/bank'
@@ -1825,6 +1826,31 @@ export class Repo {
       await d.placements.delete(itemId)
       await d.inventory.delete(itemId)
       await d.shopItems.delete(itemId)
+    })
+  }
+
+  // ---------- v8.4 線 AA 照相館：照片存在 coloring 表（畫廊作品的格式），不放 settings（太大會拖慢全 App） ----------
+  /** 已經存了幾張照片 */
+  async photoCount(): Promise<number> {
+    return this.db.coloring.where('pageId').startsWith('g:photo-').count()
+  }
+
+  /**
+   * 存一張照片（jpeg 是 data URL）。滿 PHOTO_MAX 張就不存（回 saved: false），舊的不自動刪。
+   * 照片不算「畫完一幅」：不動 framesDone、不給星星（那些只在 completeColoring 累計）。
+   */
+  async savePhoto(jpeg: string, now = this.clock()): Promise<{ saved: boolean; count: number; galleryId?: string }> {
+    const d = this.db
+    if (!jpeg.startsWith('data:image/')) return { saved: false, count: await this.photoCount() }
+    return d.transaction('rw', d.coloring, async () => {
+      const count = await d.coloring.where('pageId').startsWith('g:photo-').count()
+      if (!canSavePhoto(count)) return { saved: false, count }
+      // 同一毫秒拍兩張（不太可能）就往後挪，不覆蓋
+      let t = now
+      while (await d.coloring.get(`g:${photoGalleryId(t)}`)) t += 1
+      const galleryId = photoGalleryId(t)
+      await d.coloring.put({ pageId: `g:${galleryId}`, basePageId: PHOTO_BASE, fills: {}, png: jpeg, createdAt: now, updatedAt: now })
+      return { saved: true, count: count + 1, galleryId }
     })
   }
 }
