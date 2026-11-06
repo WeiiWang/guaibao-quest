@@ -83,7 +83,7 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
           aria-label="收下禮物"
         >
           <span className="pg-gift-card">
-            <Companion pose="happy" size="min(30vmin, 180px)" />
+            <Companion pose="happy" size="var(--pg-gift-pet, min(30vmin, 180px))" />
             <Icon name={`food-${gift}`} emoji="🎁" size={96} alt="" />
           </span>
         </div>

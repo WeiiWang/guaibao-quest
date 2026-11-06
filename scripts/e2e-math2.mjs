@@ -234,6 +234,8 @@ try {
   check('PM 按「解鎖水簾洞」：寫進設定、顯示已開放', ((await settings(page)).unlockedChapters ?? []).includes('shuiliandong'))
   await page.getByRole('button', { name: '回首頁看看' }).click()
   await openMap(page)
+  // 章節解鎖是非同步載入的，載入前第 2 章先顯示成鎖著：等它變成開的再查（等不到就照樣檢查、讓它失敗）
+  await page.waitForFunction(() => document.querySelector('[data-testid=chapter-shuiliandong]')?.getAttribute('data-open') === 'true', null, { timeout: 5000 }).catch(() => {})
   check('PM 解鎖後：第 2 章可以選，花果山的進度不受影響', (await isOpen(page, 'shuiliandong')) && (await progressOf(page, 'huaguoshan')) === undefined)
   await page.getByTestId('chapter-shuiliandong').click()
   check('切到水簾洞：地圖、站名、章節進度都換了（5 站 + 寶箱）', (await chapterNow(page)) === 'shuiliandong' && (await page.locator('.adv-map-hero').innerText()).includes('第二章・水簾洞') && (await page.locator('.adv-node-label').allInnerTexts()).join().includes('水簾洞口') && (await page.locator('[data-station-state]').count()) === 5 && (await page.getByTestId('chest-node').count()) === 1)
@@ -265,6 +267,7 @@ try {
   }))
   await page.evaluate(() => localStorage.setItem('gq-chapter-math', 'huaguoshan'))
   await openMap(page)
+  await page.waitForFunction(() => document.querySelector('[data-testid=chapter-shuiliandong]')?.getAttribute('data-open') === 'true', null, { timeout: 5000 }).catch(() => {})
   check('花果山 5 站通關後，水簾洞自動解鎖（不用 PM）；新章節的按鈕會亮', (await isOpen(page, 'shuiliandong')) && (await page.getByTestId('chapter-shuiliandong').getAttribute('class')).includes('new'))
 
   // 打開花果山的寶箱：多一個「去水簾洞」按鈕，帶孩子去新章節

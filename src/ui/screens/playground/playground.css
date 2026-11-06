@@ -17,6 +17,12 @@
 .pg-gift-card { display: flex; align-items: center; gap: 16px; padding: 20px 28px; border-radius: 32px; background: #fff8ec; box-shadow: 0 16px 40px rgb(0 0 0 / 0.24); animation: pg-pop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1); }
 @keyframes pg-pop { from { transform: scale(0.6); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .pg-gift-card { animation: none; } }
+/* 手機：禮物卡改直排、放大，寵物與食物都看得清楚 */
+@media (max-width: 560px) {
+  .pg-gift-card { --pg-gift-pet: 44vw; flex-direction: column; gap: 8px; padding: 24px 32px; }
+  .pg-gift-card img, .pg-gift-card .art-emoji { max-width: none; }
+  .pg-gift-card > :last-child, .pg-gift-card > :last-child img { width: 30vw !important; height: 30vw !important; }
+}
 
 /* v8.4 公車站：遊樂場下面一整排，搭公車去快樂小街 */
 .pg-bus { display: flex; align-items: center; justify-content: center; gap: 14px; width: min(100%, 860px); min-height: 72px; padding: 8px 20px; border: 0; border-radius: 26px; background: rgb(255 240 196 / 0.94); box-shadow: 0 6px 0 rgb(0 0 0 / 0.08), 0 10px 22px rgb(60 40 90 / 0.14); font: inherit; font-weight: 800; font-size: clamp(17px, 2.4vmin, 22px); color: #6a4a2a; }
