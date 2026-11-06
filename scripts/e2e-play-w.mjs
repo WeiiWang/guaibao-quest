@@ -128,7 +128,8 @@ const tapSpot = async (app, id) => {
   await app.finger([c])
 }
 /** 還沒觸發的計時器裡，由玩法的程式碼（playground/ 底下）排的有幾個 */
-const timers = (page) => page.evaluate(() => [...window.__pgTimers.values()].filter((t) => /\/playground\//.test(t.stack)).length)
+// 大廳（Playground.tsx）自己的公車提示計時器不算：它卸載時會清，這裡只驗玩法本身
+const timers = (page) => page.evaluate(() => [...window.__pgTimers.values()].filter((t) => /\/playground\//.test(t.stack) && !/\/playground\/Playground\.tsx/.test(t.stack)).length)
 const toHub = async (page) => {
   await page.evaluate(() => history.replaceState(null, '', '#playground'))
   await page.reload()

@@ -88,6 +88,17 @@ const centerOf = async (page, sel) => {
   const b = await page.locator(sel).first().boundingBox()
   return { x: b.x + b.width / 2, y: b.y + b.height / 2, box: b }
 }
+/** 等積木停下來再量（整座塔縮放 0.4s、掉落 0.24s 還在動時量到的是舊位置） */
+const stableCenterOf = async (page, sel) => {
+  let prev = await centerOf(page, sel)
+  for (let i = 0; i < 20; i++) {
+    await page.waitForTimeout(80)
+    const cur = await centerOf(page, sel)
+    if (Math.abs(cur.x - prev.x) < 0.5 && Math.abs(cur.y - prev.y) < 0.5) return cur
+    prev = cur
+  }
+  return prev
+}
 const fingerDrag = async (send, from, to, { steps = 8, id = 1 } = {}) => {
   await send('touchStart', [pt(from, id)])
   for (let i = 1; i <= steps; i++) await send('touchMove', [pt({ x: from.x + ((to.x - from.x) * i) / steps, y: from.y + ((to.y - from.y) * i) / steps }, id)])
@@ -202,11 +213,15 @@ async function testBlocksLayout(b, name, vp) {
   {
     const n0 = (await blocks(page)).length
     const target = (await blocks(page)).find((x) => x.shape === 'long')
-    const from = await centerOf(page, `[data-testid=blk-block][data-id="${target.id}"]`)
+    const from = await stableCenterOf(page, `[data-testid=blk-block][data-id="${target.id}"]`)
     const to = await centerOf(page, '[data-testid=blk-tray]')
+    // 寵物站在這塊上面、腳踩進來：手指按下去要拿到積木，不是寵物
+    const hit = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('[data-testid]')?.getAttribute('data-testid') ?? 'none', from)
+    check(`${tag} 寵物腳下的積木按得到`, hit === 'blk-block', hit)
     await fingerDrag(send, from, to)
     await sleep(page, 450)
-    check(`${tag} 拖回盤子就收起來`, (await blocks(page)).length === n0 - 1)
+    const after = await blocks(page)
+    check(`${tag} 拖回盤子就收起來`, after.length === n0 - 1, `${n0}→${after.length} from ${Math.round(from.x)},${Math.round(from.y)} to ${Math.round(to.x)},${Math.round(to.y)} ${JSON.stringify(after)}`)
     check(`${tag} 飛回盤子的影子清掉`, (await page.locator('[data-testid=blk-ghost]').count()) === 0)
   }
   // 兩根手指同時放兩塊

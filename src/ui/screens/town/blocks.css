@@ -23,7 +23,8 @@
 @keyframes blk-sweep { to { opacity: 0; transform: translateY(30%); } }
 
 .blk-pet { position: absolute; left: 0; bottom: 0; z-index: 2; display: grid; place-items: end center; transition: transform 0.55s cubic-bezier(0.3, 1.25, 0.5, 1); pointer-events: none; }
-.blk-pet-hop { display: block; pointer-events: auto; }
+/* 寵物站在塔頂、腳踩進最上面那塊：不接手指，不然壓在牠底下的積木拿不起來 */
+.blk-pet-hop { display: block; pointer-events: none; }
 
 /* 右邊（直向時在上面）：藍圖與推倒 */
 .blk-side { grid-area: side; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; min-height: 0; }
