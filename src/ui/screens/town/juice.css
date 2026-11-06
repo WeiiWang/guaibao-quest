@@ -1,0 +1,126 @@
+/* v8.4 果汁攤（class 一律 .jc- 開頭）。場景的櫃台橫在畫面下方三分之一：水果、果汁機、杯子都擺在櫃台上 */
+.jc {
+  --jc-counter: clamp(170px, 33vh, 290px);
+  --jc-pet: clamp(130px, 26vh, 240px);
+  --jc-guest: clamp(170px, 36vh, 320px);
+  position: absolute; inset: 0; display: grid; gap: 8px;
+  padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+  grid-template-rows: minmax(0, 1fr) var(--jc-counter);
+  grid-template-areas: 'pet stage' 'counter counter';
+}
+.jc img { -webkit-user-drag: none; -webkit-touch-callout: none; }
+
+/* 寵物站在攤子旁邊 */
+.jc-pet { grid-area: pet; align-self: end; justify-self: center; width: var(--jc-pet); height: var(--jc-pet); max-width: 100%; position: relative; z-index: 2; }
+
+/* 客人站的地方 */
+.jc-stage { grid-area: stage; position: relative; display: grid; place-items: end center; min-width: 0; min-height: 0; }
+.jc-guest { position: relative; width: var(--jc-guest); height: var(--jc-guest); max-width: 100%; padding: 0; border: 0; background: none; -webkit-tap-highlight-color: transparent; animation: jc-walk-in 0.9s cubic-bezier(0.3, 0.8, 0.4, 1) both; }
+.jc-guest-body { display: block; width: 100%; height: 100%; filter: drop-shadow(0 10px 12px rgb(60 40 20 / 0.24)); }
+.jc-guest[data-mood='wait'] .jc-guest-body { animation: jc-sway 2.4s ease-in-out infinite; }
+.jc-guest[data-mood='drink'] .jc-guest-body { animation: jc-sip 0.5s ease-in-out infinite; }
+.jc-guest[data-mood='happy'] .jc-guest-body { animation: jc-hop 0.5s ease-out 2; }
+.jc-guest[data-mood='funny'] .jc-guest-body { animation: jc-wobble 0.55s ease-in-out infinite; }
+.jc-guest[data-leaving] { animation: jc-walk-out 0.7s ease-in 0.55s forwards; pointer-events: none; }
+@keyframes jc-walk-in { from { transform: translateX(70vw); } }
+@keyframes jc-walk-out { to { transform: translateX(80vw); } }
+@keyframes jc-sway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+@keyframes jc-sip { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.03, 0.97); } }
+@keyframes jc-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-12%); } }
+@keyframes jc-wobble { 0%, 100% { transform: rotate(0) scale(1); } 25% { transform: rotate(-9deg) scale(1.04, 0.96); } 75% { transform: rotate(9deg) scale(0.96, 1.04); } }
+
+/* 點單泡泡：在客人頭上偏右，只有圖 */
+.jc-bubble { position: absolute; left: 62%; bottom: 78%; display: flex; gap: 4px; padding: 12px 14px; border-radius: 28px; background: #fff; box-shadow: 0 8px 20px rgb(60 40 20 / 0.18); transform-origin: 10% 100%; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.5, 1), opacity 0.2s; pointer-events: none; }
+.jc-bubble::after { content: ''; position: absolute; left: 14px; bottom: -14px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: -10px 14px 0 -4px #fff; }
+.jc-bubble[data-shown='0'] { transform: scale(0.2); opacity: 0; }
+.jc-bubble-fruit { display: block; width: clamp(48px, 8vmin, 76px); height: clamp(48px, 8vmin, 76px); }
+
+.jc-funny { position: absolute; left: 50%; top: -6%; width: 0; height: 0; pointer-events: none; }
+.jc-swirl { position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; animation: jc-spin 1s linear infinite; }
+.jc-funny b { position: absolute; font-size: 34px; font-weight: 900; color: #8e6cd8; animation: jc-pop-up 0.9s ease-out infinite; }
+.jc-funny b:nth-of-type(1) { left: 36px; top: -26px; }
+.jc-funny b:nth-of-type(2) { left: -60px; top: -10px; color: #ff8a3d; animation-delay: 0.3s; }
+@keyframes jc-spin { to { transform: rotate(360deg); } }
+@keyframes jc-pop-up { 0% { transform: translateY(8px) scale(0.6); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-14px) scale(1.1); opacity: 0; } }
+.jc-hearts { position: absolute; left: 50%; top: 10%; width: 0; height: 0; pointer-events: none; }
+.jc-hearts i { position: absolute; font-style: normal; font-size: clamp(26px, 5vmin, 44px); color: #ff6f91; --a: calc(var(--i) * 72deg - 90deg); animation: jc-heart 1.2s ease-out calc(var(--i) * 80ms) both; }
+@keyframes jc-heart {
+  from { transform: translate(-50%, 0) scale(0.4); opacity: 0; }
+  30% { opacity: 1; }
+  to { transform: translate(calc(-50% + cos(var(--a)) * 100px), calc(sin(var(--a)) * 80px)) scale(1.1); opacity: 0; }
+}
+
+.jc-again { position: absolute; inset: 0; display: grid; place-items: center; }
+
+/* 櫃台：水果、果汁機、杯子 */
+.jc-counter { grid-area: counter; display: flex; align-items: flex-end; justify-content: center; gap: clamp(10px, 3vw, 44px); min-width: 0; min-height: 0; padding-bottom: 6px; }
+.jc-tray { display: grid; grid-template-columns: repeat(5, minmax(56px, 1fr)); gap: 6px; align-self: center; width: min(52%, 560px); padding: 10px; border-radius: 28px; background: rgb(255 248 236 / 0.82); box-shadow: 0 8px 22px rgb(60 40 20 / 0.16); }
+.jc-fruit { aspect-ratio: 1; width: 100%; min-width: 56px; min-height: 56px; max-height: 110px; padding: 8%; border: 0; border-radius: 22px; background: rgb(255 255 255 / 0.8); touch-action: none; -webkit-tap-highlight-color: transparent; }
+.jc-fruit:active { transform: scale(0.94); }
+.jc-fruit img, .jc-fruit .art-emoji { pointer-events: none; }
+
+.jc-blender { position: relative; height: 100%; max-height: 300px; aspect-ratio: 1; min-width: 96px; padding: 0; border: 0; background: none; -webkit-tap-highlight-color: transparent; }
+.jc-blender-body { position: absolute; inset: 0; display: block; }
+.jc-blender[data-spinning='1'] .jc-blender-body { animation: jc-shake 0.12s linear infinite; }
+@keyframes jc-shake { 0%, 100% { transform: translate(0, 0) rotate(0); } 25% { transform: translate(-2px, 1px) rotate(-1deg); } 75% { transform: translate(2px, -1px) rotate(1deg); } }
+.jc-blender-art { position: absolute; inset: 0; z-index: 2; }
+/* 杯身裡的果汁與水果（畫在圖下面，透過透明杯身看得到） */
+.jc-jar-juice { position: absolute; z-index: 1; left: 24%; right: 24%; bottom: 40%; height: 48%; border-radius: 6% 6% 14% 14%; background: var(--jc-juice, transparent); opacity: 0; transform: scaleY(0.1); transform-origin: 50% 100%; transition: transform 1.1s ease-out, opacity 0.3s; }
+.jc-jar-juice[data-on='1'] { opacity: 0.88; transform: scaleY(1); }
+.jc-jar-fruits { position: absolute; z-index: 1; left: 24%; right: 24%; top: 14%; bottom: 40%; display: flex; flex-wrap: wrap-reverse; align-content: flex-start; justify-content: center; }
+.jc-jar-fruit { display: block; width: 46%; aspect-ratio: 1; margin: -4%; animation: jc-plop 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.jc-jar-fruits[data-spin='1'] .jc-jar-fruit { animation: jc-tumble 0.35s linear infinite; }
+.jc-jar-fruits[data-spin='1'] { animation: jc-fade 1.2s ease-in forwards; }
+@keyframes jc-plop { from { transform: translateY(-60%) scale(1.2); } }
+@keyframes jc-tumble { to { transform: rotate(360deg) scale(0.8); } }
+@keyframes jc-fade { to { opacity: 0; transform: scale(0.5); } }
+.jc-blender-go { position: absolute; z-index: 3; left: 50%; bottom: 8%; width: 30%; aspect-ratio: 1; margin-left: -15%; border-radius: 50%; opacity: 0; pointer-events: none; box-shadow: 0 0 0 5px #fff6a8, 0 0 18px 6px rgb(255 214 80 / 0.8); }
+.jc-blender-go[data-ready='1'] { animation: jc-go 1.1s ease-in-out infinite; }
+@keyframes jc-go { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.08); } }
+
+.jc-cup { position: relative; height: 72%; max-height: 210px; aspect-ratio: 1; min-width: 72px; padding: 0; border: 0; background: none; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.jc-cup[data-full='0'] { opacity: 0.75; }
+.jc-cup[data-full='1'] { animation: jc-ready 1.2s ease-in-out infinite; }
+@keyframes jc-ready { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.jc-cup-body { position: absolute; inset: 0; display: block; }
+.jc-cup-juice { position: absolute; z-index: 1; left: 30%; right: 30%; top: 36%; bottom: 10%; border-radius: 8% 8% 20% 20%; background: var(--jc-juice, transparent); opacity: 0; transform: scaleY(0.1); transform-origin: 50% 100%; transition: transform 0.6s ease-out, opacity 0.2s; }
+.jc-cup-juice[data-on='1'] { opacity: 0.9; transform: scaleY(1); }
+.jc-cup-art { position: absolute; inset: 0; z-index: 2; }
+.ys-ghost .jc-cup-body, .ys-flyer .jc-cup-body { position: absolute; inset: 0; }
+
+/* 直向（iPad 直、手機）：上面是寵物和客人，下面櫃台分兩排：水果一排、果汁機和杯子一排 */
+@media (max-aspect-ratio: 1/1) {
+  .jc {
+    --jc-counter: clamp(260px, 38vh, 440px);
+    --jc-pet: clamp(110px, 20vh, 220px);
+    --jc-guest: clamp(150px, 30vh, 320px);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+  }
+  .jc-counter { flex-wrap: wrap; align-content: flex-end; align-items: flex-end; row-gap: 10px; }
+  .jc-tray { width: min(100%, 560px); }
+  .jc-blender { height: auto; width: clamp(110px, 32vw, 230px); }
+  .jc-cup { height: auto; width: clamp(80px, 22vw, 160px); }
+  .jc-bubble { left: auto; right: 4%; bottom: 92%; }
+}
+@media (max-width: 560px) and (max-aspect-ratio: 1/1) {
+  .jc { gap: 6px; padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
+  .jc-tray { padding: 6px; gap: 4px; }
+  .jc-bubble { padding: 8px 10px; }
+}
+/* 手機橫放：矮 */
+@media (max-height: 500px) and (min-aspect-ratio: 1/1) {
+  .jc { --jc-counter: 150px; --jc-pet: 110px; --jc-guest: 150px; }
+  .jc-tray { width: min(50%, 420px); padding: 6px; }
+  .jc-fruit { max-height: 72px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jc-guest, .jc-guest[data-leaving], .jc-guest .jc-guest-body, .jc-blender[data-spinning='1'] .jc-blender-body, .jc-jar-fruit, .jc-jar-fruits[data-spin='1'] .jc-jar-fruit,
+  .jc-blender-go[data-ready='1'], .jc-cup[data-full='1'], .jc-swirl, .jc-funny b, .jc-hearts i { animation: none !important; }
+  .jc-guest[data-leaving] { opacity: 0.4; }
+  .jc-jar-fruits[data-spin='1'] { animation: none; opacity: 0.3; }
+  .jc-blender-go[data-ready='1'] { opacity: 1; }
+  .jc-bubble, .jc-jar-juice, .jc-cup-juice { transition: none; }
+  .jc-hearts i { transform: translate(calc(-50% + cos(var(--a)) * 80px), calc(sin(var(--a)) * 60px)); }
+}

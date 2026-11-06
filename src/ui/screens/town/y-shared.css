@@ -1,0 +1,32 @@
+/* v8.4 線 Y 共用（超市、果汁攤）：缺圖退路、玩具硬幣、拖曳層、飛行小動畫、打勾 */
+.ys-art { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
+.ys-fallback { position: relative; display: grid; place-items: center; }
+.ys-fallback > svg { width: 100%; height: 100%; }
+
+.ys-coin-art { width: 100%; height: 100%; container-type: size; }
+.ys-coin { display: grid; place-items: center; width: 100%; height: 100%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 36% 30%, #fff3b0 0 12%, #ffd257 34%, #f2aa2a 100%); box-shadow: inset 0 0 0 4px #e8961a, inset 0 0 0 7px #ffe08a, 0 4px 8px rgb(140 80 0 / 0.28); color: #a85d00; font-weight: 900; font-size: 42cqmin; line-height: 1; text-shadow: 0 2px 0 #fff2bf; }
+.ys-coin-10 { font-size: 36cqmin; letter-spacing: -0.04em; }
+/* 沒有 container query 單位的舊瀏覽器 */
+@supports not (font-size: 1cqmin) { .ys-coin { font-size: 28px; } }
+
+.ys-ghosts { position: fixed; inset: 0; z-index: 25; pointer-events: none; }
+.ys-ghost { position: fixed; left: 0; top: 0; width: clamp(64px, 11vmin, 104px); height: clamp(64px, 11vmin, 104px); pointer-events: none; filter: drop-shadow(0 8px 8px rgb(0 0 0 / 0.24)); }
+.ys-ghost[data-back] { transition: transform 0.32s ease-in-out, opacity 0.32s ease-in; opacity: 0.4; }
+.ys-ghost img { width: 100%; height: 100%; }
+
+.ys-flyer { position: fixed; z-index: 24; pointer-events: none; animation: ys-fly 0.42s cubic-bezier(0.4, 0, 0.6, 1) forwards; transform: translate(-50%, -50%); }
+@keyframes ys-fly {
+  from { transform: translate(calc(-50% + var(--ys-dx, 0px)), calc(-50% + var(--ys-dy, 0px))) scale(1); opacity: 1; }
+  70% { opacity: 1; }
+  to { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+}
+
+.ys-check { display: inline-grid; place-items: center; width: 34px; height: 34px; padding: 4px; border-radius: 50%; background: rgb(255 255 255 / 0.9); border: 3px dashed #cbbfae; color: transparent; flex: none; }
+.ys-check[data-on='1'] { background: #5fcf86; border: 3px solid #fff; color: #fff; box-shadow: 0 3px 8px rgb(30 120 60 / 0.3); animation: ys-check-pop 0.32s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes ys-check-pop { from { transform: scale(0.4); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ys-ghost[data-back] { transition: none; }
+  .ys-flyer { animation: none; display: none; }
+  .ys-check[data-on='1'] { animation: none; }
+}

@@ -1,0 +1,153 @@
+/* v8.4 超市（class 一律 .mkt- 開頭） */
+.mkt {
+  --mkt-side: clamp(170px, 21vw, 260px);
+  --mkt-pet: clamp(120px, 24vh, 230px);
+  position: absolute; inset: 0; display: grid; gap: 12px;
+  padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  grid-template-columns: var(--mkt-side) minmax(0, 1fr) var(--mkt-side);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: 'list shelf cart' 'pet shelf reg';
+}
+.mkt:not([data-phase='shop']) { grid-template-areas: 'list counter counter' 'pet counter counter'; }
+.mkt img { -webkit-user-drag: none; -webkit-touch-callout: none; }
+
+/* 購物清單：一張小紙條，只有圖 */
+.mkt-list { grid-area: list; position: relative; z-index: 2; align-self: start; display: flex; flex-direction: column; gap: 8px; margin-top: 74px; padding: 16px 12px 12px; border-radius: 18px; background: #fffdf6; box-shadow: 0 6px 0 rgb(0 0 0 / 0.05), 0 10px 22px rgb(60 40 20 / 0.16); background-image: repeating-linear-gradient(transparent 0 46px, #f1e6d3 46px 48px); }
+.mkt-list-pin { position: absolute; top: -9px; left: 50%; width: 22px; height: 22px; margin-left: -11px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffb3c4, #ff6f91); box-shadow: 0 2px 4px rgb(0 0 0 / 0.2); }
+.mkt-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; align-items: center; column-gap: 6px; padding: 2px 4px; border-radius: 14px; }
+.mkt-line[data-done='1'] { background: rgb(201 242 212 / 0.7); }
+.mkt-line-pics { display: flex; gap: 2px; min-width: 0; }
+.mkt-line-pic { display: block; width: clamp(44px, 6.6vmin, 60px); height: clamp(44px, 6.6vmin, 60px); flex: none; }
+.mkt-line[data-done='1'] .mkt-line-pic { opacity: 0.6; }
+.mkt-line .ys-check { grid-row: 1 / span 2; grid-column: 2; }
+.mkt-line-have { display: flex; gap: 4px; padding-left: 6px; }
+.mkt-line-have i { width: 10px; height: 10px; border-radius: 50%; background: #e3d6c3; }
+.mkt-line-have i[data-on='1'] { background: #46b86c; }
+
+/* 寵物：左下，站在地上 */
+.mkt-pet { grid-area: pet; position: relative; z-index: 1; align-self: end; justify-self: center; width: var(--mkt-pet); height: var(--mkt-pet); max-width: 100%; }
+
+/* 貨架：一格一格，每格下面一塊木板 */
+.mkt-shelf { grid-area: shelf; --cols: 5; align-self: center; display: grid; grid-template-columns: repeat(var(--cols), minmax(56px, 1fr)); align-content: center; justify-items: center; row-gap: 22px; column-gap: 6px; min-width: 0; min-height: 0; padding: 18px 14px; border-radius: 30px; background: rgb(255 248 236 / 0.8); box-shadow: 0 10px 26px rgb(60 40 20 / 0.14); }
+.mkt-shelf[data-count='8'] { --cols: 4; }
+.mkt-food { position: relative; isolation: isolate; width: 100%; max-width: 150px; aspect-ratio: 1; min-width: 56px; min-height: 56px; padding: 8%; border: 0; background: none; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.mkt-food::after { content: ''; position: absolute; left: -6%; right: -6%; bottom: -10px; height: 12px; border-radius: 6px; background: #d9a873; box-shadow: inset 0 -3px 0 #b9824d; z-index: -1; }
+.mkt-food-pic { display: block; width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 6px 6px rgb(60 40 20 / 0.2)); }
+.mkt-food:active .mkt-food-pic { transform: scale(0.94); }
+.mkt-tag { position: absolute; right: 0; bottom: 2px; display: grid; place-items: center; min-width: 30px; height: 30px; padding: 0 6px; border-radius: 15px; background: #fff2a8; box-shadow: 0 2px 0 #e2c454, 0 3px 6px rgb(0 0 0 / 0.12); color: #7a4c00; font-weight: 900; font-size: 18px; line-height: 1; pointer-events: none; }
+.mkt-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #e7dccb; box-shadow: inset 0 0 0 2px #cdbfa9; }
+.mkt-dot[data-on='1'] { background: #ff8a3d; box-shadow: inset 0 -2px 0 #d9631b; }
+
+/* 購物車：放東西的目標 */
+.mkt-cart { grid-area: cart; position: relative; align-self: center; justify-self: center; width: min(100%, 36vh); aspect-ratio: 1.15; }
+.mkt-cart-art { position: absolute; inset: 0; }
+.mkt-cart-pile { position: absolute; left: 16%; right: 10%; top: 0; height: 52%; display: flex; flex-wrap: wrap-reverse; justify-content: center; align-content: flex-start; pointer-events: none; }
+.mkt-cart-item { display: block; width: 33%; aspect-ratio: 1; margin: -4% -2%; animation: mkt-drop 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); }
+@keyframes mkt-drop { from { transform: translateY(-40%) scale(1.2); } }
+
+/* 收銀台（按了去結帳）：清單買齊了會發亮 */
+.mkt-reg { grid-area: reg; position: relative; align-self: center; justify-self: center; width: min(100%, 32vh); aspect-ratio: 1.15; min-width: 96px; padding: 0; border: 0; border-radius: 28px; background: rgb(255 255 255 / 0.5); box-shadow: 0 6px 18px rgb(60 40 20 / 0.14); -webkit-tap-highlight-color: transparent; }
+.mkt-reg:active { transform: translateY(3px); }
+.mkt-reg .ys-art { position: absolute; inset: 6%; width: 88%; height: 88%; }
+.mkt-reg-glow { position: absolute; inset: -8px; border-radius: 34px; border: 6px solid #ffd257; opacity: 0; pointer-events: none; }
+.mkt-reg[data-ready='1'] .mkt-reg-glow { animation: mkt-glow 1.3s ease-in-out infinite; }
+@keyframes mkt-glow { 0%, 100% { opacity: 0.35; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1.03); } }
+
+/* 收銀台那一段（拿錯的、嗶嗶、付錢、找零） */
+.mkt-counter { grid-area: counter; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(10px, 2vh, 22px); min-width: 0; min-height: 0; padding: 16px; border-radius: 32px; background: rgb(255 250 240 / 0.86); box-shadow: 0 10px 28px rgb(60 40 20 / 0.16); }
+
+.mkt-extra-items { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.mkt-extra-item { display: block; width: clamp(88px, 16vmin, 140px); aspect-ratio: 1; animation: mkt-bob 1.4s ease-in-out infinite; }
+@keyframes mkt-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8%); } }
+.mkt-extra-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(14px, 3vw, 36px); }
+.mkt-choice { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-width: 150px; min-height: 120px; padding: 10px 18px; border: 0; border-radius: 30px; box-shadow: 0 6px 0 rgb(0 0 0 / 0.08), 0 10px 22px rgb(60 40 20 / 0.16); font: inherit; font-weight: 900; font-size: clamp(18px, 2.6vmin, 24px); }
+.mkt-choice:active { transform: translateY(4px); }
+.mkt-choice-back { background: #e3f1ff; color: #3a7fc4; }
+.mkt-choice-keep { background: #ffe3ec; color: #e0587e; }
+
+.mkt-belt { position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 8px; width: min(100%, 720px); min-height: 96px; padding: 10px 14px 14px 40px; border-radius: 22px; background: repeating-linear-gradient(90deg, #8e9aa8 0 18px, #7c8896 18px 22px); box-shadow: inset 0 -6px 0 rgb(0 0 0 / 0.14); }
+.mkt-scanner { position: absolute; left: 10px; top: 12px; bottom: 12px; width: 14px; border-radius: 7px; background: #ff6f6f; opacity: 0.35; }
+.mkt-scanner[data-on='1'] { animation: mkt-beep 0.36s ease-out; }
+@keyframes mkt-beep { 0% { opacity: 1; transform: scaleX(1.6); } 100% { opacity: 0.35; transform: scaleX(1); } }
+.mkt-belt-item { position: relative; display: block; width: clamp(56px, 9vmin, 84px); aspect-ratio: 1; opacity: 0.7; transition: transform 0.2s, opacity 0.2s; }
+.mkt-belt-item[data-scanned='1'] { opacity: 1; transform: translateY(-6px); }
+.mkt-belt-pic { display: block; width: 100%; height: 100%; }
+.mkt-belt-item .mkt-tag { right: -6px; bottom: -8px; }
+
+.mkt-payrow { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 3vw, 40px); min-height: 0; }
+.mkt-till { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.mkt-display { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; min-width: 150px; max-width: 260px; min-height: 64px; padding: 8px 16px; border-radius: 18px; background: #e6fbe9; box-shadow: inset 0 0 0 4px #9ad8a6; }
+.mkt-display .mkt-dot { width: 30px; height: 30px; }
+.mkt-bill-num { font-weight: 900; font-size: clamp(36px, 6vmin, 52px); line-height: 1; color: #2b7a44; font-variant-numeric: tabular-nums; }
+.mkt-display-coin { width: 48px; height: 48px; border-radius: 50%; border: 4px dashed #e2a93a; background: rgb(255 210 87 / 0.25); }
+.mkt-display-coin[data-on='1'] { border-style: solid; background: #ffd257; }
+.mkt-slot { position: relative; width: clamp(120px, 22vmin, 200px); aspect-ratio: 1.15; }
+.mkt-slot .ys-art { position: absolute; inset: 0; }
+.mkt-paid { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; min-height: 44px; max-width: 280px; }
+.mkt-paid-coin { display: block; width: 40px; height: 40px; }
+.mkt-paid-sum { margin-left: 6px; padding: 4px 12px; border-radius: 999px; background: #fff; color: #5a4a3f; font-size: 20px; }
+
+.mkt-coins { display: flex; flex-direction: column; gap: 14px; }
+.mkt-coin { width: clamp(76px, 12vmin, 104px); height: clamp(76px, 12vmin, 104px); padding: 0; border: 0; border-radius: 50%; background: none; touch-action: none; -webkit-tap-highlight-color: transparent; transition: transform 0.12s, opacity 0.2s; }
+.mkt-coin:disabled { opacity: 0.45; }
+.mkt-coin:active:not(:disabled) { transform: scale(0.92); }
+.mkt-coins[data-ready='1'] .mkt-coin { animation: mkt-coin-bob 1.6s ease-in-out infinite; }
+.mkt-coins[data-ready='1'] .mkt-coin:nth-child(2) { animation-delay: 0.2s; }
+.mkt-coins[data-ready='1'] .mkt-coin:nth-child(3) { animation-delay: 0.4s; }
+@keyframes mkt-coin-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.mkt-change { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 22px; background: #fff; box-shadow: 0 6px 16px rgb(60 40 20 / 0.14); }
+.mkt-change-coins { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 200px; }
+.mkt-change-coin { display: block; width: 52px; height: 52px; animation: mkt-change-in 0.45s cubic-bezier(0.3, 1.3, 0.5, 1) calc(var(--i) * 90ms) both; }
+@keyframes mkt-change-in { from { transform: translateX(-120%) scale(0.4); opacity: 0; } }
+.mkt-change b { color: #5a4a3f; font-size: 22px; }
+
+.mkt-again { display: flex; justify-content: center; }
+
+/* 直向（iPad 直、手機）：清單在上、貨架中間、寵物購物車收銀台在下 */
+@media (max-aspect-ratio: 1/1) {
+  .mkt {
+    --mkt-pet: clamp(100px, 18vh, 200px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto minmax(0, 1fr) clamp(110px, 20vh, 220px);
+    grid-template-areas: 'list list list' 'shelf shelf shelf' 'pet cart reg';
+  }
+  .mkt:not([data-phase='shop']) { --mkt-pet: clamp(90px, 14vh, 170px); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: 'list list list' 'counter counter counter' 'pet . .'; }
+  .mkt-list { margin: 0 0 0 76px; flex-direction: row; flex-wrap: wrap; align-items: center; min-height: 60px; padding: 12px 10px 8px; background-image: none; }
+  .mkt-line { padding: 2px 6px; background: rgb(255 248 236 / 0.9); }
+  .mkt-cart { width: min(100%, 22vh); }
+  .mkt-reg { width: min(100%, 20vh); }
+  .mkt-pet { max-height: 100%; }
+}
+@media (max-width: 560px) and (max-aspect-ratio: 1/1) {
+  .mkt { gap: 8px; padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
+  .mkt-list { margin-left: 70px; gap: 6px; }
+  .mkt-line-pic { width: 38px; height: 38px; }
+  .mkt-line .ys-check { width: 28px; height: 28px; }
+  .mkt-shelf { --cols: 4; row-gap: 20px; padding: 14px 8px; }
+  .mkt-shelf[data-count='8'] { --cols: 4; }
+  .mkt-counter { padding: 10px; gap: 10px; }
+  .mkt-belt { min-height: 72px; padding-left: 34px; }
+  .mkt-payrow { flex-wrap: wrap; gap: 10px; }
+  .mkt-coins { flex-direction: row; }
+  .mkt-slot { width: 110px; }
+  .mkt-choice { min-width: 130px; min-height: 100px; }
+}
+/* 手機橫放：矮 */
+@media (max-height: 500px) and (min-aspect-ratio: 1/1) {
+  .mkt { --mkt-side: 150px; --mkt-pet: 110px; gap: 8px; }
+  .mkt-list { margin-top: 70px; padding: 8px; gap: 2px; }
+  .mkt-line-pic { width: 34px; height: 34px; }
+  .mkt-shelf { row-gap: 14px; padding: 10px; }
+  .mkt-food { max-width: 80px; }
+  .mkt-belt { min-height: 64px; }
+  .mkt-slot { width: 96px; }
+  .mkt-coin { width: 64px; height: 64px; }
+  .mkt-coins { gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mkt-cart-item, .mkt-extra-item, .mkt-change-coin, .mkt-scanner[data-on='1'], .mkt-coins[data-ready='1'] .mkt-coin, .mkt-reg[data-ready='1'] .mkt-reg-glow { animation: none; }
+  .mkt-reg[data-ready='1'] .mkt-reg-glow { opacity: 1; }
+  .mkt-belt-item { transition: none; }
+}
