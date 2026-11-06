@@ -1,0 +1,95 @@
+/* v8.4 積木工地（class 一律 blk- 開頭） */
+.blk-root { position: absolute; inset: 0; display: grid; gap: 8px 12px; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); grid-template-columns: minmax(0, 1fr) clamp(120px, 14vw, 172px); grid-template-rows: minmax(0, 1fr) auto; grid-template-areas: 'stage side' 'tray tray'; }
+
+/* 舞台：沙地。上面留給回去鍵 */
+.blk-stage { grid-area: stage; position: relative; min-width: 0; min-height: 0; margin-top: 70px; }
+.blk-world { position: absolute; left: 50%; bottom: 0; transform-origin: 50% 100%; transition: transform 0.4s ease-out; }
+.blk-ground-mark { position: absolute; bottom: 0; pointer-events: none; }
+.blk-block { position: absolute; touch-action: none; -webkit-tap-highlight-color: transparent; transform-origin: 50% 100%; }
+/* 長條只有一格高：手指的接觸面積往外多抓一點 */
+.blk-block::before { content: ''; position: absolute; inset: -6px -2px; }
+.blk-block > *, .blk-ghost > *, .blk-pick-art > * { position: relative; display: block; width: 100%; height: 100%; pointer-events: none; }
+.blk-img { object-fit: fill; -webkit-user-drag: none; -webkit-touch-callout: none; }
+.blk-svg { overflow: visible; }
+/* 換色：只用靜態的 filter（不做 filter 的動畫或 transition，Playwright WebKit 會崩潰） */
+.blk-c-sun { filter: hue-rotate(38deg) saturate(1.35) brightness(1.1); }
+.blk-c-leaf { filter: hue-rotate(100deg) saturate(0.85); }
+.blk-c-sky { filter: hue-rotate(190deg) saturate(1.05); }
+.blk-c-grape { filter: hue-rotate(255deg) saturate(0.8); }
+.blk-rubble { pointer-events: none; }
+/* 拿在手上的那塊：原本的元素留著收觸控事件，但看不見 */
+.blk-block[data-lifted] { visibility: hidden; pointer-events: none; }
+.blk-rubble[data-out] { animation: blk-sweep 0.3s ease-in forwards; }
+@keyframes blk-sweep { to { opacity: 0; transform: translateY(30%); } }
+
+.blk-pet { position: absolute; left: 0; bottom: 0; z-index: 2; display: grid; place-items: end center; transition: transform 0.55s cubic-bezier(0.3, 1.25, 0.5, 1); pointer-events: none; }
+.blk-pet-hop { display: block; pointer-events: auto; }
+
+/* 右邊（直向時在上面）：藍圖與推倒 */
+.blk-side { grid-area: side; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; min-height: 0; }
+.blk-crash, .blk-again { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: clamp(104px, 12vw, 136px); min-height: 104px; padding: 8px; border: 0; border-radius: 34px; font: inherit; font-weight: 900; font-size: clamp(20px, 2.6vmin, 26px); touch-action: manipulation; }
+.blk-crash { margin-top: auto; background: #ffe48a; color: #a3561a; box-shadow: 0 7px 0 #e9b23e, 0 14px 24px rgb(120 70 20 / 0.24); animation: blk-pop-in 0.35s cubic-bezier(0.3, 1.5, 0.5, 1); }
+.blk-crash:active, .blk-again:active { transform: translateY(5px); box-shadow: 0 2px 0 rgb(0 0 0 / 0.12); }
+@keyframes blk-pop-in { from { transform: scale(0.5); opacity: 0; } }
+.blk-again { margin-top: auto; background: #ff9db4; color: #fff; box-shadow: 0 7px 0 #e0728e, 0 14px 24px rgb(120 50 80 / 0.24); text-shadow: 0 2px 0 rgb(170 60 90 / 0.5); }
+
+.blk-plan { position: relative; display: grid; place-items: center; width: 100%; max-width: 172px; min-height: 96px; padding: 12px; border: 4px solid #fff; border-radius: 18px; background-color: #3b78d8; background-image: linear-gradient(rgb(255 255 255 / 0.14) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.14) 1px, transparent 1px); background-size: 14px 14px; box-shadow: 0 6px 16px rgb(30 60 120 / 0.28); transform: rotate(-2deg); }
+.blk-plan-paper { position: relative; display: block; max-height: 110px; }
+.blk-plan-blk { position: absolute; display: block; }
+.blk-plan-blk > svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.blk-plan-ok { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 14px; background: rgb(95 196 108 / 0.82); color: #fff; font-size: 64px; font-weight: 900; animation: blk-pop-in 0.35s cubic-bezier(0.3, 1.5, 0.5, 1); }
+
+/* 下面的盤子：6 種積木 + 5 種顏色 */
+.blk-tray { grid-area: tray; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 12px; border-radius: 26px; background: rgb(255 255 255 / 0.74); box-shadow: 0 8px 22px rgb(60 40 90 / 0.14); justify-self: center; max-width: 100%; }
+.blk-shapes { display: grid; grid-template-columns: repeat(6, auto); gap: 6px; }
+.blk-pick { display: grid; place-items: center; width: clamp(64px, 8.4vw, 92px); height: clamp(64px, 8.4vw, 92px); padding: 8px; border: 0; border-radius: 18px; background: rgb(255 255 255 / 0.9); box-shadow: 0 4px 0 rgb(0 0 0 / 0.06); touch-action: none; -webkit-tap-highlight-color: transparent; }
+.blk-pick-art { display: block; max-height: 100%; }
+.blk-colors { display: grid; grid-template-columns: repeat(5, auto); gap: 4px; padding-left: 12px; border-left: 3px dashed rgb(160 130 100 / 0.3); }
+.blk-swatch { display: grid; place-items: center; width: 56px; height: 56px; padding: 0; border: 0; border-radius: 50%; background: none; touch-action: manipulation; }
+.blk-swatch i { display: block; width: 38px; height: 38px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 6px rgb(0 0 0 / 0.2); transition: transform 0.15s; }
+.blk-swatch[data-on] i { transform: scale(1.22); box-shadow: 0 0 0 4px #5a4a3f, 0 2px 6px rgb(0 0 0 / 0.2); }
+
+.blk-ghost { position: fixed; left: 0; top: 0; z-index: 25; pointer-events: none; opacity: 0.92; }
+.blk-ghost[data-back] { transition: transform 0.3s ease-in-out, opacity 0.3s ease-in; opacity: 0.3; }
+
+/* 煙火 */
+.blk-fireworks { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.blk-burst { position: absolute; width: 0; height: 0; }
+.blk-burst i { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; opacity: 0; animation: blk-spark 1.3s ease-out var(--d) 2 both; }
+@keyframes blk-spark {
+  0% { transform: rotate(var(--a)) translateX(0) scale(0.4); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: rotate(var(--a)) translateX(clamp(70px, 14vmin, 130px)) scale(1); opacity: 0; }
+}
+
+/* 直向：藍圖與推倒在上面一排，舞台在中間，盤子在下面 */
+@media (max-aspect-ratio: 1/1) {
+  .blk-root { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: 'side' 'stage' 'tray'; }
+  .blk-stage { margin-top: 0; }
+  .blk-side { flex-direction: row; justify-content: flex-end; align-items: flex-start; min-height: 104px; padding-left: 76px; }
+  .blk-crash, .blk-again { margin-top: 0; }
+  .blk-plan { width: 160px; margin-right: auto; }
+  .blk-plan-paper { max-height: 80px; }
+}
+@media (max-width: 600px) and (max-aspect-ratio: 1/1) {
+  .blk-tray { flex-direction: column; gap: 6px; padding: 6px; width: 100%; }
+  .blk-shapes { grid-template-columns: repeat(6, minmax(0, 1fr)); width: 100%; gap: 4px; }
+  .blk-pick { width: 100%; min-width: 56px; height: 60px; padding: 6px; }
+  .blk-colors { padding-left: 0; border-left: 0; gap: 10px; }
+  .blk-plan { width: 128px; min-height: 88px; padding: 8px; }
+  .blk-plan-paper { max-height: 64px; }
+  .blk-crash, .blk-again { width: 96px; min-height: 96px; border-radius: 28px; }
+}
+/* 手機橫放：矮，盤子變小 */
+@media (max-height: 500px) and (min-aspect-ratio: 1/1) {
+  .blk-stage { margin-top: 0; margin-left: 76px; }
+  .blk-pick { width: 58px; height: 58px; padding: 4px; }
+  .blk-tray { padding: 4px 8px; }
+  .blk-crash, .blk-again { min-height: 88px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blk-world, .blk-pet, .blk-ghost[data-back], .blk-swatch i { transition: none; }
+  .blk-crash, .blk-plan-ok, .blk-rubble[data-out] { animation: none; }
+  .blk-burst i { animation: none; opacity: 1; transform: rotate(var(--a)) translateX(60px); }
+}
