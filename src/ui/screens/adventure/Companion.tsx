@@ -9,7 +9,7 @@ import './adventure.css'
 import './adventure-v4.css'
 import '../../l75.css'
 
-export type Pose = 'idle' | 'happy' | 'cheer' | 'think' | 'sleepy' | 'eating' | 'sing' | 'dance' | 'laugh' | 'shy' | 'dizzy'
+export type Pose = 'idle' | 'happy' | 'cheer' | 'think' | 'sleepy' | 'sleep' | 'eating' | 'sing' | 'dance' | 'laugh' | 'shy' | 'dizzy'
 
 /**
  * 依寵物階段挑姿勢圖：蛋沒有姿勢，其餘為這個物種的 <stage>-<pose>；缺圖時退回 happy / idle，
