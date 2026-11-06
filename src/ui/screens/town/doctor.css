@@ -1,0 +1,69 @@
+/* v8.4 寵物醫院。版面同洗澎澎：寵物在中間；橫向工具在右邊一欄，直向工具在下面一排。class 都用 doc- 開頭 */
+.doc-root { position: absolute; inset: 0; --tool: clamp(78px, 13vmin, 120px); --pet: min(60vmin, 64vh); touch-action: none; }
+
+/* 置中用 margin 不用 transform：寵物跳一下（petHop）是 transform 動畫，會蓋掉置中 */
+.doc-pet { position: absolute; z-index: 2; left: 46%; top: 52%; width: var(--pet); height: var(--pet); margin: calc(var(--pet) / -2) 0 0 calc(var(--pet) / -2); }
+.doc-companion { position: absolute !important; inset: 0; }
+.doc-spot { position: absolute; width: 1px; height: 1px; pointer-events: none; }
+
+/* 生病的樣子 */
+.doc-sym { position: absolute; z-index: 3; display: block; pointer-events: none; transform: translate(-50%, -50%); }
+.doc-sym-sneeze { left: 66%; top: 44%; width: 26%; height: 18%; }
+.doc-sym-sneeze i { position: absolute; left: 0; top: 40%; width: 34%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, rgb(220 238 255 / 0.85)); box-shadow: 0 1px 4px rgb(80 120 170 / 0.25); opacity: 0; animation: doc-puff 1.6s ease-out infinite; }
+@keyframes doc-puff { 0% { opacity: 0; transform: translate(0, 0) scale(0.4); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(170%, -40%) scale(1.15); } }
+.doc-sym-tummy { left: 50%; top: 72%; width: 26%; height: 17%; animation: doc-rumble 0.9s ease-in-out infinite; }
+@keyframes doc-rumble { 0%, 100% { transform: translate(-50%, -50%) rotate(-4deg); } 50% { transform: translate(-50%, -50%) rotate(4deg) scale(1.06); } }
+.doc-sym-knee { left: 41%; top: 87%; width: 15%; height: 11%; }
+.doc-sym-throat { left: 50%; top: 59%; width: 18%; height: 9%; animation: doc-tickle 0.7s ease-in-out infinite; }
+@keyframes doc-tickle { 50% { transform: translate(-50%, -60%) scale(1.08, 0.9); } }
+
+.doc-bandage-on { position: absolute; z-index: 4; left: 41%; top: 87%; width: 19%; height: 9%; transform: translate(-50%, -50%) rotate(-12deg); pointer-events: none; filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.18)); animation: doc-stick 0.35s cubic-bezier(0.2, 1.5, 0.4, 1); }
+@keyframes doc-stick { from { transform: translate(-50%, -50%) rotate(-12deg) scale(1.6); opacity: 0; } }
+
+/* 工具的效果 */
+.doc-fx { position: absolute; z-index: 5; display: block; pointer-events: none; transform: translate(-50%, -50%); }
+.doc-fx svg { display: block; width: 100%; height: 100%; }
+.doc-fx-reading { left: 76%; top: 16%; width: 17%; height: 17%; animation: doc-pop 0.4s cubic-bezier(0.2, 1.5, 0.4, 1) 0.45s both; }
+.doc-fx-heart { left: 64%; top: 60%; width: 15%; height: 15%; animation: doc-beat 0.62s ease-in-out infinite; }
+@keyframes doc-beat { 0%, 100% { transform: translate(-50%, -50%) scale(0.8); } 18% { transform: translate(-50%, -50%) scale(1.15); } 36% { transform: translate(-50%, -50%) scale(0.9); } 52% { transform: translate(-50%, -50%) scale(1.05); } }
+/* 手電筒的光：從嘴巴往外散開的一圈暖光 */
+.doc-fx-beam { left: 50%; top: 50%; width: 34%; height: 24%; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 250 200 / 0.85), rgb(255 240 150 / 0.4) 60%, transparent); animation: doc-glow-in 0.3s ease-out both; }
+@keyframes doc-glow-in { from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); } }
+@keyframes doc-pop { from { opacity: 0; transform: translate(-50%, -50%) scale(0.3); } }
+
+.doc-sticker { position: absolute; z-index: 6; left: 66%; top: 66%; width: 22%; height: 22%; transform: translate(-50%, -50%) rotate(-10deg); pointer-events: none; filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.22)); animation: doc-sticker-in 0.6s cubic-bezier(0.2, 1.4, 0.4, 1); }
+.doc-sticker svg { width: 100%; height: 100%; display: block; }
+@keyframes doc-sticker-in { from { opacity: 0; transform: translate(80%, -160%) rotate(40deg) scale(1.6); } }
+
+/* 工具盤 */
+.doc-tray { position: absolute; z-index: 6; right: max(16px, env(safe-area-inset-right)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.6vmin, 16px); }
+.doc-tray:has(.held), .doc-tray:has(.busy) { z-index: 12; }
+.doc-slot { position: relative; width: var(--tool); height: var(--tool); border-radius: 30%; background: rgb(255 255 255 / 0.78); box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.9), 0 4px 12px rgb(60 40 90 / 0.14); }
+.doc-slot.used .doc-tool:not(.busy) { opacity: 0.5; }
+.doc-slot.lit { background: #fffbe6; box-shadow: inset 0 0 0 4px #ffd166, 0 0 0 6px rgb(255 209 102 / 0.45), 0 8px 20px rgb(60 40 90 / 0.18); }
+.doc-slot.lit .doc-tool:not(.held) { animation: doc-bob 1.2s ease-in-out infinite; }
+@keyframes doc-bob { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-7%) scale(1.07); } }
+.doc-tool { position: absolute; inset: 0; box-sizing: border-box; padding: 6%; display: grid; place-items: center; touch-action: none; container-type: size; }
+.doc-tool img { pointer-events: none; }
+.doc-tool.held, .doc-tool.busy { z-index: 15; filter: drop-shadow(0 10px 12px rgb(0 0 0 / 0.26)); }
+.doc-tool.flying { transition: transform 0.38s cubic-bezier(0.3, 1.2, 0.5, 1); }
+
+.doc-again { position: absolute; z-index: 8; left: 50%; bottom: max(22px, env(safe-area-inset-bottom)); transform: translateX(-50%); }
+
+@media (orientation: landscape) {
+  .doc-again { left: auto; right: max(24px, env(safe-area-inset-right)); bottom: 50%; transform: translateY(50%); }
+}
+
+@media (orientation: portrait) {
+  .doc-root { --pet: min(78vw, 54vh); --tool: clamp(60px, 12vmin, 112px); }
+  .doc-pet { left: 50%; top: 45%; }
+  .doc-tray { right: auto; left: 50%; top: auto; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); flex-direction: row; gap: clamp(6px, 1.6vmin, 16px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-sym-sneeze i, .doc-sym-tummy, .doc-sym-throat, .doc-fx-heart, .doc-slot.lit .doc-tool:not(.held), .doc-sticker, .doc-bandage-on, .doc-fx-reading, .doc-fx-beam { animation: none; }
+  .doc-sym-sneeze i { opacity: 0.8; }
+  .doc-sym-sneeze i:nth-child(2) { left: 34%; top: 20%; }
+  .doc-sym-sneeze i:nth-child(3) { left: 66%; top: 0; }
+  .doc-tool.flying { transition: none; }
+}

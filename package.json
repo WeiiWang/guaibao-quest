@@ -55,7 +55,8 @@
     "e2e:play-u": "node scripts/e2e-play-u.mjs",
     "e2e:town-z": "node scripts/e2e-town-z.mjs",
     "e2e:town-y": "node scripts/e2e-town-y.mjs",
-    "e2e:town-aa": "node scripts/e2e-town-aa.mjs"
+    "e2e:town-aa": "node scripts/e2e-town-aa.mjs",
+    "e2e:town-x": "node scripts/e2e-town-x.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",
