@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
+import { playSound, type PlayOptions, type SoundName } from '../../../learning/audioEngine'
 import { useLearnerProfile } from '../../learningHooks'
 import type { AgeBand } from '../../../domain/types'
 
@@ -34,6 +35,15 @@ export function useTrackedSay(say: (key: string) => void) {
     latest.current(key)
   }, [])
   return { rootRef, say: track }
+}
+
+/**
+ * v8.5 播音效，同時把名字記在玩法根元素的 data-sfx（跟 data-said 一樣的用意）：
+ * 新音效（boing、splash、squeak…）檔案還沒到時不會出聲，e2e 驗的是「該響的地方有叫到」。
+ */
+export function playTracked(root: HTMLElement | null, name: SoundName, opts?: PlayOptions): void {
+  if (root) root.dataset.sfx = [...(root.dataset.sfx ? root.dataset.sfx.split(' ') : []), name].slice(-40).join(' ')
+  playSound(name, opts)
 }
 
 /** 說完「玩完了」再送禮物，不然禮物的台詞會把它打斷。孩子這時候離開，禮物照送（已經玩完了，不能損失） */

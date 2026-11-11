@@ -51,6 +51,32 @@ main[data-testid='play-bubbles'] { background: linear-gradient(180deg, #bfe6ff 0
 @keyframes pg-bub-fly-up { from { transform: translateY(0) scale(1); opacity: 1; } 60% { opacity: 1; } to { transform: translateY(-26vmin) scale(1.15) rotate(14deg); opacity: 0; } }
 @keyframes pg-bub-fly-down { 0% { transform: translateY(0) rotate(0); opacity: 1; } 18% { transform: translateY(-5vmin) rotate(-8deg); } 70% { opacity: 1; } 100% { transform: translateY(38vmin) rotate(40deg); opacity: 0; } }
 
+/* v8.5 動物泡泡：戳破後小動物彈出來轉一圈（比食物久一點，到時間由 JS 拿掉） */
+.pg-bub-fly.animal { --f: clamp(72px, 17vmin, 150px); animation: pg-bub-fly-animal 1.35s cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+@keyframes pg-bub-fly-animal {
+  0% { transform: translateY(0) scale(0.5) rotate(0); opacity: 1; }
+  22% { transform: translateY(-9vmin) scale(1.25) rotate(0); }
+  70% { transform: translateY(-9vmin) scale(1.15) rotate(360deg); opacity: 1; }
+  100% { transform: translateY(-4vmin) scale(0.9) rotate(360deg); opacity: 0; }
+}
+
+/* v8.5 泡泡棒吹出來的小泡泡：從棒子的位置冒出來，往旁邊飄一點再往上 */
+.pg-bub-rise.blown { --pg-bub-size: 9vmin; animation: pg-bub-blown var(--rise) cubic-bezier(0.25, 0.1, 0.5, 1) both; }
+@keyframes pg-bub-blown {
+  0% { transform: translate(0, 0) scale(0.3); }
+  10% { transform: translate(calc(var(--dx) * 5vmin), -4vmin) scale(1); }
+  100% { transform: translate(calc(var(--dx) * 10vmin), calc(-100dvh - 20vmin)) scale(1); }
+}
+.pg-bub-rise.blown .pg-bub-ball { --d: clamp(60px, 9vmin, 92px); }
+
+/* v8.5 泡泡棒：站在左下角（寵物在右下角），按住拖動 */
+.pg-bub-wand-slot { position: absolute; z-index: 7; left: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom)); width: clamp(76px, 15vmin, 124px); height: clamp(76px, 15vmin, 124px); border-radius: 30%; background: rgb(255 255 255 / 0.6); box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.8), 0 6px 14px rgb(70 110 190 / 0.16); pointer-events: none; }
+.pg-bub-wand { position: absolute; inset: 6%; display: block; container-type: size; touch-action: none; pointer-events: auto; transition: transform 0.26s cubic-bezier(0.2, 1.3, 0.4, 1); }
+.pg-bub-wand:not(.held) { animation: pg-bub-wand-bob 1.5s ease-in-out infinite; }
+.pg-bub-wand.held { transition: none; }
+.pg-bub-wand img, .pg-bub-wand .art-emoji { pointer-events: none; }
+@keyframes pg-bub-wand-bob { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(8deg) scale(1.05); } }
+
 /* 進度：彩虹條由左往右填滿，只會變多；滿了發光，之後還是可以繼續戳 */
 .pg-bub-meter { position: absolute; z-index: 8; top: max(26px, calc(env(safe-area-inset-top) + 14px)); left: 50%; width: min(46vw, 380px); height: 18px; margin-left: calc(min(46vw, 380px) / -2); border-radius: 9px; background: rgb(255 255 255 / 0.72); box-shadow: inset 0 2px 4px rgb(70 90 150 / 0.2); overflow: hidden; pointer-events: none; }
 .pg-bub-meter i { display: block; width: 100%; height: 100%; transform-origin: 0 50%; border-radius: 9px; background: linear-gradient(90deg, #ff8fa8, #ffc46b, #ffe873, #8fe59a, #79c6ff, #b99bff); transition: transform 0.25s ease-out; }
@@ -66,8 +92,11 @@ main[data-testid='play-bubbles'] { background: linear-gradient(180deg, #bfe6ff 0
   .pg-bub-sway { animation: none; }
   @keyframes pg-bub-still { 0% { opacity: 0; } 6% { opacity: 1; } 92% { opacity: 1; } 100% { opacity: 0; } }
   .pg-bub-rise.mini { animation: pg-bub-still var(--rise) linear both; transform: translate(calc(var(--dx) * 20vmin), calc(var(--dy) * 20vmin)); }
+  .pg-bub-rise.blown { animation: pg-bub-still var(--rise) linear both; }
   .pg-bub-ring, .pg-bub-fx i { animation: none; opacity: 0; }
   .pg-bub-fly, .pg-bub-fly.up, .pg-bub-fly.down { animation: pg-bub-fade 0.9s ease-out both; }
+  .pg-bub-fly.animal { animation: pg-bub-fade 1.35s ease-in both; }
+  .pg-bub-wand, .pg-bub-wand:not(.held) { animation: none; transition: none; }
   @keyframes pg-bub-fade { from { opacity: 1; } to { opacity: 0; } }
   .pg-bub-meter i { transition: none; }
 }

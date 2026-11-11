@@ -13,6 +13,29 @@ main[data-testid='play-memory'] { background: linear-gradient(180deg, #ffeadf 0%
   .pg-mem-pet { width: min(21vmin, 176px); height: min(21vmin, 176px); }
 }
 
+/* v8.5 牌組與魔法棒：直向排在最下面那一列（寵物左邊），橫向排在左邊那一欄（回去鍵和寵物中間）。沒有新玩具時整塊不存在 */
+.pg-mem-tools { --mt: clamp(56px, 9vmin, 78px); position: absolute; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; align-content: center; justify-content: flex-start; gap: 8px; left: max(10px, env(safe-area-inset-left)); bottom: max(8px, env(safe-area-inset-bottom)); height: min(19vmin, 120px); right: calc(min(19vmin, 120px) + 16px); }
+.pg-mem-tool { flex: none; width: var(--mt); height: var(--mt); padding: 7%; border: 0; border-radius: 28%; background: rgb(255 255 255 / 0.72); box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.85), 0 4px 0 rgb(190 150 170 / 0.4), 0 8px 14px rgb(90 50 60 / 0.14); container-type: size; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.pg-mem-tool:active { transform: translateY(3px); }
+.pg-mem-tool.on { background: #fff; box-shadow: inset 0 0 0 4px #ffd166, 0 4px 0 #e8b23f, 0 8px 14px rgb(90 50 60 / 0.16); }
+/* 玩到一半不能換牌組：按鈕先收起來（位置留著，牌桌不會跳） */
+.pg-mem-tool.away { visibility: hidden; }
+.pg-mem-tool.wand { background: radial-gradient(circle at 30% 25%, #f3e6ff, #d9c2ff 78%); box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.85), 0 4px 0 #b79be6, 0 8px 14px rgb(90 50 120 / 0.18); }
+.pg-mem-tool.wand[aria-disabled='true'] { opacity: 0.38; box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.85); }
+.pg-mem-tool img, .pg-mem-tool .art-emoji { pointer-events: none; }
+@media (orientation: portrait) {
+  /* 再玩一次讓開最下面那一列 */
+  .pg-mem.has-tools .pg-mem-again { bottom: calc(max(8px, env(safe-area-inset-bottom)) + min(19vmin, 120px) + 12px); }
+}
+@media (orientation: landscape) {
+  .pg-mem.has-tools { padding-left: max(138px, calc(env(safe-area-inset-left) + 132px)); }
+  .pg-mem-tools { left: max(6px, env(safe-area-inset-left)); right: auto; top: 80px; bottom: 84px; height: auto; width: 126px; justify-content: center; gap: 6px; }
+}
+@media (orientation: landscape) and (min-width: 900px) {
+  .pg-mem.has-tools { padding-left: min(22vmin, 190px); }
+  .pg-mem-tools { width: calc(min(22vmin, 190px) - 12px); bottom: calc(min(21vmin, 176px) + 20px); gap: 8px; }
+}
+
 .pg-mem-grid { display: grid; }
 .pg-mem-card { position: relative; padding: 0; border: 0; background: none; border-radius: clamp(16px, 3vmin, 26px); perspective: 900px; touch-action: none; -webkit-tap-highlight-color: transparent; }
 .pg-mem-inner { position: absolute; inset: 0; display: block; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 0.38s cubic-bezier(0.3, 1.1, 0.5, 1); }

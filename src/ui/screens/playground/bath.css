@@ -7,11 +7,11 @@
 .pg-bath-layer { position: absolute; inset: 0; pointer-events: none; }
 
 .pg-bath-foam, .pg-bath-drop, .pg-bath-sparkle { position: absolute; display: block; transform: translate(-50%, -50%); }
-.pg-bath-foam { border-radius: 50%; opacity: 0; transform: translate(-50%, 30%) scale(0.55); transition: opacity 0.4s, transform 0.5s ease-in; background: radial-gradient(circle at 35% 30%, #fff 0 13%, rgb(255 255 255 / 0.74) 30%, rgb(246 240 255 / 0.66) 62%, rgb(222 206 255 / 0.86) 88%, rgb(198 180 250 / 0.95) 100%); box-shadow: 0 1px 3px rgb(90 80 150 / 0.2); }
+.pg-bath-foam { border-radius: 50%; opacity: 0; transform: translate(-50%, 30%) scale(0.55); transition: opacity 0.4s, transform 0.5s ease-in; background: radial-gradient(circle at 35% 30%, #fff 0 13%, rgb(255 255 255 / 0.74) 30%, var(--foam-a, rgb(246 240 255 / 0.66)) 62%, var(--foam-b, rgb(222 206 255 / 0.86)) 88%, var(--foam-c, rgb(198 180 250 / 0.95)) 100%); box-shadow: 0 1px 3px rgb(90 80 150 / 0.2); }
 .pg-bath-foam.on { opacity: 1; transform: translate(-50%, -50%) scale(1); transition: none; animation: pg-bath-foam-in 0.26s cubic-bezier(0.2, 1.5, 0.4, 1); }
 @keyframes pg-bath-foam-in { from { transform: translate(-50%, -50%) scale(0.2); } }
 
-.pg-bath-drop { border-radius: 50% 50% 50% 50% / 62% 62% 40% 40%; opacity: 0; transform: translate(-50%, 60%) scale(0.5); transition: opacity 0.3s, transform 0.3s; background: radial-gradient(circle at 36% 30%, #fff 0 12%, rgb(170 225 255 / 0.95) 40%, rgb(90 180 240 / 0.95) 100%); box-shadow: 0 1px 2px rgb(40 90 150 / 0.3); }
+.pg-bath-drop { border-radius: 50% 50% 50% 50% / 62% 62% 40% 40%; opacity: 0; transform: translate(-50%, 60%) scale(0.5); transition: opacity 0.3s, transform 0.3s; background: radial-gradient(circle at 36% 30%, #fff 0 12%, var(--drop-a, rgb(170 225 255 / 0.95)) 40%, var(--drop-b, rgb(90 180 240 / 0.95)) 100%); box-shadow: 0 1px 2px rgb(40 90 150 / 0.3); }
 .pg-bath-drop.on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
 .is-done .pg-bath-companion { filter: brightness(1.06) drop-shadow(0 0 18px rgb(255 240 170 / 0.95)); }
@@ -34,7 +34,7 @@
 
 /* 水柱：從噴頭往下 */
 .pg-bath-water { position: absolute; z-index: -1; left: 4%; top: 62%; width: 62%; height: calc(var(--pet) * 0.26); overflow: hidden; -webkit-mask-image: linear-gradient(#000 80%, transparent); mask-image: linear-gradient(#000 80%, transparent); pointer-events: none; }
-.pg-bath-water i { position: absolute; top: 0; width: 7%; height: 100%; border-radius: 99px; background: repeating-linear-gradient(to bottom, rgb(150 215 255 / 0.95) 0 26px, rgb(150 215 255 / 0) 26px 40px); animation: pg-bath-fall 0.3s linear infinite; }
+.pg-bath-water i { position: absolute; top: 0; width: 7%; height: 100%; border-radius: 99px; background: repeating-linear-gradient(to bottom, var(--water, rgb(150 215 255 / 0.95)) 0 26px, var(--water-0, rgb(150 215 255 / 0)) 26px 40px); animation: pg-bath-fall 0.3s linear infinite; }
 @keyframes pg-bath-fall { from { background-position-y: 0; } to { background-position-y: 40px; } }
 
 .pg-bath-duck { position: absolute; z-index: 8; left: 14%; top: 74%; width: clamp(84px, 14vmin, 128px); height: clamp(84px, 14vmin, 128px); padding: 0; border: 0; background: transparent; transform: translate(-50%, -50%); touch-action: none; container-type: size; }
@@ -43,6 +43,40 @@
 
 .pg-bath-again { display: grid; place-items: center; width: clamp(88px, 15vmin, 128px); height: clamp(88px, 15vmin, 128px); border: 0; border-radius: 50%; color: #fff; background: #5cc98f; box-shadow: 0 6px 0 #3ba56f, 0 12px 22px rgb(0 0 0 / 0.18); animation: pg-pop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1); }
 .pg-bath-again:active { transform: translateY(4px); box-shadow: 0 2px 0 #3ba56f; }
+
+/* v8.5 沐浴球：丟進去之後，泡泡、水珠、水柱和腳邊那灘水都變成那個顏色（沒丟就是原本的顏色） */
+.pg-bath[data-tint='pink'] { --foam-a: rgb(255 238 246 / 0.7); --foam-b: rgb(255 190 222 / 0.88); --foam-c: rgb(248 138 192 / 0.95); --drop-a: rgb(255 205 228 / 0.95); --drop-b: rgb(245 130 185 / 0.95); --water: rgb(255 170 210 / 0.95); --water-0: rgb(255 170 210 / 0); --puddle: 255 160 205; }
+.pg-bath[data-tint='orange'] { --foam-a: rgb(255 245 230 / 0.7); --foam-b: rgb(255 214 160 / 0.88); --foam-c: rgb(248 168 88 / 0.95); --drop-a: rgb(255 226 180 / 0.95); --drop-b: rgb(245 165 80 / 0.95); --water: rgb(255 200 130 / 0.95); --water-0: rgb(255 200 130 / 0); --puddle: 255 190 115; }
+.pg-bath[data-tint='green'] { --foam-a: rgb(236 252 240 / 0.7); --foam-b: rgb(180 236 196 / 0.88); --foam-c: rgb(108 204 140 / 0.95); --drop-a: rgb(196 242 208 / 0.95); --drop-b: rgb(100 200 135 / 0.95); --water: rgb(150 230 175 / 0.95); --water-0: rgb(150 230 175 / 0); --puddle: 130 222 160; }
+.pg-bath-puddle { position: absolute; left: 4%; right: 4%; bottom: -5%; height: 20%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgb(var(--puddle) / 0.85) 0 55%, rgb(var(--puddle) / 0.5) 80%, rgb(var(--puddle) / 0) 100%); box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.35); animation: pg-bath-puddle-in 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both; }
+@keyframes pg-bath-puddle-in { from { transform: scale(0.3); opacity: 0; } }
+
+/* 沐浴球托盤：回去鍵右邊一排。同一張圖轉色相（靜態 filter），底下的小盤子是丟進去會變的顏色 */
+.pg-bath-bombs { --bomb: clamp(64px, 11vmin, 96px); position: absolute; z-index: 6; left: max(84px, calc(env(safe-area-inset-left) + 78px)); top: max(12px, env(safe-area-inset-top)); display: flex; gap: clamp(6px, 1.4vmin, 14px); }
+.pg-bath-bomb-slot { position: relative; width: var(--bomb); height: var(--bomb); border-radius: 50%; background: rgb(255 255 255 / 0.6); box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.7), inset 0 0 0 7px rgb(var(--plate) / 0.75); }
+.pg-bath-bomb-slot.pink { --plate: 255 160 205; }
+.pg-bath-bomb-slot.orange { --plate: 255 190 115; }
+.pg-bath-bomb-slot.green { --plate: 130 222 160; }
+.pg-bath-bomb { position: absolute; inset: 0; padding: 12%; border: 0; background: transparent; touch-action: none; container-type: size; transition: transform 0.28s cubic-bezier(0.2, 1.3, 0.4, 1); }
+.pg-bath-bomb > * { filter: hue-rotate(var(--hue)); pointer-events: none; }
+.pg-bath-bomb.held { z-index: 15; transition: none; }
+/* 嘶嘶冒泡：一串小泡泡往上冒（只動 transform 與 opacity） */
+.pg-bath-fizz { position: absolute; z-index: 5; width: 0; height: 0; pointer-events: none; }
+.pg-bath-fizz i { position: absolute; display: block; margin: -8px 0 0 -8px; border-radius: 50%; opacity: 0; background: radial-gradient(circle at 35% 30%, #fff 0 18%, var(--foam-b, rgb(222 206 255 / 0.86)) 60%, var(--foam-c, rgb(198 180 250 / 0.95)) 100%); animation: pg-bath-fizz 0.95s ease-out 1 both; }
+@keyframes pg-bath-fizz { 0% { transform: translateY(0) scale(0.3); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(var(--rise)) scale(1.1); opacity: 0; } }
+
+/* v8.5 泡泡造型：頭頂上一坨泡泡，點一下換形狀（尖尖頭、兔耳朵、皇冠） */
+.pg-bath-hat { position: absolute; z-index: 3; left: 50%; bottom: 84%; width: 40%; height: 35%; margin-left: -20%; padding: 0; border: 0; background: transparent; touch-action: none; transform-origin: 50% 100%; animation: pg-bath-hat-in 0.36s cubic-bezier(0.2, 1.5, 0.4, 1) both; -webkit-tap-highlight-color: transparent; }
+@keyframes pg-bath-hat-in { from { transform: scale(0.75, 0.5); } }
+.pg-bath-hat.gone { visibility: hidden; pointer-events: none; }
+.pg-bath-hat svg { display: block; pointer-events: none; overflow: visible; }
+.pg-bath-hat-line ellipse { fill: var(--foam-c, rgb(198 180 250 / 0.95)); stroke: var(--foam-c, rgb(198 180 250 / 0.95)); stroke-width: 2.5; }
+.pg-bath-hat-fill ellipse { fill: #fff; }
+.pg-bath-hat-gloss ellipse { stroke: rgb(255 255 255 / 0.7); stroke-width: 0.8; }
+.pg-bath-hat-s0 { stop-color: #fff; }
+.pg-bath-hat-s1 { stop-color: var(--foam-a, rgb(246 240 255 / 0.66)); }
+.pg-bath-hat-s2 { stop-color: var(--foam-c, rgb(198 180 250 / 0.95)); }
+.pg-bath-hat-shine ellipse { fill: #fff; }
 
 /* 手勢：一隻手從工具滑到寵物身上抹一抹 */
 .pg-bath-hint { position: fixed; z-index: 16; left: 0; top: 0; width: clamp(58px, 11vmin, 92px); height: clamp(58px, 11vmin, 92px); margin: -8px 0 0 -30px; pointer-events: none; filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.28)); transform: translate(var(--fx), var(--fy)); animation: pg-bath-hand 2.4s ease-in-out 2; }
@@ -57,6 +91,8 @@
 }
 
 @media (orientation: portrait) {
+  /* 直向：沐浴球排在右上角，讓開頭上的泡泡造型 */
+  .pg-bath-bombs { left: auto; right: max(12px, env(safe-area-inset-right)); }
   .pg-bath { --pet: min(80vw, 56vh); --tool: clamp(84px, 14vmin, 128px); }
   .pg-bath-pet { top: 45%; }
   .pg-bath-tray { right: auto; left: 50%; top: auto; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); flex-direction: row; }
@@ -65,7 +101,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pg-bath-foam.on, .pg-bath-slot.active .pg-bath-tool:not(.held), .pg-bath-again, .pg-bath-water i { animation: none; }
-  .pg-bath-foam, .pg-bath-drop, .pg-bath-tool { transition: none; }
+  .pg-bath-foam, .pg-bath-drop, .pg-bath-tool, .pg-bath-bomb { transition: none; }
+  .pg-bath-puddle, .pg-bath-hat { animation: none; }
+  /* 不往上冒：一小堆泡泡停在原地，到時間由計時器拿掉 */
+  .pg-bath-fizz i { animation: none; opacity: 0.9; }
   .pg-bath-sparkle { animation: none; opacity: 1; }
   /* 不滑動：手直接停在寵物身上 */
   .pg-bath-hint { animation: none; transform: translate(var(--tx), var(--ty)); }
