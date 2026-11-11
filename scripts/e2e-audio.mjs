@@ -118,7 +118,7 @@ const browser = await launch()
   check('音樂開關預設開、音效開關預設開', s.musicEnabled && s.sfxEnabled)
 
   // 預載音效
-  check('音效 12 個背景預載完成', await waitState(page, (x) => x.loadedSfx.length === 12, undefined, 10000))
+  check('音效 18 個背景預載完成', await waitState(page, (x) => x.loadedSfx.length === 18, undefined, 10000))
 
   // 日夜：PM 切到晚上 → 搖籃曲
   await pmSetTod(page, 'night')

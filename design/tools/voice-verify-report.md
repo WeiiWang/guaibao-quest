@@ -1,6 +1,6 @@
 # 語音辨識比對報告
 
-共 5584 個音檔；拼音錯誤率（同音字不算錯）≥ 0.3 的有 130 個。
+共 5776 個音檔；拼音錯誤率（同音字不算錯）≥ 0.3 的有 136 個。
 
 | 拼音錯誤率 | 聲音 | key | 原文 | 辨識 |
 |---|---|---|---|---|
@@ -74,6 +74,10 @@
 | 0.5 | mama | ui.friend.name.25 | 時鐘 | 十周 |
 | 0.5 | mama | word.兩輛 | 兩輛 | 两料 |
 | 0.5 | awu-rabbit | pet.bubble.3@rabbit | 哈啾！ | 哈臭! |
+| 0.5 | awu-tiger | pet.play.drive.ice@tiger | 冰淇淋車來囉！ | 冰激凌车来了 |
+| 0.5 | awu-rabbit | pet.play.drive.ice@rabbit | 冰淇淋車來囉！ | 冰激凌车来了 |
+| 0.444 | awu | pet.play.drive.fire | 喔咿喔咿，消防車出動！ | 喂喂,消防车出动 |
+| 0.444 | awu-rabbit | pet.play.drive.fire@rabbit | 喔咿喔咿，消防車出動！ | 喂喂,消防车出动 |
 | 0.44 | mama | q.pattern-1-g15.hint | 你看，小雞、小魚，小雞、小魚，小雞、小魚。一個接一個，下一個是誰呢？ | 你看,小鸡,小鸡,小鸡,小鸡小鸡小鸡小鸡小鸡小鸡小鸡,一个接一个。
 下一个是谁呢? |
 | 0.4 | mama | fb.buy.apple | 買到蘋果囉！ | 买到灵果咯 |
@@ -135,5 +139,8 @@
 再看一遍 |
 | 0.333 | awu | pet.play.blocks.crash | 轟隆！哈哈哈，倒下來了！ | 轰隆
 倒下来了 |
+| 0.333 | awu-tiger | pet.play.doctor.hiccup@tiger | 嗝！我一直打嗝。 | 隔儿,我一直打隔儿 |
+| 0.333 | awu-tiger | pet.play.drive.fire@tiger | 喔咿喔咿，消防車出動！ | 哦呦哦呦哦
+消防车出动 |
 | 0.308 | awu | ui.gift.food.5 | 我在路上撿到一串葡萄，送給你！ | 我在路上调灯顺葡萄送给你 |
 | 0.3 | awu-tiger | pet.play.bedtime.dream@tiger | 嘻嘻，我夢到好多好吃的。 | 我梦了好多好吃的 |
