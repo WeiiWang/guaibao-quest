@@ -1,3 +1,5 @@
+import { existsSync, readFileSync, statSync } from 'node:fs'
+import { join } from 'node:path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   __audioVisibilityForTest,
@@ -6,12 +8,14 @@ import {
   duckMusic,
   getAudioContext,
   getAudioState,
+  MUSIC_SCENES,
   MUSIC_VOLUME,
   playSound,
   preloadSounds,
   setMusicEnabled,
   setMusicScene,
   setSfxEnabled,
+  SOUND_NAMES,
   unlockAudio,
 } from './audioEngine'
 
@@ -136,10 +140,14 @@ class FakeCtx {
 const MANIFEST = {
   version: 1,
   music: Object.fromEntries(
-    ['title', 'home-day', 'home-night', 'map', 'stage', 'boss', 'ceremony', 'paint'].map((s) => [s, { file: `music-${s}.m4a`, v: 'abc', loopStart: 0.37, loopEnd: 40.1 }]),
+    ['title', 'home-day', 'home-night', 'map', 'stage', 'boss', 'ceremony', 'paint', 'playground', 'town'].map((s) => [s, { file: `music-${s}.m4a`, v: 'abc', loopStart: 0.37, loopEnd: 40.1 }]),
   ),
-  sfx: Object.fromEntries(['tap', 'pop', 'correct', 'wrong', 'reward', 'coin', 'whoosh', 'page', 'unlock', 'hatch', 'drop', 'sparkle'].map((s) => [s, { file: `sfx-${s}.m4a`, v: 'abc' }])),
+  sfx: Object.fromEntries(
+    ['tap', 'pop', 'correct', 'wrong', 'reward', 'coin', 'whoosh', 'page', 'unlock', 'hatch', 'drop', 'sparkle', 'boing', 'splash', 'munch', 'cheer', 'fanfare', 'squeak'].map((s) => [s, { file: `sfx-${s}.m4a`, v: 'abc' }]),
+  ),
 }
+/** v8.5 線 AF 的六個新音效 */
+const NEW_SOUNDS = ['boing', 'splash', 'munch', 'cheer', 'fanfare', 'squeak'] as const
 
 let fetched: string[] = []
 function okFetch(url: string): Promise<Response> {
@@ -286,6 +294,27 @@ describe('背景音樂：場景切換', () => {
     }
     expect(getAudioState().loadedMusic).toEqual(['map', 'stage'])
   })
+
+  it('v8.5：遊樂場與小街各有一首，互相切換時交叉淡入淡出，只抓自己那一首', async () => {
+    const ctx = setup()
+    setMusicScene('playground')
+    await flush()
+    expect(getAudioState().scene).toBe('playground')
+    expect(fetched).toEqual(['/gq/audio/manifest.json', '/gq/audio/music-playground.m4a?v=abc'])
+    const first = ctx().sources[0]
+    expect(first.loop).toBe(true)
+    expect(first.started?.offset).toBeCloseTo(0.37)
+    setMusicScene('town')
+    await flush()
+    expect(getAudioState().scene).toBe('town')
+    expect(fetched.at(-1)).toBe('/gq/audio/music-town.m4a?v=abc')
+    expect(first.stopped).not.toBeNull() // 舊的排了停止（淡出後）
+    expect(ctx().sources).toHaveLength(2)
+    // 進小遊戲還是同一首：不重播
+    setMusicScene('town')
+    await flush()
+    expect(ctx().sources).toHaveLength(2)
+  })
 })
 
 describe('背景音樂：缺檔與失敗都不丟錯', () => {
@@ -417,11 +446,43 @@ describe('音效', () => {
     expect(playSound('coin')).toBe(true)
   })
 
-  it('preloadSounds 把 12 個音效都載進來', async () => {
+  it('preloadSounds 把 18 個音效都載進來（原本 12 個加 v8.5 的 6 個）', async () => {
     setup()
     preloadSounds()
     await flush()
+    expect(SOUND_NAMES).toHaveLength(18)
+    expect([...getAudioState().loadedSfx].sort()).toEqual([...SOUND_NAMES].sort())
+  })
+
+  it('v8.5 的六個新音效：檔案載好就播檔；沒載好時安靜（沒有合成音備援）、不丟錯，並在背景載入', async () => {
+    const ctx = setup()
+    for (const n of NEW_SOUNDS) expect(playSound(n)).toBe(false) // 第一次：還沒有檔案 → 安靜
+    expect(ctx().oscillators).toBe(0)
+    await flush()
+    for (const n of NEW_SOUNDS) {
+      expect(getAudioState().loadedSfx).toContain(n)
+      expect(fetched).toContain(`/gq/audio/sfx-${n}.m4a?v=abc`)
+      expect(playSound(n)).toBe(true)
+      expect(getAudioState().played[n]).toEqual({ file: 1, synth: 0 })
+    }
+    expect(ctx().oscillators).toBe(0)
+    expect(ctx().sources).toHaveLength(NEW_SOUNDS.length)
+  })
+
+  it('清單裡還沒有某個音效（舊版清單配新程式）：安靜略過，其他音效照常', async () => {
+    const old = { ...MANIFEST, sfx: Object.fromEntries(Object.entries(MANIFEST.sfx).filter(([k]) => !(NEW_SOUNDS as readonly string[]).includes(k))) }
+    setup({
+      fetchFn: (url) => {
+        fetched.push(url)
+        return Promise.resolve(url.endsWith('manifest.json') ? new Response(JSON.stringify(old), { status: 200 }) : new Response(new ArrayBuffer(64), { status: 200 }))
+      },
+    })
+    preloadSounds()
+    await flush()
     expect(getAudioState().loadedSfx).toHaveLength(12)
+    expect(playSound('munch')).toBe(false)
+    expect(playSound('coin')).toBe(true)
+    expect(fetched.some((f) => f.includes('sfx-munch'))).toBe(false)
   })
 
   it('單一 AudioContext：音樂、音效、合成音共用同一個', async () => {
@@ -460,5 +521,85 @@ describe('語音壓低音樂（duck）', () => {
     duckMusic(true)
     getAudioContext()
     expect(ctx().gains[1].gain.value).toBeCloseTo(MUSIC_VOLUME * DUCK_RATIO)
+  })
+})
+
+// ---------- 真的檔案：public/audio 與清單、程式裡的名稱要對得上 ----------
+describe('public/audio：清單、檔案、程式裡的名稱一致', () => {
+  const dir = join(process.cwd(), 'public', 'audio')
+  const real = JSON.parse(readFileSync(join(dir, 'manifest.json'), 'utf8')) as {
+    music: Record<string, { file: string; v: string; loopStart: number; loopEnd: number; loopSeconds: number }>
+    sfx: Record<string, { file: string; v: string; duration: number }>
+  }
+
+  it('每個 MusicScene 都有一首（含 v8.5 的 playground、town），清單沒有多的', () => {
+    expect(Object.keys(real.music).sort()).toEqual([...MUSIC_SCENES].sort())
+    expect(MUSIC_SCENES).toContain('playground')
+    expect(MUSIC_SCENES).toContain('town')
+  })
+
+  it('每個 SoundName 都有檔案（含 v8.5 的六個），清單沒有多的', () => {
+    expect(Object.keys(real.sfx).sort()).toEqual([...SOUND_NAMES].sort())
+    for (const n of NEW_SOUNDS) expect(real.sfx[n]?.file).toBe(`sfx-${n}.m4a`)
+  })
+
+  it('清單裡的檔案都存在、有內容雜湊；音樂單首 ≤ 800KB、音效單個 ≤ 40KB', () => {
+    for (const [k, e] of Object.entries(real.music)) {
+      expect(e.file).toBe(`music-${k}.m4a`)
+      expect(existsSync(join(dir, e.file)), e.file).toBe(true)
+      expect(e.v).toMatch(/^[0-9a-f]{8}$/)
+      expect(statSync(join(dir, e.file)).size, e.file).toBeLessThanOrEqual(800 * 1024)
+    }
+    for (const e of Object.values(real.sfx)) {
+      expect(existsSync(join(dir, e.file)), e.file).toBe(true)
+      expect(e.v).toMatch(/^[0-9a-f]{8}$/)
+      expect(statSync(join(dir, e.file)).size, e.file).toBeLessThanOrEqual(40 * 1024)
+    }
+  })
+
+  it('循環點合理：loopStart 留了前導、loopEnd − loopStart 就是一圈的長度', () => {
+    for (const [k, e] of Object.entries(real.music)) {
+      expect(e.loopStart, k).toBeGreaterThan(0.2)
+      expect(e.loopEnd - e.loopStart, k).toBeCloseTo(e.loopSeconds, 4)
+    }
+  })
+
+  it('v8.5 新音樂一圈 30–45 秒；新音效都短（cheer 不到 1 秒、fanfare 約 1.2 秒、其餘不到 0.8 秒）', () => {
+    for (const k of ['playground', 'town']) {
+      expect(real.music[k].loopSeconds, k).toBeGreaterThanOrEqual(30)
+      expect(real.music[k].loopSeconds, k).toBeLessThanOrEqual(45)
+    }
+    expect(real.sfx.cheer.duration).toBeLessThan(1)
+    expect(real.sfx.fanfare.duration).toBeGreaterThanOrEqual(1.0)
+    expect(real.sfx.fanfare.duration).toBeLessThanOrEqual(1.4)
+    for (const n of ['boing', 'splash', 'munch', 'squeak']) expect(real.sfx[n].duration, n).toBeLessThan(0.8)
+  })
+
+  it('既有的 9 首音樂與 12 個音效沒有被重算（內容雜湊不變，使用者不必重新下載）', () => {
+    const frozen: Record<string, string> = {
+      'music-title': '7ad2edaf',
+      'music-home-day': 'a705e9fb',
+      'music-home-night': '1a2dd315',
+      'music-map': 'cc413346',
+      'music-stage': 'bfedb421',
+      'music-boss': '44e53697',
+      'music-ceremony': '16d40e9d',
+      'music-paint': 'baabe6f2',
+      'music-story': '015f9890',
+      'sfx-tap': '04056dc6',
+      'sfx-pop': 'b1fddcaa',
+      'sfx-correct': 'de118e74',
+      'sfx-wrong': 'e36e4560',
+      'sfx-reward': 'fad05b4c',
+      'sfx-coin': '7ba93056',
+      'sfx-whoosh': '23387952',
+      'sfx-page': 'a2bc4007',
+      'sfx-unlock': 'a6ac4963',
+      'sfx-hatch': 'fc7ae913',
+      'sfx-drop': 'c32237cb',
+      'sfx-sparkle': '00ff7099',
+    }
+    const now = Object.fromEntries([...Object.values(real.music), ...Object.values(real.sfx)].map((e) => [e.file.replace('.m4a', ''), e.v]))
+    for (const [k, v] of Object.entries(frozen)) expect(now[k], k).toBe(v)
   })
 })

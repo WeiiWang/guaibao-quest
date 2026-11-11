@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { musicSceneFor } from './musicScene'
 import { HUAGUOSHAN } from './chapter'
+import { PLAY_GAME_IDS, TOWN_GAME_IDS } from '../domain/playground'
 
 const LOCKABLE = ['home', 'map', 'stage', 'workshop']
 const noon = new Date(2026, 10, 3, 12, 0).getTime()
@@ -32,6 +33,40 @@ describe('musicSceneFor：畫面 → 背景音樂場景', () => {
 
   it('其他畫面維持目前那首（undefined）', () => {
     for (const n of ['tasks', 'shop', 'bag', 'parent', 'workshop', 'gallery', 'friends', 'album']) expect(musicSceneFor({ name: n }, base)).toBeUndefined()
+  })
+
+  it('v8.5：遊樂場放 playground、快樂小街放 town', () => {
+    expect(musicSceneFor({ name: 'playground' }, base)).toBe('playground')
+    expect(musicSceneFor({ name: 'town' }, base)).toBe('town')
+    // 不看日夜：晚上進去也是同一首
+    expect(musicSceneFor({ name: 'playground' }, { ...base, now: late })).toBe('playground')
+    expect(musicSceneFor({ name: 'town' }, { ...base, todMode: 'night' })).toBe('town')
+  })
+
+  it('v8.5：小遊戲放它所屬地方的那一首；音樂會、學我說話、晚安小屋維持安靜', () => {
+    const QUIET = ['music', 'talk', 'bedtime']
+    for (const id of PLAY_GAME_IDS) expect(musicSceneFor({ name: 'game', id }, base), id).toBe(QUIET.includes(id) ? null : 'playground')
+    for (const id of TOWN_GAME_IDS) expect(musicSceneFor({ name: 'game', id }, base), id).toBe(QUIET.includes(id) ? null : 'town')
+    // 17 個遊戲：14 個有音樂（遊樂場 7、小街 7）、3 個安靜
+    const all = [...PLAY_GAME_IDS, ...TOWN_GAME_IDS].map((id) => musicSceneFor({ name: 'game', id }, base))
+    expect(all).toHaveLength(17)
+    expect(all.filter((s) => s === 'playground')).toHaveLength(7)
+    expect(all.filter((s) => s === 'town')).toHaveLength(7)
+    expect(all.filter((s) => s === null)).toHaveLength(3)
+  })
+
+  it('v8.5：只看遊戲的 id（用網址直接進遊戲也對）；不認得的 id 或沒有 id 維持目前那首', () => {
+    expect(musicSceneFor({ name: 'game', id: 'bubbles' }, base)).toBe('playground')
+    expect(musicSceneFor({ name: 'game', id: 'juice' }, base)).toBe('town')
+    expect(musicSceneFor({ name: 'game', id: 'no-such-game' }, base)).toBeUndefined()
+    expect(musicSceneFor({ name: 'game' }, base)).toBeUndefined()
+  })
+
+  it('v8.5：遊玩時間到，遊樂場、小街和小遊戲都安靜', () => {
+    const lockable = [...LOCKABLE, 'playground', 'town', 'game']
+    for (const s of [{ name: 'playground' }, { name: 'town' }, { name: 'game', id: 'bubbles' }, { name: 'game', id: 'juice' }]) {
+      expect(musicSceneFor(s, { ...base, lockable, locked: true }), JSON.stringify(s)).toBeNull()
+    }
   })
 
   it('遊玩時間到、被鎖住的畫面：安靜（null）；不會被鎖的畫面不受影響', () => {
