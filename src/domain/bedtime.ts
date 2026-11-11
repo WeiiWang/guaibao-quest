@@ -1,16 +1,39 @@
 // v8.4 晚安小屋（純函式）。只是扮演：不碰寵物真正的作息與睡覺狀態，不寫任何資料。
 // 刷牙 → 換睡衣 → 聽故事或搖籃曲 → 關燈 → 睡著（點牠會翻身說夢話）。不分年齡檔。
 
-export type BedStep = 'brush' | 'pajamas' | 'story' | 'lamp' | 'asleep'
+// v8.5 新玩具：toys >= 1 換睡衣之後多一個可以跳過的「抱抱玩偶」；toys >= 2 關燈後點夜燈，天花板輪流變星星、海底、彩虹。
 
+export type BedStep = 'brush' | 'pajamas' | 'doll' | 'story' | 'lamp' | 'asleep'
+
+/** 沒有新玩具時的順序（v8.4） */
 export const BED_STEPS: readonly BedStep[] = ['brush', 'pajamas', 'story', 'lamp', 'asleep']
+const BED_STEPS_DOLL: readonly BedStep[] = ['brush', 'pajamas', 'doll', 'story', 'lamp', 'asleep']
 
-export const nextBedStep = (s: BedStep): BedStep => BED_STEPS[Math.min(BED_STEPS.length - 1, BED_STEPS.indexOf(s) + 1)]
+/** 有幾個新玩具時的順序：toys >= 1 多一步抱抱玩偶 */
+export const bedSteps = (toys = 0): readonly BedStep[] => (toys >= 1 ? BED_STEPS_DOLL : BED_STEPS)
+
+export function nextBedStep(s: BedStep, toys = 0): BedStep {
+  const steps = bedSteps(toys)
+  // 不在這個順序裡的步驟（沒有玩偶時的 doll）當作它的下一步是選故事
+  const i = steps.indexOf(s)
+  return i < 0 ? 'story' : steps[Math.min(steps.length - 1, i + 1)]
+}
+
+/** 抱抱玩偶：三個選一個（圖是 ui-bed-doll-<id>） */
+export const BED_DOLLS = ['bear', 'bunny', 'dino'] as const
+export type BedDoll = (typeof BED_DOLLS)[number]
+
+/** 夜燈投影：關燈後天花板是星星，點夜燈輪流換 */
+export const BED_CEILINGS = ['stars', 'sea', 'rainbow'] as const
+export type BedCeiling = (typeof BED_CEILINGS)[number]
+export const nextCeiling = (c: BedCeiling): BedCeiling => BED_CEILINGS[(BED_CEILINGS.indexOf(c) + 1) % BED_CEILINGS.length]
 
 /** 每一步開始時寵物說的話 */
 export const BED_STEP_LINE: Record<BedStep, string> = {
   brush: 'pet.play.bedtime.brush',
   pajamas: 'pet.play.bedtime.pajamas',
+  // 想抱玩偶那一句就是拿到新玩具時說的那句
+  doll: 'pet.toy.bedtime.doll',
   story: 'pet.play.bedtime.story',
   lamp: 'pet.play.bedtime.light',
   asleep: 'pet.play.bedtime.night',

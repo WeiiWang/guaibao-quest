@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { getAudioContext, getAudioState, playSound, type SoundName } from '../../../learning/audioEngine'
-import { BED_STEP_LINE, STORY_PAGES, STORY_PAGE_MS, brushGain, brushProgress, lullabySchedule, lullabySeconds, type BedStep } from '../../../domain/bedtime'
+import { BED_DOLLS, BED_STEP_LINE, STORY_PAGES, STORY_PAGE_MS, brushGain, brushProgress, lullabySchedule, lullabySeconds, nextBedStep, nextCeiling, type BedCeiling, type BedDoll, type BedStep } from '../../../domain/bedtime'
 import { onPetBox } from '../../../domain/doctor'
 import { FOOD_EMOJI } from '../../../art/items'
+import { useArtStatus } from '../../artProbe'
 import { Icon } from '../../components/Icon'
 import { Companion, type Pose } from '../adventure/Companion'
 import { GameShell, type GameProps } from '../playground/GameShell'
@@ -15,6 +16,8 @@ import './bedtime.css'
 
 // v8.4 晚安小屋：刷牙 → 換睡衣 → 聽故事或搖籃曲 → 關燈 → 睡著，點牠會翻身說夢話。
 // 只是扮演：不改寵物真正的作息、不讓寵物進入睡覺狀態、不寫任何寵物資料。不分年齡檔。
+// v8.5 新玩具：toys >= 1 換睡衣之後多一步「抱抱玩偶」（三個選一個拖給寵物，直接選故事或唱歌就是跳過），下一回開始才套用；
+//   toys >= 2 關燈後點夜燈，天花板輪流變星星、海底、彩虹。寵物睡前坐在被窩裡（被子蓋住腳），不是站在床上。
 
 /** 手指拿著東西時，東西浮在手指上面一點 */
 const LIFT = 26
@@ -33,7 +36,13 @@ const DREAM_MS = 2600
 /** 夢到的東西：依序輪替（不靠亂數） */
 const DREAMS = ['banana', 'cake', 'apple', 'cookie', 'peach'] as const
 
-type Tool = 'brush' | 'pajamas'
+type Tool = 'brush' | 'pajamas' | BedDoll
+const isDoll = (t: Tool): t is BedDoll => t !== 'brush' && t !== 'pajamas'
+const DOLL_INFO: Record<BedDoll, { emoji: string; label: string }> = {
+  bear: { emoji: '🧸', label: '小熊玩偶' },
+  bunny: { emoji: '🐰', label: '兔子玩偶' },
+  dino: { emoji: '🦖', label: '恐龍玩偶' },
+}
 
 // ---- 搖籃曲：音樂盒的聲音（Web Audio 合成，音效關掉時不響） ----
 
@@ -116,6 +125,50 @@ function StoryBook({ page }: { page: number }) {
   )
 }
 
+/** 夜燈投影：海底。幾條小魚慢慢游過天花板、泡泡往上飄（只動 transform 與 opacity） */
+function SeaCeiling() {
+  const fish = [
+    { top: 10, color: '#8fe3ff', size: 1, dur: 16, delay: 0 },
+    { top: 34, color: '#ffe27a', size: 0.75, dur: 21, delay: -7 },
+    { top: 58, color: '#ffb3d1', size: 0.9, dur: 18, delay: -12 },
+    { top: 22, color: '#b9f5c8', size: 0.6, dur: 24, delay: -3 },
+    { top: 70, color: '#c9b8ff', size: 0.7, dur: 20, delay: -16 },
+  ]
+  return (
+    <div className="bed-proj bed-sea" data-testid="bed-sea" aria-hidden>
+      {fish.map((f, i) => (
+        <span key={i} className={`bed-fish ${i % 2 ? 'rev' : ''}`} style={{ top: `${f.top}%`, animationDuration: `${f.dur}s`, animationDelay: `${f.delay}s` }}>
+          <svg viewBox="0 0 60 36" style={{ width: `${f.size * 100}%` }}>
+            <path d="M4 18c8-12 26-14 38-4l12-9v26l-12-9c-12 10-30 8-38-4z" fill={f.color} />
+            <circle cx="15" cy="15" r="2.6" fill="#20306a" />
+          </svg>
+        </span>
+      ))}
+      {Array.from({ length: 9 }, (_, i) => (
+        <i key={i} style={{ left: `${(i * 41) % 92 + 4}%`, animationDelay: `${-(i * 0.9)}s`, animationDuration: `${6 + (i % 3) * 1.5}s` }} />
+      ))}
+    </div>
+  )
+}
+
+/** 夜燈投影：彩虹。一道大大的彩虹掛在天花板，旁邊兩朵小雲 */
+function RainbowCeiling() {
+  const bands = ['#ff8a8a', '#ffb866', '#ffe27a', '#9be8a8', '#8fd3ff', '#c9b8ff']
+  return (
+    <div className="bed-proj bed-rainbow" data-testid="bed-rainbow" aria-hidden>
+      <svg viewBox="0 0 220 120" preserveAspectRatio="xMidYMax meet">
+        {bands.map((c, i) => (
+          <path key={c} d={`M${20 + i * 8} 112a${90 - i * 8} ${90 - i * 8} 0 0 1 ${180 - i * 16} 0`} fill="none" stroke={c} strokeWidth="8.4" />
+        ))}
+        <g fill="#f4f8ff">
+          <path d="M6 114c-7 0-8-10-1-11 0-9 12-11 15-4 4-5 13-3 13 4 7 0 8 11 0 11z" />
+          <path d="M186 114c-7 0-8-10-1-11 0-9 12-11 15-4 4-5 13-3 13 4 7 0 8 11 0 11z" />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 function NoteIcon() {
   return (
     <svg viewBox="0 0 48 48" width="70%" height="70%" aria-hidden>
@@ -138,12 +191,20 @@ interface Drag {
   last: { x: number; y: number } | null
 }
 
-function BedtimePlay({ finish, say: rawSay }: GameProps) {
+function BedtimePlay({ finish, say: rawSay, toys }: GameProps) {
   const { rootRef, say } = useTrackedSay(rawSay)
   // 不分年齡檔；只記在畫面上給測試等資料載入
   const band = useBand()
   const finishLater = useFinishLater(finish)
   const { after, cancel } = useTimers()
+  // 這一回開始時有幾個新玩具：抱抱玩偶那一步下一回才出現，不在哄睡到一半時多出來
+  const [roundToys, setRoundToys] = useState(toys)
+  /** 抱著哪個玩偶（沒選就是 null） */
+  const [doll, setDoll] = useState<BedDoll | null>(null)
+  /** 夜燈投影在天花板上的東西（關燈後才看得到） */
+  const [ceiling, setCeiling] = useState<BedCeiling>('stars')
+  /** 小床的圖有了才蓋被子（蓋的是同一張圖的下半部） */
+  const bedArt = useArtStatus('ui-bed-bed') === 'ok'
   const [step, setStep] = useState<BedStep>('brush')
   const stepRef = useRef<BedStep>('brush')
   const [brush, setBrush] = useState(0)
@@ -157,12 +218,15 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
   const [dream, setDream] = useState<number | null>(null)
   /** 點過睡著的寵物幾次（夢到的東西依序輪替；點過之後就不再示範） */
   const [dreams, setDreams] = useState(0)
+  /** 這一回點過夜燈投影了（點過就不再閃著邀請） */
+  const [projected, setProjected] = useState(false)
   const [holding, setHolding] = useState<Tool | null>(null)
   const [hint, setHint] = useState(false)
   const [moving, setMoving] = useState(false)
   const petRef = useRef<HTMLDivElement>(null)
   const mouthRef = useRef<HTMLSpanElement>(null)
   const headRef = useRef<HTMLSpanElement>(null)
+  const hugRef = useRef<HTMLSpanElement>(null)
   const lampRef = useRef<HTMLButtonElement>(null)
   const bookRef = useRef<HTMLButtonElement>(null)
   const toolRefs = useRef<Partial<Record<Tool, HTMLDivElement | null>>>({})
@@ -266,13 +330,36 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
       petHop(petRef.current, '-8%')
       after(STEP_PAUSE_MS - 400, () => {
         setMoving(false)
+        goStep(nextBedStep('pajamas', roundToys))
+      })
+    })
+  }
+
+  /** 玩偶給寵物：飛到懷裡，寵物抱著它（之後抱著睡） */
+  const hugged = (id: BedDoll, el: HTMLElement, homeX: number, homeY: number) => {
+    const hug = hugRef.current?.getBoundingClientRect()
+    setMoving(true)
+    if (hug) {
+      el.classList.add('flying')
+      el.style.transform = `translate(${hug.left - homeX}px, ${hug.top - homeY}px) scale(0.8)`
+    }
+    playSound('whoosh')
+    after(reducedMotion() ? 50 : 380, () => {
+      el.classList.remove('flying')
+      el.style.transform = ''
+      setDoll(id)
+      playSound('pop')
+      say('pet.play.bedtime.doll')
+      petHop(petRef.current, '-8%')
+      after(STEP_PAUSE_MS, () => {
+        setMoving(false)
         goStep('story')
       })
     })
   }
 
   const grab = (e: ReactPointerEvent<HTMLElement>, tool: Tool) => {
-    if (drag.current || moving || stepRef.current !== tool) return
+    if (drag.current || moving || stepRef.current !== (isDoll(tool) ? 'doll' : tool)) return
     const slot = toolRefs.current[tool]
     const el = slot?.querySelector<HTMLElement>('.bed-tool')
     if (!slot || !el) return
@@ -332,6 +419,11 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
       // 點一下睡衣：自己飛過去穿上（3 歲）；拖到寵物身上放開也是
       if (!d.moved || (p && onPetBox(p))) return dressed(d.el, d.homeX, d.homeY)
     }
+    if (isDoll(d.tool) && e.type !== 'pointercancel') {
+      const p = petPoint(e.clientX, e.clientY)
+      // 點一下玩偶：自己飛到寵物懷裡（3 歲）；拖到寵物身上放開也是
+      if (!d.moved || (p && onPetBox(p))) return hugged(d.tool, d.el, d.homeX, d.homeY)
+    }
     if (d.tool === 'brush' && !d.moved) {
       // 點牙刷：牙刷跳一下，提示要拿著刷
       playSound('tap')
@@ -363,8 +455,18 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
     pageTimer.current = after(STORY_PAGE_MS, () => turnPage(to + 1))
   }
 
+  /** 可以選故事或唱歌了嗎。抱抱玩偶那一步可以跳過：不拿玩偶、直接選故事或唱歌也行 */
+  const canPickStory = () => {
+    if (story || moving || drag.current) return false
+    if (stepRef.current === 'doll') {
+      stepRef.current = 'story'
+      setStep('story')
+    }
+    return stepRef.current === 'story'
+  }
+
   const pickBook = () => {
-    if (stepRef.current !== 'story' || story) return
+    if (!canPickStory()) return
     setStory('book')
     turnPage(0)
   }
@@ -374,13 +476,20 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
   }
 
   const pickSong = () => {
-    if (stepRef.current !== 'story' || story) return
+    if (!canPickStory()) return
     setStory('song')
     stopSong.current = playLullaby()
     after(Math.round(lullabySeconds() * 1000) + 400, storyDone)
   }
 
   const tapLamp = () => {
+    if (stepRef.current === 'asleep' && toys >= 2) {
+      // 夜燈投影：天花板換一種（星星 → 海底 → 彩虹 → 星星）。聲音小小的，寵物在睡覺
+      setCeiling(nextCeiling)
+      setProjected(true)
+      playSound('sparkle')
+      return
+    }
     if (stepRef.current !== 'lamp' || moving) {
       playSound('tap')
       return
@@ -424,6 +533,11 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
     setFlipped(false)
     setDreams(0)
     setDream(null)
+    setDoll(null)
+    setCeiling('stars')
+    setProjected(false)
+    // 新玩具在這裡才套用：收下新玩具卡之後的下一回
+    setRoundToys(toys)
     goStep('brush')
   }
 
@@ -432,6 +546,7 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
   const foam = step === 'brush' ? Math.min(6, Math.floor(brushProgress(brush) * 7)) : 0
   const hintFrom = useCallback((): Element | null => {
     if (step === 'brush' || step === 'pajamas') return toolRefs.current[step] ?? null
+    if (step === 'doll') return toolRefs.current[BED_DOLLS[0]] ?? null
     if (step === 'story') return bookRef.current
     if (step === 'lamp') return lampRef.current
     return petRef.current
@@ -439,8 +554,11 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
   const hintTo = useCallback((): Element | null => {
     if (step === 'brush') return mouthRef.current
     if (step === 'pajamas') return headRef.current
+    if (step === 'doll') return hugRef.current
     return hintFrom()
   }, [step, hintFrom])
+  /** 故事和唱歌現在能不能選（抱抱玩偶那一步也能選：等於跳過） */
+  const storyOpen = (step === 'story' || (step === 'doll' && !moving)) && !story
 
   return (
     <div
@@ -454,12 +572,16 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
       data-story={story ?? ''}
       data-dark={dark ? '1' : '0'}
       data-flipped={flipped ? '1' : '0'}
+      data-doll={doll ?? ''}
+      data-ceiling={dark ? ceiling : ''}
       onPointerMove={onMove}
       onPointerUp={onEnd}
       onPointerCancel={onEnd}
     >
       <div className="bed-dark" data-testid="bed-dark" aria-hidden />
-      {dark && (
+      {dark && ceiling === 'sea' && <SeaCeiling />}
+      {dark && ceiling === 'rainbow' && <RainbowCeiling />}
+      {dark && ceiling === 'stars' && (
         <div className="bed-stars" data-testid="bed-stars" aria-hidden>
           {Array.from({ length: 14 }, (_, i) => (
             <i key={i} style={{ left: `${(i * 37) % 96 + 2}%`, top: `${(i * 23) % 44 + 4}%`, animationDelay: `${(i % 5) * 0.4}s` }} />
@@ -481,6 +603,12 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
             <Companion pose={pose} size="100%" className="bed-companion" />
             <span ref={mouthRef} className="bed-spot bed-spot-mouth" aria-hidden />
             <span ref={headRef} className="bed-spot bed-spot-head" aria-hidden />
+            <span ref={hugRef} className="bed-spot bed-spot-hug" aria-hidden />
+            {doll && (
+              <span className="bed-doll-on" data-testid="bed-doll" data-doll={doll} aria-hidden>
+                <Icon name={`ui-bed-doll-${doll}`} emoji={DOLL_INFO[doll].emoji} size="100%" alt="" />
+              </span>
+            )}
             {foam > 0 && (
               <span className="bed-foam" data-testid="bed-foam" data-n={foam} aria-hidden>
                 {Array.from({ length: foam }, (_, i) => (
@@ -510,7 +638,20 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
             </span>
           )}
         </div>
-        <button ref={lampRef} type="button" className={`bed-lamp ${step === 'lamp' ? 'ready' : ''} ${dark ? 'on' : ''}`} data-testid="ui-bed-lamp" aria-label="夜燈" onPointerDown={tapLamp}>
+        {/* 被子：小床那張圖的下半部再蓋一次，寵物的腳在被子裡（坐在被窩裡、睡著時蓋著被子） */}
+        {bedArt && (
+          <div className="bed-blanket" data-testid="bed-blanket" aria-hidden>
+            <Icon name="ui-bed-bed" emoji="🛏️" size="100%" alt="" />
+          </div>
+        )}
+        <button
+          ref={lampRef}
+          type="button"
+          className={`bed-lamp ${step === 'lamp' ? 'ready' : ''} ${dark ? 'on' : ''} ${asleep && toys >= 2 && !projected ? 'proj' : ''}`}
+          data-testid="ui-bed-lamp"
+          aria-label="夜燈"
+          onPointerDown={tapLamp}
+        >
           <span className="bed-lamp-glow" aria-hidden />
           <Icon name="ui-bed-lamp" emoji="🌙" size="100%" alt="" />
         </button>
@@ -550,16 +691,35 @@ function BedtimePlay({ finish, say: rawSay }: GameProps) {
               </div>
             </div>
           ))}
-          <div className={`bed-slot ${step === 'story' && !story ? 'active' : ''}`}>
+          <div className={`bed-slot ${storyOpen ? 'active' : ''}`}>
             <button ref={bookRef} type="button" className="bed-tool bed-pick" data-testid="ui-bed-book" aria-label="故事書" onPointerDown={pickBook}>
               <Icon name="ui-bed-book" emoji="📖" size="100%" alt="" />
             </button>
           </div>
-          <div className={`bed-slot ${step === 'story' && !story ? 'active' : ''}`}>
+          <div className={`bed-slot ${storyOpen ? 'active' : ''}`}>
             <button type="button" className="bed-tool bed-pick bed-song" data-testid="bed-song" aria-label="唱搖籃曲" onPointerDown={pickSong}>
               <NoteIcon />
             </button>
           </div>
+        </div>
+      )}
+
+      {/* 抱抱玩偶：三個玩偶擺出來，選一個拖（或點）給寵物；不選也可以直接選故事或唱歌 */}
+      {step === 'doll' && (
+        <div className="bed-dolls" data-testid="bed-dolls">
+          {BED_DOLLS.map((d) => (
+            <div
+              key={d}
+              ref={(el) => {
+                toolRefs.current[d] = el
+              }}
+              className={`bed-slot ${!moving ? 'active' : ''} ${doll === d ? 'taken' : ''}`}
+            >
+              <div className={`bed-tool ${holding === d ? 'held' : ''}`} data-testid={`ui-bed-doll-${d}`} role="button" aria-label={DOLL_INFO[d].label} onPointerDown={(e) => grab(e, d)}>
+                <Icon name={`ui-bed-doll-${d}`} emoji={DOLL_INFO[d].emoji} size="100%" alt="" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

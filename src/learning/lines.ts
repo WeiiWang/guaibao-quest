@@ -369,6 +369,7 @@ export const STATIC_LINES: Record<string, string | string[]> = {
   'pet.play.drive.ice': '冰淇淋車來囉！',
   'pet.play.drive.wash': '刷刷刷，洗乾淨了！',
   'pet.play.photo.friend': '一起拍照，笑一個！',
+  'pet.play.doctor.hot': '熱熱的，要冰一下。',
   'pet.paint.free': '再多畫幾筆，或貼一張貼紙吧',
   'pet.gallery.empty': '還沒有畫畫喔，我們去畫一張吧',
   // v6 成長相簿：回憶卡上的一句話（句型見 src/domain/album.ts；學會新招那張和 ui.trick.learn 同一句，不重複列）
