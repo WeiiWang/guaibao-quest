@@ -30,6 +30,10 @@
 /* 貨架：一格一格，每格下面一塊木板 */
 .mkt-shelf { grid-area: shelf; --cols: 5; align-self: center; display: grid; grid-template-columns: repeat(var(--cols), minmax(56px, 1fr)); align-content: center; justify-items: center; row-gap: 22px; column-gap: 6px; min-width: 0; min-height: 0; padding: 18px 14px; border-radius: 30px; background: rgb(255 248 236 / 0.8); box-shadow: 0 10px 26px rgb(60 40 20 / 0.14); }
 .mkt-shelf[data-count='8'] { --cols: 4; }
+/* v8.5 多四種新商品：12 種排 4 欄、14 種排 5 欄，都是三排 */
+.mkt-shelf[data-count='12'] { --cols: 4; }
+.mkt-shelf[data-count='12'], .mkt-shelf[data-count='14'] { row-gap: 18px; }
+.mkt-shelf[data-count='12'] .mkt-food, .mkt-shelf[data-count='14'] .mkt-food { max-width: 128px; }
 .mkt-food { position: relative; isolation: isolate; width: 100%; max-width: 150px; aspect-ratio: 1; min-width: 56px; min-height: 56px; padding: 8%; border: 0; background: none; touch-action: none; -webkit-tap-highlight-color: transparent; }
 .mkt-food::after { content: ''; position: absolute; left: -6%; right: -6%; bottom: -10px; height: 12px; border-radius: 6px; background: #d9a873; box-shadow: inset 0 -3px 0 #b9824d; z-index: -1; }
 .mkt-food-pic { display: block; width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 6px 6px rgb(60 40 20 / 0.2)); }
@@ -104,6 +108,37 @@
 
 .mkt-again { display: flex; justify-content: center; }
 
+/* v8.5 切換按鈕（右上角）：自己買 ⇄ 當老闆。只有圖 */
+.mkt-mode { position: absolute; z-index: 6; top: max(12px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); width: 68px; height: 68px; padding: 9px; border: 0; border-radius: 50%; background: #fff8e1; box-shadow: inset 0 0 0 3px #ffd257, 0 4px 12px rgb(60 40 20 / 0.2); -webkit-tap-highlight-color: transparent; }
+.mkt-mode:active { transform: scale(0.94); }
+.mkt-mode-swap { position: absolute; right: -4px; bottom: -4px; width: 28px; height: 28px; padding: 3px; box-sizing: border-box; border-radius: 50%; background: #ff8a3d; color: #fff; box-shadow: 0 2px 4px rgb(0 0 0 / 0.2); pointer-events: none; }
+
+/* v8.5 當老闆：寵物給的硬幣在一顆對話泡泡裡（橫向在寵物上面），櫃台上左邊是還沒刷的、中間掃描器、右邊是刷好的 */
+.mkt-boss { grid-template-areas: 'hand counter counter' 'pet counter counter'; }
+.mkt.mkt-boss:not([data-phase='shop']) { grid-template-areas: 'hand counter counter' 'pet counter counter'; }
+.mkt-hand { grid-area: hand; position: relative; z-index: 2; align-self: end; justify-self: center; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 8px; max-width: 100%; margin-top: 74px; padding: 12px; border-radius: 26px; background: #fff; box-shadow: 0 8px 20px rgb(60 40 20 / 0.18); animation: mkt-hand-in 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.mkt-hand::after { content: ''; position: absolute; left: 50%; bottom: -12px; width: 24px; height: 24px; margin-left: -12px; border-radius: 50%; background: #fff; box-shadow: 4px 16px 0 -6px #fff; }
+.mkt-hand[data-on='0'] { visibility: hidden; animation: none; }
+@keyframes mkt-hand-in { from { opacity: 0; transform: scale(0.6); } }
+.mkt-give { width: clamp(60px, 9vmin, 80px); height: clamp(60px, 9vmin, 80px); }
+.mkt-give[data-taken='1'] { opacity: 0; }
+.mkt-hand .mkt-give { animation: mkt-coin-bob 1.6s ease-in-out infinite; }
+.mkt-hand .mkt-give:nth-child(even) { animation-delay: 0.25s; }
+
+.mkt-bbelt { flex-wrap: nowrap; align-items: stretch; padding: 10px 12px 14px; }
+.mkt-bwait, .mkt-bbag { flex: 1 1 0; min-width: 0; min-height: 76px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; align-content: center; gap: 6px; }
+.mkt-bbag { border-radius: 16px; background: rgb(255 255 255 / 0.22); }
+.mkt-bitem { position: relative; display: block; width: clamp(56px, 9vmin, 84px); aspect-ratio: 1; min-width: 56px; min-height: 56px; padding: 0; border: 0; background: none; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.mkt-bitem .mkt-belt-pic { pointer-events: none; filter: drop-shadow(0 4px 4px rgb(0 0 0 / 0.22)); }
+.mkt-bscan { position: relative; flex: none; align-self: stretch; width: clamp(44px, 7vmin, 64px); border-radius: 16px; background: #3d4756; box-shadow: inset 0 0 0 3px #232a35, 0 3px 0 rgb(0 0 0 / 0.2); }
+.mkt-bscan-light { position: absolute; left: 30%; right: 30%; top: 12%; bottom: 12%; border-radius: 8px; background: #ff6f6f; opacity: 0.5; }
+.mkt-bscan-light[data-on='1'] { animation: mkt-beep 0.36s ease-out; }
+
+.mkt-opts { display: flex; flex-direction: column; gap: 12px; }
+.mkt-opt { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; min-width: 150px; max-width: 230px; min-height: 72px; padding: 8px 14px; border: 0; border-radius: 22px; background: #fff; box-shadow: 0 5px 0 rgb(0 0 0 / 0.08), 0 8px 18px rgb(60 40 20 / 0.16); animation: mkt-hand-in 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); -webkit-tap-highlight-color: transparent; }
+.mkt-opt:active { transform: translateY(3px); }
+.mkt-opt-coin { display: block; width: 44px; height: 44px; pointer-events: none; }
+
 /* 直向（iPad 直、手機）：清單在上、貨架中間、寵物購物車收銀台在下 */
 @media (max-aspect-ratio: 1/1) {
   .mkt {
@@ -114,6 +149,13 @@
   }
   .mkt:not([data-phase='shop']) { --mkt-pet: clamp(90px, 14vh, 170px); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: 'list list list' 'counter counter counter' 'pet . .'; }
   .mkt-list { margin: 0 0 0 76px; flex-direction: row; flex-wrap: wrap; align-items: center; min-height: 60px; padding: 12px 10px 8px; background-image: none; }
+  /* 右上角有切換按鈕時，清單讓出位置 */
+  .mkt[data-toggle='1'] .mkt-list { margin-right: 80px; }
+  /* 當老闆：櫃台在上（讓開回去鍵和切換按鈕），寵物和牠給的硬幣在下面一排 */
+  .mkt.mkt-boss, .mkt.mkt-boss:not([data-phase='shop']) { grid-template-rows: minmax(0, 1fr) auto; grid-template-areas: 'counter counter counter' 'pet hand hand'; }
+  .mkt-boss .mkt-counter { margin-top: 80px; }
+  .mkt-hand { align-self: center; justify-self: start; margin: 0 0 0 10px; min-height: 84px; }
+  .mkt-hand::after { left: -10px; bottom: 50%; margin: 0 0 -12px; box-shadow: -14px 6px 0 -6px #fff; }
   .mkt-line { padding: 2px 6px; background: rgb(255 248 236 / 0.9); }
   .mkt-cart { width: min(100%, 22vh); }
   .mkt-reg { width: min(100%, 20vh); }
@@ -132,6 +174,11 @@
   .mkt-coins { flex-direction: row; }
   .mkt-slot { width: 110px; }
   .mkt-choice { min-width: 130px; min-height: 100px; }
+  .mkt-shelf[data-count='12'], .mkt-shelf[data-count='14'] { row-gap: 16px; }
+  .mkt-opts { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .mkt-opt { min-width: 96px; max-width: 150px; padding: 6px 8px; }
+  .mkt-opt-coin { width: 38px; height: 38px; }
+  .mkt-give { width: 58px; height: 58px; }
 }
 /* 手機橫放：矮 */
 @media (max-height: 500px) and (min-aspect-ratio: 1/1) {
@@ -147,7 +194,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mkt-cart-item, .mkt-extra-item, .mkt-change-coin, .mkt-scanner[data-on='1'], .mkt-coins[data-ready='1'] .mkt-coin, .mkt-reg[data-ready='1'] .mkt-reg-glow { animation: none; }
+  .mkt-cart-item, .mkt-extra-item, .mkt-change-coin, .mkt-scanner[data-on='1'], .mkt-coins[data-ready='1'] .mkt-coin, .mkt-reg[data-ready='1'] .mkt-reg-glow,
+  .mkt-hand, .mkt-hand .mkt-give, .mkt-bscan-light[data-on='1'], .mkt-opt { animation: none; }
   .mkt-reg[data-ready='1'] .mkt-reg-glow { opacity: 1; }
   .mkt-belt-item { transition: none; }
 }
