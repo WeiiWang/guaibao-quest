@@ -18,6 +18,11 @@ export const reducedMotion = (): boolean => {
   }
 }
 
+/** 把寵物說的台詞 key 記在玩法根元素的 data-said（最多留 40 個） */
+export function trackSaid(root: HTMLElement | null, key: string): void {
+  if (root) root.dataset.said = [...(root.dataset.said ? root.dataset.said.split(' ') : []), key].slice(-40).join(' ')
+}
+
 /**
  * 寵物說話，同時把 key 記在玩法根元素的 data-said：
  * 語音還在錄（沒錄的安靜），e2e 也驗得到「該說的有說、不該一直說的沒一直說」。
@@ -30,8 +35,7 @@ export function useTrackedSay(say: (key: string) => void) {
   }, [say])
   // 回傳的函式永遠是同一個：語音設定載入時不會讓玩法的循環重新開始
   const track = useCallback((key: string) => {
-    const el = rootRef.current
-    if (el) el.dataset.said = [...(el.dataset.said ? el.dataset.said.split(' ') : []), key].slice(-40).join(' ')
+    trackSaid(rootRef.current, key)
     latest.current(key)
   }, [])
   return { rootRef, say: track }

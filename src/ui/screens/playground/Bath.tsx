@@ -24,7 +24,7 @@ import { useLearnerProfile } from '../../learningHooks'
 import { Companion, type Pose } from '../adventure/Companion'
 import { GameShell, type GameProps } from './GameShell'
 import type { GameRootProps } from './GameScreen'
-import { playTracked } from './playU'
+import { playTracked, trackSaid } from './playU'
 import './bath.css'
 
 type ToolStep = Exclude<BathStep, 'done'>
@@ -55,7 +55,7 @@ const HINT_FIRST_MS = 900
 const GIFT_DELAY_MS = 2400
 /** v8.5 沐浴球嘶嘶冒泡多久（到了由計時器拿掉，不靠 animationend） */
 const FIZZ_MS = 1900
-const FIZZ_BUBBLES = 14
+const FIZZ_BUBBLES = 18
 /** 手指動超過這麼多才算拖，不然算點一下 */
 const TAP_SLOP = 14
 
@@ -193,12 +193,12 @@ const Fizz = memo(function Fizz() {
           key={i}
           style={
             {
-              left: `${(jitter(i, 51) - 0.5) * 150}px`,
-              top: `${(jitter(i, 57) - 0.5) * 40}px`,
-              width: `${12 + jitter(i, 61) * 20}px`,
-              height: `${12 + jitter(i, 61) * 20}px`,
+              left: `${(jitter(i, 51) - 0.5) * 200}px`,
+              top: `${(jitter(i, 57) - 0.5) * 50}px`,
+              width: `${16 + jitter(i, 61) * 30}px`,
+              height: `${16 + jitter(i, 61) * 30}px`,
               animationDelay: `${jitter(i, 67) * 0.9}s`,
-              '--rise': `${-(60 + jitter(i, 71) * 110)}px`,
+              '--rise': `${-(90 + jitter(i, 71) * 150)}px`,
             } as CSSProperties
           }
         />
@@ -286,7 +286,7 @@ interface DuckDrag {
   moved: boolean
 }
 
-function BathPlay({ finish, say, toys }: GameProps) {
+function BathPlay({ finish, say: rawSay, toys }: GameProps) {
   const { ageBand } = useLearnerProfile()
   const tuning = bathTuning(ageBand)
   const [bath, setBath] = useState<BathState>(newBath)
@@ -309,6 +309,11 @@ function BathPlay({ finish, say, toys }: GameProps) {
     setHat(h)
   }
   const rootRef = useRef<HTMLDivElement>(null)
+  /** 寵物說一句，同時記在 data-said（語音還沒錄的台詞，e2e 也驗得到有沒有說） */
+  const say = (key: string) => {
+    trackSaid(rootRef.current, key)
+    rawSay(key)
+  }
   const petRef = useRef<HTMLDivElement>(null)
   const slotRefs = useRef<Partial<Record<ToolStep, HTMLDivElement | null>>>({})
   const duckRef = useRef<HTMLButtonElement>(null)
@@ -613,7 +618,9 @@ function BathPlay({ finish, say, toys }: GameProps) {
             <div key={b.id} className={`pg-bath-bomb-slot ${b.id}`}>
               {!usedBombs.includes(b.id) && (
                 <button type="button" className="pg-bath-bomb" data-testid={`bath-bomb-${b.id}`} data-no-tap aria-label={`${b.label}沐浴球`} style={{ '--hue': `${b.hue}deg` } as CSSProperties} onPointerDown={(e) => grabBomb(e, b.id)}>
-                  <Icon name="ui-bath-bomb" emoji="🔮" size="100%" alt="" />
+                  <span className="pg-bath-bomb-pic">
+                    <Icon name="ui-bath-bomb" emoji="🔮" size="100%" alt="" />
+                  </span>
                 </button>
               )}
             </div>

@@ -57,12 +57,12 @@
 .pg-bath-bomb-slot.pink { --plate: 255 160 205; }
 .pg-bath-bomb-slot.orange { --plate: 255 190 115; }
 .pg-bath-bomb-slot.green { --plate: 130 222 160; }
-.pg-bath-bomb { position: absolute; inset: 0; padding: 12%; border: 0; background: transparent; touch-action: none; container-type: size; transition: transform 0.28s cubic-bezier(0.2, 1.3, 0.4, 1); }
-.pg-bath-bomb > * { filter: hue-rotate(var(--hue)); pointer-events: none; }
+.pg-bath-bomb { position: absolute; inset: 0; padding: 0; border: 0; background: transparent; touch-action: none; transition: transform 0.28s cubic-bezier(0.2, 1.3, 0.4, 1); }
+.pg-bath-bomb-pic { position: absolute; inset: 12%; display: block; container-type: size; filter: hue-rotate(var(--hue)); pointer-events: none; }
 .pg-bath-bomb.held { z-index: 15; transition: none; }
 /* 嘶嘶冒泡：一串小泡泡往上冒（只動 transform 與 opacity） */
 .pg-bath-fizz { position: absolute; z-index: 5; width: 0; height: 0; pointer-events: none; }
-.pg-bath-fizz i { position: absolute; display: block; margin: -8px 0 0 -8px; border-radius: 50%; opacity: 0; background: radial-gradient(circle at 35% 30%, #fff 0 18%, var(--foam-b, rgb(222 206 255 / 0.86)) 60%, var(--foam-c, rgb(198 180 250 / 0.95)) 100%); animation: pg-bath-fizz 0.95s ease-out 1 both; }
+.pg-bath-fizz i { position: absolute; display: block; margin: -14px 0 0 -14px; border-radius: 50%; opacity: 0; background: radial-gradient(circle at 35% 30%, #fff 0 18%, var(--foam-b, rgb(222 206 255 / 0.86)) 60%, var(--foam-c, rgb(198 180 250 / 0.95)) 100%); animation: pg-bath-fizz 0.95s ease-out 1 both; }
 @keyframes pg-bath-fizz { 0% { transform: translateY(0) scale(0.3); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(var(--rise)) scale(1.1); opacity: 0; } }
 
 /* v8.5 泡泡造型：頭頂上一坨泡泡，點一下換形狀（尖尖頭、兔耳朵、皇冠） */

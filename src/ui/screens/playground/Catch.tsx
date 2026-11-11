@@ -201,6 +201,7 @@ function CatchRound({ band, finish, say: rawSay, toys, onAgain }: GameProps & { 
             }
             playTracked(root, 'drop')
             if (f.drop.gold) {
+              root.dataset.gold = String(Number(root.dataset.gold ?? 0) + 1)
               // 金色的：畫面亮一下。一樣只算一顆；台詞一回說一次就好
               playTracked(root, 'sparkle')
               setFlash((n) => n + 1)

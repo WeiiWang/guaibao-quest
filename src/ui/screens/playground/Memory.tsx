@@ -273,7 +273,9 @@ function MemoryBoard({ band, finish, say: rawSay, toys }: GameProps & { band: Ag
           {/* 魔法棒排第一個：玩到一半牌組按鈕收起來時，它還是待在角落 */}
           {toys >= 2 && (
             <button type="button" className="pg-mem-tool wand" data-testid="memory-peek" aria-label="魔法棒：偷看一下" aria-disabled={!canPeek} data-left={Number.isFinite(memoryPeeks(band)) ? Math.max(0, memoryPeeks(band) - peeks) : 'many'} onClick={doPeek}>
-              <Icon name="ui-magic-wand" emoji="🪄" alt="" size="100%" />
+              <span className="pg-mem-tool-pic">
+                <Icon name="ui-magic-wand" emoji="🪄" alt="" size="100%" />
+              </span>
             </button>
           )}
           {choices.map((d) => (
@@ -287,7 +289,9 @@ function MemoryBoard({ band, finish, say: rawSay, toys }: GameProps & { band: Ag
               disabled={!canPick}
               onClick={() => pickDeck(d)}
             >
-              <Icon name={DECKS[d].icon} emoji={DECKS[d].emoji} alt="" size="100%" />
+              <span className="pg-mem-tool-pic">
+                <Icon name={DECKS[d].icon} emoji={DECKS[d].emoji} alt="" size="100%" />
+              </span>
             </button>
           ))}
         </div>
