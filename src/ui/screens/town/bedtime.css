@@ -118,6 +118,7 @@
   .bed-story-wrap { left: 50%; bottom: auto; top: 58%; }
   .bed-tray { right: auto; left: 50%; top: auto; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); flex-direction: row; }
   .bed-again { right: auto; left: 50%; transform: translateX(-50%); }
+  .bed-proj { height: 34%; }
   .bed-dolls { left: 50%; top: auto; bottom: calc(max(20px, env(safe-area-inset-bottom)) + var(--tool) + clamp(10px, 2vmin, 20px)); transform: translateX(-50%); flex-direction: row; }
 }
 
