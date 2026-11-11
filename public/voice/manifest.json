@@ -3819,6 +3819,21 @@
   "text": "嗝！我一直打嗝。",
   "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
  },
+ "pet.play.doctor.hot": {
+  "file": "a28d0e5540b8a314.m4a",
+  "text": "熱熱的，要冰一下。",
+  "voice": "awu|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.doctor.hot@rabbit": {
+  "file": "d452c636f68b5b7d.m4a",
+  "text": "熱熱的，要冰一下。",
+  "voice": "awu-rabbit|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
+ "pet.play.doctor.hot@tiger": {
+  "file": "d477097f0b44e73d.m4a",
+  "text": "熱熱的，要冰一下。",
+  "voice": "awu-tiger|用活潑調皮、超有元氣的小朋友語氣說，很開心，台灣國語口音"
+ },
  "pet.play.doctor.icepack": {
   "file": "db94a3dd64df1389.m4a",
   "text": "冰冰的，好舒服。",

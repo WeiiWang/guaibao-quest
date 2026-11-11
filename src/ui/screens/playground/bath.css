@@ -59,6 +59,9 @@
 .pg-bath-bomb-slot.green { --plate: 130 222 160; }
 .pg-bath-bomb { position: absolute; inset: 0; padding: 0; border: 0; background: transparent; touch-action: none; transition: transform 0.28s cubic-bezier(0.2, 1.3, 0.4, 1); }
 .pg-bath-bomb-pic { position: absolute; inset: 12%; display: block; container-type: size; filter: hue-rotate(var(--hue)); pointer-events: none; }
+/* 粉紅的圖轉成橘色會偏暗偏棕，補一點亮度和飽和度（靜態 filter） */
+[data-testid='bath-bomb-orange'] .pg-bath-bomb-pic { filter: hue-rotate(var(--hue)) saturate(1.7) brightness(1.28); }
+[data-testid='bath-bomb-green'] .pg-bath-bomb-pic { filter: hue-rotate(var(--hue)) saturate(1.2) brightness(1.1); }
 .pg-bath-bomb.held { z-index: 15; transition: none; }
 /* 嘶嘶冒泡：一串小泡泡往上冒（只動 transform 與 opacity） */
 .pg-bath-fizz { position: absolute; z-index: 5; width: 0; height: 0; pointer-events: none; }
