@@ -348,7 +348,7 @@ async function testMarket(b, name, vp, band) {
   check(`${tag} 新商品：貨架多四種（共 ${band === '3' ? 12 : 14} 種），排在食物後面`, shelf2.length === (band === '3' ? 12 : 14) && shelf2.slice(-4).join() === GOODS.join(), shelf2.join())
   check(`${tag} 新商品：清單上剛好一樣（最後一行），種類數不變`, list2.length === kinds && list2.filter((l) => GOODS.includes(l.id)).length === 1 && GOODS.includes(list2.at(-1).id), JSON.stringify(list2))
   // 新商品的圖還沒生好時畫的是 emoji（算文字）：把那四個 emoji 去掉之後不能有別的字
-  const listText = (await page.getByTestId('mkt-list').innerText()).replace(/[\u{1F388}\u{26BD}\u{1FAA5}\u{1F9FC}\u{FE0F}\s]/gu, '')
+  const listText = (await page.getByTestId('mkt-list').innerText()).replace(/\u{1F388}|\u{26BD}|\u{1FAA5}|\u{1F9FC}|\u{FE0F}|\s/gu, '')
   check(`${tag} 新商品：清單上畫得出來（只有圖）`, (await page.locator(`[data-testid=mkt-line][data-id=${list2.at(-1).id}] .mkt-line-pic`).count()) === 1 && listText === '', listText)
   check(`${tag} 新商品：觸控目標 ≥ 56、都在畫面內、不溢出`, (await smallTargets(page)).length === 0 && (await allInside(page, '[data-testid^=mkt-food-], [data-testid=mkt-list], [data-testid=mkt-cart], [data-testid=mkt-register]')).length === 0 && (await noOverflowX(page)), (await smallTargets(page)).join())
   check(`${tag} 新商品：貨架不被寵物或清單擋住、每樣都點得到`, (await overlaps(page, '[data-testid=mkt-pet], [data-testid=mkt-list]', '[data-testid=mkt-shelf], [data-testid=mkt-cart], [data-testid=mkt-register], [data-testid=game-back]')).length === 0 && (await covered(page, '[data-testid^=mkt-food-], [data-testid=mkt-register]')).length === 0)
@@ -429,18 +429,17 @@ async function testMarketBoss(b, name, vp, band) {
   const bag = await centerOf(page, '[data-testid=mkt-bag]')
   let sumPrice = 0
   let beeps = 0
-  const scannedIds = []
   for (let k = before0; k < n; k++) {
     const id = await page.locator('[data-testid=mkt-boss-item]').first().getAttribute('data-id')
     const o0 = await osc(page)
     // 第一個放在掃描器上、其他放進袋子那一側
     await fingerDrag(send, await itemAt(0), k === before0 ? { x: scanBox.x + scanBox.width / 2, y: scanBox.y + scanBox.height / 2 } : bag)
     await sleep(page, 120)
-    scannedIds.push(id)
     sumPrice += PRICE[id]
     if ((await osc(page)) > o0) beeps++
     if ((await scannedN()) !== k + 1) break
     if (band === '4-5') check(`${tag} 刷第 ${k + 1} 個：多一個點點`, (await page.getByTestId('mkt-bill-dot').count()) === k + 1)
+    if (band === '6-7') check(`${tag} 刷第 ${k + 1} 個（${id}）：數字加到 ${sumPrice}`, (await page.getByTestId('mkt-bill-num').innerText()).trim() === String(sumPrice))
   }
   check(`${tag} 每一樣都拖得過掃描器`, (await scannedN()) === n && (await page.getByTestId('mkt-boss-item').count()) === 0 && (await page.getByTestId('mkt-belt-item').count()) === n)
   check(`${tag} 每刷一個嗶一聲`, beeps === n - before0, `${beeps}/${n - before0}`)
