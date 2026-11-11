@@ -1,20 +1,27 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as RPointerEvent, type ReactNode } from 'react'
 import {
   BLOCK_COLORS,
-  BLOCK_SHAPES,
   BLOCK_SIZE,
   PET_ROWS,
+  TENANTS,
+  TENANT_EMOJI,
+  assignTenants,
   autoColumn,
   blueprintFor,
   canPlace,
   dropY,
+  isPart,
   matchesBlueprint,
   maxRows,
+  newRound,
+  roundEvent,
   scatter,
   settle,
   snapColumn,
+  tenantCount,
   topBlock,
   towerTop,
+  trayShapes,
   viewScale,
   type Block,
   type BlockColor,
@@ -24,6 +31,7 @@ import {
 import { localDateStr } from '../../../domain/date'
 import { playSound } from '../../../learning/audioEngine'
 import { useArtStatus } from '../../artProbe'
+import { Icon } from '../../components/Icon'
 import { Companion, type Pose } from '../adventure/Companion'
 import { GameShell, type GameProps } from '../playground/GameShell'
 import type { GameRootProps } from '../playground/GameScreen'
@@ -34,8 +42,11 @@ import './blocks.css'
 
 // 積木工地：從盤子拖積木到沙地上，會對齊格線、疊在下面那塊上面（不做真的物理、不會自己倒）。
 // 寵物爬到最高那塊上面；按「推倒」積木彈開散一地、寵物大笑。6–7 歲多一張可以照著蓋的小藍圖。
-// 玩完（finish）：推倒一次、照著蓋好一張，或這次一共放了 8 塊（只想一直蓋、不想推倒的也算玩過）。
+// 玩完（finish）：推倒一次、照著蓋好一張，或這一回合一共放了 8 塊（只想一直蓋、不想推倒的也算玩過）。
 // 不用「放 5 塊」：禮物卡是蓋住畫面的，蓋到一半跳出來會打斷正在蓋的塔；8 塊通常已經想推倒了。
+// v8.5：一回合（從空地開始蓋到推倒）只算玩完一次，規則在 domain/blocks.ts 的 roundEvent。
+// 新玩具：toys >= 1 盤子多輪子、窗戶、旗子；toys >= 2 塔蓋到 4 格高有小動物搬進來住，推倒時跟著彈開。
+// 新玩具在「地上空空的」時候才套用，蓋到一半盤子不會突然變。
 
 export default function Blocks({ onExit }: GameRootProps) {
   return (
@@ -45,8 +56,6 @@ export default function Blocks({ onExit }: GameRootProps) {
   )
 }
 
-/** 一直蓋不推倒也算玩完：這次一共放了幾塊（推倒或照著蓋好會更早） */
-const FINISH_PLACED = 8
 /** 手指移動超過這個距離才算拖 */
 const DRAG_SLOP = 10
 /** 說「我爬到最上面了」的門檻（格）與間隔 */
@@ -60,7 +69,8 @@ const FALLBACK_FILL: Record<BlockColor, string> = { coral: '#ff7a6b', sun: '#ffc
 /** 積木的樣子：有 3D 圖就用（珊瑚紅，靜態 CSS filter 換色），沒有就畫一塊形狀大致對的色塊 */
 function BlockArt({ shape, color }: { shape: BlockShape; color: BlockColor }) {
   const st = useArtStatus(`ui-blk-${shape}`)
-  if (st === 'ok') return <img className={`blk-img blk-c-${color}`} src={`${import.meta.env.BASE_URL}art/ui-blk-${shape}.png`} alt="" draggable={false} />
+  // 新積木（輪子、窗戶、旗子）的圖是單色的：不換色、不拉長（輪子要是圓的）
+  if (st === 'ok') return <img className={isPart(shape) ? 'blk-img blk-part' : `blk-img blk-c-${color}`} src={`${import.meta.env.BASE_URL}art/ui-blk-${shape}.png`} alt="" draggable={false} />
   return <BlockSvg shape={shape} fill={FALLBACK_FILL[color]} />
 }
 
@@ -90,13 +100,45 @@ function BlockSvg({ shape, fill, line }: { shape: BlockShape; fill: string; line
     case 'half':
       body = <path d={`M1 ${H - 1}A${W / 2 - 1} ${H - 2} 0 0 1 ${W - 1} ${H - 1}Z`} {...common} />
       break
+    // v8.5 新積木：固定的顏色（不跟顏色盤走）
+    case 'wheel':
+      body = (
+        <>
+          <circle cx={W / 2} cy={H / 2} r={W / 2 - 1} {...common} fill="#4a4752" />
+          <circle cx={W / 2} cy={H / 2} r={W / 2 - 8} {...common} fill="#d9d6e2" />
+          {[0, 60, 120].map((a) => (
+            <rect key={a} x={W / 2 - 1.5} y={9} width={3} height={H - 18} rx={1.5} fill="#8a8792" transform={`rotate(${a} ${W / 2} ${H / 2})`} />
+          ))}
+          <circle cx={W / 2} cy={H / 2} r={4.5} fill="#4a4752" />
+        </>
+      )
+      break
+    case 'window':
+      body = (
+        <>
+          <rect x={0.5} y={0.5} width={W - 1} height={H - 1} rx={6} {...common} fill="#f0b973" />
+          <rect x={6} y={6} width={W - 12} height={H - 12} rx={3} fill="#c4e8ff" stroke="#fff" strokeWidth={2} />
+          <path d={`M${W / 2} 6V${H - 6}M6 ${H / 2}H${W - 6}`} stroke="#fff" strokeWidth={3} />
+        </>
+      )
+      break
+    case 'flag':
+      body = (
+        <>
+          <rect x={6} y={H - 8} width={W - 12} height={7.5} rx={3.5} {...common} fill="#b9b6c3" />
+          <rect x={W / 2 - 9.5} y={5} width={5} height={H - 11} rx={2.5} fill="#8a8792" />
+          <path d={`M${W / 2 - 5} 7L${W - 1.5} 15L${W / 2 - 5} 25Z`} {...common} fill="#ff6f6f" />
+          <circle cx={W / 2 - 7} cy={5} r={4} fill="#ffd34d" stroke="rgb(0 0 0 / 0.16)" strokeWidth={1} />
+        </>
+      )
+      break
     default:
       body = <rect x={0.5} y={0.5} width={W - 1} height={H - 1} rx={6} {...common} />
   }
   return (
     <svg className="blk-svg" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden>
       {body}
-      {!line && shape !== 'roof' && shape !== 'half' && <rect x={4} y={3} width={W - 8} height={Math.min(5, H / 5)} rx={2.5} fill="rgb(255 255 255 / 0.32)" />}
+      {!line && shape !== 'roof' && shape !== 'half' && !isPart(shape) && <rect x={4} y={3} width={W - 8} height={Math.min(5, H / 5)} rx={2.5} fill="rgb(255 255 255 / 0.32)" />}
     </svg>
   )
 }
@@ -123,6 +165,17 @@ interface Rubble extends Block {
   rot: number
   lift: number
 }
+/** 推倒時跟著彈開的小動物（座標是「格」，x 是身體中間） */
+interface Flung {
+  animal: string
+  fromX: number
+  fromY: number
+  x: number
+  rot: number
+  lift: number
+}
+/** 小動物的大小（格）：坐在 2 格高的積木裡剛好 */
+const TENANT_UNITS = 1.5
 
 /** 量舞台：一格的大小跟著畫面寬度走（44–64px），地面有幾格就是幾欄 */
 function measure(el: HTMLElement | null): Dims | null {
@@ -133,7 +186,7 @@ function measure(el: HTMLElement | null): Dims | null {
   return { unit, cols: Math.max(8, Math.floor(r.width / unit)), rows: r.height / unit }
 }
 
-function BlocksGame({ say: rawSay, finish }: GameProps) {
+function BlocksGame({ say: rawSay, finish, toys }: GameProps) {
   const band = useBand()
   const { rootRef, say } = useTrackedSay(rawSay)
   const finishLater = useFinishLater(finish)
@@ -141,6 +194,15 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
   const [blocks, setBlocks] = useState<Block[]>([])
   const blocksRef = useRef<Block[]>([])
   const [rubble, setRubble] = useState<Rubble[] | null>(null)
+  const [flung, setFlung] = useState<Flung[]>([])
+  /** 這一回合用的新玩具數：地上空空的時候才跟上（蓋到一半盤子不會突然多三塊、也不會突然有人搬進來） */
+  const [liveToys, setLiveToys] = useState(toys)
+  /** 每位住戶住在哪一塊（積木 id；-1 = 還沒有房間） */
+  const [rooms, setRooms] = useState<number[]>([])
+  const roomsRef = useRef<number[]>([])
+  const housedRef = useRef(0)
+  const saidTenant = useRef(false)
+  const round = useRef(newRound())
   const [rubbleOut, setRubbleOut] = useState(false)
   const [ghosts, setGhosts] = useState<Ghost[]>([])
   /**
@@ -163,7 +225,6 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
   const trayRef = useRef<HTMLDivElement>(null)
   const hopRef = useRef<HTMLSpanElement>(null)
   const nextId = useRef(1)
-  const placedTotal = useRef(0)
   const record = useRef(0)
   const lastTopSay = useRef(-Infinity)
   const drags = useRef(new Map<number, Drag>())
@@ -201,6 +262,24 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
     }
   }, [commit])
 
+  /** 回合的事件（domain/blocks.ts）：回傳這一下要不要算玩完 */
+  const roundDo = (ev: Parameters<typeof roundEvent>[1]): boolean => {
+    const r = roundEvent(round.current, ev)
+    round.current = r.round
+    return r.finish
+  }
+  /** 地上沒有積木、手上也沒拿著：這一回合結束，下一塊開始是新的一回合 */
+  const checkEmpty = () => {
+    if (blocksRef.current.length) return
+    if ([...drags.current.values()].some((d) => d.kind === 'block' && d.moved)) return
+    roundDo('empty')
+    saidTenant.current = false
+  }
+
+  useEffect(() => {
+    if (blocks.length === 0 && lifted.length === 0) setLiveToys(toys)
+  }, [toys, blocks.length, lifted.length])
+
   const top = towerTop(blocks)
   const scale = viewScale(top, dims.rows)
   const limit = maxRows(dims.rows)
@@ -225,6 +304,23 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
     }
   }, [top, say, later])
 
+  // ---------- v8.5 住戶：塔夠高，小動物跳進來住 ----------
+  useEffect(() => {
+    const next = assignTenants(roomsRef.current, blocks, liveToys >= 2 ? tenantCount(top) : 0)
+    const housed = next.filter((id) => id >= 0).length
+    if (housed > housedRef.current) {
+      playSound('boing', { synth: false })
+      if (!saidTenant.current) {
+        saidTenant.current = true
+        say('pet.play.blocks.tenant')
+      }
+    }
+    housedRef.current = housed
+    if (next.length === roomsRef.current.length && next.every((id, i) => id === roomsRef.current[i])) return
+    roomsRef.current = next
+    setRooms(next)
+  }, [blocks, top, liveToys, say])
+
   // ---------- 6–7 歲：照著蓋 ----------
   useEffect(() => {
     if (band !== '6-7') return
@@ -241,7 +337,7 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
     playSound('correct')
     say('pet.play.blocks.match')
     petHop(hopRef.current, '-30%')
-    finishLater()
+    if (roundDo('match')) finishLater()
     // 煙火放完換下一張藍圖（同一天可以一直蓋）
     later(() => {
       setMatched(false)
@@ -257,6 +353,7 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
     later(
       () => {
         setRubble(null)
+        setFlung([])
         setRubbleOut(false)
       },
       reducedMotion() ? 0 : 320,
@@ -282,10 +379,7 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
     clearRubble()
     setActed(true)
     playSound('drop')
-    if (!keepId) {
-      placedTotal.current += 1
-      if (placedTotal.current === FINISH_PLACED) finishLater()
-    }
+    if (!keepId && roundDo('place')) finishLater()
     later(() => petHop(hopRef.current), 160)
     return true
   }
@@ -374,6 +468,7 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
       refuse()
     }
     // 放在盤子上（或放不下）：飛回盤子收起來
+    checkEmpty()
     const home = trayHome(d.shape)
     if (d.kind === 'block') playSfx('whoosh')
     setGhosts((g) => g.map((x) => (x.gid === gid ? { ...x, back: home } : x)))
@@ -409,8 +504,29 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
     setLifted([])
     const sc = scatter(cur, dimsRef.current.cols)
     setRubble(cur.map((b) => ({ ...b, ...sc.find((s) => s.id === b.id)!, fromX: b.x, fromY: b.y, y: 0 })))
+    // 住戶跟著自己那塊一起彈開，落在它旁邊
+    const out: Flung[] = []
+    roomsRef.current.forEach((id, i) => {
+      const b = cur.find((x) => x.id === id)
+      const to = sc.find((x) => x.id === id)
+      if (!b || !to) return
+      const w = BLOCK_SIZE[b.shape].w
+      const half = TENANT_UNITS / 2
+      out.push({
+        animal: TENANTS[i],
+        fromX: b.x + w / 2,
+        fromY: b.y,
+        x: Math.max(half, Math.min(dimsRef.current.cols - half, to.x + w / 2 + (to.rot < 0 ? -1 : 1))),
+        rot: to.rot < 0 ? -24 : 24,
+        lift: to.lift + 1.2,
+      })
+    })
+    setFlung(out)
+    if (out.length) playSound('squeak', { synth: false })
     setRubbleOut(false)
     commit([])
+    const done = roundDo('crash')
+    checkEmpty()
     record.current = 0
     setCrashes((n) => n + 1)
     setPose('dizzy')
@@ -423,7 +539,7 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
     }, reducedMotion() ? 100 : 720)
     later(() => setPose((p) => (p === 'laugh' ? 'happy' : p)), 3200)
     // 讓孩子先看完散一地、聽完寵物大笑，禮物才出來
-    later(finishLater, 1800)
+    if (done) later(finishLater, 1800)
   }
 
   const again = () => {
@@ -437,6 +553,7 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
   const worldW = dims.cols * dims.unit
   const s = scale
   const canCrash = blocks.length >= 2 && !rubble
+  const shapes = trayShapes(liveToys)
 
   return (
     <div
@@ -450,6 +567,8 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
       data-limit={limit}
       data-crashes={crashes}
       data-placed={blocks.length}
+      data-live-toys={liveToys}
+      data-tenants={rooms.filter((id) => id >= 0).length}
     >
       <div className="blk-stage" ref={stageRef} data-testid="blk-stage">
         <div
@@ -463,8 +582,15 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
           {[...blocks.map((b) => [b, false] as const), ...lifted.map((b) => [b, true] as const)].map(([b, up]) => (
             <BlockView key={b.id} b={b} lifted={up} unit={dims.unit} landFrom={landFrom.current} onDown={onBlockDown} />
           ))}
+          {rooms.map((id, i) => {
+            const b = id >= 0 ? blocks.find((x) => x.id === id) : undefined
+            return b ? <TenantView key={TENANTS[i]} animal={TENANTS[i]} b={b} unit={dims.unit} /> : null
+          })}
           {rubble?.map((r, i) => (
             <RubbleView key={`r${r.id}`} r={r} i={i} unit={dims.unit} out={rubbleOut} />
+          ))}
+          {flung.map((f, i) => (
+            <FlungView key={`f${crashes}-${f.animal}`} f={f} i={i} unit={dims.unit} out={rubbleOut} />
           ))}
           <div
             className="blk-pet"
@@ -502,9 +628,9 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
         )}
       </div>
 
-      <div className="blk-tray" ref={trayRef} data-testid="blk-tray">
+      <div className="blk-tray" ref={trayRef} data-testid="blk-tray" data-parts={shapes.length > 6 ? '1' : undefined}>
         <div className="blk-shapes">
-          {BLOCK_SHAPES.map((sh) => (
+          {shapes.map((sh) => (
             <button
               key={sh}
               type="button"
@@ -569,7 +695,7 @@ function BlocksGame({ say: rawSay, finish }: GameProps) {
   )
 }
 
-const SHAPE_LABEL: Record<BlockShape, string> = { cube: '方塊', long: '長條', arch: '拱門', roof: '三角屋頂', cyl: '圓柱', half: '半圓' }
+const SHAPE_LABEL: Record<BlockShape, string> = { cube: '方塊', long: '長條', arch: '拱門', roof: '三角屋頂', cyl: '圓柱', half: '半圓', wheel: '輪子', window: '窗戶', flag: '旗子' }
 const COLOR_LABEL: Record<BlockColor, string> = { coral: '紅色', sun: '黃色', leaf: '綠色', sky: '藍色', grape: '紫色' }
 
 /** 一塊放好的積木。新放的從手指放開的地方落下；底下被拿走時往下掉（FLIP，只動 transform） */
@@ -649,6 +775,81 @@ function RubbleView({ r, i, unit, out }: { r: Rubble; i: number; unit: number; o
       style={{ left: r.x * unit, bottom: 0, width: w * unit, height: h * unit, transform: `rotate(${r.rot}deg)`, transformOrigin: r.rot < 0 ? '0% 100%' : '100% 100%' }}
     >
       <BlockArt shape={r.shape} color={r.color} />
+    </div>
+  )
+}
+
+/**
+ * v8.5 住戶：坐在自己那塊積木裡（貼著底邊、置中）。第一次出現從上面跳進來；換房間時跳過去（只動 transform）。
+ * 不接手指：壓在牠底下的積木照樣拿得起來。
+ */
+function TenantView({ animal, b, unit }: { animal: string; b: Block; unit: number }) {
+  const hop = useRef<HTMLSpanElement>(null)
+  const size = TENANT_UNITS * unit
+  const { w } = BLOCK_SIZE[b.shape]
+  useLayoutEffect(() => {
+    const el = hop.current
+    if (!el || typeof el.animate !== 'function' || reducedMotion()) return
+    el.animate(
+      [
+        { transform: `translateY(${-2.4 * unit}px) scale(0.7)`, opacity: 0 },
+        { transform: 'translateY(0) scale(1.08, 0.9)', opacity: 1, offset: 0.7 },
+        { transform: `translateY(${-0.25 * unit}px) scale(0.98, 1.04)`, opacity: 1, offset: 0.85 },
+        { transform: 'translateY(0) scale(1)', opacity: 1 },
+      ],
+      { duration: 520, easing: 'ease-in' },
+    )
+    // 只在搬進來的那一下演
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return (
+    <div
+      className="blk-tenant"
+      data-testid="blk-tenant"
+      data-animal={animal}
+      data-on={b.id}
+      style={{ width: size, height: size, transform: `translate(${(b.x + w / 2) * unit - size / 2}px, ${-b.y * unit - unit * 0.06}px)` }}
+      aria-hidden
+    >
+      <span className="blk-tenant-hop" ref={hop}>
+        <Icon name={animal} emoji={TENANT_EMOJI[animal]} size="100%" alt="" />
+      </span>
+    </div>
+  )
+}
+
+/** 推倒時跟著彈開的小動物：飛起來、落在自己那塊旁邊（WAAPI，只動 transform） */
+function FlungView({ f, i, unit, out }: { f: Flung; i: number; unit: number; out: boolean }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const size = TENANT_UNITS * unit
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el || typeof el.animate !== 'function' || reducedMotion()) return
+    const dx = (f.fromX - f.x) * unit
+    const y0 = -f.fromY * unit
+    el.animate(
+      [
+        { transform: `translate(${dx}px, ${y0}px) rotate(0deg)` },
+        { transform: `translate(${dx * 0.45}px, ${y0 - f.lift * unit}px) rotate(${f.rot * 4}deg)`, offset: 0.45, easing: 'ease-in' },
+        { transform: `translate(0, 0) rotate(${f.rot * 1.4}deg)`, offset: 0.85 },
+        { transform: `translate(0, 0) rotate(${f.rot}deg)` },
+      ],
+      { duration: 760 + (i % 3) * 70, easing: 'ease-out' },
+    )
+    // 只在剛推倒時演一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return (
+    <div
+      ref={ref}
+      className="blk-tenant blk-flung"
+      data-testid="blk-flung"
+      data-animal={f.animal}
+      data-out={out ? '1' : undefined}
+      style={{ left: f.x * unit - size / 2, width: size, height: size, transform: `rotate(${f.rot}deg)` }}
+      aria-hidden
+    >
+      <Icon name={f.animal} emoji={TENANT_EMOJI[f.animal]} size="100%" alt="" />
     </div>
   )
 }

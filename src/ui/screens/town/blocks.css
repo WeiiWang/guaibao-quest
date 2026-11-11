@@ -10,6 +10,8 @@
 .blk-block::before { content: ''; position: absolute; inset: -6px -2px; }
 .blk-block > *, .blk-ghost > *, .blk-pick-art > * { position: relative; display: block; width: 100%; height: 100%; pointer-events: none; }
 .blk-img { object-fit: fill; -webkit-user-drag: none; -webkit-touch-callout: none; }
+/* v8.5 新積木的圖是單色的：不換色、不拉長 */
+.blk-img.blk-part { object-fit: contain; object-position: 50% 100%; }
 .blk-svg { overflow: visible; }
 /* 換色：只用靜態的 filter（不做 filter 的動畫或 transition，Playwright WebKit 會崩潰） */
 .blk-c-sun { filter: hue-rotate(38deg) saturate(1.35) brightness(1.1); }
@@ -25,6 +27,13 @@
 .blk-pet { position: absolute; left: 0; bottom: 0; z-index: 2; display: grid; place-items: end center; transition: transform 0.55s cubic-bezier(0.3, 1.25, 0.5, 1); pointer-events: none; }
 /* 寵物站在塔頂、腳踩進最上面那塊：不接手指，不然壓在牠底下的積木拿不起來 */
 .blk-pet-hop { display: block; pointer-events: none; }
+
+/* v8.5 住戶：坐在積木裡的小動物。不接手指，壓在牠底下的積木照樣拿得起來 */
+.blk-tenant { position: absolute; left: 0; bottom: 0; z-index: 1; pointer-events: none; transition: transform 0.4s cubic-bezier(0.3, 1.25, 0.5, 1); }
+.blk-tenant-hop { display: block; width: 100%; height: 100%; transform-origin: 50% 100%; pointer-events: none; }
+.blk-tenant .art, .blk-tenant .art-emoji { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.blk-flung { transition: none; transform-origin: 50% 100%; }
+.blk-flung[data-out] { animation: blk-sweep 0.3s ease-in forwards; }
 
 /* 右邊（直向時在上面）：藍圖與推倒 */
 .blk-side { grid-area: side; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; min-height: 0; }
@@ -63,6 +72,11 @@
   100% { transform: rotate(var(--a)) translateX(clamp(70px, 14vmin, 130px)) scale(1); opacity: 0; }
 }
 
+/* v8.5 盤子多三種新積木（9 種）：橫向時每格小一點，放不下顏色就換到下一排 */
+.blk-tray[data-parts] { flex-wrap: wrap; row-gap: 6px; }
+.blk-tray[data-parts] .blk-shapes { grid-template-columns: repeat(9, auto); }
+.blk-tray[data-parts] .blk-pick { width: clamp(60px, 6.4vw, 84px); height: clamp(60px, 6.4vw, 84px); }
+
 /* 直向：藍圖與推倒在上面一排，舞台在中間，盤子在下面 */
 @media (max-aspect-ratio: 1/1) {
   .blk-root { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: 'side' 'stage' 'tray'; }
@@ -81,16 +95,31 @@
   .blk-plan-paper { max-height: 64px; }
   .blk-crash, .blk-again { width: 96px; min-height: 96px; border-radius: 28px; }
 }
+/* 直向：9 種積木一排、顏色在下面一排 */
+@media (max-aspect-ratio: 1/1) {
+  .blk-tray[data-parts] { flex-direction: column; flex-wrap: nowrap; gap: 8px; }
+  .blk-tray[data-parts] .blk-pick { width: clamp(60px, 9vw, 84px); height: clamp(60px, 9vw, 84px); }
+  .blk-tray[data-parts] .blk-colors { padding-left: 0; border-left: 0; gap: 10px; }
+}
+/* 手機與窄的直向：9 種積木排兩排（一排 5 個），每個還是 56 以上 */
+@media (max-width: 700px) and (max-aspect-ratio: 1/1) {
+  .blk-tray[data-parts] { flex-direction: column; flex-wrap: nowrap; gap: 6px; padding: 6px; width: 100%; }
+  .blk-tray[data-parts] .blk-shapes { grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; gap: 4px; }
+  .blk-tray[data-parts] .blk-pick { width: 100%; min-width: 56px; height: 58px; padding: 5px; }
+  .blk-tray[data-parts] .blk-colors { padding-left: 0; border-left: 0; gap: 10px; }
+}
 /* 手機橫放：矮，盤子變小 */
 @media (max-height: 500px) and (min-aspect-ratio: 1/1) {
   .blk-stage { margin-top: 0; margin-left: 76px; }
   .blk-pick { width: 58px; height: 58px; padding: 4px; }
   .blk-tray { padding: 4px 8px; }
+  .blk-tray[data-parts] { row-gap: 2px; }
+  .blk-tray[data-parts] .blk-pick { width: 56px; height: 56px; }
   .blk-crash, .blk-again { min-height: 88px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .blk-world, .blk-pet, .blk-ghost[data-back], .blk-swatch i { transition: none; }
-  .blk-crash, .blk-plan-ok, .blk-rubble[data-out] { animation: none; }
+  .blk-world, .blk-pet, .blk-tenant, .blk-ghost[data-back], .blk-swatch i { transition: none; }
+  .blk-crash, .blk-plan-ok, .blk-rubble[data-out], .blk-flung[data-out] { animation: none; }
   .blk-burst i { animation: none; opacity: 1; transform: rotate(var(--a)) translateX(60px); }
 }

@@ -29,6 +29,20 @@
 .pzl-piece[data-dragging] { box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.85), 0 14px 26px rgb(40 30 20 / 0.32); cursor: grabbing; }
 .pzl-piece[data-locked] { z-index: 1; border-radius: 0; box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.35); pointer-events: none; }
 .pzl-area[data-done] .pzl-piece { box-shadow: none; }
+/* v8.5 凹凸形狀：外面的 div 還是原本那一格（可以按的範圍不變），形狀畫在裡面的 SVG（不接手指）。
+   陰影用靜態的 drop-shadow（不做 filter 的動畫或 transition） */
+.pzl-piece[data-jigsaw] { border-radius: 0; background: none; box-shadow: none; }
+.pzl-jig { position: absolute; display: block; overflow: visible; pointer-events: none; filter: drop-shadow(0 4px 4px rgb(40 30 20 / 0.3)); }
+.pzl-piece[data-jigsaw][data-locked] .pzl-jig { filter: none; }
+.pzl-jig-edge { fill: none; stroke: rgb(255 255 255 / 0.8); stroke-width: 2; stroke-linejoin: round; }
+.pzl-piece[data-locked] .pzl-jig-edge { stroke: rgb(255 255 255 / 0.4); stroke-width: 1; }
+.pzl-area[data-done] .pzl-jig-edge { stroke: none; }
+.pzl-area[data-jigsaw] .pzl-slot { box-shadow: none; }
+.pzl-board-jig { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.pzl-board-jig path { fill: none; stroke: rgb(120 90 60 / 0.28); stroke-width: 1.5; }
+.pzl-area[data-done] .pzl-board-jig { visibility: hidden; }
+/* 拼完：底下墊整張原圖，片跟片之間不會看到細縫 */
+.pzl-area[data-jigsaw][data-done] .pzl-ghostimg { opacity: 1; }
 .pzl-shine { position: absolute; inset: -6px; z-index: 3; border-radius: 14px; box-shadow: 0 0 0 6px #fff6a8, 0 0 44px 18px rgb(255 236 140 / 0.9); pointer-events: none; animation: pzl-shine 1.4s ease-out 2 both; }
 @keyframes pzl-shine { 0% { opacity: 0; transform: scale(0.97); } 30% { opacity: 1; transform: scale(1.02); } 100% { opacity: 0.35; transform: scale(1); } }
 

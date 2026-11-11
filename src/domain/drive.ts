@@ -116,6 +116,29 @@ export const CROSS_MS = 3200
 export const BOARD_MS = 1300
 export const OFF_MS = 1300
 
+// ---------- v8.5 新玩具「洗車站」 ----------
+/**
+ * 洗車站在環線上的位置：上面那段路的左半邊（過了紅綠燈和藍房子的岔路、還沒轉彎），
+ * 離紅綠燈、斑馬線、站牌都遠，不會跟它們的停車位置撞在一起。
+ */
+export const WASH_S = 960
+/** 車子停在洗車站刷多久 */
+export const WASH_MS = 1800
+/** 洗完亮晶晶多久 */
+export const SHINE_MS = 4000
+
+// ---------- v8.5 新玩具「換車」 ----------
+export type CarKind = 'red' | 'fire' | 'ice'
+/** 車庫按鈕按一下換下一台 */
+export const CAR_KINDS: readonly CarKind[] = ['red', 'fire', 'ice']
+export const nextCar = (k: CarKind): CarKind => CAR_KINDS[(CAR_KINDS.indexOf(k) + 1) % CAR_KINDS.length]
+/** 每台車的圖（public/art/<art>.png）與喇叭：小紅車叭叭、消防車警笛、冰淇淋車叮叮的小旋律 */
+export const CAR_META: Record<CarKind, { art: string; horn: 'horn' | 'siren' | 'jingle'; line: string | null }> = {
+  red: { art: 'ui-car-top', horn: 'horn', line: null },
+  fire: { art: 'ui-car-fire-top', horn: 'siren', line: 'pet.play.drive.fire' },
+  ice: { art: 'ui-car-ice-top', horn: 'jingle', line: 'pet.play.drive.ice' },
+}
+
 // ---------- 6–7 歲的岔路與房子 ----------
 export type HouseColor = 'red' | 'blue' | 'yellow'
 export interface Spur {
@@ -265,7 +288,8 @@ export function advance(car: Car, d: number, limit: number): Car {
 
 // ---------- 事件 ----------
 export type LightColor = 'green' | 'yellow' | 'red'
-export type DriveCue = 'red' | 'green' | 'cross' | 'rider' | 'where' | 'arrive'
+/** wash = 開進洗車站開始刷；washed = 洗好了（這時候寵物才說話） */
+export type DriveCue = 'red' | 'green' | 'cross' | 'rider' | 'where' | 'arrive' | 'wash' | 'washed'
 export type RiderPhase = 'wait' | 'board' | 'ride' | 'off'
 
 export interface DriveState {
@@ -282,9 +306,18 @@ export interface DriveState {
   /** 6–7 歲：停在哪棟（送錯的）房子前面，同一次不重複說 */
   wrongAt: number
   served: number
+  /** v8.5 路上有沒有洗車站（第二個新玩具） */
+  washOn: boolean
+  /** 正在洗車（開始的時間、停在哪） */
+  wash: { at: number; occ: number } | null
+  /** 最後一次洗車是哪一圈的（位置），同一圈不重複 */
+  washDone: number
+  washes: number
+  /** 最後一次洗好的時間（亮晶晶從這裡算） */
+  shineAt: number
 }
 
-export function startDrive(band: AgeBand): DriveState {
+export function startDrive(band: AgeBand, washOn = false): DriveState {
   return {
     band,
     car: startCar(),
@@ -296,8 +329,16 @@ export function startDrive(band: AgeBand): DriveState {
     rider: { phase: 'wait', n: 0, at: 0, stopAt: STOP_S },
     wrongAt: -1,
     served: 0,
+    washOn,
+    wash: null,
+    washDone: -Infinity,
+    washes: 0,
+    shineAt: -Infinity,
   }
 }
+
+/** 剛洗好，車子亮晶晶 */
+export const isShiny = (st: Pick<DriveState, 'shineAt'>, now: number): boolean => now - st.shineAt < SHINE_MS
 
 export function lightColor(st: Pick<DriveState, 'light'>, now: number): LightColor {
   if (!st.light) return 'green'
@@ -330,6 +371,12 @@ export function driveLimit(st: DriveState, now: number): number {
   if (r.phase === 'wait' && st.car.spur < 0) lim = Math.min(lim, nextOcc(s, STOP_S))
   if (r.phase === 'board' || r.phase === 'off') lim = Math.min(lim, s)
   if (r.phase === 'ride' && lapRider(st.band)) lim = Math.min(lim, r.stopAt + LOOP_LEN)
+  // 洗車站：這一圈還沒洗就停在裡面；正在洗的時候不動
+  if (st.wash) lim = Math.min(lim, s)
+  else if (st.washOn && st.car.spur < 0) {
+    const occ = nextOcc(s, WASH_S)
+    if (occ > st.washDone) lim = Math.min(lim, occ)
+  }
   return Math.max(lim, s)
 }
 
@@ -368,6 +415,21 @@ export function stepDrive(prev: DriveState, now: number): { st: DriveState; cues
       st.crossDone = occ
       st.crossN += 1
       cues.push('cross')
+    }
+  }
+
+  // 洗車站：開進去停一下刷一刷（每一圈一次），洗好了亮晶晶
+  if (st.wash && now - st.wash.at >= WASH_MS) {
+    st.wash = null
+    st.shineAt = now
+    cues.push('washed')
+  } else if (st.washOn && !st.wash && onLoop) {
+    const occ = nextOcc(car.s, WASH_S)
+    if (occ - car.s <= 2 && occ > st.washDone) {
+      st.wash = { at: now, occ }
+      st.washDone = occ
+      st.washes += 1
+      cues.push('wash')
     }
   }
 

@@ -3,20 +3,30 @@ import {
   BLOCK_SHAPES,
   BLOCK_SIZE,
   BLUEPRINTS,
+  FINISH_PLACED,
   MIN_VIEW_SCALE,
+  PART_SHAPES,
   PET_ROWS,
+  TENANTS,
+  TENANT_ROWS,
+  assignTenants,
   autoColumn,
   blueprintFor,
   canPlace,
   dropY,
   groups,
+  isPart,
   matchesBlueprint,
   maxRows,
+  newRound,
+  roundEvent,
   scatter,
   settle,
   snapColumn,
+  tenantCount,
   topBlock,
   towerTop,
+  trayShapes,
   viewScale,
   type Block,
 } from './blocks'
@@ -283,5 +293,117 @@ describe('照著蓋：比對', () => {
   it('兩塊分開沒碰到不是同一群', () => {
     expect(groups([blk('cube', 0), blk('cube', 3)])).toHaveLength(2)
     expect(groups([blk('cube', 0), blk('cube', 2)])).toHaveLength(1)
+  })
+})
+
+describe('v8.5 一回合只算玩完一次', () => {
+  const run = (evs: Parameters<typeof roundEvent>[1][]) => {
+    let r = newRound()
+    let n = 0
+    for (const ev of evs) {
+      const out = roundEvent(r, ev)
+      r = out.round
+      if (out.finish) n++
+    }
+    return { n, r }
+  }
+  const places = (k: number) => Array.from({ length: k }, () => 'place' as const)
+  it('放到第 8 塊算一次，之後再放、再推倒都不再算', () => {
+    expect(FINISH_PLACED).toBe(8)
+    expect(run(places(7)).n).toBe(0)
+    expect(run(places(8)).n).toBe(1)
+    expect(run([...places(20), 'crash']).n).toBe(1)
+  })
+  it('推倒算一次；照著蓋好又推倒也只算一次', () => {
+    expect(run([...places(2), 'crash']).n).toBe(1)
+    expect(run([...places(3), 'match', 'crash']).n).toBe(1)
+    expect(run([...places(3), 'match', ...places(5), 'crash']).n).toBe(1)
+  })
+  it('推倒之後地上空了才是新的一回合，新回合可以再算一次', () => {
+    expect(run([...places(8), 'crash', 'empty', ...places(2), 'crash', 'empty']).n).toBe(2)
+    expect(run([...places(2), 'crash', 'empty', ...places(8)]).n).toBe(2)
+  })
+  it('還沒玩完就把積木全部收回盤子：不重新數（放過的照算）', () => {
+    const { n, r } = run([...places(5), 'empty', ...places(3)])
+    expect(n).toBe(1)
+    expect(r.done).toBe(true)
+  })
+  it('同一回合連續蓋好兩張藍圖也只算一次', () => {
+    expect(run([...places(3), 'match', ...places(4), 'match']).n).toBe(1)
+  })
+})
+
+describe('v8.5 新積木', () => {
+  it('沒有新玩具時盤子就是原本的 6 種，有了多 3 種排在後面', () => {
+    expect(trayShapes(0)).toEqual(BLOCK_SHAPES)
+    expect(trayShapes(1)).toEqual([...BLOCK_SHAPES, ...PART_SHAPES])
+    expect(trayShapes(2)).toHaveLength(9)
+  })
+  it('新積木照同一套格子堆疊', () => {
+    for (const s of PART_SHAPES) {
+      expect(isPart(s)).toBe(true)
+      expect(BLOCK_SIZE[s].w).toBeGreaterThanOrEqual(2)
+      expect(BLOCK_SIZE[s].h).toBeGreaterThanOrEqual(2)
+    }
+    expect(isPart('cube')).toBe(false)
+    const t = build([
+      ['wheel', 0],
+      ['wheel', 2],
+      ['long', 0],
+      ['window', 1],
+      ['flag', 1],
+    ])
+    expect(t.map((b) => b.y)).toEqual([0, 0, 2, 3, 5])
+    expect(towerTop(t)).toBe(8)
+  })
+  it('藍圖不會用到新積木（沒有新玩具也蓋得出來）', () => {
+    for (const p of BLUEPRINTS) for (const b of p.blocks) expect(isPart(b.shape)).toBe(false)
+  })
+})
+
+describe('v8.5 住戶', () => {
+  it('塔到 4 格高來第一隻，之後每 3 格多一隻，最多 3 隻', () => {
+    expect(TENANT_ROWS).toBe(4)
+    expect([0, 3, 4, 6, 7, 9, 10, 30].map(tenantCount)).toEqual([0, 0, 1, 1, 2, 2, 3, 3])
+    expect(TENANTS).toEqual(['obj-chick', 'obj-rabbit', 'obj-bear'])
+  })
+  it('住在最低的空房間，不住寵物站的最高那塊', () => {
+    const t = build([
+      ['cube', 4],
+      ['cube', 4],
+    ])
+    expect(assignTenants([], t, 1)).toEqual([t[0].id])
+    // 只有一塊：那塊是寵物站的，沒有房間
+    expect(assignTenants([], t.slice(0, 1), 1)).toEqual([-1])
+  })
+  it('長條和旗子住不下', () => {
+    const t = build([
+      ['long', 4],
+      ['flag', 4],
+      ['cube', 4],
+      ['cube', 4],
+    ])
+    expect(assignTenants([], t, 2)).toEqual([t[2].id, -1])
+  })
+  it('已經住下的不搬家；房間被拿走才換', () => {
+    const t = build([
+      ['cube', 4],
+      ['cube', 4],
+      ['cube', 4],
+      ['cube', 4],
+    ])
+    const a = assignTenants([], t, 1)
+    expect(a).toEqual([t[0].id])
+    const b = assignTenants(a, t, 2)
+    expect(b).toEqual([t[0].id, t[1].id])
+    // 最下面那塊被拿走（上面的往下掉）：第一位搬到剩下最低的空房間
+    const rest = settle(t.slice(1))
+    expect(assignTenants(b, rest, 2)).toEqual([rest[1].id, rest[0].id])
+    // 兩位不會住同一間
+    const c = assignTenants([t[0].id, t[0].id], t, 2)
+    expect(new Set(c).size).toBe(2)
+  })
+  it('推倒之後（沒有積木）沒有人住', () => {
+    expect(assignTenants([3, 5], [], 0)).toEqual([])
   })
 })

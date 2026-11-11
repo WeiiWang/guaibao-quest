@@ -7,25 +7,40 @@ import { HATS, canWearHat, hatOf } from '../../../domain/hats'
 import {
   COUNT_FROM,
   COUNT_STEP_MS,
+  FRIEND_SIZES,
+  FRIEND_START_SIZE,
   PET_SIZES,
   PET_START,
   PHOTO_BACKDROPS,
+  PHOTO_FRIENDS,
   PHOTO_JPEG_Q,
+  PHOTO_MAX_FRIENDS,
   PHOTO_MAX_STICKERS,
   PHOTO_PX,
   STICKER_SIZE,
+  applyTone,
   clampPet,
   clampSticker,
   containIn,
   coverCrop,
+  frameOps,
+  friendSpot,
   hatOnImage,
+  heartPath,
   insidePhoto,
+  nearestSize,
+  nextFrame,
+  nextFriendSize,
   nextPose,
   nextSize,
+  nextTone,
   photoLine,
   pinchSize,
+  starPath,
   stickerSpot,
+  type PhotoFrame,
   type PhotoPose,
+  type PhotoTone,
   type Rect,
 } from '../../../domain/photo'
 import { playSound } from '../../../learning/audioEngine'
@@ -43,21 +58,29 @@ import './photo.css'
 
 // 照相館：選佈景 → 擺寵物（拖、縮放、換姿勢）→ 戴帽子、貼貼紙 → 按快門（手指 3、2、1）→ 閃光、喀嚓 → 拍立得飛出來 → 存進畫廊。
 // 照片用 canvas 合成成 JPEG 存在 coloring 表（g:photo-<時間戳>），不放 settings。沒有對錯，滿 30 張就只是不存。
+// v8.5 新玩具：toys >= 1 盤子最前面多一排動物朋友（拖進來、移動、點一下或雙指換大小，跟貼紙一樣會拍進照片）；
+//             toys >= 2 工具列多兩顆按鈕：相框（沒有、星星、愛心、底片）與色調（原色、暖暖、黑白），都真的畫進照片的像素。
 
 type Phase = 'pick' | 'stage' | 'count' | 'shoot' | 'print'
 interface Placed {
   id: number
+  /** friend = 動物朋友（比貼紙大、可以換大小） */
+  kind: 'sticker' | 'friend'
   art: string
   emoji: string
   x: number
   y: number
+  /** 動物朋友的大小是第幾檔（FRIEND_SIZES）；貼紙用不到 */
+  size: number
 }
-type Item = { kind: 'hat'; id: string; emoji: string } | { kind: 'sticker'; art: string; emoji: string }
+type Item = { kind: 'hat'; id: string; emoji: string } | { kind: 'sticker'; art: string; emoji: string } | { kind: 'friend'; art: string; emoji: string }
 type Drag =
   | { kind: 'tray'; item: Item; sx: number; sy: number; moved: boolean }
   | { kind: 'sticker'; id: number; sx: number; sy: number; moved: boolean }
   | { kind: 'pet'; sx: number; sy: number; px: number; py: number; moved: boolean }
   | { kind: 'pinch' }
+  /** 兩根手指捏同一位動物朋友：換大小（不移動、放開也不算點） */
+  | { kind: 'fpinch'; id: number }
 
 const DRAG_SLOP = 10
 const base = import.meta.env.BASE_URL
@@ -70,7 +93,7 @@ export default function Photo({ onExit, go }: GameRootProps) {
   )
 }
 
-function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: () => void }) {
+function PhotoGame({ say: rawSay, finish, toys, toGallery }: GameProps & { toGallery: () => void }) {
   const { soundOn } = useLearningSettings()
   // 照相館是自由創作，不分年齡檔（只標在畫面上給測試看）
   const band = useBand()
@@ -89,6 +112,12 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
   const [pose, setPose] = useState<PhotoPose>('happy')
   const [hat, setHat] = useState<string | null>(null)
   const [stickers, setStickers] = useState<Placed[]>([])
+  const [border, setBorder] = useState<PhotoFrame>('none')
+  const [tone, setTone] = useState<PhotoTone>('plain')
+  const saidFriend = useRef(false)
+  const friendN = useRef(0)
+  /** 正在被兩根手指捏的動物朋友 */
+  const fpinch = useRef<{ id: number; ids: [number, number]; d0: number; size0: number } | null>(null)
   const [ghosts, setGhosts] = useState<{ pid: number; item: Item; x: number; y: number }[]>([])
   const [count, setCount] = useState(COUNT_FROM)
   const [print, setPrint] = useState<{ url: string; saved: boolean | null } | null>(null)
@@ -155,17 +184,36 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
     pop()
   }
   const addSticker = (item: Extract<Item, { kind: 'sticker' }>, at?: { x: number; y: number }) => {
-    if (stickers.length >= PHOTO_MAX_STICKERS) {
+    if (stickers.filter((s) => s.kind === 'sticker').length >= PHOTO_MAX_STICKERS) {
       if (soundRef.current) playSound('tap')
       return false
     }
     const p = at ?? stickerSpot(placedN.current)
     placedN.current += 1
-    setStickers((s) => [...s, { id: nextId.current++, art: item.art, emoji: item.emoji, x: clampSticker(p.x), y: clampSticker(p.y) }])
+    setStickers((s) => [...s, { id: nextId.current++, kind: 'sticker', art: item.art, emoji: item.emoji, x: clampSticker(p.x), y: clampSticker(p.y), size: 0 }])
     setActed(true)
     pop()
     return true
   }
+  /** v8.5 動物朋友：跟貼紙一樣放進照片，只是比較大、可以換大小。第一次放進來寵物說一句 */
+  const addFriend = (item: Extract<Item, { kind: 'friend' }>, at?: { x: number; y: number }) => {
+    if (stickers.filter((s) => s.kind === 'friend').length >= PHOTO_MAX_FRIENDS) {
+      if (soundRef.current) playSound('tap')
+      return false
+    }
+    const p = at ?? friendSpot(friendN.current)
+    friendN.current += 1
+    setStickers((s) => [...s, { id: nextId.current++, kind: 'friend', art: item.art, emoji: item.emoji, x: clampSticker(p.x), y: clampSticker(p.y), size: FRIEND_START_SIZE }])
+    setActed(true)
+    pop()
+    if (soundRef.current) playSound('squeak', { synth: false })
+    if (!saidFriend.current) {
+      saidFriend.current = true
+      say(photoLine('friend'))
+    }
+    return true
+  }
+  const place = (it: Exclude<Item, { kind: 'hat' }>, at?: { x: number; y: number }) => (it.kind === 'friend' ? addFriend(it, at) : addSticker(it, at))
 
   // 托盤：點一下 = 戴上 / 貼上；拖進照片放開 = 放在那裡；拖到別的地方 = 取消
   const onTrayDown = (e: RPointerEvent<HTMLButtonElement>, item: Item) => {
@@ -198,12 +246,12 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
           setHat(null)
           pop()
         } else wearHat(it.id)
-      } else addSticker(it)
+      } else place(it)
       return
     }
     if (!inFrame(e.clientX, e.clientY)) return
     if (it.kind === 'hat') wearHat(it.id)
-    else addSticker(it, toFrame(e.clientX, e.clientY) ?? undefined)
+    else place(it, toFrame(e.clientX, e.clientY) ?? undefined)
   }
   const onTrayCancel = (e: RPointerEvent<HTMLButtonElement>) => {
     const pid = e.pointerId
@@ -212,14 +260,37 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
   }
 
   // 照片上的貼紙：拖著移動，拖出照片就拿掉
-  const onStickerDown = (e: RPointerEvent<HTMLButtonElement>, id: number) => {
+  const onStickerDown = (e: RPointerEvent<HTMLButtonElement>, s: Placed) => {
     if (phase !== 'stage') return
     e.stopPropagation()
     e.currentTarget.setPointerCapture?.(e.pointerId)
+    last.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    const id = s.id
+    // 動物朋友已經被一根手指按著，第二根手指也按上來：變成雙指縮放
+    const other = s.kind === 'friend' ? [...drags.current.entries()].find(([, d]) => d.kind === 'sticker' && d.id === id) : undefined
+    if (other && !fpinch.current) {
+      const a = last.current.get(other[0])
+      if (a) {
+        fpinch.current = { id, ids: [other[0], e.pointerId], d0: Math.max(20, Math.hypot(a.x - e.clientX, a.y - e.clientY)), size0: s.size }
+        drags.current.set(other[0], { kind: 'fpinch', id })
+        drags.current.set(e.pointerId, { kind: 'fpinch', id })
+        return
+      }
+    }
     drags.current.set(e.pointerId, { kind: 'sticker', id, sx: e.clientX, sy: e.clientY, moved: false })
   }
   const onStickerMove = (e: RPointerEvent<HTMLButtonElement>) => {
     const d = drags.current.get(e.pointerId)
+    if (d) last.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    if (d?.kind === 'fpinch') {
+      const p = fpinch.current
+      const a = p && last.current.get(p.ids[0])
+      const b = p && last.current.get(p.ids[1])
+      if (!p || !a || !b) return
+      const k = nearestSize(FRIEND_SIZES, p.size0, Math.hypot(a.x - b.x, a.y - b.y) / p.d0)
+      setStickers((all) => (all.some((v) => v.id === p.id && v.size !== k) ? all.map((v) => (v.id === p.id ? { ...v, size: k } : v)) : all))
+      return
+    }
     if (!d || d.kind !== 'sticker') return
     if (!d.moved && Math.hypot(e.clientX - d.sx, e.clientY - d.sy) < DRAG_SLOP) return
     d.moved = true
@@ -232,11 +303,26 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
   }
   const onStickerUp = (e: RPointerEvent<HTMLButtonElement>, s: Placed) => {
     const d = drags.current.get(e.pointerId)
+    last.current.delete(e.pointerId)
+    if (d?.kind === 'fpinch') {
+      // 捏完：兩根手指都不算拖、也不算點（另一根放開時什麼都不做）
+      drags.current.delete(e.pointerId)
+      if (![...drags.current.values()].some((x) => x.kind === 'fpinch')) fpinch.current = null
+      setActed(true)
+      return
+    }
     if (!d || d.kind !== 'sticker') return
     drags.current.delete(e.pointerId)
     const el = e.currentTarget
     delete el.dataset.out
     if (!d.moved) {
+      if (s.kind === 'friend') {
+        // 點一下動物朋友：換下一檔大小，彈一下
+        setStickers((all) => all.map((v) => (v.id === s.id ? { ...v, size: nextFriendSize(v.size) } : v)))
+        if (soundRef.current && !playSound('boing', { synth: false })) playSound('pop')
+        if (!reducedMotion() && typeof el.animate === 'function') el.animate([{ scale: '1' }, { scale: '1.15' }, { scale: '1' }], { duration: 260, easing: 'ease-out' })
+        return
+      }
       if (soundRef.current) playSound('tap')
       if (!reducedMotion() && typeof el.animate === 'function') el.animate([{ rotate: '0deg' }, { rotate: '-12deg' }, { rotate: '10deg' }, { rotate: '0deg' }], { duration: 360 })
       return
@@ -254,6 +340,12 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
     if (soundRef.current) playSound('whoosh')
   }
   const onStickerCancel = (e: RPointerEvent<HTMLButtonElement>, s: Placed) => {
+    last.current.delete(e.pointerId)
+    if (drags.current.get(e.pointerId)?.kind === 'fpinch') {
+      drags.current.delete(e.pointerId)
+      if (![...drags.current.values()].some((x) => x.kind === 'fpinch')) fpinch.current = null
+      return
+    }
     if (!drags.current.delete(e.pointerId)) return
     const el = e.currentTarget
     delete el.dataset.out
@@ -322,6 +414,18 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
       setActed(true)
       if (soundRef.current) playSound('tap')
     }
+  }
+
+  // v8.5 相框與色調：按一下換下一個（3 歲也會用），拍的時候畫進照片
+  const cycleFrame = () => {
+    setBorder((f) => nextFrame(f))
+    setActed(true)
+    pop()
+  }
+  const cycleTone = () => {
+    setTone((t) => nextTone(t))
+    setActed(true)
+    pop()
   }
 
   const cycleSize = () => {
@@ -458,14 +562,31 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
         emojiAt(g, em, box.x + box.w / 2, box.y + box.h * 0.6, box.h * 0.7)
       }
     }
-    // 貼紙
-    for (const el of frame.querySelectorAll<HTMLElement>('[data-testid=photo-sticker]')) {
+    // 貼紙與動物朋友（照畫面上的前後順序）
+    for (const el of frame.querySelectorAll<HTMLElement>('[data-testid=photo-sticker], [data-testid=photo-friend]')) {
       const r = local(el.getBoundingClientRect())
       const img = el.querySelector<HTMLImageElement>('img')
       if (img && (await ready(img))) {
         const ir = containIn(img.naturalWidth, img.naturalHeight, r)
         g.drawImage(img, ir.x, ir.y, ir.w, ir.h)
       } else emojiAt(g, el.querySelector('.art-emoji-glyph')?.textContent ?? '', r.x + r.w / 2, r.y + r.h / 2, r.h * 0.8)
+    }
+    // v8.5 色調：自己算像素（不用 ctx.filter，iPad 的 Safari 不一定支援）。全部都是同源的圖，讀得到像素
+    if (tone !== 'plain') {
+      const im = g.getImageData(0, 0, N, N)
+      applyTone(im.data, tone)
+      g.putImageData(im, 0, 0)
+    }
+    // v8.5 相框：畫在最上面（不跟著變色），跟畫面預覽用同一份 path
+    const ops = frameOps(border)
+    if (ops.length) {
+      g.save()
+      g.scale(N / 100, N / 100)
+      for (const op of ops) {
+        g.fillStyle = op.fill
+        g.fill(new Path2D(op.d), op.evenodd ? 'evenodd' : 'nonzero')
+      }
+      g.restore()
     }
     return c.toDataURL('image/jpeg', PHOTO_JPEG_Q)
   }
@@ -480,11 +601,14 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
   const frameEl = useCallback(() => frameRef.current, [])
 
   const items: Item[] = [
+    // v8.5 動物朋友排在最前面（一拿到就看得到）
+    ...(toys >= 1 ? PHOTO_FRIENDS.map((f) => ({ kind: 'friend' as const, art: f.art, emoji: f.emoji })) : []),
     ...(hatsOk ? hats.map((h) => ({ kind: 'hat' as const, id: h.id, emoji: h.emoji })) : []),
     ...unlocked.map((s) => ({ kind: 'sticker' as const, art: s.art, emoji: s.emoji })),
   ]
   const petSize = PET_SIZES[sizeIdx]
   const studio = phase !== 'pick'
+  const decor = frameOps(border)
 
   return (
     <div
@@ -496,7 +620,10 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
       data-pose={pose}
       data-size={sizeIdx}
       data-hat={hat ?? ''}
-      data-stickers={stickers.length}
+      data-stickers={stickers.filter((s) => s.kind === 'sticker').length}
+      data-friends={stickers.filter((s) => s.kind === 'friend').length}
+      data-frame={border}
+      data-tone={tone}
       data-saved={print?.saved == null ? '' : print.saved ? '1' : '0'}
       data-backdrop={backdrop}
     >
@@ -530,12 +657,13 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
                 <button
                   key={s.id}
                   type="button"
-                  className="photo-sticker"
-                  style={{ left: `${s.x}%`, top: `${s.y}%`, width: `${STICKER_SIZE * 100}%` }}
-                  data-testid="photo-sticker"
+                  className={s.kind === 'friend' ? 'photo-sticker photo-friend' : 'photo-sticker'}
+                  style={{ left: `${s.x}%`, top: `${s.y}%`, width: `${(s.kind === 'friend' ? FRIEND_SIZES[s.size] : STICKER_SIZE) * 100}%` }}
+                  data-testid={s.kind === 'friend' ? 'photo-friend' : 'photo-sticker'}
                   data-art={s.art}
-                  aria-label="貼紙"
-                  onPointerDown={(e) => onStickerDown(e, s.id)}
+                  data-size={s.kind === 'friend' ? s.size : undefined}
+                  aria-label={s.kind === 'friend' ? '動物朋友' : '貼紙'}
+                  onPointerDown={(e) => onStickerDown(e, s)}
                   onPointerMove={onStickerMove}
                   onPointerUp={(e) => onStickerUp(e, s)}
                   onPointerCancel={(e) => onStickerCancel(e, s)}
@@ -543,12 +671,21 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
                   <Icon name={s.art} emoji={s.emoji} size="100%" alt="" />
                 </button>
               ))}
+              {/* v8.5 色調與相框的預覽：疊在照片上（不接手指）。色調用混色（不用 filter），相框跟 canvas 用同一份 path */}
+              {tone !== 'plain' && <div className={`photo-tone photo-tone-${tone}`} data-testid="photo-tone" aria-hidden />}
+              {decor.length > 0 && (
+                <svg className="photo-decor" viewBox="0 0 100 100" preserveAspectRatio="none" data-testid="photo-decor" aria-hidden>
+                  {decor.map((op, i) => (
+                    <path key={i} d={op.d} fill={op.fill} fillRule={op.evenodd ? 'evenodd' : 'nonzero'} />
+                  ))}
+                </svg>
+              )}
               <div className="photo-flash" ref={flashRef} aria-hidden />
             </div>
           </div>
 
           <div className="photo-side">
-            <div className="photo-tools">
+            <div className="photo-tools" data-more={toys >= 2 ? '1' : undefined}>
               <button type="button" className="photo-tool" onClick={() => setPhase('pick')} disabled={phase !== 'stage'} aria-label="換佈景" data-testid="photo-change-bg">
                 <span className="photo-tool-bg" style={{ backgroundImage: `url("${base}art/${backdrop}.jpg")` }} aria-hidden />
               </button>
@@ -559,16 +696,26 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
                   ))}
                 </svg>
               </button>
+              {toys >= 2 && (
+                <>
+                  <button type="button" className="photo-tool" onClick={cycleFrame} disabled={phase !== 'stage'} aria-label="換相框" data-testid="photo-frame-btn" data-frame={border}>
+                    <FrameIcon frame={border} />
+                  </button>
+                  <button type="button" className="photo-tool" onClick={cycleTone} disabled={phase !== 'stage'} aria-label="換色調" data-testid="photo-tone-btn" data-tone={tone}>
+                    <ToneIcon tone={tone} />
+                  </button>
+                </>
+              )}
             </div>
             <div className="photo-tray" ref={trayRef} data-testid="photo-tray">
               {items.map((it) => (
                 <button
-                  key={it.kind === 'hat' ? it.id : it.art}
+                  key={it.kind === 'hat' ? it.id : `${it.kind}:${it.art}`}
                   type="button"
-                  className={`photo-item ${it.kind === 'hat' ? 'photo-item-hat' : ''} ${it.kind === 'hat' && hat === it.id ? 'on' : ''}`}
-                  aria-label={it.kind === 'hat' ? hatOf(it.id)?.name ?? '帽子' : '貼紙'}
-                  data-testid={it.kind === 'hat' ? `photo-hat-${it.id}` : 'photo-tray-sticker'}
-                  data-art={it.kind === 'sticker' ? it.art : undefined}
+                  className={`photo-item ${it.kind === 'hat' ? 'photo-item-hat' : it.kind === 'friend' ? 'photo-item-friend' : ''} ${it.kind === 'hat' && hat === it.id ? 'on' : ''}`}
+                  aria-label={it.kind === 'hat' ? hatOf(it.id)?.name ?? '帽子' : it.kind === 'friend' ? '動物朋友' : '貼紙'}
+                  data-testid={it.kind === 'hat' ? `photo-hat-${it.id}` : it.kind === 'friend' ? 'photo-tray-friend' : 'photo-tray-sticker'}
+                  data-art={it.kind === 'hat' ? undefined : it.art}
                   onPointerDown={(e) => onTrayDown(e, it)}
                   onPointerMove={onTrayMove}
                   onPointerUp={onTrayUp}
@@ -577,7 +724,7 @@ function PhotoGame({ say: rawSay, finish, toGallery }: GameProps & { toGallery: 
                     // 鍵盤或輔助工具（沒有 pointer 事件）
                     if (e.detail !== 0 || phase !== 'stage') return
                     if (it.kind === 'hat') wearHat(it.id)
-                    else addSticker(it)
+                    else place(it)
                   }}
                 >
                   <Icon name={it.kind === 'hat' ? it.id : it.art} emoji={it.emoji} size="100%" alt="" />
@@ -661,6 +808,35 @@ function emojiAt(g: CanvasRenderingContext2D, text: string, cx: number, cy: numb
   g.textBaseline = 'middle'
   g.fillText(text, cx, cy)
   g.restore()
+}
+
+/** v8.5 相框按鈕上的圖：一張小照片，邊框就是現在選的相框 */
+function FrameIcon({ frame }: { frame: PhotoFrame }) {
+  const band = frame === 'stars' ? '#ffd76a' : frame === 'hearts' ? '#ffb3cc' : frame === 'film' ? '#2b2b33' : '#fff'
+  return (
+    <svg viewBox="0 0 48 48" width="82%" height="82%" aria-hidden>
+      <rect x="3" y="3" width="42" height="42" rx="7" fill={band} stroke={frame === 'none' ? '#d9a7bb' : 'rgb(0 0 0 / 0.14)'} strokeWidth="2" strokeDasharray={frame === 'none' ? '5 4' : undefined} />
+      <rect x={frame === 'film' ? 6 : 10} y={frame === 'film' ? 12 : 10} width={frame === 'film' ? 36 : 28} height={frame === 'film' ? 24 : 28} rx="3" fill="#bfe3ff" />
+      {frame === 'film' && [9, 18, 27, 36].map((x) => <rect key={x} x={x} y="6" width="4" height="3.5" rx="1" fill="#fdfbf5" />)}
+      {frame === 'film' && [9, 18, 27, 36].map((x) => <rect key={x} x={x} y="38.5" width="4" height="3.5" rx="1" fill="#fdfbf5" />)}
+      {frame === 'stars' && <path d={starPath(24, 25, 10)} fill="#ffb300" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round" />}
+      {frame === 'hearts' && <path d={heartPath(24, 25, 7)} fill="#ff6f9c" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round" />}
+    </svg>
+  )
+}
+
+/** v8.5 色調按鈕上的圖：一顆球，原色是彩色的三瓣、暖暖是橘黃色、黑白是灰階 */
+function ToneIcon({ tone }: { tone: PhotoTone }) {
+  const c = tone === 'warm' ? ['#ffb347', '#ffd76a', '#ff9a5a'] : tone === 'mono' ? ['#3a3a3a', '#9a9a9a', '#e4e4e4'] : ['#ff7a8a', '#6fc3ff', '#7fd67f']
+  return (
+    <svg viewBox="0 0 48 48" width="78%" height="78%" aria-hidden>
+      <path d="M24 24 L24 4 A20 20 0 0 1 41.3 34 Z" fill={c[0]} />
+      <path d="M24 24 L41.3 34 A20 20 0 0 1 6.7 34 Z" fill={c[1]} />
+      <path d="M24 24 L6.7 34 A20 20 0 0 1 24 4 Z" fill={c[2]} />
+      <circle cx="24" cy="24" r="20" fill="none" stroke="#fff" strokeWidth="3" />
+      <circle cx="24" cy="24" r="21.5" fill="none" stroke="rgb(0 0 0 / 0.12)" strokeWidth="1" />
+    </svg>
+  )
 }
 
 /** 可愛的手指：比出 1、2、3 */
