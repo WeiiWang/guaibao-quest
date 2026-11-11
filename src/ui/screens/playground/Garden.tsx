@@ -5,7 +5,7 @@ import { db } from '../../../db/db'
 import { repo } from '../../../db/repo'
 import { now } from '../../../domain/clock'
 import { localDateStr } from '../../../domain/date'
-import { CROP_LABELS, GARDEN_CROPS, gardenIntroLine, normalizeGarden, plantArt, plotState, type Garden as GardenData } from '../../../domain/garden'
+import { CROP_LABELS, GARDEN_CROPS, butterflyPlots, gardenIntroLine, normalizeGarden, plantArt, plotState, sprinklerTargets, sprinklerWets, type Garden as GardenData } from '../../../domain/garden'
 import type { GardenPlot } from '../../../domain/types'
 import { playSound } from '../../../learning/audioEngine'
 import { Icon } from '../../components/Icon'
@@ -13,13 +13,20 @@ import { flyOne, iconNode } from '../../fly'
 import { Companion, type Pose } from '../adventure/Companion'
 import { GameShell, type GameProps } from './GameShell'
 import type { GameRootProps } from './GameScreen'
-import { GestureHint, playSfx, useTimers } from './vShared'
+import { GestureHint, playSfx, reducedMotion, useTimers } from './vShared'
 import './garden.css'
 
-// 小菜園：種下 → 澆水 → 隔天再澆 → 收成進背包。不會枯萎、沒有倒數、不用 finish()（獎勵是收成本身）。
+// 小菜園：種下 → 澆水 → 隔天再澆 → 收成進背包。不會枯萎、沒有倒數。
+// v8.5：每收成一次呼叫一次 finish()（不送食物，只算次數：第 1 次有灑水器、第 3 次有蝴蝶）。
 
 const DRAG_SLOP = 10
 const FX_MS = 1100
+/** 收成後先看水果飛進背包、聽寵物說完，再算玩完一次（新玩具卡或小慶祝） */
+const HARVEST_FINISH_MS = 1600
+/** 灑水器的彩虹留多久；這段時間再按不會重複灑 */
+const RAINBOW_MS = 1900
+/** 蝴蝶飛一圈多久 */
+const FLY_MS = 1300
 
 const plantEmoji = (p: GardenPlot) => (p.stage === 0 ? '🌱' : p.stage === 1 ? '🌿' : (FOOD_EMOJI[p.crop] ?? '🌱'))
 
@@ -38,7 +45,7 @@ export default function Garden({ onExit }: GameRootProps) {
 
 type FxKind = 'water' | 'grow'
 
-function GardenGame({ garden, say }: { garden: GardenData } & GameProps) {
+function GardenGame({ garden, say, finish, toys }: { garden: GardenData } & GameProps) {
   const [today, setToday] = useState(() => localDateStr(now()))
   const [picking, setPicking] = useState<number | null>(null)
   const [fx, setFx] = useState<Record<number, { kind: FxKind; key: number }>>({})
@@ -51,6 +58,24 @@ function GardenGame({ garden, say }: { garden: GardenData } & GameProps) {
   const canDrag = useRef<{ pid: number; sx: number; sy: number; moved: boolean; over: number | null } | null>(null)
   const busy = useRef(new Set<number>())
   const fxKey = useRef(0)
+  // v8.5 灑水器：彩虹的 key（0 = 沒有彩虹）
+  const [rainbow, setRainbow] = useState(0)
+  const sprinkling = useRef(false)
+  // v8.5 收成算次數：還沒送出的次數。離開時照送，隨時可以離開、不會少算
+  const pendingFinish = useRef(0)
+  const finishRef = useRef(finish)
+  useEffect(() => {
+    finishRef.current = finish
+  }, [finish])
+  useEffect(() => {
+    const pending = pendingFinish
+    return () => {
+      while (pending.current > 0) {
+        pending.current -= 1
+        finishRef.current()
+      }
+    }
+  }, [])
 
   // 開著過夜、或從背景回來：換成今天的樣子
   useEffect(() => {
@@ -100,7 +125,7 @@ function GardenGame({ garden, say }: { garden: GardenData } & GameProps) {
     later(() => busy.current.delete(i), FX_MS)
     setToday(localDateStr(now()))
     setWatered(true)
-    playSfx('drop')
+    playSfx('splash')
     showFx(i, 'water')
     void repo.gardenWater(i).then((outcome) => {
       if (outcome === 'grew') {
@@ -126,6 +151,13 @@ function GardenGame({ garden, say }: { garden: GardenData } & GameProps) {
       playSound('reward')
       cheer('cheer', 1400)
       say('pet.play.garden.harvest')
+      // 一次收成算玩完一次（只呼叫一次：repo 擋掉了連點，重複的收成拿到 null 不會走到這裡）
+      pendingFinish.current += 1
+      later(() => {
+        if (pendingFinish.current <= 0) return
+        pendingFinish.current -= 1
+        finishRef.current()
+      }, HARVEST_FINISH_MS)
       if (!rect) return
       const size = Math.min(rect.width, rect.height, 120)
       const x = rect.left + rect.width / 2
@@ -135,6 +167,62 @@ function GardenGame({ garden, say }: { garden: GardenData } & GameProps) {
         void flyOne({ rect: box, node: iconNode(`food-${r.crop}`, FOOD_EMOJI[r.crop] ?? '🥕', size) }, bagRef.current, { delay: k * 140, duration: 760 })
       }
     })
+  }
+
+  /** v8.5 灑水器：有種東西的田都灑到；會長的（今天還沒長過的）各長一階，規則跟一塊一塊澆完全一樣 */
+  const sprinkle = () => {
+    if (sprinkling.current) return
+    sprinkling.current = true
+    later(() => {
+      sprinkling.current = false
+      setRainbow(0)
+    }, RAINBOW_MS)
+    const date = localDateStr(now())
+    setToday(date)
+    setWatered(true)
+    setRainbow(++fxKey.current)
+    playSfx('splash')
+    say('pet.play.garden.sprinkler')
+    for (const i of sprinklerWets(garden)) {
+      busy.current.add(i)
+      later(() => busy.current.delete(i), FX_MS)
+      showFx(i, 'water')
+    }
+    const targets = sprinklerTargets(garden, date)
+    void (async () => {
+      let grew = false
+      for (const i of targets) {
+        if ((await repo.gardenWater(i)) !== 'grew') continue
+        grew = true
+        showFx(i, 'grow')
+      }
+      if (grew) playSfx('sparkle')
+      cheer(grew ? 'cheer' : 'happy')
+    })()
+  }
+
+  /** v8.5 蝴蝶：點了飛一圈再停回去。不收成、不算任何東西 */
+  const flyButterfly = (el: HTMLButtonElement) => {
+    if (el.dataset.flying) return
+    el.dataset.flying = '1'
+    el.dataset.flies = String(Number(el.dataset.flies ?? 0) + 1)
+    later(() => {
+      delete el.dataset.flying
+    }, FLY_MS)
+    playSfx('sparkle')
+    const wings = el.firstElementChild
+    if (reducedMotion()) wings?.animate?.([{ opacity: 1 }, { opacity: 0.35 }, { opacity: 1 }], { duration: 500 })
+    else
+      wings?.animate?.(
+        [
+          { transform: 'translate(0, 0) rotate(0deg)' },
+          { transform: 'translate(85%, -70%) rotate(18deg)' },
+          { transform: 'translate(10%, -150%) rotate(-8deg)' },
+          { transform: 'translate(-80%, -75%) rotate(-20deg)' },
+          { transform: 'translate(0, 0) rotate(0deg)' },
+        ],
+        { duration: FLY_MS, easing: 'ease-in-out' },
+      )
   }
 
   const tapPlot = (i: number) => {
@@ -258,6 +346,30 @@ function GardenGame({ garden, say }: { garden: GardenData } & GameProps) {
             )}
           </button>
         ))}
+        {toys >= 2 &&
+          butterflyPlots(garden).map((i) => (
+            <button
+              key={`fly-${i}`}
+              type="button"
+              // 第 5 塊田（橫向時在灑水器正下方）的蝴蝶停低一點，不跟灑水器疊在一起（見 garden.css）
+              className={`pg-gard-fly ${i === 4 ? 'is-under' : ''}`}
+              style={{ '--c3': i % 3, '--r3': Math.floor(i / 3), '--c2': i % 2, '--r2': Math.floor(i / 2) } as React.CSSProperties}
+              onClick={(e) => flyButterfly(e.currentTarget)}
+              aria-label="蝴蝶"
+              data-no-tap
+              data-testid={`garden-butterfly-${i}`}
+            >
+              <span className="pg-gard-fly-wings">
+                <Icon name="ui-garden-butterfly" emoji="🦋" size="100%" alt="" />
+              </span>
+            </button>
+          ))}
+        {rainbow > 0 && <span key={rainbow} className="pg-gard-rainbow" aria-hidden data-testid="garden-rainbow" />}
+        {toys >= 1 && (
+          <button type="button" className="pg-gard-sprinkler" onClick={sprinkle} aria-label="灑水器" data-no-tap data-testid="garden-sprinkler">
+            <Icon name="ui-garden-sprinkler" emoji="💦" size="100%" alt="" />
+          </button>
+        )}
       </div>
 
       <div className="pg-gard-dock">

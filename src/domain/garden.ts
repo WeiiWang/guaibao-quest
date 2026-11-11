@@ -72,6 +72,24 @@ export function harvestPlot(raw: unknown, index: number): { garden: Garden; crop
 
 export const hasReadyCrop = (raw: unknown): boolean => normalizeGarden(raw).some((p) => p?.stage === 2)
 
+/**
+ * v8.5 灑水器：按一下會長大的是哪幾塊田。就是「現在澆水會長」的那些（thirsty），
+ * 每塊還是各自走 waterPlot，所以一天最多長一階的規則不變；今天長過的、長好的、空的都不在裡面。
+ */
+export function sprinklerTargets(raw: unknown, date: string): number[] {
+  return normalizeGarden(raw).flatMap((p, i) => (plotState(p, date) === 'thirsty' ? [i] : []))
+}
+
+/** v8.5 灑水器：哪幾塊田有水滴（有種東西的都灑到，空田不灑） */
+export function sprinklerWets(raw: unknown): number[] {
+  return normalizeGarden(raw).flatMap((p, i) => (p ? [i] : []))
+}
+
+/** v8.5 蝴蝶：停在哪幾塊田上（長好的作物） */
+export function butterflyPlots(raw: unknown): number[] {
+  return normalizeGarden(raw).flatMap((p, i) => (p?.stage === 2 ? [i] : []))
+}
+
 /** 進菜園時寵物說哪一句（lines.ts 的 key）：有長好的先講；有能澆的請孩子澆；還有空田就請孩子種；都睡了就明天見 */
 export function gardenIntroLine(raw: unknown, date: string): string {
   const states = normalizeGarden(raw).map((p) => plotState(p, date))

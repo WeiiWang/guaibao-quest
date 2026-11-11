@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { unlockAudio } from '../../../learning/audioEngine'
-import { playDrum, playXylophone, type DrumKind } from '../../../learning/instruments'
-import { FREE_PLAY_GOAL, MUSIC_NOTES, NOTE_COLOR, NOTE_FREQ, SONGS, anyKeyAdvances, nextNote, songStep, type MusicNote, type Song, type SongId } from '../../../domain/music'
+import { playBell, playDrum, playMeow, playXylophone, type DrumKind } from '../../../learning/instruments'
+import { FREE_PLAY_GOAL, MUSIC_NOTES, NOTE_COLOR, NOTE_FREQ, anyKeyAdvances, nextNote, songStep, songsFor, voicesFor, type MusicNote, type MusicVoice, type Song, type SongId } from '../../../domain/music'
+import { Icon } from '../../components/Icon'
 import { useLearnerProfile, useLearningSettings } from '../../learningHooks'
 import { Companion, type Pose } from '../adventure/Companion'
 import { GameShell, type GameProps } from './GameShell'
@@ -29,6 +30,16 @@ const HAND_AFTER_MS = 4000
 /** 魔法演奏（任何鍵都前進）時，幾乎同時按下的多根手指或手掌只算一下：旋律不會被一掌跳過好幾個音 */
 const SAME_PRESS_MS = 45
 const MAX_NOTES = 14
+/** 換聲音時試聽的那個音 */
+const VOICE_PREVIEW: MusicNote = 'G5'
+
+/** v8.5 木琴鍵用哪種聲音發聲（鼓不變） */
+function playKey(voice: MusicVoice, freq: number): void {
+  if (voice === 'bell') playBell(freq)
+  else if (voice === 'cat') playMeow(freq)
+  else playXylophone(freq)
+}
+const VOICE_LABEL: Record<MusicVoice, string> = { xylo: '木琴的聲音', bell: '鈴鐺的聲音', cat: '喵喵的聲音' }
 
 interface Fly {
   id: number
@@ -37,7 +48,7 @@ interface Fly {
   color: string
 }
 
-function MusicGame({ finish, say }: GameProps) {
+function MusicGame({ finish, say, toys }: GameProps) {
   const { ageBand } = useLearnerProfile()
   const { soundOn } = useLearningSettings()
   const reduced = useReducedMotion()
@@ -51,6 +62,10 @@ function MusicGame({ finish, say }: GameProps) {
   const [hint, setHint] = useState(false)
   const [last, setLast] = useState<string>('')
   const [free, setFree] = useState(0)
+  // v8.5：玩完第 1 次多兩首歌（歌卡變成只有圖的小卡），第 3 次可以換聲音
+  const songs = songsFor(toys)
+  const voices = voicesFor(toys)
+  const [voice, setVoice] = useState<MusicVoice>('xylo')
 
   const rootRef = useRef<HTMLDivElement>(null)
   const petRef = useRef<HTMLDivElement>(null)
@@ -60,6 +75,8 @@ function MusicGame({ finish, say }: GameProps) {
     cur: null as { song: Song; index: number } | null,
     soundOn: true,
     band: ageBand,
+    voice: 'xylo' as MusicVoice,
+    meowSaid: false,
     free: 0,
     freeDone: false,
     lastAdvanceAt: -Infinity,
@@ -172,7 +189,7 @@ function MusicGame({ finish, say }: GameProps) {
     if (cur) {
       if (anyKeyAdvances(s.band) && performance.now() - s.lastAdvanceAt < SAME_PRESS_MS) return
       const r = songStep(cur.song, cur.index, pressed, s.band)
-      if (s.soundOn) playXylophone(NOTE_FREQ[r.play])
+      if (s.soundOn) playKey(s.voice, NOTE_FREQ[r.play])
       setLast(r.play)
       if (r.advanced) {
         s.lastAdvanceAt = performance.now()
@@ -184,7 +201,7 @@ function MusicGame({ finish, say }: GameProps) {
       if (r.done) celebrate()
       return
     }
-    if (s.soundOn) playXylophone(NOTE_FREQ[pressed])
+    if (s.soundOn) playKey(s.voice, NOTE_FREQ[pressed])
     setLast(pressed)
     flash(pressed, NOTE_COLOR[pressed])
     dance()
@@ -214,11 +231,25 @@ function MusicGame({ finish, say }: GameProps) {
       setIndex(0)
       return
     }
-    const next = SONGS.find((x) => x.id === id) ?? null
+    const next = songs.find((x) => x.id === id) ?? null
     s.cur = next ? { song: next, index: 0 } : null
     s.lastAdvanceAt = -Infinity
     setSong(next)
     setIndex(0)
+  }
+
+  /** v8.5 換聲音：馬上用新的聲音彈一個音給孩子聽。不算自由彈的下數，也不動正在彈的歌 */
+  const pickVoice = (v: MusicVoice) => {
+    touched()
+    const s = live.current
+    s.voice = v
+    setVoice(v)
+    if (s.soundOn) playKey(v, NOTE_FREQ[VOICE_PREVIEW])
+    dance()
+    if (v === 'cat' && !s.meowSaid) {
+      s.meowSaid = true
+      say('pet.play.music.meow')
+    }
   }
 
   const lit = song && !big ? nextNote(song, index) : null
@@ -238,14 +269,15 @@ function MusicGame({ finish, say }: GameProps) {
       data-free={free}
       data-big={big ? '1' : undefined}
       data-age={ageBand}
+      data-voice={voice}
       onPointerUp={unlockAudio}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <div className="pg-mus-cards">
-        {SONGS.map((x) => (
-          <button key={x.id} type="button" className={`pg-mus-card ${song?.id === x.id ? 'is-on' : ''}`} onClick={() => pickSong(x.id)} aria-pressed={song?.id === x.id} data-testid={`pg-mus-song-${x.id}`}>
+      <div className={`pg-mus-cards ${songs.length > 2 ? 'is-many' : ''}`}>
+        {songs.map((x) => (
+          <button key={x.id} type="button" className={`pg-mus-card ${song?.id === x.id ? 'is-on' : ''}`} onClick={() => pickSong(x.id)} aria-pressed={song?.id === x.id} aria-label={x.title} data-testid={`pg-mus-song-${x.id}`}>
             <span className="pg-mus-card-art" aria-hidden>
-              {x.id === 'twinkle' ? <StarArt /> : <TigerArt />}
+              {SONG_ART[x.id]}
             </span>
             <span className="pg-mus-card-title">{x.title}</span>
           </button>
@@ -264,6 +296,30 @@ function MusicGame({ finish, say }: GameProps) {
           <Companion pose={pose} size="100%" />
         </div>
         <Drum kind="high" onPress={pressDrum} keyRefs={keyRefs.current} />
+        {voices.length > 0 && (
+          <div className="pg-mus-voices" role="group" aria-label="換聲音" data-testid="pg-mus-voices">
+            {voices.map((v) => (
+              <button
+                key={v}
+                type="button"
+                className={`pg-mus-voice ${voice === v ? 'is-on' : ''}`}
+                onPointerDown={(e) => {
+                  if (e.button === 0) pickVoice(v)
+                }}
+                onClick={(e) => {
+                  // 鍵盤（detail 0）；手指與滑鼠在 pointerdown 就換了
+                  if (e.detail === 0) pickVoice(v)
+                }}
+                aria-pressed={voice === v}
+                aria-label={VOICE_LABEL[v]}
+                data-no-tap
+                data-testid={`pg-mus-voice-${v}`}
+              >
+                {v === 'xylo' ? <XyloArt /> : <Icon name={v === 'bell' ? 'ui-music-bell' : 'ui-music-cat'} emoji={v === 'bell' ? '🔔' : '🐱'} size="100%" alt="" />}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="pg-mus-xylo" data-testid="pg-mus-xylo">
@@ -363,5 +419,65 @@ const TigerArt = () => (
     <circle cx="41" cy="31" r="3" fill="#3a2a1f" />
     <ellipse cx="32" cy="40" rx="3.5" ry="2.5" fill="#3a2a1f" />
     <path d="M26 46q6 4 12 0" fill="none" stroke="#3a2a1f" strokeWidth="2.5" strokeLinecap="round" />
+  </svg>
+)
+
+/** v8.5 瑪莉有隻小綿羊 */
+const LambArt = () => (
+  <svg viewBox="0 0 64 64" width="100%" height="100%">
+    <path d="M22 50v9M42 50v9" stroke="#5a4a3f" strokeWidth="5" strokeLinecap="round" />
+    <g fill="#fff" stroke="#d9cfc4" strokeWidth="2.5">
+      <circle cx="20" cy="34" r="11" />
+      <circle cx="44" cy="34" r="11" />
+      <circle cx="26" cy="24" r="11" />
+      <circle cx="40" cy="24" r="11" />
+      <circle cx="32" cy="42" r="12" />
+    </g>
+    <circle cx="32" cy="33" r="13" fill="#fff" />
+    <ellipse cx="13" cy="33" rx="5" ry="3.5" fill="#5a4a3f" transform="rotate(-24 13 33)" />
+    <ellipse cx="51" cy="33" rx="5" ry="3.5" fill="#5a4a3f" transform="rotate(24 51 33)" />
+    <ellipse cx="32" cy="38" rx="11" ry="12" fill="#5a4a3f" />
+    <circle cx="27.5" cy="35" r="2.4" fill="#fff" />
+    <circle cx="36.5" cy="35" r="2.4" fill="#fff" />
+    <path d="M28 43q4 3 8 0" fill="none" stroke="#ffb7c8" strokeWidth="2.5" strokeLinecap="round" />
+    <circle cx="32" cy="20" r="6" fill="#fff" stroke="#d9cfc4" strokeWidth="2.5" />
+  </svg>
+)
+
+/** v8.5 倫敦鐵橋 */
+const BridgeArt = () => (
+  <svg viewBox="0 0 64 64" width="100%" height="100%">
+    <path d="M2 50h60v8H2z" fill="#6fc3ee" />
+    <path d="M2 53q5-4 10 0t10 0 10 0 10 0 10 0 10 0" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.8" />
+    <path d="M4 40h56v7H4z" fill="#8a6a55" />
+    <path d="M14 24q18 14 36 0" fill="none" stroke="#e8743b" strokeWidth="3" strokeLinecap="round" />
+    <path d="M4 38l10-14M60 38L50 24" fill="none" stroke="#e8743b" strokeWidth="3" strokeLinecap="round" />
+    <g fill="#f6c36b" stroke="#c98f3a" strokeWidth="2" strokeLinejoin="round">
+      <path d="M10 50V20l5-9 5 9v30z" />
+      <path d="M44 50V20l5-9 5 9v30z" />
+    </g>
+    <path d="M13 44v-5a2 2 0 0 1 4 0v5zM47 44v-5a2 2 0 0 1 4 0v5z" fill="#5a4a3f" />
+    <rect x="13" y="24" width="4" height="6" rx="1.5" fill="#fff8ec" />
+    <rect x="47" y="24" width="4" height="6" rx="1.5" fill="#fff8ec" />
+  </svg>
+)
+
+const SONG_ART: Record<SongId, JSX.Element> = { twinkle: <StarArt />, tigers: <TigerArt />, mary: <LambArt />, bridge: <BridgeArt /> }
+
+/** v8.5 換聲音的「木琴」按鈕：三根彩色的琴鍵 */
+const XyloArt = () => (
+  <svg viewBox="0 0 64 64" width="100%" height="100%" aria-hidden>
+    <path d="M6 20l52 8M6 46l52-6" stroke="#8a6a48" strokeWidth="4" strokeLinecap="round" />
+    <rect x="9" y="12" width="12" height="42" rx="5" fill="#ef5350" />
+    <rect x="26" y="15" width="12" height="36" rx="5" fill="#f7c631" />
+    <rect x="43" y="18" width="12" height="30" rx="5" fill="#3f9fe6" />
+    <g fill="#fff" opacity="0.8">
+      <circle cx="15" cy="21" r="2" />
+      <circle cx="15" cy="45" r="2" />
+      <circle cx="32" cy="23" r="2" />
+      <circle cx="32" cy="43" r="2" />
+      <circle cx="49" cy="25" r="2" />
+      <circle cx="49" cy="41" r="2" />
+    </g>
   </svg>
 )

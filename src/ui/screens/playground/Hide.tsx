@@ -1,8 +1,24 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../../../db/db'
-import { playSound } from '../../../learning/audioEngine'
-import { HIDE_SURPRISE, hideLayout, hidePlan, hideSpotsFor, nextHideSpot, peekLevelAt, saysEmptyLine, shouldWiggle, type HideSpot, type HideSurprise, type PeekLevel } from '../../../domain/hide'
+import { playSound, type SoundName } from '../../../learning/audioEngine'
+import {
+  HIDE_SURPRISE,
+  eyesAlwaysGlow,
+  flashlightRadius,
+  hideLayout,
+  hidePlan,
+  hideSpotsFor,
+  lightReaches,
+  nextHideSpot,
+  peekLevelAt,
+  saysEmptyLine,
+  shouldWiggle,
+  swapSeekOrder,
+  type HideSpot,
+  type HideSurprise,
+  type PeekLevel,
+} from '../../../domain/hide'
 import { speciesEmoji } from '../../../domain/species'
 import { Art } from '../../components/Art'
 import { Icon } from '../../components/Icon'
@@ -11,6 +27,7 @@ import { useLearnerProfile } from '../../learningHooks'
 import { Companion, companionArt } from '../adventure/Companion'
 import { GameShell, type GameProps } from './GameShell'
 import type { GameRootProps } from './GameScreen'
+import { playSfx } from './vShared'
 import { TapHint, useReducedMotion, useTimers } from './wHelpers'
 import './pg-hide.css'
 
@@ -22,7 +39,9 @@ export default function Hide({ onExit }: GameRootProps) {
   )
 }
 
-type Phase = 'intro' | 'count' | 'run' | 'seek' | 'found'
+// swap-*：v8.5 換你藏（孩子藏球 → 寵物數到三 → 寵物走去找 → 找到）。這一段不算一回合，不呼叫 finish()
+type Phase = 'intro' | 'count' | 'run' | 'seek' | 'found' | 'swap-hide' | 'swap-count' | 'swap-seek' | 'swap-found'
+const isSwap = (p: Phase) => p === 'swap-hide' || p === 'swap-count' || p === 'swap-seek' || p === 'swap-found'
 
 // 只有第一輪有開場白要等；之後的輪次「再玩一次」那句話講完就跑
 const INTRO_MS = 3200
@@ -35,6 +54,17 @@ const FOUND_FINISH_MS = 1500
 const SPOT_COOLDOWN_MS = 800
 /** 第一輪這麼久沒點任何東西，就出現手勢示範 */
 const HAND_AFTER_MS = 5000
+/** 換你藏：寵物走到一個東西旁邊要多久、看一個錯的停多久（讓「不在這裡」講完）、找到後多久出現按鈕 */
+const SWAP_WALK_MS = 750
+const SWAP_LOOK_MS = 1500
+const SWAP_DONE_MS = 1500
+/** 晚上版：手指按下到放開移動不超過這麼多才算「點」，超過就是在移動手電筒 */
+const NIGHT_TAP_SLOP = 14
+/** 發亮的眼睛在東西的哪個高度（占物件框的比例） */
+const EYES_Y = 0.46
+
+/** 點開沒有寵物時，每種驚喜的聲音（新音效還沒有檔案時 playSfx 會用 pop 頂著） */
+const SURPRISE_SFX: Record<HideSurprise, SoundName> = { bird: 'squeak', stars: 'sparkle', frog: 'boing', flowers: 'pop', ball: 'boing', butterfly: 'pop' }
 
 /**
  * 躲著時寵物框的位置（占物件框的百分比）。寵物整隻都在，靠物件自己遮住，所以不會有切一半的頭。
@@ -66,12 +96,15 @@ function useBoxSize(ref: RefObject<HTMLElement | null>) {
   return size
 }
 
-function HideGame({ finish, say }: GameProps) {
+function HideGame({ finish, say, toys }: GameProps) {
   const { ageBand } = useLearnerProfile()
   const spots = useMemo(() => hideSpotsFor(ageBand), [ageBand])
   const plan = hidePlan(ageBand)
   const reduced = useReducedMotion()
   const fieldRef = useRef<HTMLDivElement>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const darkRef = useRef<HTMLDivElement>(null)
+  const eyesRef = useRef<HTMLSpanElement>(null)
   const size = useBoxSize(fieldRef)
   const rects = useMemo(() => (size ? hideLayout(spots.length, size.w, size.h) : []), [size, spots.length])
   const { after, cancel } = useTimers()
@@ -85,9 +118,30 @@ function HideGame({ finish, say }: GameProps) {
   const [showAgain, setShowAgain] = useState(false)
   const [hand, setHand] = useState(false)
   const [saidEmpty, setSaidEmpty] = useState(0)
+  // v8.5 換你藏：第幾次（1 起算，0 = 還沒玩過）、球藏在哪、寵物走到路線的第幾站、是不是正停下來看、看錯了幾個
+  const [swapTurn, setSwapTurn] = useState(0)
+  const [ball, setBall] = useState<HideSpot | null>(null)
+  const [swapStep, setSwapStep] = useState(0)
+  const [looking, setLooking] = useState(false)
+  const [looked, setLooked] = useState(0)
+  const swapOrder = useMemo(() => (ball ? swapSeekOrder(spots, ball, swapTurn - 1) : []), [spots, ball, swapTurn])
+  // v8.5 手電筒（晚上版）
+  const [night, setNight] = useState(false)
 
   // 同一個 tick 裡的多指要立刻看到新狀態（不等重畫），所以判斷都看 ref
-  const live = useRef({ phase: 'intro' as Phase, hiding: null as HideSpot | null, misses: 0, tapped: false, cooldown: new Map<HideSpot, number>(), pendingFinish: null as number | null })
+  const live = useRef({
+    phase: 'intro' as Phase,
+    hiding: null as HideSpot | null,
+    misses: 0,
+    tapped: false,
+    cooldown: new Map<HideSpot, number>(),
+    pendingFinish: null as number | null,
+    night: false,
+    /** 晚上版：每根手指按下的位置（放開時沒移動才算點） */
+    presses: new Map<number, { x: number; y: number }>(),
+    /** 手電筒最後照在哪（相對於玩法的框）；null = 還沒動過，照在中間 */
+    light: null as { x: number; y: number } | null,
+  })
   const finishRef = useRef(finish)
   useEffect(() => {
     finishRef.current = finish
@@ -123,9 +177,82 @@ function HideGame({ finish, say }: GameProps) {
     } else if (phase === 'seek') {
       for (const p of plan.peeks) if (p.afterMs > 0) timers.push(after(p.afterMs, () => setPeek(p.level)))
       if (round === 1 && !live.current.tapped) timers.push(after(HAND_AFTER_MS, () => setHand(true)))
+    } else if (phase === 'swap-hide') {
+      // 第一次換你藏：太久沒藏就示範點一個東西
+      if (swapTurn === 1) timers.push(after(HAND_AFTER_MS, () => setHand(true)))
+    } else if (phase === 'swap-count') {
+      say('pet.play.hide.swap.count')
+      timers.push(after(AGAIN_COUNT_MS, () => go('swap-seek')))
+    } else if (phase === 'swap-seek') {
+      const spot = swapOrder[swapStep]
+      timers.push(
+        after(SWAP_WALK_MS, () => {
+          if (swapStep >= swapOrder.length - 1) {
+            // 路線的最後一站一定是有球的那個
+            go('swap-found')
+            playSound('correct')
+            say('pet.play.hide.swap.found')
+            return
+          }
+          setLooking(true)
+          setLooked((n) => n + 1)
+          setSurprises((m) => ({ ...m, [spot]: (m[spot] ?? 0) + 1 }))
+          playSfx(SURPRISE_SFX[HIDE_SURPRISE[spot]])
+          say('pet.play.hide.swap.miss')
+          timers.push(
+            after(SWAP_LOOK_MS, () => {
+              setLooking(false)
+              setSwapStep((n) => n + 1)
+            }),
+          )
+        }),
+      )
+    } else if (phase === 'swap-found') {
+      timers.push(after(SWAP_DONE_MS, () => setShowAgain(true)))
     }
     return () => timers.forEach(cancel)
-  }, [phase, round, spots, plan, after, cancel, go, say])
+  }, [phase, round, spots, plan, swapTurn, swapStep, swapOrder, after, cancel, go, say])
+
+  // 晚上版：把光圈放回最後的位置（重畫或切換後遮罩是新的），順便算眼睛有沒有被照到
+  const applyLight = useCallback(() => {
+    const root = rootRef.current
+    if (!root) return
+    const l = live.current.light
+    const dark = darkRef.current
+    if (dark && l) {
+      dark.style.setProperty('--lx', `${l.x}px`)
+      dark.style.setProperty('--ly', `${l.y}px`)
+    }
+    const eyes = eyesRef.current
+    if (!eyes) return
+    if (eyesAlwaysGlow(ageBand)) {
+      eyes.dataset.lit = '1'
+      return
+    }
+    const r = root.getBoundingClientRect()
+    const e = eyes.getBoundingClientRect()
+    const at = l ?? { x: r.width / 2, y: r.height * 0.45 }
+    const radius = flashlightRadius(ageBand) * Math.min(window.innerWidth, window.innerHeight)
+    eyes.dataset.lit = lightReaches(at, radius, { x: e.left + e.width / 2 - r.left, y: e.top + e.height / 2 - r.top }) ? '1' : '0'
+  }, [ageBand])
+  useLayoutEffect(applyLight)
+
+  const moveLight = (clientX: number, clientY: number) => {
+    const root = rootRef.current
+    if (!root || !live.current.night) return
+    const r = root.getBoundingClientRect()
+    live.current.light = { x: clientX - r.left, y: clientY - r.top }
+    applyLight()
+  }
+
+  const toggleNight = () => {
+    const on = !live.current.night
+    live.current.night = on
+    live.current.presses.clear()
+    setNight(on)
+    playSound('pop')
+    if (on) say('pet.play.hide.night')
+  }
 
   // 離開時還沒送出的禮物照送：隨時可以離開，不會損失東西
   useEffect(() => {
@@ -140,6 +267,16 @@ function HideGame({ finish, say }: GameProps) {
 
   const tap = (spot: HideSpot, el: HTMLElement) => {
     const s = live.current
+    if (s.phase === 'swap-hide') {
+      // 換你藏：點哪個，球就藏進哪個
+      setHand(false)
+      setBall(spot)
+      setSwapStep(0)
+      playSfx('boing')
+      if (!reduced) el.querySelector('.pg-hide-obj')?.animate?.([{ transform: 'none' }, { transform: 'scale(1.06, 0.92)' }, { transform: 'scale(0.97, 1.03)' }, { transform: 'none' }], { duration: 460, delay: 260, easing: 'ease-out' })
+      go('swap-count')
+      return
+    }
     if (s.phase !== 'seek') return
     s.tapped = true
     setHand(false)
@@ -161,7 +298,7 @@ function HideGame({ finish, say }: GameProps) {
     const missNo = s.misses
     setMisses(missNo)
     setSurprises((m) => ({ ...m, [spot]: (m[spot] ?? 0) + 1 }))
-    playSound('pop')
+    playSfx(SURPRISE_SFX[HIDE_SURPRISE[spot]])
     if (saysEmptyLine(missNo)) {
       say('pet.play.hide.empty')
       setSaidEmpty((n) => n + 1)
@@ -171,15 +308,35 @@ function HideGame({ finish, say }: GameProps) {
 
   const again = () => {
     const s = live.current
-    if (s.phase !== 'found' || s.pendingFinish !== null) return
+    if ((s.phase !== 'found' && s.phase !== 'swap-found') || s.pendingFinish !== null) return
     s.misses = 0
     s.cooldown.clear()
     setMisses(0)
     setPeek(0)
     setSurprises({})
     setShowAgain(false)
+    setBall(null)
+    setLooking(false)
     setRound((r) => r + 1)
     go('count')
+  }
+
+  /** v8.5 換你藏：找到寵物之後（或上一次換你藏結束後）才能開始 */
+  const startSwap = () => {
+    const s = live.current
+    if ((s.phase !== 'found' && s.phase !== 'swap-found') || s.pendingFinish !== null) return
+    s.cooldown.clear()
+    setSurprises({})
+    setShowAgain(false)
+    setHand(false)
+    setBall(null)
+    setSwapStep(0)
+    setLooking(false)
+    setLooked(0)
+    setSwapTurn((n) => n + 1)
+    playSound('pop')
+    say('pet.play.hide.swap.ask')
+    go('swap-hide')
   }
 
   const wiggle = phase === 'seek' && shouldWiggle(plan, misses)
@@ -198,8 +355,52 @@ function HideGame({ finish, say }: GameProps) {
     return { width: s, height: s, left: (size.w - s) / 2, top: (size.h - s) / 2 }
   })()
 
+  // 換你藏的寵物：一直是同一個元素，站在中央遮眼睛，找的時候用 transform 走到每一站的旁邊
+  const swapPetBox: CSSProperties | undefined = (() => {
+    if (!size || !isSwap(phase)) return undefined
+    const s0 = Math.min(Math.min(size.w, size.h) * 0.55, 320)
+    const box = { width: s0, height: s0, left: (size.w - s0) / 2, top: (size.h - s0) / 2 }
+    const at = phase === 'swap-seek' ? swapOrder[swapStep] : phase === 'swap-found' ? ball : null
+    const r = at ? rects[spots.indexOf(at)] : undefined
+    if (!r) return box
+    const s = r.size * 0.62
+    // 站在東西的右前方，右邊沒位置就站左前方；腳跟東西的底對齊
+    const right = r.x + r.size * 0.84 + s / 2 <= size.w
+    const cx = Math.max(s / 2, Math.min(size.w - s / 2, r.x + r.size * (right ? 0.84 : 0.16)))
+    const bottom = Math.min(size.h, r.y + r.size * 1.02)
+    return { ...box, transform: `translate(${cx - size.w / 2}px, ${bottom - (box.top + s0)}px) scale(${s / s0})` }
+  })()
+  const swapPose = phase === 'swap-found' ? 'cheer' : phase === 'swap-seek' ? (looking ? 'think' : 'happy') : 'shy'
+  const canAct = showAgain && (phase === 'found' || phase === 'swap-found')
+
+  const againButton = (
+    <button type="button" className="pg-hide-again" onClick={again} data-testid="pg-hide-again">
+      <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden>
+        <path d="M38 24a14 14 0 1 1-4.5-10.3" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+        <path d="M36 5v11H25z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      </svg>
+      再玩一次
+    </button>
+  )
+
   return (
-    <div className="pg-hide" data-testid="pg-hide" data-phase={phase} data-round={round} data-misses={misses} data-peek={shownPeek} data-said-empty={saidEmpty} data-age={ageBand}>
+    <div
+      className="pg-hide"
+      ref={rootRef}
+      data-testid="pg-hide"
+      data-phase={phase}
+      data-round={round}
+      data-misses={misses}
+      data-peek={shownPeek}
+      data-said-empty={saidEmpty}
+      data-age={ageBand}
+      data-night={night ? '1' : undefined}
+      data-swap-turn={swapTurn || undefined}
+      data-swap-ball={ball ?? undefined}
+      data-swap-looked={swapTurn ? looked : undefined}
+      onPointerDown={night ? (e) => moveLight(e.clientX, e.clientY) : undefined}
+      onPointerMove={night ? (e) => moveLight(e.clientX, e.clientY) : undefined}
+    >
       <div className="pg-hide-field" ref={fieldRef}>
         {rects.length === spots.length &&
           spots.map((spot, i) => {
@@ -212,13 +413,25 @@ function HideGame({ finish, say }: GameProps) {
                 className={`pg-hide-spot ${isHere && wiggle ? 'is-wiggle' : ''} ${isHere && phase === 'found' ? 'is-found' : ''}`}
                 style={{ left: r.x, top: r.y, width: r.size, height: r.size, zIndex: 1 + Math.round(r.y) }}
                 onPointerDown={(e) => {
-                  if (e.button === 0) tap(spot, e.currentTarget)
+                  if (e.button !== 0) return
+                  // 晚上版手指是手電筒：按下去先不算，放開時沒移動才算點
+                  if (live.current.night) live.current.presses.set(e.pointerId, { x: e.clientX, y: e.clientY })
+                  else tap(spot, e.currentTarget)
+                }}
+                onPointerUp={(e) => {
+                  const p = live.current.presses.get(e.pointerId)
+                  if (!p) return
+                  live.current.presses.delete(e.pointerId)
+                  if (Math.hypot(e.clientX - p.x, e.clientY - p.y) <= NIGHT_TAP_SLOP) tap(spot, e.currentTarget)
+                }}
+                onPointerCancel={(e) => {
+                  live.current.presses.delete(e.pointerId)
                 }}
                 onClick={(e) => {
                   // 鍵盤（detail 0）；手指與滑鼠在 pointerdown 就處理了
                   if (e.detail === 0) tap(spot, e.currentTarget)
                 }}
-                aria-label="找找看"
+                aria-label={phase === 'swap-hide' ? '把球藏在這裡' : '找找看'}
                 data-no-tap
                 data-testid={`pg-hide-spot-${spot}`}
                 data-hiding={isHere ? '1' : undefined}
@@ -230,6 +443,11 @@ function HideGame({ finish, say }: GameProps) {
                   <Icon name={`ui-hide-${spot}`} emoji={SPOT_EMOJI[spot]} alt="" className="pg-hide-obj-img" />
                 </span>
                 {surprises[spot] ? <Surprise key={surprises[spot]} kind={HIDE_SURPRISE[spot]} onDone={() => setSurprises((m) => ({ ...m, [spot]: undefined }))} /> : null}
+                {ball === spot && (phase === 'swap-count' || phase === 'swap-found') && (
+                  <span className={`pg-hide-ballfx ${phase === 'swap-found' ? 'is-out' : 'is-in'}`} key={`${phase}-${swapTurn}`} aria-hidden data-testid="pg-hide-ball">
+                    <Icon name="ui-hide-ball" emoji="⚽" size="100%" alt="" />
+                  </span>
+                )}
                 {hand && i === 0 && <TapHint />}
               </button>
             )
@@ -248,23 +466,65 @@ function HideGame({ finish, say }: GameProps) {
           </div>
         )}
 
-        {phase === 'count' && (
-          <div className="pg-hide-count" key={round} aria-hidden data-testid="pg-hide-count">
+        {swapPetBox && (
+          <div className={`pg-hide-pet is-swap ${phase === 'swap-found' ? 'is-swap-found' : ''}`} style={swapPetBox} key={`swap-${swapTurn}`} data-testid="pg-hide-pet">
+            <div className="pg-hide-swap-hop">
+              <Companion pose={swapPose} size="100%" />
+              {phase === 'swap-found' && (
+                <span className="pg-hide-hearts" aria-hidden>
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {phase === 'swap-hide' && (
+          <span className="pg-hide-ball-wait" aria-hidden data-testid="pg-hide-ball-wait">
+            <Icon name="ui-hide-ball" emoji="⚽" size="100%" alt="" />
+          </span>
+        )}
+
+        {(phase === 'count' || phase === 'swap-count') && (
+          <div className="pg-hide-count" key={`${phase}-${round}-${swapTurn}`} aria-hidden data-testid="pg-hide-count">
             <span>1</span>
             <span>2</span>
             <span>3</span>
           </div>
         )}
+
+        {night && phase === 'seek' && foundRect && (
+          <span
+            ref={eyesRef}
+            className="pg-hide-eyes"
+            style={{ left: foundRect.x + foundRect.size / 2, top: foundRect.y + foundRect.size * EYES_Y, width: foundRect.size * 0.26 }}
+            aria-hidden
+            data-testid="pg-hide-eyes"
+          >
+            <i />
+            <i />
+          </span>
+        )}
       </div>
 
-      {showAgain && phase === 'found' && (
-        <button type="button" className="pg-hide-again" onClick={again} data-testid="pg-hide-again">
-          <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden>
-            <path d="M38 24a14 14 0 1 1-4.5-10.3" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
-            <path d="M36 5v11H25z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          </svg>
-          再玩一次
+      {night && <div ref={darkRef} className="pg-hide-dark" style={{ '--lr': `${Math.round(flashlightRadius(ageBand) * 100)}vmin` } as CSSProperties} aria-hidden data-testid="pg-hide-dark" />}
+
+      {toys >= 2 && (
+        <button type="button" className={`pg-hide-night ${night ? 'is-on' : ''}`} onClick={toggleNight} aria-pressed={night} aria-label={night ? '開燈' : '手電筒'} data-no-tap data-testid="pg-hide-night">
+          <Icon name="ui-hide-flashlight" emoji="🔦" size="100%" alt="" />
         </button>
+      )}
+
+      {canAct && toys < 1 && againButton}
+      {canAct && toys >= 1 && (
+        <div className="pg-hide-actions">
+          {againButton}
+          <button type="button" className="pg-hide-swap" onClick={startSwap} aria-label="換你藏" data-no-tap data-testid="pg-hide-swap">
+            <Icon name="ui-hide-ball" emoji="⚽" size="100%" alt="" />
+          </button>
+        </div>
       )}
     </div>
   )

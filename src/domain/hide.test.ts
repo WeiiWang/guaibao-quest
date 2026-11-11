@@ -1,5 +1,20 @@
 import { describe, expect, it } from 'vitest'
-import { HIDE_SPOTS, HIDE_SURPRISE, hideLayout, hidePlan, hideSpotsFor, nextHideSpot, peekLevelAt, saysEmptyLine, shouldWiggle } from './hide'
+import {
+  HIDE_SPOTS,
+  HIDE_SURPRISE,
+  eyesAlwaysGlow,
+  flashlightRadius,
+  hideLayout,
+  hidePlan,
+  hideSpotsFor,
+  lightReaches,
+  nextHideSpot,
+  peekLevelAt,
+  saysEmptyLine,
+  shouldWiggle,
+  swapMissCount,
+  swapSeekOrder,
+} from './hide'
 
 describe('躲藏物數量', () => {
   it('3 歲 4 個、4–5 歲 5 個、6–7 歲 6 個', () => {
@@ -100,5 +115,54 @@ describe('hideLayout', () => {
 
   it('有上限，大螢幕不會大到擋住背景', () => {
     for (const r of hideLayout(4, 2000, 2000)) expect(r.size).toBeLessThanOrEqual(340)
+  })
+})
+
+describe('v8.5 換你藏', () => {
+  it('看錯 1 個、2 個輪流，只看第幾次', () => {
+    expect([0, 1, 2, 3, 4].map(swapMissCount)).toEqual([1, 2, 1, 2, 1])
+    expect(swapMissCount(-3)).toBe(1)
+  })
+  it('一定找得到：路線最後一個是有球的，前面都不是、也不重複', () => {
+    for (const band of ['3', '4-5', '6-7'] as const) {
+      const spots = hideSpotsFor(band)
+      for (const ball of spots)
+        for (let turn = 0; turn < 12; turn++) {
+          const order = swapSeekOrder(spots, ball, turn)
+          expect(order.at(-1)).toBe(ball)
+          const wrong = order.slice(0, -1)
+          expect(wrong).toHaveLength(swapMissCount(turn))
+          expect(wrong).not.toContain(ball)
+          expect(new Set(wrong).size).toBe(wrong.length)
+          for (const w of wrong) expect(spots).toContain(w)
+          expect(swapSeekOrder(spots, ball, turn)).toEqual(order)
+        }
+    }
+  })
+  it('每次從不同的地方開始看', () => {
+    const spots = hideSpotsFor('6-7')
+    const firsts = new Set([0, 2, 4, 6, 8].map((t) => swapSeekOrder(spots, 'bush', t)[0]))
+    expect(firsts.size).toBeGreaterThan(1)
+  })
+  it('只有一個東西也不會壞', () => {
+    expect(swapSeekOrder(['bush'], 'bush', 3)).toEqual(['bush'])
+  })
+})
+
+describe('v8.5 手電筒', () => {
+  it('3 歲的光圈最大，年紀越大越小', () => {
+    expect(flashlightRadius('3')).toBeGreaterThan(flashlightRadius('4-5'))
+    expect(flashlightRadius('4-5')).toBeGreaterThan(flashlightRadius('6-7'))
+    expect(flashlightRadius('6-7')).toBeGreaterThan(0.15)
+  })
+  it('眼睛：小的一直看得到，6–7 歲要照到', () => {
+    expect(eyesAlwaysGlow('3')).toBe(true)
+    expect(eyesAlwaysGlow('4-5')).toBe(true)
+    expect(eyesAlwaysGlow('6-7')).toBe(false)
+  })
+  it('照到光圈八成以內才算', () => {
+    expect(lightReaches({ x: 100, y: 100 }, 100, { x: 100, y: 100 })).toBe(true)
+    expect(lightReaches({ x: 100, y: 100 }, 100, { x: 179, y: 100 })).toBe(true)
+    expect(lightReaches({ x: 100, y: 100 }, 100, { x: 185, y: 100 })).toBe(false)
   })
 })
