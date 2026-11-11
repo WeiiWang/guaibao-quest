@@ -354,6 +354,7 @@ async function testMarket(b, name, vp, band) {
   check(`${tag} 新商品：貨架不被寵物或清單擋住、每樣都點得到`, (await overlaps(page, '[data-testid=mkt-pet], [data-testid=mkt-list]', '[data-testid=mkt-shelf], [data-testid=mkt-cart], [data-testid=mkt-register], [data-testid=game-back]')).length === 0 && (await covered(page, '[data-testid^=mkt-food-], [data-testid=mkt-register]')).length === 0)
   if (band === '6-7') check(`${tag} 新商品：有價錢`, (await page.locator('[data-testid=mkt-food-ball] [data-testid=mkt-tag]').innerText()).trim() === String(PRICE.ball))
   check(`${tag} 只有第一個新玩具時沒有切換按鈕`, (await page.getByTestId('mkt-mode').count()) === 0)
+  await sleep(page, 300) // 貨架是重新畫出來的：等圖解碼完再截
   await shot(page, `market-7-goods-${name}-${band}`)
   // 這次只買那樣新商品
   await putInCart(page, send, list2.at(-1).id, band)
@@ -854,7 +855,7 @@ async function testJuiceDeco(b, name, vp, band) {
   check(`${tag} 「要不要加吸管」只說第一次`, (await said(page, 'juice')).filter((x) => x === 'deco').length === 1)
   await fingerTap(send, await centerOf(page, '[data-testid=juice-deco-umbrella]'))
   await sleep(page, 100)
-  await fingerTap(send, await centerOf(page, '[data-testid=juice-customer]'))
+  await page.getByTestId('juice-customer').tap({ force: true }) // 點客人也能拿給他（客人是 click，不是 pointer 事件）
   await waitPhase(page, 'done', 8000)
   check(`${tag} 3 位都喝到了`, (await data(page, 'juice', 'served')) === '3' && (await said(page, 'juice')).at(-1) === 'done')
   await page.waitForSelector('[data-testid=play-gift]', { timeout: 4000 })
