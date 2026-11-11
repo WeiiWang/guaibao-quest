@@ -21,7 +21,40 @@
 @media (max-width: 560px) {
   .pg-gift-card { --pg-gift-pet: 44vw; flex-direction: column; gap: 8px; padding: 24px 32px; }
   .pg-gift-card img, .pg-gift-card .art-emoji { max-width: none; }
-  .pg-gift-card > :last-child, .pg-gift-card > :last-child img { width: 30vw !important; height: 30vw !important; }
+  .pg-gift-items > img, .pg-gift-items > .art-emoji, .pg-gift-toy img, .pg-gift-toy .art-emoji { width: 30vw !important; height: 30vw !important; }
+}
+/* v8.5 卡上的東西：新玩具（有「新玩具」緞帶和名字）、皇冠、食物，排成一排 */
+.pg-gift-items { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.pg-gift-toy { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 18px 12px 8px; border-radius: 24px; background: linear-gradient(180deg, #fff3c4, #ffe08a); box-shadow: inset 0 0 0 3px #ffd34d; }
+.pg-gift-toy b { position: absolute; top: -12px; padding: 2px 14px; border-radius: 999px; background: #ff7a5c; color: #fff; font-size: 16px; white-space: nowrap; box-shadow: 0 3px 0 rgb(0 0 0 / 0.12); }
+.pg-gift-toy em { font-style: normal; font-weight: 800; font-size: 18px; color: #6a4a2a; white-space: nowrap; }
+.pg-gift-toy img, .pg-gift-toy .art-emoji { animation: pg-toy-wiggle 1.2s ease-in-out infinite; }
+@keyframes pg-toy-wiggle { 0%, 100% { transform: rotate(-5deg) scale(1); } 50% { transform: rotate(5deg) scale(1.06); } }
+/* 沒有禮物的那幾次：中間噴一圈星星，不擋手指 */
+.pg-cheer { position: absolute; inset: 0; z-index: 25; pointer-events: none; }
+.pg-cheer i { position: absolute; left: 50%; top: 46%; width: 46px; height: 46px; margin: -23px; background: #ffd34d; clip-path: polygon(50% 0, 62% 36%, 100% 38%, 70% 60%, 80% 100%, 50% 76%, 20% 100%, 30% 60%, 0 38%, 38% 36%); opacity: 0; animation: pg-cheer-fly 1.1s var(--d) cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+.pg-cheer i:nth-child(3n) { background: #ff9bb8; }
+.pg-cheer i:nth-child(3n + 1) { background: #8fd4ff; }
+@keyframes pg-cheer-fly {
+  0% { opacity: 0; transform: rotate(var(--a)) translateY(0) scale(0.3); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--a)) translateY(min(-34vmin, -150px)) scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pg-gift-toy img, .pg-gift-toy .art-emoji { animation: none; }
+  .pg-cheer i { animation: none; opacity: 0.9; transform: rotate(var(--a)) translateY(min(-22vmin, -100px)); }
+}
+
+/* v8.5 格子上的星星與皇冠（遊樂場與小街共用） */
+.pg-tile, .town-house { position: relative; }
+.pg-stars { display: flex; gap: 3px; padding: 0 !important; background: none !important; box-shadow: none !important; }
+.pg-stars i { width: clamp(14px, 2.6vmin, 22px); height: clamp(14px, 2.6vmin, 22px); background: rgb(120 100 90 / 0.22); clip-path: polygon(50% 0, 62% 36%, 100% 38%, 70% 60%, 80% 100%, 50% 76%, 20% 100%, 30% 60%, 0 38%, 38% 36%); }
+.pg-stars i[data-on='1'] { background: #ffc531; }
+.pg-tile .pg-crown, .town-house .pg-crown { position: absolute; top: -10px; right: -6px; width: clamp(34px, 6.4vmin, 52px) !important; height: clamp(34px, 6.4vmin, 52px) !important; padding: 0; border-radius: 0; background: none; box-shadow: none; transform: rotate(14deg); filter: none; pointer-events: none; }
+.town-house .pg-crown { top: 0; right: 8%; }
+/* 橫向：寵物固定站在左下角，格子和公車整排讓開它的寬度（跟小街一樣） */
+@media (min-aspect-ratio: 1/1) and (min-height: 600px) {
+  .pg-hub-body { padding-left: calc(var(--pl-pet, 200px) * 0.85); }
 }
 
 /* v8.4 公車站：遊樂場下面一整排，搭公車去快樂小街 */

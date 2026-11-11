@@ -13,8 +13,9 @@
 export type MusicScene = 'title' | 'home-day' | 'home-night' | 'map' | 'stage' | 'boss' | 'ceremony' | 'paint' | 'story'
 export const MUSIC_SCENES: readonly MusicScene[] = ['title', 'home-day', 'home-night', 'map', 'stage', 'boss', 'ceremony', 'paint', 'story']
 
-export type SoundName = 'tap' | 'pop' | 'correct' | 'wrong' | 'reward' | 'coin' | 'whoosh' | 'page' | 'unlock' | 'hatch' | 'drop' | 'sparkle'
-export const SOUND_NAMES: readonly SoundName[] = ['tap', 'pop', 'correct', 'wrong', 'reward', 'coin', 'whoosh', 'page', 'unlock', 'hatch', 'drop', 'sparkle']
+// v8.5 多了 boing（彈跳）、splash（水）、munch（吃）、cheer（歡呼）、fanfare（得到新玩具）、squeak（小動物叫）
+export type SoundName = 'tap' | 'pop' | 'correct' | 'wrong' | 'reward' | 'coin' | 'whoosh' | 'page' | 'unlock' | 'hatch' | 'drop' | 'sparkle' | 'boing' | 'splash' | 'munch' | 'cheer' | 'fanfare' | 'squeak'
+export const SOUND_NAMES: readonly SoundName[] = ['tap', 'pop', 'correct', 'wrong', 'reward', 'coin', 'whoosh', 'page', 'unlock', 'hatch', 'drop', 'sparkle', 'boing', 'splash', 'munch', 'cheer', 'fanfare', 'squeak']
 
 /** 音樂音量（相對於檔案的 −24 LUFS）：預設偏小，不蓋過語音 */
 export const MUSIC_VOLUME = 0.5

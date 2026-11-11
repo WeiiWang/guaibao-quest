@@ -20,6 +20,7 @@ import { checkPin, hashPin, isValidPin } from '../domain/pin'
 import { registry, type PinStore } from '../profiles/registry'
 import { balanceOf, checkPenalty, grantPoints } from '../domain/points'
 import { settlePlayGame, type PlayGameId } from '../domain/playground'
+import { settlePlayCount, type PlayToy } from '../domain/playToys'
 import { harvestPlot, plantSeed, waterPlot, type WaterOutcome } from '../domain/garden'
 import { canBuy } from '../domain/shop'
 import { clampTaskPoints, instancesToCreate, transition } from '../domain/tasks'
@@ -96,6 +97,14 @@ const PET_ID = 'pet'
 export type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string; reason?: 'full' | 'capped' | 'expired' | 'used' }
 
 /** 所有寫入都走 Repo；db 與時間來源可注入（測試用） */
+/** v8.5 玩完一回的結果：食物（今天第一次）、玩完幾次、剛好得到的新玩具、剛好戴上皇冠 */
+export interface PlayOutcome {
+  foodId: string | null
+  plays: number
+  toy: PlayToy | null
+  crowned: boolean
+}
+
 export class Repo {
   constructor(
     readonly db: GuaibaoDB = defaultDb,
@@ -449,6 +458,30 @@ export class Repo {
       const inv = await d.inventory.get(r.foodId)
       await d.inventory.put({ id: r.foodId, itemId: r.foodId, qty: (inv?.qty ?? 0) + 1 })
       return r.foodId
+    })
+  }
+
+  /**
+   * v8.5 越玩越多：玩完一回。一次交易做完三件事：次數加一、今天第一次玩完送食物（規則同 finishPlayGame）、
+   * 剛好到門檻就回傳新玩具。新玩具只看次數，不受每日食物上限影響。
+   */
+  async completePlayGame(gameId: PlayGameId, now = this.clock()): Promise<PlayOutcome> {
+    const d = this.db
+    return d.transaction('rw', [d.settings, d.inventory], async () => {
+      const s = await d.settings.get(SETTINGS_ID)
+      if (!s) return { foodId: null, plays: 0, toy: null, crowned: false }
+      const date = localDateStr(now)
+      const food = settlePlayGame(s.playDaily, date, gameId)
+      const count = settlePlayCount(s.playCount, gameId)
+      const patch: Partial<Settings> = {}
+      if (food.foodId) patch.playDaily = food.daily
+      if (count.plays > 0) patch.playCount = count.counts
+      if (Object.keys(patch).length > 0) await d.settings.update(SETTINGS_ID, patch)
+      if (food.foodId) {
+        const inv = await d.inventory.get(food.foodId)
+        await d.inventory.put({ id: food.foodId, itemId: food.foodId, qty: (inv?.qty ?? 0) + 1 })
+      }
+      return { foodId: food.foodId, plays: count.plays, toy: count.toy, crowned: count.crowned }
     })
   }
 

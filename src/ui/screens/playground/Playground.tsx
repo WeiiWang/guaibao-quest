@@ -9,6 +9,7 @@ import { Icon } from '../../components/Icon'
 import { PlaceBackdrop, usePlaceGreeting } from '../../components/Place'
 import { PlaceStand } from '../../components/PlaceStand'
 import { usePetLine } from './GameShell'
+import { PlayStars } from './PlayStars'
 import './playground.css'
 import './garden-hint.css'
 
@@ -52,6 +53,7 @@ export function PlaygroundScreen({ onBack, onOpen, onTown }: { onBack: () => voi
             <button key={g.id} className={`pg-tile tone-${g.tone}${g.id === 'garden' && gardenReady ? ' pg-gard-ready-hint' : ''}`} onClick={() => onOpen(g.id)} data-testid={`game-${g.id}`} aria-label={g.label}>
               <Icon name={g.icon} emoji={g.emoji} size={96} alt="" />
               <span>{g.label}</span>
+              <PlayStars id={g.id} plays={settings?.playCount?.[g.id]} />
             </button>
           ))}
         </div>

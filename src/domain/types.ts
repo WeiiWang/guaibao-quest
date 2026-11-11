@@ -225,6 +225,8 @@ export interface Settings {
   garden?: (GardenPlot | null)[]
   /** v8.4 去過快樂小街（去過就不再在遊樂場提醒搭公車） */
   townVisited?: boolean
+  /** v8.5 越玩越多：每個遊戲玩完幾次（遊戲 id → 次數）。新玩具與格子上的星星只看這個 */
+  playCount?: Record<string, number>
   /** v5：上一次送今日小禮物的日期（YYYY-MM-DD） */
   lastGiftDate?: string
   /** v5：收到的貼紙（public/art 素材名，不重複） */
