@@ -4,6 +4,9 @@
 //         太高會縮小、到上限不給放（不疊出畫面）、推倒散一地、再蓋、禮物只送一次、6–7 歲照著蓋（藍圖從畫面讀，不寫死日期）、
 //         有 3D 圖時用靜態 filter 換色、動作減少、三種寵物；
 //   拼圖：自己畫的排最前面並說 mine、片數依年齡、固定洗牌、太遠不吸／附近吸過去、兩指同時拖兩片、拼完亮一下說 done、禮物、換一張。
+//   v8.5 新玩具（有、沒有兩種狀態都測；次數用 patchSettings({ playCount }) 設定）：
+//         積木：一回合只算玩完一次、新積木（輪子、窗戶、旗子）三種尺寸放得下、住戶（塔到 4 格高搬進來、不擋積木、推倒跟著彈開）；
+//         拼圖：多 6 張圖、凹凸形狀（3 歲維持方塊、吸附與可按範圍照常）。
 // 用法：先啟動 dev server（pnpm exec vite --port 5203 --strictPort），再
 //   BASE_URL=http://localhost:5203 node scripts/e2e-town-z.mjs     （或 pnpm e2e:town-z；E2E_BROWSER=webkit 改用 WebKit）
 //   SHOTS_DIR=<目錄> 會存截圖（不要放 repo 裡）；ONLY=blocks,puzzle 只跑其中一段。
@@ -38,6 +41,8 @@ const patchSettings = (page, patch) =>
       }),
     patch,
   )
+const playCount = async (page, game) =>
+  (await idb(page, (db) => new Promise((r) => (db.transaction('settings').objectStore('settings').get('main').onsuccess = (e) => r(e.target.result?.playCount ?? {})))))[game] ?? 0
 const foodTotal = (page) =>
   idb(page, (db) => new Promise((r) => (db.transaction('inventory').objectStore('inventory').getAll().onsuccess = (e) => r(e.target.result.reduce((a, i) => a + (i.qty ?? 0), 0)))))
 
@@ -132,7 +137,7 @@ const closeGift = async (page) => {
 // ---------- 積木 ----------
 const blocks = (page) =>
   page.evaluate(() => [...document.querySelectorAll('[data-testid=blk-block]')].map((el) => ({ id: Number(el.dataset.id), shape: el.dataset.shape, color: el.dataset.color, x: Number(el.dataset.x), y: Number(el.dataset.y) })))
-const SIZE = { cube: [2, 2], long: [4, 1], arch: [4, 2], roof: [4, 2], cyl: [2, 3], half: [4, 2] }
+const SIZE = { cube: [2, 2], long: [4, 1], arch: [4, 2], roof: [4, 2], cyl: [2, 3], half: [4, 2], wheel: [2, 2], window: [2, 2], flag: [2, 3] }
 /** 地面第 x 格（積木左邊）放 shape 時手指要放在哪裡：從世界的實際位置換算 */
 const columnPoint = async (page, shape, x) => {
   const wr = await page.getByTestId('blk-world').boundingBox()
@@ -158,6 +163,7 @@ async function testBlocksLayout(b, name, vp) {
   check(`${tag} 觸控目標 ≥ 56`, (await smallTargets(page)).length === 0, (await smallTargets(page)).join())
   check(`${tag} 盤子都在畫面內`, (await outside(page, '[data-testid=blk-tray] button, [data-testid=game-back]')).length === 0, (await outside(page, '[data-testid=blk-tray] button')).join())
   check(`${tag} 4–5 歲沒有藍圖`, (await page.getByTestId('blk-plan').count()) === 0)
+  check(`${tag} 還沒有新玩具：沒有輪子、窗戶、旗子`, (await page.locator('[data-testid=blk-pick-wheel], [data-testid=blk-pick-window], [data-testid=blk-pick-flag]').count()) === 0 && (await attr(page, '[data-testid=play-blocks]', 'data-toys')) === '0')
   await shot(page, `blocks-0-${name}`)
 
   // 點一下：放在中間，一直點就疊高
@@ -172,6 +178,7 @@ async function testBlocksLayout(b, name, vp) {
   await page.waitForFunction(() => document.querySelector('[data-testid=blocks]').dataset.said?.includes('pet.play.blocks.top'), null, { timeout: 2000 }).catch(() => {})
   check(`${tag} 疊到 4 格高寵物說爬到最上面`, (await said(page, 'blocks')).includes('pet.play.blocks.top'))
   check(`${tag} 寵物站在最高那塊`, (await attr(page, '[data-testid=blk-pet]', 'data-on')) === String(bs[1].id))
+  check(`${tag} 還沒有新玩具：4 格高也沒有住戶`, (await page.getByTestId('blk-tenant').count()) === 0 && !(await said(page, 'blocks')).includes('pet.play.blocks.tenant'))
   await sleep(page, 700)
   await flush(page)
   {
@@ -258,6 +265,8 @@ async function testBlocksLayout(b, name, vp) {
     }
     check(`${tag} 一直蓋不推倒：放到第 8 塊送禮物`, giftAt === 8, `giftAt ${giftAt}`)
     check(`${tag} 禮物進背包一份`, (await foodTotal(page)) === food0 + 1)
+    check(`${tag} 算玩完一次`, (await playCount(page, 'blocks')) === 1)
+    check(`${tag} 蓋到一半拿到新玩具：盤子先不變（下一回合才多）`, (await page.locator('[data-testid^=blk-pick-]').count()) === 6 && (await attr(page, '[data-testid=play-blocks]', 'data-toys')) === '1')
     await sleep(page, 700)
     await flush(page)
     const top = Number(await attr(page, '[data-testid=blocks]', 'data-top'))
@@ -283,6 +292,8 @@ async function testBlocksLayout(b, name, vp) {
     await page.waitForFunction(() => document.querySelector('[data-testid=blocks]').dataset.said?.includes('pet.play.blocks.crash'), null, { timeout: 2500 }).catch(() => {})
     check(`${tag} 推倒：寵物說倒下來了`, (await said(page, 'blocks')).includes('pet.play.blocks.crash'))
     check(`${tag} 今天送過了：推倒不再送禮物`, !(await waitGift(page, 4000)) && (await foodTotal(page)) === food0)
+    check(`${tag} 同一回合放滿 8 塊又推倒：只算玩完一次`, (await playCount(page, 'blocks')) === 1)
+    check(`${tag} 推倒之後（新的一回合）盤子多了輪子、窗戶、旗子`, (await page.locator('[data-testid^=blk-pick-]').count()) === 9)
     await flush(page)
     const out = await outside(page, '[data-testid=blk-rubble]')
     check(`${tag} 散開的積木都在畫面裡`, out.length === 0, out.join())
@@ -294,6 +305,9 @@ async function testBlocksLayout(b, name, vp) {
     await page.getByTestId('blk-crash').tap()
     await sleep(page, 200)
     check(`${tag} 推倒可以再來一次`, Number(await attr(page, '[data-testid=blocks]', 'data-crashes')) === 2)
+    // 新的一回合推倒：算第 2 次。沒有禮物也沒有新玩具，只放星星（不擋操作）
+    await page.waitForSelector('[data-testid=play-cheer]', { timeout: 5000 }).catch(() => {})
+    check(`${tag} 新的一回合推倒：算第 2 次、放星星不跳卡`, (await playCount(page, 'blocks')) === 2 && (await page.getByTestId('play-gift').count()) === 0)
   }
   check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
   await send.detach()
@@ -377,6 +391,183 @@ async function testBlocksArt(b) {
   await ctx.close()
 }
 
+/** v8.5 新積木：玩完 1 次之後盤子多輪子、窗戶、旗子（9 種），三種尺寸都放得下 */
+async function testBlocksParts(b, name, vp) {
+  const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
+  const send = await touchSender(ctx, page)
+  const tag = `新積木[${name}]`
+  await ctx.route('**/art/ui-blk-*.png', (r) => r.fulfill({ status: 404, body: '' }))
+  await patchSettings(page, { playCount: { blocks: 1 } })
+  await enter(page, 'blocks', '4-5')
+  await flush(page)
+  check(`${tag} 盤子有 9 種積木`, (await page.locator('[data-testid^=blk-pick-]').count()) === 9 && (await page.locator('[data-testid=blk-tray] svg.blk-svg').count()) === 9)
+  check(`${tag} 不橫向溢出`, await noOverflow(page))
+  check(`${tag} 觸控目標 ≥ 56`, (await smallTargets(page)).length === 0, (await smallTargets(page)).join())
+  check(`${tag} 盤子都在畫面內`, (await outside(page, '[data-testid=blk-tray], [data-testid=blk-tray] button')).length === 0, (await outside(page, '[data-testid=blk-tray], [data-testid=blk-tray] button')).join())
+  {
+    const clash = await page.evaluate(() => {
+      const bs = [...document.querySelectorAll('[data-testid=blk-tray] button')].map((el) => [el.dataset.testid, el.getBoundingClientRect()])
+      const out = []
+      for (let i = 0; i < bs.length; i++)
+        for (let j = i + 1; j < bs.length; j++) {
+          const p = bs[i][1]
+          const q = bs[j][1]
+          if (p.left < q.right - 1 && q.left < p.right - 1 && p.top < q.bottom - 1 && q.top < p.bottom - 1) out.push(`${bs[i][0]}×${bs[j][0]}`)
+        }
+      return out
+    })
+    check(`${tag} 盤子上的按鈕不互相蓋到`, clash.length === 0, clash.join())
+  }
+  check(`${tag} 盤子不擋回去鍵`, (await overlaps(page, '[data-testid=blk-tray]', '[data-testid=game-back]')).length === 0)
+  await shot(page, `blocks-6-parts-${name}`)
+  // 點一下：輪子、窗戶、旗子照同一套格子疊起來
+  for (const sh of ['wheel', 'window', 'flag']) {
+    await page.getByTestId(`blk-pick-${sh}`).tap()
+    await sleep(page, 120)
+  }
+  let bs = await blocks(page)
+  check(`${tag} 點一下就放：輪子、窗戶、旗子疊成一座`, JSON.stringify(bs.map((x) => [x.shape, x.y])) === '[["wheel",0],["window",2],["flag",4]]' && new Set(bs.map((x) => x.x)).size === 1, JSON.stringify(bs))
+  // 拖曳：對齊格線
+  {
+    await fingerDrag(send, await pick(page, 'wheel'), await columnPoint(page, 'wheel', 0))
+    await sleep(page, 150)
+    bs = await blocks(page)
+    const w = bs.filter((x) => x.shape === 'wheel').find((x) => x.x === 0)
+    check(`${tag} 輪子拖到地面：對齊格線`, !!w && w.y === 0, JSON.stringify(bs))
+    // 放好的新積木可以再拖：拖回盤子收起來
+    const from = await stableCenterOf(page, `[data-testid=blk-block][data-id="${w.id}"]`)
+    await fingerDrag(send, from, await centerOf(page, '[data-testid=blk-tray]'))
+    await sleep(page, 450)
+    check(`${tag} 新積木拖回盤子就收起來`, (await blocks(page)).length === 3)
+  }
+  await sleep(page, 500)
+  await flush(page)
+  check(`${tag} 積木和寵物都在畫面裡`, (await outside(page, '[data-testid=blk-block], [data-testid=blk-pet]')).length === 0)
+  check(`${tag} 塔不會蓋到盤子、回去鍵、推倒鍵`, (await overlaps(page, '[data-testid=blk-block]', '[data-testid=blk-tray], [data-testid=game-back], [data-testid=blk-crash]')).length === 0)
+  check(`${tag} 只有一個新玩具：塔再高也沒有住戶`, (await page.getByTestId('blk-tenant').count()) === 0)
+  await shot(page, `blocks-7-parts-build-${name}`)
+  await page.getByTestId('blk-crash').tap()
+  await sleep(page, 700)
+  await flush(page)
+  check(`${tag} 推倒：新積木也散在地上、都在畫面裡`, (await page.locator('[data-testid=blk-rubble]').count()) === 3 && (await outside(page, '[data-testid=blk-rubble]')).length === 0)
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await send.detach()
+  await ctx.close()
+}
+
+/** v8.5 新積木的圖到了：單色、不換色（沒有 filter） */
+async function testBlocksPartsArt(b) {
+  const { ctx, page, errors } = await freshApp(b, SIZES.land, TOUCH)
+  const tag = '新積木[圖]'
+  await ctx.route('**/art/ui-blk-*.png', (r) => r.fulfill({ path: new URL('../public/art/food-apple.png', import.meta.url).pathname }))
+  await patchSettings(page, { playCount: { blocks: 2 } })
+  await enter(page, 'blocks', '3')
+  await page.waitForSelector('[data-testid=blk-pick-wheel] img.blk-img')
+  await page.getByTestId('blk-color-sky').tap()
+  await page.getByTestId('blk-pick-cube').tap()
+  await page.getByTestId('blk-pick-window').tap()
+  await sleep(page, 100)
+  const f = await page.evaluate(() => [...document.querySelectorAll('[data-testid=blk-block]')].map((el) => [el.dataset.shape, getComputedStyle(el.querySelector('img')).filter]))
+  check(`${tag} 舊積木照樣換色、新積木不換色`, f.length === 2 && f[0][1].includes('hue-rotate') && f[1][1] === 'none', JSON.stringify(f))
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await ctx.close()
+}
+
+/** v8.5 住戶：玩完 3 次之後，塔到 4 格高小動物搬進來；不擋積木；推倒跟著彈開 */
+async function testBlocksTenants(b, name, vp) {
+  const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
+  const send = await touchSender(ctx, page)
+  const tag = `住戶[${name}]`
+  await patchSettings(page, { playCount: { blocks: 3 } })
+  await enter(page, 'blocks', '3')
+  await page.getByTestId('blk-pick-cube').tap()
+  await sleep(page, 150)
+  check(`${tag} 才 2 格高：還沒有住戶`, (await page.getByTestId('blk-tenant').count()) === 0)
+  await page.getByTestId('blk-pick-cube').tap()
+  await page.waitForSelector('[data-testid=blk-tenant]', { timeout: 2000 }).catch(() => {})
+  let bs = await blocks(page)
+  const tenants = () => page.evaluate(() => [...document.querySelectorAll('[data-testid=blk-tenant]')].map((el) => [el.dataset.animal, Number(el.dataset.on)]))
+  check(`${tag} 塔到 4 格高：小雞搬進下面那塊`, JSON.stringify(await tenants()) === JSON.stringify([['obj-chick', bs[0].id]]), JSON.stringify(await tenants()))
+  check(`${tag} 第一隻來的時候寵物說有小動物搬進來`, (await said(page, 'blocks')).filter((k) => k === 'pet.play.blocks.tenant').length === 1)
+  await sleep(page, 700)
+  await flush(page)
+  {
+    // 小動物坐在積木裡：在那塊的範圍內
+    const t = await page.getByTestId('blk-tenant').boundingBox()
+    const blk = await page.locator(`[data-testid=blk-block][data-id="${bs[0].id}"]`).boundingBox()
+    check(`${tag} 小動物坐在積木裡`, t.x >= blk.x - 1 && t.x + t.width <= blk.x + blk.width + 1 && t.y >= blk.y - 1 && t.y + t.height <= blk.y + blk.height + 1, `${JSON.stringify(t)} in ${JSON.stringify(blk)}`)
+    check(`${tag} 小動物不接手指（pointer-events: none）`, (await page.evaluate(() => getComputedStyle(document.querySelector('[data-testid=blk-tenant]')).pointerEvents)) === 'none')
+    const at = { x: t.x + t.width / 2, y: t.y + t.height / 2 }
+    const hit = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('[data-testid]')?.getAttribute('data-testid') ?? 'none', at)
+    check(`${tag} 小動物底下的積木按得到`, hit === 'blk-block', hit)
+    // 按在小動物身上把那塊拖走：拿得起來，上面的往下掉
+    const cols = Number(await attr(page, '[data-testid=blocks]', 'data-cols'))
+    await fingerDrag(send, at, await columnPoint(page, 'cube', cols - 2))
+    await sleep(page, 450)
+    const after = await blocks(page)
+    const moved = after.find((x) => x.id === bs[0].id)
+    check(`${tag} 按在小動物身上也拖得動積木`, !!moved && moved.x === cols - 2 && moved.y === 0 && after.find((x) => x.id === bs[1].id).y === 0, JSON.stringify(after))
+    check(`${tag} 塔變矮了：住戶先離開`, (await page.getByTestId('blk-tenant').count()) === 0)
+  }
+  // 再疊高：4 格 1 隻、7 格 2 隻、10 格 3 隻（不搬家）
+  for (let i = 0; i < 4; i++) {
+    await page.getByTestId('blk-pick-cube').tap()
+    await sleep(page, 120)
+  }
+  await sleep(page, 300)
+  bs = await blocks(page)
+  const top = Number(await attr(page, '[data-testid=blocks]', 'data-top'))
+  let ts = await tenants()
+  check(`${tag} 疊到 10 格高：小雞、兔子、小熊依序住進來`, top === 10 && JSON.stringify(ts.map((t) => t[0])) === '["obj-chick","obj-rabbit","obj-bear"]', `top ${top} ${JSON.stringify(ts)}`)
+  check(`${tag} 一人一間、不住寵物站的那塊`, new Set(ts.map((t) => t[1])).size === 3 && !ts.some((t) => String(t[1]) === String(bs.at(-1).id)) && (await attr(page, '[data-testid=blk-pet]', 'data-on')) === String(bs.at(-1).id), JSON.stringify(ts))
+  check(`${tag} 同一回合只說一次`, (await said(page, 'blocks')).filter((k) => k === 'pet.play.blocks.tenant').length === 1)
+  await sleep(page, 700)
+  await flush(page)
+  check(`${tag} 住戶都在畫面裡`, (await outside(page, '[data-testid=blk-tenant], [data-testid=blk-pet]')).length === 0)
+  await shot(page, `blocks-8-tenants-${name}`)
+  // 推倒：小動物跟著彈開
+  await page.getByTestId('blk-crash').tap()
+  await sleep(page, 120)
+  check(`${tag} 推倒：三隻小動物跟著彈開`, (await page.getByTestId('blk-flung').count()) === 3 && (await page.getByTestId('blk-tenant').count()) === 0)
+  await sleep(page, 900)
+  await flush(page)
+  check(`${tag} 彈開的小動物落在畫面裡`, (await outside(page, '[data-testid=blk-flung]')).length === 0, (await outside(page, '[data-testid=blk-flung]')).join())
+  await shot(page, `blocks-9-tenants-crash-${name}`)
+  await page.getByTestId('blk-again').tap()
+  await sleep(page, 500)
+  check(`${tag} 再蓋：小動物也收乾淨`, (await page.getByTestId('blk-flung').count()) === 0)
+  for (let i = 0; i < 2; i++) {
+    await page.getByTestId('blk-pick-cube').tap()
+    await sleep(page, 120)
+  }
+  await page.waitForSelector('[data-testid=blk-tenant]', { timeout: 2000 }).catch(() => {})
+  check(`${tag} 新的一回合蓋到 4 格高又搬進來、再說一次`, (await page.getByTestId('blk-tenant').count()) === 1 && (await said(page, 'blocks')).filter((k) => k === 'pet.play.blocks.tenant').length === 2)
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await send.detach()
+  await ctx.close()
+}
+
+/** v8.5 住戶（動作減少）：直接出現、推倒直接落地，不演動畫 */
+async function testBlocksTenantsReduced(b) {
+  const { ctx, page, errors } = await freshApp(b, SIZES.land, { ...TOUCH, ctxOpts: { hasTouch: true, reducedMotion: 'reduce' } })
+  const tag = '住戶[動作減少]'
+  await patchSettings(page, { playCount: { blocks: 5 } })
+  await enter(page, 'blocks', '4-5')
+  for (let i = 0; i < 2; i++) {
+    await page.getByTestId('blk-pick-arch').tap()
+    await sleep(page, 100)
+  }
+  await page.waitForSelector('[data-testid=blk-tenant]', { timeout: 2000 }).catch(() => {})
+  const a = await page.evaluate(() => [...document.querySelectorAll('[data-testid=blk-tenant]')].map((el) => el.querySelector('.blk-tenant-hop').getAnimations().length))
+  check(`${tag} 住戶直接出現`, JSON.stringify(a) === '[0]', JSON.stringify(a))
+  await page.getByTestId('blk-crash').tap()
+  await sleep(page, 150)
+  const r = await page.evaluate(() => [...document.querySelectorAll('[data-testid=blk-flung]')].map((el) => [el.style.transform, el.getAnimations().length]))
+  check(`${tag} 推倒直接落地`, r.length === 1 && r[0][0].includes('rotate') && r[0][1] === 0, JSON.stringify(r))
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await ctx.close()
+}
+
 // ---------- 拼圖 ----------
 const pieces = (page) =>
   page.evaluate(() =>
@@ -429,6 +620,7 @@ async function testPuzzle(b, name, vp, age) {
   await page.waitForSelector('[data-testid=pzl-pic][data-mine]')
   check(`${tag} 自己畫的排最前面`, (await attr(page, '[data-testid=pzl-pic]', 'data-mine')) === '1')
   check(`${tag} 後面接 8 張場景圖`, (await page.locator('[data-testid=pzl-pic]:not([data-mine])').count()) === 8)
+  check(`${tag} 還沒有新玩具：第一張場景圖跟以前一樣`, (await attr(page, '[data-testid=pzl-pic]:not([data-mine])', 'data-key')) === 'scene-play-garden')
   await page.waitForFunction(() => document.querySelector('[data-testid=puzzle]').dataset.said?.includes('pet.play.puzzle.mine'), null, { timeout: 4000 }).catch(() => {})
   check(`${tag} 寵物說這是你畫的`, (await said(page, 'puzzle')).includes('pet.play.puzzle.mine'))
   const SIZES_FOR = { 3: [], '4-5': [6, 9], '6-7': [9, 16] }
@@ -453,6 +645,7 @@ async function testPuzzle(b, name, vp, age) {
   if (name !== 'phone') check(`${tag} 一片夠大（≥ 56）`, ps.every((p) => p.w >= 55), String(Math.round(ps[0].w)))
   check(`${tag} 底板有淡淡的原圖`, Math.abs(Number(await page.evaluate(() => getComputedStyle(document.querySelector('.pzl-ghostimg')).opacity)) - 0.25) < 0.01)
   check(`${tag} 第一次有手勢示範`, (await page.locator('[data-testid=puzzle] [data-testid=play-hand]').count()) === 1)
+  check(`${tag} 還沒有新玩具：方塊形狀`, (await page.locator('.pzl-jig').count()) === 0 && (await attr(page, '[data-testid=puzzle]', 'data-jigsaw')) === null)
   await shot(page, `puzzle-1-play-${name}-${age}`)
 
   // 太遠：不吸，留在放開的地方
@@ -504,6 +697,7 @@ async function testPuzzle(b, name, vp, age) {
   await page.getByTestId('pzl-again').tap()
   await page.waitForSelector('[data-testid=pzl-pics]')
   check(`${tag} 換一張回到選圖`, (await attr(page, '[data-testid=puzzle]', 'data-phase')) === 'pick')
+  check(`${tag} 玩完第 1 次：回到選圖多了 6 張新圖`, (await playCount(page, 'puzzle')) === 1 && (await page.locator('[data-testid=pzl-pic]:not([data-mine])').count()) === 14)
   check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
   await send.detach()
   await ctx.close()
@@ -532,6 +726,188 @@ async function testPuzzleShuffle(b) {
   await ctx.close()
 }
 
+/** v8.5 新圖片：玩完 1 次之後多 6 張故事圖（排在前面），圖都載得到、拼得起來；還是方塊形狀 */
+async function testPuzzlePics(b, name, vp) {
+  const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
+  const send = await touchSender(ctx, page)
+  const tag = `新圖片[${name}]`
+  await patchSettings(page, { playCount: { puzzle: 1 } })
+  await enter(page, 'puzzle', '4-5')
+  await page.waitForSelector('[data-testid=pzl-pic]')
+  const keys = await page.evaluate(() => [...document.querySelectorAll('[data-testid=pzl-pic]')].map((e) => e.dataset.key))
+  check(`${tag} 14 張：新的 6 張故事圖在前面，原本 8 張在後面`, keys.length === 14 && keys.slice(0, 6).every((k) => k.startsWith('story-')) && keys[6] === 'scene-play-garden' && keys.slice(6).every((k) => k.startsWith('scene-')), keys.join())
+  await page.waitForFunction(() => [...document.querySelectorAll('[data-testid=pzl-pic] img')].every((i) => i.complete), null, { timeout: 8000 }).catch(() => {})
+  const broken = await page.evaluate(() => [...document.querySelectorAll('[data-testid=pzl-pic] img')].filter((i) => !i.naturalWidth).length)
+  check(`${tag} 圖都載得到`, broken === 0, String(broken))
+  check(`${tag} 選圖：不橫向溢出`, await noOverflow(page))
+  check(`${tag} 選圖：觸控目標 ≥ 56`, (await smallTargets(page)).length === 0, (await smallTargets(page)).join())
+  await shot(page, `puzzle-3-pics-${name}`)
+  // 每一張新圖都切得出來（裁主體那一塊），截圖給人看
+  for (let k = 0; k < 6; k++) {
+    await page.locator('[data-testid=pzl-pic]').nth(k).tap()
+    await page.waitForSelector('[data-testid=pzl-piece]')
+    await sleep(page, 200)
+    if (k === 0) {
+      check(`${tag} 只有第一個新玩具：還是方塊形狀`, (await page.locator('.pzl-jig').count()) === 0)
+      check(`${tag} 6 片`, (await pieces(page)).length === 6)
+      // 拼完一張新圖
+      for (let i = 0; i < 6; i++) await dragTo(page, send, i, 0.05, 0.05)
+      await sleep(page, 200)
+      check(`${tag} 新圖拼得完`, (await attr(page, '[data-testid=puzzle]', 'data-phase')) === 'done')
+      await sleep(page, 500)
+      await shot(page, `puzzle-4-newpic-done-${name}`)
+      check(`${tag} 拼完算第 2 次`, (await waitGift(page, 4000)) && (await playCount(page, 'puzzle')) === 2)
+      await closeGift(page)
+    } else await shot(page, `puzzle-4-newpic-${k}-${name}`)
+    await page.getByTestId('game-back').tap()
+    await enter(page, 'puzzle', '4-5')
+    await page.waitForSelector('[data-testid=pzl-pic]')
+  }
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await send.detach()
+  await ctx.close()
+}
+
+/** 凹凸形狀的片都在畫面裡（歪著放的時候外框會多一點點，留一成的寬容） */
+const jigOutside = (page) =>
+  page.evaluate(() => {
+    const bad = []
+    for (const el of document.querySelectorAll('[data-testid=pzl-piece]')) {
+      const r = el.querySelector('.pzl-jig').getBoundingClientRect()
+      const tol = el.getBoundingClientRect().width * 0.1
+      if (r.left < -tol || r.top < -tol || r.right > innerWidth + tol || r.bottom > innerHeight + tol) bad.push(`${el.dataset.piece}@${Math.round(r.left)},${Math.round(r.top)},${Math.round(r.right)},${Math.round(r.bottom)}`)
+    }
+    return bad
+  })
+
+/** v8.5 凹凸形狀：玩完 3 次之後（4 歲以上）拼圖片有凹有凸；吸附、底板提示、可以按的範圍照常 */
+async function testPuzzleJigsaw(b, name, vp, age, want) {
+  const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
+  const send = await touchSender(ctx, page)
+  const tag = `凹凸形狀[${name} ${age} ${want}片]`
+  await patchSettings(page, { playCount: { puzzle: 3 } })
+  await enter(page, 'puzzle', age)
+  await page.waitForSelector('[data-testid=pzl-pic]')
+  await page.getByTestId(`pzl-size-${want}`).tap()
+  await page.locator('[data-testid=pzl-pic][data-key=scene-play-garden]').tap()
+  await page.waitForSelector('[data-testid=pzl-piece]')
+  await sleep(page, 250)
+  await flush(page)
+  let ps = await pieces(page)
+  check(`${tag} 片數`, ps.length === want)
+  check(`${tag} 每片都是凹凸形狀（SVG 外框）`, (await attr(page, '[data-testid=puzzle]', 'data-jigsaw')) === '1' && (await page.locator('[data-testid=pzl-piece] svg.pzl-jig clipPath path').count()) === want)
+  {
+    // 外框真的有凹有凸：不是每片都一樣，而且有曲線
+    const ds = await page.evaluate(() => [...document.querySelectorAll('[data-testid=pzl-piece]')].sort((a, c) => a.dataset.piece - c.dataset.piece).map((el) => el.querySelector('.pzl-jig-edge').getAttribute('d')))
+    check(`${tag} 外框有曲線、依位置不同`, ds.every((d) => d.includes('C')) && new Set(ds).size >= Math.min(want, 4), String(new Set(ds).size))
+  }
+  check(`${tag} 底板的提示也是凹凸格線、淡淡的原圖還在`, (await page.locator('[data-testid=pzl-board-jig] path').count()) === want && Math.abs(Number(await page.evaluate(() => getComputedStyle(document.querySelector('.pzl-ghostimg')).opacity)) - 0.25) < 0.01)
+  {
+    // 可以按的範圍不因為形狀變小：每片還是一整格（跟底板的格子一樣大）
+    const s0 = await slotBox(page, 0)
+    const sizes = await page.evaluate(() => [...document.querySelectorAll('[data-testid=pzl-piece]')].map((el) => el.offsetWidth))
+    check(`${tag} 每片可以按的範圍還是一整格`, sizes.every((w) => Math.abs(w - s0.width) < 1), `${sizes[0]} vs ${s0.width}`)
+    if (name !== 'phone') check(`${tag} 一片夠大（≥ 56）`, sizes.every((w) => w >= 55), String(sizes[0]))
+    // 凹進去的地方（每一邊的中間）也按得到這一片
+    const miss = await page.evaluate(() => {
+      const out = []
+      for (const el of document.querySelectorAll('[data-testid=pzl-piece]')) {
+        const r = el.getBoundingClientRect()
+        const cx = r.left + r.width / 2
+        const cy = r.top + r.height / 2
+        const k = el.offsetWidth * 0.4
+        for (const [dx, dy] of [[0, 0], [k, 0], [-k, 0], [0, k], [0, -k], [k * 0.75, k * 0.75], [-k * 0.75, -k * 0.75]]) {
+          const hit = document.elementFromPoint(cx + dx, cy + dy)?.closest('[data-testid=pzl-piece]')
+          if (hit !== el) out.push(`${el.dataset.piece}@${Math.round(dx)},${Math.round(dy)}→${hit?.dataset.piece ?? document.elementFromPoint(cx + dx, cy + dy)?.className}`)
+        }
+      }
+      return out
+    })
+    check(`${tag} 凹進去的地方、邊邊角角都按得到`, miss.length === 0, miss.slice(0, 6).join(' '))
+    check(`${tag} 形狀本身不接手指`, (await page.evaluate(() => getComputedStyle(document.querySelector('.pzl-jig')).pointerEvents)) === 'none')
+  }
+  check(`${tag} 打散的片（格子）都在畫面內`, (await outside(page, '[data-testid=pzl-piece], [data-testid=pzl-board]')).length === 0, (await outside(page, '[data-testid=pzl-piece]')).join())
+  check(`${tag} 凸出去的部分也在畫面內`, (await jigOutside(page)).length === 0, (await jigOutside(page)).join(' '))
+  if (name !== 'phone') check(`${tag} 片沒有壓在底板上`, (await overlaps(page, '[data-testid=pzl-piece]', '[data-testid=pzl-board]')).length === 0)
+  check(`${tag} 片不擋回去鍵與寵物`, (await overlaps(page, '[data-testid=pzl-piece], [data-testid=pzl-board]', '[data-testid=game-back], [data-testid=pzl-pet]')).length === 0)
+  await shot(page, `puzzle-5-jigsaw-${name}-${age}-${want}`)
+  // 吸附照常：太遠不吸、附近吸過去剛好對齊
+  {
+    const s = await slotBox(page, 0)
+    await dragTo(page, send, 0, 0, 1.05)
+    await sleep(page, 80)
+    const p0 = (await pieces(page)).find((p) => p.i === 0)
+    check(`${tag} 離太遠不會吸過去`, !p0.locked && Math.abs(p0.y + p0.h / 2 - (s.y + s.height * 1.55)) < p0.h * 0.2)
+    await dragTo(page, send, 0, 0.18, -0.15)
+    await sleep(page, 300)
+    await flush(page)
+    const p1 = (await pieces(page)).find((p) => p.i === 0)
+    check(`${tag} 拖到附近就吸過去、剛好對齊`, p1.locked && Math.abs(p1.x - s.x) < 1.5 && Math.abs(p1.y - s.y) < 1.5, `${Math.round(p1.x - s.x)},${Math.round(p1.y - s.y)}`)
+  }
+  // 兩指同時拖兩片
+  {
+    const a = { from: await pieceCenter(page, 1), s: await slotBox(page, 1) }
+    const c = { from: await pieceCenter(page, 2), s: await slotBox(page, 2) }
+    await twoFingerDrag(send, { from: a.from, to: { x: a.s.x + a.s.width / 2, y: a.s.y + a.s.height / 2 } }, { from: c.from, to: { x: c.s.x + c.s.width / 2, y: c.s.y + c.s.height / 2 } }, 6)
+    await sleep(page, 150)
+    ps = await pieces(page)
+    check(`${tag} 兩指同時拖兩片都拼上`, ps.find((p) => p.i === 1).locked && ps.find((p) => p.i === 2).locked)
+  }
+  await shot(page, `puzzle-6-jigsaw-part-${name}-${age}-${want}`)
+  for (let i = 3; i < want; i++) await dragTo(page, send, i, 0.05, 0.05)
+  await sleep(page, 200)
+  ps = await pieces(page)
+  check(`${tag} 全部拼好、亮一下、說拼好了`, ps.every((p) => p.locked) && (await attr(page, '[data-testid=puzzle]', 'data-phase')) === 'done' && (await page.getByTestId('pzl-shine').count()) === 1 && (await said(page, 'puzzle')).includes('pet.play.puzzle.done'))
+  await sleep(page, 500)
+  await flush(page)
+  await shot(page, `puzzle-7-jigsaw-done-${name}-${age}-${want}`)
+  await waitGift(page, 4000)
+  check(`${tag} 算玩完一次（第 4 次）`, (await playCount(page, 'puzzle')) === 4)
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await send.detach()
+  await ctx.close()
+}
+
+/** v8.5 凹凸形狀：3 歲維持方塊；只有一個新玩具也是方塊；拼到一半拿到新玩具，這一張不變、下一張才變 */
+async function testPuzzleJigsawGate(b) {
+  const tag = '凹凸形狀[什麼時候才有]'
+  {
+    const { ctx, page, errors } = await freshApp(b, SIZES.land, TOUCH)
+    await patchSettings(page, { playCount: { puzzle: 9 } })
+    await enter(page, 'puzzle', '3')
+    await page.locator('[data-testid=pzl-pic]').first().tap()
+    await page.waitForSelector('[data-testid=pzl-piece]')
+    await sleep(page, 200)
+    check(`${tag} 3 歲：兩個新玩具都有也維持方塊`, (await page.locator('.pzl-jig').count()) === 0 && (await pieces(page)).length === 4 && (await attr(page, '[data-testid=puzzle]', 'data-jigsaw')) === null)
+    check(`${tag} 3 歲：沒有錯誤`, errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+  {
+    const { ctx, page, errors } = await freshApp(b, SIZES.land, TOUCH)
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { puzzle: 2 } })
+    await enter(page, 'puzzle', '4-5')
+    await page.locator('[data-testid=pzl-pic][data-key=scene-play-sky]').tap()
+    await page.waitForSelector('[data-testid=pzl-piece]')
+    await sleep(page, 200)
+    check(`${tag} 玩完 2 次：還是方塊`, (await page.locator('.pzl-jig').count()) === 0)
+    for (let i = 0; i < 6; i++) await dragTo(page, send, i, 0.05, 0.05)
+    check(`${tag} 第 3 次拼完：新玩具卡（拼圖形狀）`, (await waitGift(page, 4000)) && (await attr(page, '[data-testid=play-toy]', 'data-toy')) === 'jigsaw')
+    await closeGift(page)
+    await sleep(page, 300)
+    check(`${tag} 收下卡片：剛拼好的這一張不變（還是方塊）`, (await attr(page, '[data-testid=play-puzzle]', 'data-toys')) === '2' && (await page.locator('.pzl-jig').count()) === 0 && (await attr(page, '[data-testid=puzzle]', 'data-phase')) === 'done')
+    await page.getByTestId('pzl-again').tap()
+    await page.waitForSelector('[data-testid=pzl-pics]')
+    await page.locator('[data-testid=pzl-pic][data-key=scene-play-sky]').tap()
+    await page.waitForSelector('[data-testid=pzl-piece]')
+    await sleep(page, 200)
+    check(`${tag} 下一張才變成凹凸形狀`, (await page.locator('[data-testid=pzl-piece] .pzl-jig').count()) === 6)
+    check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+    await send.detach()
+    await ctx.close()
+  }
+}
+
 const b = await launch()
 try {
   if (on('blocks')) {
@@ -540,12 +916,28 @@ try {
     await testBlueprint(b, 'phone', SIZES.phone)
     await testBlocksArt(b)
   }
+  if (on('blocks-toys')) {
+    for (const [name, vp] of Object.entries(SIZES)) await testBlocksParts(b, name, vp)
+    await testBlocksPartsArt(b)
+    await testBlocksTenants(b, 'land', SIZES.land)
+    await testBlocksTenants(b, 'phone', SIZES.phone)
+    await testBlocksTenantsReduced(b)
+  }
   if (on('puzzle')) {
     await testPuzzle(b, 'land', SIZES.land, '6-7')
     await testPuzzle(b, 'port', SIZES.port, '4-5')
     await testPuzzle(b, 'phone', SIZES.phone, '3')
     await testPuzzle(b, 'phone', SIZES.phone, '6-7')
     await testPuzzleShuffle(b)
+  }
+  if (on('puzzle-toys')) {
+    await testPuzzlePics(b, 'land', SIZES.land)
+    await testPuzzlePics(b, 'phone', SIZES.phone)
+    await testPuzzleJigsaw(b, 'land', SIZES.land, '6-7', 16)
+    await testPuzzleJigsaw(b, 'port', SIZES.port, '4-5', 9)
+    await testPuzzleJigsaw(b, 'phone', SIZES.phone, '4-5', 6)
+    await testPuzzleJigsaw(b, 'phone', SIZES.phone, '6-7', 16)
+    await testPuzzleJigsawGate(b)
   }
 } finally {
   await b.close()

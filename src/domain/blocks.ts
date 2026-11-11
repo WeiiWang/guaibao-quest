@@ -2,7 +2,13 @@
 // 座標單位是「格」：x 是左邊在第幾格，y 是底邊離地幾格（地面 y = 0）。不做真的物理、不會自己倒。
 
 export const BLOCK_SHAPES = ['cube', 'long', 'arch', 'roof', 'cyl', 'half'] as const
-export type BlockShape = (typeof BLOCK_SHAPES)[number]
+/** v8.5 新玩具「新積木」：輪子、窗戶、旗子（圖是單色的，不跟著顏色盤換色） */
+export const PART_SHAPES = ['wheel', 'window', 'flag'] as const
+export type PartShape = (typeof PART_SHAPES)[number]
+export type BlockShape = (typeof BLOCK_SHAPES)[number] | PartShape
+export const isPart = (shape: BlockShape): shape is PartShape => (PART_SHAPES as readonly string[]).includes(shape)
+/** 盤子上有哪些積木：沒有新玩具時就是原本的 6 種 */
+export const trayShapes = (toys: number): readonly BlockShape[] => (toys >= 1 ? [...BLOCK_SHAPES, ...PART_SHAPES] : BLOCK_SHAPES)
 
 /** 每種積木的寬高（格）。拱門、三角屋頂、半圓的上緣不是平的，但堆疊照外框算（簡單、可預期） */
 export const BLOCK_SIZE: Record<BlockShape, { w: number; h: number }> = {
@@ -12,6 +18,10 @@ export const BLOCK_SIZE: Record<BlockShape, { w: number; h: number }> = {
   roof: { w: 4, h: 2 },
   cyl: { w: 2, h: 3 },
   half: { w: 4, h: 2 },
+  // 新積木照同一套格子：輪子與窗戶跟方塊一樣大，旗子是細細高高的一支（上面照樣可以再疊，跟屋頂一樣照外框算）
+  wheel: { w: 2, h: 2 },
+  window: { w: 2, h: 2 },
+  flag: { w: 2, h: 3 },
 }
 
 export const BLOCK_COLORS = ['coral', 'sun', 'leaf', 'sky', 'grape'] as const
@@ -246,4 +256,77 @@ export function matchesBlueprint(blocks: readonly PlanBlock[], plan: Blueprint):
   if (blocks.length < plan.blocks.length) return false
   const want = signature(plan.blocks)
   return groups(blocks).some((g) => g.length === plan.blocks.length && signature(g) === want)
+}
+
+// ---------- v8.5 一回合只算一次 ----------
+
+/** 一直蓋不推倒也算玩完：這一回合一共放了幾塊（推倒或照著蓋好會更早） */
+export const FINISH_PLACED = 8
+
+/**
+ * 一回合：從地上空空的開始蓋，到推倒（或把積木全部收回盤子）為止。
+ * 一回合裡「推倒、照著蓋好、放滿 8 塊」不管發生幾樣，只算玩完一次。
+ */
+export interface BuildRound {
+  /** 這一回合放了幾塊 */
+  placed: number
+  /** 這一回合已經算過玩完了 */
+  done: boolean
+}
+export const newRound = (): BuildRound => ({ placed: 0, done: false })
+
+/**
+ * place：放了一塊新的；crash：推倒；match：照著蓋好；empty：地上沒有積木了（推倒之後，或全部拖回盤子）。
+ * 回傳新的回合狀態，以及這一下要不要呼叫 finish()。
+ */
+export function roundEvent(r: BuildRound, ev: 'place' | 'crash' | 'match' | 'empty'): { round: BuildRound; finish: boolean } {
+  if (ev === 'empty') return { round: r.done ? newRound() : r, finish: false }
+  const placed = ev === 'place' ? r.placed + 1 : r.placed
+  const hit = ev === 'place' ? placed === FINISH_PLACED : true
+  const finish = hit && !r.done
+  return { round: { placed, done: r.done || finish }, finish }
+}
+
+// ---------- v8.5 新玩具「住戶」 ----------
+
+/** 塔蓋到幾格高，第一隻小動物搬進來 */
+export const TENANT_ROWS = 4
+/** 之後每多幾格再來一隻 */
+export const TENANT_STEP = 3
+/** 依序搬進來的小動物 */
+export const TENANTS = ['obj-chick', 'obj-rabbit', 'obj-bear'] as const
+export const TENANT_EMOJI: Record<string, string> = { 'obj-chick': '🐥', 'obj-rabbit': '🐰', 'obj-bear': '🐻' }
+
+/** 塔這麼高的時候該有幾位住戶（0–3） */
+export function tenantCount(top: number): number {
+  if (top < TENANT_ROWS) return 0
+  return Math.min(TENANTS.length, 1 + Math.floor((top - TENANT_ROWS) / TENANT_STEP))
+}
+
+/** 這塊積木住得下小動物嗎：至少 2 格高（長條太扁）、不是旗子（只有一根桿子） */
+const roomy = (shape: BlockShape): boolean => BLOCK_SIZE[shape].h >= 2 && shape !== 'flag'
+
+/**
+ * 每位住戶住在哪一塊積木裡（回傳積木 id；-1 = 現在沒有房間，先不出來）。
+ * 寵物站的最高那塊不住（牠的腳踩在那裡）。已經住下的不搬家，除非那塊被拿走或變成最高的；
+ * 新來的住最低的空房間（一樣高照 id），所以結果只看積木怎麼擺，不靠亂數。
+ */
+export function assignTenants(prev: readonly number[], blocks: readonly Block[], count: number): number[] {
+  const topId = topBlock(blocks)?.id ?? -1
+  const rooms = blocks.filter((b) => b.id !== topId && roomy(b.shape)).sort((a, b) => a.y - b.y || a.id - b.id)
+  const out: number[] = []
+  const taken = new Set<number>()
+  for (let i = 0; i < count; i++) {
+    const keep = prev[i] !== undefined && prev[i] >= 0 && !taken.has(prev[i]) && rooms.some((b) => b.id === prev[i])
+    out.push(keep ? prev[i] : -1)
+    if (keep) taken.add(prev[i])
+  }
+  for (let i = 0; i < count; i++) {
+    if (out[i] >= 0) continue
+    const free = rooms.find((b) => !taken.has(b.id))
+    if (!free) continue
+    out[i] = free.id
+    taken.add(free.id)
+  }
+  return out
 }

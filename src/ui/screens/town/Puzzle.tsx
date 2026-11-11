@@ -3,7 +3,24 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { repo } from '../../../db/repo'
 import { localDateStr } from '../../../domain/date'
 import type { AgeBand } from '../../../domain/types'
-import { PUZZLE_SCENES, PUZZLE_SIZES, gridOf, puzzleLayout, saySnap, shuffleOrder, slotOf, snaps, tiltOf, type PuzzleLayout } from '../../../domain/puzzle'
+import {
+  JIGSAW_TAB,
+  PUZZLE_SIZES,
+  cropRect,
+  gridOf,
+  jigsawEdges,
+  jigsawPath,
+  puzzleLayout,
+  puzzleScenes,
+  saySnap,
+  shuffleOrder,
+  slotOf,
+  snaps,
+  tiltOf,
+  usesJigsaw,
+  type PuzzleFocus,
+  type PuzzleLayout,
+} from '../../../domain/puzzle'
 import { playSound } from '../../../learning/audioEngine'
 import { Companion, type Pose } from '../adventure/Companion'
 import { GameShell, type GameProps } from '../playground/GameShell'
@@ -15,6 +32,8 @@ import './puzzle.css'
 
 // 拼圖屋：選一張圖（自己畫的排最前面）→ 碎片打散在桌上 → 拖到底板附近就吸過去 → 拼完圖亮一下、寵物鼓掌。
 // 片數依年齡（4–5、6–7 歲可以選），洗牌固定（圖 + 日期 + 片數），不靠亂數。
+// v8.5 新玩具：toys >= 1 多 6 張故事圖可以選；toys >= 2 拼圖片變成有凹有凸的形狀（4 歲以上；3 歲維持方塊）。
+// 形狀在選圖的那一下決定，拼到一半不會變。
 
 export default function Puzzle({ onExit }: GameRootProps) {
   return (
@@ -31,6 +50,8 @@ interface Pic {
   key: string
   src: string
   mine: boolean
+  /** 只裁主體那一塊（新的故事圖） */
+  focus?: PuzzleFocus
 }
 interface Piece {
   i: number
@@ -39,21 +60,14 @@ interface Piece {
   locked: boolean
 }
 
-/** 把圖從中間裁成 cols:rows 的比例（碎片都是正方形）。做不到就用原圖（會稍微變形，但不會壞） */
-function cropTo(src: string, cols: number, rows: number): Promise<string> {
+/** 把圖裁成 cols:rows 的比例（碎片都是正方形；裁哪一塊見 cropRect）。做不到就用原圖（會稍微變形，但不會壞） */
+function cropTo(src: string, cols: number, rows: number, focus?: PuzzleFocus): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image()
     img.onload = () => {
       try {
         const want = cols / rows
-        const iw = img.naturalWidth
-        const ih = img.naturalHeight
-        let sw = iw
-        let sh = iw / want
-        if (sh > ih) {
-          sh = ih
-          sw = ih * want
-        }
+        const { x: sx, y: sy, w: sw, h: sh } = cropRect(img.naturalWidth, img.naturalHeight, cols, rows, focus)
         const outW = Math.min(1200, Math.round(sw))
         const outH = Math.round(outW / want)
         const c = document.createElement('canvas')
@@ -64,7 +78,7 @@ function cropTo(src: string, cols: number, rows: number): Promise<string> {
         // 畫廊作品可能有透明的地方：先鋪白，轉 JPEG 才不會變黑
         g.fillStyle = '#fff'
         g.fillRect(0, 0, outW, outH)
-        g.drawImage(img, (iw - sw) / 2, (ih - sh) / 2, sw, sh, 0, 0, outW, outH)
+        g.drawImage(img, sx, sy, sw, sh, 0, 0, outW, outH)
         resolve(c.toDataURL('image/jpeg', 0.88))
       } catch {
         resolve(src)
@@ -75,7 +89,7 @@ function cropTo(src: string, cols: number, rows: number): Promise<string> {
   })
 }
 
-function PuzzleGame({ say: rawSay, finish }: GameProps) {
+function PuzzleGame({ say: rawSay, finish, toys }: GameProps) {
   const band = useBand()
   const { rootRef, say } = useTrackedSay(rawSay)
   const finishLater = useFinishLater(finish)
@@ -90,14 +104,16 @@ function PuzzleGame({ say: rawSay, finish }: GameProps) {
         .filter((w) => !!w.png)
         .slice(0, MAX_MINE)
         .map((w) => ({ key: w.pageId, src: w.png!, mine: true })),
-      ...PUZZLE_SCENES.map((s) => ({ key: s, src: `${import.meta.env.BASE_URL}art/${s}.jpg`, mine: false })),
+      ...puzzleScenes(toys).map((s) => ({ key: s.id, src: `${import.meta.env.BASE_URL}art/${s.id}.jpg`, mine: false, focus: s.focus })),
     ],
-    [works],
+    [works, toys],
   )
   const hasMine = pics.some((p) => p.mine)
   const [phase, setPhase] = useState<'pick' | 'load' | 'play' | 'done'>('pick')
   const [pic, setPic] = useState<Pic | null>(null)
   const [img, setImg] = useState<string | null>(null)
+  /** 這一張用不用凹凸形狀：選圖的時候決定，拼到一半拿到新玩具也不會變 */
+  const [jigsaw, setJigsaw] = useState(false)
   const [pose, setPose] = useState<Pose>('happy')
   const hopRef = useRef<HTMLSpanElement>(null)
   const saidMine = useRef(false)
@@ -116,9 +132,10 @@ function PuzzleGame({ say: rawSay, finish }: GameProps) {
     if (phase !== 'pick') return
     playSound('pop')
     setPic(p)
+    setJigsaw(usesJigsaw(toys, band))
     setPhase('load')
     const { cols, rows } = gridOf(n)
-    const url = await cropTo(p.src, cols, rows)
+    const url = await cropTo(p.src, cols, rows, p.focus)
     setImg(url)
     setPhase('play')
     setPose('happy')
@@ -146,7 +163,7 @@ function PuzzleGame({ say: rawSay, finish }: GameProps) {
   const seedKey = pic ? `${pic.key}|${localDateStr(Date.now())}|${n}` : ''
 
   return (
-    <div className="pzl-root" ref={rootRef} data-testid="puzzle" data-band={band} data-phase={phase} data-count={n}>
+    <div className="pzl-root" ref={rootRef} data-testid="puzzle" data-band={band} data-phase={phase} data-count={n} data-jigsaw={phase !== 'pick' && jigsaw ? '1' : undefined}>
       <div className="pzl-pet" data-testid="pzl-pet" data-big={phase === 'done' ? '1' : undefined}>
         <span className="pzl-pet-hop" ref={hopRef}>
           <Companion pose={pose} size="var(--pzl-pet)" />
@@ -187,7 +204,7 @@ function PuzzleGame({ say: rawSay, finish }: GameProps) {
           <div className="pzl-pics" data-testid="pzl-pics">
             {pics.map((p) => (
               <button key={p.key} type="button" className="pzl-pic" data-testid="pzl-pic" data-key={p.key} data-mine={p.mine ? '1' : undefined} onClick={() => void choose(p)} aria-label={p.mine ? '我畫的圖' : '拼圖'}>
-                <img src={p.src} alt="" draggable={false} />
+                <img src={p.src} alt="" draggable={false} style={p.focus ? { objectPosition: `${p.focus.cx * 100}% ${p.focus.cy * 100}%` } : undefined} />
                 {p.mine && (
                   <span className="pzl-mine" aria-hidden>
                     <svg viewBox="0 0 32 32" width="30" height="30">
@@ -201,7 +218,7 @@ function PuzzleGame({ say: rawSay, finish }: GameProps) {
         </div>
       )}
 
-      {(phase === 'play' || phase === 'done') && img && pic && <Board key={`${pic.key}|${n}`} img={img} n={n} seedKey={seedKey} band={band} done={phase === 'done'} say={say} onDone={onDone} />}
+      {(phase === 'play' || phase === 'done') && img && pic && <Board key={`${pic.key}|${n}`} img={img} n={n} seedKey={seedKey} band={band} jigsaw={jigsaw} done={phase === 'done'} say={say} onDone={onDone} />}
 
       {phase === 'done' && (
         <button type="button" className="pzl-again" onClick={again} data-testid="pzl-again" aria-label="換一張">
@@ -216,12 +233,14 @@ function PuzzleGame({ say: rawSay, finish }: GameProps) {
   )
 }
 
-function Board({ img, n, seedKey, band, done, say, onDone }: { img: string; n: number; seedKey: string; band: AgeBand; done: boolean; say: (k: string) => void; onDone: () => void }) {
+function Board({ img, n, seedKey, band, jigsaw, done, say, onDone }: { img: string; n: number; seedKey: string; band: AgeBand; jigsaw: boolean; done: boolean; say: (k: string) => void; onDone: () => void }) {
   const areaRef = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState<{ w: number; h: number } | null>(null)
   const { cols, rows } = gridOf(n)
   const order = useMemo(() => shuffleOrder(n, seedKey), [n, seedKey])
-  const layout: PuzzleLayout | null = useMemo(() => (size ? puzzleLayout(size.w, size.h, n) : null), [size, n])
+  const layout: PuzzleLayout | null = useMemo(() => (size ? puzzleLayout(size.w, size.h, n, jigsaw ? JIGSAW_TAB : 0) : null), [size, n, jigsaw])
+  /** 凹凸形狀：每一片的外框（座標是那一片自己的，邊長 = layout.piece） */
+  const shapes = useMemo(() => (jigsaw && layout ? Array.from({ length: n }, (_, i) => jigsawPath(jigsawEdges(i, cols, rows), layout.piece)) : null), [jigsaw, layout, n, cols, rows])
   const [pieces, setPieces] = useState<Piece[]>([])
   const piecesRef = useRef<Piece[]>([])
   const [touched, setTouched] = useState(false)
@@ -305,7 +324,11 @@ function Board({ img, n, seedKey, band, done, say, onDone }: { img: string; n: n
     setPieces(next)
     // 立刻放到新位置（不等 render，避免閃回原位）
     d.el.style.transform = `translate(${x}px, ${y}px)${hit ? '' : ` rotate(${tiltOf(d.i, seedKey)}deg)`}`
-    if (!hit) return
+    if (!hit) {
+      // 放回桌上也有聲音
+      if (!cancel) playSound('drop')
+      return
+    }
     placed.current += 1
     playSfx('pop')
     if (!reducedMotion() && typeof d.el.animate === 'function')
@@ -316,7 +339,7 @@ function Board({ img, n, seedKey, band, done, say, onDone }: { img: string; n: n
 
   const firstLoose = pieces.find((p) => !p.locked)
   return (
-    <div className="pzl-area" ref={areaRef} data-testid="pzl-area" data-done={done ? '1' : undefined}>
+    <div className="pzl-area" ref={areaRef} data-testid="pzl-area" data-done={done ? '1' : undefined} data-jigsaw={jigsaw ? '1' : undefined}>
       {layout && (
         <>
           <div className="pzl-board" data-testid="pzl-board" style={{ left: layout.board.x, top: layout.board.y, width: layout.board.w, height: layout.board.h }}>
@@ -330,15 +353,54 @@ function Board({ img, n, seedKey, band, done, say, onDone }: { img: string; n: n
                 style={{ left: `${((i % cols) / cols) * 100}%`, top: `${(Math.floor(i / cols) / rows) * 100}%`, width: `${100 / cols}%`, height: `${100 / rows}%` }}
               />
             ))}
+            {shapes && (
+              // 底板的提示也畫成凹凸的格線
+              <svg className="pzl-board-jig" viewBox={`0 0 ${layout.board.w} ${layout.board.h}`} aria-hidden data-testid="pzl-board-jig">
+                {shapes.map((d, i) => (
+                  <path key={i} d={d} transform={`translate(${(i % cols) * layout.piece} ${Math.floor(i / cols) * layout.piece})`} />
+                ))}
+              </svg>
+            )}
             {done && <span className="pzl-shine" data-testid="pzl-shine" aria-hidden />}
           </div>
           {pieces.map((p) => {
             const c = p.i % cols
             const r = Math.floor(p.i / cols)
+            const P = layout.piece
+            const transform = `translate(${p.x}px, ${p.y}px)${p.locked ? '' : ` rotate(${tiltOf(p.i, seedKey)}deg)`}`
+            if (shapes) {
+              // 凹凸形狀：可以按的範圍還是原本那一格（外面這個 div），形狀只是裡面那張 SVG 的樣子，不接手指
+              const t = Math.ceil(P * JIGSAW_TAB) + 3
+              return (
+                <div
+                  key={p.i}
+                  className="pzl-piece"
+                  data-testid="pzl-piece"
+                  data-piece={p.i}
+                  data-jigsaw="1"
+                  data-locked={p.locked ? '1' : undefined}
+                  style={{ width: P, height: P, transform }}
+                  onPointerDown={(e) => onDown(e, p)}
+                  onPointerMove={onMove}
+                  onPointerUp={(e) => onUp(e)}
+                  onPointerCancel={(e) => onUp(e, true)}
+                >
+                  <svg className="pzl-jig" width={P + t * 2} height={P + t * 2} viewBox={`${-t} ${-t} ${P + t * 2} ${P + t * 2}`} style={{ left: -t, top: -t }} aria-hidden>
+                    <defs>
+                      <clipPath id={`pzl-clip-${p.i}`}>
+                        <path d={shapes[p.i]} />
+                      </clipPath>
+                    </defs>
+                    <image href={img} x={-c * P} y={-r * P} width={cols * P} height={rows * P} preserveAspectRatio="none" clipPath={`url(#pzl-clip-${p.i})`} />
+                    <path className="pzl-jig-edge" d={shapes[p.i]} />
+                  </svg>
+                </div>
+              )
+            }
             const style: CSSProperties = {
-              width: layout.piece,
-              height: layout.piece,
-              transform: `translate(${p.x}px, ${p.y}px)${p.locked ? '' : ` rotate(${tiltOf(p.i, seedKey)}deg)`}`,
+              width: P,
+              height: P,
+              transform,
               backgroundImage: `url("${img}")`,
               backgroundSize: `${cols * 100}% ${rows * 100}%`,
               backgroundPosition: `${cols > 1 ? (c / (cols - 1)) * 100 : 0}% ${rows > 1 ? (r / (rows - 1)) * 100 : 0}%`,

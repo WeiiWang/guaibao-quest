@@ -27,6 +27,58 @@ export const PUZZLE_SCENES = [
   'scene-play-orchard',
 ] as const
 
+/** 圖要裁哪一塊：中心點（佔原圖的比例）與放大倍數。沒給就是從正中間裁最大的一塊 */
+export interface PuzzleFocus {
+  cx: number
+  cy: number
+  zoom: number
+}
+export interface PuzzleScene {
+  id: string
+  focus?: PuzzleFocus
+}
+
+/**
+ * v8.5 新玩具「新圖片」：6 張故事圖（public/art/*.jpg）。
+ * 故事圖是 16:9、下半邊留給角色站（一大片草地或沙灘），整張拿來拼的話下面幾片都長得一樣；
+ * 所以每張都指定裁主體那一塊（切成小片也認得出來）。
+ */
+export const PUZZLE_EXTRA: readonly PuzzleScene[] = [
+  { id: 'story-nature-close-1', focus: { cx: 0.5, cy: 0.36, zoom: 1.25 } },
+  { id: 'story-life-close-1', focus: { cx: 0.6, cy: 0.4, zoom: 1.3 } },
+  { id: 'story-huaguoshan-close-2', focus: { cx: 0.62, cy: 0.45, zoom: 1.2 } },
+  { id: 'story-english-open-1', focus: { cx: 0.6, cy: 0.38, zoom: 1.3 } },
+  { id: 'story-shuiliandong-close-2', focus: { cx: 0.5, cy: 0.42, zoom: 1.3 } },
+  { id: 'story-shuiliandong-open-2', focus: { cx: 0.5, cy: 0.45, zoom: 1.25 } },
+]
+
+/** 可以選的固定圖片：沒有新玩具時跟 v8.4 一模一樣；有了之後新的 6 張排在前面（一回來就看得到） */
+export function puzzleScenes(toys: number): PuzzleScene[] {
+  const base = PUZZLE_SCENES.map((id) => ({ id }))
+  return toys >= 1 ? [...PUZZLE_EXTRA, ...base] : base
+}
+
+/**
+ * 從 iw×ih 的原圖裁出 cols:rows 的一塊。沒有 focus：正中間最大的一塊（v8.4 的裁法）；
+ * 有 focus：縮小 zoom 倍、中心移到 (cx, cy)，但不會裁到圖外面。
+ */
+export function cropRect(iw: number, ih: number, cols: number, rows: number, focus?: PuzzleFocus): Rect {
+  const want = cols / rows
+  let w = iw
+  let h = iw / want
+  if (h > ih) {
+    h = ih
+    w = ih * want
+  }
+  if (!focus) return { x: (iw - w) / 2, y: (ih - h) / 2, w, h }
+  const z = Math.max(1, focus.zoom)
+  w /= z
+  h /= z
+  const x = Math.max(0, Math.min(iw - w, focus.cx * iw - w / 2))
+  const y = Math.max(0, Math.min(ih - h, focus.cy * ih - h / 2))
+  return { x, y, w, h }
+}
+
 /** 字串雜湊（FNV-1a），給固定洗牌用 */
 export function hashStr(s: string): number {
   let h = 0x811c9dc5
@@ -102,7 +154,7 @@ function pack(r: Rect, p: number): { x: number; y: number }[] {
  * 桌面排版：底板在中間（橫向）或上面（直向），碎片排在旁邊空的地方，彼此不重疊、也不壓在底板上。
  * 從大的底板開始試，放不下所有碎片就縮小一點；縮到底還不夠才讓碎片疊在一起。
  */
-export function puzzleLayout(w: number, h: number, n: number): PuzzleLayout {
+export function puzzleLayout(w: number, h: number, n: number, tab = 0): PuzzleLayout {
   const { cols, rows } = gridOf(n)
   const wide = w >= h * 1.1
   // 一片的邊長上限：底板在橫向最多佔一半寬、整個高；直向佔整個寬、一半多一點的高
@@ -114,16 +166,18 @@ export function puzzleLayout(w: number, h: number, n: number): PuzzleLayout {
     const bh = p * rows
     let board: Rect
     let areas: Rect[]
+    // 凹凸形狀的拼圖片會凸出去一點（tab = 凸出去的長度佔邊長的比例）：靠畫面邊緣的那幾邊多留這麼多，凸出來的部分不會被切掉
+    const pd = tab * p
     if (wide) {
       board = { x: (w - bw) / 2, y: (h - bh) / 2, w: bw, h: bh }
       const sideW = (w - bw) / 2 - GAP * 2
       areas = [
-        { x: 0, y: 0, w: sideW, h },
-        { x: w - sideW, y: 0, w: sideW, h },
+        { x: pd, y: 0, w: sideW - pd, h: h - pd },
+        { x: w - sideW, y: 0, w: sideW - pd, h: h - pd },
       ]
     } else {
       board = { x: (w - bw) / 2, y: 0, w: bw, h: bh }
-      areas = [{ x: 0, y: bh + GAP * 2, w, h: h - bh - GAP * 2 }]
+      areas = [{ x: pd, y: bh + GAP * 2, w: w - pd * 2, h: h - bh - GAP * 2 - pd }]
     }
     const spots = areas.flatMap((a) => pack(a, p))
     best = { board, piece: p, spots }
@@ -161,4 +215,75 @@ export function snaps(dx: number, dy: number, piece: number, band: AgeBand): boo
 export function saySnap(placed: number, total: number): boolean {
   if (placed >= total) return false
   return placed === 1 || placed % 4 === 0
+}
+
+// ---------- v8.5 新玩具「拼圖形狀」：有凹有凸的拼圖片 ----------
+
+/** 4 歲以上才換成凹凸形狀；3 歲維持方塊（形狀多了他們反而認不出來是哪一片） */
+export const usesJigsaw = (toys: number, band: AgeBand): boolean => toys >= 2 && band !== '3'
+
+/** 一邊的樣子：0 = 平的（圖的外緣），1 = 凸出去，-1 = 凹進來 */
+export type EdgeKind = -1 | 0 | 1
+export interface JigsawEdges {
+  top: EdgeKind
+  right: EdgeKind
+  bottom: EdgeKind
+  left: EdgeKind
+}
+
+/** 凸出去多長（佔一片邊長的比例） */
+export const JIGSAW_TAB = 0.22
+
+/**
+ * 第 i 片四邊的凹凸：只看它在第幾欄第幾列（不用亂數），相鄰兩片剛好一凸一凹，圖的外緣是平的。
+ * 左右相鄰：(欄 + 列) 是偶數時左邊那片凸出去；上下相鄰：(欄 + 列) 是偶數時上面那片凹進來。
+ */
+export function jigsawEdges(i: number, cols: number, rows: number): JigsawEdges {
+  const c = i % cols
+  const r = Math.floor(i / cols)
+  const even = (a: number, b: number) => (a + b) % 2 === 0
+  /** (c, r) 那片的右邊 */
+  const v = (cc: number, rr: number): EdgeKind => (even(cc, rr) ? 1 : -1)
+  /** (c, r) 那片的下邊 */
+  const hz = (cc: number, rr: number): EdgeKind => (even(cc, rr) ? -1 : 1)
+  const neg = (k: EdgeKind): EdgeKind => (k === 1 ? -1 : k === -1 ? 1 : 0)
+  return {
+    top: r > 0 ? neg(hz(c, r - 1)) : 0,
+    right: c < cols - 1 ? v(c, r) : 0,
+    bottom: r < rows - 1 ? hz(c, r) : 0,
+    left: c > 0 ? neg(v(c - 1, r)) : 0,
+  }
+}
+
+/** 一個凸起的輪廓（u = 沿著邊 0–1，v = 往外），接在 (0.38, 0) 之後：細脖子、圓頭 */
+const KNOB: readonly [number, number][][] = [
+  [[0.45, 0], [0.43, 0.06], [0.4, 0.09]],
+  [[0.34, 0.14], [0.38, JIGSAW_TAB], [0.5, JIGSAW_TAB]],
+  [[0.62, JIGSAW_TAB], [0.66, 0.14], [0.6, 0.09]],
+  [[0.57, 0.06], [0.55, 0], [0.62, 0]],
+]
+
+/**
+ * 一片的外框（SVG path）。座標是這一片自己的：左上角 (0, 0)、邊長 p；凸出去的部分會超出 0–p 最多 JIGSAW_TAB × p。
+ * 順時針畫：上邊往右、右邊往下、下邊往左、左邊往上。
+ */
+export function jigsawPath(e: JigsawEdges, p: number): string {
+  const f = (n: number) => String(Math.round(n * 100) / 100)
+  // 每一邊：起點、沿著邊的方向、往外的方向
+  const sides: { k: EdgeKind; ax: number; ay: number; dx: number; dy: number; ox: number; oy: number }[] = [
+    { k: e.top, ax: 0, ay: 0, dx: 1, dy: 0, ox: 0, oy: -1 },
+    { k: e.right, ax: p, ay: 0, dx: 0, dy: 1, ox: 1, oy: 0 },
+    { k: e.bottom, ax: p, ay: p, dx: -1, dy: 0, ox: 0, oy: 1 },
+    { k: e.left, ax: 0, ay: p, dx: 0, dy: -1, ox: -1, oy: 0 },
+  ]
+  const out = ['M0 0']
+  for (const s of sides) {
+    const at = (u: number, v: number) => `${f(s.ax + s.dx * u * p + s.ox * v * s.k * p)} ${f(s.ay + s.dy * u * p + s.oy * v * s.k * p)}`
+    if (s.k !== 0) {
+      out.push(`L${at(0.38, 0)}`)
+      for (const seg of KNOB) out.push(`C${seg.map(([u, v]) => at(u, v)).join(' ')}`)
+    }
+    out.push(`L${at(1, 0)}`)
+  }
+  return out.join('') + 'Z'
 }
