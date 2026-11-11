@@ -22,6 +22,11 @@
 .pg-mus-card-title { white-space: nowrap; }
 .pg-mus-card.is-on { background: #fff3c4; box-shadow: 0 0 0 4px #ffb13d, 0 5px 0 rgb(0 0 0 / 0.1), 0 10px 22px rgb(120 80 10 / 0.26); }
 
+/* v8.5 有四首歌：歌卡只留圖（不靠字，名字在 aria-label），四張排一排 */
+.pg-mus-cards.is-many .pg-mus-card { flex: 0 1 132px; padding: clamp(4px, 0.8vmin, 8px); }
+.pg-mus-cards.is-many .pg-mus-card-title { display: none; }
+.pg-mus-cards.is-many .pg-mus-card-art { width: clamp(44px, 8vmin, 72px); }
+
 /* 進度：一串小音符點，空的時候也佔住高度，選歌不會擠動版面 */
 .pg-mus-progress { display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 3px 4px; min-height: clamp(14px, 2.4vmin, 22px); }
 .pg-mus-progress i { width: clamp(8px, 1.3vmin, 12px); aspect-ratio: 1; border-radius: 50%; background: rgb(255 255 255 / 0.7); box-shadow: inset 0 0 0 1.5px rgb(90 74 63 / 0.25); }
@@ -41,6 +46,15 @@
 .pg-mus-drum-body { position: relative; display: block; width: 100%; height: 76%; border-radius: 12% 12% 22% 22% / 16% 16% 24% 24%; background: repeating-linear-gradient(115deg, #e8743b 0 16%, #f6b24d 16% 32%); box-shadow: inset 0 -10px 0 rgb(0 0 0 / 0.14), 0 7px 12px rgb(60 30 60 / 0.25); }
 .pg-mus-drum.is-high .pg-mus-drum-body { background: repeating-linear-gradient(115deg, #3f9fe6 0 16%, #8fd6ff 16% 32%); }
 .pg-mus-drum-head { position: absolute; left: -3%; right: -3%; top: -19%; height: 40%; border-radius: 50%; background: radial-gradient(closest-side, #fffdf6, #f3e6cd); box-shadow: 0 3px 0 #b98f5d, 0 5px 6px rgb(0 0 0 / 0.14); }
+
+/* v8.5 換聲音：三顆圓按鈕直排在舞台右上角（平板橫向時右邊有空位；直向時在小鼓上面） */
+.pg-mus-stage { position: relative; }
+.pg-mus-voices { position: absolute; right: 0; top: 0; z-index: 2; display: flex; flex-direction: column; gap: clamp(6px, 1.2vmin, 12px); }
+.pg-mus-voice { --v: clamp(60px, 8.6vmin, 76px); flex: none; width: var(--v); height: var(--v); padding: 9px; border: 0; border-radius: 50%; background: rgb(255 255 255 / 0.92); box-shadow: 0 4px 0 rgb(0 0 0 / 0.1), 0 7px 14px rgb(60 40 90 / 0.16); touch-action: none; -webkit-tap-highlight-color: transparent; }
+.pg-mus-voice:active { scale: 1; }
+.pg-mus-voice.is-on { background: #fff3c4; box-shadow: 0 0 0 4px #ffb13d, 0 4px 0 rgb(0 0 0 / 0.1), 0 8px 18px rgb(120 80 10 / 0.26); }
+.pg-mus-voice img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; -webkit-user-drag: none; }
+.pg-mus-voice svg { display: block; }
 
 /* 木琴 */
 .pg-mus-xylo { position: relative; min-height: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: clamp(3px, 0.9vmin, 9px); }
@@ -80,6 +94,10 @@
   .pg-mus-pet { height: auto; width: 100%; order: -1; margin-bottom: auto; }
   .pg-mus-drum, .pg-mus-drum.is-high { width: 88%; height: auto; }
   .pg-mus-drum.is-high { width: 72%; }
+  /* 換聲音排在寵物（order -2）和鼓中間，照順序往下排，不疊在別的東西上 */
+  .pg-mus-pet { order: -2; }
+  .pg-mus-voices { position: static; order: -1; margin-bottom: auto; gap: 8px; }
+  .pg-mus-voice { --v: 60px; padding: 8px; }
   .pg-mus-rail { top: 0; bottom: 0; left: auto; right: auto; width: 3.5%; height: auto; }
   .pg-mus-rail.is-a { top: 0; left: 18%; }
   .pg-mus-rail.is-b { top: 0; left: 78%; }
@@ -99,6 +117,11 @@
   .pg-mus-pet { grid-column: 1 / -1; grid-row: 1; height: 100%; min-height: 0; }
   .pg-mus-drum, .pg-mus-drum.is-high { grid-row: 2; height: 72px; min-height: 72px; }
   .pg-mus-xylo { grid-column: 2; grid-row: 3; grid-template-columns: repeat(8, minmax(56px, 1fr)); }
+  /* 換聲音橫排在右上角、歌卡那一排的右邊（舞台這一欄太窄放不下） */
+  .pg-mus-stage { position: static; }
+  .pg-mus-voices { top: 8px; right: max(14px, env(safe-area-inset-right)); flex-direction: row; gap: 6px; }
+  .pg-mus-voice { --v: 56px; padding: 7px; }
+  .pg-mus-cards.is-many .pg-mus-card { flex-basis: 76px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

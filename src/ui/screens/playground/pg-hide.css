@@ -67,6 +67,48 @@
 .pg-hide-again { position: absolute; z-index: 2200; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: inline-flex; align-items: center; gap: 10px; min-height: 84px; padding: 0 clamp(24px, 5vmin, 44px); border: 0; border-radius: 42px; background: #ff9b45; color: #fff; font: inherit; font-size: clamp(24px, 4.4vmin, 36px); font-weight: 900; white-space: nowrap; box-shadow: 0 8px 0 #d97a2a, 0 14px 26px rgb(70 40 10 / 0.3); animation: pg-hide-num 0.42s cubic-bezier(0.2, 1.5, 0.4, 1) both; }
 .pg-hide-again:active { transform: translateX(-50%) translateY(5px); box-shadow: 0 3px 0 #d97a2a; }
 
+/* ---------- v8.5 換你藏 ---------- */
+/* 再玩一次 + 換你藏並排（沒有新玩具時只有再玩一次，位置跟原本一樣） */
+.pg-hide-actions { position: absolute; z-index: 2200; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: clamp(12px, 3vmin, 28px); }
+.pg-hide-actions .pg-hide-again { position: static; transform: none; }
+.pg-hide-actions .pg-hide-again:active { transform: translateY(5px); }
+.pg-hide-swap { flex: none; width: 96px; height: 96px; padding: 12px; border: 0; border-radius: 50%; background: #fff8ec; box-shadow: 0 8px 0 #e3d3b8, 0 14px 26px rgb(70 40 10 / 0.3); -webkit-tap-highlight-color: transparent; animation: pg-hide-num 0.42s cubic-bezier(0.2, 1.5, 0.4, 1) 0.12s both; }
+.pg-hide-swap:active { transform: translateY(5px); box-shadow: 0 3px 0 #e3d3b8; }
+.pg-hide-swap img, .pg-hide-night img, .pg-hide-ballfx img, .pg-hide-ball-wait img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; -webkit-user-drag: none; }
+
+/* 換你藏的寵物：只動 transform，走到每一站旁邊 */
+.pg-hide-pet.is-swap { transition: transform 0.7s cubic-bezier(0.4, 0, 0.3, 1); animation: pg-hide-pet-in 0.3s ease-out 1; }
+.pg-hide-swap-hop { position: absolute; inset: 0; transform-origin: 50% 100%; }
+.pg-hide-pet.is-swap-found .pg-hide-swap-hop { animation: pg-hide-hop 0.7s cubic-bezier(0.2, 1.3, 0.4, 1) 2; }
+@keyframes pg-hide-hop { 45% { transform: translateY(-24%) scale(1.05); } }
+
+/* 孩子手上的球：等著被藏起來 */
+.pg-hide-ball-wait { position: absolute; z-index: 2100; left: 50%; bottom: 3%; --sz: clamp(76px, 15vmin, 128px); width: var(--sz); height: var(--sz); margin-left: calc(var(--sz) / -2); pointer-events: none; filter: drop-shadow(0 6px 6px rgb(40 40 10 / 0.28)); animation: pg-hide-ball-bob 0.9s ease-in-out infinite alternate; }
+@keyframes pg-hide-ball-bob { from { transform: translateY(0); } to { transform: translateY(-16%); } }
+/* 球掉進去（is-in，演完就看不到）、被找到時彈出來（is-out，留在上面） */
+.pg-hide-ballfx { position: absolute; left: 33%; top: 8%; width: 34%; height: 34%; pointer-events: none; z-index: 4; }
+.pg-hide-ballfx.is-in { animation: pg-hide-ball-in 0.7s cubic-bezier(0.5, 0, 0.8, 0.6) both; }
+.pg-hide-ballfx.is-out { animation: pg-hide-ball-out 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+@keyframes pg-hide-ball-in { 0% { transform: translateY(-130%) scale(1.1); opacity: 0; } 20% { opacity: 1; } 70% { opacity: 1; } 100% { transform: translateY(95%) scale(0.5); opacity: 0; } }
+@keyframes pg-hide-ball-out { 0% { transform: translateY(95%) scale(0.5); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-40%) scale(1); opacity: 1; } }
+
+/* ---------- v8.5 手電筒（晚上版） ---------- */
+.pg-hide-night { position: absolute; z-index: 2200; top: max(12px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); width: 64px; height: 64px; padding: 9px; border: 0; border-radius: 50%; background: rgb(255 255 255 / 0.92); box-shadow: 0 4px 0 rgb(0 0 0 / 0.1), 0 8px 18px rgb(60 40 90 / 0.2); -webkit-tap-highlight-color: transparent; }
+.pg-hide-night.is-on { background: #ffe58a; box-shadow: 0 0 0 4px #fff, 0 0 22px 8px rgb(255 232 130 / 0.75); }
+.pg-hide-night:active { transform: translateY(3px); }
+.pg-hide[data-night] { touch-action: none; }
+/* 一層半透明的夜色，手指的位置挖一圈光。只動畫 opacity（WebKit 動畫 filter 會閃退）；光圈位置直接改 CSS 變數，不是動畫 */
+.pg-hide-dark { --lx: 50%; --ly: 45%; position: absolute; inset: 0; z-index: 2050; pointer-events: none; opacity: 0.5; transition: opacity 0.4s linear; background: radial-gradient(circle var(--lr, 28vmin) at var(--lx) var(--ly), rgb(10 14 46 / 0) 0, rgb(10 14 46 / 0) 52%, rgb(10 14 46 / 0.55) 80%, rgb(10 14 46 / 0.9) 100%); animation: pg-hide-dark-in 0.4s linear 1; }
+/* 找的時候才全暗；數數、跑走、找到時留一點亮，看得到寵物 */
+.pg-hide[data-phase='seek'] .pg-hide-dark { opacity: 1; }
+@keyframes pg-hide-dark-in { from { opacity: 0; } }
+/* 發亮的眼睛：在夜色上面。data-lit="0"（6–7 歲沒照到）時看不到 */
+.pg-hide-eyes { position: absolute; z-index: 2060; display: flex; justify-content: space-between; aspect-ratio: 2.3; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; transition: opacity 0.25s linear; }
+.pg-hide-eyes[data-lit='1'] { opacity: 1; }
+.pg-hide-eyes i { position: relative; width: 38%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #fffbd0, #ffe14a 62%, #f2b61f); box-shadow: 0 0 10px 3px rgb(255 232 110 / 0.85), 0 0 26px 8px rgb(255 220 80 / 0.4); animation: pg-hide-blink 3.2s ease-in-out infinite; }
+.pg-hide-eyes i::after { content: ''; position: absolute; left: 36%; top: 22%; width: 28%; height: 56%; border-radius: 50%; background: #2a2333; }
+@keyframes pg-hide-blink { 0%, 44%, 52%, 100% { transform: scaleY(1); } 48% { transform: scaleY(0.12); } }
+
 /* 驚喜：外層決定壽命（animationend 就移除），一定要有動畫（減少動態時是淡入淡出） */
 .pg-hide-sur { position: absolute; inset: 0; pointer-events: none; z-index: 3; animation: pg-hide-life 1.5s linear both; }
 @keyframes pg-hide-life { 0%, 100% { opacity: 1; } 99% { opacity: 1; } }
@@ -105,6 +147,12 @@
   .pg-hide-pet.is-run.to-right, .pg-hide-pet.is-run.to-left { animation: pg-hide-fade 0.3s linear forwards; }
   .pg-hide-peek-pet { transition: none; }
   .pg-hide-sur svg, .pg-hide-wing, .pg-hide-flap, .pg-hide-hearts i { animation: none; }
+  /* v8.5：寵物直接出現在每一站旁邊，球不飛（直接不見、直接出現），眼睛不眨，夜色不漸變 */
+  .pg-hide-pet.is-swap { transition: none; animation: none; }
+  .pg-hide-pet.is-swap-found .pg-hide-swap-hop, .pg-hide-swap, .pg-hide-ball-wait, .pg-hide-eyes i, .pg-hide-dark { animation: none; }
+  .pg-hide-ballfx.is-in { animation: none; opacity: 0; }
+  .pg-hide-ballfx.is-out { animation: none; transform: translateY(-40%); }
+  .pg-hide-dark, .pg-hide-eyes { transition: none; }
   .pg-hide-hearts { display: none; }
   /* 驚喜不飛，原地淡入淡出（外層的動畫留著，演完才移除）。styles.css 在這個模式把所有動畫壓成 0.001 秒，要 !important 才留得住，不然一閃就沒了 */
   .pg-hide-sur { animation: pg-hide-fade-inout 1.2s linear both !important; }

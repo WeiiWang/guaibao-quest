@@ -91,6 +91,85 @@ export function playXylophone(freq: number): void {
   }
 }
 
+/**
+ * v8.5 鈴鐺：音磚樂器的非整數泛音（1、2.76、5.4 倍）加一個略高於八度的分音，尾巴拖得比木琴長很多，
+ * 聽起來是「叮——」而不是「咚」。基音還是那個鍵的音，所以彈得出旋律。
+ */
+export function playBell(freq: number): void {
+  try {
+    const c = getAudioContext()
+    if (!c) return
+    const t = c.currentTime
+    const out = busOf(c)
+    partial(c, out, t, freq, freq, 0.4, 1.6)
+    partial(c, out, t, freq * 2.003, freq * 2.003, 0.1, 1.2)
+    partial(c, out, t, freq * 2.76, freq * 2.76, 0.16, 0.9)
+    partial(c, out, t, freq * 5.4, freq * 5.4, 0.07, 0.35)
+  } catch {
+    /* 聲音失敗不影響遊戲 */
+  }
+}
+
+/**
+ * v8.5 喵喵：一個像貓叫的滑音。鋸齒波的音高先滑上去、停在那個鍵的音、最後掉下來（喵～），
+ * 同時一個帶通濾波器從低掃到高再掃回來（嘴巴從「ㄇ」張開到「ㄧ」再收成「ㄠ」）。
+ * 中間停在鍵的音上，所以還是彈得出旋律。只用一個振盪器。
+ */
+export function playMeow(freq: number): void {
+  try {
+    const c = getAudioContext()
+    if (!c) return
+    const t = c.currentTime
+    const out = busOf(c)
+    const dur = 0.46
+    const o = c.createOscillator()
+    o.type = 'sawtooth'
+    o.frequency.setValueAtTime(freq * 0.78, t)
+    o.frequency.exponentialRampToValueAtTime(freq, t + 0.09)
+    o.frequency.setValueAtTime(freq, t + 0.22)
+    o.frequency.exponentialRampToValueAtTime(freq * 0.8, t + dur)
+    const mouth = c.createBiquadFilter()
+    mouth.type = 'bandpass'
+    mouth.Q.value = 4
+    mouth.frequency.setValueAtTime(700, t)
+    mouth.frequency.exponentialRampToValueAtTime(2400, t + 0.11)
+    mouth.frequency.setValueAtTime(2400, t + 0.2)
+    mouth.frequency.exponentialRampToValueAtTime(850, t + dur)
+    // 一點沒過濾波器的本音墊在下面，音高才聽得清楚；先壓掉刺耳的高頻
+    const body = c.createBiquadFilter()
+    body.type = 'lowpass'
+    body.frequency.value = 1800
+    const bodyGain = c.createGain()
+    bodyGain.gain.value = 0.22
+    const g = c.createGain()
+    g.gain.setValueAtTime(0.0001, t)
+    g.gain.exponentialRampToValueAtTime(0.5, t + 0.05)
+    g.gain.setValueAtTime(0.5, t + 0.24)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+    o.connect(mouth)
+    mouth.connect(g)
+    o.connect(body)
+    body.connect(bodyGain)
+    bodyGain.connect(g)
+    g.connect(out)
+    o.onended = () => {
+      try {
+        o.disconnect()
+        mouth.disconnect()
+        body.disconnect()
+        bodyGain.disconnect()
+        g.disconnect()
+      } catch {
+        /* ignore */
+      }
+    }
+    o.start(t)
+    o.stop(t + dur + 0.02)
+  } catch {
+    /* 聲音失敗不影響遊戲 */
+  }
+}
+
 export type DrumKind = 'low' | 'high'
 
 /** 鼓：低頻下滑的「咚」+ 一點噪音的「噠」。low 大鼓、high 小鼓 */

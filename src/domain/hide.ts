@@ -115,3 +115,33 @@ export function hideLayout(count: number, width: number, height: number, opts: {
   })
   return out
 }
+
+// ---------- v8.5 越玩越多 ----------
+
+/** 換你藏：寵物先看錯幾個再找到。第幾次換你藏（從 0 算）決定：1、2、1、2…，不用亂數 */
+export const swapMissCount = (turn: number): 1 | 2 => (Math.max(0, Math.floor(turn)) % 2 === 0 ? 1 : 2)
+
+/**
+ * 換你藏：寵物找球的路線。前面是看錯的（不會是有球的那個、也不重複），最後一個一定是有球的。
+ * 從哪個開始看也用第幾次決定，所以每次不太一樣，但同一次重算結果相同。
+ */
+export function swapSeekOrder(spots: readonly HideSpot[], ball: HideSpot, turn: number): HideSpot[] {
+  const others = spots.filter((s) => s !== ball)
+  const n = Math.min(swapMissCount(turn), others.length)
+  const start = others.length ? Math.max(0, Math.floor(turn)) % others.length : 0
+  const wrong = Array.from({ length: n }, (_, k) => others[(start + k) % others.length])
+  return [...wrong, ball]
+}
+
+const LIGHT_RADIUS: Record<AgeBand, number> = { '3': 0.36, '4-5': 0.28, '6-7': 0.22 }
+
+/** 手電筒的光圈半徑，占畫面短邊的比例。3 歲最大（手指不準也照得到） */
+export const flashlightRadius = (band: AgeBand): number => LIGHT_RADIUS[band]
+
+/** 晚上版發亮的眼睛：3 歲、4–5 歲黑暗中一直看得到；6–7 歲要光照到才看得到（真的要用手電筒找） */
+export const eyesAlwaysGlow = (band: AgeBand): boolean => band !== '6-7'
+
+/** 光圈有沒有照到某一點（照到光圈的八成以內才算，邊緣太暗不算） */
+export function lightReaches(light: { x: number; y: number }, radius: number, target: { x: number; y: number }): boolean {
+  return Math.hypot(light.x - target.x, light.y - target.y) <= radius * 0.8
+}

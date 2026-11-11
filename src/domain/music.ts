@@ -28,7 +28,7 @@ export const NOTE_COLOR: Record<MusicNote, string> = {
   C6: '#a05cd0',
 }
 
-export type SongId = 'twinkle' | 'tigers'
+export type SongId = 'twinkle' | 'tigers' | 'mary' | 'bridge'
 
 export interface Song {
   id: SongId
@@ -51,6 +51,30 @@ export const SONGS: readonly Song[] = [
     notes: n('C5 D5 E5 C5  C5 D5 E5 C5  E5 F5 G5  E5 F5 G5  G5 A5 G5 F5 E5 C5  G5 A5 G5 F5 E5 C5  C6 G5 C6  C6 G5 C6'.replace(/ +/g, ' ')),
   },
 ]
+
+/** v8.5 新玩具 `songs`：玩完第 1 次多兩首（皆公版旋律，C 大調，全部落在木琴的 8 個音裡，不用移調） */
+export const BONUS_SONGS: readonly Song[] = [
+  {
+    id: 'mary',
+    title: '瑪莉有隻小綿羊',
+    notes: n('E5 D5 C5 D5 E5 E5 E5  D5 D5 D5  E5 G5 G5  E5 D5 C5 D5 E5 E5 E5  E5 D5 D5 E5 D5 C5'.replace(/ +/g, ' ')),
+  },
+  {
+    id: 'bridge',
+    title: '倫敦鐵橋',
+    notes: n('G5 A5 G5 F5 E5 F5 G5  D5 E5 F5  E5 F5 G5  G5 A5 G5 F5 E5 F5 G5  D5 G5 E5 C5'.replace(/ +/g, ' ')),
+  },
+]
+
+/** 有幾個新玩具時可以選哪些歌：沒有新玩具就是原本的兩首 */
+export const songsFor = (toys: number): readonly Song[] => (toys >= 1 ? [...SONGS, ...BONUS_SONGS] : SONGS)
+
+/** v8.5 新玩具 `voices`：木琴的聲音可以換。xylo 是原本的 */
+export const MUSIC_VOICES = ['xylo', 'bell', 'cat'] as const
+export type MusicVoice = (typeof MUSIC_VOICES)[number]
+
+/** 有幾個新玩具時可以換哪些聲音：兩個都有才出現換聲音的按鈕（空陣列 = 不顯示，只有木琴） */
+export const voicesFor = (toys: number): readonly MusicVoice[] => (toys >= 2 ? MUSIC_VOICES : [])
 
 /** 自由彈累計敲幾下算玩完（讓只想亂敲的孩子也拿得到） */
 export const FREE_PLAY_GOAL = 30

@@ -6,8 +6,16 @@ import './v-shared.css'
 
 export const reducedMotion = () => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
-/** 音效：有些音效沒有合成音備援，音檔還沒載好時第一下會沒聲音；這時用 pop 頂一下，孩子的第一次澆水不會是安靜的 */
+/**
+ * 音效：有些音效沒有合成音備援（v8.5 的 boing、splash、munch、squeak 也是），音檔還沒載好時會沒聲音；
+ * 這時用 pop 頂一下，孩子的第一次澆水不會是安靜的。
+ * 自動化瀏覽器裡把叫過的名字記在 window.__pgSfx（新音效還沒有檔案，e2e 只能驗「有沒有叫到」）。
+ */
 export function playSfx(name: SoundName) {
+  if (typeof navigator !== 'undefined' && navigator.webdriver) {
+    const w = window as unknown as { __pgSfx?: string[] }
+    ;(w.__pgSfx ??= []).push(name)
+  }
   if (!playSound(name)) playSound('pop')
 }
 
