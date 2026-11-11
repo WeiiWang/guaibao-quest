@@ -4,8 +4,12 @@
 
   uv run --with numpy python design/tools/gen_music.py            # 全部（BGM + SFX）
   uv run --with numpy python design/tools/gen_music.py title map  # 只算指定場景
-  uv run --with numpy python design/tools/gen_music.py --sfx      # 只算音效
+  uv run --with numpy python design/tools/gen_music.py --sfx      # 只算音效（全部）
+  uv run --with numpy python design/tools/gen_music.py --sfx boing munch   # 只算指定的音效
   uv run --with numpy python design/tools/gen_music.py --report   # 只量測現有檔案
+
+加新東西時只算新的（給名稱）：既有檔案重算後位元組只要有一點不同，manifest 的 v 就會變，所有使用者都要重新下載。
+名稱打錯會直接報錯，不會退回「全部重算」。
 
 輸出：public/audio/music-<scene>.m4a、sfx-<name>.m4a、manifest.json
 全部是原創：旋律與和弦在本檔手寫，音色用加法／模態／FM 合成，沒有任何取樣或第三方素材。
@@ -256,6 +260,60 @@ def inst_ep(f: float, dur: float, vel: float, rng) -> np.ndarray:
     return out * 0.42
 
 
+def inst_xylo(f: float, dur: float, vel: float, rng) -> np.ndarray:
+    """木琴（xylophone，v8.5）：比馬林巴短、乾一點，泛音 1 : 3 : 6。短短的音聽起來像在跳。"""
+    tau1 = float(np.clip(0.30 * (523.0 / f) ** 0.5, 0.09, 0.5)) * (0.85 + 0.3 * vel)
+    n = int(min(tau1 * 6.0, 2.0) * SR)
+    t = tarr(n)
+    out = np.zeros(n)
+    for ratio, amp, tm in ((1.0, 1.0, 1.0), (3.0, 0.26 * (0.5 + vel), 0.30), (6.0, 0.06 * vel, 0.10)):
+        if f * ratio > 8000:
+            continue
+        out += amp * np.sin(2 * np.pi * f * ratio * t + rng.uniform(0, 0.4)) * np.exp(-t / (tau1 * tm))
+    k = int(0.006 * SR)
+    out[:k] += fft_filter(noise(k, rng), lp=min(f * 3.0, 4000.0)) * np.hanning(k) * 0.14 * vel
+    out *= fade_in(n, 0.0012)
+    return out * 0.55
+
+
+def inst_clarinet(f: float, dur: float, vel: float, rng, vib: float = 0.003) -> np.ndarray:
+    """單簧管（v8.5）：只有奇數泛音，中音域溫暖、不尖。緩起、尾巴有一點顫音和很輕的氣息聲。"""
+    rel = 0.13
+    n = int((dur + rel) * SR)
+    t = tarr(n)
+    ramp = np.clip((t - 0.22) / 0.4, 0, 1)
+    inst_f = f * (1.0 + vib * ramp * np.sin(2 * np.pi * 4.6 * t + rng.uniform(0, 6)))
+    ph = 2 * np.pi * np.cumsum(inst_f) / SR
+    # 音越高泛音越少（真的單簧管高音區也比較純），高音才不會變尖
+    b = float(np.clip((466.0 / f) ** 0.7, 0.35, 1.0))
+    out = np.sin(ph)
+    for k, a in ((3, 0.34 * b), (5, 0.11 * b**2), (7, 0.035 * b**3), (2, 0.05)):
+        if f * k < 6500:
+            out += a * np.sin(k * ph)
+    kd = int(dur * SR)
+    env = fade_in(n, 0.045) * np.concatenate([np.ones(kd), np.cos(np.linspace(0, np.pi / 2, n - kd)) ** 2])
+    breath = fft_filter(noise(n, rng), hp=max(f * 2.0, 1500.0), lp=5000.0) * 0.022
+    sw = 1.0 + 0.06 * np.sin(2 * np.pi * 0.8 * t)
+    return (out + breath) * env * sw * 0.36
+
+
+def inst_brass(f: float, dur: float, vel: float, rng) -> np.ndarray:
+    """玩具小號（v8.5，音效用）：諧波隨音頭打開（先圓後亮），最高到 6 kHz，不刺耳。"""
+    rel = 0.09
+    n = int((dur + rel) * SR)
+    t = tarr(n)
+    scoop = 1.0 - 0.012 * np.exp(-t / 0.02)
+    vibr = 1.0 + 0.004 * np.clip((t - 0.18) / 0.2, 0, 1) * np.sin(2 * np.pi * 5.5 * t)
+    ph = 2 * np.pi * np.cumsum(f * scoop * vibr) / SR
+    bright = (0.42 + 0.34 * vel * (1 - np.exp(-t / 0.035))) * (0.82 + 0.18 * np.exp(-t / 0.4))
+    out = np.zeros(n)
+    for k in range(1, int(min(12, 6000 // f)) + 1):
+        out += (k**-0.6) * bright ** (k - 1) * np.sin(k * ph + rng.uniform(0, 0.2))
+    kd = int(dur * SR)
+    env = fade_in(n, 0.016) * np.concatenate([np.ones(kd), np.cos(np.linspace(0, np.pi / 2, n - kd)) ** 2])
+    return out * env * 0.3
+
+
 # ----- 打擊 -----
 
 
@@ -329,6 +387,8 @@ INSTR = {
     "bass": (inst_bass, 0.05),
     "flute": (inst_flute, 0.45),
     "ep": (inst_ep, 0.38),
+    "xylo": (inst_xylo, 0.30),
+    "clarinet": (inst_clarinet, 0.40),
 }
 PERC = {
     "shaker": (perc_shaker, 0.08),
@@ -897,6 +957,72 @@ def song_story() -> Song:
     return s
 
 
+def song_playground() -> Song:
+    """遊樂場（v8.5 線 AF）：A 大調 118 BPM、明顯的搖擺。木琴唱旋律（三個八分音符加一個休止，跳一下停一下），
+    低音在根音、高八度、五音之間彈來彈去，烏克麗麗只刷反拍，音樂盒在空拍回應兩個音；木魚、沙錘、很輕的大鼓。"""
+    sw = 0.12
+    s = Song("playground", 118, 4, 16, seed=101, rt60=1.4, wet=0.20, swing=sw)
+    ch = ["A", "A", "D", "E7", "A", "F#m", "D", "E7",
+          "D", "A", "Bm7", "E7", "A", "F#m", "Bm7", "E7"]
+    mel = (
+        "A4:0.5 C#5:0.5 E5:0.5 r:0.5 A5:0.5 E5:0.5 C#5:1 | E5:0.5 F#5:0.5 E5:0.5 r:0.5 C#5:1 r:1 | D5:0.5 F#5:0.5 A5:0.5 r:0.5 B5:0.5 A5:0.5 F#5:1 | G#5:0.5 B5:0.5 G#5:0.5 r:0.5 E5:1 r:1 |"
+        " A4:0.5 C#5:0.5 E5:0.5 r:0.5 A5:0.5 C#6:0.5 A5:1 | C#6:0.5 B5:0.5 A5:0.5 r:0.5 F#5:1 A5:1 | F#5:0.5 A5:0.5 D6:1 C#6:0.5 B5:0.5 A5:1 | B5:1 G#5:0.5 E5:0.5 B4:1 r:1 |"
+        " F#5:1 r:0.5 A5:0.5 D6:1 A5:1 | E5:1 r:0.5 A5:0.5 C#6:1 A5:1 | D5:0.5 F#5:0.5 B5:1 A5:0.5 F#5:0.5 D5:1 | E5:0.5 G#5:0.5 B5:0.5 D6:0.5 E6:1 r:1 |"
+        " A4:0.5 C#5:0.5 E5:0.5 r:0.5 A5:0.5 E5:0.5 C#6:1 | C#6:0.5 A5:0.5 F#5:0.5 r:0.5 A5:1 F#5:1 | B5:0.5 A5:0.5 F#5:0.5 D5:0.5 F#5:1 B5:1 | A5:0.5 G#5:0.5 E5:0.5 r:0.5 B4:0.5 D5:0.5 E5:1"
+    )
+    # 旋律休息的那一拍，音樂盒回兩個音（像朋友在旁邊跟著跳）
+    ans = (
+        "r:4 | r:3 C#6:0.5 E6:0.5 | r:4 | r:3 B5:0.5 E6:0.5 |"
+        " r:4 | r:4 | r:4 | r:3 D6:0.5 E6:0.5 |"
+        " r:4 | r:4 | r:4 | r:3 B5:0.5 G#5:0.5 |"
+        " r:4 | r:4 | r:4 | r:4"
+    )
+    s.melody("xylo", mel, vel=0.85, pan=0.06, level=1.0, jit=0.006)
+    s.melody("marimba", mel, vel=0.5, pan=-0.1, octave=-1, level=0.6, jit=0.008)
+    s.melody("musicbox", ans, vel=0.5, pan=0.3, level=0.5, jit=0.01, accent=0.0)
+    # 反拍刷弦：拍點直接寫成搖擺後的位置（自動搖擺只會移動第一根弦，四根弦會散掉）
+    s.strum(ch, [(0.5 + sw, "u", 0.8), (1.5 + sw, "u", 0.65), (2.5 + sw, "u", 0.8), (3.5 + sw, "u", 0.65)], low=54, vel=0.5, pan=-0.22, level=0.85)
+    s.bassline(ch, [(0, "r", 0.5), (1, "8", 0.35), (2, "5", 0.5), (3, "8", 0.35)], octave_low=40, vel=0.7, level=0.9, tau=0.22)
+    s.pad(ch, per=1, vel=0.36, level=0.5, center=61, send=0.5, attack=0.3, release=0.7)
+    s.drums("kick", "x.......x.......", bars=range(4, 16), subdiv=4, vel=0.45, level=0.75)
+    s.drums("wood", "....x.......o...", subdiv=4, vel=0.45, pan=-0.35, level=0.75)
+    s.drums("shaker", "x.x.x.x.x.x.x.x.", subdiv=4, vel=0.42, pan=0.35, level=0.7)
+    s.drums("tambourine", "....x.......x...", bars=range(8, 16), subdiv=4, vel=0.4, pan=0.4, level=0.6)
+    return s
+
+
+def song_town() -> Song:
+    """快樂小街（v8.5 線 AF）：降 B 大調 96 BPM、輕輕搖擺，像散步。和弦一級一級往上走再走回來。
+    單簧管唱旋律（後半段木琴疊上來），木魚一低一高當腳步聲，低音前半段兩拍一步、後半段一拍一步，
+    烏克麗麗輕輕刷第 2、4 拍，音樂盒偶爾叮兩下（像店門口的鈴）。"""
+    sw = 0.10
+    s = Song("town", 96, 4, 16, seed=103, rt60=1.7, wet=0.24, swing=sw)
+    ch = ["Bb6", "Cm7", "Dm7", "Ebmaj7", "Dm7", "Gm7", "Cm7", "F7",
+          "Ebmaj7", "Dm7", "Cm7", "Bb6", "Gm7", "Cm7", "F7sus", "F7"]
+    mel_a = (
+        "D5:1.5 F5:0.5 G5:1 F5:1 | Eb5:1.5 G5:0.5 Bb5:2 | A5:1 F5:0.5 D5:0.5 F5:1 A5:1 | G5:2 r:0.5 Bb4:0.5 D5:0.5 Eb5:0.5 |"
+        " F5:1.5 D5:0.5 A5:1 F5:1 | G5:1 Bb5:0.5 D6:0.5 Bb5:2 | C6:1 Bb5:0.5 G5:0.5 Eb5:1 G5:1 | F5:1.5 Eb5:0.5 C5:1 r:1"
+    )
+    mel_b = (
+        "Bb5:1 G5:1 Eb5:0.5 G5:0.5 Bb5:1 | A5:1 F5:1 D5:2 | G5:1 Eb5:1 C5:0.5 Eb5:0.5 G5:1 | F5:1.5 G5:0.5 D5:1 r:1 |"
+        " D5:0.5 G5:0.5 Bb5:1 D6:1.5 Bb5:0.5 | C6:1 G5:1 Eb5:1 G5:1 | Bb5:1.5 C6:0.5 Bb5:1 F5:1 | A5:1 G5:0.5 Eb5:0.5 C5:1 r:1"
+    )
+    s.melody("clarinet", mel_a + " | " + mel_b, vel=0.7, pan=0.08, level=1.0, jit=0.01, accent=0.06)
+    # 後半段木琴疊同一段旋律（只給後半段的音，start_bar=8 才不會整首錯開 8 小節）
+    s.melody("marimba", mel_b, start_bar=8, vel=0.42, pan=0.25, level=0.7, jit=0.012)
+    s.strum(ch, [(1, "d", 0.7), (2.5 + sw, "u", 0.45), (3, "d", 0.6)], low=53, vel=0.45, pan=-0.22, level=0.8)
+    s.bassline(ch, [(0, "r", 1.7), (2, "5", 1.7)], bars=range(0, 8), octave_low=38, vel=0.62, level=0.9, tau=0.5)
+    s.bassline(ch, [(0, "r", 0.9), (1, "3", 0.9), (2, "5", 0.9), (3, "3", 0.9)], bars=range(8, 16), octave_low=38, vel=0.62, level=0.85, tau=0.34)
+    s.pad(ch, per=1, vel=0.42, level=0.45, center=60, send=0.5, attack=0.5, release=0.9)
+    # 腳步聲：左腳低、右腳高
+    s.drums("wood", "x.......x.......", subdiv=4, vel=0.4, pan=-0.3, level=0.7, f=820.0, tau=0.022)
+    s.drums("wood", "....x.......x...", subdiv=4, vel=0.36, pan=0.3, level=0.65, f=1040.0, tau=0.02)
+    s.drums("brush", "....x.......o...", bars=range(4, 16), subdiv=4, vel=0.4, pan=0.2, level=0.65)
+    s.drums("shaker", "..x...x...x...x.", subdiv=4, vel=0.3, pan=0.4, level=0.5)
+    s.arp("musicbox", ch, [(2.5, 5, 0.5), (3.5, 6, 0.5)], low=58, vel=0.3, pan=0.32, level=0.55, bars=range(1, 16, 2), jit=0.012)
+    return s
+
+
 SONGS = {
     "story": song_story,
     "title": song_title,
@@ -907,6 +1033,8 @@ SONGS = {
     "boss": song_boss,
     "ceremony": song_ceremony,
     "paint": song_paint,
+    "playground": song_playground,
+    "town": song_town,
 }
 
 # 場景 → 目標響度修正（LU）。stage 要低調，其餘維持 −24 LUFS
@@ -1102,6 +1230,118 @@ def sfx_sparkle() -> np.ndarray:
     return s.finish(0.9, 0.45, 0.3, 1.5)
 
 
+# ----- v8.5 線 AF：六個新音效 -----
+
+
+def soft_peak(x: np.ndarray, drive: float = 1.6) -> np.ndarray:
+    """把零星的尖峰壓圓（tanh），峰值不變、整體比較飽滿。雜訊類的短音效峰值很高，不壓的話正規化之後會太小聲。"""
+    pk = float(np.max(np.abs(x))) + 1e-12
+    return np.tanh(drive * x / pk) / math.tanh(drive) * pk
+
+
+def sfx_boing() -> np.ndarray:
+    """彈跳：音高從低往上滑（跳起來），前面帶一圈一圈變小的抖動（彈簧），一點點木頭的起跳聲。"""
+    s = Sfx(13, 0.8)
+    n = int(0.5 * SR)
+    t = tarr(n)
+    glide = 210 + 300 * (1 - np.exp(-t / 0.12))
+    wob = 1 + 0.17 * np.exp(-t / 0.17) * np.sin(2 * np.pi * 12.5 * t)
+    ph = 2 * np.pi * np.cumsum(glide * wob) / SR
+    body = np.sin(ph) + 0.42 * np.sin(2 * ph) * np.exp(-t / 0.14) + 0.16 * np.sin(3 * ph) * np.exp(-t / 0.08)
+    s.add(body * np.exp(-t / 0.16) * fade_in(n, 0.004), 0.0, 0.8)
+    s.add(perc_wood(0.6, s.rng, f=520.0, tau=0.012), 0.0, 0.3)
+    return s.finish(0.3, 0.0, 0.06, 0.45)
+
+
+def sfx_splash() -> np.ndarray:
+    """水花：兩層帶通雜訊（高的那層收得快，不嘶）、一個往上滑的「撲通」、幾顆濺起來的小水珠。"""
+    s = Sfx(14, 1.0)
+    n = int(0.5 * SR)
+    t = tarr(n)
+    lo = fft_filter(noise(n, s.rng), hp=350, lp=2200)
+    hi = fft_filter(noise(n, s.rng), hp=1800, lp=6000)
+    s.add(lo * (1 - np.exp(-t / 0.012)) * np.exp(-t / 0.11) * 0.5 + hi * (1 - np.exp(-t / 0.006)) * np.exp(-t / 0.055) * 0.32, 0.0, 1.0, 0.25)
+    k = int(0.12 * SR)
+    u = tarr(k) / (k / SR)
+    s.add(np.sin(2 * np.pi * np.cumsum(210 + 520 * u**1.6) / SR) * np.sin(np.pi * u) ** 0.8, 0.015, 0.22)
+    for off, f0, g in ((0.13, 1250, 0.16), (0.19, 1700, 0.13), (0.26, 1050, 0.10), (0.33, 1500, 0.08), (0.41, 1900, 0.05)):
+        k = int(0.045 * SR)
+        u = tarr(k) / (k / SR)
+        s.add(np.sin(2 * np.pi * np.cumsum(f0 * (1 + 0.55 * u**1.5)) / SR) * np.sin(np.pi * u) ** 1.2, off, g, 0.4)
+    return soft_peak(s.finish(0.5, 0.3, 0.1, 0.7))
+
+
+def sfx_munch() -> np.ndarray:
+    """吃東西咬三口：每一口是脆脆的顆粒雜訊（咬下去）加一個音高往下掉的「嗯」（嘴巴合起來），三口音高略有不同。"""
+    s = Sfx(15, 1.0)
+    for off, pm, g in ((0.0, 1.0, 1.0), (0.19, 1.14, 0.9), (0.37, 0.92, 0.85)):
+        k = int(0.075 * SR)
+        tk = tarr(k)
+        grain = np.repeat(s.rng.uniform(0.25, 1.0, k // 96 + 1), 96)[:k]  # 2 ms 一粒
+        s.add(fft_filter(noise(k, s.rng), hp=650, lp=3600) * grain * (1 - np.exp(-tk / 0.002)) * np.exp(-tk / 0.022), off, 0.9 * g)
+        m = int(0.13 * SR)
+        tm = tarr(m)
+        ph = 2 * np.pi * np.cumsum(pm * (185 + 150 * np.exp(-tm / 0.035))) / SR
+        om = (np.sin(ph) + 0.35 * np.sin(2 * ph) * np.exp(-tm / 0.03)) * (1 - np.exp(-tm / 0.008)) * np.exp(-tm / 0.05)
+        s.add(om, off + 0.012, 0.4 * g)
+    # 顆粒的邊緣和 tanh 會多出很高的頻率，最後再收掉
+    return fft_filter(soft_peak(s.finish(0.3, 0.0, 0.05, 0.6)), lp=4500)
+
+
+def sfx_cheer() -> np.ndarray:
+    """短短的「耶」（不是人聲）：兩支笛子一樣的聲音一起往上滑再停住（A5→D6、F#5→A5），落地時木琴與鐘琴的 D 大三和弦、鈴鼓、兩下拍手。"""
+    s = Sfx(16, 1.6)
+    n = int(0.5 * SR)
+    t = tarr(n)
+    up = np.clip(t / 0.13, 0, 1) ** 0.8
+    vib = 1 + 0.012 * np.clip((t - 0.2) / 0.15, 0, 1) * np.sin(2 * np.pi * 6.5 * t)
+    env = fade_in(n, 0.03) * fade_out(n, 0.22)
+    for a, b, g in (("A5", "D6", 0.4), ("F#5", "A5", 0.26)):
+        f0, f1 = mtof(name_to_midi(a)), mtof(name_to_midi(b))
+        ph = 2 * np.pi * np.cumsum(f0 * (f1 / f0) ** up * vib) / SR
+        s.add((np.sin(ph) + 0.24 * np.sin(2 * ph) + 0.08 * np.sin(3 * ph)) * env, 0.0, g, 0.4)
+    t1 = 0.13
+    for nm, g in (("D5", 0.8), ("F#5", 0.6), ("A5", 0.6)):
+        s.note("marimba", name_to_midi(nm), t1, 0.85, g, 0.35)
+    for nm, g in (("D6", 0.30), ("F#6", 0.26), ("A6", 0.22)):
+        s.note("glock", name_to_midi(nm), t1 + 0.01, 0.6, g, 0.5)
+    s.add(perc_tambourine(0.8, s.rng), t1, 0.5, 0.2)
+    s.add(perc_clap(0.8, s.rng), t1, 0.5, 0.15)
+    s.add(perc_clap(0.8, s.rng), t1 + 0.17, 0.4, 0.15)
+    return s.finish(0.7, 0.4, 0.2, 0.95)
+
+
+def sfx_fanfare() -> np.ndarray:
+    """得到新玩具的小號角：玩具小號「答、答答、答、答、答——」（C5 C5 C5 F5 A5 → C6 長音），長音下面疊 F 大三和弦，
+    落地時有鐘琴、鈴鼓和一下很輕的鼓。比 reward 隆重，但還是圓圓的、不大聲。"""
+    s = Sfx(17, 2.4)
+    for nm, t0, d, v in (("C5", 0.0, 0.13, 0.8), ("C5", 0.16, 0.06, 0.65), ("C5", 0.24, 0.06, 0.7), ("F5", 0.32, 0.13, 0.85), ("A5", 0.48, 0.13, 0.9)):
+        s.add(inst_brass(mtof(name_to_midi(nm)), d, v, s.rng), t0, v, 0.35)
+    t1 = 0.64
+    for nm, g in (("C6", 1.0), ("A5", 0.6), ("F5", 0.55), ("F4", 0.4)):
+        s.add(inst_brass(mtof(name_to_midi(nm)), 0.5, 0.9, s.rng), t1, g, 0.4)
+    for nm, g in (("F6", 0.30), ("A6", 0.24), ("C7", 0.20)):
+        s.note("glock", name_to_midi(nm), t1 + 0.01, 0.6, g, 0.55)
+    s.add(perc_kick(0.8, s.rng), t1, 0.5)
+    s.add(perc_tambourine(0.8, s.rng), t1, 0.3, 0.2)
+    return s.finish(0.9, 0.45, 0.3, 1.3)
+
+
+def sfx_squeak() -> np.ndarray:
+    """橡皮玩具吱一聲：音高很快上去再下來（最高約 1.5 kHz，不尖），帶一點細細的抖動；後面一個比較低、比較小聲的「放開」。"""
+    s = Sfx(18, 0.6)
+    n = int(0.16 * SR)
+    t = tarr(n)
+    u = t / (n / SR)
+    ph = 2 * np.pi * np.cumsum((900 + 560 * np.sin(np.pi * u) ** 0.8 + 120 * u) * (1 + 0.045 * np.sin(2 * np.pi * 42 * t))) / SR
+    s.add((np.sin(ph) + 0.22 * np.sin(2 * ph) + 0.06 * np.sin(3 * ph)) * np.sin(np.pi * u) ** 0.6, 0.0, 0.6)
+    k = int(0.08 * SR)
+    uk = tarr(k) / (k / SR)
+    ph2 = 2 * np.pi * np.cumsum(900 - 240 * uk) / SR
+    s.add((np.sin(ph2) + 0.2 * np.sin(2 * ph2)) * np.sin(np.pi * uk) ** 0.8, 0.185, 0.2)
+    return s.finish(0.25, 0.0, 0.03, 0.3)
+
+
 SFX = {
     "tap": sfx_tap,
     "pop": sfx_pop,
@@ -1115,7 +1355,16 @@ SFX = {
     "hatch": sfx_hatch,
     "drop": sfx_drop,
     "sparkle": sfx_sparkle,
+    "boing": sfx_boing,
+    "splash": sfx_splash,
+    "munch": sfx_munch,
+    "cheer": sfx_cheer,
+    "fanfare": sfx_fanfare,
+    "squeak": sfx_squeak,
 }
+
+# 取樣峰值上限（dBFS）。預設 −2；雜訊多的音效經過 AAC 之後真峰值會比取樣峰值高約 1 dB，所以另外壓低一點
+SFX_PEAK_CAP = {"splash": -3.2, "munch": -3.2}
 
 # ---------------------------------------------------------------------------
 # 分析（我聽不到，所以算頻譜與包絡）
@@ -1233,7 +1482,7 @@ def build_music(scene: str, tmpdir: Path, manifest: dict) -> None:
 
 def build_sfx(name: str, tmpdir: Path, manifest: dict) -> None:
     x = SFX[name]()
-    y, info = normalize_to(x[None, :], tmpdir / f"sfx-{name}-n.wav", SFX_LUFS, 2.0, -2.0)
+    y, info = normalize_to(x[None, :], tmpdir / f"sfx-{name}-n.wav", SFX_LUFS, 2.0, SFX_PEAK_CAP.get(name, -2.0))
     wav = tmpdir / f"sfx-{name}.wav"
     write_wav_f32(wav, y)
     out = OUT / f"sfx-{name}.m4a"
@@ -1269,6 +1518,14 @@ def main() -> None:
         return
     only_sfx = "--sfx" in args
     scenes = [a for a in args if a in SONGS]
+    sfx_names = [a for a in args if a in SFX]
+    unknown = [a for a in args if a != "--sfx" and a not in SONGS and a not in SFX]
+    if unknown:
+        # 打錯名字時不要退回「全部重算」：既有檔案重算後內容一變，所有使用者都要重新下載
+        sys.exit(f"不認得的名稱：{' '.join(unknown)}\n場景：{' '.join(SONGS)}\n音效：{' '.join(SFX)}")
+    build_all = not only_sfx and not scenes and not sfx_names
+    music_list = list(SONGS) if build_all else ([] if only_sfx else scenes)
+    sfx_list = list(SFX) if build_all or (only_sfx and not sfx_names) else sfx_names
     OUT.mkdir(parents=True, exist_ok=True)
     mf_path = OUT / "manifest.json"
     manifest = {"version": 1, "sampleRate": SR, "music": {}, "sfx": {}}
@@ -1281,12 +1538,10 @@ def main() -> None:
             pass
     with tempfile.TemporaryDirectory(prefix="gq-music-") as td:
         tmp = Path(td)
-        if not only_sfx:
-            for sc in scenes or SONGS:
-                build_music(sc, tmp, manifest)
-        if only_sfx or not scenes:
-            for nm in SFX:
-                build_sfx(nm, tmp, manifest)
+        for sc in music_list:
+            build_music(sc, tmp, manifest)
+        for nm in sfx_list:
+            build_sfx(nm, tmp, manifest)
     mf_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
     total = sum(p.stat().st_size for p in OUT.glob("*"))
     print(f"完成：{OUT}（共 {total / 1024:.0f}KB）")

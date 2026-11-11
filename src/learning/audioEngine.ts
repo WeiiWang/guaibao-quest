@@ -10,8 +10,9 @@
  *   要測音檔本身時在 localStorage 設 gq-audio-test=1。
  */
 
-export type MusicScene = 'title' | 'home-day' | 'home-night' | 'map' | 'stage' | 'boss' | 'ceremony' | 'paint' | 'story'
-export const MUSIC_SCENES: readonly MusicScene[] = ['title', 'home-day', 'home-night', 'map', 'stage', 'boss', 'ceremony', 'paint', 'story']
+// v8.5 多了 playground（遊樂場和它的小遊戲）、town（快樂小街和它的小遊戲）
+export type MusicScene = 'title' | 'home-day' | 'home-night' | 'map' | 'stage' | 'boss' | 'ceremony' | 'paint' | 'story' | 'playground' | 'town'
+export const MUSIC_SCENES: readonly MusicScene[] = ['title', 'home-day', 'home-night', 'map', 'stage', 'boss', 'ceremony', 'paint', 'story', 'playground', 'town']
 
 // v8.5 多了 boing（彈跳）、splash（水）、munch（吃）、cheer（歡呼）、fanfare（得到新玩具）、squeak（小動物叫）
 export type SoundName = 'tap' | 'pop' | 'correct' | 'wrong' | 'reward' | 'coin' | 'whoosh' | 'page' | 'unlock' | 'hatch' | 'drop' | 'sparkle' | 'boing' | 'splash' | 'munch' | 'cheer' | 'fanfare' | 'squeak'
@@ -265,7 +266,7 @@ function loadSfx(name: SoundName): Promise<AudioBuffer | null> {
 }
 
 let preloaded = false
-/** 第一次觸碰後在背景載入全部音效（十幾個小檔，合計約 150KB），之後就不會退回合成音 */
+/** 第一次觸碰後在背景載入全部音效（18 個小檔，合計約 150KB），之後就不會退回合成音 */
 export function preloadSounds(): void {
   if (preloaded || !env.loadingAllowed()) return
   preloaded = true

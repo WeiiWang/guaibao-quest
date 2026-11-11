@@ -82,6 +82,24 @@
       "loopSeconds": 58.181812,
       "bpm": 66,
       "bars": 16
+    },
+    "playground": {
+      "file": "music-playground.m4a",
+      "v": "2825ee3a",
+      "loopStart": 0.341333,
+      "loopEnd": 32.883708,
+      "loopSeconds": 32.542375,
+      "bpm": 118,
+      "bars": 16
+    },
+    "town": {
+      "file": "music-town.m4a",
+      "v": "e17c5a11",
+      "loopStart": 0.341333,
+      "loopEnd": 40.341333,
+      "loopSeconds": 40.0,
+      "bpm": 96,
+      "bars": 16
     }
   },
   "sfx": {
@@ -144,6 +162,36 @@
       "file": "sfx-sparkle.m4a",
       "v": "00ff7099",
       "duration": 1.5
+    },
+    "boing": {
+      "file": "sfx-boing.m4a",
+      "v": "9819e070",
+      "duration": 0.45
+    },
+    "splash": {
+      "file": "sfx-splash.m4a",
+      "v": "4573b0da",
+      "duration": 0.7
+    },
+    "munch": {
+      "file": "sfx-munch.m4a",
+      "v": "c47b898c",
+      "duration": 0.512
+    },
+    "cheer": {
+      "file": "sfx-cheer.m4a",
+      "v": "f8c1ff5b",
+      "duration": 0.95
+    },
+    "fanfare": {
+      "file": "sfx-fanfare.m4a",
+      "v": "0322db1e",
+      "duration": 1.3
+    },
+    "squeak": {
+      "file": "sfx-squeak.m4a",
+      "v": "a9705a30",
+      "duration": 0.265
     }
   }
 }
