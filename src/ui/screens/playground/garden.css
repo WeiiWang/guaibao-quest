@@ -1,7 +1,7 @@
 /* v8.3 小菜園 */
 .pg-gard { --pg-gard-pet-size: clamp(96px, 17vmin, 150px); position: absolute; inset: 0; display: grid; gap: 10px; padding: max(12px, env(safe-area-inset-top)) max(84px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(84px, env(safe-area-inset-left)); grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
 
-.pg-gard-field { display: grid; gap: clamp(8px, 1.6vmin, 16px); grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); min-height: 0; }
+.pg-gard-field { --pg-gard-gap: clamp(8px, 1.6vmin, 16px); --pg-gard-cols: 3; --pg-gard-rows: 2; position: relative; display: grid; gap: var(--pg-gard-gap); grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); min-height: 0; }
 .pg-gard-plot { position: relative; min-width: 0; min-height: 0; padding: 0; border: 0; border-radius: 30px; overflow: hidden; background: radial-gradient(ellipse at 50% 72%, #a77750 0%, #8d6240 62%, #7a5335 100%); box-shadow: inset 0 -8px 0 rgb(60 35 20 / 0.28), inset 0 4px 0 rgb(255 255 255 / 0.12), 0 6px 14px rgb(60 40 20 / 0.24); -webkit-tap-highlight-color: transparent; }
 .pg-gard-plot[data-over='1'] { outline: 6px solid rgb(120 200 255 / 0.9); outline-offset: -6px; }
 .pg-gard-plot:active { filter: brightness(1.04); }
@@ -38,6 +38,26 @@
 .pg-gard-star { position: absolute; left: calc(14% + var(--n) * 22%); top: 30%; font-style: normal; font-size: clamp(22px, 4vmin, 34px); color: #ffe066; text-shadow: 0 0 6px rgb(255 190 40 / 0.8); animation: pg-gard-star 0.9s ease-out calc(0.2s + var(--n) * 70ms) both; }
 @keyframes pg-gard-star { from { transform: translateY(16px) scale(0.3); opacity: 0; } 40% { opacity: 1; } to { transform: translateY(-46px) scale(1.15); opacity: 0; } }
 
+/* ---------- v8.5 灑水器、彩虹、蝴蝶：都疊在田上面，用絕對位置（不佔格子，田的排法不變） ---------- */
+/* 寬高都寫死（不用 aspect-ratio）：WebKit 的按鈕會被裡面的圖撐高，變成不是正圓 */
+.pg-gard-sprinkler { --sz: clamp(64px, 11vmin, 92px); position: absolute; z-index: 6; left: 50%; top: 50%; width: var(--sz); height: var(--sz); padding: 10px; border: 0; border-radius: 50%; background: #e8f7ff; box-shadow: 0 0 0 4px #fff, 0 5px 0 rgb(0 0 0 / 0.14), 0 9px 18px rgb(30 80 130 / 0.3); transform: translate(-50%, -50%); -webkit-tap-highlight-color: transparent; }
+.pg-gard-sprinkler:active { transform: translate(-50%, calc(-50% + 3px)); box-shadow: 0 0 0 4px #fff, 0 2px 0 rgb(0 0 0 / 0.14); }
+.pg-gard-sprinkler img, .pg-gard-fly img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
+/* 彩虹：半圓，七道顏色；只動畫 opacity 與 transform */
+.pg-gard-rainbow { position: absolute; z-index: 5; left: 50%; top: 6%; width: min(88%, 170vh); aspect-ratio: 2; margin-left: calc(min(88%, 170vh) / -2); border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: radial-gradient(circle farthest-side at 50% 100%, rgb(255 255 255 / 0) 0 62%, #b79cff 62% 67.4%, #6fb2ff 67.4% 72.8%, #5fd7c0 72.8% 78.2%, #7ddc6a 78.2% 83.6%, #ffe05a 83.6% 89%, #ffa24d 89% 94.4%, #ff7b7b 94.4% 99.6%, rgb(255 255 255 / 0) 100%); opacity: 0; pointer-events: none; transform-origin: 50% 100%; -webkit-mask-image: linear-gradient(#000 70%, rgb(0 0 0 / 0)); mask-image: linear-gradient(#000 70%, rgb(0 0 0 / 0)); animation: pg-gard-rainbow 1.9s ease-out both; }
+@keyframes pg-gard-rainbow { 0% { opacity: 0; transform: scale(0.82); } 18% { opacity: 0.88; transform: scale(1); } 75% { opacity: 0.88; } 100% { opacity: 0; } }
+/*
+ * 蝴蝶：停在長好的作物那一格的角落。位置用格子的欄、列算（--c3/--r3 是橫向 3 欄時的位置，--c2/--r2 是直向 2 欄時的）。
+ * 預設停左上角；--mirror: 1 換到右上角、--low: 1 換到左下角，用來讓開田中間的灑水器：
+ * 橫向時灑水器壓在第 5 塊田（is-under）的上緣，那隻停左下角；直向時灑水器在中間那排的內側，右欄的停右上角。
+ */
+.pg-gard-fly { --fly: clamp(56px, 9.5vmin, 84px); --cw: calc((100% - (var(--pg-gard-cols) - 1) * var(--pg-gard-gap)) / var(--pg-gard-cols)); --ch: calc((100% - (var(--pg-gard-rows) - 1) * var(--pg-gard-gap)) / var(--pg-gard-rows)); --c: var(--c3); --r: var(--r3); --mirror: 0; --low: 0; position: absolute; z-index: 4; left: calc(var(--c) * (var(--cw) + var(--pg-gard-gap)) + var(--cw) * 0.05 + var(--mirror) * (var(--cw) * 0.9 - var(--fly))); top: calc(var(--r) * (var(--ch) + var(--pg-gard-gap)) + var(--ch) * 0.04 + var(--low) * (var(--ch) * 0.92 - var(--fly))); width: var(--fly); height: var(--fly); padding: 4px; border: 0; background: none; -webkit-tap-highlight-color: transparent; }
+.pg-gard-fly.is-under { --low: 1; }
+.pg-gard-fly:active { scale: 1; }
+.pg-gard-fly-wings { display: block; width: 100%; height: 100%; filter: drop-shadow(0 3px 3px rgb(40 30 60 / 0.3)); }
+.pg-gard-fly-wings > * { animation: pg-gard-flap 1.1s ease-in-out infinite alternate; }
+@keyframes pg-gard-flap { from { transform: scaleX(1); } to { transform: scaleX(0.62); } }
+
 .pg-gard-dock { display: flex; align-items: center; justify-content: center; gap: clamp(16px, 5vw, 60px); min-height: 0; }
 .pg-gard-can { position: relative; z-index: 15; width: clamp(84px, 14vmin, 128px); height: clamp(84px, 14vmin, 128px); padding: 8px; border: 0; border-radius: 28px; background: rgb(255 255 255 / 0.86); box-shadow: 0 5px 0 rgb(0 0 0 / 0.08), 0 8px 18px rgb(60 40 90 / 0.16); touch-action: none; transition: transform 0.28s cubic-bezier(0.3, 1.3, 0.5, 1); -webkit-tap-highlight-color: transparent; }
 .pg-gard-can[data-dragging] { transition: none; background: transparent; box-shadow: none; }
@@ -54,7 +74,9 @@
 /* 直向（iPad 直放、手機）：2×3，田才夠大；上面留回去鍵的位置 */
 @media (max-aspect-ratio: 1/1) {
   .pg-gard { padding-top: max(78px, calc(env(safe-area-inset-top) + 66px)); padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
-  .pg-gard-field { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  .pg-gard-field { --pg-gard-cols: 2; --pg-gard-rows: 3; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  .pg-gard-fly { --c: var(--c2); --r: var(--r2); --mirror: var(--c2); }
+  .pg-gard-fly.is-under { --low: 0; }
 }
 /* 手機橫放：矮，工具放右邊 */
 @media (max-height: 500px) and (min-aspect-ratio: 1/1) {
@@ -68,6 +90,9 @@
 @media (prefers-reduced-motion: reduce) {
   .pg-gard-plant, .pg-gard-plant[data-shake], .pg-gard-wants, .pg-gard-sparks i, .pg-gard-picker { animation: none; }
   .pg-gard-can { transition: none; }
+  /* v8.5：彩虹不動，直接出現、時間到收掉；蝴蝶不拍翅膀 */
+  .pg-gard-rainbow { animation: none; opacity: 0.88; }
+  .pg-gard-fly-wings > * { animation: none; }
   /* 不動，但水滴和星星還是看得到一下 */
   .pg-gard-drop { animation: none; top: calc(24% + var(--n) * 7%); opacity: 0.85; }
   .pg-gard-star { animation: none; opacity: 0.95; }

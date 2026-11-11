@@ -18,9 +18,23 @@
 @keyframes pg-bake-stick { from { transform: translate(-50%, -50%) scale(1.3); } }
 @keyframes pg-bake-poof { to { transform: translate(-50%, -50%) scale(0.4); opacity: 0; } }
 
+/* v8.5 擠花袋擠出來的奶油：疊在底座和糖珠上面、裝飾下面。一條線畫兩次（深色的邊 + 淺色的面），看起來有厚度 */
+.pg-bake-cream { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.pg-bake-cream path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.pg-bake-cream-edge { stroke: #e6c79a; stroke-width: 6.2; }
+.pg-bake-cream-top { stroke: #fffaf0; stroke-width: 4.6; }
+/* 選著擠花袋時手指是在擠奶油，不會拖到裝飾 */
+.pg-bake[data-piping] .pg-bake-deco { pointer-events: none; }
+.pg-bake[data-piping] .pg-bake-box { cursor: crosshair; }
+.pg-bake-piping.is-on { background: #ffe9f0; box-shadow: 0 0 0 4px #ff8fb1, 0 5px 0 rgb(0 0 0 / 0.08), 0 8px 18px rgb(160 40 80 / 0.2); }
+.pg-bake-piping img { -webkit-user-drag: none; -webkit-touch-callout: none; pointer-events: none; }
+
 .pg-bake-choose { grid-area: base; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; gap: clamp(12px, 3vmin, 28px); min-height: 0; }
 .pg-bake-base-btn { width: min(22vw, 44vh); height: min(22vw, 44vh); min-width: 96px; min-height: 96px; padding: 6%; border: 0; border-radius: 32px; background: rgb(255 255 255 / 0.84); box-shadow: 0 6px 0 rgb(0 0 0 / 0.07), 0 12px 24px rgb(60 40 90 / 0.14); }
 .pg-bake-base-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 rgb(0 0 0 / 0.07); }
+
+/* v8.5 有五種底座：小一點，橫向排 3 + 2 */
+.pg-bake-choose.is-many .pg-bake-base-btn { width: min(20vw, 36vh); height: min(20vw, 36vh); }
 
 .pg-bake-tools { grid-area: tools; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 0; }
 .pg-bake-tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 96px; min-height: 92px; padding: 6px; border: 0; border-radius: 26px; background: rgb(255 255 255 / 0.92); box-shadow: 0 5px 0 rgb(0 0 0 / 0.08), 0 8px 18px rgb(60 40 90 / 0.14); font: inherit; font-weight: 800; font-size: 15px; color: #5a4a3f; }
@@ -63,11 +77,17 @@
   .pg-bake-base-btn { width: min(23vh, 62vw); height: min(23vh, 62vw); }
   .pg-bake-tools { flex-direction: row; }
   .pg-bake-tool { flex-direction: row; gap: 8px; width: auto; min-width: 132px; min-height: 64px; padding: 6px 16px; }
+  /* 五種底座：直向排兩欄（2 + 2 + 1） */
+  .pg-bake-choose.is-many { flex-direction: row; flex-wrap: wrap; }
+  .pg-bake-choose.is-many .pg-bake-base-btn { width: min(20vh, 42vw); height: min(20vh, 42vw); }
 }
 @media (max-width: 560px) and (max-aspect-ratio: 1/1) {
   .pg-bake-tray { grid-template-columns: repeat(5, minmax(56px, 1fr)); }
   .pg-bake-tools { gap: 8px; min-width: 0; }
   .pg-bake-tool { min-width: 0; padding: 6px 12px; }
+  /* 手機直向三顆工具放不下字：有擠花袋時只留圖（名字在 aria-label） */
+  .pg-bake-tools.has-piping .pg-bake-tool { min-width: 60px; }
+  .pg-bake-tools.has-piping .pg-bake-tool > span:last-child { display: none; }
 }
 /* 手機橫放：矮，把工具和寵物擠小 */
 @media (max-height: 500px) and (min-aspect-ratio: 1/1) {
@@ -77,6 +97,10 @@
   .pg-bake-top { padding: 3px; max-height: 56px; }
   .pg-bake-tray { padding: 4px; }
   .pg-bake-sprinkle-icon { transform: scale(0.8); }
+  /* 三顆工具：圖小一點才排得下 */
+  .pg-bake-tools.has-piping .pg-bake-tool { min-height: 60px; padding: 2px 6px; }
+  .pg-bake-tools.has-piping .pg-bake-piping .art, .pg-bake-tools.has-piping .pg-bake-piping .art-emoji { width: 34px !important; height: 34px !important; }
+  .pg-bake-tools.has-piping .pg-bake-check { font-size: 30px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

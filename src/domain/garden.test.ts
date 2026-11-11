@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { FOOD_IDS } from './constants'
-import { GARDEN_CROPS, GARDEN_SIZE, HARVEST_QTY, gardenIntroLine, harvestPlot, hasReadyCrop, normalizeGarden, plantArt, plantSeed, plotState, waterPlot } from './garden'
+import { GARDEN_CROPS, GARDEN_SIZE, HARVEST_QTY, butterflyPlots, gardenIntroLine, harvestPlot, hasReadyCrop, normalizeGarden, plantArt, plantSeed, plotState, sprinklerTargets, sprinklerWets, waterPlot } from './garden'
 
 const D1 = '2026-11-04'
 const D2 = '2026-11-05'
@@ -125,5 +125,39 @@ describe('小菜園：寵物說什麼、畫哪張圖', () => {
     expect(plantArt(sprout[0]!)).toBe('ui-plant-sprout')
     expect(plantArt(leafy[0]!)).toBe('ui-plant-leafy')
     expect(plantArt(ready[0]!)).toBe('ui-plant-carrot')
+  })
+})
+
+describe('v8.5 灑水器與蝴蝶', () => {
+  // 0 號小芽（今天種的）、1 號葉子（今天長過）、2 號長好、3 號葉子（昨天長的）、4、5 空
+  const sprout = plantSeed(undefined, 0, 'carrot')!
+  const withLeafy = waterPlot(plantSeed(sprout, 1, 'apple'), 1, D2).garden
+  const withReady = waterPlot(waterPlot(plantSeed(withLeafy, 2, 'peach'), 2, D1).garden, 2, D2).garden
+  const mixed = waterPlot(plantSeed(withReady, 3, 'grape'), 3, D1).garden
+
+  it('灑水器只讓「現在澆水會長」的田長大', () => {
+    expect(sprinklerTargets(mixed, D2)).toEqual([0, 3])
+    expect(sprinklerTargets(undefined, D2)).toEqual([])
+  })
+  it('灑水器灑到每一塊有種東西的田，空田不灑', () => {
+    expect(sprinklerWets(mixed)).toEqual([0, 1, 2, 3])
+    expect(sprinklerWets(undefined)).toEqual([])
+  })
+  it('灑完一次：每塊田各長一階；同一天再灑一次什麼都不會長（一天最多一階不變）', () => {
+    let g = mixed
+    for (const i of sprinklerTargets(g, D2)) {
+      const r = waterPlot(g, i, D2)
+      expect(r.outcome).toBe('grew')
+      g = r.garden
+    }
+    expect(g.map((p) => p?.stage ?? null)).toEqual([1, 1, 2, 2, null, null])
+    expect(sprinklerTargets(g, D2)).toEqual([])
+    // 隔天又可以長
+    expect(sprinklerTargets(g, D3)).toEqual([0, 1])
+  })
+  it('蝴蝶停在長好的作物上', () => {
+    expect(butterflyPlots(mixed)).toEqual([2])
+    expect(butterflyPlots(undefined)).toEqual([])
+    expect(butterflyPlots(sprout)).toEqual([])
   })
 })
