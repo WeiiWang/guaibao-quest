@@ -6,6 +6,9 @@
 // 用法：先啟動 dev server（pnpm dev --port 5210 --strictPort），再
 //   BASE_URL=http://localhost:5210 node scripts/e2e-play-t.mjs       （或 pnpm e2e:play-t；E2E_BROWSER=webkit 改用 WebKit）
 //   想存截圖：SHOT_DIR=<資料夾> node scripts/e2e-play-t.mjs（不要放 repo 裡）
+//   ONLY=bath,toys,talk 只跑其中幾段（bath = 洗澎澎原本的流程，toys = v8.5 洗澎澎的新玩具，talk = 學我說話）。
+// v8.5 新玩具（沐浴球、泡泡造型）：沒有和有兩種狀態都測，用 patchSettings({ playCount }) 直接設定玩完幾次。
+//   新音效（splash、boing）檔案還沒到時不會出聲，驗的是玩法根元素的 data-sfx（有沒有叫到）。
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -68,6 +71,23 @@ const setTalkOn = (page, on) =>
       }),
     on,
   )
+const patchSettings = (page, patch) =>
+  idb(
+    page,
+    (db, p) =>
+      new Promise((res) => {
+        const s = db.transaction('settings', 'readwrite').objectStore('settings')
+        s.get('main').onsuccess = (e) => (s.put({ ...e.target.result, ...p }).onsuccess = () => res(1))
+      }),
+    patch,
+  )
+const ONLY = process.env.ONLY?.split(',')
+const on = (name) => !ONLY || ONLY.includes(name)
+const bathData = (page, name) => page.getByTestId('bath').getAttribute(`data-${name}`)
+const bathList = async (page, name) => ((await bathData(page, name)) ?? '').split(' ').filter(Boolean)
+/** 泡泡現在是什麼顏色（看邊緣那一圈的顏色） */
+const foamColor = (page) => page.evaluate(() => getComputedStyle(document.querySelector('[data-testid=bath-foam]')).backgroundImage)
+const FOAM_EDGE = { none: 'rgba(198, 180, 250', pink: 'rgba(248, 138, 192', orange: 'rgba(248, 168, 88', green: 'rgba(108, 204, 140' }
 const finger = (x, y, id = 1) => ({ x, y, id, radiusX: 25, radiusY: 25, force: 0.5 })
 const boxOf = async (page, sel) => {
   const b = await page.locator(sel).first().boundingBox()
@@ -107,6 +127,7 @@ async function testBath(b, tag, vp) {
   check(`[${tag}] 洗澎澎：寵物是孩子自己的`, (await page.locator('[data-testid=bath-pet] [data-testid=companion]').count()) === 1)
   check(`[${tag}] 洗澎澎：沒有橫向捲動`, await noOverflowX(page))
   check(`[${tag}] 洗澎澎：從抹泡泡開始`, (await stepOf(page)) === 'soap')
+  check(`[${tag}] 沒有新玩具：沒有沐浴球`, (await count(page, 'bath-bombs')) === 0 && (await bathData(page, 'tint')) === null)
   for (const id of ['bath-tool-soap', 'bath-tool-rinse', 'bath-tool-dry', 'bath-duck', 'game-back']) {
     const box = await boxOf(page, `[data-testid=${id}]`)
     check(`[${tag}] ${id} 夠大（≥56）且在畫面內`, box.width >= 56 && box.height >= 56 && box.x >= 0 && box.y >= 0 && box.x + box.width <= vp.width + 1 && box.y + box.height <= vp.height + 1, `${Math.round(box.width)}x${Math.round(box.height)} @${Math.round(box.x)},${Math.round(box.y)}`)
@@ -158,6 +179,7 @@ async function testBath(b, tag, vp) {
   check(`[${tag}] 抹夠了進沖水`, (await stepOf(page)) === 'rinse')
   await page.waitForTimeout(150)
   check(`[${tag}] 泡泡約 7 成以上`, (await count(page, 'bath-foam')) >= 40, String(await count(page, 'bath-foam')))
+  check(`[${tag}] 沒有新玩具：頭上沒有泡泡造型，泡泡是原本的顏色`, (await count(page, 'bath-hat')) === 0 && (await bathData(page, 'hat')) === null && (await foamColor(page)).includes(FOAM_EDGE.none))
   await shot(page, `bath-${tag}-2-foam`)
 
   // 第二步：拿著蓮蓬頭有水柱，泡泡變少
@@ -176,6 +198,7 @@ async function testBath(b, tag, vp) {
   check(`[${tag}] 放開蓮蓬頭水就停`, await page.waitForFunction(() => !document.querySelector('[data-testid=bath-water]'), null, { timeout: 1500 }).then(() => true, () => false))
   await scrub(page, send, 'rinse')
   check(`[${tag}] 沖完進擦乾`, (await stepOf(page)) === 'dry')
+  check(`[${tag}] 聲音：抹泡泡 pop、沖水 splash（水的聲音，不是掉東西的 drop）`, (await bathList(page, 'sfx')).includes('pop') && (await bathList(page, 'sfx')).includes('splash') && !(await bathList(page, 'sfx')).includes('drop'))
   await page.waitForTimeout(600)
   check(`[${tag}] 泡泡都沖走了`, (await count(page, 'bath-foam')) === 0)
   check(`[${tag}] 全身水珠`, (await count(page, 'bath-drop')) > 20, String(await count(page, 'bath-drop')))
@@ -186,6 +209,7 @@ async function testBath(b, tag, vp) {
   check(`[${tag}] 擦乾後完成`, (await stepOf(page)) === 'done')
   check(`[${tag}] 水珠沒了`, (await count(page, 'bath-drop')) === 0)
   check(`[${tag}] 亮晶晶`, (await count(page, 'bath-sparkles')) === 1)
+  check(`[${tag}] 聲音：擦乾 whoosh，每一步做完 sparkle`, (await bathList(page, 'sfx')).includes('whoosh') && (await bathList(page, 'sfx')).filter((k) => k === 'sparkle').length === 3)
   check(`[${tag}] 寵物開心跳`, (await page.locator('[data-testid=bath-pet] [data-testid=companion]').getAttribute('data-pose')) === 'cheer')
   await page.waitForTimeout(400)
   await shot(page, `bath-${tag}-5-done`)
@@ -200,6 +224,7 @@ async function testBath(b, tag, vp) {
   check(`[${tag}] 今天記了洗澎澎`, (await settings(page)).playDaily?.done.includes('bath'))
   const giftImg = await page.locator('[data-testid=play-gift] img.art').last().getAttribute('src').catch(() => '')
   check(`[${tag}] 禮物顯示食物的圖`, /food-/.test(giftImg ?? ''), giftImg ?? '')
+  check(`[${tag}] 玩完第 1 次：卡上有新玩具（沐浴球），玩完算一次`, (await page.getByTestId('play-toy').getAttribute('data-toy')) === 'bomb' && (await settings(page)).playCount?.bath === 1)
   await page.waitForTimeout(550) // 禮物剛跳出來的 0.5 秒不接受點擊
   await page.getByTestId('play-gift').click()
 
@@ -208,11 +233,14 @@ async function testBath(b, tag, vp) {
   await page.getByTestId('bath-again').click()
   await page.waitForFunction(() => document.querySelector('[data-testid=bath]')?.dataset.step === 'soap')
   check(`[${tag}] 再洗一次從頭開始，泡泡清掉`, (await count(page, 'bath-foam')) === 0)
+  check(`[${tag}] 收下新玩具卡後再洗一次：沐浴球出現了（3 顆），還沒有泡泡造型`, (await page.locator('.pg-bath-bomb').count()) === 3)
   await scrub(page, send, 'soap')
   await scrub(page, send, 'rinse')
   await scrub(page, send, 'dry')
   check(`[${tag}] 第二次也洗得完`, (await stepOf(page)) === 'done')
+  check(`[${tag}] 第二次：沒丟沐浴球就還是原本的顏色，一回只算玩完一次`, (await bathData(page, 'tint')) === null)
   await page.waitForTimeout(2800)
+  check(`[${tag}] 第二次洗完：玩完次數是 2`, (await settings(page)).playCount?.bath === 2, String((await settings(page)).playCount?.bath))
   check(`[${tag}] 同一天不重複送`, (await count(page, 'play-gift')) === 0 && total(await allInv(page)) === total(after))
   check(`[${tag}] 沒有橫向捲動（結束時）`, await noOverflowX(page))
 
@@ -773,19 +801,244 @@ async function testTalkEdge(b) {
   }
 }
 
+const overlapBox = (a, c) => a.x < c.x + c.width && c.x < a.x + a.width && a.y < c.y + c.height && c.y < a.y + a.height
+const inViewBox = (b, vp) => b.x >= 0 && b.y >= 0 && b.x + b.width <= vp.width + 1 && b.y + b.height <= vp.height + 1
+
+/** v8.5 洗澎澎的新玩具：沐浴球（玩完 1 次）、泡泡造型（玩完 3 次）。兩個都有的狀態，三種尺寸各走一次 */
+async function testBathToys(b, tag, vp) {
+  const { ctx, page, errors } = await freshApp(b, vp, { ...touchOpts(vp), noFavorite: true })
+  const send = await touchSender(ctx, page)
+  await patchSettings(page, { playCount: { bath: 3 } })
+  await goHash(page, 'playground', '[data-testid=playground-grid]')
+  await page.waitForTimeout(400)
+  const t0 = await timers(page)
+  await goHash(page, 'game/bath', '[data-testid=bath]')
+  await page.waitForTimeout(400)
+  const pet = await boxOf(page, '[data-testid=bath-pet]')
+
+  // --- 沐浴球 ---
+  check(`[${tag}] 沐浴球：有 3 顆（粉紅、橘、綠）`, (await count(page, 'bath-bomb-pink')) === 1 && (await count(page, 'bath-bomb-orange')) === 1 && (await count(page, 'bath-bomb-green')) === 1)
+  const bombs = {}
+  for (const id of ['pink', 'orange', 'green']) bombs[id] = await boxOf(page, `[data-testid=bath-bomb-${id}]`)
+  check(`[${tag}] 沐浴球：每顆 ≥ 56px 且在畫面內`, Object.values(bombs).every((x) => x.width >= 56 && x.height >= 56 && inViewBox(x, vp)), Object.values(bombs).map((x) => `${Math.round(x.width)}@${Math.round(x.x)},${Math.round(x.y)}`).join(' '))
+  const others = []
+  for (const id of ['game-back', 'bath-tray', 'bath-duck', 'bath-pet']) others.push(await boxOf(page, `[data-testid=${id}]`))
+  check(`[${tag}] 沐浴球：不蓋回去鍵、工具、小鴨、寵物，也不互相蓋`, Object.values(bombs).every((x) => others.every((o) => !overlapBox(x, o)) && Object.values(bombs).every((y) => x === y || !overlapBox(x, y))))
+  const hues = await page.evaluate(() => [...document.querySelectorAll('.pg-bath-bomb-pic')].map((el) => getComputedStyle(el).filter))
+  check(`[${tag}] 沐浴球：同一張圖轉三種色相`, new Set(hues).size === 3 && hues.every((h) => h.startsWith('hue-rotate')), hues.join(' '))
+  check(`[${tag}] 沐浴球：沒有橫向捲動`, await noOverflowX(page))
+  await shot(page, `toys-bath-${tag}-1-start`)
+
+  // 拖到離寵物很遠的地方放開：不算，回托盤
+  const far = { x: vp.width - 12, y: vp.height - 12 }
+  await send('touchStart', [finger(bombs.orange.cx, bombs.orange.cy)])
+  await send('touchMove', [finger((bombs.orange.cx + far.x) / 2, (bombs.orange.cy + far.y) / 2)])
+  await send('touchMove', [finger(far.x, far.y)])
+  await page.waitForTimeout(80)
+  const dragging = await boxOf(page, '[data-testid=bath-bomb-orange]')
+  check(`[${tag}] 沐浴球：跟著手指`, Math.abs(dragging.cx - far.x) < 12, `${Math.round(dragging.cx)} vs ${far.x}`)
+  await send('touchEnd', [])
+  await page.waitForTimeout(450)
+  const home = await boxOf(page, '[data-testid=bath-bomb-orange]')
+  check(`[${tag}] 沐浴球：丟太遠不算，回到托盤`, (await bathData(page, 'tint')) === null && Math.abs(home.cx - bombs.orange.cx) < 6 && Math.abs(home.cy - bombs.orange.cy) < 6)
+
+  // 拖到寵物身上：水和泡泡變成那個顏色，嘶嘶冒泡
+  await send('touchStart', [finger(bombs.pink.cx, bombs.pink.cy)])
+  await send('touchMove', [finger((bombs.pink.cx + pet.cx) / 2, (bombs.pink.cy + pet.cy) / 2)])
+  await send('touchMove', [finger(pet.cx + 30, pet.y + pet.height * 0.8)])
+  await send('touchEnd', [])
+  await page.waitForTimeout(250)
+  check(`[${tag}] 沐浴球：丟進去水變成粉紅色`, (await bathData(page, 'tint')) === 'pink' && (await count(page, 'bath-puddle')) === 1)
+  check(`[${tag}] 沐浴球：嘶嘶冒泡`, (await count(page, 'bath-fizz')) === 1)
+  check(`[${tag}] 沐浴球：有聲音（splash）`, (await bathList(page, 'sfx')).includes('splash'))
+  check(`[${tag}] 沐浴球：說 bomb`, (await bathList(page, 'said')).filter((k) => k === 'pet.play.bath.bomb').length === 1)
+  check(`[${tag}] 沐浴球：丟進去的那顆不見了，另外兩顆還在`, (await count(page, 'bath-bomb-pink')) === 0 && (await count(page, 'bath-bomb-orange')) === 1 && (await count(page, 'bath-bomb-green')) === 1)
+  check(`[${tag}] 沐浴球：冒泡和那灘水不擋手指`, await page.evaluate(() => ['.pg-bath-fizz', '.pg-bath-puddle'].every((s) => getComputedStyle(document.querySelector(s)).pointerEvents === 'none')))
+  await shot(page, `toys-bath-${tag}-2-bomb`)
+  check(`[${tag}] 沐浴球：冒完泡收掉`, await page.waitForFunction(() => !document.querySelector('[data-testid=bath-fizz]'), null, { timeout: 4000 }).then(() => true, () => false))
+
+  // 泡泡也是那個顏色
+  const sponge = await boxOf(page, '[data-testid=bath-tool-soap]')
+  await send('touchStart', [finger(sponge.cx, sponge.cy)])
+  await send('touchMove', [finger(pet.cx, pet.cy)])
+  await send('touchMove', [finger(pet.cx + 20, pet.cy)])
+  await send('touchEnd', [])
+  await page.waitForTimeout(80)
+  check(`[${tag}] 沐浴球：抹出來的泡泡是粉紅色`, (await foamColor(page)).includes(FOAM_EDGE.pink), (await foamColor(page)).slice(0, 60))
+
+  // 點一下也可以（3 歲還不太會拖）：換成綠色，台詞不會再念一次
+  await send('touchStart', [finger(bombs.green.cx, bombs.green.cy)])
+  await send('touchEnd', [])
+  await page.waitForTimeout(200)
+  check(`[${tag}] 沐浴球：點一下也丟得進去，再丟一顆就換顏色`, (await bathData(page, 'tint')) === 'green' && (await foamColor(page)).includes(FOAM_EDGE.green))
+  check(`[${tag}] 沐浴球：台詞一回只說一次`, (await bathList(page, 'said')).filter((k) => k === 'pet.play.bath.bomb').length === 1)
+  check(`[${tag}] 沐浴球：丟沐浴球不算洗澡的步驟`, (await stepOf(page)) === 'soap')
+
+  // --- 泡泡造型 ---
+  check(`[${tag}] 泡泡造型：還沒抹滿，頭上沒有`, (await count(page, 'bath-hat')) === 0)
+  await scrub(page, send, 'soap')
+  check(`[${tag}] 泡泡造型：抹滿了進沖水`, (await stepOf(page)) === 'rinse')
+  await page.waitForTimeout(500)
+  check(`[${tag}] 泡泡造型：頭上多一坨圓圓的泡泡`, (await bathData(page, 'hat')) === 'puff')
+  const hat = await boxOf(page, '[data-testid=bath-hat]')
+  check(`[${tag}] 泡泡造型：夠大（≥ 56px）、在畫面內、在頭頂`, hat.width >= 56 && hat.height >= 56 && inViewBox(hat, vp) && Math.abs(hat.cx - pet.cx) < 4 && hat.cy < pet.y + pet.height * 0.2, `${Math.round(hat.width)}×${Math.round(hat.height)} @${Math.round(hat.x)},${Math.round(hat.y)}`)
+  const bombBoxes = []
+  for (const id of ['orange']) bombBoxes.push(await boxOf(page, `[data-testid=bath-bomb-${id}]`))
+  check(`[${tag}] 泡泡造型：不蓋沐浴球、回去鍵、工具`, [...bombBoxes, others[0], others[1]].every((o) => !overlapBox(hat, o)))
+  await shot(page, `toys-bath-${tag}-3-hat-puff`)
+  const foamBefore = await count(page, 'bath-foam')
+  const seen = []
+  for (let k = 0; k < 4; k++) {
+    await send('touchStart', [finger(hat.cx, hat.cy)])
+    await send('touchEnd', [])
+    await page.waitForTimeout(380)
+    seen.push(await bathData(page, 'hat'))
+    if (k < 3) await shot(page, `toys-bath-${tag}-4-hat-${seen[k]}`)
+  }
+  check(`[${tag}] 泡泡造型：點一下換一個（尖尖頭、兔耳朵、皇冠輪流）`, seen.join() === 'spike,bunny,crown,spike', seen.join())
+  check(`[${tag}] 泡泡造型：換造型有聲音（boing）`, (await bathList(page, 'sfx')).filter((k) => k === 'boing').length === 4)
+  check(`[${tag}] 泡泡造型：點造型不會沖掉泡泡、不會跳步驟、不會拿起蓮蓬頭`, (await count(page, 'bath-foam')) === foamBefore && (await stepOf(page)) === 'rinse' && (await count(page, 'bath-water')) === 0)
+  const shape = await page.evaluate(() => document.querySelectorAll('[data-testid=bath-hat] svg ellipse').length)
+  check(`[${tag}] 泡泡造型：是畫出來的泡泡形狀（SVG）`, shape > 10, String(shape))
+
+  // 沖肚子：造型還在；沖到頭頂：沒了
+  const shower = await boxOf(page, '[data-testid=bath-tool-rinse]')
+  await send('touchStart', [finger(shower.cx, shower.cy)])
+  await send('touchMove', [finger(pet.x + pet.width * 0.4, pet.y + pet.height * 0.75)])
+  await send('touchMove', [finger(pet.x + pet.width * 0.6, pet.y + pet.height * 0.75)])
+  await page.waitForTimeout(80)
+  check(`[${tag}] 泡泡造型：沖肚子不會沖掉頭上的造型`, (await bathData(page, 'hat')) === 'spike' && (await stepOf(page)) === 'rinse')
+  check(`[${tag}] 沐浴球：水柱也是那個顏色`, await page.evaluate(() => getComputedStyle(document.querySelector('[data-testid=bath-water] i')).backgroundImage.includes('rgba(150, 230, 175')))
+  await shot(page, `toys-bath-${tag}-5-rinse`)
+  await send('touchEnd', [])
+  // 手指直接放在頭頂旁邊（造型的左邊），往頭頂沖一小段：只沖頭頂，不會順便把全身沖完
+  await send('touchStart', [finger(pet.x + pet.width * 0.2, pet.y + pet.height * 0.08)])
+  await page.waitForTimeout(60)
+  check(`[${tag}] 泡泡造型：水還沒沖到頭頂，造型還在`, (await bathData(page, 'hat')) === 'spike' && (await count(page, 'bath-water')) === 1)
+  await send('touchMove', [finger(pet.x + pet.width * 0.42, pet.y + pet.height * 0.08)])
+  await page.waitForTimeout(80)
+  check(`[${tag}] 泡泡造型：沖到頭頂就沒了`, (await bathData(page, 'hat')) === null && (await stepOf(page)) === 'rinse')
+  check(`[${tag}] 泡泡造型：沖掉之後不擋手指`, await page.evaluate(() => getComputedStyle(document.querySelector('[data-testid=bath-hat]')).pointerEvents === 'none'))
+  await send('touchEnd', [])
+  await send('touchStart', [finger(hat.cx, hat.cy)])
+  await send('touchEnd', [])
+  await page.waitForTimeout(100)
+  check(`[${tag}] 泡泡造型：沖掉之後點頭頂不會變回來`, (await bathData(page, 'hat')) === null)
+
+  // 洗完：一回只算一次；再洗一次全部重來
+  await scrub(page, send, 'rinse')
+  check(`[${tag}] 新玩具：照樣沖得完`, (await stepOf(page)) === 'dry')
+  check(`[${tag}] 泡泡造型：沖完水按鈕也收掉`, (await count(page, 'bath-hat')) === 0)
+  await scrub(page, send, 'dry')
+  check(`[${tag}] 新玩具：照樣洗得完`, (await stepOf(page)) === 'done')
+  check(`[${tag}] 洗完：沐浴球和那灘水收起來`, (await count(page, 'bath-bombs')) === 0 && (await count(page, 'bath-puddle')) === 0)
+  await page.waitForTimeout(2900)
+  check(`[${tag}] 新玩具：一回只算玩完一次`, (await settings(page)).playCount?.bath === 4, String((await settings(page)).playCount?.bath))
+  if (await count(page, 'play-gift')) {
+    await page.waitForTimeout(550)
+    await page.getByTestId('play-gift').click()
+  }
+  await page.getByTestId('bath-again').click()
+  await page.waitForFunction(() => document.querySelector('[data-testid=bath]')?.dataset.step === 'soap')
+  check(`[${tag}] 再洗一次：水變回原本的顏色、沐浴球 3 顆都回來、頭上沒有造型`, (await bathData(page, 'tint')) === null && (await page.locator('.pg-bath-bomb').count()) === 3 && (await bathData(page, 'hat')) === null)
+  await page.waitForTimeout(2000)
+  check(`[${tag}] 再洗一次：還沒洗完不會多算`, (await settings(page)).playCount?.bath === 4)
+
+  // 從頭上的造型開始拖：當成拿蓮蓬頭沖水，不是換造型
+  await scrub(page, send, 'soap')
+  await page.waitForTimeout(450)
+  const hat2 = await boxOf(page, '[data-testid=bath-hat]')
+  const boing0 = (await bathList(page, 'sfx')).filter((k) => k === 'boing').length
+  await send('touchStart', [finger(hat2.cx, hat2.cy)])
+  await send('touchMove', [finger(hat2.cx + 30, hat2.cy + 10)])
+  await send('touchMove', [finger(hat2.cx + 60, hat2.cy + 20)])
+  await page.waitForTimeout(120)
+  check(`[${tag}] 泡泡造型：從造型上拖開是沖水（蓮蓬頭過來、造型被沖掉）`, (await count(page, 'bath-water')) === 1 && (await bathData(page, 'hat')) === null)
+  await send('touchEnd', [])
+  await page.waitForTimeout(100)
+  check(`[${tag}] 泡泡造型：拖開不算點（沒有換造型）`, (await bathList(page, 'sfx')).filter((k) => k === 'boing').length === boing0)
+
+  // 離開：計時器清乾淨
+  await page.getByTestId('game-back').click()
+  await page.waitForSelector('[data-testid=playground-grid]')
+  await page.waitForTimeout(500)
+  const t1 = await timers(page)
+  check(`[${tag}] 新玩具：離開後計時器清乾淨`, t1 <= t0, `${t0} → ${t1}`)
+  check(`[${tag}] 洗澎澎新玩具：沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await send.detach()
+  await ctx.close()
+}
+
+/** 只有第一個新玩具（沐浴球）：沒有泡泡造型。動作減少也能玩 */
+async function testBathToysOne(b) {
+  const vp = SIZES.land
+  {
+    const { ctx, page, errors } = await freshApp(b, vp, touchOpts(vp))
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { bath: 1 } })
+    await goHash(page, 'game/bath', '[data-testid=bath]')
+    await page.waitForTimeout(300)
+    check('只有沐浴球：3 顆沐浴球都在', (await page.locator('.pg-bath-bomb').count()) === 3)
+    await scrub(page, send, 'soap')
+    await page.waitForTimeout(400)
+    check('只有沐浴球：抹滿了頭上沒有泡泡造型', (await stepOf(page)) === 'rinse' && (await count(page, 'bath-hat')) === 0 && (await bathData(page, 'hat')) === null)
+    // 沖水沖到一半丟沐浴球：剩下的泡泡跟著變色
+    const orange = await boxOf(page, '[data-testid=bath-bomb-orange]')
+    await send('touchStart', [finger(orange.cx, orange.cy)])
+    await send('touchEnd', [])
+    await page.waitForTimeout(200)
+    check('只有沐浴球：洗到一半丟也可以，泡泡跟著變色', (await bathData(page, 'tint')) === 'orange' && (await foamColor(page)).includes(FOAM_EDGE.orange))
+    check('只有沐浴球：沒有錯誤', errors.length === 0, errors.join(' | '))
+    await send.detach()
+    await ctx.close()
+  }
+  {
+    const { ctx, page, errors } = await freshApp(b, vp, { ctxOpts: { hasTouch: true, reducedMotion: 'reduce' } })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { bath: 3 } })
+    await goHash(page, 'game/bath', '[data-testid=bath]')
+    await page.waitForTimeout(300)
+    const pink = await boxOf(page, '[data-testid=bath-bomb-pink]')
+    await send('touchStart', [finger(pink.cx, pink.cy)])
+    await send('touchEnd', [])
+    await page.waitForTimeout(200)
+    const anims = await page.evaluate(() => ['.pg-bath-fizz i', '.pg-bath-puddle'].map((s) => getComputedStyle(document.querySelector(s)).animationName))
+    check('動作減少：沐浴球照樣變色，泡泡不亂飄', (await bathData(page, 'tint')) === 'pink' && anims.every((a) => a === 'none'), anims.join())
+    check('動作減少：冒的泡泡一樣會收掉', await page.waitForFunction(() => !document.querySelector('[data-testid=bath-fizz]'), null, { timeout: 4000 }).then(() => true, () => false))
+    await scrub(page, send, 'soap')
+    await page.waitForTimeout(300)
+    const hat = await boxOf(page, '[data-testid=bath-hat]')
+    await send('touchStart', [finger(hat.cx, hat.cy)])
+    await send('touchEnd', [])
+    await page.waitForTimeout(150)
+    check('動作減少：泡泡造型照樣換', (await bathData(page, 'hat')) === 'spike')
+    check('動作減少（洗澎澎新玩具）：沒有錯誤', errors.length === 0, errors.join(' | '))
+    await send.detach()
+    await ctx.close()
+  }
+}
+
 const tmp = mkdtempSync(join(tmpdir(), 'gq-play-t-'))
 const wav = join(tmp, 'voice.wav')
 makeWav(wav)
 const browser = await launch({ args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', `--use-file-for-fake-audio-capture=${wav}`] })
 try {
-  for (const [tag, vp] of Object.entries(SIZES)) await testBath(browser, tag, vp)
-  await testBathExtras(browser)
-  await testTalkParent(browser)
-  for (const [tag, vp] of Object.entries(SIZES)) {
-    await testTalkFlow(browser, tag, vp, { synth: IS_WEBKIT })
-    await testTalkBlocked(browser, tag, vp)
+  if (on('bath')) {
+    for (const [tag, vp] of Object.entries(SIZES)) await testBath(browser, tag, vp)
+    await testBathExtras(browser)
   }
-  await testTalkEdge(browser)
+  if (on('toys')) {
+    for (const [tag, vp] of Object.entries(SIZES)) await testBathToys(browser, tag, vp)
+    await testBathToysOne(browser)
+  }
+  if (on('talk')) {
+    await testTalkParent(browser)
+    for (const [tag, vp] of Object.entries(SIZES)) {
+      await testTalkFlow(browser, tag, vp, { synth: IS_WEBKIT })
+      await testTalkBlocked(browser, tag, vp)
+    }
+    await testTalkEdge(browser)
+  }
 } finally {
   await browser.close()
   rmSync(tmp, { recursive: true, force: true })

@@ -144,3 +144,47 @@ export function bathStroke(s: BathState, from: BathPoint, to: BathPoint, tuning:
   if (s.step === 'rinse') return { state: { ...next, step: 'dry', soap: empty(), wet: [...BATH_MASK] }, changed, advanced: true }
   return { state: { ...next, step: 'done', wet: empty() }, changed, advanced: true }
 }
+
+// ---------- v8.5 新玩具：沐浴球、泡泡造型 ----------
+
+/**
+ * 沐浴球的顏色：同一張圖轉色相（圖本身是粉紅色，色相約 330°），泡泡和水用對應的顏色（bath.css）。
+ * 挑粉紅、橘、綠：原本的泡泡是淡紫、水是藍的，這三個顏色一丟進去就看得出來變了。
+ */
+export const BATH_BOMBS = [
+  { id: 'pink', hue: 0, label: '粉紅色' },
+  { id: 'orange', hue: 60, label: '橘色' },
+  { id: 'green', hue: 150, label: '綠色' },
+] as const
+export type BathBombId = (typeof BATH_BOMBS)[number]['id']
+
+/**
+ * 沐浴球放開的地方算不算丟進去了：寵物洗澡的那一塊，四周多留一點（3 歲丟不準）。
+ * 位置用寵物框的比例（跟 BathPoint 一樣）。
+ */
+export function bombInBath({ x, y }: BathPoint): boolean {
+  return x >= -0.2 && x <= 1.2 && y >= -0.15 && y <= 1.2
+}
+
+/** 泡泡造型：抹滿後頭上先是一坨圓圓的泡泡，點了輪流變尖尖頭、兔耳朵、皇冠 */
+export const FOAM_HATS = ['spike', 'bunny', 'crown'] as const
+export type FoamHat = 'puff' | (typeof FOAM_HATS)[number]
+
+/** 點一下換下一個造型（圓圓的只有一開始有，之後三種輪流） */
+export function nextFoamHat(hat: FoamHat): FoamHat {
+  return FOAM_HATS[(FOAM_HATS.indexOf(hat as (typeof FOAM_HATS)[number]) + 1) % FOAM_HATS.length]
+}
+
+/** 頭上那坨泡泡的位置（寵物框的比例）：頭頂正中間 */
+export const FOAM_HAT_SPOT: BathPoint = { x: 0.5, y: 0.08 }
+
+/** 蓮蓬頭這一筆有沒有沖到頭上的泡泡造型（沖到就沒了）。跟沖身上的泡泡用同一個水柱範圍 */
+export function rinseHitsHat(from: BathPoint, to: BathPoint, tuning: BathTuning): boolean {
+  const dist = Math.hypot(to.x - from.x, to.y - from.y)
+  const n = Math.max(1, Math.ceil(dist / (tuning.radius / 2)))
+  for (let k = 0; k <= n; k++) {
+    const p = { x: from.x + ((to.x - from.x) * k) / n, y: from.y + ((to.y - from.y) * k) / n }
+    if (brushHit('rinse', FOAM_HAT_SPOT, p, tuning.radius)) return true
+  }
+  return false
+}

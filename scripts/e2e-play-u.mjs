@@ -4,7 +4,9 @@
 //   動作減少仍能玩、旋轉不壞、缺圖不破版。
 // 用法：先啟動 dev server（pnpm dev --port 5211 --strictPort），再
 //   BASE_URL=http://localhost:5211 node scripts/e2e-play-u.mjs     （或 pnpm e2e:play-u；E2E_BROWSER=webkit 改用 WebKit）
-//   SHOTS_DIR=<目錄> 會存截圖；ONLY=bubbles,catch,memory,layout 只跑其中幾段。
+//   SHOTS_DIR=<目錄> 會存截圖；ONLY=bubbles,catch,memory,layout,toys 只跑其中幾段。
+// v8.5 新玩具（toys 段）：每個新玩具都測「沒有」和「有」兩種狀態，用 patchSettings({ playCount }) 直接設定玩完幾次。
+//   新音效（squeak、boing…）檔案還沒到時不會出聲，驗的是玩法根元素的 data-sfx（有沒有叫到）。
 // 無頭 WebKit 不跑 rAF、CSS 動畫也只在畫一幀時才前進：讀泡泡位置前先 page.screenshot() 刷一幀（flush）。
 import { mkdirSync } from 'node:fs'
 import { loadavg } from 'node:os'
@@ -57,6 +59,17 @@ const enter = async (page, game, age, reload = true) => {
   await page.waitForSelector(`[data-testid=${game}]`)
   if (age) await page.waitForSelector(`[data-testid=${game}][data-band="${age}"]`)
 }
+const sfx = (page, game) => page.evaluate((g) => (document.querySelector(`[data-testid=${g}]`)?.dataset.sfx ?? '').split(' ').filter(Boolean), game)
+const shellToys = (page, game) => page.evaluate((g) => document.querySelector(`[data-testid=play-${g}]`)?.dataset.toys, game)
+const boxOf = (page, sel) =>
+  page.evaluate((s) => {
+    const el = document.querySelector(s)
+    if (!el) return null
+    const r = el.getBoundingClientRect()
+    return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, w: r.width, h: r.height, x: r.left + r.width / 2, y: r.top + r.height / 2 }
+  }, sel)
+const hit = (a, b) => !!a && !!b && a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom
+const inView = (r, vp) => !!r && r.left >= 0 && r.top >= 0 && r.right <= vp.width + 0.5 && r.bottom <= vp.height + 0.5
 const said = (page, game) => page.evaluate((g) => (document.querySelector(`[data-testid=${g}]`)?.dataset.said ?? '').split(' ').filter(Boolean), game)
 const attr = (page, game, name) => page.evaluate(([g, n]) => document.querySelector(`[data-testid=${g}]`)?.getAttribute(`data-${n}`), [game, name])
 const noOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth && document.body.scrollWidth <= innerWidth)
@@ -79,7 +92,7 @@ const bubbles = (page) =>
     [...document.querySelectorAll('[data-bubble]')]
       .map((el) => {
         const r = el.getBoundingClientRect()
-        return { id: el.dataset.bubble, x: r.left + r.width / 2, y: r.top + r.height / 2, d: r.width, big: !!el.dataset.big, mini: !!el.dataset.mini }
+        return { id: el.dataset.bubble, x: r.left + r.width / 2, y: r.top + r.height / 2, d: r.width, big: !!el.dataset.big, mini: !!el.dataset.mini, blown: !!el.dataset.blown, animal: el.dataset.animal ?? null }
       })
       // 避開回去鍵與畫面外
       .filter((b) => b.x > 20 && b.x < innerWidth - 20 && b.y > 90 && b.y < innerHeight - 10),
@@ -139,6 +152,7 @@ async function testBubbles(browser) {
     check(`泡泡 ${age}：滿了說 done`, (await said(page, 'bubbles')).includes('pet.play.bubbles.done'))
     await page.waitForSelector('[data-testid=play-gift]', { timeout: 4000 })
     check(`泡泡 ${age}：送一份禮物`, (await foodTotal(page)) === food0 + 1)
+    check(`泡泡 ${age}：沒有新玩具時沒有動物泡泡、沒有泡泡棒、沒叫 squeak`, (await page.locator('[data-animal]').count()) === 0 && (await page.getByTestId('bubble-wand').count()) === 0 && !(await sfx(page, 'bubbles')).includes('squeak'))
     const giftArt = await page.evaluate(() => document.querySelector('[data-testid=play-gift] img[src*="food-"]') !== null)
     check(`泡泡 ${age}：禮物顯示食物的圖`, giftArt)
     await shot(page, `bubbles-${age}-gift`)
@@ -299,11 +313,12 @@ const catchState = (page) =>
     const root = document.querySelector('[data-testid=catch]')
     if (!root) return null
     const basket = document.querySelector('[data-testid=catch-basket]').getBoundingClientRect()
-    const fruits = [...document.querySelectorAll('[data-testid=catch-fruit]')]
+    // 主回合的水果和 v8.5 水果雨的水果都算（機器人兩種都追）
+    const fruits = [...document.querySelectorAll('.pg-catch-fruit')]
       .filter((el) => getComputedStyle(el).display !== 'none')
       .map((el) => {
         const r = el.getBoundingClientRect()
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2 }
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2, rain: el.dataset.testid === 'catch-rain-fruit' }
       })
     return {
       basket: { x: basket.left + basket.width / 2, y: basket.top, w: basket.width, h: basket.height, left: basket.left, right: basket.right },
@@ -311,13 +326,17 @@ const catchState = (page) =>
       caught: Number(root.dataset.caught),
       missed: Number(root.dataset.missed),
       ended: root.dataset.ended === 'true',
+      rain: root.dataset.rain,
+      bonus: Number(root.dataset.bonus),
+      gold: Number(root.dataset.gold ?? 0),
+      flash: !!document.querySelector('[data-testid=catch-flash]'),
       w: innerWidth,
       h: innerHeight,
     }
   })
 
 /** 自動玩一回：手指一直放著，追最低的那顆還沒過籃子的水果 */
-async function playRound(page, send, { skill = true, timeout = 90000 } = {}) {
+async function playRound(page, send, { skill = true, timeout = 90000, watch } = {}) {
   const t0 = Date.now()
   let down = false
   let last = t0
@@ -326,6 +345,7 @@ async function playRound(page, send, { skill = true, timeout = 90000 } = {}) {
   while (Date.now() - t0 < timeout) {
     const s = await catchState(page)
     if (!s || s.ended) break
+    if (watch && (await watch(s)) === 'stop') break
     if (skill) {
       // 水果要過了籃口判定帶（籃子高度的 75%）才換下一顆，不能還沒進籃就放棄
       const target = s.fruits.filter((f) => f.y < s.basket.y + s.basket.h * 0.75).sort((a, b) => b.y - a.y)[0]
@@ -341,6 +361,7 @@ async function playRound(page, send, { skill = true, timeout = 90000 } = {}) {
     last = Date.now()
   }
   if (down) await send('touchEnd', [])
+  if (!(await catchState(page))?.ended && watch) return 'stopped'
   await page.waitForSelector('[data-testid=catch-end]', { timeout: 8000 })
   // 機器人反應多慢、機器多忙：接到的顆數偏低時用來分辨是遊戲的問題還是測試機太忙
   return `機器人最慢一輪 ${worst}ms，負載 ${loadavg()[0].toFixed(1)}`
@@ -356,6 +377,10 @@ async function testCatch(browser) {
     const food0 = await foodTotal(page)
     await enter(page, 'catch', '6-7')
     check('接水果：一回 15 顆（元素數）', (await page.getByTestId('catch-fruit').count()) === 15)
+    check('沒有新玩具：沒有金色水果、沒有水果雨、只有原本 5 種水果', await page.evaluate(() => {
+      const els = [...document.querySelectorAll('.pg-catch-fruit')]
+      return els.length === 15 && els.every((e) => !e.dataset.gold && ['apple', 'banana', 'grape', 'peach', 'watermelon'].includes(e.dataset.food)) && document.querySelector('[data-testid=catch]').dataset.rain === 'no'
+    }))
     check('接水果：開場有手勢示範', (await page.getByTestId('play-hand').count()) === 1)
     // 量同時在空中的顆數（6–7 歲一定有同時掉的）
     let simultaneous = 0
@@ -381,9 +406,13 @@ async function testCatch(browser) {
     check('結束：第一回說 catch.done', (await said(page, 'catch')).includes('pet.play.catch.done'))
     check('結束：紀錄寫入', (await settings(page)).playBest?.catch === n1)
     check('結束：水果圖一顆一顆堆著', (await page.locator('.pg-catch-end-fruits > span').count()) === n1)
+    check('沒有新玩具：結束時沒有水果雨、沒有加幾顆、沒說金色', first.rain === 'no' && (await page.getByTestId('catch-bonus').count()) === 0 && !(await said(page, 'catch')).some((k) => k === 'pet.play.catch.gold' || k === 'pet.play.catch.rain'))
     await page.waitForSelector('[data-testid=play-gift]', { timeout: 4000 })
     check('結束：送一份禮物', (await foodTotal(page)) === food0 + 1)
+    check('玩完第 1 次：卡上有新玩具（金色水果），收下之前玩法還是沒有新玩具', (await page.getByTestId('play-toy').getAttribute('data-toy')) === 'gold' && (await shellToys(page, 'catch')) === '0')
     await closeGift(page)
+    await page.waitForFunction(() => document.querySelector('[data-testid=play-catch]')?.dataset.toys === '1', null, { timeout: 3000 }).catch(() => {})
+    check('收下新玩具卡：這個遊戲有 1 個新玩具', (await shellToys(page, 'catch')) === '1')
     await page.waitForTimeout(200)
     await shot(page, 'catch-6-7-end')
     check('再玩一次：夠大', await page.getByTestId('play-again').evaluate((el) => el.offsetHeight >= 56 && el.offsetWidth >= 56))
@@ -393,6 +422,7 @@ async function testCatch(browser) {
     await page.getByTestId('play-again').click()
     await page.waitForSelector('[data-testid=catch-fruit]')
     check('再玩一次：重新開始', (await catchState(page)).caught === 0)
+    check('新玩具從下一回開始：第 5、10、15 顆是金色的', (await page.evaluate(() => [...document.querySelectorAll('[data-testid=catch-fruit]')].map((e, i) => (e.dataset.gold ? i + 1 : 0)).filter(Boolean).join())) === '5,10,15')
     await playRound(page, send)
     const n2 = Number(await page.getByTestId('catch-end-num').textContent())
     if (n2 > 1) {
@@ -638,6 +668,7 @@ async function testMemory(browser) {
     check(`配對 ${age}：有寵物牌`, list.filter((c) => c.face === 'pet').length === 2)
     check(`配對 ${age}：每種兩張`, pairs(list).every((p) => p.length === 2))
     check(`配對 ${age}：開場有手勢示範`, (await page.getByTestId('play-hand').count()) === 1)
+    check(`配對 ${age}：沒有新玩具時沒有牌組選單、沒有魔法棒，牌面都是原本的`, (await page.getByTestId('memory-tools').count()) === 0 && (await page.getByTestId('memory-peek').count()) === 0 && list.every((c) => c.face === 'pet' || !c.face.startsWith('obj-')) && (await attr(page, 'memory', 'deck')) === 'fruit')
 
     // 翻錯：動作中第三張不算，等一下翻回去；連續翻錯只說第一次
     const [p1, p2] = pairs(list)
@@ -869,12 +900,569 @@ async function testLayout(browser) {
   }
 }
 
+// ---------- v8.5 新玩具 ----------
+const ANIMALS = ['bear', 'rabbit', 'chick', 'cow', 'fish', 'octopus']
+const SNACKS = ['cake', 'cookie', 'milk', 'riceball', 'carrot']
+const plays = async (page, game) => (await settings(page)).playCount?.[game] ?? 0
+/** 等一顆動物泡泡飄到戳得到的地方 */
+async function waitAnimal(page, timeout = 20000) {
+  const t0 = Date.now()
+  while (Date.now() - t0 < timeout) {
+    await flush(page)
+    const a = (await bubbles(page)).find((b) => b.animal)
+    if (a) return a
+    await page.waitForTimeout(150)
+  }
+  return null
+}
+
+async function testBubbleToys(browser) {
+  // 第一個新玩具（動物泡泡）：有動物、沒有泡泡棒
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { stage: 'adult' })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { bubbles: 1 } })
+    await enter(page, 'bubbles', '6-7')
+    check('動物泡泡：這個遊戲有 1 個新玩具', (await shellToys(page, 'bubbles')) === '1')
+    check('動物泡泡：還沒有泡泡棒', (await page.getByTestId('bubble-wand').count()) === 0)
+    // 一進來的 4 顆是第 0–3 顆，第 5 顆（n = 4）是第一隻動物：小熊
+    const seen = []
+    const first = await waitAnimal(page)
+    check('動物泡泡：出現了', !!first)
+    if (first) {
+      seen.push(first.animal)
+      check('動物泡泡：第一隻是小熊（每 5 顆一顆，固定順序）', first.animal === 'bear', first.animal)
+      check('動物泡泡：跟一般泡泡一樣大（≥ 56px）', first.d >= 56, `${Math.round(first.d)}px`)
+      await shot(page, 'toys-bubbles-animal')
+      const p0 = await popped(page)
+      await flush(page)
+      const now = (await bubbles(page)).find((b) => b.animal) ?? first
+      await tapAll(send, [pt(now.x, now.y)])
+      await page.waitForTimeout(120)
+      check('動物泡泡：戳得破，算一顆', (await popped(page)) === p0 + 1)
+      check('動物泡泡：小動物彈出來', (await page.locator('[data-testid=bubble-fx][data-animal]').count()) === 1)
+      const anim = await page.evaluate(() => getComputedStyle(document.querySelector('[data-testid=bubble-fx][data-animal] .pg-bub-fly')).animationName)
+      check('動物泡泡：彈出來轉一圈（專用的動作）', anim === 'pg-bub-fly-animal', anim)
+      check('動物泡泡：叫一聲 squeak', (await sfx(page, 'bubbles')).includes('squeak'))
+      check('動物泡泡：第一次說 animal', (await said(page, 'bubbles')).filter((k) => k === 'pet.play.bubbles.animal').length === 1)
+      await flush(page)
+      await shot(page, 'toys-bubbles-animal-pop')
+      await page.waitForTimeout(1700)
+      check('動物泡泡：演完清掉', (await page.locator('[data-testid=bubble-fx][data-animal]').count()) === 0)
+    }
+    // 再戳兩隻：順序是固定的，台詞只說第一次
+    for (let k = 0; k < 2; k++) {
+      const a = await waitAnimal(page)
+      if (!a) break
+      seen.push(a.animal)
+      await flush(page)
+      const now = (await bubbles(page)).find((b) => b.animal) ?? a
+      await tapAll(send, [pt(now.x, now.y)])
+      await page.waitForTimeout(150)
+    }
+    check('動物泡泡：照順序輪流（熊、兔、雞…）', seen.length === 3 && seen.every((a, i) => ANIMALS.indexOf(a) > (i ? ANIMALS.indexOf(seen[i - 1]) : -1)), seen.join())
+    check('動物泡泡：台詞只說第一次', (await said(page, 'bubbles')).filter((k) => k === 'pet.play.bubbles.animal').length === 1)
+    check('動物泡泡：沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 第二個新玩具（泡泡棒）：按住拖動沿路吹泡泡，上限照舊
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { stage: 'adult' })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { bubbles: 3 } })
+    await enter(page, 'bubbles', '4-5')
+    await page.waitForTimeout(500)
+    check('泡泡棒：這個遊戲有 2 個新玩具', (await shellToys(page, 'bubbles')) === '2')
+    const home = await boxOf(page, '[data-testid=bubble-wand]')
+    check('泡泡棒：在角落，夠大（≥ 56px）', !!home && home.w >= 56 && home.h >= 56 && inView(home, SIZES.land), home ? `${Math.round(home.w)}×${Math.round(home.h)} @${Math.round(home.left)},${Math.round(home.top)}` : '沒有')
+    check('泡泡棒：不蓋回去鍵與寵物', !hit(home, await boxOf(page, '[data-testid=game-back]')) && !hit(home, await boxOf(page, '[data-testid=bubbles-pet]')))
+    const p0 = await popped(page)
+    await send('touchStart', [pt(home.x, home.y, 1)])
+    await page.waitForTimeout(60)
+    check('泡泡棒：拿起來不算戳泡泡', (await popped(page)) === p0)
+    check('泡泡棒：手勢示範碰了就消失', (await page.getByTestId('play-hand').count()) === 0)
+    let maxAlive = 0
+    for (let i = 1; i <= 10; i++) {
+      await send('touchMove', [pt(home.x + i * 70, home.y - i * 40, 1)])
+      await page.waitForTimeout(30)
+      maxAlive = Math.max(maxAlive, Number(await attr(page, 'bubbles', 'alive')))
+    }
+    // 剛吹出來的泡泡會先從小長到大（跟大泡泡噴的小泡泡一樣），長好再量
+    await page.waitForTimeout(700)
+    await flush(page)
+    const blown = (await bubbles(page)).filter((b) => b.blown)
+    check('泡泡棒：沿路吹出一串小泡泡', Number(await attr(page, 'bubbles', 'blown')) >= 5 && blown.length >= 3, `吹了 ${await attr(page, 'bubbles', 'blown')} 顆，畫面上 ${blown.length} 顆`)
+    check('泡泡棒：吹出來的泡泡 ≥ 56px', blown.every((b) => b.d >= 56), blown.map((b) => Math.round(b.d)).join())
+    const held = await boxOf(page, '[data-testid=bubble-wand]')
+    check('泡泡棒：跟著手指', Math.abs(held.x - (home.x + 700)) < 30 && held.y < home.y - 300, `${Math.round(held.x)},${Math.round(held.y)}`)
+    check('泡泡棒：吹的時候有聲音（whoosh）', (await sfx(page, 'bubbles')).includes('whoosh'))
+    check('泡泡棒：拖的時候不戳泡泡', (await popped(page)) === p0)
+    await shot(page, 'toys-bubbles-wand')
+    // 另一根手指照樣戳得破
+    await flush(page)
+    const target = (await bubbles(page)).find((b) => Math.hypot(b.x - held.x, b.y - held.y) > 200)
+    if (target) {
+      await send('touchStart', [pt(home.x + 700, home.y - 400, 1), pt(target.x, target.y, 2)])
+      await page.waitForTimeout(60)
+      check('泡泡棒：拿著的時候另一根手指照樣戳得破', (await popped(page)) === p0 + 1, `${p0} → ${await popped(page)}`)
+    }
+    // 拼命拖：畫面上的泡泡不超過總上限
+    for (let i = 0; i < 60; i++) {
+      await send('touchMove', [pt(200 + ((i * 97) % 800), 200 + ((i * 61) % 400), 1)])
+      if (i % 6 === 0) maxAlive = Math.max(maxAlive, Number(await attr(page, 'bubbles', 'alive')))
+    }
+    maxAlive = Math.max(maxAlive, Number(await attr(page, 'bubbles', 'alive')))
+    check('泡泡棒：拼命吹也不超過上限 20 顆', maxAlive <= 20 && maxAlive >= 15, `最多 ${maxAlive} 顆`)
+    await send('touchEnd', [])
+    await page.waitForTimeout(500)
+    const back = await boxOf(page, '[data-testid=bubble-wand]')
+    check('泡泡棒：放開回到角落', Math.abs(back.x - home.x) < 16 && Math.abs(back.y - home.y) < 16, `${Math.round(back.x)},${Math.round(back.y)} vs ${Math.round(home.x)},${Math.round(home.y)}`)
+    // 吹出來的泡泡戳得破、算數
+    await flush(page)
+    const one = (await bubbles(page)).find((b) => b.blown)
+    if (one) {
+      const before = await popped(page)
+      await tapAll(send, [pt(one.x, one.y)])
+      await page.waitForTimeout(60)
+      check('泡泡棒：吹出來的泡泡戳得破', (await popped(page)) === before + 1)
+    } else check('泡泡棒：畫面上還有吹出來的泡泡可以戳', false)
+    check('泡泡棒：有兩個新玩具時動物泡泡也在', !!(await waitAnimal(page)))
+    check('泡泡棒：沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 玩完第 1 次：整張卡跳出來，收下之後動物泡泡才出現；玩完只算一次
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.port, { stage: 'adult' })
+    const send = await touchSender(ctx, page)
+    await enter(page, 'bubbles', '3')
+    check('還沒玩完過：沒有新玩具', (await shellToys(page, 'bubbles')) === '0' && (await plays(page, 'bubbles')) === 0)
+    await popUntil(page, send, GOAL['3'])
+    await page.waitForSelector('[data-testid=play-gift]', { timeout: 4000 })
+    check('玩完第 1 次：卡上有新玩具（動物泡泡）', (await page.getByTestId('play-toy').getAttribute('data-toy')) === 'animals')
+    check('玩完第 1 次：卡還沒收，泡泡裡還沒有動物', (await shellToys(page, 'bubbles')) === '0' && (await page.locator('[data-animal]').count()) === 0)
+    await shot(page, 'toys-bubbles-card')
+    await closeGift(page)
+    await page.waitForFunction(() => document.querySelector('[data-testid=play-bubbles]')?.dataset.toys === '1', null, { timeout: 3000 }).catch(() => {})
+    check('收下卡片：這個遊戲有 1 個新玩具', (await shellToys(page, 'bubbles')) === '1')
+    check('收下卡片：接著冒出來的泡泡有小動物', !!(await waitAnimal(page, 30000)))
+    await popUntil(page, send, GOAL['3'] + 6)
+    await page.waitForTimeout(1800)
+    check('玩完只算一次（繼續戳不會再算）', (await plays(page, 'bubbles')) === 1)
+    check('新玩具卡段沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 動作減少：泡泡棒吹出來的泡泡不飄、小動物只淡出
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.phone, { stage: 'adult', ctxOpts: { reducedMotion: 'reduce' } })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { bubbles: 3 } })
+    await enter(page, 'bubbles', '3')
+    await page.waitForTimeout(400)
+    const home = await boxOf(page, '[data-testid=bubble-wand]')
+    await send('touchStart', [pt(home.x, home.y, 1)])
+    for (let i = 1; i <= 6; i++) await send('touchMove', [pt(home.x + i * 40, home.y - i * 60, 1)])
+    await send('touchEnd', [])
+    await flush(page)
+    const a = (await bubbles(page)).filter((b) => b.blown)
+    await page.waitForTimeout(400)
+    await flush(page)
+    const b = (await bubbles(page)).filter((x) => x.blown)
+    check('動作減少：泡泡棒照樣吹得出泡泡', a.length >= 2, `${a.length} 顆`)
+    check('動作減少：吹出來的泡泡不飄', a.length > 0 && a.every((x) => b.some((y) => y.id === x.id && Math.abs(y.x - x.x) < 1 && Math.abs(y.y - x.y) < 1)))
+    const wandAnim = await page.evaluate(() => getComputedStyle(document.querySelector('[data-testid=bubble-wand]')).animationName)
+    check('動作減少：泡泡棒不晃', wandAnim === 'none', wandAnim)
+    check('動作減少（新玩具）沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+}
+
+async function testCatchToys(browser) {
+  // 第一個新玩具（金色水果）：3 歲慢慢掉，機器人幾乎都接得到
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { stage: 'adult' })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { catch: 1 } })
+    await enter(page, 'catch', '3')
+    const els = await page.evaluate(() => [...document.querySelectorAll('.pg-catch-fruit')].map((e) => ({ id: e.dataset.testid, food: e.dataset.food, gold: !!e.dataset.gold })))
+    check('金色水果：一回還是 15 顆，沒有水果雨', els.length === 15 && els.every((e) => e.id === 'catch-fruit') && (await attr(page, 'catch', 'rain')) === 'no')
+    check('金色水果：第 5、10、15 顆是金色的', els.map((e, i) => (e.gold ? i + 1 : 0)).filter(Boolean).join() === '5,10,15')
+    check('金色水果：有草莓和橘子', els.some((e) => e.food === 'strawberry') && els.some((e) => e.food === 'orange'))
+    let flashes = 0
+    let wasFlash = false
+    let goldShot = false
+    await playRound(page, send, {
+      watch: async (s) => {
+        if (s.flash && !wasFlash) flashes++
+        wasFlash = s.flash
+        if (!goldShot && (await page.evaluate(() => [...document.querySelectorAll('.pg-catch-fruit.gold')].some((e) => getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().top > 160)))) {
+          goldShot = true
+          await shot(page, 'toys-catch-gold')
+        }
+      },
+    })
+    const s = await catchState(page)
+    const n = Number(await page.getByTestId('catch-end-num').textContent())
+    check('金色水果：接得到金色的', s.gold >= 1, `${s.gold} 顆`)
+    check('金色水果：接到畫面亮一下', flashes >= 1 && flashes <= s.gold, `亮 ${flashes} 次，接到 ${s.gold} 顆金色`)
+    await page.waitForTimeout(900) // 最後一顆（第 15 顆）就是金色的，接到之後還在亮
+    check('金色水果：亮完就收掉', (await page.getByTestId('catch-flash').count()) === 0)
+    check('金色水果：台詞一回只說一次', (await said(page, 'catch')).filter((k) => k === 'pet.play.catch.gold').length === 1)
+    check('金色水果：不改計分（金色的一樣算一顆，接到 + 沒接到 = 15）', s.caught + s.missed === 15 && n === s.caught, `${s.caught}+${s.missed}，顯示 ${n}`)
+    check('金色水果：沒有加幾顆', (await page.getByTestId('catch-bonus').count()) === 0 && s.bonus === 0)
+    check('金色水果：接到有聲音（drop），金色多一聲 sparkle', (await sfx(page, 'catch')).includes('drop') && (await sfx(page, 'catch')).includes('sparkle'))
+    check('金色水果：沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 第二個新玩具（水果雨）：一回結束後多 8 顆，不算紀錄，玩完只算一次；下到一半離開也算玩完
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { stage: 'adult' })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { catch: 3 } })
+    await page.evaluate(() => history.replaceState(null, '', '#playground'))
+    await page.reload()
+    await page.waitForSelector('.pg-grid')
+    await page.waitForTimeout(600)
+    const timers0 = await page.evaluate(() => window.__timers.size)
+    await enter(page, 'catch', '6-7', false)
+    check('水果雨：主回合 15 顆，另外 8 顆水果雨先藏著', (await page.getByTestId('catch-fruit').count()) === 15 && (await page.getByTestId('catch-rain-fruit').count()) === 8)
+    check('水果雨：主回合一樣有金色水果', (await page.locator('[data-testid=catch-fruit][data-gold]').count()) === 3)
+    let atRain = null
+    let maxRain = 0
+    let rainShot = false
+    await playRound(page, send, {
+      watch: async (s) => {
+        if (s.rain !== 'falling') return
+        if (!atRain) atRain = { caught: s.caught, missed: s.missed, plays: await plays(page, 'catch'), gift: await page.getByTestId('play-gift').count() }
+        const n = s.fruits.filter((f) => f.rain).length
+        maxRain = Math.max(maxRain, n)
+        if (!rainShot && n >= 6 && s.fruits.some((f) => f.y > s.h * 0.35)) {
+          rainShot = true
+          await shot(page, 'toys-catch-rain')
+        }
+      },
+    })
+    const s = await catchState(page)
+    const n = Number(await page.getByTestId('catch-end-num').textContent())
+    check('水果雨：主回合掉完才開始', !!atRain && atRain.caught + atRain.missed === 15, atRain ? `${atRain.caught}+${atRain.missed}` : '沒下')
+    check('水果雨：說 rain', (await said(page, 'catch')).filter((k) => k === 'pet.play.catch.rain').length === 1)
+    check('水果雨：8 顆一起掉（畫面上同時至少 6 顆）', maxRain >= 6, `最多同時 ${maxRain} 顆`)
+    check('水果雨：下的時候還沒算玩完、還沒跳卡', !!atRain && atRain.plays === 3 && atRain.gift === 0)
+    check('水果雨：接得到（接幾個都好）', s.bonus >= 1 && s.bonus <= 8, `${s.bonus} 顆`)
+    check('水果雨：不算進這一回的顆數', s.caught === atRain?.caught && s.missed === atRain?.missed && n === s.caught, `${s.caught}+${s.missed}，顯示 ${n}`)
+    check('水果雨：不算進個人紀錄', (await settings(page)).playBest?.catch === s.caught, `紀錄 ${(await settings(page)).playBest?.catch}，主回合 ${s.caught}`)
+    check('水果雨：結束畫面另外寫多接到幾顆', (await page.getByTestId('catch-bonus').textContent()) === `+${s.bonus}`)
+    check('水果雨：籃子裡的水果圖是全部接到的', (await page.locator('.pg-catch-end-fruits > span').count()) === s.caught + s.bonus)
+    check('水果雨：結束畫面沒有超出', await page.getByTestId('play-again').evaluate((el) => el.getBoundingClientRect().bottom <= innerHeight))
+    await page.waitForTimeout(2000)
+    check('水果雨：一回只算玩完一次', (await plays(page, 'catch')) === 4, `${await plays(page, 'catch')}`)
+    await closeGift(page)
+    await page.waitForTimeout(300)
+    await shot(page, 'toys-catch-rain-end')
+    await page.waitForTimeout(1800)
+    check('水果雨：之後不會再多算', (await plays(page, 'catch')) === 4)
+
+    // 第二回：水果雨下到一半離開，主回合已經玩完了，照樣算一次（只算一次）
+    await page.getByTestId('play-again').click()
+    await page.waitForSelector('[data-testid=catch-fruit]')
+    const r = await playRound(page, send, { watch: (st) => (st.rain === 'falling' && st.fruits.some((f) => f.rain) ? 'stop' : undefined) })
+    check('水果雨下到一半：回合還沒結束', r === 'stopped' && !(await catchState(page)).ended)
+    await page.getByTestId('game-back').click()
+    await page.waitForSelector('.pg-grid')
+    await page.waitForTimeout(3300)
+    check('水果雨下到一半離開：照樣算玩完一次', (await plays(page, 'catch')) === 5, `${await plays(page, 'catch')}`)
+    const timers1 = await page.evaluate(() => window.__timers.size)
+    check('水果雨下到一半離開：計時器清乾淨', timers1 <= timers0, `${timers0} → ${timers1}`)
+    check('水果雨：沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 手機、動作減少：水果雨照樣下完
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.phone, { stage: 'adult', ctxOpts: { reducedMotion: 'reduce' } })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { catch: 3 } })
+    await enter(page, 'catch', '6-7')
+    let flashStill = null
+    await playRound(page, send, {
+      watch: async (s) => {
+        if (s.flash && flashStill === null) flashStill = await page.evaluate(() => getComputedStyle(document.querySelector('[data-testid=catch-flash]')).animationName === 'none')
+      },
+    })
+    const s = await catchState(page)
+    check('動作減少：水果雨照樣下完', s.ended && s.rain === 'done', s.rain)
+    if (flashStill !== null) check('動作減少：金色不閃（淡淡亮一下）', flashStill)
+    await page.waitForSelector('[data-testid=play-gift]', { timeout: 4000 }).catch(() => {})
+    await closeGift(page)
+    await page.waitForTimeout(300)
+    check('手機：水果雨的結束畫面沒有超出', await page.getByTestId('play-again').evaluate((el) => el.getBoundingClientRect().bottom <= innerHeight) && (await noOverflow(page)))
+    await shot(page, 'toys-catch-rain-end-phone')
+    check('動作減少（水果雨）沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+}
+
+const allUp = (page) => page.evaluate(() => [...document.querySelectorAll('[data-testid=memory-card]')].every((c) => c.classList.contains('up')))
+const upCount = (page) => page.evaluate(() => [...document.querySelectorAll('[data-testid=memory-card]')].filter((c) => c.classList.contains('up')).length)
+const toolBoxes = (page) =>
+  page.evaluate(() =>
+    [...document.querySelectorAll('[data-testid=memory-tools] button')].map((el) => {
+      const r = el.getBoundingClientRect()
+      return { id: el.dataset.testid, left: r.left, top: r.top, right: r.right, bottom: r.bottom, w: r.width, h: r.height, shown: getComputedStyle(el).visibility !== 'hidden', disabled: el.disabled || el.getAttribute('aria-disabled') === 'true', on: el.getAttribute('aria-pressed') === 'true' }
+    }),
+  )
+
+async function testMemoryToys(browser) {
+  // 沒有新玩具：就算這台裝置記過動物牌，也是原本的牌
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { stage: 'adult' })
+    await page.evaluate(() => localStorage.setItem('gq-memory-deck', 'animal'))
+    await enter(page, 'memory', '4-5')
+    await page.waitForSelector('[data-testid=memory-card]')
+    const list = await cards(page)
+    check('沒有新玩具：記過動物牌也還是原本的牌', (await attr(page, 'memory', 'deck')) === 'fruit' && list.every((c) => !c.face.startsWith('obj-')) && (await page.getByTestId('memory-tools').count()) === 0)
+    check('沒有新玩具段沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 第一個新玩具（動物牌）：開始前可以選，玩到一半不能換，下次進來還是上次選的
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { stage: 'adult' })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { memory: 1 } })
+    await enter(page, 'memory', '4-5')
+    await page.waitForSelector('[data-testid=memory-card]')
+    let tools = await toolBoxes(page)
+    check('動物牌：有水果和動物兩個牌組按鈕，沒有點心、沒有魔法棒', tools.map((t) => t.id).join() === 'memory-deck-fruit,memory-deck-animal')
+    check('動物牌：不選就是水果（原本的）', (await attr(page, 'memory', 'deck')) === 'fruit' && tools[0].on && !tools[1].on)
+    check('動物牌：按鈕夠大（≥ 56px）', tools.every((t) => t.w >= 56 && t.h >= 56), tools.map((t) => `${Math.round(t.w)}×${Math.round(t.h)}`).join())
+    const before = (await cards(page)).map((c) => c.face).join()
+    await page.getByTestId('memory-deck-fruit').click()
+    check('動物牌：再點一次現在的牌組不會重發', (await cards(page)).map((c) => c.face).join() === before)
+    await page.getByTestId('memory-deck-animal').click()
+    await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.deck === 'animal')
+    let list = await cards(page)
+    check('動物牌：8 張，寵物一對，其他都是小動物，每種兩張', list.length === 8 && list.filter((c) => c.face === 'pet').length === 2 && list.every((c) => c.face === 'pet' || ANIMALS.includes(c.face.replace('obj-', ''))) && pairs(list).every((p) => p.length === 2))
+    check('動物牌：全部蓋著', list.every((c) => c.state === 'down'))
+    check('動物牌：手勢示範還在（還沒開始翻）', (await page.getByTestId('play-hand').count()) === 1)
+    // 開始翻了：牌組按鈕收起來，按了也沒用
+    const [p1] = pairs(list)
+    await tapCard(send, p1[0])
+    await page.waitForTimeout(450)
+    await flush(page)
+    tools = await toolBoxes(page)
+    check('動物牌：玩到一半牌組按鈕收起來', tools.every((t) => !t.shown && t.disabled))
+    await page.evaluate(() => document.querySelector('[data-testid=memory-deck-fruit]').click())
+    await page.waitForTimeout(100)
+    list = await cards(page)
+    check('動物牌：玩到一半換不了牌組（正在玩的牌不會變）', (await attr(page, 'memory', 'deck')) === 'animal' && list[p1[0].i].state === 'up')
+    await shot(page, 'toys-memory-animal')
+    await tapCard(send, p1[1])
+    await page.waitForTimeout(520)
+    await clearBoard(page, send)
+    await page.waitForSelector('[data-testid=memory][data-won=true]')
+    await page.waitForTimeout(1900)
+    check('動物牌：翻完算玩完一次', (await plays(page, 'memory')) === 2)
+    await closeGift(page)
+    await page.waitForTimeout(300)
+    tools = await toolBoxes(page)
+    check('動物牌：翻完牌組按鈕回來', tools.every((t) => t.shown && !t.disabled))
+    // 下次進來：還是上次選的
+    await enter(page, 'memory', '4-5')
+    await page.waitForSelector('[data-testid=memory-card]')
+    check('動物牌：下次進來還是上次選的', (await attr(page, 'memory', 'deck')) === 'animal' && (await cards(page)).some((c) => c.face.startsWith('obj-')))
+    // 翻完後直接選另一組：就是用那一組再玩一次
+    await clearBoard(page, send)
+    await page.waitForSelector('[data-testid=memory][data-won=true]')
+    await page.waitForTimeout(1800)
+    await closeGift(page)
+    await page.getByTestId('memory-deck-fruit').click()
+    await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.won === 'false')
+    list = await cards(page)
+    check('動物牌：翻完後選水果就用水果再玩一次', (await attr(page, 'memory', 'deck')) === 'fruit' && list.every((c) => c.state === 'down' && !c.face.startsWith('obj-')))
+    check('動物牌：沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 第二個新玩具（魔法棒 + 點心牌）：4–5 歲一回 1 次
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.port, { stage: 'adult' })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { memory: 3 } })
+    await page.evaluate(() => history.replaceState(null, '', '#playground'))
+    await page.reload()
+    await page.waitForSelector('.pg-grid')
+    await page.waitForTimeout(600)
+    const timers0 = await page.evaluate(() => window.__timers.size)
+    await enter(page, 'memory', '4-5', false)
+    await page.waitForSelector('[data-testid=memory-card]')
+    let tools = await toolBoxes(page)
+    check('魔法棒：有魔法棒和三個牌組', tools.map((t) => t.id).sort().join() === 'memory-deck-animal,memory-deck-fruit,memory-deck-snack,memory-peek')
+    await page.getByTestId('memory-deck-snack').click()
+    await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.deck === 'snack')
+    let list = await cards(page)
+    check('點心牌：寵物一對，其他都是點心', list.length === 8 && list.filter((c) => c.face === 'pet').length === 2 && list.every((c) => c.face === 'pet' || SNACKS.includes(c.face)) && pairs(list).every((p) => p.length === 2))
+    // 先翻一張，再偷看：偷看完那張還是翻著
+    const [p1, p2] = pairs(list)
+    await tapCard(send, p1[0])
+    await page.waitForTimeout(60)
+    const t0 = Date.now()
+    await page.getByTestId('memory-peek').click()
+    await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.peek === 'true')
+    check('魔法棒：全部翻開', await allUp(page))
+    check('魔法棒：說 peek', (await said(page, 'memory')).filter((k) => k === 'pet.play.memory.peek').length === 1)
+    check('魔法棒：有聲音（sparkle）', (await sfx(page, 'memory')).includes('sparkle'))
+    await page.waitForTimeout(450)
+    await flush(page)
+    await shot(page, 'toys-memory-peek')
+    // 偷看的時候翻牌不算
+    await tapCard(send, p2[0])
+    await page.waitForTimeout(40)
+    check('魔法棒：偷看的時候不能翻牌', (await cards(page))[p2[0].i].state === 'down')
+    await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.peek === 'false', null, { timeout: 4000 })
+    const took = Date.now() - t0
+    check('魔法棒：大約 1.2 秒後蓋回去', took >= 1100 && took <= 2600, `${took}ms`)
+    list = await cards(page)
+    check('魔法棒：蓋回去之後只剩原本翻開的那一張', (await upCount(page)) === 1 && list[p1[0].i].state === 'up')
+    check('魔法棒：偷看不算配對', list.every((c) => c.state !== 'matched'))
+    // 蓋回去的牌真的看不到牌面（WebKit 會露背面的那種問題）
+    await tapCard(send, p1[1])
+    await page.waitForTimeout(520)
+    await waitAllDown(page)
+    const look = await downCardsLookSame(page)
+    check('魔法棒：蓋回去的牌看不到牌面（比像素）', look.n === 6 && look.same, `${look.n} 張，最大差 ${look.maxDiff}/255`)
+    // 4–5 歲一回 1 次：用過就按不動
+    tools = await toolBoxes(page)
+    check('魔法棒：4–5 歲一回 1 次，用過就暗掉', tools.find((t) => t.id === 'memory-peek').disabled && (await attr(page, 'memory', 'peeks')) === '1')
+    await page.evaluate(() => document.querySelector('[data-testid=memory-peek]').click())
+    await page.waitForTimeout(150)
+    check('魔法棒：第二次按沒有反應', (await attr(page, 'memory', 'peek')) === 'false' && (await attr(page, 'memory', 'peeks')) === '1' && (await upCount(page)) === 2)
+    // 翻完、再玩一次：又可以用一次
+    await clearBoard(page, send)
+    await page.waitForSelector('[data-testid=memory][data-won=true]')
+    await page.waitForTimeout(1900)
+    await closeGift(page)
+    await page.waitForTimeout(400)
+    await flush(page)
+    await shot(page, 'toys-memory-won')
+    tools = await toolBoxes(page)
+    const again = await boxOf(page, '[data-testid=play-again]')
+    check('魔法棒：翻完時「再玩一次」不蓋牌組與魔法棒', tools.every((t) => !hit(t, again)) && inView(again, SIZES.port))
+    await page.getByTestId('play-again').click()
+    await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.won === 'false')
+    check('魔法棒：再玩一次還是同一組牌（點心）', (await attr(page, 'memory', 'deck')) === 'snack')
+    check('魔法棒：新的一回又可以用', !(await toolBoxes(page)).find((t) => t.id === 'memory-peek').disabled && (await attr(page, 'memory', 'peeks')) === '0')
+    // 偷看到一半離開：計時器清乾淨
+    await page.getByTestId('memory-peek').click()
+    await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.peek === 'true')
+    await page.getByTestId('game-back').click()
+    await page.waitForSelector('.pg-grid')
+    await page.waitForTimeout(3300)
+    const timers1 = await page.evaluate(() => window.__timers.size)
+    check('魔法棒：偷看到一半離開，計時器清乾淨', timers1 <= timers0, `${timers0} → ${timers1}`)
+    check('魔法棒：沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 3 歲：魔法棒不限次數，台詞一回只說一次
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.phone, { stage: 'adult' })
+    await patchSettings(page, { playCount: { memory: 3 } })
+    await enter(page, 'memory', '3')
+    await page.waitForSelector('[data-testid=memory-card]')
+    for (let k = 1; k <= 3; k++) {
+      await page.getByTestId('memory-peek').click()
+      await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.peek === 'true', null, { timeout: 3000 }).catch(() => {})
+      const up = await allUp(page)
+      await page.waitForFunction(() => document.querySelector('[data-testid=memory]').dataset.peek === 'false', null, { timeout: 4000 })
+      check(`3 歲：魔法棒第 ${k} 次也可以用`, up && (await attr(page, 'memory', 'peeks')) === String(k))
+    }
+    check('3 歲：用了三次還是可以再用', !(await toolBoxes(page)).find((t) => t.id === 'memory-peek').disabled)
+    check('3 歲：台詞一回只說一次', (await said(page, 'memory')).filter((k) => k === 'pet.play.memory.peek').length === 1)
+    check('3 歲魔法棒段沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+
+  // 動物圖全部缺：退回 emoji，不破版
+  {
+    const { ctx, page, errors } = await freshApp(browser, SIZES.land, { stage: 'adult' })
+    const send = await touchSender(ctx, page)
+    await patchSettings(page, { playCount: { memory: 3 } })
+    await page.route('**/art/obj-*.png', (r) => r.abort())
+    await page.evaluate(() => localStorage.setItem('gq-memory-deck', 'animal'))
+    await enter(page, 'memory', '6-7')
+    await page.waitForSelector('[data-testid=memory-card]')
+    const list = await cards(page)
+    check('缺圖：6–7 歲動物牌 12 張（寵物 + 5 種動物）', list.length === 12 && new Set(list.map((c) => c.face)).size === 6 && (await attr(page, 'memory', 'deck')) === 'animal')
+    const one = list.find((c) => c.face !== 'pet')
+    await tapCard(send, one)
+    await page.waitForTimeout(600)
+    await flush(page)
+    const size = await page.locator('[data-testid=memory-card][data-state=up] .pg-mem-front').boundingBox()
+    check('缺圖：動物牌面退回 emoji', (await page.locator('[data-testid=memory-card][data-state=up] .art-emoji-glyph').textContent()).length > 0)
+    check('缺圖：卡片大小沒變', !!size && Math.abs(size.width - one.w) < 2)
+    await shot(page, 'toys-memory-noart')
+    check('缺圖（動物牌）沒有錯誤', errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+}
+
+/** 有兩個新玩具時，三種尺寸 × 三個年齡的版面：新東西夠大、在畫面內、不蓋到原本的東西 */
+async function testToysLayout(browser) {
+  for (const [name, vp] of Object.entries(SIZES)) {
+    const { ctx, page, errors } = await freshApp(browser, vp, { stage: 'adult' })
+    await patchSettings(page, { playCount: { bubbles: 3, catch: 3, memory: 3 } })
+    for (const age of AGES) {
+      await enter(page, 'bubbles', age)
+      await page.waitForTimeout(700)
+      await flush(page)
+      const wand = await boxOf(page, '[data-testid=bubble-wand]')
+      check(`新玩具版面 ${name} ${age} 泡泡棒：≥ 56px 且在畫面內`, !!wand && wand.w >= 56 && wand.h >= 56 && inView(wand, vp), wand ? `${Math.round(wand.w)}×${Math.round(wand.h)}` : '沒有')
+      check(`新玩具版面 ${name} ${age} 泡泡棒：不蓋回去鍵、寵物、進度條`, !hit(wand, await boxOf(page, '[data-testid=game-back]')) && !hit(wand, await boxOf(page, '[data-testid=bubbles-pet]')) && !hit(wand, await boxOf(page, '.pg-bub-meter')))
+      check(`新玩具版面 ${name} ${age} 泡泡：沒有橫向捲動`, await noOverflow(page))
+      await shot(page, `toys-layout-${name}-${age}-bubbles`)
+
+      await enter(page, 'memory', age)
+      await page.waitForSelector('[data-testid=memory-card]')
+      await page.waitForTimeout(250)
+      const list = await cards(page)
+      const tools = await toolBoxes(page)
+      const back = await boxOf(page, '[data-testid=game-back]')
+      const pet = await boxOf(page, '[data-testid=memory-pet]')
+      check(`新玩具版面 ${name} ${age} 配對：4 個按鈕都 ≥ 56px 且在畫面內`, tools.length === 4 && tools.every((t) => t.w >= 56 && t.h >= 56 && inView(t, vp)), tools.map((t) => `${Math.round(t.w)}×${Math.round(t.h)}`).join())
+      check(`新玩具版面 ${name} ${age} 配對：按鈕不互相蓋、不蓋牌、回去鍵、寵物`, tools.every((t, i) => !hit(t, back) && !hit(t, pet) && list.every((c) => !hit(t, c)) && tools.every((o, j) => i === j || !hit(t, o))))
+      check(`新玩具版面 ${name} ${age} 配對：牌還是 ${CARDS[age]} 張、每張 ≥ 56px、都在畫面內`, list.length === CARDS[age] && list.every((k) => k.w >= 56 && k.h >= 56 && k.left >= 0 && k.right <= vp.width && k.top >= 0 && k.bottom <= vp.height), `${Math.round(list[0].w)}×${Math.round(list[0].h)}`)
+      check(`新玩具版面 ${name} ${age} 配對：回去鍵與寵物不蓋牌`, list.every((c) => !hit(c, back) && !hit(c, pet)))
+      const used = await page.evaluate(() => {
+        const rs = [...document.querySelectorAll('[data-testid=memory-card]')].map((c) => c.getBoundingClientRect())
+        const w = Math.max(...rs.map((r) => r.right)) - Math.min(...rs.map((r) => r.left))
+        const h = Math.max(...rs.map((r) => r.bottom)) - Math.min(...rs.map((r) => r.top))
+        return (w * h) / (innerWidth * innerHeight)
+      })
+      check(`新玩具版面 ${name} ${age} 配對：牌桌還是占滿大部分畫面`, used >= 0.5, `${Math.round(used * 100)}%`)
+      check(`新玩具版面 ${name} ${age} 配對：沒有橫向捲動`, await noOverflow(page))
+      await shot(page, `toys-layout-${name}-${age}-memory`)
+    }
+    check(`新玩具版面 ${name}：沒有錯誤`, errors.length === 0, errors.join(' | '))
+    await ctx.close()
+  }
+}
+
 const browser = await launch()
 try {
   if (on('layout')) await testLayout(browser)
   if (on('bubbles')) await testBubbles(browser)
   if (on('catch')) await testCatch(browser)
   if (on('memory')) await testMemory(browser)
+  // toys 一次跑全部新玩具；也可以只挑一個遊戲（toys-layout、toys-bubbles、toys-catch、toys-memory）
+  const toy = (name) => on('toys') || (ONLY ?? []).includes(`toys-${name}`)
+  if (toy('layout')) await testToysLayout(browser)
+  if (toy('bubbles')) await testBubbleToys(browser)
+  if (toy('catch')) await testCatchToys(browser)
+  if (toy('memory')) await testMemoryToys(browser)
 } finally {
   await browser.close()
 }

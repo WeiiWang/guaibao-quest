@@ -1,18 +1,37 @@
 import { memo, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
-import { getAudioContext, getAudioState, playSound, type SoundName } from '../../../learning/audioEngine'
-import { BATH_CELLS, BATH_COLS, BATH_MASK, bathProgress, bathStroke, bathTuning, cellCenter, newBath, type BathPoint, type BathState, type BathStep } from '../../../domain/bath'
+import { getAudioContext, getAudioState, type SoundName } from '../../../learning/audioEngine'
+import {
+  BATH_BOMBS,
+  BATH_CELLS,
+  BATH_COLS,
+  BATH_MASK,
+  bathProgress,
+  bathStroke,
+  bathTuning,
+  bombInBath,
+  cellCenter,
+  newBath,
+  nextFoamHat,
+  rinseHitsHat,
+  type BathBombId,
+  type BathPoint,
+  type BathState,
+  type BathStep,
+  type FoamHat,
+} from '../../../domain/bath'
 import { Icon } from '../../components/Icon'
 import { useLearnerProfile } from '../../learningHooks'
 import { Companion, type Pose } from '../adventure/Companion'
 import { GameShell, type GameProps } from './GameShell'
 import type { GameRootProps } from './GameScreen'
+import { playTracked, trackSaid } from './playU'
 import './bath.css'
 
 type ToolStep = Exclude<BathStep, 'done'>
 
 const TOOLS: readonly { step: ToolStep; icon: string; emoji: string; label: string; sound: SoundName; pose: Pose }[] = [
   { step: 'soap', icon: 'ui-play-sponge', emoji: '🧽', label: '海綿', sound: 'pop', pose: 'laugh' },
-  { step: 'rinse', icon: 'ui-play-shower', emoji: '🚿', label: '蓮蓬頭', sound: 'drop', pose: 'sing' },
+  { step: 'rinse', icon: 'ui-play-shower', emoji: '🚿', label: '蓮蓬頭', sound: 'splash', pose: 'sing' },
   { step: 'dry', icon: 'ui-play-towel', emoji: '🧣', label: '毛巾', sound: 'whoosh', pose: 'shy' },
 ]
 
@@ -34,6 +53,11 @@ const HINT_IDLE_MS = 5000
 const HINT_FIRST_MS = 900
 /** 洗好後等寵物說完「香香的」才送禮物，不然兩句台詞會互相打斷 */
 const GIFT_DELAY_MS = 2400
+/** v8.5 沐浴球嘶嘶冒泡多久（到了由計時器拿掉，不靠 animationend） */
+const FIZZ_MS = 1900
+const FIZZ_BUBBLES = 18
+/** 手指動超過這麼多才算拖，不然算點一下 */
+const TAP_SLOP = 14
 
 /** 同一個格子每次都長一樣的泡泡（不用亂數，重畫才不會跳） */
 const jitter = (i: number, salt = 0) => {
@@ -76,6 +100,110 @@ const Sparkles = memo(function Sparkles() {
         <i key={i} className="pg-bath-sparkle" style={{ left: `${8 + jitter(i, 11) * 84}%`, top: `${6 + jitter(i, 23) * 88}%`, animationDelay: `${jitter(i, 31) * 1.2}s`, width: `${6 + jitter(i, 41) * 8}%`, height: `${6 + jitter(i, 41) * 8}%` }} />
       ))}
     </div>
+  )
+})
+
+type Blob = readonly [cx: number, cy: number, rx: number, ry: number]
+/** v8.5 泡泡造型：一顆一顆泡泡疊出來的形狀（viewBox 120×104，底部貼著頭頂） */
+const HAT_BASE: readonly Blob[] = [
+  [20, 84, 14, 14],
+  [38, 86, 16, 16],
+  [60, 87, 17, 16],
+  [82, 86, 16, 16],
+  [100, 84, 14, 14],
+]
+const HAT_SHAPES: Record<FoamHat, readonly Blob[]> = {
+  puff: [
+    [60, 56, 27, 25],
+    [38, 66, 18, 17],
+    [82, 66, 18, 17],
+    [54, 36, 15, 14],
+    [74, 42, 12, 11],
+  ],
+  spike: [
+    [60, 64, 22, 20],
+    [60, 46, 16, 15],
+    [62, 31, 11.5, 11],
+    [65, 19, 8, 7.5],
+    [68, 10, 5, 5],
+  ],
+  bunny: [
+    [41, 40, 11.5, 33],
+    [79, 40, 11.5, 33],
+    [60, 70, 22, 15],
+  ],
+  crown: [
+    [27, 66, 13, 13],
+    [25, 48, 9, 9],
+    [23, 35, 6, 6],
+    [60, 62, 15, 15],
+    [60, 41, 10.5, 10.5],
+    [60, 25, 7, 7],
+    [93, 66, 13, 13],
+    [95, 48, 9, 9],
+    [97, 35, 6, 6],
+    [43, 72, 11, 11],
+    [77, 72, 11, 11],
+  ],
+}
+
+/** 頭上那坨泡泡。顏色跟身上的泡泡一樣（丟了沐浴球就跟著變色） */
+const FoamHatShape = memo(function FoamHatShape({ hat }: { hat: FoamHat }) {
+  const blobs = [...HAT_SHAPES[hat], ...HAT_BASE]
+  return (
+    <svg viewBox="0 0 120 104" width="100%" height="100%" aria-hidden>
+      <defs>
+        {/* 跟身上的泡泡同一種光澤：左上亮、邊緣帶顏色 */}
+        <radialGradient id="pg-bath-hat-g" cx="36%" cy="30%" r="78%">
+          <stop offset="0.12" className="pg-bath-hat-s0" />
+          <stop offset="0.62" className="pg-bath-hat-s1" />
+          <stop offset="1" className="pg-bath-hat-s2" />
+        </radialGradient>
+      </defs>
+      <g className="pg-bath-hat-line">
+        {blobs.map(([cx, cy, rx, ry], i) => (
+          <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} />
+        ))}
+      </g>
+      <g className="pg-bath-hat-fill">
+        {blobs.map(([cx, cy, rx, ry], i) => (
+          <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} />
+        ))}
+      </g>
+      <g className="pg-bath-hat-gloss">
+        {blobs.map(([cx, cy, rx, ry], i) => (
+          <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#pg-bath-hat-g)" />
+        ))}
+      </g>
+      <g className="pg-bath-hat-shine">
+        {blobs.map(([cx, cy, rx, ry], i) => (
+          <ellipse key={i} cx={cx - rx * 0.36} cy={cy - ry * 0.42} rx={rx * 0.22} ry={ry * 0.15} />
+        ))}
+      </g>
+    </svg>
+  )
+})
+
+/** 沐浴球冒的泡泡：每顆固定的位置與大小（不用亂數，重畫才不會跳） */
+const Fizz = memo(function Fizz() {
+  return (
+    <>
+      {Array.from({ length: FIZZ_BUBBLES }, (_, i) => (
+        <i
+          key={i}
+          style={
+            {
+              left: `${(jitter(i, 51) - 0.5) * 200}px`,
+              top: `${(jitter(i, 57) - 0.5) * 50}px`,
+              width: `${16 + jitter(i, 61) * 30}px`,
+              height: `${16 + jitter(i, 61) * 30}px`,
+              animationDelay: `${jitter(i, 67) * 0.9}s`,
+              '--rise': `${-(90 + jitter(i, 71) * 150)}px`,
+            } as CSSProperties
+          }
+        />
+      ))}
+    </>
   )
 })
 
@@ -140,6 +268,17 @@ interface ToolDrag {
   last: BathPoint | null
 }
 
+interface BombDrag {
+  id: number
+  bomb: BathBombId
+  el: HTMLElement
+  homeX: number
+  homeY: number
+  startX: number
+  startY: number
+  moved: boolean
+}
+
 interface DuckDrag {
   id: number
   startX: number
@@ -147,13 +286,34 @@ interface DuckDrag {
   moved: boolean
 }
 
-function BathPlay({ finish, say }: GameProps) {
+function BathPlay({ finish, say: rawSay, toys }: GameProps) {
   const { ageBand } = useLearnerProfile()
   const tuning = bathTuning(ageBand)
   const [bath, setBath] = useState<BathState>(newBath)
   const [holding, setHolding] = useState<ToolStep | null>(null)
   const [hint, setHint] = useState<CSSProperties | null>(null)
+  // v8.5 沐浴球：丟進去的那顆的顏色（這一回都是這個顏色，再丟一顆就換）；用掉的這一回不再出現
+  const [tint, setTint] = useState<BathBombId | null>(null)
+  const [usedBombs, setUsedBombs] = useState<readonly BathBombId[]>([])
+  const [fizz, setFizz] = useState<{ key: number; x: number; y: number } | null>(null)
+  const bombDrag = useRef<BombDrag | null>(null)
+  const bombSaid = useRef(false)
+  const fizzTimer = useRef<number | undefined>(undefined)
+  // v8.5 泡泡造型：抹滿後頭上的那坨泡泡；沖到就沒了
+  const [hat, setHat] = useState<FoamHat | null>(null)
+  const hatRef = useRef<FoamHat | null>(null)
+  const hatEl = useRef<HTMLButtonElement>(null)
+  const hatTap = useRef<{ id: number; x: number; y: number; moved: boolean } | null>(null)
+  const putHat = (h: FoamHat | null) => {
+    hatRef.current = h
+    setHat(h)
+  }
   const rootRef = useRef<HTMLDivElement>(null)
+  /** 寵物說一句，同時記在 data-said（語音還沒錄的台詞，e2e 也驗得到有沒有說） */
+  const say = (key: string) => {
+    trackSaid(rootRef.current, key)
+    rawSay(key)
+  }
   const petRef = useRef<HTMLDivElement>(null)
   const slotRefs = useRef<Partial<Record<ToolStep, HTMLDivElement | null>>>({})
   const duckRef = useRef<HTMLButtonElement>(null)
@@ -180,7 +340,13 @@ function BathPlay({ finish, say }: GameProps) {
   useEffect(() => {
     flushRef.current = flushGift
   })
-  useEffect(() => () => flushRef.current(), [])
+  useEffect(
+    () => () => {
+      flushRef.current()
+      window.clearTimeout(fizzTimer.current)
+    },
+    [],
+  )
 
   // 手勢提示：換步驟或放開工具後開始算，一直沒動作才再出現；拿著工具時不打擾
   const step = bath.step
@@ -225,8 +391,11 @@ function BathPlay({ finish, say }: GameProps) {
 
   const afterAdvance = (next: BathStep) => {
     releaseTool()
-    playSound('sparkle')
+    playTracked(rootRef.current, 'sparkle')
     if (next !== 'soap') say(NEXT_LINE[next])
+    // v8.5 泡泡抹滿了：頭上多一坨可以捏造型的泡泡；沖完水一定沒了
+    if (next === 'rinse' && toys >= 2) putHat('puff')
+    else if (next !== 'rinse') putHat(null)
     if (next === 'done') {
       giftPending.current = true
       giftTimer.current = window.setTimeout(flushGift, GIFT_DELAY_MS)
@@ -239,15 +408,21 @@ function BathPlay({ finish, say }: GameProps) {
     const ty = y - LIFT
     d.el.style.transform = `translate(${x - d.homeX}px, ${ty - d.homeY}px) scale(1.08)`
     const to = { x: (x - d.pet.left) / d.pet.width, y: (ty - d.pet.top) / d.pet.height }
-    const r = bathStroke(bathRef.current, d.last ?? to, to, tuning)
+    const from = d.last ?? to
+    const r = bathStroke(bathRef.current, from, to, tuning)
     d.last = to
+    const now = performance.now()
+    if (d.tool.step === 'rinse' && hatRef.current && rinseHitsHat(from, to, tuning)) {
+      putHat(null)
+      lastSfx.current = now
+      playTracked(rootRef.current, 'splash')
+    }
     if (r.state === bathRef.current) return
     bathRef.current = r.state
     setBath(r.state)
-    const now = performance.now()
     if (r.changed > 0 && now - lastSfx.current >= SFX_GAP_MS) {
       lastSfx.current = now
-      playSound(d.tool.sound)
+      playTracked(rootRef.current, d.tool.sound)
     }
     if (r.advanced) afterAdvance(r.state.step)
   }
@@ -269,6 +444,57 @@ function BathPlay({ finish, say }: GameProps) {
     setHolding(s)
     moveTool(e.clientX, e.clientY)
   }
+  /** 沐浴球丟進去了：水和泡泡變成它的顏色，嘶嘶冒泡 */
+  const dropBomb = (bomb: BathBombId, x: number, y: number) => {
+    const box = rootRef.current?.getBoundingClientRect()
+    setTint(bomb)
+    setUsedBombs((u) => (u.includes(bomb) ? u : [...u, bomb]))
+    if (box) setFizz((f) => ({ key: (f?.key ?? 0) + 1, x: x - box.left, y: y - box.top }))
+    window.clearTimeout(fizzTimer.current)
+    fizzTimer.current = window.setTimeout(() => setFizz(null), FIZZ_MS)
+    playTracked(rootRef.current, 'splash')
+    // 台詞一回說一次：連丟三顆不會念三次
+    if (!bombSaid.current) {
+      bombSaid.current = true
+      say('pet.play.bath.bomb')
+    }
+  }
+  const grabBomb = (e: ReactPointerEvent<HTMLButtonElement>, bomb: BathBombId) => {
+    if (bombDrag.current) return
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId)
+    } catch {
+      /* 指標已經放開 */
+    }
+    const el = e.currentTarget
+    const home = el.getBoundingClientRect()
+    bombDrag.current = { id: e.pointerId, bomb, el, homeX: home.left + home.width / 2, homeY: home.top + home.height / 2, startX: e.clientX, startY: e.clientY, moved: false }
+    el.classList.add('held')
+  }
+  const moveBomb = (d: BombDrag, x: number, y: number) => {
+    if (Math.hypot(x - d.startX, y - d.startY) > TAP_SLOP) d.moved = true
+    if (d.moved) d.el.style.transform = `translate(${x - d.homeX}px, ${y - LIFT - d.homeY}px) scale(1.12)`
+  }
+  const endBomb = (d: BombDrag, x: number, y: number, cancelled: boolean) => {
+    bombDrag.current = null
+    d.el.classList.remove('held')
+    d.el.style.transform = ''
+    const pet = petRef.current?.getBoundingClientRect()
+    if (cancelled || !pet) return
+    // 點一下也算（3 歲還不太會拖）：直接掉到寵物腳邊。拖的要放在洗澡的地方，放太遠就回托盤
+    if (!d.moved) dropBomb(d.bomb, pet.left + pet.width / 2, pet.top + pet.height * 0.88)
+    else if (bombInBath({ x: (x - pet.left) / pet.width, y: (y - LIFT - pet.top) / pet.height })) dropBomb(d.bomb, x, y - LIFT)
+  }
+
+  /** 換一個泡泡造型 */
+  const squishHat = () => {
+    const h = hatRef.current
+    if (!h) return
+    putHat(nextFoamHat(h))
+    playTracked(rootRef.current, 'boing')
+    if (!reducedMotion()) hatEl.current?.animate?.([{ transform: 'scale(1.18, 0.7)' }, { transform: 'scale(0.92, 1.12)' }, { transform: 'scale(1)' }], { duration: 320, easing: 'ease-out' })
+  }
+
   const grabDuck = (e: ReactPointerEvent<HTMLButtonElement>) => {
     if (duckDrag.current) return
     try {
@@ -302,12 +528,25 @@ function BathPlay({ finish, say }: GameProps) {
   }
 
   const onMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    // 從頭上的泡泡開始抹：手指一拖開就當成拿蓮蓬頭沖水（不是換造型）
+    const tap = hatTap.current
+    if (tap?.id === e.pointerId && !tap.moved && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > TAP_SLOP) {
+      tap.moved = true
+      grabTool(e, 'rinse')
+    }
     if (toolDrag.current?.id === e.pointerId) moveTool(e.clientX, e.clientY)
     if (duckDrag.current?.id === e.pointerId) moveDuck(duckDrag.current, e.clientX, e.clientY)
+    if (bombDrag.current?.id === e.pointerId) moveBomb(bombDrag.current, e.clientX, e.clientY)
   }
   const onEnd = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (toolDrag.current?.id === e.pointerId) releaseTool()
     if (duckDrag.current?.id === e.pointerId) dropDuck(duckDrag.current, e.type === 'pointercancel')
+    if (bombDrag.current?.id === e.pointerId) endBomb(bombDrag.current, e.clientX, e.clientY, e.type === 'pointercancel')
+    const tap = hatTap.current
+    if (tap?.id === e.pointerId) {
+      hatTap.current = null
+      if (!tap.moved && e.type !== 'pointercancel') squishHat()
+    }
   }
 
   const again = () => {
@@ -315,6 +554,11 @@ function BathPlay({ finish, say }: GameProps) {
     const fresh = newBath()
     bathRef.current = fresh
     setBath(fresh)
+    // 新的一回：水變回原本的顏色，沐浴球都回來
+    setTint(null)
+    setUsedBombs([])
+    bombSaid.current = false
+    putHat(null)
     say('pet.play.bath.intro')
   }
 
@@ -324,12 +568,70 @@ function BathPlay({ finish, say }: GameProps) {
   const activeIdx = TOOLS.findIndex((t) => t.step === step)
 
   return (
-    <div ref={rootRef} className={`pg-bath ${done ? 'is-done' : ''}`} data-testid="bath" data-step={step} data-progress={bathProgress(bath).toFixed(2)} onPointerMove={onMove} onPointerUp={onEnd} onPointerCancel={onEnd}>
+    <div
+      ref={rootRef}
+      className={`pg-bath ${done ? 'is-done' : ''}`}
+      data-testid="bath"
+      data-step={step}
+      data-progress={bathProgress(bath).toFixed(2)}
+      data-tint={tint ?? undefined}
+      data-hat={hat ?? undefined}
+      onPointerMove={onMove}
+      onPointerUp={onEnd}
+      onPointerCancel={onEnd}
+    >
       <div ref={petRef} className="pg-bath-pet" data-testid="bath-pet" onPointerDown={(e) => !done && grabTool(e, step as ToolStep)}>
+        {tint && !done && <span key={tint} className="pg-bath-puddle" data-testid="bath-puddle" aria-hidden />}
         <Companion pose={pose} size="100%" className="pg-bath-companion" />
         <Foam soap={bath.soap} soaped={bath.soaped} wet={bath.wet} />
+        {toys >= 2 && step === 'rinse' && (
+          // 沖掉之後按鈕還留在畫面裡（只是看不到、碰不到）：手指從它身上開始拖去沖水時，事件才不會跟著元素一起不見
+          <button
+            ref={hatEl}
+            type="button"
+            className={`pg-bath-hat ${hat ? '' : 'gone'}`}
+            data-testid="bath-hat"
+            data-hat={hat ?? 'none'}
+            data-no-tap
+            aria-label="泡泡造型，點一下換一個"
+            aria-hidden={!hat}
+            tabIndex={hat ? 0 : -1}
+            onPointerDown={(e) => {
+              // 不讓寵物那一層把它當成「開始沖水」；是點還是拖，等手指動了才知道
+              e.stopPropagation()
+              hatTap.current = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: false }
+            }}
+            onClick={(e) => {
+              // 鍵盤（Enter / 空白鍵）沒有 pointer 事件
+              if (e.detail === 0) squishHat()
+            }}
+          >
+            {hat && <FoamHatShape hat={hat} />}
+          </button>
+        )}
         {done && <Sparkles />}
       </div>
+
+      {toys >= 1 && !done && (
+        <div className="pg-bath-bombs" data-testid="bath-bombs">
+          {BATH_BOMBS.map((b) => (
+            <div key={b.id} className={`pg-bath-bomb-slot ${b.id}`}>
+              {!usedBombs.includes(b.id) && (
+                <button type="button" className="pg-bath-bomb" data-testid={`bath-bomb-${b.id}`} data-no-tap aria-label={`${b.label}沐浴球`} style={{ '--hue': `${b.hue}deg` } as CSSProperties} onPointerDown={(e) => grabBomb(e, b.id)}>
+                  <span className="pg-bath-bomb-pic">
+                    <Icon name="ui-bath-bomb" emoji="🔮" size="100%" alt="" />
+                  </span>
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {fizz && (
+        <div key={fizz.key} className="pg-bath-fizz" style={{ left: fizz.x, top: fizz.y }} data-testid="bath-fizz" aria-hidden>
+          <Fizz />
+        </div>
+      )}
 
       <button ref={duckRef} className="pg-bath-duck" data-testid="bath-duck" aria-label="小鴨" data-no-tap onPointerDown={grabDuck}>
         <Icon name="ui-play-duck" emoji="🦆" size="100%" alt="" />

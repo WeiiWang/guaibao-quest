@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
 import { FOOD_EMOJI } from '../../../art/items'
 import { repo } from '../../../db/repo'
-import { playSound } from '../../../learning/audioEngine'
-import { CATCH_TUNE, catchAtRim, catchClampBasket, catchEndLine, catchFall, catchHit, catchMagnetX, catchPlan } from '../../../domain/playU'
+import { CATCH_TUNE, catchAtRim, catchClampBasket, catchEndLine, catchFall, catchHit, catchMagnetX, catchPlan, catchRainPlan, catchRainTune, type CatchDrop } from '../../../domain/playU'
 import type { AgeBand } from '../../../domain/types'
 import { Icon } from '../../components/Icon'
 import { Companion, type Pose } from '../adventure/Companion'
 import type { GameRootProps } from './GameScreen'
 import { GameShell, type GameProps } from './GameShell'
-import { AgainButton, HandHint, petHop, reducedMotion, useBand, useFinishLater, useTrackedSay } from './playU'
+import { AgainButton, HandHint, petHop, playTracked, reducedMotion, useBand, useFinishLater, useTrackedSay } from './playU'
 import './playU.css'
 import './catch.css'
 
@@ -24,25 +23,44 @@ const WATCHDOG_MS = 100
 const PILE_MAX = 6
 /** 寵物開心的姿勢維持多久 */
 const CHEER_MS = 800
+/** v8.5 接到金色水果，畫面亮多久 */
+const FLASH_MS = 650
+
+/** v8.5 新水果的圖在 obj-*（原本的水果在 food-*） */
+const MORE_ART: Record<string, { name: string; emoji: string }> = {
+  strawberry: { name: 'obj-strawberry', emoji: '🍓' },
+  orange: { name: 'obj-orange', emoji: '🍊' },
+}
 
 function Fruit({ id, size = '100%' }: { id: string; size?: string }) {
-  return <Icon name={`food-${id}`} emoji={FOOD_EMOJI[id]} alt="" size={size} />
+  const more = MORE_ART[id]
+  return <Icon name={more ? more.name : `food-${id}`} emoji={more ? more.emoji : FOOD_EMOJI[id]} alt="" size={size} />
 }
 
 interface EndResult {
   caught: string[]
+  /** v8.5 水果雨接到的（不算紀錄） */
+  bonus: string[]
   broke: boolean
   best: number
 }
 
-function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: AgeBand; onAgain: () => void }) {
+type RainState = 'no' | 'wait' | 'falling' | 'done'
+
+function CatchRound({ band, finish, say: rawSay, toys, onAgain }: GameProps & { band: AgeBand; onAgain: () => void }) {
   const { rootRef, say } = useTrackedSay(rawSay)
   const finishLater = useFinishLater(finish)
   const tune = CATCH_TUNE[band]
   // 一回一張表：只決定掉哪裡，跟獎勵無關
   const [seed] = useState(() => Date.now() % 1000000)
-  const plan = useMemo(() => catchPlan(band, seed), [band, seed])
+  // v8.5 新玩具在這一回開始時就定下來：玩到一半收下新玩具卡，正在掉的水果不會變
+  const [level] = useState(toys)
+  const plan = useMemo(() => catchPlan(band, seed, level), [band, seed, level])
+  const rainPlan = useMemo(() => (level >= 2 ? catchRainPlan(seed) : []), [level, seed])
   const [caught, setCaught] = useState<string[]>([])
+  const [bonus, setBonus] = useState<string[]>([])
+  const [rain, setRain] = useState<RainState>(level >= 2 ? 'wait' : 'no')
+  const [flash, setFlash] = useState(0)
   const [missed, setMissed] = useState(0)
   const [end, setEnd] = useState<EndResult | null>(null)
   const [touched, setTouched] = useState(false)
@@ -53,6 +71,10 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
   // 籃子中心（0–1）：手指只改這個數字，下一步才畫，一幀裡手指動很多次也只畫一次
   const basketX = useRef(0.5)
   const drag = useRef<{ id: number; offset: number } | null>(null)
+  const finishRef = useRef(finish)
+  useEffect(() => {
+    finishRef.current = finish
+  }, [finish])
 
   useEffect(() => {
     const root = rootRef.current
@@ -64,9 +86,20 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
     let over = false
     let alive = true
     let cheerT = 0
+    let flashT = 0
     const caughtIds: string[] = []
+    const bonusIds: string[] = []
     const reduce = reducedMotion()
-    const fruits = plan.map((drop) => ({ drop, state: 'wait' as 'wait' | 'fall' | 'roll' | 'gone', rollFrom: 0, y: -Infinity, x: drop.x, dir: 1 }))
+    const make = (drop: CatchDrop) => ({ drop, state: 'wait' as 'wait' | 'fall' | 'roll' | 'gone', rollFrom: 0, y: -Infinity, x: drop.x, dir: 1 })
+    let fruits = plan.map(make)
+    // v8.5 水果雨：主回合掉完才開始；時間從那一刻重新算
+    let raining = false
+    let t0 = 0
+    let fallTune = tune
+    let goldSaid = false
+    /** 主回合玩完了、禮物還沒送（水果雨還在下，或正在寫紀錄）：這時候離開，禮物照送 */
+    let owed = false
+    let best: Promise<{ prev: number; broke: boolean }> | null = null
 
     const place = () => {
       const W = root.clientWidth
@@ -84,21 +117,43 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
       window.clearInterval(watchdog)
     }
 
+    /** 個人紀錄只看主回合的 15 顆，主回合一掉完就記（水果雨接到的不算） */
+    const recordBest = () =>
+      (best ??= (async () => {
+        const prev = (await repo.getSettings())?.playBest?.catch ?? 0
+        const broke = await repo.recordPlayBest('catch', caughtIds.length)
+        return { prev, broke }
+      })())
+
     const finishRound = () => {
       over = true
+      owed = true
       stop()
       const n = caughtIds.length
       void (async () => {
-        const prev = (await repo.getSettings())?.playBest?.catch ?? 0
-        const broke = await repo.recordPlayBest('catch', n)
+        const { prev, broke } = await recordBest()
         if (!alive) return
-        setEnd({ caught: [...caughtIds], broke, best: Math.max(prev, n) })
+        owed = false
+        if (raining) setRain('done')
+        setEnd({ caught: [...caughtIds], bonus: [...bonusIds], broke, best: Math.max(prev, n) })
         const line = catchEndLine(n, broke)
         if (line) say(line)
         setPose('cheer')
-        playSound('sparkle')
+        playTracked(root, 'sparkle')
         finishLater()
       })()
+    }
+
+    const startRain = () => {
+      raining = true
+      owed = true
+      void recordBest()
+      t0 = simT
+      fallTune = catchRainTune(band)
+      fruits = rainPlan.map(make)
+      setRain('falling')
+      say('pet.play.catch.rain')
+      playTracked(root, 'whoosh')
     }
 
     const step = () => {
@@ -121,25 +176,42 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
         const el = fruitEls.current.get(f.drop.i)
         if (!el) continue
         if (f.state === 'wait') {
-          if (simT < f.drop.at) continue
+          if (simT - t0 < f.drop.at) continue
           f.state = 'fall'
           el.style.display = 'block'
         }
         if (f.state === 'fall') {
-          const fall = catchFall(simT, f.drop, tune)
+          const fall = catchFall(simT - t0, f.drop, fallTune)
           const y = -size + (groundY + size) * fall
           const prevY = f.y
           f.y = y
-          f.x = catchMagnetX(f.drop.x, basketX.current, fall, tune)
-          const spin = reduce ? 0 : (simT - f.drop.at) * 0.05 * (f.drop.i % 2 ? 1 : -1)
+          f.x = catchMagnetX(f.drop.x, basketX.current, fall, fallTune)
+          const spin = reduce ? 0 : (simT - t0 - f.drop.at) * 0.05 * (f.drop.i % 2 ? 1 : -1)
           el.style.transform = `translate3d(${f.x * W - size / 2}px, ${y - size / 2}px, 0) rotate(${spin}deg)`
           // 水果在籃口這一段高度裡碰到籃子就算接到（從側邊撈也算）；掉到籃子下面就來不及了
           if (catchAtRim(prevY, y, rimY, rimBottom) && catchHit(f.x, basketX.current, halfHit)) {
             f.state = 'gone'
             el.style.display = 'none'
-            caughtIds.push(f.drop.foodId)
-            setCaught([...caughtIds])
-            playSound('drop')
+            if (raining) {
+              bonusIds.push(f.drop.foodId)
+              setBonus([...bonusIds])
+            } else {
+              caughtIds.push(f.drop.foodId)
+              setCaught([...caughtIds])
+            }
+            playTracked(root, 'drop')
+            if (f.drop.gold) {
+              root.dataset.gold = String(Number(root.dataset.gold ?? 0) + 1)
+              // 金色的：畫面亮一下。一樣只算一顆；台詞一回說一次就好
+              playTracked(root, 'sparkle')
+              setFlash((n) => n + 1)
+              window.clearTimeout(flashT)
+              flashT = window.setTimeout(() => setFlash(0), FLASH_MS)
+              if (!goldSaid) {
+                goldSaid = true
+                say('pet.play.catch.gold')
+              }
+            }
             petHop(petRef.current)
             setPose('cheer')
             window.clearTimeout(cheerT)
@@ -148,7 +220,9 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
             f.state = 'roll'
             f.rollFrom = simT
             f.dir = f.x < 0.5 ? -1 : 1
-            setMissed((m) => m + 1)
+            if (!raining) setMissed((m) => m + 1)
+            // 沒接到：彈一下滾走（不是扣分的聲音）
+            playTracked(root, 'boing')
           }
         } else if (f.state === 'roll') {
           const p = (simT - f.rollFrom) / ROLL_MS
@@ -163,7 +237,9 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
           }
         }
       }
-      if (remaining === 0) finishRound()
+      if (remaining > 0) return
+      if (!raining && rainPlan.length > 0) startRain()
+      else finishRound()
     }
 
     const loop = () => {
@@ -179,8 +255,13 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
       alive = false
       stop()
       window.clearTimeout(cheerT)
+      window.clearTimeout(flashT)
+      if (owed) {
+        owed = false
+        finishRef.current()
+      }
     }
-  }, [finishLater, plan, rootRef, say, tune])
+  }, [band, finishLater, plan, rainPlan, rootRef, say, tune])
 
   const moveTo = useCallback(
     (clientX: number, offset: number) => {
@@ -220,6 +301,8 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
     if (drag.current?.id === e.pointerId) drag.current = null
   }, [])
 
+  // 籃子裡看得到的：主回合接到的加上水果雨接到的
+  const inBasket = bonus.length ? [...caught, ...bonus] : caught
   const basketVars = { '--pg-catch-w': `max(${tune.basketMinPx}px, ${tune.basketVmin}vmin)` } as CSSProperties
 
   return (
@@ -231,6 +314,8 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
       data-caught={caught.length}
       data-missed={missed}
       data-ended={end ? 'true' : 'false'}
+      data-rain={rain}
+      data-bonus={bonus.length}
       onPointerDown={end ? undefined : onPointerDown}
       onPointerMove={end ? undefined : onPointerMove}
       onPointerUp={onPointerEnd}
@@ -241,11 +326,13 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
         <Companion pose={pose} size="100%" />
       </span>
       {!end &&
-        plan.map((d) => (
+        [...plan, ...rainPlan].map((d) => (
           <div
             key={d.i}
-            className="pg-catch-fruit"
-            data-testid="catch-fruit"
+            className={`pg-catch-fruit ${d.gold ? 'gold' : ''}`}
+            data-testid={d.i < plan.length ? 'catch-fruit' : 'catch-rain-fruit'}
+            data-food={d.foodId}
+            data-gold={d.gold || undefined}
             ref={(el) => {
               if (el) fruitEls.current.set(d.i, el)
               else fruitEls.current.delete(d.i)
@@ -256,8 +343,8 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
         ))}
       <div ref={basketRef} className="pg-catch-basket" data-testid="catch-basket" hidden={!!end}>
         <span className="pg-catch-pile" aria-hidden>
-          {caught.slice(-PILE_MAX).map((id, i) => (
-            <span key={`${id}-${i + Math.max(0, caught.length - PILE_MAX)}`} className="pg-catch-pile-one" style={{ '--i': i, '--up': i % 2 } as CSSProperties}>
+          {inBasket.slice(-PILE_MAX).map((id, i) => (
+            <span key={`${id}-${i + Math.max(0, inBasket.length - PILE_MAX)}`} className="pg-catch-pile-one" style={{ '--i': i, '--up': i % 2 } as CSSProperties}>
               <Fruit id={id} />
             </span>
           ))}
@@ -268,15 +355,16 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
       {!end && (
         <div className="pg-catch-count" aria-hidden data-testid="catch-count">
           <Fruit id="apple" size="1.3em" />
-          <b>{caught.length}</b>
+          <b>{inBasket.length}</b>
         </div>
       )}
+      {flash > 0 && <div key={flash} className="pg-catch-flash" data-testid="catch-flash" aria-hidden />}
       {end && (
         <div className="pg-catch-end" data-testid="catch-end" data-caught={end.caught.length} data-broke={end.broke}>
           <div className="pg-catch-end-card">
             <div className="pg-catch-end-pile" data-count={end.caught.length}>
               <div className="pg-catch-end-fruits">
-                {end.caught.map((id, i) => (
+                {[...end.caught, ...end.bonus].map((id, i) => (
                   <span key={i}>
                     <Fruit id={id} />
                   </span>
@@ -289,6 +377,11 @@ function CatchRound({ band, finish, say: rawSay, onAgain }: GameProps & { band: 
             <div className="pg-catch-end-num" aria-label={`接到 ${end.caught.length} 顆`}>
               <Fruit id="apple" size="0.7em" />
               <b data-testid="catch-end-num">{end.caught.length}</b>
+              {end.bonus.length > 0 && (
+                <span className="pg-catch-bonus" data-testid="catch-bonus" aria-label={`水果雨多接到 ${end.bonus.length} 顆`}>
+                  +{end.bonus.length}
+                </span>
+              )}
             </div>
             {end.broke && (
               <div className="pg-catch-more" data-testid="catch-more">

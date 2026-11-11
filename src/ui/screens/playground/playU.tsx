@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
+import { playSound, type PlayOptions, type SoundName } from '../../../learning/audioEngine'
 import { useLearnerProfile } from '../../learningHooks'
 import type { AgeBand } from '../../../domain/types'
 
@@ -17,6 +18,11 @@ export const reducedMotion = (): boolean => {
   }
 }
 
+/** 把寵物說的台詞 key 記在玩法根元素的 data-said（最多留 40 個） */
+export function trackSaid(root: HTMLElement | null, key: string): void {
+  if (root) root.dataset.said = [...(root.dataset.said ? root.dataset.said.split(' ') : []), key].slice(-40).join(' ')
+}
+
 /**
  * 寵物說話，同時把 key 記在玩法根元素的 data-said：
  * 語音還在錄（沒錄的安靜），e2e 也驗得到「該說的有說、不該一直說的沒一直說」。
@@ -29,11 +35,19 @@ export function useTrackedSay(say: (key: string) => void) {
   }, [say])
   // 回傳的函式永遠是同一個：語音設定載入時不會讓玩法的循環重新開始
   const track = useCallback((key: string) => {
-    const el = rootRef.current
-    if (el) el.dataset.said = [...(el.dataset.said ? el.dataset.said.split(' ') : []), key].slice(-40).join(' ')
+    trackSaid(rootRef.current, key)
     latest.current(key)
   }, [])
   return { rootRef, say: track }
+}
+
+/**
+ * v8.5 播音效，同時把名字記在玩法根元素的 data-sfx（跟 data-said 一樣的用意）：
+ * 新音效（boing、splash、squeak…）檔案還沒到時不會出聲，e2e 驗的是「該響的地方有叫到」。
+ */
+export function playTracked(root: HTMLElement | null, name: SoundName, opts?: PlayOptions): void {
+  if (root) root.dataset.sfx = [...(root.dataset.sfx ? root.dataset.sfx.split(' ') : []), name].slice(-40).join(' ')
+  playSound(name, opts)
 }
 
 /** 說完「玩完了」再送禮物，不然禮物的台詞會把它打斷。孩子這時候離開，禮物照送（已經玩完了，不能損失） */
