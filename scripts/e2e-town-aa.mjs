@@ -3,12 +3,15 @@
 // 紅燈與斑馬線真的停得住、3 歲按著自己開、4–5 歲繞一圈載完乘客、6–7 歲選岔路送到房子、喇叭；
 // 照相館選佈景、拖寵物 / 換姿勢 / 換大小、拖帽子與貼紙、倒數與「現在拍」、canvas 合成 JPEG 存進畫廊、掛到房間、
 // 不算畫框幅數、滿 30 張不存、禮物、離開後計時器清乾淨。
+// v8.5 新玩具（有、沒有兩種狀態都測；次數用 patchSettings({ playCount }) 設定）：
+//   開車：車庫換車（消防車的警笛、冰淇淋車的小旋律）、洗車站（停一下刷一刷、亮晶晶，紅綠燈／斑馬線／乘客照常，3 歲按著也過得去）；
+//   照相：動物朋友（拖進來、移動、換大小、拍進照片）、相框與色調（真的存進照片的像素）。
 // 用法：先啟動 dev server（pnpm exec vite --port 5204 --strictPort），再
 //   BASE_URL=http://localhost:5204 node scripts/e2e-town-aa.mjs      （或 pnpm e2e:town-aa；E2E_BROWSER=webkit 改用 WebKit）
 //   想存截圖：SHOT_DIR=<資料夾>（不要放 repo 裡）；只跑某一段：E2E_ONLY=drive-lap
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { freshApp, idb, IS_WEBKIT, launch, makeChecker, touchSender } from './e2e-lib.mjs'
-import { CROSS_BLOCK, LIGHT_BLOCK, LOOP_LEN, SPURS, loopAt, spurAt, viewSize } from '../src/domain/drive.ts'
+import { CROSS_BLOCK, LIGHT_BLOCK, LOOP_LEN, SPURS, WASH_S, loopAt, spurAt, viewSize } from '../src/domain/drive.ts'
 
 const { state, check } = makeChecker()
 const SIZES = { land: { width: 1180, height: 820 }, port: { width: 820, height: 1180 }, phone: { width: 390, height: 844 } }
@@ -135,21 +138,39 @@ const offRoad = (w) => {
   return best
 }
 
-async function driveLayout(b, name, vp, band) {
+async function driveLayout(b, name, vp, band, toys = 0) {
   const { page, errors } = await freshApp(b, vp, TOUCH)
-  const tag = `開車[${name} ${band}]`
+  const tag = `開車[${name} ${band}${toys ? ` 新玩具${toys}` : ''}]`
+  if (toys) await patchSettings(page, { playCount: { drive: toys >= 2 ? 3 : 1 } })
   await enter(page, 'drive', band)
+  check(`${tag} 車庫按鈕：${toys >= 1 ? '有' : '沒有'}`, (await page.getByTestId('drive-garage').count()) === (toys >= 1 ? 1 : 0))
+  check(`${tag} 洗車站：${toys >= 2 ? '有' : '沒有'}`, (await page.getByTestId('drive-wash').count()) === (toys >= 2 ? 1 : 0) && (await page.getByTestId('drive-wash-bay').count()) === (toys >= 2 ? 1 : 0))
+  check(`${tag} 一開始是小紅車`, (await ds(page, 'drive')).car === 'red')
   check(`${tag} 有路面`, (await page.locator('[data-testid=drive-road] path').count()) >= 4)
   check(`${tag} 房子數量（6–7 歲才有岔路與三棟房子）`, (await page.locator('[data-testid^=drive-house-]').count()) === (band === '6-7' ? 3 : 0))
-  const inside = await allInside(page, '[data-testid=drive-map], .drive-sprite, [data-testid=drive-horn]')
+  const inside = await allInside(page, '[data-testid=drive-map], .drive-sprite, [data-testid=drive-horn], [data-testid=drive-garage]')
   check(`${tag} 路、車、房子、紅綠燈、喇叭都在畫面內`, inside.length === 0, inside.join())
   check(`${tag} 不橫向溢出`, await noOverflow(page))
   const small = await smallTargets(page, 'drive')
   check(`${tag} 觸控目標 ≥ 56`, small.length === 0, small.join())
-  const petHit = await overlaps(page, '[data-testid=drive-pet] .companion', '[data-testid=drive-car], [data-testid^=drive-house-], [data-testid=drive-light], [data-testid=drive-stop], [data-testid=drive-rider], [data-testid=drive-horn]')
+  const petHit = await overlaps(page, '[data-testid=drive-pet] .companion', '[data-testid=drive-car], [data-testid^=drive-house-], [data-testid=drive-light], [data-testid=drive-stop], [data-testid=drive-rider], [data-testid=drive-horn], [data-testid=drive-wash], [data-testid=drive-garage]')
   check(`${tag} 寵物不擋車子、房子、紅綠燈、站牌`, petHit.length === 0, petHit.join())
-  const backHit = await overlaps(page, '[data-testid=game-back]', '.drive-sprite, [data-testid=drive-horn]')
+  const backHit = await overlaps(page, '[data-testid=game-back]', '.drive-sprite, [data-testid=drive-horn], [data-testid=drive-garage]')
   check(`${tag} 回去鍵沒有蓋到東西`, backHit.length === 0, backHit.join())
+  if (toys >= 1) {
+    const gHit = await overlaps(page, '[data-testid=drive-garage]', '.drive-sprite, [data-testid=drive-horn]')
+    check(`${tag} 車庫按鈕沒有蓋到車子、房子、紅綠燈、喇叭`, gHit.length === 0, gHit.join())
+    // 車庫也不能壓在路上（手指要在路上拖車）
+    const m0 = await mapInfo(page)
+    const g = await page.getByTestId('drive-garage').boundingBox()
+    const corners = [[g.x, g.y], [g.x + g.width, g.y], [g.x, g.y + g.height], [g.x + g.width, g.y + g.height], [g.x + g.width / 2, g.y + g.height / 2]]
+    const near = Math.min(...corners.map(([x, y]) => offRoad(toWorld(m0, { x, y }))))
+    check(`${tag} 車庫按鈕不壓在路上`, near > 50, near.toFixed(0))
+  }
+  if (toys >= 2) {
+    const wHit = await overlaps(page, '[data-testid=drive-wash]', '[data-testid^=drive-house-], [data-testid=drive-light], [data-testid=drive-stop], [data-testid=drive-rider], [data-testid=game-back], [data-testid=drive-horn], [data-testid=drive-garage]')
+    check(`${tag} 洗車站沒有蓋到房子、紅綠燈、站牌、按鈕`, wHit.length === 0, wHit.join())
+  }
   check(`${tag} 第一次有手勢示範`, (await page.locator('[data-testid=gesture-hint]').count()) === 1)
   // 路面真的在環線上：車子中心在路中間
   const m = await mapInfo(page)
@@ -157,16 +178,17 @@ async function driveLayout(b, name, vp, band) {
   check(`${tag} 車子在路上`, offRoad(toWorld(m, car)) < 3, offRoad(toWorld(m, car)).toFixed(1))
   // 小車的大小：手指（50px）按得到
   check(`${tag} 小車夠大`, car.box.width >= 40, String(Math.round(car.box.width)))
-  await shot(page, `drive-${name}-${band}`)
+  await shot(page, `drive-${name}-${band}${toys ? `-toys${toys}` : ''}`)
   check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
   await page.context().close()
 }
 
 /** 4–5 歲：一根手指一直把車往前拖，繞一圈載完一位乘客；紅燈、斑馬線停得住；手指離開路面車子還在路上 */
-async function driveLap(b) {
+async function driveLap(b, wash = false) {
   const { ctx, page, errors } = await freshApp(b, SIZES.land, TOUCH)
   const send = await touchSender(ctx, page)
-  const tag = '開車[4-5 繞一圈]'
+  const tag = wash ? '開車[4-5 繞一圈 有洗車站]' : '開車[4-5 繞一圈]'
+  if (wash) await patchSettings(page, { playCount: { drive: 3 } })
   await enter(page, 'drive', '4-5')
   const m = await mapInfo(page)
   // 手指往草地上拖（離開路面）：車子動了，但還在路上
@@ -186,6 +208,10 @@ async function driveLap(b) {
   let sawRed = false
   let sawCross = false
   let angles = new Set()
+  const washS = []
+  let sawSuds = false
+  let sawShine = false
+  let shot1 = false
   const t0 = Date.now()
   let d = {}
   while (Date.now() - t0 < 45000) {
@@ -194,6 +220,18 @@ async function driveLap(b) {
     await sleep(page, 60)
     d = await ds(page, 'drive')
     const s = Number(d.s)
+    if (d.wash === '1') {
+      washS.push(s)
+      sawSuds ||= (await page.getByTestId('drive-suds').count()) === 1
+      if (!shot1 && washS.length > 4) {
+        shot1 = true
+        await shot(page, 'drive-wash-suds')
+      }
+    }
+    if (d.shiny === '1' && !sawShine) {
+      sawShine = (await page.getByTestId('drive-shine').count()) === 1
+      await shot(page, 'drive-wash-shiny')
+    }
     if (d.light !== 'green') {
       sawRed = true
       redMax = Math.max(redMax, s)
@@ -220,6 +258,15 @@ async function driveLap(b) {
   check(`${tag} 車頭跟著路轉向（角度變過很多次）`, angles.size > 10, String(angles.size))
   check(`${tag} 繞一圈回站牌，乘客下車`, d.served === '1', JSON.stringify({ s: d.s, rider: d.rider }))
   const lines = await said(page, 'drive')
+  if (wash) {
+    check(`${tag} 開進洗車站停下來刷（一圈一次）`, washS.length > 5 && d.washes === '1', `${washS.length} 次取樣 washes ${d.washes}`)
+    check(`${tag} 洗的時候車子停在洗車站裡不動`, washS.every((s) => Math.abs(s - WASH_S) <= 2), `${Math.min(...washS)}–${Math.max(...washS)} vs ${WASH_S}`)
+    check(`${tag} 洗的時候有泡泡、洗好亮晶晶`, sawSuds && sawShine)
+    check(`${tag} 洗好了寵物說一次`, lines.filter((x) => x === 'pet.play.drive.wash').length === 1, lines.join(' '))
+    check(`${tag} 泡泡和星星不接手指`, (await page.evaluate(() => getComputedStyle(document.querySelector('.drive-sprite')).pointerEvents)) === 'none')
+  } else {
+    check(`${tag} 沒有洗車站：一路沒停下來洗、也沒說洗車`, washS.length === 0 && d.washes === '0' && !sawShine && !lines.includes('pet.play.drive.wash'))
+  }
   for (const k of ['rider', 'red', 'green', 'cross', 'arrive']) check(`${tag} 寵物說了 ${k}`, lines.includes(`pet.play.drive.${k}`), lines.join(' '))
   check(`${tag} 3–5 歲不說「想去哪」`, !lines.includes('pet.play.drive.where'))
   check(`${tag} 紅燈只說一次`, lines.filter((x) => x === 'pet.play.drive.red').length === 1)
@@ -234,17 +281,19 @@ async function driveLap(b) {
   await page.getByTestId('drive-horn').click()
   await sleep(page, 150)
   check(`${tag} 喇叭按了有反應`, (await page.evaluate(() => document.querySelector('[data-testid=drive-car]').dataset.honks)) === '3')
+  check(`${tag} 小紅車的喇叭是叭叭`, (await page.evaluate(() => document.querySelector('[data-testid=drive-car]').dataset.horn)) === 'horn')
   check(`${tag} 喇叭沒有語音`, (await said(page, 'drive')).length === before)
   check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
-  await shot(page, 'drive-lap-done')
+  await shot(page, wash ? 'drive-lap-wash-done' : 'drive-lap-done')
   await ctx.close()
 }
 
 /** 3 歲：手指按著（不用拖、不用按在車上）車子就自己開；放開就停；一樣會停紅燈、載完乘客 */
-async function drive3(b) {
+async function drive3(b, wash = false) {
   const { ctx, page, errors } = await freshApp(b, SIZES.port, TOUCH)
   const send = await touchSender(ctx, page)
-  const tag = '開車[3 歲按著]'
+  const tag = wash ? '開車[3 歲按著 有洗車站]' : '開車[3 歲按著]'
+  if (wash) await patchSettings(page, { playCount: { drive: 3 } })
   await enter(page, 'drive', '3')
   const m = await mapInfo(page)
   // 按在環線中間的草地（不是車上）
@@ -264,14 +313,21 @@ async function drive3(b) {
   await send('touchStart', [pt(grass)])
   let redMax = -Infinity
   let d = {}
+  let washN = 0
   const t0 = Date.now()
   while (Date.now() - t0 < 40000) {
     await sleep(page, 120)
     d = await ds(page, 'drive')
     if (d.light !== 'green') redMax = Math.max(redMax, Number(d.s))
+    if (d.wash === '1') {
+      washN++
+      if (washN === 4) await shot(page, 'drive-wash-3yo-port')
+    }
     if (d.served === '1') break
   }
   await send('touchEnd', [])
+  if (wash) check(`${tag} 按著自己開進洗車站、洗完自己開出來`, washN >= 3 && d.washes === '1' && (await said(page, 'drive')).includes('pet.play.drive.wash'), `${washN} ${d.washes}`)
+  else check(`${tag} 沒有洗車站`, washN === 0 && d.washes === '0')
   check(`${tag} 紅燈停得住`, redMax > -Infinity && redMax <= LIGHT_BLOCK + 0.5, String(redMax))
   check(`${tag} 按著就能載完一位乘客`, d.served === '1', JSON.stringify(d))
   await page.waitForSelector('[data-testid=play-gift]', { timeout: 5000 }).catch(() => {})
@@ -338,6 +394,104 @@ async function drive67(b) {
 }
 const OFF_WAIT = 1500
 
+/** v8.5 換車：車庫按一下換下一台；消防車的喇叭是警笛、冰淇淋車是叮叮的小旋律；第一次換各說一句 */
+async function driveCars(b, art) {
+  const { ctx, page, errors } = await freshApp(b, SIZES.land, TOUCH)
+  const send = await touchSender(ctx, page)
+  const tag = `換車[${art ? '有圖' : '沒圖'}]`
+  // 新車的 3D 圖：還沒生好（404）時用自己畫的 SVG；生好了就用圖
+  await ctx.route('**/art/ui-car-*-top.png', (r) => (art ? r.fulfill({ path: new URL('../public/art/ui-car-top.png', import.meta.url).pathname }) : r.fulfill({ status: 404, body: '' })))
+  await patchSettings(page, { playCount: { drive: 1 } })
+  await enter(page, 'drive', '4-5')
+  const car = () => page.evaluate(() => ({ ...document.querySelector('[data-testid=drive-car]').dataset }))
+  const garage = await centerOf(page, '[data-testid=drive-garage]')
+  check(`${tag} 車庫按鈕夠大`, garage.box.width >= 56 && garage.box.height >= 56, `${garage.box.width}x${garage.box.height}`)
+  check(`${tag} 車庫裡停著下一台（消防車）`, (await page.getByTestId('drive-garage').getAttribute('data-next')) === 'fire')
+  check(`${tag} 只有第一個新玩具：路上沒有洗車站`, (await page.getByTestId('drive-wash').count()) === 0)
+  const s0 = Number((await ds(page, 'drive')).s)
+  await fingerTap(send, garage)
+  await sleep(page, 150)
+  check(`${tag} 按一下換成消防車`, (await ds(page, 'drive')).car === 'fire' && (await car()).car === 'fire')
+  check(`${tag} 第一次換消防車寵物說一句`, (await said(page, 'drive')).filter((k) => k === 'pet.play.drive.fire').length === 1)
+  check(`${tag} 換車不會動到車子的位置`, Number((await ds(page, 'drive')).s) === s0)
+  await sleep(page, 400)
+  const kind = await page.evaluate(() => (document.querySelector('[data-testid=drive-car] .drive-car-body img') ? 'img' : document.querySelector('[data-testid=drive-car] .drive-car-body svg') ? 'svg' : 'none'))
+  check(`${tag} 消防車${art ? '用 3D 圖' : '用自己畫的圖（不是空的、不是 emoji）'}`, kind === (art ? 'img' : 'svg'), kind)
+  await shot(page, `drive-car-fire-${art ? 'art' : 'svg'}`)
+  const horn = await centerOf(page, '[data-testid=drive-horn]')
+  await fingerTap(send, horn)
+  await sleep(page, 120)
+  check(`${tag} 消防車的喇叭是警笛`, (await car()).horn === 'siren' && (await car()).honks === '1')
+  await fingerTap(send, garage)
+  await sleep(page, 150)
+  check(`${tag} 再按一下換成冰淇淋車、說一句`, (await ds(page, 'drive')).car === 'ice' && (await said(page, 'drive')).filter((k) => k === 'pet.play.drive.ice').length === 1)
+  await sleep(page, 400)
+  await shot(page, `drive-car-ice-${art ? 'art' : 'svg'}`)
+  await fingerTap(send, horn)
+  await sleep(page, 120)
+  check(`${tag} 冰淇淋車的喇叭是叮叮的小旋律`, (await car()).horn === 'jingle')
+  // 開著新車照樣開：手指拖車往前
+  {
+    const c = await centerOf(page, '[data-testid=drive-car]')
+    await send('touchStart', [pt(c)])
+    for (let i = 0; i < 8; i++) {
+      await send('touchMove', [pt(await centerOf(page, '[data-testid=drive-ahead]'))])
+      await sleep(page, 60)
+    }
+    // 開車的手指不放，另一根手指按車庫（多指）
+    await send('touchStart', [pt(await centerOf(page, '[data-testid=drive-ahead]'), 0), pt(garage, 1)])
+    await sleep(page, 120)
+    await send('touchEnd', [])
+    const d = await ds(page, 'drive')
+    check(`${tag} 開著冰淇淋車照樣往前開`, Number(d.s) > s0 + 30, d.s)
+    check(`${tag} 開車的手指不放也能換車（換回小紅車）`, d.car === 'red')
+  }
+  await fingerTap(send, horn)
+  await sleep(page, 120)
+  check(`${tag} 換回小紅車喇叭是叭叭`, (await car()).horn === 'horn')
+  await fingerTap(send, garage)
+  await sleep(page, 120)
+  await page.getByTestId('drive-garage').click()
+  await sleep(page, 120)
+  const lines = await said(page, 'drive')
+  check(`${tag} 再換到同一台不重複說`, (await ds(page, 'drive')).car === 'ice' && lines.filter((k) => k === 'pet.play.drive.fire').length === 1 && lines.filter((k) => k === 'pet.play.drive.ice').length === 1, lines.join(' '))
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await ctx.close()
+}
+
+/** v8.5 洗車站的圖：還沒生好時用自己畫的；動作減少時泡泡不動 */
+async function driveWashReduced(b) {
+  const { ctx, page, errors } = await freshApp(b, SIZES.phone, { ...TOUCH, ctxOpts: { hasTouch: true, reducedMotion: 'reduce' } })
+  const send = await touchSender(ctx, page)
+  const tag = '洗車站[手機 動作減少]'
+  await ctx.route('**/art/ui-drive-wash.png', (r) => r.fulfill({ status: 404, body: '' }))
+  await patchSettings(page, { playCount: { drive: 4 } })
+  await enter(page, 'drive', '3')
+  await sleep(page, 300)
+  check(`${tag} 沒有圖：用自己畫的洗車站`, (await page.locator('[data-testid=drive-wash] svg').count()) === 1)
+  const m = await mapInfo(page)
+  const grass = toScreen(m, { x: 360, y: 300 })
+  await send('touchStart', [pt(grass)])
+  let d = {}
+  const t0 = Date.now()
+  while (Date.now() - t0 < 30000) {
+    await sleep(page, 100)
+    d = await ds(page, 'drive')
+    if (d.wash === '1') break
+  }
+  check(`${tag} 3 歲按著開到洗車站`, d.wash === '1', JSON.stringify(d))
+  const anim = await page.evaluate(() => [...document.querySelectorAll('[data-testid=drive-suds] i')].map((el) => getComputedStyle(el).animationName))
+  check(`${tag} 動作減少：泡泡不動`, anim.length === 8 && anim.every((a) => a === 'none'), anim.join())
+  await shot(page, 'drive-wash-phone-reduced')
+  await page.waitForFunction(() => document.querySelector('[data-testid=drive]').dataset.washes === '1' && !document.querySelector('[data-testid=drive]').dataset.wash, null, { timeout: 5000 }).catch(() => {})
+  await sleep(page, 600)
+  d = await ds(page, 'drive')
+  check(`${tag} 洗完繼續往前開`, Number(d.s) > WASH_S + 20 && d.wash === undefined, d.s)
+  await send('touchEnd', [])
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await ctx.close()
+}
+
 // ---------- 照相館 ----------
 async function photoLayout(b, name, vp) {
   const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
@@ -366,6 +520,8 @@ async function photoLayout(b, name, vp) {
   const hit = await overlaps(page, '[data-testid=photo-frame]', '[data-testid=game-back], [data-testid=photo-tray], [data-testid=photo-shutter], [data-testid=photo-size]')
   check(`${tag} 照片不擋回去鍵、托盤、快門`, hit.length === 0, hit.join())
   check(`${tag} 托盤有帽子和預設 8 張貼紙`, (await page.locator('[data-testid=photo-hat-hat-crown]').count()) === 1 && (await page.locator('[data-testid=photo-tray-sticker]').count()) >= 8)
+  check(`${tag} 還沒有新玩具：沒有動物朋友、沒有相框與色調按鈕`, (await page.locator('[data-testid=photo-tray-friend], [data-testid=photo-frame-btn], [data-testid=photo-tone-btn], [data-testid=photo-decor], [data-testid=photo-tone]').count()) === 0)
+  check(`${tag} 還沒有新玩具：托盤第一個是帽子（跟以前一樣）`, (await page.evaluate(() => document.querySelector('[data-testid=photo-tray] button')?.dataset.testid)) === 'photo-hat-hat-crown')
   check(`${tag} 第一次有手勢示範`, (await page.locator('[data-testid=gesture-hint]').count()) === 1)
   // 托盤的貼紙拖進照片（往照片的方向拖：橫向往左、直向往上，跟托盤捲動的方向垂直）
   const st = await centerOf(page, '[data-testid=photo-tray-sticker]')
@@ -507,6 +663,282 @@ async function photoFlow(b) {
   await ctx.close()
 }
 
+// ---------- v8.5 照相館的新玩具 ----------
+/** 按快門、直接拍，等存好；回傳照片（data URL）。玩完的卡跳出來就收掉 */
+const snap = async (page) => {
+  await page.getByTestId('photo-shutter').click()
+  await page.getByTestId('photo-now').click()
+  await page.waitForSelector('[data-testid=photo-print-img]', { timeout: 8000 })
+  await page.waitForFunction(() => document.querySelector('[data-testid=photo]').dataset.saved !== '', null, { timeout: 5000 })
+  const src = await page.getByTestId('photo-print-img').getAttribute('src')
+  // 玩完的卡（或星星）在 1.5 秒後才出來：等它、收掉，才按得到「再拍一張」
+  await page.waitForSelector('[data-testid=play-gift], [data-testid=play-cheer]', { timeout: 4000 }).catch(() => {})
+  await closeGift(page)
+  return src
+}
+const againPhoto = async (page) => {
+  await page.getByTestId('photo-again').click()
+  await page.waitForSelector('[data-testid=photo][data-phase=stage]')
+  await sleep(page, 150)
+}
+/** 照片上幾個點的顏色（位置是百分比） */
+const pixelsAt = (page, src, pts) =>
+  page.evaluate(
+    async ([src, pts]) => {
+      const img = new Image()
+      img.src = src
+      await img.decode()
+      const c = document.createElement('canvas')
+      c.width = img.naturalWidth
+      c.height = img.naturalHeight
+      const g = c.getContext('2d')
+      g.drawImage(img, 0, 0)
+      return pts.map(([x, y]) => [...g.getImageData(Math.round((x * c.width) / 100), Math.round((y * c.height) / 100), 1, 1).data].slice(0, 3))
+    },
+    [src, pts],
+  )
+/** 一塊區域（百分比的 x, y, w, h）的平均顏色，以及兩張照片在這一塊差多少 */
+const boxStats = (page, a, b, box) =>
+  page.evaluate(
+    async ([a, b, box]) => {
+      const read = async (src) => {
+        const img = new Image()
+        img.src = src
+        await img.decode()
+        const c = document.createElement('canvas')
+        c.width = img.naturalWidth
+        c.height = img.naturalHeight
+        const g = c.getContext('2d')
+        g.drawImage(img, 0, 0)
+        const k = c.width / 100
+        return g.getImageData(Math.round(box[0] * k), Math.round(box[1] * k), Math.max(1, Math.round(box[2] * k)), Math.max(1, Math.round(box[3] * k))).data
+      }
+      const A = await read(a)
+      const B = b ? await read(b) : A
+      const mean = [0, 0, 0]
+      let diff = 0
+      let chroma = 0
+      for (let i = 0; i < A.length; i += 4) {
+        for (let k = 0; k < 3; k++) {
+          mean[k] += A[i + k]
+          diff += Math.abs(A[i + k] - B[i + k])
+        }
+        chroma += Math.max(A[i], A[i + 1], A[i + 2]) - Math.min(A[i], A[i + 1], A[i + 2])
+      }
+      const n = A.length / 4
+      return { mean: mean.map((v) => v / n), diff: diff / (n * 3), chroma: chroma / n }
+    },
+    [a, b, box],
+  )
+const lastPhotoPng = (page) =>
+  idb(page, (db) => new Promise((r) => (db.transaction('coloring').objectStore('coloring').getAll().onsuccess = (e) => r(e.target.result.filter((x) => x.pageId.startsWith('g:photo-')).sort((a, c) => a.createdAt - c.createdAt).at(-1)?.png ?? ''))))
+
+/** v8.5 動物朋友：玩完 1 次之後盤子最前面多一排動物，可以拖進來、移動、換大小，跟貼紙一樣拍進照片 */
+async function photoFriends(b, name, vp) {
+  const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
+  const send = await touchSender(ctx, page)
+  const tag = `動物朋友[${name}]`
+  await patchSettings(page, { playCount: { photo: 1 } })
+  await enter(page, 'photo')
+  await page.getByTestId('photo-bg-scene-play-orchard').click()
+  await page.waitForSelector('[data-testid=photo-pet] img.pet-img')
+  await sleep(page, 300)
+  const fr = await centerOf(page, '[data-testid=photo-frame]')
+  const arts = await page.evaluate(() => [...document.querySelectorAll('[data-testid=photo-tray] button')].slice(0, 6).map((e) => `${e.dataset.testid}:${e.dataset.art}`))
+  check(`${tag} 盤子最前面多一排六種動物`, JSON.stringify(arts) === JSON.stringify(['obj-bear', 'obj-rabbit', 'obj-chick', 'obj-cow', 'obj-fish', 'obj-octopus'].map((a) => `photo-tray-friend:${a}`)), arts.join())
+  check(`${tag} 貼紙都還在`, (await page.locator('[data-testid=photo-tray-sticker]').count()) >= 8)
+  check(`${tag} 只有第一個新玩具：沒有相框與色調按鈕`, (await page.locator('[data-testid=photo-frame-btn], [data-testid=photo-tone-btn]').count()) === 0)
+  check(`${tag} 不橫向溢出`, await noOverflow(page))
+  const small = await smallTargets(page, 'photo')
+  check(`${tag} 觸控目標 ≥ 56`, small.length === 0, small.join())
+  const ins = await allInside(page, '[data-testid=photo-frame], [data-testid=photo-shutter], [data-testid=photo-size], [data-testid=photo-change-bg], [data-testid=photo-tray]')
+  check(`${tag} 照片、托盤、快門都在畫面內`, ins.length === 0, ins.join())
+  const friends = () => page.evaluate(() => [...document.querySelectorAll('[data-testid=photo-friend]')].map((el) => { const r = el.getBoundingClientRect(); return { art: el.dataset.art, size: Number(el.dataset.size), x: r.x + r.width / 2, y: r.y + r.height / 2, w: r.width } }))
+  // 點一下：站到寵物旁邊
+  const bear = await centerOf(page, '[data-testid=photo-tray-friend][data-art=obj-bear]')
+  await fingerTap(send, bear)
+  await sleep(page, 150)
+  let fs = await friends()
+  check(`${tag} 點一下小熊：站進照片裡`, fs.length === 1 && fs[0].art === 'obj-bear' && (await ds(page, 'photo')).friends === '1' && (await ds(page, 'photo')).stickers === '0', JSON.stringify(fs))
+  check(`${tag} 動物朋友比貼紙大（照片的三成）`, Math.abs(fs[0].w - fr.box.width * 0.3) < 2, `${fs[0].w} vs ${fr.box.width * 0.3}`)
+  check(`${tag} 第一次放進來寵物說「一起拍照」`, (await said(page, 'photo')).filter((k) => k === 'pet.play.photo.friend').length === 1)
+  // 拖進來：放在手指放開的地方
+  const rabbit = await centerOf(page, '[data-testid=photo-tray-friend][data-art=obj-rabbit]')
+  const dropAt = { x: fr.box.x + fr.box.width * 0.75, y: fr.box.y + fr.box.height * 0.35 }
+  await fingerDrag(send, rabbit, dropAt)
+  await sleep(page, 150)
+  fs = await friends()
+  const rb = fs.find((f) => f.art === 'obj-rabbit')
+  check(`${tag} 兔子拖進照片：放在放開的地方`, fs.length === 2 && !!rb && Math.hypot(rb.x - dropAt.x, rb.y - dropAt.y) < 6, JSON.stringify(rb))
+  check(`${tag} 第二隻不再說`, (await said(page, 'photo')).filter((k) => k === 'pet.play.photo.friend').length === 1)
+  // 拖著移動
+  const to = { x: fr.box.x + fr.box.width * 0.25, y: fr.box.y + fr.box.height * 0.3 }
+  await fingerDrag(send, { x: rb.x, y: rb.y }, to)
+  await sleep(page, 150)
+  fs = await friends()
+  const rb2 = fs.find((f) => f.art === 'obj-rabbit')
+  check(`${tag} 照片上的動物可以拖著移動`, fs.length === 2 && Math.hypot(rb2.x - to.x, rb2.y - to.y) < 6 && rb2.size === 1, JSON.stringify(rb2))
+  // 點一下換大小：中 → 大 → 小
+  await fingerTap(send, { x: rb2.x, y: rb2.y })
+  await sleep(page, 350)
+  const big = (await friends()).find((f) => f.art === 'obj-rabbit')
+  await fingerTap(send, { x: rb2.x, y: rb2.y })
+  await sleep(page, 350)
+  const tiny = (await friends()).find((f) => f.art === 'obj-rabbit')
+  check(`${tag} 點一下動物換大小（中 → 大 → 小）`, big.size === 2 && big.w > rb2.w * 1.25 && tiny.size === 0 && tiny.w < rb2.w * 0.8, `${rb2.w}→${big.w}→${tiny.w}`)
+  check(`${tag} 最小的動物也按得到（≥ 56）`, name === 'phone' ? tiny.w >= 55.5 : tiny.w >= 56, String(tiny.w))
+  // 雙指張開：變大；位置不動、不算點
+  {
+    const a0 = { x: tiny.x - 14, y: tiny.y }
+    const b0 = { x: tiny.x + 14, y: tiny.y }
+    await send('touchStart', [pt(a0, 1), pt(b0, 2)])
+    for (let i = 1; i <= 8; i++) await send('touchMove', [pt({ x: a0.x - i * 4, y: a0.y }, 1), pt({ x: b0.x + i * 4, y: b0.y }, 2)])
+    await send('touchEnd', [])
+    await sleep(page, 200)
+    const z = (await friends()).find((f) => f.art === 'obj-rabbit')
+    check(`${tag} 兩根手指張開：動物變大`, z.size === 2, String(z.size))
+    check(`${tag} 縮放時位置不動`, Math.hypot(z.x - tiny.x, z.y - tiny.y) < 2, `${z.x - tiny.x},${z.y - tiny.y}`)
+    const a1 = { x: z.x - 50, y: z.y }
+    const b1 = { x: z.x + 50, y: z.y }
+    await send('touchStart', [pt(a1, 1), pt(b1, 2)])
+    for (let i = 1; i <= 8; i++) await send('touchMove', [pt({ x: a1.x + i * 4, y: a1.y }, 1), pt({ x: b1.x - i * 4, y: b1.y }, 2)])
+    await send('touchEnd', [])
+    await sleep(page, 200)
+    const z2 = (await friends()).find((f) => f.art === 'obj-rabbit')
+    check(`${tag} 兩根手指捏起來：動物變小`, z2.size < 2, String(z2.size))
+  }
+  // 動物不擋寵物：寵物照樣拖得動
+  await shot(page, `photo-6-friends-${name}`)
+  // 拍下來：動物在照片裡（跟把動物拿掉之後再拍一張比）
+  const bearAt = (await friends()).find((f) => f.art === 'obj-bear')
+  const box = [((bearAt.x - bearAt.w * 0.25 - fr.box.x) / fr.box.width) * 100, ((bearAt.y - bearAt.w * 0.25 - fr.box.y) / fr.box.height) * 100, ((bearAt.w * 0.5) / fr.box.width) * 100, ((bearAt.w * 0.5) / fr.box.height) * 100]
+  const withBear = await snap(page)
+  if (SHOT_DIR) writeFileSync(`${SHOT_DIR}/photo-friends-${name}-${tagB}.jpg`, Buffer.from(withBear.split(',')[1], 'base64'))
+  await againPhoto(page)
+  check(`${tag} 再拍一張：動物都還在`, (await ds(page, 'photo')).friends === '2')
+  // 把小熊拖出照片：拿掉
+  await fingerDrag(send, { x: bearAt.x, y: bearAt.y }, { x: bearAt.x, y: fr.box.y + fr.box.height + (name === 'land' ? 400 : 130) }, { steps: 6 })
+  await sleep(page, 200)
+  check(`${tag} 動物拖出照片就拿掉`, (await ds(page, 'photo')).friends === '1', (await ds(page, 'photo')).friends)
+  const noBear = await snap(page)
+  const there = await boxStats(page, withBear, noBear, box)
+  const corner = await boxStats(page, withBear, noBear, [1, 1, 8, 8])
+  check(`${tag} 動物真的拍進照片（那一塊不一樣，別的地方一樣）`, there.diff > 12 && corner.diff < 4, `${there.diff.toFixed(1)} / ${corner.diff.toFixed(1)}`)
+  await againPhoto(page)
+  // 最多六位
+  for (let i = 0; i < 7; i++) {
+    await fingerTap(send, await centerOf(page, `[data-testid=photo-tray-friend] >> nth=${i % 6}`))
+    await sleep(page, 80)
+  }
+  check(`${tag} 最多六位動物朋友`, (await ds(page, 'photo')).friends === '6')
+  check(`${tag} 動物都在照片範圍裡`, (await page.evaluate(() => { const f = document.querySelector('[data-testid=photo-frame]').getBoundingClientRect(); return [...document.querySelectorAll('[data-testid=photo-friend]')].every((el) => { const r = el.getBoundingClientRect(); const cx = r.x + r.width / 2; const cy = r.y + r.height / 2; return cx > f.left && cx < f.right && cy > f.top && cy < f.bottom }) })))
+  await sleep(page, 200)
+  await shot(page, `photo-7-friends-six-${name}`)
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await ctx.close()
+}
+
+/** v8.5 相框與色調：玩完 3 次之後多兩顆按鈕；選了什麼，拍下來的照片（像素）就是什麼 */
+async function photoFrames(b, name, vp) {
+  const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
+  const tag = `相框與色調[${name}]`
+  await patchSettings(page, { playCount: { photo: 3 } })
+  await enter(page, 'photo')
+  await page.getByTestId('photo-bg-scene-play-orchard').click()
+  await page.waitForSelector('[data-testid=photo-pet] img.pet-img')
+  await sleep(page, 300)
+  check(`${tag} 多了相框與色調按鈕`, (await page.locator('[data-testid=photo-frame-btn]').count()) === 1 && (await page.locator('[data-testid=photo-tone-btn]').count()) === 1)
+  check(`${tag} 一開始沒有相框、原色`, (await ds(page, 'photo')).frame === 'none' && (await ds(page, 'photo')).tone === 'plain' && (await page.locator('[data-testid=photo-decor], [data-testid=photo-tone]').count()) === 0)
+  check(`${tag} 不橫向溢出`, await noOverflow(page))
+  const small = await smallTargets(page, 'photo')
+  check(`${tag} 觸控目標 ≥ 56`, small.length === 0, small.join())
+  const ins = await allInside(page, '[data-testid=photo-frame], [data-testid=photo-shutter], [data-testid=photo-size], [data-testid=photo-change-bg], [data-testid=photo-frame-btn], [data-testid=photo-tone-btn], [data-testid=photo-tray]')
+  check(`${tag} 四顆工具、托盤、快門都在畫面內`, ins.length === 0, ins.join())
+  const toolHit = await overlaps(page, '.photo-tool, [data-testid=photo-shutter], [data-testid=photo-tray], [data-testid=game-back], [data-testid=photo-frame]', '.photo-tool')
+  check(`${tag} 工具按鈕不互相蓋到、不擋照片與托盤`, toolHit.length === 0, toolHit.join())
+  const fr = await centerOf(page, '[data-testid=photo-frame]')
+  check(`${tag} 照片還是夠大`, fr.box.width >= Math.min(vp.width, vp.height) * 0.6, String(Math.round(fr.box.width)))
+  // 先拍一張原樣的（對照用）
+  const plain = await snap(page)
+  await againPhoto(page)
+  // 相框按一下換下一個：星星 → 愛心 → 底片 → 沒有
+  const seen = []
+  for (let i = 0; i < 4; i++) {
+    await page.getByTestId('photo-frame-btn').click()
+    await sleep(page, 80)
+    seen.push(`${(await ds(page, 'photo')).frame}:${await page.locator('[data-testid=photo-decor] path').count()}`)
+    if (i < 3) await shot(page, `photo-8-frame-${i}-${name}`)
+  }
+  check(`${tag} 相框按一下換下一個（星星、愛心、底片、沒有），畫面上看得到`, /^stars:\d+,hearts:\d+,film:\d+,none:0$/.test(seen.join()) && !seen.slice(0, 3).some((x) => x.endsWith(':0')), seen.join())
+  // 色調：暖暖 → 黑白 → 原色
+  const tones = []
+  for (let i = 0; i < 3; i++) {
+    await page.getByTestId('photo-tone-btn').click()
+    await sleep(page, 80)
+    tones.push(`${(await ds(page, 'photo')).tone}:${await page.evaluate(() => document.querySelector('[data-testid=photo-tone]')?.className ?? '')}`)
+  }
+  check(`${tag} 色調按一下換下一個（暖暖、黑白、原色）`, tones.join() === 'warm:photo-tone photo-tone-warm,mono:photo-tone photo-tone-mono,plain:', tones.join())
+  // 預覽不用 filter、沒有 filter 的動畫；蓋在上面的那幾層不接手指
+  await page.getByTestId('photo-tone-btn').click()
+  await page.getByTestId('photo-frame-btn').click()
+  await sleep(page, 100)
+  const st = await page.evaluate(() => {
+    const t = getComputedStyle(document.querySelector('[data-testid=photo-tone]'))
+    const d = getComputedStyle(document.querySelector('[data-testid=photo-decor]'))
+    return { filter: t.filter, pe: [t.pointerEvents, d.pointerEvents], anim: document.getAnimations().filter((a) => JSON.stringify(a.effect?.getKeyframes?.() ?? []).includes('filter')).length }
+  })
+  check(`${tag} 預覽沒有 filter 動畫、不接手指`, st.filter === 'none' && st.pe.every((v) => v === 'none') && st.anim === 0, JSON.stringify(st))
+  // 選了相框和色調，寵物照樣拖得動（那幾層不擋）
+  {
+    const send = await touchSender(ctx, page)
+    const p0 = await centerOf(page, '[data-testid=photo-pet]')
+    await fingerDrag(send, { x: p0.x, y: p0.y + p0.box.height * 0.2 }, { x: p0.x - fr.box.width * 0.2, y: p0.y + p0.box.height * 0.2 })
+    await sleep(page, 150)
+    const p1 = await centerOf(page, '[data-testid=photo-pet]')
+    check(`${tag} 有相框時寵物照樣拖得動`, p1.x < p0.x - fr.box.width * 0.1, `${p0.x}→${p1.x}`)
+    await fingerDrag(send, { x: p1.x, y: p1.y + p1.box.height * 0.2 }, { x: p0.x, y: p0.y + p0.box.height * 0.2 })
+    await sleep(page, 150)
+  }
+  // 星星相框 + 暖暖：拍下來
+  await shot(page, `photo-9-stars-warm-${name}`)
+  const warm = await snap(page)
+  if (SHOT_DIR) writeFileSync(`${SHOT_DIR}/photo-stars-warm-${name}-${tagB}.jpg`, Buffer.from(warm.split(',')[1], 'base64'))
+  {
+    // 上面那條邊（兩顆星星中間）是相框的淡黃色；中間是暖色調（比原樣紅一點、藍少一點）
+    const [band] = await pixelsAt(page, warm, [[50, 1.2]])
+    check(`${tag} 星星相框畫進照片（邊是淡黃色）`, band[0] > 235 && band[1] > 215 && band[2] > 140 && band[2] < 200, band.join())
+    const [star] = await pixelsAt(page, warm, [[40.6, 3.3]])
+    check(`${tag} 星星畫進照片（橘黃色）`, star[0] > 230 && star[1] > 150 && star[1] < 215 && star[2] < 90, star.join())
+    const a = await boxStats(page, warm, null, [30, 12, 40, 20])
+    const p = await boxStats(page, plain, null, [30, 12, 40, 20])
+    check(`${tag} 暖暖色調畫進照片（紅多、藍少）`, a.mean[0] > p.mean[0] + 3 && a.mean[2] < p.mean[2] - 12, `${a.mean.map(Math.round)} vs ${p.mean.map(Math.round)}`)
+    check(`${tag} 存進畫廊的就是這一張（有相框與色調）`, (await lastPhotoPng(page)) === warm)
+  }
+  await againPhoto(page)
+  check(`${tag} 再拍一張：相框與色調都還在`, (await ds(page, 'photo')).frame === 'stars' && (await ds(page, 'photo')).tone === 'warm')
+  // 底片 + 黑白
+  await page.getByTestId('photo-frame-btn').click()
+  await page.getByTestId('photo-frame-btn').click()
+  await page.getByTestId('photo-tone-btn').click()
+  await sleep(page, 150)
+  check(`${tag} 換成底片 + 黑白`, (await ds(page, 'photo')).frame === 'film' && (await ds(page, 'photo')).tone === 'mono')
+  await shot(page, `photo-10-film-mono-${name}`)
+  const mono = await snap(page)
+  if (SHOT_DIR) writeFileSync(`${SHOT_DIR}/photo-film-mono-${name}-${tagB}.jpg`, Buffer.from(mono.split(',')[1], 'base64'))
+  {
+    const [dark, hole, side] = await pixelsAt(page, mono, [[44.4, 5], [50, 5], [1.2, 50]])
+    check(`${tag} 底片相框畫進照片（黑邊、白色齒孔）`, dark.every((v) => v < 90) && side.every((v) => v < 90) && hole.every((v) => v > 215), `${dark} / ${hole} / ${side}`)
+    const m = await boxStats(page, mono, null, [20, 15, 60, 60])
+    const p = await boxStats(page, plain, null, [20, 15, 60, 60])
+    check(`${tag} 黑白色調畫進照片（沒有彩度、但不是一片灰）`, m.chroma < 6 && p.chroma > 25 && m.mean[0] > 40 && m.mean[0] < 235, `${m.chroma.toFixed(1)} vs ${p.chroma.toFixed(1)} mean ${Math.round(m.mean[0])}`)
+    check(`${tag} 存進畫廊的就是這一張`, (await lastPhotoPng(page)) === mono)
+    const dim = await page.evaluate(async (src) => { const i = new Image(); i.src = src; await i.decode(); return `${i.naturalWidth}x${i.naturalHeight}` }, mono)
+    check(`${tag} 照片還是 1080×1080 的 JPEG`, dim === '1080x1080' && mono.startsWith('data:image/jpeg'))
+  }
+  check(`${tag} 沒有錯誤`, errors.length === 0, errors.join(' | '))
+  await ctx.close()
+}
+
 /** 30 張滿了：照樣可以拍、可以看，只是不存；寵物說請爸爸媽媽整理 */
 async function photoFull(b) {
   const { page, errors, ctx } = await freshApp(b, SIZES.phone, TOUCH)
@@ -581,11 +1013,26 @@ try {
   await run('drive-layout', () => driveLayout(b, 'phone', SIZES.phone, '4-5'))
   await run('drive-lap', () => driveLap(b))
   await run('drive-3', () => drive3(b))
+  await run('drive-toys', () => driveLayout(b, 'land', SIZES.land, '6-7', 2))
+  await run('drive-toys', () => driveLayout(b, 'port', SIZES.port, '6-7', 2))
+  await run('drive-toys', () => driveLayout(b, 'phone', SIZES.phone, '6-7', 2))
+  await run('drive-toys', () => driveLayout(b, 'phone', SIZES.phone, '4-5', 1))
+  await run('drive-toys', () => driveCars(b, false))
+  await run('drive-toys', () => driveCars(b, true))
+  await run('drive-toys', () => driveLap(b, true))
+  await run('drive-toys', () => drive3(b, true))
+  await run('drive-toys', () => driveWashReduced(b))
   await run('drive-67', () => drive67(b))
   await run('photo-layout', () => photoLayout(b, 'land', SIZES.land))
   await run('photo-layout', () => photoLayout(b, 'port', SIZES.port))
   await run('photo-layout', () => photoLayout(b, 'phone', SIZES.phone))
   await run('photo-flow', () => photoFlow(b))
+  await run('photo-toys', () => photoFriends(b, 'land', SIZES.land))
+  await run('photo-toys', () => photoFriends(b, 'port', SIZES.port))
+  await run('photo-toys', () => photoFriends(b, 'phone', SIZES.phone))
+  await run('photo-toys', () => photoFrames(b, 'land', SIZES.land))
+  await run('photo-toys', () => photoFrames(b, 'port', SIZES.port))
+  await run('photo-toys', () => photoFrames(b, 'phone', SIZES.phone))
   await run('photo-full', () => photoFull(b))
   await run('timers', () => timers(b))
 } finally {

@@ -37,6 +37,12 @@
 }
 .photo-sticker .art, .photo-sticker .art-emoji { width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 3px 3px rgb(0 0 0 / 0.2)); }
 .photo-sticker[data-out='1'] { opacity: 0.45; }
+/* v8.5 色調與相框的預覽：蓋在佈景、寵物、貼紙上面，不接手指。
+   色調用混色模式（不是 filter）：黑白 = 把彩度拿掉、暖暖 = 疊一層淡淡的黃；拍下來的照片是 canvas 算像素，這裡只是預覽 */
+.photo-tone { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.photo-tone-mono { background: #808080; mix-blend-mode: saturation; }
+.photo-tone-warm { background: #ffecc7; mix-blend-mode: multiply; }
+.photo-decor { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; display: block; pointer-events: none; }
 .photo-flash { position: absolute; inset: 0; z-index: 5; background: #fff; opacity: 0; pointer-events: none; }
 
 .photo-side { flex: 0 0 var(--photo-side); width: var(--photo-side); height: min(calc(100dvh - 28px), 100%); display: flex; flex-direction: column; gap: 12px; min-height: 0; }
@@ -57,6 +63,11 @@
 }
 .photo-item .art, .photo-item .art-emoji { width: 100%; height: 100%; pointer-events: none; }
 .photo-item-hat { background: #fff6e0; }
+/* v8.5 動物朋友那一排：淡藍色的底，跟貼紙分得出來 */
+.photo-item-friend { background: #e6f4ff; }
+/* v8.5 工具列多了相框與色調：四顆排成一排（每顆還是 56 以上） */
+.photo-tools[data-more] { gap: 8px; }
+.photo-tools[data-more] .photo-tool { padding: 4px; border-radius: 18px; }
 .photo-item.on { border-color: #f48fb1; }
 .photo-shutter {
   flex: 0 0 auto; align-self: center; width: 116px; height: 116px; display: grid; place-items: center; padding: 14px; border: 0; border-radius: 50%;
@@ -76,6 +87,9 @@
   .photo-tools { grid-column: 1; grid-row: 1 / 3; flex-direction: column; }
   .photo-tool { width: 72px; flex: 0 0 auto; }
   .photo-tray { grid-column: 2; grid-row: 1 / 3; grid-template-columns: none; grid-auto-flow: column; grid-template-rows: repeat(2, 72px); grid-auto-columns: 72px; overflow-x: auto; overflow-y: hidden; height: 172px; }
+  /* v8.5 四顆工具：直向排成 2×2 */
+  .photo-tools[data-more] { display: grid; grid-template-columns: repeat(2, 64px); gap: 10px; }
+  .photo-tools[data-more] .photo-tool { width: 64px; }
   .photo-item { touch-action: pan-x; }
   .photo-shutter { grid-column: 3; grid-row: 1 / 3; width: 104px; height: 104px; }
 }
@@ -83,6 +97,8 @@
   .photo-side { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; grid-template-rows: auto auto; }
   .photo-tools { grid-column: 1 / 3; grid-row: 2; flex-direction: row; }
   .photo-tool { flex: 1 1 0; width: auto; }
+  .photo-tools[data-more] { display: flex; gap: 6px; }
+  .photo-tools[data-more] .photo-tool { width: auto; min-width: 56px; }
   .photo-tray { grid-column: 1 / 4; grid-row: 1; height: 172px; }
   .photo-shutter { grid-column: 3; grid-row: 2; width: 96px; height: 96px; }
   .photo-frame-wrap { --photo-frame: min(calc(100vw - 32px), calc(100dvh - 84px - 12px - 18px - 310px)); }

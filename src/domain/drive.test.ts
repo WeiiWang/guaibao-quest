@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import {
+  CAR_KINDS,
+  CAR_META,
   CROSS_BLOCK,
   CROSS_MS,
+  CROSS_S,
+  LIGHT_S,
+  SHINE_MS,
+  WASH_MS,
+  WASH_S,
+  isShiny,
+  nextCar,
   DRIVE_H,
   DRIVE_W,
   LIGHT_BLOCK,
@@ -277,5 +286,119 @@ describe('開車：載乘客', () => {
     expect(riderAt(0)).toEqual(riderAt(0))
     expect(new Set([0, 1, 2, 3].map((i) => riderAt(i).animal)).size).toBe(4)
     expect(new Set([0, 1, 2, 3, 4, 5].map((i) => riderAt(i).house)).size).toBe(3)
+  })
+})
+
+describe('v8.5 洗車站', () => {
+  it('位置離紅綠燈、斑馬線、站牌、岔路口都遠', () => {
+    const gap = (a: number, b: number) => Math.min(((a - b) % LOOP_LEN + LOOP_LEN) % LOOP_LEN, ((b - a) % LOOP_LEN + LOOP_LEN) % LOOP_LEN)
+    for (const at of [LIGHT_S, LIGHT_BLOCK, CROSS_S, CROSS_BLOCK, STOP_S, ...SPURS.map((s) => s.at)]) expect(gap(WASH_S, at)).toBeGreaterThan(100)
+    // 在直線上（不是轉彎的地方）：車頭方向在洗車站前後不變
+    expect(near(loopAt(WASH_S - 40).a, loopAt(WASH_S + 40).a)).toBe(true)
+  })
+  it('沒有這個新玩具：路上沒有洗車站，車子直接開過去，事件跟以前一模一樣', () => {
+    const a = drive(startDrive('4-5'), 30000)
+    expect(a.cues.some((c) => c.cue === 'wash' || c.cue === 'washed')).toBe(false)
+    expect(a.st.washes).toBe(0)
+    expect(a.st.served).toBeGreaterThanOrEqual(1)
+  })
+  it('開進洗車站停一下刷一刷，洗好才能走；洗完亮晶晶一陣子', () => {
+    let st = startDrive('4-5', true)
+    const out = drive(st, 40000)
+    const wash = out.cues.find((c) => c.cue === 'wash')!
+    const washed = out.cues.find((c) => c.cue === 'washed')!
+    expect(wash).toBeTruthy()
+    expect(washed.t - wash.t).toBeGreaterThanOrEqual(WASH_MS)
+    expect(washed.t - wash.t).toBeLessThan(WASH_MS + 100)
+    // 洗的時候車子停在洗車站裡
+    st = startDrive('4-5', true)
+    let seen = false
+    for (let t = 0; t <= 40000; t += 50) {
+      st = { ...st, car: moveToward(st.car, loopAt(st.car.s + 40), driveLimit(st, t), false) }
+      st = stepDrive(st, t).st
+      if (st.wash) {
+        seen = true
+        expect(near(st.car.s, st.wash.occ, 2.01)).toBe(true)
+        expect(near(((st.wash.occ % LOOP_LEN) + LOOP_LEN) % LOOP_LEN, WASH_S)).toBe(true)
+        expect(driveLimit(st, t)).toBe(st.car.s)
+        expect(isShiny(st, t)).toBe(false)
+      }
+    }
+    expect(seen).toBe(true)
+    expect(isShiny({ shineAt: washed.t }, washed.t + SHINE_MS - 1)).toBe(true)
+    expect(isShiny({ shineAt: washed.t }, washed.t + SHINE_MS)).toBe(false)
+  })
+  it('不會直接衝過去：手指甩再快也會停在洗車站', () => {
+    let st: DriveState = { ...startDrive('4-5', true), car: { spur: -1, s: WASH_S - 30, t: 0, rev: false }, rider: { phase: 'ride', n: 0, at: 0, stopAt: STOP_S } }
+    st = { ...st, car: moveToward(st.car, loopAt(WASH_S + 60), driveLimit(st, 0), false) }
+    expect(st.car.s).toBeLessThanOrEqual(WASH_S + 0.01)
+  })
+  it('每一圈洗一次；洗完倒車再往前不會重洗', () => {
+    const out = drive(startDrive('4-5', true), 90000)
+    const n = out.cues.filter((c) => c.cue === 'wash').length
+    expect(n).toBeGreaterThanOrEqual(2)
+    expect(out.st.washes).toBe(n)
+    // 兩次洗車之間隔了一整圈
+    const ts = out.cues.filter((c) => c.cue === 'wash').map((c) => c.t)
+    expect(ts[1] - ts[0]).toBeGreaterThan(5000)
+    // 洗完倒車 40 再往前開：同一圈不重洗
+    let st: DriveState = { ...startDrive('4-5', true), car: { spur: -1, s: WASH_S, t: 0, rev: false }, rider: { phase: 'ride', n: 0, at: 0, stopAt: STOP_S } }
+    st = stepDrive(st, 0).st
+    expect(st.wash).not.toBeNull()
+    st = stepDrive(st, WASH_MS).st
+    expect(st.wash).toBeNull()
+    st = { ...st, car: { ...st.car, s: WASH_S - 40 } }
+    const again = drive(st, 600, WASH_MS + 50)
+    expect(again.cues.some((c) => c.cue === 'wash')).toBe(false)
+    expect(again.st.car.s).toBeGreaterThan(WASH_S + 20)
+  })
+  it.each(['3', '4-5'] as const)('%s 歲有洗車站：紅綠燈、斑馬線、乘客照常，還是載得完一位', (band) => {
+    const run = (wash: boolean) => {
+      let st = startDrive(band, wash)
+      const cues: DriveCue[] = []
+      let redMax = -Infinity
+      let crossMax = -Infinity
+      for (let t = 0; t <= 60000 && st.served < 1; t += 50) {
+        const lim = driveLimit(st, t)
+        st = { ...st, car: band === '3' ? advance(st.car, 7.5, lim) : moveToward(st.car, loopAt(st.car.s + 40), lim, false) }
+        const r = stepDrive(st, t)
+        st = r.st
+        cues.push(...r.cues)
+        if (lightColor(st, t) !== 'green') redMax = Math.max(redMax, st.car.s)
+        if (crossProgress(st, t) !== null) crossMax = Math.max(crossMax, st.car.s)
+      }
+      return { st, cues, redMax, crossMax }
+    }
+    const a = run(false)
+    const b = run(true)
+    expect(b.st.served).toBe(1)
+    expect(b.redMax).toBeLessThanOrEqual(LIGHT_BLOCK + 0.01)
+    expect(b.crossMax).toBeLessThanOrEqual(CROSS_BLOCK + 0.01)
+    // 多了洗車的兩件事，其他的事一件不少、順序不變
+    expect(b.cues.filter((c) => c !== 'wash' && c !== 'washed')).toEqual(a.cues)
+    expect(b.cues.filter((c) => c === 'wash')).toHaveLength(1)
+    expect(b.cues.filter((c) => c === 'washed')).toHaveLength(1)
+  })
+  it('6–7 歲：在岔路上不會被洗車站擋住，送得到乘客', () => {
+    let out = drive(startDrive('6-7', true), 4000)
+    expect(out.st.rider.phase).toBe('ride')
+    const want = riderAt(0).house
+    const j = SPURS.findIndex((s) => s.house === want)
+    out = drive(out.st, 60000, 4050, toHouse(j))
+    expect(out.st.served).toBe(1)
+  })
+})
+
+describe('v8.5 換車', () => {
+  it('車庫按一下換下一台：小紅車 → 消防車 → 冰淇淋車 → 小紅車', () => {
+    expect(CAR_KINDS).toEqual(['red', 'fire', 'ice'])
+    expect(nextCar('red')).toBe('fire')
+    expect(nextCar('fire')).toBe('ice')
+    expect(nextCar('ice')).toBe('red')
+  })
+  it('每台車有自己的喇叭；新車第一次換有一句話', () => {
+    expect(CAR_META.red).toEqual({ art: 'ui-car-top', horn: 'horn', line: null })
+    expect(CAR_META.fire).toEqual({ art: 'ui-car-fire-top', horn: 'siren', line: 'pet.play.drive.fire' })
+    expect(CAR_META.ice).toEqual({ art: 'ui-car-ice-top', horn: 'jingle', line: 'pet.play.drive.ice' })
   })
 })
