@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as RPointerEvent, type ReactNode } from 'react'
+import { getAudioContext, getAudioState } from '../../../learning/audioEngine'
 import { useArtStatus } from '../../artProbe'
 import { Art } from '../../components/Art'
 import { reducedMotion } from '../playground/playU'
@@ -196,6 +197,32 @@ export function useDragLayer<T>(opts: DragOpts<T>) {
     </div>
   )
   return { bind, layer, clear }
+}
+
+/** 收銀台刷條碼的「嗶」（Web Audio 合成，音效關掉時不響）。回傳有沒有出聲 */
+export function scanBeep(): boolean {
+  if (!getAudioState().sfxEnabled) return false
+  try {
+    const c = getAudioContext()
+    if (!c) return false
+    if (c.state !== 'running') void c.resume()?.catch?.(() => {})
+    const t = c.currentTime
+    const o = c.createOscillator()
+    const g = c.createGain()
+    o.type = 'square'
+    o.frequency.setValueAtTime(1320, t)
+    g.gain.setValueAtTime(0.0001, t)
+    g.gain.exponentialRampToValueAtTime(0.09, t + 0.01)
+    g.gain.setValueAtTime(0.09, t + 0.08)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.13)
+    o.connect(g).connect(c.destination)
+    o.onended = () => g.disconnect()
+    o.start(t)
+    o.stop(t + 0.15)
+    return true
+  } catch {
+    return false
+  }
 }
 
 /** 點 (x, y) 在不在元素上（手指大，多給一點邊） */

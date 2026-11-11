@@ -16,6 +16,13 @@
 .doc-sym-knee { left: 41%; top: 87%; width: 15%; height: 11%; }
 .doc-sym-throat { left: 50%; top: 59%; width: 18%; height: 9%; animation: doc-tickle 0.7s ease-in-out infinite; }
 @keyframes doc-tickle { 50% { transform: translate(-50%, -60%) scale(1.08, 0.9); } }
+/* v8.5 發燒：頭上三道熱氣往上飄；打嗝：嘴邊一顆一顆跳出來的小泡泡 */
+.doc-sym-fever { left: 50%; top: 3%; width: 34%; height: 15%; display: flex; justify-content: space-between; }
+.doc-sym-fever svg { display: block; width: 22%; height: 100%; opacity: 0; animation: doc-steam 1.5s ease-out infinite; }
+@keyframes doc-steam { 0% { opacity: 0; transform: translateY(30%) scaleY(0.7); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-45%) scaleY(1.1); } }
+.doc-sym-hiccup { left: 69%; top: 47%; width: 12%; height: 12%; }
+.doc-sym-hiccup i { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, rgb(210 240 255 / 0.9)); box-shadow: inset 0 0 0 2px rgb(150 205 240 / 0.8), 0 1px 4px rgb(80 120 170 / 0.25); opacity: 0; animation: doc-hic 1.6s ease-out infinite; }
+@keyframes doc-hic { 0% { opacity: 0; transform: translate(-30%, 40%) scale(0.3); } 12% { opacity: 1; transform: translate(0, 0) scale(1.1); } 55% { opacity: 1; transform: translate(10%, -70%) scale(0.95); } 100% { opacity: 0; transform: translate(40%, -170%) scale(0.7); } }
 
 .doc-bandage-on { position: absolute; z-index: 4; left: 41%; top: 87%; width: 19%; height: 9%; transform: translate(-50%, -50%) rotate(-12deg); pointer-events: none; filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.18)); animation: doc-stick 0.35s cubic-bezier(0.2, 1.5, 0.4, 1); }
 @keyframes doc-stick { from { transform: translate(-50%, -50%) rotate(-12deg) scale(1.6); opacity: 0; } }
@@ -30,6 +37,21 @@
 .doc-fx-beam { left: 50%; top: 50%; width: 34%; height: 24%; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 250 200 / 0.85), rgb(255 240 150 / 0.4) 60%, transparent); animation: doc-glow-in 0.3s ease-out both; }
 @keyframes doc-glow-in { from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); } }
 @keyframes doc-pop { from { opacity: 0; transform: translate(-50%, -50%) scale(0.3); } }
+/* v8.5 冰枕的小雪花、喝水的水滴 */
+.doc-fx-cool { left: 50%; top: 8%; width: 52%; height: 15%; display: flex; justify-content: space-between; }
+.doc-fx-cool svg { width: 26%; height: 100%; animation: doc-flake 1.1s ease-in-out infinite; }
+@keyframes doc-flake { 0%, 100% { opacity: 0.35; transform: scale(0.7) rotate(0); } 50% { opacity: 1; transform: scale(1.05) rotate(30deg); } }
+.doc-fx-drops { left: 33%; top: 57%; width: 22%; height: 12%; display: flex; justify-content: space-between; }
+.doc-fx-drops svg { width: 26%; height: 100%; opacity: 0; animation: doc-drip 0.9s ease-in infinite; }
+@keyframes doc-drip { 0% { opacity: 0; transform: translateY(-40%) scale(0.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(70%) scale(1); } }
+
+/* v8.5 照骨頭：一個跟著板子走的窗子，裡面是固定對著寵物身體的骨頭（寬度要跟 Doctor.tsx 的 XRAY_SIZE 一樣） */
+.doc-xray { position: absolute; z-index: 7; left: 0; top: 0; width: 44%; height: 44%; border-radius: 16%; overflow: hidden; isolation: isolate; background: rgb(22 44 92 / 0.88); box-shadow: 0 0 0 max(4px, 0.9vmin) #8fe3ff, 0 0 0 max(7px, 1.5vmin) #fff, 0 8px 18px rgb(0 0 0 / 0.3); pointer-events: none; visibility: hidden; }
+.doc-xray.on { visibility: visible; }
+.doc-xray-in { position: absolute; left: 0; top: 0; width: calc(100% / 0.44); height: calc(100% / 0.44); }
+.doc-xray-bones { display: block; width: 100%; height: 100%; }
+.doc-xray-heart { transform-box: fill-box; transform-origin: 50% 50%; animation: doc-xbeat 0.62s ease-in-out infinite; }
+@keyframes doc-xbeat { 0%, 100% { transform: scale(0.82); } 18% { transform: scale(1.18); } 36% { transform: scale(0.92); } 52% { transform: scale(1.06); } }
 
 .doc-sticker { position: absolute; z-index: 6; left: 66%; top: 66%; width: 22%; height: 22%; transform: translate(-50%, -50%) rotate(-10deg); pointer-events: none; filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.22)); animation: doc-sticker-in 0.6s cubic-bezier(0.2, 1.4, 0.4, 1); }
 .doc-sticker svg { width: 100%; height: 100%; display: block; }
@@ -38,6 +60,8 @@
 /* 工具盤 */
 .doc-tray { position: absolute; z-index: 6; right: max(16px, env(safe-area-inset-right)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.6vmin, 16px); }
 .doc-tray:has(.held), .doc-tray:has(.busy) { z-index: 12; }
+/* v8.5 工具變多（7、8 個）：橫向排兩欄、直向排兩排 */
+.doc-tray:not([data-count='5']) { display: grid; grid-template-columns: repeat(2, var(--tool)); }
 .doc-slot { position: relative; width: var(--tool); height: var(--tool); border-radius: 30%; background: rgb(255 255 255 / 0.78); box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.9), 0 4px 12px rgb(60 40 90 / 0.14); }
 .doc-slot.used .doc-tool:not(.busy) { opacity: 0.5; }
 .doc-slot.lit { background: #fffbe6; box-shadow: inset 0 0 0 4px #ffd166, 0 0 0 6px rgb(255 209 102 / 0.45), 0 8px 20px rgb(60 40 90 / 0.18); }
@@ -48,21 +72,25 @@
 .doc-tool.held, .doc-tool.busy { z-index: 15; filter: drop-shadow(0 10px 12px rgb(0 0 0 / 0.26)); }
 .doc-tool.flying { transition: transform 0.38s cubic-bezier(0.3, 1.2, 0.5, 1); }
 
-.doc-again { position: absolute; z-index: 8; left: 50%; bottom: max(22px, env(safe-area-inset-bottom)); transform: translateX(-50%); }
+.doc-again { position: absolute; z-index: 8; left: 50%; bottom: max(22px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; align-items: center; gap: clamp(12px, 3vmin, 28px); }
+.doc-again:has(.held) { z-index: 12; }
 
 @media (orientation: landscape) {
-  .doc-again { left: auto; right: max(24px, env(safe-area-inset-right)); bottom: 50%; transform: translateY(50%); }
+  .doc-again { left: auto; right: max(24px, env(safe-area-inset-right)); bottom: 50%; transform: translateY(50%); flex-direction: column; }
 }
 
 @media (orientation: portrait) {
   .doc-root { --pet: min(78vw, 54vh); --tool: clamp(60px, 12vmin, 112px); }
   .doc-pet { left: 50%; top: 45%; }
   .doc-tray { right: auto; left: 50%; top: auto; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); flex-direction: row; gap: clamp(6px, 1.6vmin, 16px); }
+  .doc-tray:not([data-count='5']) { grid-template-columns: repeat(4, var(--tool)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .doc-sym-sneeze i, .doc-sym-tummy, .doc-sym-throat, .doc-fx-heart, .doc-slot.lit .doc-tool:not(.held), .doc-sticker, .doc-bandage-on, .doc-fx-reading, .doc-fx-beam { animation: none; }
-  .doc-sym-sneeze i { opacity: 0.8; }
+  .doc-sym-sneeze i, .doc-sym-tummy, .doc-sym-throat, .doc-fx-heart, .doc-slot.lit .doc-tool:not(.held), .doc-sticker, .doc-bandage-on, .doc-fx-reading, .doc-fx-beam,
+  .doc-sym-fever svg, .doc-sym-hiccup i, .doc-fx-cool svg, .doc-fx-drops svg, .doc-xray-heart { animation: none; }
+  .doc-sym-sneeze i, .doc-sym-fever svg, .doc-sym-hiccup i, .doc-fx-drops svg { opacity: 0.8; }
+  .doc-sym-hiccup i:nth-child(2) { transform: translate(60%, -90%) scale(0.7); }
   .doc-sym-sneeze i:nth-child(2) { left: 34%; top: 20%; }
   .doc-sym-sneeze i:nth-child(3) { left: 66%; top: 0; }
   .doc-tool.flying { transition: none; }

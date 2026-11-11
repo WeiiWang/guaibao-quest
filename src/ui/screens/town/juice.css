@@ -45,10 +45,19 @@
 @keyframes jc-pop-up { 0% { transform: translateY(8px) scale(0.6); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-14px) scale(1.1); opacity: 0; } }
 .jc-hearts { position: absolute; left: 50%; top: 10%; width: 0; height: 0; pointer-events: none; }
 .jc-hearts i { position: absolute; font-style: normal; font-size: clamp(26px, 5vmin, 44px); color: #ff6f91; --a: calc(var(--i) * 72deg - 90deg); animation: jc-heart 1.2s ease-out calc(var(--i) * 80ms) both; }
+/* v8.5 果汁有裝飾：多一圈小星星，客人多跳幾下 */
+.jc-hearts i.jc-star { color: #ffd257; font-size: clamp(22px, 4.2vmin, 38px); animation-name: jc-star; }
+.jc-guest[data-fancy='1'] .jc-guest-body { animation: jc-hop 0.4s ease-out 4; }
 @keyframes jc-heart {
   from { transform: translate(-50%, 0) scale(0.4); opacity: 0; }
   30% { opacity: 1; }
   to { transform: translate(calc(-50% + cos(var(--a)) * 100px), calc(sin(var(--a)) * 80px)) scale(1.1); opacity: 0; }
+}
+
+@keyframes jc-star {
+  from { transform: translate(-50%, 0) scale(0.3) rotate(0); opacity: 0; }
+  30% { opacity: 1; }
+  to { transform: translate(calc(-50% + cos(var(--a)) * 150px), calc(sin(var(--a)) * 120px)) scale(1.1) rotate(140deg); opacity: 0; }
 }
 
 .jc-again { position: absolute; inset: 0; display: grid; place-items: center; }
@@ -59,6 +68,12 @@
 .jc-fruit { aspect-ratio: 1; width: 100%; min-width: 56px; min-height: 56px; max-height: 110px; padding: 8%; border: 0; border-radius: 22px; background: rgb(255 255 255 / 0.8); touch-action: none; -webkit-tap-highlight-color: transparent; }
 .jc-fruit:active { transform: scale(0.94); }
 .jc-fruit img, .jc-fruit .art-emoji { pointer-events: none; }
+/* v8.5 草莓和橘子加進來是 7 種：一排 7 格 */
+.jc-tray[data-count='7'] { grid-template-columns: repeat(7, minmax(56px, 1fr)); width: min(60%, 640px); }
+/* v8.5 裝飾盤：倒好之後取代水果盤（同一個位置）。加過的變淡 */
+.jc-decos { grid-template-columns: repeat(3, minmax(56px, 110px)); justify-content: center; animation: jc-plop 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.jc-deco[data-used='1'] { opacity: 0.35; }
+.jc-deco-art { pointer-events: none; }
 
 .jc-blender { position: relative; height: 100%; max-height: 300px; aspect-ratio: 1; min-width: 96px; padding: 0; border: 0; background: none; -webkit-tap-highlight-color: transparent; }
 .jc-blender-body { position: absolute; inset: 0; display: block; }
@@ -89,6 +104,11 @@
 .jc-cup-juice[data-on='1'] { opacity: 0.82; transform: scaleY(1); }
 .jc-cup-art { position: absolute; inset: 0; z-index: 2; }
 .ys-ghost .jc-cup-body, .ys-flyer .jc-cup-body { position: absolute; inset: 0; }
+/* v8.5 杯子上的裝飾：吸管斜插在左邊、小雨傘插在杯口、冰塊浮在果汁上（位置對齊 ui-juice-cup 的杯身） */
+.jc-cup-deco { position: absolute; z-index: 4; display: block; pointer-events: none; animation: jc-plop 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.jc-cup-deco-straw { left: 10%; top: -4%; width: 46%; height: 62%; transform: rotate(-24deg); }
+.jc-cup-deco-umbrella { left: 36%; top: -16%; width: 44%; height: 56%; transform: rotate(10deg); }
+.jc-cup-deco-ice { left: 30%; top: 46%; width: 38%; height: 30%; }
 
 /* 直向（iPad 直、手機）：上面是寵物和客人，下面櫃台分兩排：水果一排、果汁機和杯子一排 */
 @media (max-aspect-ratio: 1/1) {
@@ -99,7 +119,7 @@
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
   }
   .jc-counter { flex-wrap: wrap; align-content: flex-end; align-items: flex-end; row-gap: 10px; }
-  .jc-tray { width: min(100%, 560px); }
+  .jc-tray, .jc-tray[data-count='7'] { width: min(100%, 560px); }
   .jc-blender { height: auto; width: clamp(110px, 32vw, 230px); }
   .jc-cup { height: auto; width: clamp(80px, 22vw, 160px); }
   .jc-bubble { left: auto; right: 4%; bottom: 92%; }
@@ -107,18 +127,21 @@
 @media (max-width: 560px) and (max-aspect-ratio: 1/1) {
   .jc { gap: 6px; padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
   .jc-tray { padding: 6px; gap: 4px; }
+  /* 手機放不下一排 7 格（每格要 56 以上）：排成 4 + 3 兩排 */
+  .jc-tray[data-count='7'] { grid-template-columns: repeat(4, minmax(56px, 66px)); justify-content: center; }
   .jc-bubble { padding: 8px 10px; }
 }
 /* 手機橫放：矮 */
 @media (max-height: 500px) and (min-aspect-ratio: 1/1) {
   .jc { --jc-counter: 150px; --jc-pet: 110px; --jc-guest: 150px; }
-  .jc-tray { width: min(50%, 420px); padding: 6px; }
+  .jc-tray, .jc-tray[data-count='7'] { width: min(54%, 520px); padding: 6px; }
   .jc-fruit { max-height: 72px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .jc-guest, .jc-guest[data-leaving], .jc-guest .jc-guest-body, .jc-blender[data-spinning='1'] .jc-blender-body, .jc-jar-fruit, .jc-jar-fruits[data-spin='1'] .jc-jar-fruit,
-  .jc-blender-go[data-ready='1'], .jc-cup[data-full='1'], .jc-swirl, .jc-funny b, .jc-hearts i { animation: none !important; }
+  .jc-blender-go[data-ready='1'], .jc-cup[data-full='1'], .jc-swirl, .jc-funny b, .jc-hearts i, .jc-decos, .jc-cup-deco { animation: none !important; }
+  .jc-hearts i.jc-star { transform: translate(calc(-50% + cos(var(--a)) * 120px), calc(sin(var(--a)) * 95px)); }
   .jc-guest[data-leaving] { opacity: 0.4; }
   .jc-jar-fruits[data-spin='1'] { animation: none; opacity: 0.3; }
   .jc-blender-go[data-ready='1'] { opacity: 1; }

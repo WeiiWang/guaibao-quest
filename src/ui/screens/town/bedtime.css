@@ -1,4 +1,4 @@
-/* v8.4 晚安小屋（寵物框不設 z-index：Z 字與夢話泡泡要浮到黑幕上面）。寵物站在小床上；橫向工具在右邊一欄，直向在下面一排。class 都用 bed- 開頭。
+/* v8.4 晚安小屋（寵物框不設 z-index：Z 字與夢話泡泡要浮到黑幕上面）。寵物坐在小床的被窩裡（v8.5：被子蓋住腳，不再站在床上）；橫向工具在右邊一欄，直向在下面一排。class 都用 bed- 開頭。
    動畫只用 opacity 與 transform（WebKit 的 filter 動畫會當掉）。舞台不用 transform 置中：它不能變成疊層，Z 字和夜燈才浮得到黑幕上面 */
 .bed-root { position: absolute; inset: 0; --pet: min(46vmin, 50vh); --bed: calc(var(--pet) * 1.45); --tool: clamp(78px, 13vmin, 120px); touch-action: none; }
 
@@ -6,14 +6,22 @@
 .bed-bed { position: absolute; left: 0; bottom: 0; width: 100%; height: calc(var(--bed) * 0.62); container-type: size; pointer-events: none; }
 .bed-bed img { width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%; }
 
-.bed-pet { position: absolute; left: 50%; bottom: calc(var(--bed) * 0.3); width: var(--pet); height: var(--pet); margin-left: calc(var(--pet) / -2); touch-action: none; }
+.bed-pet { position: absolute; left: 50%; bottom: calc(var(--bed) * 0.19); width: var(--pet); height: var(--pet); margin-left: calc(var(--pet) / -2); touch-action: none; }
 .bed-pet-body { position: absolute; inset: 0; transition: transform 0.6s ease-in-out; }
-.bed-pet.is-asleep .bed-pet-body { transform: translateY(16%) scale(1.08); }
-.bed-pet.is-asleep.is-flipped .bed-pet-body { transform: translateY(16%) scale(-1.08, 1.08); }
+.bed-pet.is-asleep .bed-pet-body { transform: translateY(-4%) scale(1.08); }
+.bed-pet.is-asleep.is-flipped .bed-pet-body { transform: translateY(-4%) scale(-1.08, 1.08); }
+/* 被子：跟小床同一張圖、同一個位置，只留下被子以下的部分，蓋在寵物的腳上（DOM 在寵物後面所以畫在上面；不設 z-index，Z 字和夢話泡泡照樣浮在上面） */
+.bed-blanket { position: absolute; left: 0; bottom: 0; width: 100%; height: calc(var(--bed) * 0.62); container-type: size; pointer-events: none; clip-path: polygon(0 48%, 34% 45%, 50% 44%, 66% 45%, 100% 48%, 100% 100%, 0 100%); }
+.bed-blanket img { width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%; }
 .bed-companion { position: absolute !important; inset: 0; pointer-events: none; }
 .bed-spot { position: absolute; width: 1px; height: 1px; pointer-events: none; }
 .bed-spot-mouth { left: 50%; top: 50%; }
 .bed-spot-head { left: 50%; top: 10%; }
+.bed-spot-hug { left: 50%; top: 64%; }
+
+/* v8.5 抱抱玩偶：抱在胸前；睡著時（躺著的圖）跟著移到懷裡 */
+.bed-doll-on { position: absolute; left: 50%; top: 66%; width: 36%; height: 36%; transform: translate(-50%, -50%) rotate(-6deg); pointer-events: none; container-type: size; filter: drop-shadow(0 3px 3px rgb(0 0 0 / 0.2)); animation: bed-pop-in 0.35s cubic-bezier(0.2, 1.4, 0.4, 1); transition: left 0.6s, top 0.6s; }
+.bed-pet.is-asleep .bed-doll-on { left: 40%; top: 70%; }
 
 /* 刷牙的泡泡、牙齒亮晶晶 */
 .bed-foam { position: absolute; left: 34%; top: 42%; width: 32%; height: 18%; pointer-events: none; }
@@ -50,6 +58,9 @@
 .bed-lamp.on { z-index: 10; background: transparent; box-shadow: none; }
 .bed-lamp-glow { position: absolute; left: 50%; top: 50%; width: 260%; height: 260%; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 224 140 / 0.7), rgb(255 210 120 / 0.25) 55%, transparent); transform: translate(-50%, -50%) scale(0.6); opacity: 0; transition: opacity 1s, transform 1s; pointer-events: none; }
 .bed-lamp.on .bed-lamp-glow { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+/* v8.5 夜燈投影：還沒點過時，夜燈外面一圈光慢慢擴散，邀請孩子點 */
+.bed-lamp.proj::after { content: ''; position: absolute; inset: -6%; border-radius: 50%; border: 4px solid rgb(255 236 170 / 0.9); opacity: 0; animation: bed-ring 2.4s ease-out infinite; pointer-events: none; }
+@keyframes bed-ring { 0% { opacity: 0; transform: scale(0.7); } 30% { opacity: 0.9; } 100% { opacity: 0; transform: scale(1.5); } }
 
 /* 關燈：一層深藍的遮罩（用不透明度，不用 filter），加上會閃、慢慢轉的星星 */
 .bed-dark { position: absolute; inset: 0; z-index: 9; background: rgb(16 20 64 / 0.62); opacity: 0; transition: opacity 1.2s ease; pointer-events: none; }
@@ -57,6 +68,20 @@
 .bed-stars { position: absolute; z-index: 10; inset: -30% -10% 20%; pointer-events: none; animation: bed-spin 80s linear infinite; transform-origin: 50% 70%; }
 .bed-stars i { position: absolute; width: clamp(10px, 2.2vmin, 20px); aspect-ratio: 1; background: #fff3b0; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: bed-twinkle 2.4s ease-in-out infinite; }
 @keyframes bed-spin { to { transform: rotate(360deg); } }
+
+/* v8.5 夜燈投影（海底、彩虹）：照在房間上半部，像投影的光，淡淡的 */
+.bed-proj { position: absolute; z-index: 10; left: 0; right: 0; top: 0; height: 40%; overflow: hidden; pointer-events: none; animation: bed-proj-in 0.9s ease both; }
+@keyframes bed-proj-in { from { opacity: 0; } }
+.bed-fish { position: absolute; left: 0; width: clamp(60px, 13vmin, 120px); opacity: 0.85; animation: bed-swim 18s linear infinite; }
+.bed-fish svg { display: block; }
+.bed-fish.rev { animation-name: bed-swim-rev; }
+@keyframes bed-swim { from { transform: translateX(110vw); } to { transform: translateX(-30vw); } }
+@keyframes bed-swim-rev { from { transform: translateX(-30vw) scaleX(-1); } to { transform: translateX(110vw) scaleX(-1); } }
+.bed-sea i { position: absolute; bottom: -6%; width: clamp(8px, 1.8vmin, 16px); aspect-ratio: 1; border-radius: 50%; box-shadow: inset 0 0 0 2px rgb(200 240 255 / 0.9); opacity: 0; animation: bed-bubble 7s ease-in infinite; }
+@keyframes bed-bubble { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 15% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(-38vh) scale(1.2); } }
+.bed-rainbow { display: grid; place-items: end center; }
+.bed-rainbow svg { display: block; width: 92%; height: 90%; opacity: 0.86; animation: bed-glow 4s ease-in-out infinite; }
+@keyframes bed-glow { 0%, 100% { opacity: 0.7; } 50% { opacity: 0.95; } }
 
 /* 故事書與搖籃曲的音符 */
 .bed-story-wrap { position: absolute; z-index: 6; left: 44%; bottom: 6%; width: min(58vmin, 420px); height: calc(min(58vmin, 420px) * 0.67); margin-left: calc(min(58vmin, 420px) / -2); padding: 0; border: 0; background: none; }
@@ -71,6 +96,10 @@
 /* 工具盤 */
 .bed-tray { position: absolute; z-index: 6; right: max(16px, env(safe-area-inset-right)); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.6vmin, 16px); }
 .bed-tray:has(.held), .bed-tray:has(.flying) { z-index: 12; }
+/* v8.5 抱抱玩偶：那一步才出現的三個玩偶。橫向在左邊一欄，直向在工具盤上面一排 */
+.bed-dolls { position: absolute; z-index: 6; left: max(16px, env(safe-area-inset-left)); top: 54%; transform: translateY(-50%); display: flex; flex-direction: column; gap: clamp(8px, 1.6vmin, 16px); animation: bed-pop-in 0.35s cubic-bezier(0.2, 1.4, 0.4, 1); }
+.bed-dolls:has(.held), .bed-dolls:has(.flying) { z-index: 12; }
+.bed-dolls .bed-slot.taken .bed-tool { visibility: hidden; }
 .bed-slot { position: relative; width: var(--tool); height: var(--tool); border-radius: 30%; background: rgb(255 255 255 / 0.6); box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.75); transition: opacity 0.25s; }
 .bed-slot:not(.active) { opacity: 0.45; }
 .bed-slot.active { background: #fffbe6; box-shadow: inset 0 0 0 4px #ffd166, 0 8px 20px rgb(30 20 60 / 0.25); }
@@ -89,10 +118,22 @@
   .bed-story-wrap { left: 50%; bottom: auto; top: 58%; }
   .bed-tray { right: auto; left: 50%; top: auto; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); flex-direction: row; }
   .bed-again { right: auto; left: 50%; transform: translateX(-50%); }
+  .bed-proj { height: 34%; }
+  .bed-dolls { left: 50%; top: auto; bottom: calc(max(20px, env(safe-area-inset-bottom)) + var(--tool) + clamp(10px, 2vmin, 20px)); transform: translateX(-50%); flex-direction: row; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bed-foam i, .bed-shine i, .bed-cap, .bed-zzz i, .bed-dream, .bed-lamp.ready, .bed-stars, .bed-stars i, .bed-book, .bed-book-pic, .bed-notes i, .bed-slot.active .bed-tool:not(.held):not(.flying) { animation: none; }
+  .bed-foam i, .bed-shine i, .bed-cap, .bed-zzz i, .bed-dream, .bed-lamp.ready, .bed-stars, .bed-stars i, .bed-book, .bed-book-pic, .bed-notes i, .bed-slot.active .bed-tool:not(.held):not(.flying),
+  .bed-doll-on, .bed-dolls, .bed-proj, .bed-fish, .bed-sea i, .bed-rainbow svg, .bed-lamp.proj::after { animation: none; }
+  .bed-lamp.proj::after { opacity: 0.8; }
+  .bed-sea i { opacity: 0.8; bottom: auto; top: 30%; }
+  .bed-sea i:nth-of-type(odd) { top: 62%; }
+  .bed-fish { left: 12%; }
+  .bed-fish:nth-child(2) { left: 58%; }
+  .bed-fish:nth-child(3) { left: 30%; }
+  .bed-fish:nth-child(4) { left: 78%; }
+  .bed-fish:nth-child(5) { left: 44%; }
+  .bed-doll-on { transition: none; }
   .bed-zzz i, .bed-notes i { opacity: 1; }
   .bed-zzz i:nth-child(2) { transform: translate(60%, -90%); }
   .bed-zzz i:nth-child(3) { transform: translate(120%, -180%); }

@@ -1,4 +1,6 @@
-// v8.4 線 Y E2E：快樂小街的超市、果汁攤。
+// v8.4 線 Y E2E：快樂小街的超市、果汁攤。v8.5 加上新玩具（用 playCount 設定玩完幾次；每個都測「沒有」和「有」）：
+//   超市：玩完 1 次貨架和清單多四種新商品；玩完 3 次多切換按鈕可以當老闆（拖過掃描器、收硬幣、6–7 歲找錢）。
+//   果汁攤：玩完 1 次多草莓和橘子；玩完 3 次倒好之後可以加吸管、小雨傘、冰塊，有加客人更開心。
 // 三種尺寸 × 三個年齡檔、不橫向溢出、觸控目標、寵物不擋操作；
 // 超市：清單依年齡（2/3/4 種）、3 歲點了就飛進車、4 歲以上要拖、放外面飛回、兩指同時放、打勾、
 //       拿錯的結帳時問（放回 / 留下）、收銀台一個一個嗶、價錢（點點 / 數字）算對、投不夠就等、投多找零算對、
@@ -21,7 +23,11 @@ const shot = async (page, name) => {
 }
 const TOUCH = { ctxOpts: { hasTouch: true } }
 /** 超市 6–7 歲的單價（跟 domain/market.ts 對照：這裡另外寫一份，畫面算錯就抓得到） */
-const PRICE = { carrot: 1, cookie: 2, banana: 2, apple: 3, grape: 4, milk: 3, peach: 4, riceball: 3, watermelon: 5, cake: 5 }
+const PRICE = { carrot: 1, cookie: 2, banana: 2, apple: 3, grape: 4, milk: 3, peach: 4, riceball: 3, watermelon: 5, cake: 5, balloon: 2, ball: 4, toothbrush: 2, soap: 3 }
+/** v8.5 玩完 1 次之後貨架上多出來的新商品（不是食物） */
+const GOODS = ['balloon', 'ball', 'toothbrush', 'soap']
+const osc = (page) => page.evaluate(() => window.__audio.osc)
+const settings = (page) => idb(page, (db) => new Promise((r) => (db.transaction('settings').objectStore('settings').get('main').onsuccess = (e) => r(e.target.result))))
 
 /** 手指：接觸面積像真機（約 50px 寬） */
 const FINGER = { radiusX: 25, radiusY: 25, force: 0.5 }
@@ -51,9 +57,9 @@ const patchSettings = (page, patch) =>
       }),
     patch,
   )
-/** 設年齡後直接進玩法（用 replaceState 再 reload：不觸發 hashchange，WebKit 不會報 lazy import 被打斷） */
-const enter = async (page, game, age) => {
-  await patchSettings(page, { ageBand: age })
+/** 設年齡後直接進玩法（用 replaceState 再 reload：不觸發 hashchange，WebKit 不會報 lazy import 被打斷）。plays = 這個地方玩完幾次（v8.5：決定有幾個新玩具） */
+const enter = async (page, game, age, plays = 0) => {
+  await patchSettings(page, { ageBand: age, ...(plays ? { playCount: { [game]: plays } } : {}) })
   await page.evaluate((g) => history.replaceState(null, '', `#game/${g}`), game)
   await page.reload()
   await page.waitForSelector(`[data-testid=${game}][data-band="${age}"]`)
@@ -144,6 +150,7 @@ async function testMarket(b, name, vp, band) {
   const units = list.reduce((s, l) => s + l.qty, 0)
   check(`${tag} 同一種要 2 個時畫 2 個圖`, (await page.locator('.mkt-line-pic').count()) === units)
   check(`${tag} 貨架 ${band === '3' ? 8 : 10} 種`, (await page.locator('[data-testid^=mkt-food-]').count()) === (band === '3' ? 8 : 10))
+  check(`${tag}（沒有新玩具）貨架和清單都沒有新商品、沒有切換按鈕`, (await page.locator(GOODS.map((g) => `[data-testid=mkt-food-${g}]`).join(', ')).count()) === 0 && !list.some((l) => GOODS.includes(l.id)) && (await page.getByTestId('mkt-mode').count()) === 0)
   const tags = await page.locator('[data-testid=mkt-shelf] [data-testid=mkt-tag]').count()
   check(`${tag} 價錢牌：3 歲沒有、其他每樣都有`, band === '3' ? tags === 0 : tags === (await page.locator('[data-testid^=mkt-food-]').count()))
   if (band === '6-7') {
@@ -327,19 +334,36 @@ async function testMarket(b, name, vp, band) {
   check(`${tag} 不扣星星（流水帳沒變）`, (await ledgerCount(page)) === led0)
   const pet1 = await getPet(page)
   check(`${tag} 寵物狀態沒變`, pet1.hunger === pet0.hunger && pet1.feedCount === pet0.feedCount)
+  check(`${tag} 玩完第 1 次，卡上有新玩具（新商品）`, (await page.getByTestId('play-toy').getAttribute('data-toy')) === 'goods')
+  check(`${tag} 卡還沒收下，貨架還是原本的`, (await page.getByTestId('play-market').getAttribute('data-toys')) === '0')
   await closeGift(page)
 
-  // 再買一次：換下一張清單，同一天不再送
+  // 再買一次：換下一張清單，同一天不再送。v8.5：收下新玩具後，這一張清單和貨架多了新商品
   await page.getByTestId('play-again').tap()
   await page.waitForSelector('[data-testid=market][data-phase=shop][data-round="1"]')
   check(`${tag} 再買一次換下一張清單`, (await data(page, 'market', 'list')) !== list.map((l) => `${l.id}:${l.qty}`).join(','), await data(page, 'market', 'list'))
   check(`${tag} 再買一次購物車是空的`, (await cartCount(page)) === 0)
   const list2 = parseList(await data(page, 'market', 'list'))
-  await putInCart(page, send, list2[0].id, band)
+  const shelf2 = await page.locator('[data-testid^=mkt-food-]').evaluateAll((els) => els.map((e) => e.dataset.testid.replace('mkt-food-', '')))
+  check(`${tag} 新商品：貨架多四種（共 ${band === '3' ? 12 : 14} 種），排在食物後面`, shelf2.length === (band === '3' ? 12 : 14) && shelf2.slice(-4).join() === GOODS.join(), shelf2.join())
+  check(`${tag} 新商品：清單上剛好一樣（最後一行），種類數不變`, list2.length === kinds && list2.filter((l) => GOODS.includes(l.id)).length === 1 && GOODS.includes(list2.at(-1).id), JSON.stringify(list2))
+  // 新商品的圖還沒生好時畫的是 emoji（算文字）：把那四個 emoji 去掉之後不能有別的字
+  const listText = (await page.getByTestId('mkt-list').innerText()).replace(/\u{1F388}|\u{26BD}|\u{1FAA5}|\u{1F9FC}|\u{FE0F}|\s/gu, '')
+  check(`${tag} 新商品：清單上畫得出來（只有圖）`, (await page.locator(`[data-testid=mkt-line][data-id=${list2.at(-1).id}] .mkt-line-pic`).count()) === 1 && listText === '', listText)
+  check(`${tag} 新商品：觸控目標 ≥ 56、都在畫面內、不溢出`, (await smallTargets(page)).length === 0 && (await allInside(page, '[data-testid^=mkt-food-], [data-testid=mkt-list], [data-testid=mkt-cart], [data-testid=mkt-register]')).length === 0 && (await noOverflowX(page)), (await smallTargets(page)).join())
+  check(`${tag} 新商品：貨架不被寵物或清單擋住、每樣都點得到`, (await overlaps(page, '[data-testid=mkt-pet], [data-testid=mkt-list]', '[data-testid=mkt-shelf], [data-testid=mkt-cart], [data-testid=mkt-register], [data-testid=game-back]')).length === 0 && (await covered(page, '[data-testid^=mkt-food-], [data-testid=mkt-register]')).length === 0)
+  if (band === '6-7') check(`${tag} 新商品：有價錢`, (await page.locator('[data-testid=mkt-food-ball] [data-testid=mkt-tag]').innerText()).trim() === String(PRICE.ball))
+  check(`${tag} 只有第一個新玩具時沒有切換按鈕`, (await page.getByTestId('mkt-mode').count()) === 0)
+  await sleep(page, 300) // 貨架是重新畫出來的：等圖解碼完再截
+  await shot(page, `market-7-goods-${name}-${band}`)
+  // 這次只買那樣新商品
+  await putInCart(page, send, list2.at(-1).id, band)
   await sleep(page, 100)
+  check(`${tag} 新商品放得進購物車、清單那一行打勾`, (await cartCount(page)) === 1 && (await page.locator(`[data-testid=mkt-line][data-id=${list2.at(-1).id}][data-done="1"]`).count()) === 1)
   await page.getByTestId('mkt-register').tap()
   await page.waitForSelector('[data-testid=market][data-phase=pay]', { timeout: 8000 })
   const bill2 = Number(await data(page, 'market', 'bill'))
+  check(`${tag} 新商品的價錢算對`, bill2 === (band === '6-7' ? PRICE[list2.at(-1).id] : 1), String(bill2))
   // 6–7 歲這次剛好付（5 → 1 → …），不找錢
   if (band === '6-7') {
     for (const c of [10, 5, 1]) while (Number(await data(page, 'market', 'paid')) + c <= bill2) await coin(c)
@@ -348,9 +372,200 @@ async function testMarket(b, name, vp, band) {
   check(`${tag} 第二次剛好付不找錢`, Number(await data(page, 'market', 'change')) === 0 && Number(await data(page, 'market', 'paid')) === (band === '3' ? 1 : bill2))
   await sleep(page, 2000)
   check(`${tag} 同一天第二次不再送禮物`, (await page.getByTestId('play-gift').count()) === 0)
+  const inv2 = await inventory(page)
+  check(`${tag} 新商品不進背包`, sum(inv2) === sum(inv0) + 1 && !GOODS.some((g) => g in inv2))
   check(`${tag} 沒有錯誤`, realErrors(errors).length === 0, realErrors(errors).join(' | '))
   await send.detach()
   await ctx.close()
+}
+
+/** v8.5 當老闆（玩完 3 次）：切換按鈕、把東西拖過掃描器、收寵物的硬幣、6–7 歲找錢 */
+async function testMarketBoss(b, name, vp, band) {
+  const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
+  const send = await touchSender(ctx, page)
+  const tag = `老闆[${name}/${band}]`
+  await enter(page, 'market', band, 3)
+  const inv0 = await inventory(page)
+  const led0 = await ledgerCount(page)
+  check(`${tag} 一進來是自己買，有切換按鈕`, (await data(page, 'market', 'mode')) === 'shop' && (await page.getByTestId('mkt-mode').count()) === 1)
+  check(`${tag} 切換按鈕 ≥ 56、在畫面內、沒有字`, (await smallTargets(page)).length === 0 && (await allInside(page, '[data-testid=mkt-mode]')).length === 0 && (await page.getByTestId('mkt-mode').innerText()).trim() === '', (await smallTargets(page)).join())
+  const clash = await overlaps(page, '[data-testid=mkt-mode]', '[data-testid=mkt-list], [data-testid=mkt-shelf], [data-testid=mkt-cart], [data-testid=mkt-register], [data-testid=game-back], [data-testid=mkt-pet]')
+  check(`${tag} 切換按鈕不擋清單貨架購物車收銀台回去鍵`, clash.length === 0, clash.join())
+  check(`${tag} 自己買的畫面照舊：貨架點得到、不溢出`, (await covered(page, '[data-testid^=mkt-food-], [data-testid=mkt-register]')).length === 0 && (await noOverflowX(page)))
+  await shot(page, `boss-1-shop-${name}-${band}`)
+
+  await page.getByTestId('mkt-mode').tap()
+  await page.waitForSelector('[data-testid=market][data-mode=boss][data-phase=scan]')
+  await sleep(page, 500)
+  check(`${tag} 換成當老闆，寵物說要買這些`, (await said(page, 'market')).includes('boss.want'))
+  const order = (await data(page, 'market', 'order')).split(',')
+  const n = order.length
+  const kinds = { 3: 2, '4-5': 3, '6-7': 4 }[band]
+  check(`${tag} 東西已經在櫃台上（${n} 個）`, n >= kinds && n <= 6 && (await page.getByTestId('mkt-boss-item').count()) === n && Number(await data(page, 'market', 'scanned')) === 0, order.join())
+  check(`${tag} 觸控目標 ≥ 56、都在畫面內、不溢出`, (await smallTargets(page)).length === 0 && (await allInside(page, '[data-testid=mkt-boss-item], [data-testid=mkt-scan], [data-testid=mkt-bag], [data-testid=mkt-slot], [data-testid=mkt-pet], [data-testid=mkt-mode]')).length === 0 && (await noOverflowX(page)), (await smallTargets(page)).join())
+  const clash2 = await overlaps(page, '[data-testid=mkt-pet], [data-testid=mkt-mode], [data-testid=game-back]', '[data-testid=mkt-belt], [data-testid=mkt-slot], [data-testid=mkt-display]')
+  check(`${tag} 寵物、切換按鈕、回去鍵不擋櫃台`, clash2.length === 0, clash2.join())
+  check(`${tag} 東西都點得到`, (await covered(page, '[data-testid=mkt-boss-item]')).length === 0)
+  check(`${tag} 有手勢示範（拖過掃描器）`, (await page.getByTestId('gesture-hint').count()) === 1)
+  await shot(page, `boss-2-scan-${name}-${band}`)
+
+  const itemAt = (i) => centerOf(page, `[data-testid=mkt-boss-item] >> nth=${i}`)
+  const scannedN = async () => Number(await data(page, 'market', 'scanned'))
+  // 點一下：3 歲自己滑過去；4 歲以上不算，手勢再示範
+  await fingerTap(send, await itemAt(0))
+  await sleep(page, 150)
+  if (band === '3') check(`${tag} 3 歲點一下就刷過去`, (await scannedN()) === 1 && (await page.getByTestId('mkt-boss-item').count()) === n - 1)
+  else check(`${tag} 4 歲以上點一下不算、再示範一次`, (await scannedN()) === 0 && (await page.getByTestId('gesture-hint').count()) === 1)
+  // 拖到一半、還沒過掃描器就放開：不算，飛回去
+  const scanBox = (await centerOf(page, '[data-testid=mkt-scan]')).box
+  const it0 = await itemAt(0)
+  const before0 = await scannedN()
+  if (it0.x - 70 > 0 && scanBox.x - (it0.x - 70) > 60) {
+    await fingerDrag(send, it0, { x: it0.x - 70, y: it0.y - 10 })
+    await sleep(page, 60)
+    check(`${tag} 沒拖過掃描器不算、會飛回去`, (await scannedN()) === before0 && (await page.locator('[data-testid=ys-ghost][data-back]').count()) === 1)
+    await sleep(page, 450)
+  }
+  // 一樣一樣拖過掃描器：每個嗶一聲，價錢跟著加
+  const bag = await centerOf(page, '[data-testid=mkt-bag]')
+  let sumPrice = 0
+  let beeps = 0
+  for (let k = before0; k < n; k++) {
+    const id = await page.locator('[data-testid=mkt-boss-item]').first().getAttribute('data-id')
+    const o0 = await osc(page)
+    // 第一個放在掃描器上、其他放進袋子那一側
+    await fingerDrag(send, await itemAt(0), k === before0 ? { x: scanBox.x + scanBox.width / 2, y: scanBox.y + scanBox.height / 2 } : bag)
+    await sleep(page, 120)
+    sumPrice += PRICE[id]
+    if ((await osc(page)) > o0) beeps++
+    if ((await scannedN()) !== k + 1) break
+    if (band === '4-5') check(`${tag} 刷第 ${k + 1} 個：多一個點點`, (await page.getByTestId('mkt-bill-dot').count()) === k + 1)
+    if (band === '6-7') check(`${tag} 刷第 ${k + 1} 個（${id}）：數字加到 ${sumPrice}`, (await page.getByTestId('mkt-bill-num').innerText()).trim() === String(sumPrice))
+  }
+  check(`${tag} 每一樣都拖得過掃描器`, (await scannedN()) === n && (await page.getByTestId('mkt-boss-item').count()) === 0 && (await page.getByTestId('mkt-belt-item').count()) === n)
+  check(`${tag} 每刷一個嗶一聲`, beeps === n - before0, `${beeps}/${n - before0}`)
+  if (band === '6-7') {
+    const total = order.reduce((s, id) => s + PRICE[id], 0)
+    check(`${tag} 6–7 歲價錢是數字，加對`, (await page.getByTestId('mkt-bill-num').innerText()).trim() === String(total) && Number(await data(page, 'market', 'bill')) === total && total >= 5 && total <= 20, `${await page.getByTestId('mkt-bill-num').innerText()} vs ${total}`)
+  }
+  if (band === '3') check(`${tag} 3 歲沒有價錢`, (await page.locator('[data-testid=mkt-belt-item] [data-testid=mkt-tag]').count()) === 0)
+
+  // 寵物給錢
+  await page.waitForSelector('[data-testid=market][data-phase=pay]', { timeout: 4000 })
+  check(`${tag} 刷完寵物說給你錢`, (await said(page, 'market')).includes('boss.pay'))
+  const bill = Number(await data(page, 'market', 'bill'))
+  const need = Number(await data(page, 'market', 'need'))
+  const offer = await page.getByTestId('mkt-give-coin').evaluateAll((els) => els.map((e) => Number(e.dataset.value)))
+  const offerSum = offer.reduce((a, c) => a + c, 0)
+  if (band === '3') check(`${tag} 3 歲寵物給一枚`, offer.length === 1 && need === 1)
+  if (band === '4-5') check(`${tag} 4–5 歲寵物拿出比點點多兩枚 1 元，收 ${bill} 枚就夠`, offer.length === bill + 2 && offer.every((c) => c === 1) && need === bill && bill === n && bill <= 5, offer.join())
+  if (band === '6-7') check(`${tag} 6–7 歲寵物多給（${offerSum} > ${bill}，5 的倍數）`, offerSum > bill && offerSum % 5 === 0 && offerSum - bill <= 5 && need === offer.length, offer.join('+'))
+  check(`${tag} 硬幣 ≥ 56、在畫面內、不被寵物擋住`, (await smallTargets(page)).length === 0 && (await allInside(page, '[data-testid=mkt-give-coin], [data-testid=mkt-hand]')).length === 0 && (await overlaps(page, '[data-testid=mkt-pet], [data-testid=game-back], [data-testid=mkt-mode]', '[data-testid=mkt-give-coin]')).length === 0 && (await covered(page, '[data-testid=mkt-give-coin]')).length === 0, (await smallTargets(page)).join())
+  check(`${tag} 收錢時不溢出、有手勢示範`, (await noOverflowX(page)) && (await page.getByTestId('gesture-hint').count()) === 1)
+  await shot(page, `boss-3-pay-${name}-${band}`)
+  const takeOne = () => page.locator('[data-testid=mkt-give-coin][data-taken="0"]').first().tap({ force: true })
+  for (let i = 0; i < need - 1; i++) await takeOne()
+  if (need > 1) {
+    // 還沒收夠就等著：不催、不倒數
+    const before = (await said(page, 'market')).length
+    await sleep(page, 1500)
+    check(`${tag} 還沒收夠就等著（不催）`, (await data(page, 'market', 'phase')) === 'pay' && (await said(page, 'market')).length === before)
+    check(`${tag} 收一枚就多一枚`, (await page.getByTestId('mkt-paid-coin').count()) === need - 1)
+    if (band === '4-5') check(`${tag} 收一枚點點亮一個`, (await page.locator('[data-testid=mkt-bill-dot][data-on="1"]').count()) === need - 1)
+  }
+  await takeOne()
+  const got = Number(await data(page, 'market', 'got'))
+  check(`${tag} 收到的錢算對`, got === (band === '6-7' ? offerSum : need), String(got))
+
+  if (band === '6-7') {
+    const change = offerSum - bill
+    await page.waitForSelector('[data-testid=mkt-opts]')
+    check(`${tag} 寵物說要找錢`, (await data(page, 'market', 'phase')) === 'change' && Number(await data(page, 'market', 'change')) === change)
+    await page.waitForFunction(() => (document.querySelector('[data-testid=market]')?.dataset.said ?? '').includes('boss.change'), null, { timeout: 3000 }).catch(() => null)
+    check(`${tag} 寵物說了 change`, (await said(page, 'market')).includes('boss.change'))
+    const opts = await page.getByTestId('mkt-opt').evaluateAll((els) => els.map((e) => Number(e.dataset.amount)))
+    check(`${tag} 三個選項都不一樣、有對的（${change}）`, opts.length === 3 && new Set(opts).size === 3 && opts.includes(change) && opts.every((a) => a > 0), opts.join())
+    check(`${tag} 選項只有硬幣（沒有字）、≥ 56、在畫面內`, (await page.getByTestId('mkt-opts').innerText()).replace(/[\d\s]/g, '') === '' && (await smallTargets(page)).length === 0 && (await allInside(page, '[data-testid=mkt-opt]')).length === 0 && (await noOverflowX(page)), (await smallTargets(page)).join())
+    check(`${tag} 選項不被寵物或切換按鈕擋住`, (await overlaps(page, '[data-testid=mkt-pet], [data-testid=mkt-mode]', '[data-testid=mkt-opt]')).length === 0 && (await covered(page, '[data-testid=mkt-opt]')).length === 0)
+    await shot(page, `boss-4-change-${name}-${band}`)
+    // 先選錯：寵物搖頭，可以再選
+    const wrong = opts.find((a) => a !== change)
+    const w0 = Number((await page.getByTestId('mkt-pet').getAttribute('data-wiggles')) ?? 0)
+    await page.locator(`[data-testid=mkt-opt][data-amount="${wrong}"]`).tap()
+    await sleep(page, 200)
+    check(`${tag} 選錯：寵物搖頭、還能再選、沒有扣東西`, Number((await page.getByTestId('mkt-pet').getAttribute('data-wiggles')) ?? 0) === w0 + 1 && (await data(page, 'market', 'phase')) === 'change' && (await page.getByTestId('mkt-opt').count()) === 3 && (await data(page, 'market', 'given')) === '')
+    await page.locator(`[data-testid=mkt-opt][data-amount="${change}"]`).tap()
+    await sleep(page, 150)
+    check(`${tag} 選對：找回 ${change} 元`, Number(await data(page, 'market', 'given')) === change && (await page.getByTestId('mkt-change').count()) === 1)
+  } else check(`${tag} ${band} 歲不用找錢`, Number(await data(page, 'market', 'change')) === 0 && (await page.getByTestId('mkt-opts').count()) === 0)
+
+  await page.waitForSelector('[data-testid=market][data-phase=done]', { timeout: 5000 })
+  check(`${tag} 做完寵物說謝謝老闆`, (await said(page, 'market')).at(-1) === 'boss.thanks')
+  check(`${tag} 做完不能再收錢`, (await page.getByTestId('mkt-give-coin').count()) === 0)
+  await page.waitForSelector('[data-testid=play-gift]', { timeout: 4000 })
+  check(`${tag} 當老闆玩完也有結尾（今天第一次有禮物）`, true)
+  await shot(page, `boss-5-done-${name}-${band}`)
+  await closeGift(page)
+  check(`${tag} 一回合只算玩完一次`, (await settings(page)).playCount?.market === 4, String((await settings(page)).playCount?.market))
+  check(`${tag} 當老闆不扣星星、東西不進背包（只多禮物 1 個）`, (await ledgerCount(page)) === led0 && sum(await inventory(page)) === sum(inv0) + 1)
+
+  // 再玩一次：換一批東西；再切回去是自己買
+  await page.getByTestId('play-again').tap()
+  await page.waitForSelector('[data-testid=market][data-mode=boss][data-phase=scan][data-round="1"]')
+  check(`${tag} 再玩一次：寵物買的不一樣、從頭開始`, (await data(page, 'market', 'order')) !== order.join(',') && Number(await data(page, 'market', 'scanned')) === 0 && (await said(page, 'market')).at(-1) === 'boss.want')
+  await page.getByTestId('mkt-mode').tap()
+  await page.waitForSelector('[data-testid=market][data-mode=shop][data-phase=shop]')
+  check(`${tag} 再按切換按鈕回到自己買`, (await page.locator('[data-testid^=mkt-food-]').count()) === (band === '3' ? 12 : 14) && (await cartCount(page)) === 0)
+  await sleep(page, 1800)
+  check(`${tag} 切換不會多算一次`, (await settings(page)).playCount?.market === 4)
+  check(`${tag} 沒有錯誤`, realErrors(errors).length === 0, realErrors(errors).join(' | '))
+  await send.detach()
+  await ctx.close()
+}
+
+/** v8.5 當老闆的邊界：減少動態走得完、做到一半切換或離開不出錯、不多算次數 */
+async function testMarketBossEdge(b) {
+  const r = await freshApp(b, SIZES.port, TOUCH)
+  await r.page.emulateMedia({ reducedMotion: 'reduce' })
+  const send = await touchSender(r.ctx, r.page)
+  await enter(r.page, 'market', '3', 3)
+  await r.page.getByTestId('mkt-mode').tap()
+  await r.page.waitForSelector('[data-testid=market][data-mode=boss]')
+  const n = (await data(r.page, 'market', 'order')).split(',').length
+  for (let i = 0; i < n; i++) {
+    await fingerTap(send, await centerOf(r.page, '[data-testid=mkt-boss-item]'))
+    await sleep(r.page, 80)
+  }
+  check('老闆（減少動態）：點了不飛、直接刷過去', (await r.page.getByTestId('ys-flyer').count()) === 0 && Number(await data(r.page, 'market', 'scanned')) === n)
+  await r.page.waitForSelector('[data-testid=market][data-phase=pay]', { timeout: 4000 })
+  await r.page.getByTestId('mkt-give-coin').first().tap({ force: true })
+  await r.page.waitForSelector('[data-testid=market][data-phase=done]', { timeout: 4000 })
+  check('老闆（減少動態）：走得完', true)
+  check('老闆（減少動態）：沒有錯誤', realErrors(r.errors).length === 0, realErrors(r.errors).join(' | '))
+  await send.detach()
+  await r.ctx.close()
+
+  // 刷到一半切回自己買、再切回來、再離開：不出錯、不算玩完
+  const m = await freshApp(b, SIZES.land, TOUCH)
+  const send2 = await touchSender(m.ctx, m.page)
+  await enter(m.page, 'market', '4-5', 3)
+  await m.page.getByTestId('mkt-mode').tap()
+  await m.page.waitForSelector('[data-testid=market][data-mode=boss]')
+  await fingerDrag(send2, await centerOf(m.page, '[data-testid=mkt-boss-item]'), await centerOf(m.page, '[data-testid=mkt-bag]'))
+  await sleep(m.page, 100)
+  check('老闆：刷了一個', Number(await data(m.page, 'market', 'scanned')) === 1)
+  await m.page.getByTestId('mkt-mode').tap()
+  await m.page.waitForSelector('[data-testid=market][data-mode=shop]')
+  await m.page.getByTestId('mkt-mode').tap()
+  await m.page.waitForSelector('[data-testid=market][data-mode=boss]')
+  check('老闆：切走再切回來從頭開始', Number(await data(m.page, 'market', 'scanned')) === 0)
+  await fingerDrag(send2, await centerOf(m.page, '[data-testid=mkt-boss-item]'), await centerOf(m.page, '[data-testid=mkt-bag]'))
+  await m.page.getByTestId('game-back').tap()
+  await sleep(m.page, 1800)
+  check('老闆：做到一半離開不算玩完', (await settings(m.page)).playCount?.market === 3)
+  check('老闆（邊界）：沒有錯誤', realErrors(m.errors).length === 0, realErrors(m.errors).join(' | '))
+  await send2.detach()
+  await m.ctx.close()
 }
 
 /** 超市：拿錯的全部放回去會回到貨架；空車結帳不會進去；減少動態走得完 */
@@ -402,6 +617,8 @@ async function testMarketEdge(b) {
 
 // ======================= 果汁攤 =======================
 const JUICE_FRUITS = ['banana', 'apple', 'grape', 'peach', 'watermelon']
+/** v8.5 玩完 1 次之後多出來的水果 */
+const NEW_FRUITS = ['strawberry', 'orange']
 const jphase = (page) => data(page, 'juice', 'phase')
 const waitPhase = (page, p, timeout = 6000) => page.waitForSelector(`[data-testid=juice][data-phase=${p}]`, { timeout })
 const blenderCount = async (page) => Number(await page.getByTestId('juice-blender').getAttribute('data-count'))
@@ -434,6 +651,7 @@ async function testJuice(b, name, vp, band) {
   check(`${tag} 點單種類依年齡`, band === '3' ? nKinds === 1 : band === '4-5' ? nKinds === 2 : nKinds === 2 || nKinds === 3, order.join())
   check(`${tag} 泡泡裡是水果圖`, (await page.getByTestId('juice-order-fruit').count()) === nKinds && (await page.getByTestId('juice-bubble').innerText()).trim() === '')
   check(`${tag} 泡泡出現`, (await page.getByTestId('juice-bubble').getAttribute('data-shown')) === '1')
+  check(`${tag}（沒有新玩具）水果盤 5 種，沒有草莓和橘子`, (await page.locator('[data-testid^=juice-fruit-]').count()) === 5 && (await page.locator('[data-testid=juice-fruit-strawberry], [data-testid=juice-fruit-orange]').count()) === 0 && !order.some((f) => NEW_FRUITS.includes(f)))
   check(`${tag} 第一次有手勢示範`, (await page.getByTestId('gesture-hint').count()) === 1)
   check(`${tag} 不橫向溢出`, await noOverflowX(page))
   check(`${tag} 觸控目標 ≥ 56`, (await smallTargets(page)).length === 0, (await smallTargets(page)).join())
@@ -464,6 +682,7 @@ async function testJuice(b, name, vp, band) {
   check(`${tag} 倒進杯子`, (await page.getByTestId('juice-cup').getAttribute('data-full')) === '1' && (await blenderCount(page)) === 0)
   const cupColor = await page.locator('[data-testid=juice-cup] .jc-cup-juice').evaluate((e) => getComputedStyle(e).backgroundColor)
   check(`${tag} 杯子裡有果汁的顏色`, /rgb/.test(cupColor) && cupColor !== 'rgba(0, 0, 0, 0)', cupColor)
+  check(`${tag}（沒有新玩具）倒好之後沒有裝飾盤，水果盤還在`, (await page.getByTestId('juice-decos').count()) === 0 && (await page.getByTestId('juice-tray').count()) === 1 && !(await said(page, 'juice')).includes('deco'))
   await shot(page, `juice-2-ready-${name}-${band}`)
   await page.getByTestId('juice-customer').tap({ force: true }) // 點客人也能拿給他
   await waitPhase(page, 'funny')
@@ -517,13 +736,156 @@ async function testJuice(b, name, vp, band) {
   await shot(page, `juice-4-done-${name}-${band}`)
   const inv1 = await inventory(page)
   check(`${tag} 果汁不進背包（只多禮物 1 個）`, sum(inv1) === sum(inv0) + 1)
+  check(`${tag} 玩完第 1 次，卡上有新玩具（草莓和橘子）`, (await page.getByTestId('play-toy').getAttribute('data-toy')) === 'fruits')
+  check(`${tag} 卡還沒收下，水果盤還是 5 種`, (await page.locator('[data-testid^=juice-fruit-]').count()) === 5)
   await closeGift(page)
   await page.getByTestId('play-again').tap()
   await page.waitForSelector('[data-testid=juice][data-round="1"]')
   check(`${tag} 再一回客人接著輪（小兔子）`, (await data(page, 'juice', 'who')) === 'rabbit')
+
+  // v8.5：收下新玩具的下一回，水果盤多草莓和橘子，這一回一定有客人點到
+  await waitPhase(page, 'make')
+  check(`${tag} 新水果：水果盤 7 種（草莓、橘子排在後面）`, (await page.locator('[data-testid^=juice-fruit-]').evaluateAll((els) => els.map((e) => e.dataset.testid.replace('juice-fruit-', '')).join())) === [...JUICE_FRUITS, ...NEW_FRUITS].join())
+  check(`${tag} 新水果：觸控目標 ≥ 56、都在畫面內、不溢出`, (await smallTargets(page)).length === 0 && (await allInside(page, '[data-testid^=juice-fruit-], [data-testid=juice-blender], [data-testid=juice-cup], [data-testid=juice-customer], [data-testid=juice-pet]')).length === 0 && (await noOverflowX(page)), (await smallTargets(page)).join())
+  check(`${tag} 新水果：寵物、客人不擋櫃台，水果都點得到`, (await overlaps(page, '[data-testid=juice-pet], [data-testid=juice-customer]', '[data-testid=juice-tray], [data-testid=juice-blender], [data-testid=juice-cup], [data-testid=game-back]')).length === 0 && (await covered(page, '[data-testid^=juice-fruit-], [data-testid=juice-blender]')).length === 0)
+  await shot(page, `juice-5-fruits7-${name}-${band}`)
+  const orders = []
+  for (let g = 0; g < 3; g++) {
+    await waitPhase(page, 'make')
+    const o = (await data(page, 'juice', 'order')).split(',')
+    orders.push(o)
+    check(`${tag} 新水果：第 ${g + 1} 位點的種類數跟原本一樣`, band === '3' ? o.length === 1 : band === '4-5' ? o.length === 2 : o.length === 2 || o.length === 3, o.join())
+    await fillBlender(page, send, o)
+    await blendAndPour(page)
+    if (o.some((f) => NEW_FRUITS.includes(f))) {
+      const c = await page.locator('[data-testid=juice-cup] .jc-cup-juice').evaluate((e) => getComputedStyle(e).backgroundColor)
+      check(`${tag} 新水果打出來有顏色（${o.join('+')}）`, /rgb/.test(c) && c !== 'rgba(0, 0, 0, 0)', c)
+      check(`${tag} 新水果的點單泡泡畫得出來`, (await page.getByTestId('juice-order-fruit').count()) === o.length)
+      await shot(page, `juice-6-newfruit-${name}-${band}`)
+    }
+    check(`${tag} 只有第一個新玩具時，倒好之後沒有裝飾盤`, (await page.getByTestId('juice-decos').count()) === 0)
+    await fingerTap(send, await centerOf(page, '[data-testid=juice-cup]'))
+    await waitPhase(page, 'yum')
+    check(`${tag} 新水果做對了客人開心（沒有裝飾就是原本的開心）`, (await page.getByTestId('juice-customer').getAttribute('data-fancy')) === '0' && (await page.getByTestId('juice-star').count()) === 0)
+    await waitPhase(page, g < 2 ? 'arrive' : 'done', 8000)
+  }
+  check(`${tag} 新水果：這一回有客人點草莓或橘子`, orders.some((o) => o.some((f) => NEW_FRUITS.includes(f))), orders.map((o) => o.join('+')).join(' / '))
+  await sleep(page, 2000)
+  check(`${tag} 第 2 次沒有卡，只有星星和歡呼（不擋操作）`, (await page.getByTestId('play-gift').count()) === 0 && (await settings(page)).playCount?.juice === 2)
   check(`${tag} 沒有錯誤`, realErrors(errors).length === 0, realErrors(errors).join(' | '))
   await send.detach()
   await ctx.close()
+}
+
+/** v8.5 裝飾（玩完 3 次）：倒好之後水果盤換成吸管、小雨傘、冰塊，拖或點到杯子上；有加客人更開心，不加也可以 */
+async function testJuiceDeco(b, name, vp, band) {
+  const { ctx, page, errors } = await freshApp(b, vp, TOUCH)
+  const send = await touchSender(ctx, page)
+  const tag = `裝飾[${name}/${band}]`
+  await enter(page, 'juice', band, 3)
+  await waitPhase(page, 'make')
+  check(`${tag} 一進來就有兩個新玩具：水果盤 7 種`, (await page.getByTestId('play-juice').getAttribute('data-toys')) === '2' && (await page.locator('[data-testid^=juice-fruit-]').count()) === 7)
+  check(`${tag} 還沒倒好時沒有裝飾盤`, (await page.getByTestId('juice-decos').count()) === 0)
+  const order = (await data(page, 'juice', 'order')).split(',')
+  await fillBlender(page, send, order)
+  await blendAndPour(page)
+  await sleep(page, 350)
+  check(`${tag} 倒好之後水果盤換成裝飾盤（吸管、小雨傘、冰塊）`, (await page.getByTestId('juice-tray').count()) === 0 && (await page.locator('[data-testid^=juice-deco-]').evaluateAll((els) => els.map((e) => e.dataset.testid.replace('juice-deco-', '')).join())) === 'straw,umbrella,ice')
+  check(`${tag} 第一次寵物說要不要加吸管`, (await said(page, 'juice')).filter((x) => x === 'deco').length === 1)
+  check(`${tag} 裝飾盤只有圖、≥ 56、在畫面內、不溢出`, (await page.getByTestId('juice-decos').innerText()).trim() === '' && (await smallTargets(page)).length === 0 && (await allInside(page, '[data-testid^=juice-deco-], [data-testid=juice-decos], [data-testid=juice-cup], [data-testid=juice-blender]')).length === 0 && (await noOverflowX(page)), (await smallTargets(page)).join())
+  check(`${tag} 寵物、客人不擋裝飾盤，裝飾都點得到`, (await overlaps(page, '[data-testid=juice-pet], [data-testid=juice-customer]', '[data-testid=juice-decos], [data-testid=juice-cup]')).length === 0 && (await covered(page, '[data-testid^=juice-deco-]')).length === 0)
+  await shot(page, `deco-1-tray-${name}-${band}`)
+  const decoOn = async () => ((await page.getByTestId('juice-cup').getAttribute('data-deco')) ?? '').split(',').filter(Boolean)
+  const cup = await centerOf(page, '[data-testid=juice-cup]')
+  // 吸管用拖的
+  await fingerDrag(send, await centerOf(page, '[data-testid=juice-deco-straw]'), cup)
+  await sleep(page, 100)
+  check(`${tag} 吸管拖到杯子上`, (await decoOn()).join() === 'straw' && (await page.locator('[data-testid=juice-cup] [data-testid=juice-cup-deco][data-id=straw]').count()) === 1)
+  // 小雨傘拖到外面：不算、飛回去
+  await fingerDrag(send, await centerOf(page, '[data-testid=juice-deco-umbrella]'), await centerOf(page, '[data-testid=juice-pet]'))
+  await sleep(page, 60)
+  check(`${tag} 裝飾放在杯子外不算、會飛回去`, (await decoOn()).join() === 'straw' && (await page.locator('[data-testid=ys-ghost][data-back]').count()) === 1)
+  await sleep(page, 450)
+  // 冰塊用點的；再點一次不會多一個
+  await fingerTap(send, await centerOf(page, '[data-testid=juice-deco-ice]'))
+  await sleep(page, 100)
+  await fingerTap(send, await centerOf(page, '[data-testid=juice-deco-ice]'))
+  await sleep(page, 100)
+  check(`${tag} 冰塊點一下就加上去，同一種只能加一個`, (await decoOn()).join() === 'straw,ice' && (await page.getByTestId('juice-deco-ice').getAttribute('data-used')) === '1')
+  await fingerTap(send, await centerOf(page, '[data-testid=juice-deco-umbrella]'))
+  await sleep(page, 500)
+  check(`${tag} 三種都能加`, (await decoOn()).length === 3 && (await page.locator('[data-testid=juice-cup] [data-testid=juice-cup-deco]').count()) === 3)
+  check(`${tag} 杯子上的裝飾不擋手指`, (await page.locator('[data-testid=juice-cup] [data-testid=juice-cup-deco]').first().evaluate((el) => getComputedStyle(el).pointerEvents)) === 'none')
+  check(`${tag} 加了裝飾還在等孩子拿給客人（不催）`, (await jphase(page)) === 'ready')
+  await shot(page, `deco-2-cup-${name}-${band}`)
+  // 拖給客人：更開心
+  await fingerDrag(send, await centerOf(page, '[data-testid=juice-cup]'), await centerOf(page, '[data-testid=juice-customer]'))
+  await waitPhase(page, 'yum')
+  check(`${tag} 有裝飾：客人更開心（多一圈星星）`, (await page.getByTestId('juice-customer').getAttribute('data-fancy')) === '1' && (await page.getByTestId('juice-star').count()) === 5 && (await page.getByTestId('juice-hearts').getAttribute('data-more')) === '1')
+  await sleep(page, 350)
+  await shot(page, `deco-3-fancy-${name}-${band}`)
+  check(`${tag} 給出去之後杯子上的裝飾清掉`, (await decoOn()).length === 0)
+
+  // 第二位：不加裝飾直接給，也可以
+  await waitPhase(page, 'arrive')
+  await waitPhase(page, 'make')
+  check(`${tag} 下一位來了，水果盤回來`, (await page.getByTestId('juice-tray').count()) === 1 && (await page.getByTestId('juice-decos').count()) === 0)
+  await fillBlender(page, send, (await data(page, 'juice', 'order')).split(','))
+  await blendAndPour(page)
+  await fingerTap(send, await centerOf(page, '[data-testid=juice-cup]'))
+  await waitPhase(page, 'yum')
+  check(`${tag} 不加裝飾也可以直接給，客人照樣開心`, (await page.getByTestId('juice-customer').getAttribute('data-fancy')) === '0' && (await page.getByTestId('juice-hearts').count()) === 1 && (await page.getByTestId('juice-star').count()) === 0 && (await data(page, 'juice', 'served')) === '2')
+
+  // 第三位：做錯又加了裝飾 → 還是好笑的表情（裝飾不會讓做錯變對），再做一次
+  await waitPhase(page, 'arrive')
+  await waitPhase(page, 'make')
+  const order3 = (await data(page, 'juice', 'order')).split(',')
+  const wrong = [...JUICE_FRUITS, ...NEW_FRUITS].find((f) => !order3.includes(f))
+  await fillBlender(page, send, [wrong])
+  await blendAndPour(page)
+  await fingerTap(send, await centerOf(page, '[data-testid=juice-deco-straw]'))
+  await sleep(page, 100)
+  await fingerTap(send, await centerOf(page, '[data-testid=juice-cup]'))
+  await waitPhase(page, 'funny')
+  check(`${tag} 做錯加了裝飾還是好笑的表情`, (await page.getByTestId('juice-funny').count()) === 1 && (await page.getByTestId('juice-star').count()) === 0)
+  await waitPhase(page, 'make')
+  check(`${tag} 再做一次：水果盤回來、杯子是空的`, (await page.getByTestId('juice-tray').count()) === 1 && (await decoOn()).length === 0 && (await page.getByTestId('juice-cup').getAttribute('data-full')) === '0')
+  await fillBlender(page, send, order3)
+  await blendAndPour(page)
+  check(`${tag} 「要不要加吸管」只說第一次`, (await said(page, 'juice')).filter((x) => x === 'deco').length === 1)
+  await fingerTap(send, await centerOf(page, '[data-testid=juice-deco-umbrella]'))
+  await sleep(page, 100)
+  await page.getByTestId('juice-customer').tap({ force: true }) // 點客人也能拿給他（客人是 click，不是 pointer 事件）
+  await waitPhase(page, 'done', 8000)
+  check(`${tag} 3 位都喝到了`, (await data(page, 'juice', 'served')) === '3' && (await said(page, 'juice')).at(-1) === 'done')
+  await page.waitForSelector('[data-testid=play-gift]', { timeout: 4000 })
+  await closeGift(page)
+  check(`${tag} 一回合只算玩完一次`, (await settings(page)).playCount?.juice === 4, String((await settings(page)).playCount?.juice))
+  check(`${tag} 沒有錯誤`, realErrors(errors).length === 0, realErrors(errors).join(' | '))
+  await send.detach()
+  await ctx.close()
+}
+
+/** v8.5 裝飾：減少動態照樣能加、能給 */
+async function testJuiceDecoReduced(b) {
+  const m = await freshApp(b, SIZES.phone, TOUCH)
+  await m.page.emulateMedia({ reducedMotion: 'reduce' })
+  const send = await touchSender(m.ctx, m.page)
+  await enter(m.page, 'juice', '3', 3)
+  await waitPhase(m.page, 'make')
+  await fillBlender(m.page, send, (await data(m.page, 'juice', 'order')).split(','))
+  await blendAndPour(m.page)
+  await fingerTap(send, await centerOf(m.page, '[data-testid=juice-deco-ice]'))
+  await sleep(m.page, 100)
+  check('裝飾（減少動態）：點了不飛、直接加上去', (await m.page.getByTestId('ys-flyer').count()) === 0 && (await m.page.getByTestId('juice-cup').getAttribute('data-deco')) === 'ice')
+  await fingerTap(send, await centerOf(m.page, '[data-testid=juice-cup]'))
+  await waitPhase(m.page, 'yum')
+  check('裝飾（減少動態）：客人更開心', (await m.page.getByTestId('juice-customer').getAttribute('data-fancy')) === '1')
+  await m.page.getByTestId('game-back').tap()
+  await sleep(m.page, 1200)
+  check('裝飾（減少動態）：沒有錯誤', realErrors(m.errors).length === 0, realErrors(m.errors).join(' | '))
+  await send.detach()
+  await m.ctx.close()
 }
 
 /** 6–7 歲：泡泡看 4 秒收起來，點客人再出現（不扣分）；peek 只說一次 */
@@ -612,9 +974,18 @@ try {
   await run('market', () => testMarket(b, 'port', SIZES.port, '4-5'))
   await run('market', () => testMarket(b, 'phone', SIZES.phone, '3'))
   await run('market-edge', () => testMarketEdge(b))
+  await run('boss', () => testMarketBoss(b, 'land', SIZES.land, '6-7'))
+  await run('boss', () => testMarketBoss(b, 'port', SIZES.port, '4-5'))
+  await run('boss', () => testMarketBoss(b, 'phone', SIZES.phone, '3'))
+  await run('boss', () => testMarketBoss(b, 'phone', SIZES.phone, '6-7'))
+  await run('boss-edge', () => testMarketBossEdge(b))
   await run('juice', () => testJuice(b, 'land', SIZES.land, '4-5'))
   await run('juice', () => testJuice(b, 'port', SIZES.port, '6-7'))
   await run('juice', () => testJuice(b, 'phone', SIZES.phone, '3'))
+  await run('deco', () => testJuiceDeco(b, 'land', SIZES.land, '4-5'))
+  await run('deco', () => testJuiceDeco(b, 'port', SIZES.port, '6-7'))
+  await run('deco', () => testJuiceDeco(b, 'phone', SIZES.phone, '3'))
+  await run('deco-edge', () => testJuiceDecoReduced(b))
   await run('juice-peek', () => testJuicePeek(b))
 } finally {
   await b.close()

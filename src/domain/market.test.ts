@@ -20,7 +20,7 @@ import {
   marketListUnits,
   marketPay,
   marketShelf,
-  type MarketFood,
+  type MarketItem,
 } from './market'
 import type { AgeBand } from './types'
 
@@ -30,7 +30,7 @@ const DATES = Array.from({ length: 366 }, (_, i) => {
   const d = new Date(Date.UTC(2026, 0, 1 + i))
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
 })
-const expand = (lines: { id: MarketFood; qty: number }[]) => lines.flatMap((l) => Array<MarketFood>(l.qty).fill(l.id))
+const expand = (lines: { id: MarketItem; qty: number }[]) => lines.flatMap((l) => Array<MarketItem>(l.qty).fill(l.id))
 
 describe('超市：貨架', () => {
   it('3 歲 8 種、其他 10 種，都是食物', () => {
@@ -83,7 +83,7 @@ describe('超市：購物清單', () => {
         expect(total).toBeLessThanOrEqual(MARKET_MAX_BILL)
         expect(marketListUnits(l)).toBeLessThanOrEqual(MARKET_CART_MAX['6-7'])
         // 一個一個放進去都放得下
-        const cart: MarketFood[] = []
+        const cart: MarketItem[] = []
         for (const id of expand(l)) {
           expect(marketCanAdd('6-7', cart, id)).toBe(true)
           cart.push(id)

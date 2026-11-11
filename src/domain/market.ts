@@ -6,17 +6,28 @@ import type { AgeBand } from './types'
 // 這是孩子的數學練習：價錢、付了多少、找多少都要算對，所以全部在這裡、全部有單元測試。
 // 沒有輸：買錯、多拿、投不夠都只是等著或多一個選擇，不扣任何東西。硬幣是玩具硬幣，不是星星。
 
+// v8.5 新玩具：toys >= 1 貨架和清單多四種不是食物的商品；toys >= 2 可以換成「當老闆」（寵物來買，孩子刷條碼、收錢、找錢）。
+// toys === 0 時清單與貨架跟 v8.4 一模一樣。
+
 export type MarketFood = (typeof FOOD_IDS)[number]
 
-/** 貨架上的食物：3 歲 8 種（少一點比較好找），其他 10 種（全部） */
-export function marketShelf(band: AgeBand): readonly MarketFood[] {
+/** v8.5 不是食物的新商品（圖是 ui-mkt-<id>）：氣球、皮球、牙刷、肥皂 */
+export const MARKET_GOODS = ['balloon', 'ball', 'toothbrush', 'soap'] as const
+export type MarketGood = (typeof MARKET_GOODS)[number]
+/** 貨架上的東西：食物或新商品 */
+export type MarketItem = MarketFood | MarketGood
+export const isMarketGood = (id: string): id is MarketGood => (MARKET_GOODS as readonly string[]).includes(id)
+
+/** 貨架上的東西：3 歲 8 種食物（少一點比較好找），其他 10 種（全部）；toys >= 1 再多四種新商品（排在最後一排） */
+export function marketShelf(band: AgeBand, toys = 0): readonly MarketItem[] {
   // 3 歲拿掉最像的兩樣（飯糰、蛋糕），留下一眼就認得的蔬果、餅乾、牛奶
-  return band === '3' ? FOOD_IDS.filter((f) => f !== 'riceball' && f !== 'cake') : FOOD_IDS
+  const foods: readonly MarketFood[] = band === '3' ? FOOD_IDS.filter((f) => f !== 'riceball' && f !== 'cake') : FOOD_IDS
+  return toys >= 1 ? [...foods, ...MARKET_GOODS] : foods
 }
 
 /** 清單上的一行：要哪一種、要幾個（1 或 2） */
 export interface MarketLine {
-  id: MarketFood
+  id: MarketItem
   qty: number
 }
 
@@ -40,6 +51,12 @@ export const MARKET_PRICE: Record<MarketFood, number> = {
   cake: 5,
 }
 
+/** 新商品的單價（6–7 歲）：皮球最貴，氣球、牙刷便宜 */
+export const MARKET_GOOD_PRICE: Record<MarketGood, number> = { balloon: 2, ball: 4, toothbrush: 2, soap: 3 }
+
+/** 一樣東西多少錢（6–7 歲的單價；不認得的當 0） */
+export const marketPrice = (id: string): number => (isMarketGood(id) ? MARKET_GOOD_PRICE[id] : (MARKET_PRICE[id as MarketFood] ?? 0))
+
 /** 6–7 歲一次最多付多少（價錢是 5–20） */
 export const MARKET_MAX_BILL = 20
 export const MARKET_MIN_BILL = 5
@@ -61,25 +78,29 @@ const STRIDE = 3
  * - 4–5 歲：3 種，偶數回有一種要 2 個（總數 ≤ 4，付錢時最多 5 點）
  * - 6–7 歲：4 種，最便宜的那種要 2 個（總價不超過 20 才加）；總價固定在 5–20
  */
-export function marketList(date: string, round: number, band: AgeBand): MarketLine[] {
+export function marketList(date: string, round: number, band: AgeBand, toys = 0): MarketLine[] {
+  // 食物照 v8.4 的規則輪（新商品不參加輪替，所以有沒有新玩具，食物那幾行都一樣）
   const shelf = marketShelf(band)
   const n = shelf.length
+  const day = dayNumber(date)
   // 隔天往後挪 3 格（跟 8、10 都互質，一段時間會輪遍貨架），下一回挪 1 格
-  const seed = dayNumber(date) * 3 + round
+  const seed = day * 3 + round
   const start = ((seed % n) + n) % n
   const kinds = MARKET_KINDS[band]
   const lines: MarketLine[] = []
   for (let k = 0; k < kinds; k++) lines.push({ id: shelf[(start + k * STRIDE) % n], qty: 1 })
+  // v8.5 有新商品時：每張清單的最後一行換成一樣新商品（四種照日期和回數輪流），孩子拿到新玩具的下一張清單就買得到
+  if (toys >= 1) lines[kinds - 1] = { id: MARKET_GOODS[(((day + round) % MARKET_GOODS.length) + MARKET_GOODS.length) % MARKET_GOODS.length], qty: 1 }
   if (band === '4-5' && seed % 2 === 0) lines[seed % kinds].qty = 2
   if (band === '6-7') {
-    const cheapest = lines.reduce((a, b) => (MARKET_PRICE[b.id] < MARKET_PRICE[a.id] ? b : a))
-    if (marketListTotal(lines) + MARKET_PRICE[cheapest.id] <= MARKET_MAX_BILL) cheapest.qty = 2
+    const cheapest = lines.reduce((a, b) => (marketPrice(b.id) < marketPrice(a.id) ? b : a))
+    if (marketListTotal(lines) + marketPrice(cheapest.id) <= MARKET_MAX_BILL) cheapest.qty = 2
   }
   return lines
 }
 
 /** 清單全部照單買要多少錢（6–7 歲的單價） */
-export const marketListTotal = (lines: readonly MarketLine[]): number => lines.reduce((s, l) => s + MARKET_PRICE[l.id] * l.qty, 0)
+export const marketListTotal = (lines: readonly MarketLine[]): number => lines.reduce((s, l) => s + marketPrice(l.id) * l.qty, 0)
 
 /** 清單上的東西總共幾個 */
 export const marketListUnits = (lines: readonly MarketLine[]): number => lines.reduce((s, l) => s + l.qty, 0)
@@ -110,7 +131,7 @@ export function marketExtras(lines: readonly MarketLine[], cart: readonly string
 }
 
 /** 這個東西還放得進購物車嗎（放不下的會彈回貨架，不是做錯） */
-export function marketCanAdd(band: AgeBand, cart: readonly string[], id: MarketFood): boolean {
+export function marketCanAdd(band: AgeBand, cart: readonly string[], id: MarketItem): boolean {
   if (cart.length >= MARKET_CART_MAX[band]) return false
   if (band === '6-7') return marketBill(band, [...cart, id]) <= MARKET_MAX_BILL
   return true
@@ -125,7 +146,7 @@ export function marketCanAdd(band: AgeBand, cart: readonly string[], id: MarketF
 export function marketBill(band: AgeBand, cart: readonly string[]): number {
   if (band === '3') return 1
   if (band === '4-5') return Math.max(1, Math.min(MARKET_CART_MAX['4-5'], cart.length))
-  return cart.reduce((s, id) => s + (MARKET_PRICE[id as MarketFood] ?? 0), 0)
+  return cart.reduce((s, id) => s + marketPrice(id), 0)
 }
 
 /** 投了這些硬幣，一共付了多少 */
@@ -159,4 +180,44 @@ export function marketChangeCoins(change: number): Coin[] {
     }
   }
   return out
+}
+
+// ---- v8.5 當老闆：換寵物來買，孩子刷條碼、收硬幣；6–7 歲要找零 ----
+
+/** 寵物這一回要買的東西（一個一個攤開放在櫃台上）。用跟購物清單同一套輪替，往後錯開幾格，不會跟孩子剛買的那張一樣 */
+export function bossOrder(date: string, round: number, band: AgeBand, toys = 0): MarketItem[] {
+  return marketList(date, round + 5, band, toys).flatMap((l) => Array.from({ length: l.qty }, () => l.id))
+}
+
+/**
+ * 寵物拿出來的硬幣：
+ * - 3 歲：一枚（收下就完成）
+ * - 4–5 歲：比價錢多兩枚 1 元（價錢是點點，孩子一枚對一個點，數到剛好就夠了，多的寵物留著）
+ * - 6–7 歲：故意多給，湊到比價錢大的下一個 5 的倍數（10 元、5 元），孩子要找 1–5 元
+ */
+export function bossOffer(band: AgeBand, bill: number): Coin[] {
+  if (band === '3') return [1]
+  if (band === '4-5') return Array.from({ length: bill + 2 }, () => 1 as Coin)
+  return marketChangeCoins((Math.floor(bill / 5) + 1) * 5)
+}
+
+/** 要收幾枚才算收好：3 歲 1 枚、4–5 歲跟點點一樣多、6–7 歲全部收下（再找錢） */
+export function bossNeed(band: AgeBand, bill: number): number {
+  if (band === '3') return 1
+  if (band === '4-5') return bill
+  return bossOffer(band, bill).length
+}
+
+/** 6–7 歲要找多少（其他年齡不找） */
+export const bossChange = (band: AgeBand, bill: number): number => (band === '6-7' ? coinSum(bossOffer(band, bill)) - bill : 0)
+
+/**
+ * 找零的三個選項（一個對、兩個差一點），位置依價錢和回數輪流，不靠亂數。
+ * 選錯只是寵物搖頭，可以再選。
+ */
+export function bossChangeOptions(change: number, round: number): number[] {
+  const wrong = [change + 1, change > 1 ? change - 1 : change + 2]
+  const opts = [change, ...wrong]
+  const shift = (((change + round) % 3) + 3) % 3
+  return [...opts.slice(shift), ...opts.slice(0, shift)]
 }
