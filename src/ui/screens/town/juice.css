@@ -106,8 +106,9 @@
 .ys-ghost .jc-cup-body, .ys-flyer .jc-cup-body { position: absolute; inset: 0; }
 /* v8.5 杯子上的裝飾：吸管斜插在左邊、小雨傘插在杯口、冰塊浮在果汁上（位置對齊 ui-juice-cup 的杯身） */
 .jc-cup-deco { position: absolute; z-index: 4; display: block; pointer-events: none; animation: jc-plop 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); }
-.jc-cup-deco-straw { left: 10%; top: -4%; width: 46%; height: 62%; transform: rotate(-24deg); }
-.jc-cup-deco-umbrella { left: 36%; top: -16%; width: 44%; height: 56%; transform: rotate(10deg); }
+/* 杯子的圖本來就有一片柳橙（左）和一支吸管（右）：新吸管直直插在中間偏左，小雨傘在中間偏右，不要疊在柳橙上 */
+.jc-cup-deco-straw { left: 20%; top: -30%; width: 34%; height: 82%; transform: rotate(-6deg); }
+.jc-cup-deco-umbrella { left: 40%; top: -22%; width: 44%; height: 56%; transform: rotate(12deg); }
 .jc-cup-deco-ice { left: 30%; top: 46%; width: 38%; height: 30%; }
 
 /* 直向（iPad 直、手機）：上面是寵物和客人，下面櫃台分兩排：水果一排、果汁機和杯子一排 */

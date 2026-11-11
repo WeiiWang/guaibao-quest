@@ -50,7 +50,9 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
   const say = usePetLine()
   // 還沒讀到存檔是 undefined：先不畫玩法，免得玩法一開始拿到「沒有新玩具」又馬上變
   const plays = useLiveQuery(async () => (await db.settings.get('main'))?.playCount?.[id] ?? 0, [id], undefined)
-  const [card, setCard] = useState<PlayOutcome | null>(null)
+  // 一張一張排隊：卡還開著時又玩完一次（小菜園連續收成），後面那張等前一張收掉再出來
+  const [cards, setCards] = useState<PlayOutcome[]>([])
+  const card = cards[0] ?? null
   const [cheer, setCheer] = useState(0)
   // 卡還開著的時候不換：孩子收下卡之後，新玩具才出現在玩法裡
   const [toys, setToys] = useState<0 | 1 | 2 | null>(null)
@@ -63,6 +65,15 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
     const t = window.setTimeout(() => say(intro), 500)
     return () => window.clearTimeout(t)
   }, [intro, say])
+  // 每張卡出現的那一刻：重新計算「0.5 秒內點不掉」，播聲音、寵物介紹
+  useEffect(() => {
+    if (!card) return
+    giftArmed.current = false
+    giftShownAt.current = performance.now()
+    if (card.toy || card.crowned) playSound('fanfare', { synth: false })
+    playSound('reward')
+    say(card.toy ? card.toy.line : card.crowned ? 'pet.play.crown' : 'pet.play.reward')
+  }, [card, say])
   useEffect(() => {
     if (!cheer) return
     const t = window.setTimeout(() => setCheer(0), CHEER_MS)
@@ -78,14 +89,9 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
         }
         return
       }
-      giftArmed.current = false
-      giftShownAt.current = performance.now()
-      setCard(r)
-      if (r.toy || r.crowned) playSound('fanfare', { synth: false })
-      playSound('reward')
-      say(r.toy ? r.toy.line : r.crowned ? 'pet.play.crown' : 'pet.play.reward')
+      setCards((q) => [...q, r])
     })
-  }, [id, say])
+  }, [id])
   return (
     <main className="screen place pg-game" data-testid={`play-${id}`} data-toys={toys ?? undefined}>
       <div className="place-backdrop" aria-hidden>
@@ -114,15 +120,15 @@ export function GameShell({ id, scene, intro, children, onExit }: { id: PlayGame
             giftArmed.current = performance.now() - giftShownAt.current > 500
           }}
           onClick={() => {
-            if (giftArmed.current) setCard(null)
+            if (giftArmed.current) setCards((q) => q.slice(1))
           }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') setCard(null)
+            if (e.key === 'Enter' || e.key === ' ') setCards((q) => q.slice(1))
           }}
           data-testid="play-gift"
           aria-label={card.toy ? `收下新玩具：${card.toy.label}` : '收下禮物'}
         >
-          <span className="pg-gift-card">
+          <span className="pg-gift-card" key={card.plays}>
             <Companion pose="happy" size="var(--pg-gift-pet, min(30vmin, 180px))" />
             <span className="pg-gift-items">
               {card.toy && (
